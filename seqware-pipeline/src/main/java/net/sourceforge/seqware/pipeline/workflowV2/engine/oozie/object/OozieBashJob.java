@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.jdom.Element;
 
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 
 public class OozieBashJob extends OozieJob {
 
@@ -41,6 +43,7 @@ public class OozieBashJob extends OozieJob {
     addProp(config, "oozie.launcher.mapred.job.reduce.memory.mb", jobObj.getMaxMemory());
     addProp(config, "oozie.launcher.mapreduce.map.memory.physical.mb", jobObj.getMaxMemory());
     addProp(config, "oozie.launcher.mapreduce.reduce.memory.physical.mb", jobObj.getMaxMemory());
+    addProp(config, ConfigTools.SEQWARE_SETTINGS_PROPERTY, ConfigTools.getSettingsFilePath());
 
     add(java, "main-class", "net.sourceforge.seqware.pipeline.runner.Runner");
     for (String arg : runnerArgs(jobScript)) {
@@ -56,17 +59,7 @@ public class OozieBashJob extends OozieJob {
 
   private File emitJobScript() {
     File file = file(scriptsDir, scriptFileName(name), true);
-
-    StringBuilder contents = new StringBuilder("#!/usr/bin/env bash\n\n");
-    contents.append("cd ");
-    contents.append(oozie_working_dir);
-    contents.append("\n");
-    for (String arg : jobObj.getCommand().getArguments()) {
-      contents.append(arg);
-    }
-    contents.append("\n");
-
-    write(contents.toString(), file);
+    writeScript(concat(" ", jobObj.getCommand().getArguments()), file);
     return file;
   }
 
@@ -80,13 +73,8 @@ public class OozieBashJob extends OozieJob {
     args.add("net.sourceforge.seqware.pipeline.runner.Runner");
     args.addAll(runnerArgs(jobScript));
 
-    StringBuilder contents = new StringBuilder("#!/usr/bin/env bash\n\n");
-    for (String arg : args) {
-      contents.append(arg);
-      contents.append(" ");
-    }
+    writeScript(concat(" ", args), file);
 
-    write(contents.toString(), file);
     return file;
   }
 
@@ -95,6 +83,19 @@ public class OozieBashJob extends OozieJob {
     args.add("--module");
     args.add("net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
     args.add("--");
+
+    Command cmd = jobObj.getCommand();
+    if (cmd.isGcrSkipIfMissing()){
+      args.add("--gcr-skip-if-missing");
+    }
+    if (cmd.isGcrSkipIfOutputExists()){
+      args.add("--gcr-skip-if-output-exists");
+    }
+    if(cmd.getGcrOutputFile() != null){
+      args.add("--gcr-output-file");
+      args.add(cmd.getGcrOutputFile());
+    }
+
     args.add("--gcr-algorithm");
     args.add(jobObj.getAlgo());
     args.add("--gcr-script");

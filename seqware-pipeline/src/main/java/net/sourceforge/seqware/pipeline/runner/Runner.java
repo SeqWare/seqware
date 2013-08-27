@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -569,7 +570,11 @@ public class Runner {
       String user = options.valueOf("metdata-config-username").toString();
       String pass = options.valueOf("metadata-config-password").toString();
       String connection = options.valueOf("metadata-config-database").toString();
-      meta = new MetadataDB(connection, user, pass);
+      try {
+        meta = new MetadataDB(connection, user, pass);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
     } else {
       meta = MetadataFactory.get(settings);
     }

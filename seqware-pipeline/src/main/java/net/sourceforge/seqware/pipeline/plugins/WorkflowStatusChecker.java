@@ -331,9 +331,14 @@ public class WorkflowStatusChecker extends Plugin {
       try {
         OozieClient oc = new OozieClient((String) config.get("OOZIE_URL"));
         String jobId = wr.getStatusCmd();
+        if (jobId == null){
+          handlePreLaunch(); return;
+        }
+
         WorkflowJob wfJob = oc.getJobInfo(jobId);
-        if (wfJob == null)
-          return;
+        if (wfJob == null){
+          throw new IllegalStateException("No Oozie job found for WorkflowRun: swid="+wr.getSwAccession()+" oozie-id="+jobId);
+        }
 
         WorkflowRunStatus curSqwStatus = wr.getStatus();
         WorkflowRunStatus nextSqwStatus;
@@ -404,11 +409,10 @@ public class WorkflowStatusChecker extends Plugin {
         }
 
         synchronized (metadata_sync) {
-          WorkflowStatusChecker.this.metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(),
-                                                                  wr.getTemplate(), nextSqwStatus, wr.getStatusCmd(),
-                                                                  wr.getCurrentWorkingDir(), wr.getDax(),
-                                                                  wr.getIniFile(), wr.getHost(), err, out,
-                                                                  wr.getWorkflowEngine(), wr.getInputFileAccessions());
+          wr.setStatus(nextSqwStatus);
+          wr.setStdErr(err);
+          wr.setStdOut(out);
+          WorkflowStatusChecker.this.metadata.updateWorkflowRun(wr);
         }
       } catch (RuntimeException e) {
         throw e;
@@ -417,6 +421,27 @@ public class WorkflowStatusChecker extends Plugin {
       }
     }
     
+    private void handlePreLaunch(){
+      switch(wr.getStatus()){
+      case submitted_cancel:
+        // run cancelled before launching
+        wr.setStatus(WorkflowRunStatus.cancelled);
+        synchronized (metadata_sync) {
+          WorkflowStatusChecker.this.metadata.updateWorkflowRun(wr);
+        }
+        break;
+      case submitted_retry:
+        // retrying a pre-launch cancellation
+        wr.setStatus(WorkflowRunStatus.submitted);
+        synchronized (metadata_sync) {
+          WorkflowStatusChecker.this.metadata.updateWorkflowRun(wr);
+        }
+        break;
+      default:
+          throw new IllegalStateException("No Oozie job ID found for WorkflowRun: swid="+wr.getSwAccession()+" status="+wr.getStatus().name());
+      }
+    }
+
     @SuppressWarnings("deprecation")
     private Properties getCurrentConf(WorkflowJob wfJob){
       /*

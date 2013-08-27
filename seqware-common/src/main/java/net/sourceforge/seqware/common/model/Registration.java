@@ -371,41 +371,6 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
         return false;
     }
 
-    /**
-     * <p>cloneFromDB.</p>
-     *
-     * @param ownerId a int.
-     * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
-     * @throws java.sql.SQLException if any.
-     */
-    public static Registration cloneFromDB(int ownerId) throws SQLException {
-        Registration registration = null;
-        ResultSet rs = null;
-        try {
-            rs = DBAccess.get().executeQuery("SELECT * FROM registration WHERE registration_id=" + ownerId);
-
-            if (rs.next()) {
-                registration = new Registration();
-                registration.setRegistrationId(rs.getInt("registration_id"));
-                registration.setEmailAddress(rs.getString("email"));
-                registration.setPasswordHint(rs.getString("password_hint"));
-                registration.setFirstName(rs.getString("first_name"));
-                registration.setLastName(rs.getString("last_name"));
-                registration.setInstitution(rs.getString("institution"));
-                registration.setLIMSAdmin(rs.getBoolean("lims_admin"));
-                registration.setCreateTimestamp(rs.getTimestamp("create_tstmp"));
-                registration.setUpdateTimestamp(rs.getTimestamp("last_update_tstmp"));
-                registration.setJoinDevelopersMailingList(rs.getBoolean("developer_ml"));
-                registration.setJoinUsersMailingList(rs.getBoolean("user_ml"));
-
-            }
-        } finally {
-            DbUtils.closeQuietly(rs);
-            DBAccess.close();
-        }
-        return registration;
-    }
-
     /** {@inheritDoc} */
     @Override
     public boolean givesPermission(Registration registration) {

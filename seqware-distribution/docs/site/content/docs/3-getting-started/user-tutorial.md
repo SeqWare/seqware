@@ -229,7 +229,7 @@ The next step is to find the available workflows
 and their parameters.  To see the list of available workflows you can execute
 the following command:
 
-	seqware workflow list
+    $ seqware workflow list
 
 First, you will get a tab-delimited list of workflows showing their name, version, and 
 (most importantly) their SWID that you can use in scripts. In the second and third examples

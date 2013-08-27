@@ -14,18 +14,19 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import net.sourceforge.seqware.common.business.ProcessingRelationshipService;
 import net.sourceforge.seqware.common.business.ProcessingService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingRelationship;
-
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -103,36 +104,47 @@ public class ProcessingStructureResource extends BasicRestlet {
 	private DotNode buildDotTree( int parentAccession) throws SQLException {
 		
 		String sql0 = "select processing_id, algorithm, sw_accession from processing where sw_accession = " + parentAccession;
-                ResultSet rs0 = null;
                 DotNode root = null;
                 try{
-		rs0 = DBAccess.get().executeQuery(sql0);
-		if(!rs0.next())
+		root = DBAccess.get().executeQuery(sql0, new ResultSetHandler<DotNode>(){
+      @Override
+      public DotNode handle(ResultSet rs) throws SQLException {
+        if(rs.next()){
+          DotNode root = new DotNode(rs.getInt("processing_id"));
+          root.setAlgo(rs.getString("algorithm"));
+          root.setSWAccessionId(rs.getInt("sw_accession"));
+          return root;
+        } else {
+          return null;
+        }
+      }
+		});
+		if(root == null)
 			return null;
 		
-		root = new DotNode(rs0.getInt("processing_id"));
-		root.setAlgo(rs0.getString("algorithm"));
-		root.setSWAccessionId(rs0.getInt("sw_accession"));
                 } finally{
                     DBAccess.close();
-                    DbUtils.closeQuietly(rs0);
                 }
 		
 		String sql = "select a.child_id, b.algorithm, b.sw_accession from processing_relationship a, processing b " +
 				"where a.child_id = b.processing_id and a.parent_id = " + root.getProcessingId();   
-                ResultSet rs = null;
-                List<DotNode> children = new ArrayList<DotNode>();
+                List<DotNode> children;
 		try{
-                rs = DBAccess.get().executeQuery(sql);
-		//to avoid recursively open resultset, store them in array first, then close rs
-		while(rs.next()) {
-			DotNode c = new DotNode(rs.getInt("child_id"));
-			c.setAlgo(rs.getString("algorithm"));
-			c.setSWAccessionId(rs.getInt("sw_accession"));
-			children.add(c);
-		}
+		  children = DBAccess.get().executeQuery(sql, new ResultSetHandler<List<DotNode>>() {
+        @Override
+        public List<DotNode> handle(ResultSet rs) throws SQLException {
+          List<DotNode> children = new ArrayList<DotNode>();
+          while(rs.next()) {
+            DotNode c = new DotNode(rs.getInt("child_id"));
+            c.setAlgo(rs.getString("algorithm"));
+            c.setSWAccessionId(rs.getInt("sw_accession"));
+            children.add(c);
+          }
+          return children;
+        }
+      });
+      
                 } finally{
-                    DbUtils.closeQuietly(rs);
                     DBAccess.close();
                 }	
 		for(DotNode c: children) {
@@ -145,19 +157,22 @@ public class ProcessingStructureResource extends BasicRestlet {
 	private void addSubNodes(DotNode parent) throws SQLException {
 		String sql = "select a.child_id, b.algorithm, b.sw_accession from processing_relationship a, processing b " +
 				"where a.child_id = b.processing_id and a.parent_id = " + parent.getProcessingId();  
-                ResultSet rs = null;
-                List<DotNode> children = new ArrayList<DotNode>();
+                List<DotNode> children;
                 try{
-		rs = DBAccess.get().executeQuery(sql);
-		//to avoid recursively open resultset, store them in array first, then close rs		
-		while(rs.next()) {
-			DotNode c = new DotNode(rs.getInt("child_id"));
-			c.setAlgo(rs.getString("algorithm"));
-			c.setSWAccessionId(rs.getInt("sw_accession"));
-			children.add(c);
-		}
+		children = DBAccess.get().executeQuery(sql, new ResultSetHandler<List<DotNode>>(){
+      @Override
+      public List<DotNode> handle(ResultSet rs) throws SQLException {
+        List<DotNode> children = new ArrayList<DotNode>();
+        while(rs.next()) {
+          DotNode c = new DotNode(rs.getInt("child_id"));
+          c.setAlgo(rs.getString("algorithm"));
+          c.setSWAccessionId(rs.getInt("sw_accession"));
+          children.add(c);
+        }
+        return children;
+      }
+		});
                 } finally{
-                    DbUtils.closeQuietly(rs);
                     DBAccess.close();
                 }	
 		for(DotNode c: children) {

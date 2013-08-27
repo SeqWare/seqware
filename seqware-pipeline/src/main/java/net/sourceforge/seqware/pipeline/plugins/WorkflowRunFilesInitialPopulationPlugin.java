@@ -23,9 +23,10 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.common.util.Log;
-import org.apache.commons.dbutils.DbUtils;
-import org.apache.commons.lang.StringUtils;
 
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.lang.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -157,31 +158,42 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         ResultSet rs = null;
         MetadataDB mdb = null;
         try {
-            StringBuilder query = new StringBuilder();
-            query.append("select w.sw_accession, w.workflow_run_id, w.status, f.* FROM workflow_run w LEFT OUTER JOIN workflow_run_input_files f ");
-            query.append("ON w.workflow_run_id = f.workflow_run_id WHERE (status = 'completed' OR status= 'failed') AND ");
-            query.append("f.workflow_run_id IS NULL ORDER BY w.sw_accession;");
+            String query = new StringBuilder()
+            .append("select w.sw_accession, w.workflow_run_id, w.status, f.* FROM workflow_run w LEFT OUTER JOIN workflow_run_input_files f ")
+            .append("ON w.workflow_run_id = f.workflow_run_id WHERE (status = 'completed' OR status= 'failed') AND ")
+            .append("f.workflow_run_id IS NULL ORDER BY w.sw_accession;").toString();
 
             Log.info("Executing query: " + query);
             mdb = DBAccess.get();
-            mdb.getDb().setAutoCommit(false);
-            rs = mdb.executeQuery(query.toString());
-            PreparedStatement prepareStatement = mdb.getDb().prepareStatement("INSERT INTO workflow_run_input_files (workflow_run_id, file_id) VALUES(?,?)");
-            while (rs.next()) {
-                int workflowSWID = rs.getInt("sw_accession");
-                int workflowRunID = rs.getInt("workflow_run_id");
-                Log.stdout("Working on workflow_run " + workflowSWID);
-
-                // populate input files
-                List<Integer> listOfFiles = this.getListOfFiles(workflowSWID);
-                Log.stdout("Found " + listOfFiles.size() + " input files for workflow_run " + workflowSWID);
-                // insert into new workflow_run_input_files table
-                for (Integer fSWID : listOfFiles) {
-                    Integer file_id = this.metadata.getFile(fSWID).getFileId();
-                    prepareStatement.setInt(1, workflowRunID);
-                    prepareStatement.setInt(2, file_id);
-                    prepareStatement.executeUpdate();
+            
+            List<int[]> ids = mdb.executeQuery(query, new ResultSetHandler<List<int[]>>(){
+              @Override
+              public List<int[]> handle(ResultSet rs) throws SQLException {
+                List<int[]> ids = new ArrayList<int[]>();
+                while(rs.next()){
+                  ids.add(new int[]{rs.getInt("sw_accession"), rs.getInt("workflow_run_id")});
                 }
+                return ids;
+              }
+            });
+            
+            mdb.getDb().setAutoCommit(false);
+            PreparedStatement prepareStatement = mdb.getDb().prepareStatement("INSERT INTO workflow_run_input_files (workflow_run_id, file_id) VALUES(?,?)");
+            for (int[] i : ids){
+              int workflowSWID = i[0];
+              int workflowRunID = i[1];
+              Log.stdout("Working on workflow_run " + workflowSWID);
+
+              // populate input files
+              List<Integer> listOfFiles = this.getListOfFiles(workflowSWID);
+              Log.stdout("Found " + listOfFiles.size() + " input files for workflow_run " + workflowSWID);
+              // insert into new workflow_run_input_files table
+              for (Integer fSWID : listOfFiles) {
+                  Integer file_id = this.metadata.getFile(fSWID).getFileId();
+                  prepareStatement.setInt(1, workflowRunID);
+                  prepareStatement.setInt(2, file_id);
+                  prepareStatement.executeUpdate();
+              }
             }
             Log.stdout("Success!");
             mdb.getDb().commit();

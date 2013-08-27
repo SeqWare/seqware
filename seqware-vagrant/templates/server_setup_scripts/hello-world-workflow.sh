@@ -1,10 +1,6 @@
 #!/bin/bash -vx
 
-# Should be invoked as seqware user
-# e.g.: sudo -i -u seqware hello-world-workflow.sh
-
-cd ~/workflow-dev
-
+su - seqware -c 'cd /home/seqware/workflow-dev; \
 mvn archetype:generate \
 -DinteractiveMode=false \
 -DarchetypeCatalog=local \
@@ -16,12 +12,11 @@ mvn archetype:generate \
 -Dversion=1.0-SNAPSHOT \
 -DworkflowVersion=1.0-SNAPSHOT \
 -DworkflowDirectoryName=HelloWorld \
--DworkflowName=HelloWorld
+-DworkflowName=HelloWorld'
 
-cd HelloWorld
+su - seqware -c 'cd /home/seqware/workflow-dev/HelloWorld; mvn install'
 
-mvn install
+su - seqware -c 'cd /home/seqware/workflow-dev/HelloWorld; seqware bundle package --dir target/Workflow_Bundle_HelloWorld*'
 
-seqware bundle package --dir `ls -d target/Workflow_Bundle_HelloWorld*`
+su - seqware -c 'cd /home/seqware/workflow-dev/HelloWorld; seqware bundle install --zip Workflow_Bundle_HelloWorld*'
 
-seqware bundle install --zip `ls Workflow_Bundle_HelloWorld*`

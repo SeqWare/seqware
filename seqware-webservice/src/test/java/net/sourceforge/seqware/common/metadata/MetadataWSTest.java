@@ -38,6 +38,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.log4j.Logger;
 import org.junit.*;
 
@@ -203,12 +204,21 @@ public class MetadataWSTest {
 
     }
 
-    protected void testTimestamp(String sql, String colname, Date beforeDate) {
+    protected void testTimestamp(String sql, final String colname, Date beforeDate) {
         logger.debug(sql);
         try {
-            ResultSet rs = DBAccess.get().executeQuery(sql);
-            if (rs.next()) {
-                Date date = rs.getTimestamp(colname);
+          Date date = DBAccess.get().executeQuery(sql, new ResultSetHandler<Date>(){
+            @Override
+            public Date handle(ResultSet rs) throws SQLException {
+              if (rs.next()){
+                return rs.getTimestamp(colname);
+              } else {
+                return null;
+              }
+            }
+          });
+          
+            if (date != null) {
                 if (date.before(beforeDate)) {
                     logger.debug("before " + beforeDate.toString());
                     logger.debug("update " + date.toString());
@@ -229,9 +239,18 @@ public class MetadataWSTest {
     protected void testCount(String sql, int expectedCount) {
         logger.debug(sql);
         try {
-            ResultSet rs = DBAccess.get().executeQuery(sql);
-            if (rs.next()) {
-                int count = rs.getInt("count");
+          int count = DBAccess.get().executeQuery(sql, new ResultSetHandler<Integer>(){
+              @Override
+              public Integer handle(ResultSet rs) throws SQLException {
+                if (rs.next()){
+                  return rs.getInt("count");
+                } else {
+                  return 0;
+                }
+              }
+            });
+          
+            if (count > 0) {
                 Assert.assertEquals("Expected count is not the same:" + expectedCount + "!=<" + count, true, (expectedCount <= count));
 
             } else {
