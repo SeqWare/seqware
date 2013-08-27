@@ -6,6 +6,8 @@ echo '%{HOSTS}' >> /etc/hosts
 
 # general apt-get
 apt-get update
+export DEBIAN_FRONTEND=noninteractive
+
 
 # setup zookeeper
 apt-get -q -y --force-yes install zookeeper zookeeper-server
@@ -18,75 +20,71 @@ apt-get -q -y --force-yes install postgresql-9.1 postgresql-client-9.1 tomcat6-c
 
 # install Hadoop deps, the master node runs the NameNode, SecondaryNameNode and JobTracker
 # NOTE: shouldn't really use secondary name node on same box for production
-apt-get -q -y --force-yes install hadoop-0.20-mapreduce-jobtracker hadoop-hdfs-namenode hadoop-hdfs-datanode hadoop-hdfs-secondarynamenode hadoop-client 
+apt-get -q -y --force-yes install hadoop-0.20-mapreduce-jobtracker hadoop-hdfs-namenode hadoop-0.20-mapreduce-tasktracker hadoop-hdfs-datanode hadoop-client hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase-master xfsprogs
+
 
 # setup LZO
-wget -q http://archive.cloudera.com/gplextras/ubuntu/lucid/amd64/gplextras/cloudera.list
-mv cloudera.list /etc/apt/sources.list.d/gplextras.list
-apt-get update
-apt-get -q -y --force-yes install hadoop-lzo-cdh4
+#wget -q http://archive.cloudera.com/gplextras/ubuntu/lucid/amd64/gplextras/cloudera.list
+#mv cloudera.list /etc/apt/sources.list.d/gplextras.list
+#apt-get update
+#apt-get -q -y --force-yes install hadoop-lzo-cdh4
 
 # configuration for hadoop
-cp -r /etc/hadoop/conf.empty /etc/hadoop/conf.my_cluster
+cp /vagrant/conf.master.tar.gz /etc/hadoop/
+cd /etc/hadoop/
+tar zxf conf.master.tar.gz
+cd -
 update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.my_cluster 50
 update-alternatives --set hadoop-conf /etc/hadoop/conf.my_cluster
 
 # setup HDFS configs
-echo '<?xml version="1.0"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-
-<configuration>
-  <property>
-   <name>fs.defaultFS</name>
-   <value>hdfs://master/</value>
-  </property>
-</configuration>
-' > /etc/hadoop/conf/core-site.xml
+#echo '<?xml version="1.0"?>
+#<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+#
+#<configuration>
+#  <property>
+#   <name>fs.defaultFS</name>
+#   <value>hdfs://master/</value>
+#  </property>
+#</configuration>
+#' > /etc/hadoop/conf/core-site.xml
 
 # hdfs config
 # should setup multiple directories in hdfs-site.xml
-mkdir -p /data/1/dfs/nn
-mkdir -p /data/1/dfs/dn
+# TODO: this assumes /mnt has the ephemeral drive!
+ln -s /mnt /data
+mkdir -p /data/1/dfs/nn /data/1/dfs/dn
 chown -R hdfs:hdfs /data/1/dfs/nn /data/1/dfs/dn
 chmod 700 /data/1/dfs/nn /data/1/dfs/dn
 
-echo '<?xml version="1.0"?>
-<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-<configuration>
-  <property>
-     <name>dfs.name.dir</name>
-     <value>/var/lib/hadoop-hdfs/cache/hdfs/dfs/name</value>
-  </property>
-  <property>
-     <name>dfs.permissions.superusergroup</name>
-     <value>hadoop</value>
-  </property>
-  <property>
-     <name>dfs.namenode.name.dir</name>
-     <value>/data/1/dfs/nn</value>
-  </property>
-  <property>
-     <name>dfs.namenode.data.dir</name>
-     <value>/data/1/dfs/dn</value>
-  </property>
-</configuration>
-' > /etc/hadoop/conf/hdfs-site.xml
+#echo '<?xml version="1.0"?>
+#<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+#<configuration>
+#  <property>
+#     <name>dfs.name.dir</name>
+#     <value>/var/lib/hadoop-hdfs/cache/hdfs/dfs/name</value>
+#  </property>
+#  <property>
+#     <name>dfs.permissions.superusergroup</name>
+#     <value>hadoop</value>
+#  </property>
+#  <property>
+#     <name>dfs.namenode.name.dir</name>
+#     <value>/data/1/dfs/nn</value>
+#  </property>
+#  <property>
+#     <name>dfs.namenode.data.dir</name>
+#     <value>/data/1/dfs/dn</value>
+#  </property>
+#</configuration>
+#' > /etc/hadoop/conf/hdfs-site.xml
 
 # format HDFS
-sudo -u hdfs hadoop namenode -format
-
+sudo -u hdfs hadoop namenode -format -force
 
 # setup the HDFS drives
 # TODO: this perl script should do all of the above
 #perl /vagrant/setup_hdfs_volumes.pl
-
-# start cloudera manager
-#service cloudera-scm-server-db initdb
-#service cloudera-scm-server-db start
-#service cloudera-scm-server start
-
-# format the name node
-sudo -u hdfs hdfs namenode -format -force
 
 # start all the hadoop daemons
 for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do sudo service $x start ; done
@@ -97,6 +95,8 @@ sudo -u hdfs hadoop fs -chmod -R 1777 /tmp
 sudo -u hdfs hadoop fs -mkdir -p /var/lib/hadoop-hdfs/cache/mapred/mapred/staging
 sudo -u hdfs hadoop fs -chmod 1777 /var/lib/hadoop-hdfs/cache/mapred/mapred/staging
 sudo -u hdfs hadoop fs -chown -R mapred /var/lib/hadoop-hdfs/cache/mapred
+sudo -u hdfs hadoop fs -mkdir /tmp/mapred/system
+sudo -u hdfs hadoop fs -chown mapred:hadoop /tmp/mapred/system
 
 # start mapred
 for x in `cd /etc/init.d ; ls hadoop-0.20-mapreduce-*` ; do sudo service $x start ; done
@@ -121,8 +121,14 @@ service hbase-master start
 for i in apache2 cron hadoop-hdfs-namenode hadoop-hdfs-datanode hadoop-hdfs-secondarynamenode hadoop-0.20-mapreduce-tasktracker hadoop-0.20-mapreduce-jobtracker hue oozie postgresql tomcat6 hbase-master; do echo $i; sysv-rc-conf $i on; done
 
 
-## TODO: setup NFS before seqware
-
+## Setup NFS before seqware
+# see https://help.ubuntu.com/community/SettingUpNFSHowTo#NFS_Server
+apt-get -q -y --force-yes install rpcbind nfs-kernel-server
+echo '%{EXPORTS}' >> /etc/exports
+exportfs -ra
+# TODO: get rid of portmap localhost setting
+service portmap restart
+service nfs-kernel-server restart
 
 # add seqware user
 useradd -d /home/seqware -m seqware -s /bin/bash
