@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-catalog xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0 http://maven.apache.org/xsd/archetype-catalog-1.0.0.xsd"
+    xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <archetypes>
+    <archetype>
+      <groupId>com.github.seqware</groupId>
+      <artifactId>seqware-archetype-java-workflow</artifactId>
+      <version>${project.version}</version>
+      <repository>http://wrench.res.oicr.on.ca/artifactory/seqware-release</repository>
+      <description>SeqWare Java workflow archetype</description>
+    </archetype>
+    <archetype>
+      <groupId>com.github.seqware</groupId>
+      <artifactId>seqware-archetype-module</artifactId>
+      <version>${project.version}</version>
+      <repository>http://wrench.res.oicr.on.ca/artifactory/seqware-release</repository>
+      <description>SeqWare module archetype</description>
+    </archetype>
+    <archetype>
+      <groupId>com.github.seqware</groupId>
+      <artifactId>seqware-archetype-decider</artifactId>
+      <version>${project.version}</version>
+      <repository>http://wrench.res.oicr.on.ca/artifactory/seqware-release</repository>
+      <description>SeqWare Java Decider archetype</description>
+    </archetype>
+  </archetypes>
+</archetype-catalog>
