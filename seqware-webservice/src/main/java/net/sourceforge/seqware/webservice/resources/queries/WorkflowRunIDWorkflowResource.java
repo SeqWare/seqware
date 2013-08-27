@@ -59,7 +59,7 @@ public class WorkflowRunIDWorkflowResource extends BasicRestlet {
         
             String id = request.getAttributes().get("workflowRunId").toString();  
             WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-            WorkflowRun run = (WorkflowRun)testIfNull(wrs.findBySWAccession(Integer.parseInt(id)));
+            WorkflowRun run = (WorkflowRun)testIfNull(wrs.findBySWAccession(convertIDWithResourceException(id)));
             Workflow w = run.getWorkflow();
             JaxbObject<Workflow> jaxbTool = new JaxbObject<Workflow>();
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();

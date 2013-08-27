@@ -94,7 +94,7 @@ public class ProcessIDResource extends DatabaseIDResource {
         authenticate();
 
         ProcessingService ss = BeanFactory.getProcessingServiceBean();
-        Processing processing = (Processing) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        Processing processing = (Processing) testIfNull(ss.findBySWAccession(convertIDWithResourceException()));
         Processing dto = copier.hibernate2dto(Processing.class, processing);
 
         if (fields.contains("workflowRun")) {

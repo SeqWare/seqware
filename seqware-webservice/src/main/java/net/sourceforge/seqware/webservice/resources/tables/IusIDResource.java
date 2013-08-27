@@ -66,7 +66,7 @@ public class IusIDResource extends DatabaseIDResource {
     public void getXml() {
         authenticate();
         IUSService ss = BeanFactory.getIUSServiceBean();
-        IUS ius = (IUS) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        IUS ius = (IUS) testIfNull(ss.findBySWAccession(convertIDWithResourceException()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<IUS> jaxbTool = new JaxbObject<IUS>();
 

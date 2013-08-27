@@ -105,4 +105,17 @@ public class BasicRestlet extends Restlet {
 //    protected void removeSession(Session session) {
 //        session.close();
 //    }
+    
+     /**
+     * Parses a provided attribute and throws resourceExceptions as needed
+     * @param attribute
+     * @return 
+     */
+    protected int convertIDWithResourceException(String attribute){
+        try{
+            return Integer.parseInt(attribute);
+        } catch (NumberFormatException e){
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
+        }
+    } 
 }

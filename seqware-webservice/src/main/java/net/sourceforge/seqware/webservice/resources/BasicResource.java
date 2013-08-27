@@ -113,4 +113,15 @@ public class BasicResource extends WadlServerResource {
         return o;
     }
 
+    /**
+     * Parses the ID field and throws resourceExceptions as needed
+     * @return 
+     */
+    protected int convertIntAttributeWithResourceException(String attribute){
+        try{
+            return Integer.parseInt(attribute);
+        } catch (NumberFormatException e){
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
+        }
+    } 
 }

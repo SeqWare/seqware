@@ -59,7 +59,7 @@ public class SampleIDResource extends DatabaseIDResource {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
 
         SampleService ss = BeanFactory.getSampleServiceBean();
-        Sample sample = (Sample) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        Sample sample = (Sample) testIfNull(ss.findBySWAccession(convertIDWithResourceException()));
         Sample dto = copier.hibernate2dto(Sample.class, sample);
 
         if (fields.contains("lanes")) {

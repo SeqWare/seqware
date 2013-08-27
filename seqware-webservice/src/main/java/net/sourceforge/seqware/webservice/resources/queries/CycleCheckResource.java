@@ -51,7 +51,7 @@ public class CycleCheckResource
 
         if (request.getMethod().compareTo(Method.GET) == 0) {
             CheckForCycles cfc = new CheckForCycles();
-            String results = cfc.checkStudy(Integer.parseInt(id));
+            String results = cfc.checkStudy(convertIDWithResourceException(id));
             response.setEntity(results, MediaType.TEXT_PLAIN);
         } else {
             response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);

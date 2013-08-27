@@ -57,7 +57,7 @@ public class WorkflowRunIdFilesResource extends BasicRestlet {
         try {
             String id = request.getAttributes().get("workflowRunId").toString();
 
-            List<File> files = hello(Integer.parseInt(id));
+            List<File> files = hello(convertIDWithResourceException(id));
 
             FileList list = new FileList();
             list.setList(files);
