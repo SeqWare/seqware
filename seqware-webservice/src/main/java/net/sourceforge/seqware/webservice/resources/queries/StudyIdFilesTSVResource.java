@@ -103,7 +103,7 @@ public class StudyIdFilesTSVResource extends BasicRestlet {
             fatf.setReportInputFiles(true);
         }
         
-        Study study = (Study) testIfNull(ss.findBySWAccession(Integer.parseInt(studySWA)));
+        Study study = (Study) testIfNull(ss.findBySWAccession(convertIDWithResourceException(studySWA)));
         StringWriter writer = new StringWriter();
         if (handleStudy(study, writer , fatf, null)) {
             return;

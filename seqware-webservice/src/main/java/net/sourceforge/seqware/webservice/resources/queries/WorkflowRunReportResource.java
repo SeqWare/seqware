@@ -107,12 +107,12 @@ public class WorkflowRunReportResource
             cfc.setLatestDate(latestDate);
             StringBuilder builder = getHeader();
             if (wId != null) {
-                Collection<WorkflowRunReportRow> rows = cfc.getRunsFromWorkflow(Integer.parseInt(wId.toString()));
+                Collection<WorkflowRunReportRow> rows = cfc.getRunsFromWorkflow(convertIDWithResourceException(wId.toString()));
                 for (WorkflowRunReportRow results : rows) {
                     toString(results, builder);
                 }
             } else if (wrId != null) {
-                WorkflowRunReportRow results = cfc.getSingleWorkflowRun(Integer.parseInt(wrId.toString()));
+                WorkflowRunReportRow results = cfc.getSingleWorkflowRun(convertIDWithResourceException(wrId.toString()));
                 // check to see if we're just returning the stderr/out or full report
                 if (showStdErr) {
                   builder = new StringBuilder();

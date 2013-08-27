@@ -16,8 +16,6 @@
  */
 package net.sourceforge.seqware.webservice.resources.filters;
 
-import java.io.IOException;
-import javax.resource.ResourceException;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
@@ -25,13 +23,8 @@ import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.tables.StudyIDResource;
-import org.restlet.data.MediaType;
-import org.restlet.data.Status;
-import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * <p>StudyIDFilter class.</p>
@@ -52,13 +45,14 @@ public class StudyIDFilter extends StudyIDResource {
    * <p>getXml.</p>
    */
   @Get
+  @Override
   public void getXml() {
     StudyService ss = BeanFactory.getStudyServiceBean();
 
     String path = getRequest().getResourceRef().getPath();
     Study study = null;
     if (getId() != null) {
-      study = ss.findByID(Integer.parseInt(getId()));
+      study = ss.findByID(convertIDWithResourceException());
     }
 
     if (path.contains("experiments")) {

@@ -58,7 +58,7 @@ public class ProcessingStructureResource extends BasicRestlet {
         List<Integer> accessionList = new ArrayList<Integer>();
         for(String a: accessions) {
             try {
-                Integer i = Integer.parseInt(a);
+                Integer i = convertIDWithResourceException(a);
                 accessionList.add(i);
             } catch(NumberFormatException e) {
                 response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST, "Invalid swAccession");

@@ -51,7 +51,7 @@ public class WorkflowReportResource
 
         if (request.getMethod().compareTo(Method.GET) == 0) {
             WorkflowReport cfc = new WorkflowReport();
-            String results = cfc.fromWorkflow(Integer.parseInt(id));
+            String results = cfc.fromWorkflow(convertIDWithResourceException(id));
             response.setEntity(results, MediaType.TEXT_PLAIN);
         } else {
             response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);

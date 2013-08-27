@@ -60,7 +60,7 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
         init(request);
         String id = request.getAttributes().get("sequencerRunId").toString();
 
-        List<ReturnValue> returnValues = hello(Integer.parseInt(id));
+        List<ReturnValue> returnValues = hello(convertIDWithResourceException(id));
 
         ReturnValueList list = new ReturnValueList();
         list.setList(returnValues);

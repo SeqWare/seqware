@@ -67,7 +67,7 @@ public class SequencerRunIDResource extends DatabaseIDResource {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<SequencerRun> jaxbTool = new JaxbObject<SequencerRun>();
 
-        SequencerRun run = (SequencerRun) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        SequencerRun run = (SequencerRun) testIfNull(ss.findBySWAccession(convertIDWithResourceException()));
         SequencerRun dto = copier.hibernate2dto(SequencerRun.class, run);
 
 

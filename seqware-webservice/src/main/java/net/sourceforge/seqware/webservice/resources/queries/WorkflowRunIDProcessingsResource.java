@@ -57,7 +57,7 @@ public class WorkflowRunIDProcessingsResource extends BasicRestlet {
         try {
             String id = request.getAttributes().get("workflowRunId").toString();
 
-            List<Processing> procs = collectProcessingList(Integer.parseInt(id));
+            List<Processing> procs = collectProcessingList(convertIDWithResourceException(id));
 
             ProcessingList list = new ProcessingList();
             list.setList(procs);
