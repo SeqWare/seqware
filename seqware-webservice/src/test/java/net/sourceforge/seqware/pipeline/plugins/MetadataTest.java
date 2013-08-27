@@ -24,11 +24,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Lane;
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -37,8 +35,8 @@ import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
-import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
+import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.*;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
@@ -682,6 +680,79 @@ public class MetadataTest extends PluginTest {
         Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
     }
     
+    @Test
+    public void testCreateFile() {
+        final String algorithm = "kryptonite_algorithm1";
+        final String type = "kryptonite_type1";
+        final String meta_type = "kryptonite/gzip";
+        final String file_path = "/datastore/kryptonite.gz";
+        final String description = "glowing_metal";
+        launchPlugin("--table", "file", "--create",
+                "--file",type+"::"+meta_type+"::"+file_path + "::" + description,
+                "--field", "algorithm::" + algorithm
+                );
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid); 
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select f.sw_accession, p.algorithm from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?", Integer.valueOf(integer));
+        int file_sw_accession = (Integer)runQuery[0];
+        String dbAlgorithm = (String)runQuery[1];
+        
+        net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
+        Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
+        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) 
+                && file.getMetaType().equals(meta_type) && file.getDescription().equals(description)
+                && file.getType().equals(type));
+        Assert.assertTrue("algorithm incorrect", dbAlgorithm.equals(algorithm));
+    }
+    
+    @Test
+    public void testCreateFileWithParentAccessions() {
+        final String algorithm = "kryptonite_algorithm1";
+        final String type = "cool_type1";
+        final String meta_type = "adamantium/gzip";
+        final String file_path = "/datastore/adamantium.gz";
+        launchPlugin("--table", "file", "--create",
+                "--file",type+"::"+meta_type+"::"+file_path,
+                "--parent-accession","834", // experiment
+                "--parent-accession", "4765", // ius 
+                "--parent-accession", "4707", // lane
+                "--parent-accession", "4760", // sample
+                "--parent-accession", "4715", // sequencer_run
+                "--parent-accession", "120", //study
+                "--parent-accession", "10", //processing
+                "--field", "algorithm::" + algorithm
+        );
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select f.sw_accession, p.processing_id from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?", Integer.valueOf(integer));
+        int file_sw_accession = (Integer)runQuery[0];
+        int processing_id = (Integer)runQuery[1];
+
+        net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
+        Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
+        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) && file.getMetaType().equals(meta_type));
+        // tests to verify that parent-accession links are created properly
+        runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT("
+                + "(select count(*) from processing_experiments WHERE processing_id = ?),"
+                + "(select count(*) from processing_files WHERE processing_id = ?),"
+                + "(select count(*) from processing_ius WHERE processing_id = ?),"
+                + "(select count(*) from processing_lanes WHERE processing_id = ?),"
+                + "(select count(*) from processing_samples WHERE processing_id = ?),"
+                + "(select count(*) from processing_sequencer_runs WHERE processing_id = ?),"
+                + "(select count(*) from processing_studies WHERE processing_id = ?),"
+                + "(select count(*) from processing_relationship WHERE child_id = ?)"
+                + ")", Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id)
+                , Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id));
+        String result = runQuery[0].toString();
+        Assert.assertTrue("parent links not created", result.equals("(1,1,1,1,1,1,1,1)"));
+
+    }
+
     @Test
     public void testCreateWorkflowRunWithFilesAndAccessions() {
         launchPlugin("--table", "workflow_run", "--create",
