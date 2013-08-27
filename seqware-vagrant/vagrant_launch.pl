@@ -149,24 +149,55 @@ sub provision_instances {
     print "PROVISION: $host\n";
     if ($host =~ /master/) {
       # has all the master daemons
-      run_provision_script($master_config_scripts, $hosts->{$host});
+      run_provision_script($master_config_scripts, $hosts->{$host}, $hosts);
     } else {
       # then it's a worker node
-      run_provision_script($worker_config_scripts, $hosts->{$host});
+      run_provision_script($worker_config_scripts, $hosts->{$host}, $hosts);
     }
   }
 }
 
 # TODO: don't I need to process the script files before sending them over? I'll need to fill in with host info for sure!
 sub run_provision_script {
-  my ($config_scripts, $host) = @_;
+  my ($config_scripts, $host, $hosts) = @_;
+  my $host_str = figure_out_host_str($hosts);
+  my $master_pip = $hosts->{master}{pip};
+  my $exports = make_exports_str($hosts);
   my @a = split /,/, $config_scripts;
   foreach my $script (@a) {
     $script =~ /\/([^\/]+)$/;
     my $script_name = $1;
-    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." $script ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." bash /tmp/config_script.sh");
+    replace($script, "/tmp/config_script.sh", '%{HOSTS}', $host_str);
+    replace("/tmp/config_script.sh", "/tmp/config_script.2.sh", '%{MASTER_PIP}', $master_pip);
+    replace("/tmp/config_script.2.sh", "/tmp/config_script.sh", '%{EXPORTS}', $exports);
+    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." bash /tmp/config_script.sh");
+    run("rm /tmp/config_script.sh /tmp/config_script.2.sh");
   }
-  # left off here
+}
+
+# this creates a string to add to /etc/exports
+sub make_exports_str {
+  my $hosts = shift;
+  my $pip = $hosts->{master}{pip};
+  $pip =~ /(\d+\.\d+\.\d+)\.\d+/;
+  my $pre = $1;
+  my $result = "
+/home $pre.0/255.255.255.0(rw,sync,no_subtree_check)
+/datastore $pre.0/255.255.255.0(rw,sync,no_subtree_check)
+/usr/tmp/seqware-oozie $pre.0/255.255.255.0(rw,sync,no_subtree_check)
+";
+  return($result);
+}
+
+# this creates the /etc/hosts additions
+sub figure_out_host_str {
+  my ($hosts) = @_;
+  my $s = "";
+  foreach my $host (keys %{$hosts}) {
+    $s .= $hosts->{$host}{pip}."  $host\n";
+  }
+  print "HOSTS: $s\n";
+  return($s);
 }
 
 
@@ -221,6 +252,10 @@ sub prepare_files {
   copy("templates/user_data.txt", "$work_dir/user_data.txt");
   # script for setting up hadoop hdfs
   copy("templates/setup_hdfs_volumes.pl", "$work_dir/setup_hdfs_volumes.pl");
+  # hadoop settings files
+  # FIXME: break out into config driven provisioniner
+  copy("template/conf.worker.tar.gz", "$work_dir/conf.worker.tar.gz");
+  copy("template/conf.master.tar.gz", "$work_dir/conf.master.tar.gz");
 }
 
 sub autoreplace {
