@@ -376,9 +376,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             }
             
             for (Entry<String, List<ReturnValue>> entry : entryList) {
-                Log.fatal("Considering key:" + entry.getKey());
+                Log.info("Considering key:" + entry.getKey());
                 for(ReturnValue r : entry.getValue()){
-                    Log.fatal(r.getAttribute(FindAllTheFiles.FILE_SWA));
+                    Log.info("Group contains: " + r.getAttribute(FindAllTheFiles.FILE_SWA));
                 }
                 
 
