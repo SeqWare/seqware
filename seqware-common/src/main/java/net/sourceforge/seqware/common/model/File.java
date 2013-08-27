@@ -343,39 +343,6 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
     this.fileType = fileType;
   }
 
-  /**
-   * <p>cloneFromDB.</p>
-   *
-   * @param fileId a int.
-   * @return a {@link net.sourceforge.seqware.common.model.File} object.
-   * @throws java.sql.SQLException if any.
-   */
-  public static File cloneFromDB(int fileId) throws SQLException {
-    File file = null;
-    ResultSet rs = null;
-    try {
-      rs = DBAccess.get().executeQuery("SELECT * FROM file WHERE file_id=" + fileId);
-      if (rs.next()) {
-        file = new File();
-        file.setFileId(rs.getInt("file_id"));
-        file.setFilePath(rs.getString("file_path"));
-        file.setMd5sum(rs.getString("md5sum"));
-        file.setUrl(rs.getString("url"));
-        file.setUrlLabel(rs.getString("url_label"));
-        file.setType(rs.getString("type"));
-        file.setMetaType(rs.getString("meta_type"));
-        file.setDescription(rs.getString("description"));
-        file.setSwAccession(rs.getInt("sw_accession"));
-        file.setSkip(rs.getBoolean("skip"));
-      }
-    } finally {
-      DbUtils.closeQuietly(rs);
-      DBAccess.close();
-    }
-
-    return file;
-  }
-
   /** {@inheritDoc} */
   @Override
   public boolean givesPermission(Registration registration) {
