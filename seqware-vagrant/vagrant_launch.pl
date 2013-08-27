@@ -169,8 +169,9 @@ sub run_provision_script {
     my $script_name = $1;
     replace($script, "/tmp/config_script.sh", '%{HOSTS}', $host_str);
     replace("/tmp/config_script.sh", "/tmp/config_script.2.sh", '%{MASTER_PIP}', $master_pip);
-    replace("/tmp/config_script.2.sh", "/tmp/config_script.sh", '%{EXPORTS}', $exports);
-    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." bash /tmp/config_script.sh");
+    autoreplace("/tmp/config_script.2.sh", "/tmp/config_script.3.sh");
+    replace("/tmp/config_script.3.sh", "/tmp/config_script.sh", '%{EXPORTS}', $exports);
+    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." sudo bash /tmp/config_script.sh");
     run("rm /tmp/config_script.sh /tmp/config_script.2.sh");
   }
 }
@@ -178,14 +179,16 @@ sub run_provision_script {
 # this creates a string to add to /etc/exports
 sub make_exports_str {
   my $hosts = shift;
-  my $pip = $hosts->{master}{pip};
-  $pip =~ /(\d+\.\d+\.\d+)\.\d+/;
-  my $pre = $1;
-  my $result = "
-/home $pre.0/255.255.255.0(rw,sync,no_subtree_check)
-/datastore $pre.0/255.255.255.0(rw,sync,no_subtree_check)
-/usr/tmp/seqware-oozie $pre.0/255.255.255.0(rw,sync,no_subtree_check)
+  my $result = "";
+  foreach my $host (keys %{$hosts}) {
+    my $pip = $hosts->{$host}{pip};
+    $result .= "
+/home $pip(rw,sync,no_subtree_check)
+/datastore $pip(rw,sync,no_subtree_check)
+/usr/tmp/seqware-oozie $pip(rw,sync,no_subtree_check)
 ";
+  }
+  print "EXPORT: $result\n"; 
   return($result);
 }
 
@@ -254,8 +257,8 @@ sub prepare_files {
   copy("templates/setup_hdfs_volumes.pl", "$work_dir/setup_hdfs_volumes.pl");
   # hadoop settings files
   # FIXME: break out into config driven provisioniner
-  copy("template/conf.worker.tar.gz", "$work_dir/conf.worker.tar.gz");
-  copy("template/conf.master.tar.gz", "$work_dir/conf.master.tar.gz");
+  copy("templates/conf.worker.tar.gz", "$work_dir/conf.worker.tar.gz");
+  copy("templates/conf.master.tar.gz", "$work_dir/conf.master.tar.gz");
 }
 
 sub autoreplace {
