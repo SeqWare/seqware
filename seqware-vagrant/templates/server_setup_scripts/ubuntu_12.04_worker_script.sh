@@ -3,7 +3,7 @@
 # setup hosts
 # NOTE: the hostname seems to already be set at least on BioNimubs OS
 echo '%{HOSTS}' >> /etc/hosts
-
+hostname worker1
 
 # general apt-get
 apt-get update
@@ -31,6 +31,8 @@ ln -s /mnt /data
 mkdir -p /data/1/dfs/nn /data/1/dfs/dn
 chown -R hdfs:hdfs /data/1/dfs/nn /data/1/dfs/dn
 chmod 700 /data/1/dfs/nn /data/1/dfs/dn
+mkdir -p /data/1/mapred/local
+chown -R mapred:mapred /data/1/mapred
 
 # start all the hadoop daemons
 for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do sudo service $x start ; done
@@ -49,6 +51,7 @@ for i in cron hadoop-hdfs-datanode hadoop-0.20-mapreduce-tasktracker; do echo $i
 # seqware tutorials
 apt-get -q -y --force-yes install rpcbind nfs-common
 mkdir -p /usr/tmp/seqware-oozie
+mkdir -p /datastore
 echo 'rpcbind : ALL' >> /etc/hosts.deny
 echo 'rpcbind : %{MASTER_PIP}' >> /etc/hosts.allow
 mount %{MASTER_PIP}:/home /home

@@ -3,6 +3,7 @@
 # setup hosts
 # NOTE: the hostname seems to already be set at least on BioNimubs OS
 echo '%{HOSTS}' >> /etc/hosts
+hostname master
 
 # general apt-get
 apt-get update
@@ -56,6 +57,8 @@ ln -s /mnt /data
 mkdir -p /data/1/dfs/nn /data/1/dfs/dn
 chown -R hdfs:hdfs /data/1/dfs/nn /data/1/dfs/dn
 chmod 700 /data/1/dfs/nn /data/1/dfs/dn
+mkdir -p /data/1/mapred/local
+chown -R mapred:mapred /data/1/mapred
 
 #echo '<?xml version="1.0"?>
 #<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
@@ -120,23 +123,26 @@ service hbase-master start
 # setup daemons to start on boot
 for i in apache2 cron hadoop-hdfs-namenode hadoop-hdfs-datanode hadoop-hdfs-secondarynamenode hadoop-0.20-mapreduce-tasktracker hadoop-0.20-mapreduce-jobtracker hue oozie postgresql tomcat6 hbase-master; do echo $i; sysv-rc-conf $i on; done
 
+# configure dirs for seqware
+mkdir -p /usr/tmp/seqware-oozie 
+chmod -R a+rwx /usr/tmp/
+chown -R seqware:seqware /usr/tmp/seqware-oozie
+
+sudo mkdir /datastore
+sudo chown seqware /datastore
+
 
 ## Setup NFS before seqware
 # see https://help.ubuntu.com/community/SettingUpNFSHowTo#NFS_Server
 apt-get -q -y --force-yes install rpcbind nfs-kernel-server
 echo '%{EXPORTS}' >> /etc/exports
 exportfs -ra
-# TODO: get rid of portmap localhost setting
+# TODO: get rid of portmap localhost setting maybe... don't see the file they refer to
 service portmap restart
 service nfs-kernel-server restart
 
 # add seqware user
 useradd -d /home/seqware -m seqware -s /bin/bash
-
-# configure dirs for seqware
-mkdir -p /usr/tmp/seqware-oozie 
-chmod -R a+rwx /usr/tmp/
-chown -R seqware:seqware /usr/tmp/seqware-oozie
 
 # various seqware dirs
 mkdir -p /home/seqware/bin
@@ -239,8 +245,6 @@ perl -pi -e "s/test_seqware_meta_db/seqware_meta_db/;" /etc/tomcat6/Catalina/loc
 cp -r /home/seqware/gitroot/seqware/seqware-distribution/docs/vm_landing/* /var/www/
 
 # seqware tutorials
-sudo mkdir /datastore
-sudo chown seqware /datastore
 # required for running oozie jobs
 mkdir /usr/lib/hadoop-0.20-mapreduce/.seqware
 cp /home/seqware/.seqware/settings /usr/lib/hadoop-0.20-mapreduce/.seqware/settings
