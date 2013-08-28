@@ -28,10 +28,10 @@ import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeSet;
 
-import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -83,7 +83,7 @@ public class FindAllTheFiles {
         "Sequencer Run SWID"), SEQUENCER_RUN_TAG_PREFIX("sequencerrun."), SEQUENCER_RUN_ATTRIBUTES(
         "Sequencer Run Attributes"), WORKFLOW_RUN_NAME("Workflow Run Name"), WORKFLOW_RUN_SWA("Workflow Run SWID"), WORKFLOW_RUN_STATUS(
         "Workflow Run Status"), WORKFLOW_NAME("Workflow Name"), WORKFLOW_SWA("Workflow SWID"), WORKFLOW_VERSION(
-        "Workflow Version"), FILE_SWA("File SWID"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
+        "Workflow Version"), FILE_SWA("File SWID"), FILE_TAG_PREFIX("file."), FILE_ATTRIBUTES("File Attributes"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
         "Processing Algorithm"), PROCESSING_TAG_PREFIX("processing."), PROCESSING_ATTRIBUTES("Processing Attributes"),
         INPUT_FILE_META_TYPES("Input File Meta-Types"), INPUT_FILE_SWIDS("Input File SWIDs"), INPUT_FILE_PATHS("Input File Paths");
         ;
@@ -171,6 +171,8 @@ public class FindAllTheFiles {
   public static String WORKFLOW_VERSION = Header.WORKFLOW_VERSION.getTitle();
   /** Constant <code>FILE_SWA="Header.FILE_SWA.getTitle()"</code> */
   public static String FILE_SWA = Header.FILE_SWA.getTitle();
+  public static String FILE_TAG_PREFIX = Header.FILE_TAG_PREFIX.getTitle();
+  public static String FILE_ATTRIBUTES = Header.FILE_ATTRIBUTES.getTitle();
   /** Constant <code>PROCESSING_DATE="Header.PROCESSING_DATE.getTitle()"</code> */
   public static String PROCESSING_DATE = Header.PROCESSING_DATE.getTitle();
   /** Constant <code>PROCESSING_SWID="Header.PROCESSING_SWID.getTitle()"</code> */
@@ -395,7 +397,7 @@ public class FindAllTheFiles {
     // SEQWARE-1297
     // before this ticket, this either reported empty processing events when we don't require files 
     // OR we reported the files. We actually want to report the files if they are present
-    if (!requireFiles && processing.getFiles().size() == 0) {
+    if (!requireFiles && processing.getFiles().isEmpty()) {
       ReturnValue ret = createReturnValue(sample, processing, study, e, ius, lane, sequencerRun, workflowRun, workflow);
       returnValues.add(ret);
     } else {
@@ -405,21 +407,7 @@ public class FindAllTheFiles {
     }
     return numFiles;
   }
-
-  private Set<WorkflowRun> parseWorkflowRunsFromIUSandLane(IUS ius, Lane lane) {
-    // Get the Processings from WorkflowRun
-    Set<WorkflowRun> workflowRuns = new TreeSet<WorkflowRun>();
-    Set<WorkflowRun> someRuns = ius.getWorkflowRuns();
-    Set<WorkflowRun> moreRuns = lane.getWorkflowRuns();
-    if (someRuns != null) {
-      workflowRuns.addAll(someRuns);
-    }
-    if (moreRuns != null) {
-      workflowRuns.addAll(moreRuns);
-    }
-    return workflowRuns;
-  }
-
+  
   private void parseProcessingsFromStack(IUS ius, Lane lane, Set<Processing> currentProcessings) {
     Stack<Processing> processingStack = new Stack<Processing>();
     processingStack.addAll(ius.getProcessings());
@@ -533,6 +521,14 @@ public class FindAllTheFiles {
     // File
     FileMetadata fm = new FileMetadata();
     ret.setAttribute(FILE_SWA, file.getSwAccession().toString());
+     for (FileAttribute fa : file.getFileAttributes()) {
+        String key = FILE_TAG_PREFIX + fa.getTag();
+        if (ret.getAttribute(key) != null) {
+          ret.setAttribute(key, ret.getAttribute(key) + ";" + fa.getValue());
+        } else {
+          ret.setAttribute(key, fa.getValue());
+        }
+      }
     fm.setFilePath(file.getFilePath());
     fm.setMetaType(file.getMetaType());
     fm.setDescription(file.getSwAccession().toString());
@@ -566,7 +562,7 @@ public class FindAllTheFiles {
     // Experiment
     if (e != null) {
       String eName = e.getName();
-      if (eName == null && eName.isEmpty()) {
+      if (eName == null || eName.isEmpty()) {
         eName = e.getTitle();
       }
       ret.setAttribute(EXPERIMENT_NAME, eName);
@@ -981,6 +977,7 @@ public class FindAllTheFiles {
     StringBuilder iusTag = new StringBuilder();
     StringBuilder seqencerrunTag = new StringBuilder();
     StringBuilder processingTag = new StringBuilder();
+    StringBuilder fileTag = new StringBuilder();
     for (String key : ret.getAttributes().keySet()) {
       if (key.startsWith(FindAllTheFiles.PARENT_SAMPLE_TAG_PREFIX)) {
         parentSampleTag.append(key).append("=").append(ret.getAttribute(key)).append(";");
@@ -998,6 +995,8 @@ public class FindAllTheFiles {
         seqencerrunTag.append(key).append("=").append(ret.getAttribute(key)).append(";");
       } else if (key.startsWith(FindAllTheFiles.PROCESSING_TAG_PREFIX)) {
         processingTag.append(key).append("=").append(ret.getAttribute(key)).append(";");
+      } else if (key.startsWith(FindAllTheFiles.FILE_TAG_PREFIX)){
+        fileTag.append(key).append("=").append(ret.getAttribute(key)).append(";");
       }
     }
     StringBuilder sb = new StringBuilder();
@@ -1037,7 +1036,8 @@ public class FindAllTheFiles {
     sb.append(processingTag.toString()).append("\t");
     sb.append(fm.getMetaType()).append("\t");
     sb.append(ret.getAttribute(FILE_SWA)).append("\t");
-    sb.append(fm.getFilePath());
+    sb.append(fm.getFilePath()).append("\t");
+    sb.append(fileTag.toString());
     if (reportInputFiles){
         sb.append("\t");
         sb.append(ret.getAttribute(INPUT_FILE_META_TYPES)).append("\t");
@@ -1099,7 +1099,8 @@ public class FindAllTheFiles {
     sb.append(PROCESSING_ATTRIBUTES).append("\t");
     sb.append("File Meta-Type").append("\t");
     sb.append(FILE_SWA).append("\t");
-    sb.append("File Path");
+    sb.append("File Path").append("\t");
+    sb.append(FILE_ATTRIBUTES);
     if (reportInputFiles){
         sb.append("\t");
         sb.append(INPUT_FILE_META_TYPES).append("\t");
