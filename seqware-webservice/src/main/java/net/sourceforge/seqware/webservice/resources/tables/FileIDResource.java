@@ -86,6 +86,8 @@ public class FileIDResource extends DatabaseIDResource {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         }
         try {
+            // SEQWARE-1548 
+            newFile = testIfNull(newFile); 
             // persist
             FileService fs = BeanFactory.getFileServiceBean();
             File file = (File) testIfNull(fs.findByID(newFile.getFileId()));
