@@ -71,6 +71,14 @@ public class FindAllTheFiles {
         this.reportInputFiles = reportInputFiles;
     }
 
+    private void addAttributeToReturnValue(ReturnValue ret, String key, String value) {
+        if (ret.getAttribute(key) != null) {
+          ret.setAttribute(key, ret.getAttribute(key) + ";" + value);
+        } else {
+          ret.setAttribute(key, value);
+        }
+    }
+
   public enum Header {
     STUDY_TITLE("Study Title"), STUDY_SWA("Study SWID"), STUDY_TAG_PREFIX("study."), STUDY_ATTRIBUTES(
         "Study Attributes"), EXPERIMENT_NAME("Experiment Name"), EXPERIMENT_SWA("Experiment SWID"), EXPERIMENT_TAG_PREFIX(
@@ -521,13 +529,12 @@ public class FindAllTheFiles {
     // File
     FileMetadata fm = new FileMetadata();
     ret.setAttribute(FILE_SWA, file.getSwAccession().toString());
-     for (FileAttribute fa : file.getFileAttributes()) {
-        String key = FILE_TAG_PREFIX + fa.getTag();
-        if (ret.getAttribute(key) != null) {
-          ret.setAttribute(key, ret.getAttribute(key) + ";" + fa.getValue());
-        } else {
-          ret.setAttribute(key, fa.getValue());
-        }
+      if (file.getSkip() != null && file.getSkip()) {
+          addAttributeToReturnValue(ret, FILE_TAG_PREFIX + "skip", "");
+      }
+      for (FileAttribute fa : file.getFileAttributes()) {
+          String key = FILE_TAG_PREFIX + fa.getTag();
+          addAttributeToReturnValue(ret, key, fa.getValue());
       }
     fm.setFilePath(file.getFilePath());
     fm.setMetaType(file.getMetaType());
@@ -600,13 +607,12 @@ public class FindAllTheFiles {
         }
         psName.append(name).append(":");
         psSwa.append(parentSample.getSwAccession()).append(":");
+        if (parentSample.getSkip() != null && parentSample.getSkip()) {
+          addAttributeToReturnValue(ret, PARENT_SAMPLE_TAG_PREFIX + "skip." + parentSample.getSwAccession(), "");
+        }
         for (SampleAttribute satt : parentSample.getSampleAttributes()) {
           String key = PARENT_SAMPLE_TAG_PREFIX + satt.getTag() + "." + parentSample.getSwAccession();
-          if (ret.getAttribute(key) != null) {
-            ret.setAttribute(key, ret.getAttribute(key) + ";" + satt.getValue());
-          } else {
-            ret.setAttribute(key, satt.getValue());
-          }
+          addAttributeToReturnValue(ret, key, satt.getValue());
         }
       }
       // Parent Sample
@@ -617,26 +623,24 @@ public class FindAllTheFiles {
       }
       ret.setAttribute(SAMPLE_NAME, sName);
       ret.setAttribute(SAMPLE_SWA, sample.getSwAccession().toString());
+      if (sample.getSkip() != null && sample.getSkip()){
+          addAttributeToReturnValue(ret, SAMPLE_TAG_PREFIX + "skip", "");
+      }
       for (SampleAttribute satt : sample.getSampleAttributes()) {
         String key = SAMPLE_TAG_PREFIX + satt.getTag();
-        if (ret.getAttribute(key) != null) {
-          ret.setAttribute(key, ret.getAttribute(key) + ";" + satt.getValue());
-        } else {
-          ret.setAttribute(key, satt.getValue());
-        }
+        addAttributeToReturnValue(ret, key, satt.getValue());
       }
     }
     // IUS
     if (ius != null) {
       ret.setAttribute(IUS_SWA, ius.getSwAccession().toString());
       ret.setAttribute(IUS_TAG, (ius.getTag() == null ? "NoIndex" : ius.getTag()));
+      if (ius.getSkip() != null && ius.getSkip()){
+          addAttributeToReturnValue(ret, IUS_TAG_PREFIX + "skip", "");
+      }
       for (IUSAttribute iatt : ius.getIusAttributes()) {
         String key = Header.IUS_TAG_PREFIX.getTitle() + iatt.getTag();
-        if (ret.getAttribute(key) != null) {
-          ret.setAttribute(key, ret.getAttribute(key) + ";" + iatt.getValue());
-        } else {
-          ret.setAttribute(key, iatt.getValue());
-        }
+        addAttributeToReturnValue(ret, key, iatt.getValue());
       }
     }
     // Lane
@@ -648,26 +652,24 @@ public class FindAllTheFiles {
         num = lane.getLaneIndex();
       }
       ret.setAttribute(LANE_NUM, new Integer(num + 1).toString());
+      if (lane.getSkip() != null && lane.getSkip()){
+          addAttributeToReturnValue(ret, LANE_TAG_PREFIX + "skip", "");
+      }
       for (LaneAttribute latt : lane.getLaneAttributes()) {
         String key = LANE_TAG_PREFIX + latt.getTag();
-        if (ret.getAttribute(key) != null) {
-          ret.setAttribute(key, ret.getAttribute(key) + ";" + latt.getValue());
-        } else {
-          ret.setAttribute(key, latt.getValue());
-        }
+        addAttributeToReturnValue(ret, key, latt.getValue());
       }
     }
     // Sequencer Run
     if (sequencerRun != null) {
       ret.setAttribute(SEQUENCER_RUN_NAME, sequencerRun.getName());
       ret.setAttribute(SEQUENCER_RUN_SWA, sequencerRun.getSwAccession().toString());
+      if (sequencerRun.getSkip() != null && sequencerRun.getSkip()){
+          addAttributeToReturnValue(ret, SEQUENCER_RUN_TAG_PREFIX + "skip", "");
+      }
       for (SequencerRunAttribute sra : sequencerRun.getSequencerRunAttributes()) {
         String key = SEQUENCER_RUN_TAG_PREFIX + sra.getTag();
-        if (ret.getAttribute(key) != null) {
-          ret.setAttribute(key, ret.getAttribute(key) + ";" + sra.getValue());
-        } else {
-          ret.setAttribute(key, sra.getValue());
-        }
+        addAttributeToReturnValue(ret, key, sra.getValue());
       }
     }
       // WorkflowRun
@@ -755,90 +757,6 @@ public class FindAllTheFiles {
   public void setRequireFiles(boolean requireFiles) {
     this.requireFiles = requireFiles;
   }
-
-//  /**
-//   * <p>filterReturnValuesV2.</p>
-//   *
-//   * @param out a {@link java.io.Writer} object.
-//   * @param returnValues a {@link java.util.List} object.
-//   * @param studyName a {@link java.lang.String} object.
-//   * @param fileType a {@link java.lang.String} object.
-//   * @param duplicates a boolean.
-//   * @param showFailedAndRunning a boolean.
-//   * @param showStatus a boolean.
-//   * @throws java.io.IOException if any.
-//   */
-//  public static void filterReturnValuesV2(Writer out, List<ReturnValue> returnValues, String studyName,
-//      String fileType, boolean duplicates, boolean showFailedAndRunning, boolean showStatus) throws IOException {
-//
-//    List<ReturnValue> newReturnValues = new ArrayList<ReturnValue>();
-//
-//    Log.info("There are " + returnValues.size() + " files in total before filtering");
-//    Set<FileMetadata> set = new TreeSet<FileMetadata>(new Comparator<FileMetadata>() {
-//
-//      @Override
-//      public int compare(FileMetadata t, FileMetadata t1) {
-//        return t.getFilePath().compareTo(t1.getFilePath());
-//      }
-//    });
-//    for (ReturnValue rv : returnValues) {
-//      ArrayList<FileMetadata> cloneFiles = (ArrayList<FileMetadata>) rv.getFiles().clone();
-//
-//      if (!duplicates) {
-//        for (FileMetadata file : cloneFiles) {
-//          if (!set.add(file)) {
-//            Log.debug("Removing file because file is a duplicate: " + file.getFilePath());
-//            rv.getFiles().remove(file);
-//          }
-//        }
-//      }
-//
-//      for (FileMetadata file : cloneFiles) {
-//        if (!fileType.equals(FILETYPE_ALL)) {
-//          if (!file.getMetaType().equals(fileType)) {
-//            Log.debug("Removing file because filetype is wrong:" + file.getMetaType() + " is not " + fileType);
-//            rv.getFiles().remove(file);
-//          }
-//        }
-//      }
-//      if (rv.getFiles().isEmpty()) {
-//        Log.debug("Files are empty. Skipping.");
-//        continue;
-//      }
-//
-//      // if the returnValue isn't successful, remove it
-//      if (rv.getExitStatus() != ReturnValue.SUCCESS) {
-//        Log.error("Exit status: " + rv.getExitStatus());
-//        continue;
-//      }
-//
-//      // if the workflow run is not successful and we don't want to see all of
-//      // the files, then skip it.
-//      String workflowRunStatus = rv.getAttribute(FindAllTheFiles.WORKFLOW_RUN_STATUS);
-//      if (workflowRunStatus != null && !workflowRunStatus.equals(Metadata.SUCCESS)
-//          && !workflowRunStatus.equals(Metadata.COMPLETED)) {
-//        if (!showFailedAndRunning) {
-//          Log.debug("Not showing failed or running workflow run" + workflowRunStatus);
-//          continue;
-//        }
-//      }
-//
-//      replaceSpaces(rv, FindAllTheFiles.EXPERIMENT_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.PARENT_SAMPLE_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.SAMPLE_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.LANE_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.SEQUENCER_RUN_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.WORKFLOW_RUN_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.WORKFLOW_NAME);
-//
-//      for (FileMetadata fm : rv.getFiles()) {
-//        print(out, rv, studyName, showStatus, fm);
-//      }
-//
-//      newReturnValues.add(rv);
-//    }
-//    Log.info("There are " + newReturnValues.size() + " files in total after filtering");
-//  }
 
   /**
    * <p>filterReturnValues.</p>
