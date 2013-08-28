@@ -106,7 +106,7 @@ public class BasicResource extends WadlServerResource {
      * @param o a {@link java.lang.Object} object.
      * @return a {@link java.lang.Object} object.
      */
-    protected Object testIfNull(Object o) {
+    protected <T> T testIfNull(T o) {
         if (o == null) {
             throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Object cannot be found");
         }
