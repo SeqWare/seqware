@@ -59,7 +59,8 @@ public class BasicDeciderET {
         Log.info(genOutput);
         // run the decider
         File seqwareJar = ITUtility.retrieveFullAssembledJar();
-        command = "java -cp "+createTempDir.getAbsolutePath()+"/seqware-archetype-decider/target/seqware-archetype-decider-1.0-SNAPSHOT.jar:"
+        String SEQWARE_VERSION = new ReturnValue().getClass().getPackage().getImplementationVersion();
+        command = "java -cp "+createTempDir.getAbsolutePath()+"/seqware-archetype-decider/target/Decider_1.0-SNAPSHOT_seqware-archetype-decider_1.0_SeqWare_"+SEQWARE_VERSION+".jar:"
                 + seqwareJar.getAbsolutePath() 
                 + " net.sourceforge.seqware.pipeline.runner.PluginRunner -p com.seqware.github.HelloWorldDecider -- --all --wf-accession 6685 --parent-wf-accessions 4767 --test";
         genOutput = ITUtility.runArbitraryCommand(command, 0, createTempDir);

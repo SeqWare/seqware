@@ -22,9 +22,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -44,8 +48,6 @@ import java.util.logging.Logger;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.metadata.MetadataDB;
-import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -58,7 +60,6 @@ import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import net.sourceforge.seqware.pipeline.tools.SetOperations;
@@ -117,9 +118,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("schedule"), "Schedule this workflow to be run rather than running it immediately. See also: --run");
         parser.acceptsAll(Arrays.asList("run"), "Run this workflow now. This is the default behaviour. See also: --schedule");
         parser.acceptsAll(Arrays.asList("ignore-skip-flag"), "Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.");
-        parser.acceptsAll(Arrays.asList("launch-max"), "The maximum number of jobs to launch at once. Default: infinite.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("rerun-max"), "The maximum number of times to re-launch a workflowrun if failed. Default: 5.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("launch-max"), "The maximum number of jobs to launch at once.").withRequiredArg().defaultsTo("2147483647");
+        parser.acceptsAll(Arrays.asList("rerun-max"), "The maximum number of times to re-launch a workflowrun if failed.").withRequiredArg().defaultsTo("5");
         parser.acceptsAll(Arrays.asList("host", "ho"), "Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host").withRequiredArg();
+        //SEQWARE-1622 - check whether files exist
+        parser.acceptsAll(Arrays.asList("check-file-exists", "cf"), "Optional: only launch on the file if the file exists");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
     
@@ -177,7 +180,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             try {
                 header = Header.valueOf(headerString);
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                Log.fatal("IllegalArgumentException when grouping", e);
                 StringBuilder sb = new StringBuilder();
                 sb.append("group-by attribute must be one of the following: \n");
                 for (Header h : Header.values()) {
@@ -326,7 +329,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     @Override
     public ReturnValue do_run() {
         String groupBy = header.getTitle();
-        Map<String, List<ReturnValue>> mappedFiles = null;
+        Map<String, List<ReturnValue>> mappedFiles;
         List<ReturnValue> vals = null;
 
         if (options.has("all")) {
@@ -363,9 +366,17 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     private ReturnValue launchWorkflows(Map<String, List<ReturnValue>> mappedFiles) {
         if (mappedFiles != null) {
-
-            for (Entry<String, List<ReturnValue>> entry : mappedFiles.entrySet()) {
+            
+            List<Entry<String, List<ReturnValue>>> entryList = new ArrayList<Entry<String, List<ReturnValue>>>();
+            entryList.addAll(mappedFiles.entrySet());
+            Collections.sort(entryList, new ReturnValueProcessingTimeComparator());
+            
+            for (Entry<String, List<ReturnValue>> entry : entryList) {
                 Log.info("Considering key:" + entry.getKey());
+                for(ReturnValue r : entry.getValue()){
+                    Log.info("Group contains: " + r.getAttribute(FindAllTheFiles.FILE_SWA));
+                }
+                
 
                 parentAccessionsToRun = new HashSet<String>();
                 filesToRun = new HashSet<String>();
@@ -721,6 +732,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * @return true if the file can be added to the list, false otherwise
      */
     protected boolean checkFileDetails(ReturnValue returnValue, FileMetadata fm) {
+        if (this.options.has("check-file-exists")) {
+            if (!new File(fm.getFilePath()).exists()) {
+                Log.warn("File not found:" + fm.getFilePath());
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -1024,5 +1042,30 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         FAILED,
         OTHER,
         COMPLETED
+    }
+    
+    private class ReturnValueProcessingTimeComparator implements Comparator<Entry<String, List<ReturnValue>>> {
+        
+        @Override
+        public int compare(Entry<String, List<ReturnValue>> t0, Entry<String, List<ReturnValue>> t1) {
+            DateFormat formatter = new SimpleDateFormat();
+            Integer t0date = latestSWID(t0, formatter);
+            Integer t1date = latestSWID(t1, formatter);
+            return t1date.compareTo(t0date);      
+        }
+
+        private Integer latestSWID(Entry<String, List<ReturnValue>> t0, DateFormat formatter) {
+            // grab the latest date in each group
+            Integer latestSWID = Integer.MIN_VALUE;
+            for(ReturnValue t0i : t0.getValue()){
+                Integer currInt = Integer.valueOf(t0i.getAttribute(FindAllTheFiles.FILE_SWA));
+              
+                if (currInt != null && currInt > latestSWID){
+                    latestSWID = currInt;
+                }
+            }
+            return latestSWID;
+        }
+    
     }
 }
