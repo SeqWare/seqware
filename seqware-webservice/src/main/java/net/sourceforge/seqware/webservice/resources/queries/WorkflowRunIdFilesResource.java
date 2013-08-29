@@ -26,6 +26,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.lists.FileList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -57,7 +58,7 @@ public class WorkflowRunIdFilesResource extends BasicRestlet {
         try {
             String id = request.getAttributes().get("workflowRunId").toString();
 
-            List<File> files = hello(convertIDWithResourceException(id));
+            List<File> files = hello(BasicResource.parseClientInt(id));
 
             FileList list = new FileList();
             list.setList(files);
@@ -82,7 +83,7 @@ public class WorkflowRunIdFilesResource extends BasicRestlet {
      */
     public List<File> hello(int wrSWA) throws SQLException {
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-        List<File> files = (List<File>) testIfNull(wrs.findFiles(wrSWA));
+        List<File> files = (List<File>) BasicResource.testIfNull(wrs.findFiles(wrSWA));
         List<File> dtoFiles = new ArrayList<File>();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         for (File file : files) {

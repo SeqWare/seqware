@@ -16,23 +16,16 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.parsers.DocumentBuilderFactory;
 import net.sourceforge.seqware.common.model.Attribute;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 import org.restlet.data.MediaType;
-import org.restlet.data.Status;
-import org.restlet.ext.xml.DomRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
 import org.restlet.resource.Put;
-import org.restlet.resource.ResourceException;
-import org.w3c.dom.Document;
 
 /**
  * <p>DatabaseIDResource class.</p>
@@ -42,7 +35,7 @@ import org.w3c.dom.Document;
  */
 public class DatabaseIDResource extends BasicResource {
 
-    private String id;
+    private int id;
 
     /**
      * <p>Getter for the field <code>attribute</code>.</p>
@@ -58,7 +51,7 @@ public class DatabaseIDResource extends BasicResource {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String getId() {
+    public int getId() {
         return id;
     }
     protected String attribute;
@@ -76,7 +69,7 @@ public class DatabaseIDResource extends BasicResource {
     @Override
     public void doInit() {
         super.doInit();
-        this.id = (String) getRequestAttributes().get(attribute);
+        this.id = BasicResource.parseClientInt((String) getRequestAttributes().get(attribute));
         attribute += " " + id;
     }
 
@@ -134,18 +127,5 @@ public class DatabaseIDResource extends BasicResource {
             // populate the child end of the relationship
             newAttr.setAttributeParent(parent);
         }
-    }
-    
-    /**
-     * Parses the ID field and throws resourceExceptions as needed
-     * @return 
-     */
-    protected int convertIDWithResourceException(){
-        try{
-            return Integer.parseInt(this.getId());
-        } catch (NumberFormatException e){
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
-        }
-    } 
-    
+    }  
 }

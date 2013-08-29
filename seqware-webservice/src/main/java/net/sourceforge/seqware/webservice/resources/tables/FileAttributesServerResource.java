@@ -58,7 +58,7 @@ public class FileAttributesServerResource extends BasicResource implements FileA
     authenticate();
     Integer fileSwa;
     try {
-      fileSwa = convertIntAttributeWithResourceException("" + getRequestAttributes().get("swa"));
+      fileSwa = parseClientInt("" + getRequestAttributes().get("swa"));
     } catch (NumberFormatException e) {
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
     }

@@ -14,6 +14,7 @@ import org.restlet.representation.WriterRepresentation;
 import clojure.lang.RT;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 
 public class StudyIdFilesTSVResource2 extends BasicRestlet {
 
@@ -26,7 +27,7 @@ public class StudyIdFilesTSVResource2 extends BasicRestlet {
     authenticate(request.getChallengeResponse().getIdentifier());
     init(request);
     if (request.getAttributes().containsKey("studyId")) {
-      final int studyAccession = convertIDWithResourceException((String) request.getAttributes().get("studyId"));
+      final int studyAccession = BasicResource.parseClientInt((String) request.getAttributes().get("studyId"));
       response.setEntity(new WriterRepresentation(MediaType.TEXT_TSV) {
         @Override
         public void write(Writer writer) throws IOException {

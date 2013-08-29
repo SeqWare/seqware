@@ -25,6 +25,7 @@ import net.sourceforge.seqware.common.model.lists.ReturnValueList;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -57,7 +58,7 @@ public class SampleIdFilesResource extends BasicRestlet {
         ReturnValueList returnValues = new ReturnValueList();
 
         SampleService ss = BeanFactory.getSampleServiceBean();
-        Sample sample = (Sample) testIfNull(ss.findBySWAccession(convertIDWithResourceException(id)));
+        Sample sample = (Sample) BasicResource.testIfNull(ss.findBySWAccession(BasicResource.parseClientInt(id)));
         FindAllTheFiles fatf = new FindAllTheFiles();
         
         if (this.getQueryValue("requireFiles") != null){
