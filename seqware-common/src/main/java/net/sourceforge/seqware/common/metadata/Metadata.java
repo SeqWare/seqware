@@ -26,6 +26,7 @@ import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
@@ -814,8 +815,7 @@ public interface Metadata {
    * @param laneAccession a int.
    * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
    */
-  public Lane getLane(int laneAccession);
-  
+  public Lane getLane(int laneAccession);  
     /**
    * <p>getSequencerRun.</p>
    *
