@@ -69,6 +69,13 @@ public class FileResource extends DatabaseResource {
             File dto = copier.hibernate2dto(File.class, p);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
+        } else if (queryValues.get("path") != null) {
+            JaxbObject<File> jaxbTool = new JaxbObject<File>();
+            File p = (File) testIfNull(ss.findByPath(queryValues.get("path")));
+
+            File dto = copier.hibernate2dto(File.class, p);
+            Document line = XmlTools.marshalToDocument(jaxbTool, dto);
+            getResponse().setEntity(XmlTools.getRepresentation(line));
         } else {
             JaxbObject<FileList> jaxbTool = new JaxbObject<FileList>();
             List<File> files = (List<File>) testIfNull(ss.findByOwnerId(registration.getRegistrationId()));

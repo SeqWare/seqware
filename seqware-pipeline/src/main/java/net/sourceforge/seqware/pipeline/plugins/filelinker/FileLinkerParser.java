@@ -111,7 +111,7 @@ public class FileLinkerParser {
             hasRequiredValues = false;
             badLines.add(i + 2);
             log.error(
-                  "Required value(s) missing in csv file at line number [{}]. Lane, seqwareAccession, mimeType and file are required. {}",
+                  "Required value(s) missing in csv file at line number [{}]. Lane, seqwareAccession, mime_type and file are required. {}",
                   i + 2, line);
          }
       }
