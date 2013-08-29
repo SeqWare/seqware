@@ -39,7 +39,15 @@ import org.junit.*;
  * @author mtaschuk
  */
 public class MetadataTest extends ExtendedPluginTest {
+    
+    @Before
+    @Override
+    public void setUp() {
+        instance = new Metadata();
+        super.setUp();
+    }
 
+    
     public MetadataTest() {
     }
 
@@ -920,5 +928,46 @@ public class MetadataTest extends ExtendedPluginTest {
         String s = getOut();
         getAndCheckSwid(s);
 
+    }
+    
+    @Test
+    public void testPromptBoolean() {
+        //can test the error checking by extending the TestConsoleAdapter to
+        //change on the second query and then checking for the presence of error
+        //in the output. But, I'm slightly too lazy for that right now.
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("test-default", "");
+        params.put("test-value", "false");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+        Assert.assertTrue("Failed while testing for default", ((Metadata) instance).promptBoolean("test-default", Boolean.TRUE));
+        Assert.assertFalse("Failed while testing for a value", ((Metadata) instance).promptBoolean("test-value", Boolean.TRUE));
+        systemOut.println(getOut());
+    }
+
+    @Test
+    public void testPromptInteger() {
+        //can test the error checking by extending the TestConsoleAdapter to
+        //change on the second query and then checking for the presence of error
+        //in the output. But, I'm slightly too lazy for that right now.
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("test-default", "");
+        params.put("test-value", "10");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+        Assert.assertTrue("Failed while testing for default", 5 == ((Metadata) instance).promptInteger("test-default", 5));
+        Assert.assertTrue("Failed while testing for a value", 10 == ((Metadata) instance).promptInteger("test-value", 5));
+        systemOut.println(getOut());
+    }
+
+    @Test
+    public void testPromptString() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("test-default", "");
+        params.put("test-value", "value");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+        Assert.assertNull(((Metadata) instance).promptString("test-default", null));
+        Assert.assertEquals("Failed while testing for default", "", ((Metadata) instance).promptString("test-default", ""));
+        Assert.assertEquals("Failed while testing for default", "default", ((Metadata) instance).promptString("test-default", "default"));
+        Assert.assertEquals("Failed while testing for a value", "value", ((Metadata) instance).promptString("test-value", "default"));
+        systemOut.println(getOut());
     }
 }
