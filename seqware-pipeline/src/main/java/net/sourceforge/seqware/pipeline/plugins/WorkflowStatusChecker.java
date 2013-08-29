@@ -46,6 +46,7 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
@@ -69,7 +70,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowStatusChecker extends Plugin {
-    public static final String workflowRunAccession = "workflow-run-accession";
+    public static final String WORKFLOW_RUN_ACCESSION = "workflow-run-accession";
   private ReturnValue classReturnValue = new ReturnValue();
   // NOTE: this is shared with WorkflowLauncher so only one can run at a time
   public static final String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
@@ -87,7 +88,7 @@ public class WorkflowStatusChecker extends Plugin {
     super();
     parser.acceptsAll(Arrays.asList("status-cmd", "s"),
                       "Optional: the Pegasus status command, if you specify this option the command will be run, potentially displaying the summarized/parsed errors, but the database will not be updated.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList(workflowRunAccession, "wra"),
+    parser.acceptsAll(Arrays.asList(WORKFLOW_RUN_ACCESSION, "wra"),
                       "Optional: this will cause the program to only check the status of workflow run(s). For multiple runs, comma-separate with no spaces").withRequiredArg().withValuesSeparatedBy(',').ofType(Integer.class);
     parser.acceptsAll(Arrays.asList("workflow-accession", "wa"),
                       "Optional: this will cause the program to only check the status of workflow runs that are this type of workflow.").withRequiredArg();
@@ -98,9 +99,10 @@ public class WorkflowStatusChecker extends Plugin {
     parser.acceptsAll(Arrays.asList("threads-in-thread-pool", "tp"),
                       "Optional: this will determine the number of threads to run with. Default: 1").withRequiredArg().ofType(Integer.class);
     //SEQWARE-1732 custom lock ID
-    parser.acceptsAll(Arrays.asList("custom-lock-file", "clf"),
-                      "Optional: This option is discouraged and unsupported. A custom lock-file allows multiple workflow status checkers "
-            + "and workflow launchers to run at the same time, but could lead to a corrupt state in the metadb").withRequiredArg();
+    parser.acceptsAll(Arrays.asList("dynamic-lock-file", "dlf"),
+                      "Optional: This option is discouraged and unsupported. A unique lock-file based on the SW_REST_URL is generated. "
+            + "This allows multiple workflow status checkers and workflow launchers to run at the same time, "
+            + "but could lead to a corrupt state in the metadb");
 
     classReturnValue.setExitStatus(ReturnValue.SUCCESS);
   }
@@ -114,9 +116,9 @@ public class WorkflowStatusChecker extends Plugin {
     // check to see if this code is already running, if so exit
     try {
         String lock = appID;
-        if (options.has("custom-lock-file")){
-            Log.stderr("Using a custom-lock-file. This mode is unsupported.");
-            lock = (String)options.valueOf("custom-lock-file");
+        if (options.has("dynamic-lock-file")){
+            Log.stderr("Using a dynamic-lock-file based on your SW_REST_URL. This mode is unsupported.");
+            lock = ConfigTools.getSettings().get("SW_REST_URL");
         } 
         JUnique.acquireLock(lock);
     } catch (AlreadyLockedException e) {
@@ -300,8 +302,8 @@ public class WorkflowStatusChecker extends Plugin {
       }
 
       // check if this workflow run accession matches if provided
-      if (options.has(workflowRunAccession)) {
-          List<Integer> valuesOf = (List<Integer>) options.valuesOf(workflowRunAccession);
+      if (options.has(WORKFLOW_RUN_ACCESSION)) {
+          List<Integer> valuesOf = (List<Integer>) options.valuesOf(WORKFLOW_RUN_ACCESSION);
           if(!valuesOf.contains(wr.getSwAccession())){
               return;
           }
