@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.webservice.resources.queries;
 
 import net.sourceforge.seqware.common.hibernate.WorkflowReport;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -51,7 +52,7 @@ public class WorkflowReportResource
 
         if (request.getMethod().compareTo(Method.GET) == 0) {
             WorkflowReport cfc = new WorkflowReport();
-            String results = cfc.fromWorkflow(convertIDWithResourceException(id));
+            String results = cfc.fromWorkflow(BasicResource.parseClientInt(id));
             response.setEntity(results, MediaType.TEXT_PLAIN);
         } else {
             response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);

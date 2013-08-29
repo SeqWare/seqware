@@ -75,19 +75,6 @@ public class BasicRestlet extends Restlet {
         registration = BeanFactory.getRegistrationServiceBean().
                 findByEmailAddress(identifier);
     }
-
-    /**
-     * <p>testIfNull.</p>
-     *
-     * @param o a {@link java.lang.Object} object.
-     * @return a {@link java.lang.Object} object.
-     */
-    protected Object testIfNull(Object o) {
-        if (o == null) {
-            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Object cannot be found "+ o);
-        }
-        return o;
-    }
     
     protected String getQueryValue(String key){  
         if (queryValues != null && queryValues.get(key) != null) {
@@ -105,17 +92,4 @@ public class BasicRestlet extends Restlet {
 //    protected void removeSession(Session session) {
 //        session.close();
 //    }
-    
-     /**
-     * Parses a provided attribute and throws resourceExceptions as needed
-     * @param attribute
-     * @return 
-     */
-    protected int convertIDWithResourceException(String attribute){
-        try{
-            return Integer.parseInt(attribute);
-        } catch (NumberFormatException e){
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
-        }
-    } 
 }

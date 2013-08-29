@@ -30,6 +30,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -63,7 +64,7 @@ public class RunWorkflowResource
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         if (request.getMethod().compareTo(Method.GET) == 0) {
             try {
-                Workflow w = (Workflow) testIfNull(ws.findBySWAccession(convertIDWithResourceException(id)));
+                Workflow w = (Workflow) BasicResource.testIfNull(ws.findBySWAccession(BasicResource.parseClientInt(id)));
                 WorkflowRunList2 list = new WorkflowRunList2();
                 SortedSet<WorkflowRun> wrs = w.getWorkflowRuns();
                 if (wrs != null) {
@@ -84,7 +85,7 @@ public class RunWorkflowResource
         } else if (request.getMethod().compareTo(Method.POST) == 0) {
             WorkflowInfo workflowInfo = new WorkflowInfo();
             Log.debug("ID: "+id);
-            Workflow w = (Workflow) testIfNull(ws.findBySWAccession(convertIDWithResourceException(id)));
+            Workflow w = (Workflow) BasicResource.testIfNull(ws.findBySWAccession(BasicResource.parseClientInt(id)));
 
             workflowInfo.setCommand(w.getCommand());
             workflowInfo.setDescription(w.getDescription());

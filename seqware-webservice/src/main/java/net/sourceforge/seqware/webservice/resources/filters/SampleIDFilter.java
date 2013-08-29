@@ -56,21 +56,21 @@ public class SampleIDFilter extends BasicResource {
             Object val = requestAttributes.get("experimentId");
             if (val != null) {
                 ExperimentService es = BeanFactory.getExperimentServiceBean();
-                Experiment s = (Experiment)testIfNull(es.findBySWAccession(convertIntAttributeWithResourceException(val.toString())));
+                Experiment s = (Experiment)testIfNull(es.findBySWAccession(parseClientInt(val.toString())));
                 samples = (SortedSet<Sample>) testIfNull(s.getSamples());
             }
         } else if (requestAttributes.containsKey("parentId")) {
             Object val = requestAttributes.get("parentId");
             if (val != null) {
                 SampleService es = BeanFactory.getSampleServiceBean();
-                Sample s = (Sample)testIfNull(es.findBySWAccession(convertIntAttributeWithResourceException(val.toString())));
+                Sample s = (Sample)testIfNull(es.findBySWAccession(parseClientInt(val.toString())));
                 samples = (Set<Sample>) testIfNull(s.getChildren());
             }
         } else if (requestAttributes.containsKey("childId")) {
             Object val = requestAttributes.get("childId");
             if (val != null) {
                 SampleService es = BeanFactory.getSampleServiceBean();
-                Sample s = (Sample)testIfNull(es.findBySWAccession(convertIntAttributeWithResourceException(val.toString())));
+                Sample s = (Sample)testIfNull(es.findBySWAccession(parseClientInt(val.toString())));
                 samples = (Set<Sample>) testIfNull(s.getParents());
             }
         } else {
