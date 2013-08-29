@@ -1,8 +1,6 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -15,15 +13,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import net.sourceforge.seqware.common.business.ProcessingRelationshipService;
-import net.sourceforge.seqware.common.business.ProcessingService;
-import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.common.model.Processing;
-import net.sourceforge.seqware.common.model.ProcessingRelationship;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
-import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -58,7 +51,7 @@ public class ProcessingStructureResource extends BasicRestlet {
         List<Integer> accessionList = new ArrayList<Integer>();
         for(String a: accessions) {
             try {
-                Integer i = convertIDWithResourceException(a);
+                Integer i = BasicResource.parseClientInt(a);
                 accessionList.add(i);
             } catch(NumberFormatException e) {
                 response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST, "Invalid swAccession");

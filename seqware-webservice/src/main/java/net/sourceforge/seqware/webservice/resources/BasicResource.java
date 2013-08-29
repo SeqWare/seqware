@@ -106,7 +106,7 @@ public class BasicResource extends WadlServerResource {
      * @param o a {@link java.lang.Object} object.
      * @return a {@link java.lang.Object} object.
      */
-    protected <T> T testIfNull(T o) {
+    public static <T> T testIfNull(T o) {
         if (o == null) {
             throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Object cannot be found");
         }
@@ -117,7 +117,7 @@ public class BasicResource extends WadlServerResource {
      * Parses the ID field and throws resourceExceptions as needed
      * @return 
      */
-    protected int convertIntAttributeWithResourceException(String attribute){
+    public static int parseClientInt(String attribute) throws ResourceException {
         try{
             return Integer.parseInt(attribute);
         } catch (NumberFormatException e){

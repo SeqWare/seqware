@@ -28,6 +28,7 @@ import net.sourceforge.seqware.common.model.lists.ReturnValueList;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -60,7 +61,7 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
         init(request);
         String id = request.getAttributes().get("sequencerRunId").toString();
 
-        List<ReturnValue> returnValues = hello(convertIDWithResourceException(id));
+        List<ReturnValue> returnValues = hello(BasicResource.parseClientInt(id));
 
         ReturnValueList list = new ReturnValueList();
         list.setList(returnValues);
@@ -81,7 +82,7 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
         List<ReturnValue> returnValues = new ArrayList<ReturnValue>();
 
         SequencerRunService srs = BeanFactory.getSequencerRunServiceBean();
-        SequencerRun sr = (SequencerRun) testIfNull(srs.findBySWAccession(srSWA));
+        SequencerRun sr = (SequencerRun) BasicResource.testIfNull(srs.findBySWAccession(srSWA));
 
         FindAllTheFiles fatf = new FindAllTheFiles();
         if (this.getQueryValue("requireFiles") != null){

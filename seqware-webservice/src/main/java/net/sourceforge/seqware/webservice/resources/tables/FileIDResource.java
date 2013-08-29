@@ -57,7 +57,7 @@ public class FileIDResource extends DatabaseIDResource {
     public void getXml() {
         FileService ss = BeanFactory.getFileServiceBean();
 
-        File file = (File) testIfNull(ss.findBySWAccession(convertIDWithResourceException()));
+        File file = (File) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<File> jaxbTool = new JaxbObject<File>();
 

@@ -26,6 +26,7 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.lists.ProcessingList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -57,7 +58,7 @@ public class WorkflowRunIDProcessingsResource extends BasicRestlet {
         try {
             String id = request.getAttributes().get("workflowRunId").toString();
 
-            List<Processing> procs = collectProcessingList(convertIDWithResourceException(id));
+            List<Processing> procs = collectProcessingList(BasicResource.parseClientInt(id));
 
             ProcessingList list = new ProcessingList();
             list.setList(procs);
@@ -82,7 +83,7 @@ public class WorkflowRunIDProcessingsResource extends BasicRestlet {
      */
     public List<Processing> collectProcessingList(int wrSWA) throws SQLException {
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-        WorkflowRun run = (WorkflowRun)testIfNull(wrs.findBySWAccession(wrSWA));
+        WorkflowRun run = (WorkflowRun)BasicResource.testIfNull(wrs.findBySWAccession(wrSWA));
         SortedSet<Processing> procs = new TreeSet<Processing>(new Comparator<Processing>(){
             @Override
             public int compare(Processing t, Processing t1) {

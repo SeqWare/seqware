@@ -23,6 +23,7 @@ import net.sourceforge.seqware.common.hibernate.WorkflowRunReport;
 import net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.apache.log4j.Logger;
 import org.restlet.Context;
@@ -107,12 +108,12 @@ public class WorkflowRunReportResource
             cfc.setLatestDate(latestDate);
             StringBuilder builder = getHeader();
             if (wId != null) {
-                Collection<WorkflowRunReportRow> rows = cfc.getRunsFromWorkflow(convertIDWithResourceException(wId.toString()));
+                Collection<WorkflowRunReportRow> rows = cfc.getRunsFromWorkflow(BasicResource.parseClientInt(wId.toString()));
                 for (WorkflowRunReportRow results : rows) {
                     toString(results, builder);
                 }
             } else if (wrId != null) {
-                WorkflowRunReportRow results = cfc.getSingleWorkflowRun(convertIDWithResourceException(wrId.toString()));
+                WorkflowRunReportRow results = cfc.getSingleWorkflowRun(BasicResource.parseClientInt(wrId.toString()));
                 // check to see if we're just returning the stderr/out or full report
                 if (showStdErr) {
                   builder = new StringBuilder();
