@@ -28,10 +28,10 @@ import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeSet;
 
-import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -71,6 +71,14 @@ public class FindAllTheFiles {
         this.reportInputFiles = reportInputFiles;
     }
 
+    private void addAttributeToReturnValue(ReturnValue ret, String key, String value) {
+        if (ret.getAttribute(key) != null) {
+          ret.setAttribute(key, ret.getAttribute(key) + ";" + value);
+        } else {
+          ret.setAttribute(key, value);
+        }
+    }
+
   public enum Header {
     STUDY_TITLE("Study Title"), STUDY_SWA("Study SWID"), STUDY_TAG_PREFIX("study."), STUDY_ATTRIBUTES(
         "Study Attributes"), EXPERIMENT_NAME("Experiment Name"), EXPERIMENT_SWA("Experiment SWID"), EXPERIMENT_TAG_PREFIX(
@@ -83,7 +91,7 @@ public class FindAllTheFiles {
         "Sequencer Run SWID"), SEQUENCER_RUN_TAG_PREFIX("sequencerrun."), SEQUENCER_RUN_ATTRIBUTES(
         "Sequencer Run Attributes"), WORKFLOW_RUN_NAME("Workflow Run Name"), WORKFLOW_RUN_SWA("Workflow Run SWID"), WORKFLOW_RUN_STATUS(
         "Workflow Run Status"), WORKFLOW_NAME("Workflow Name"), WORKFLOW_SWA("Workflow SWID"), WORKFLOW_VERSION(
-        "Workflow Version"), FILE_SWA("File SWID"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
+        "Workflow Version"), FILE_SWA("File SWID"), FILE_TAG_PREFIX("file."), FILE_ATTRIBUTES("File Attributes"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
         "Processing Algorithm"), PROCESSING_TAG_PREFIX("processing."), PROCESSING_ATTRIBUTES("Processing Attributes"),
         INPUT_FILE_META_TYPES("Input File Meta-Types"), INPUT_FILE_SWIDS("Input File SWIDs"), INPUT_FILE_PATHS("Input File Paths");
         ;
@@ -171,6 +179,8 @@ public class FindAllTheFiles {
   public static String WORKFLOW_VERSION = Header.WORKFLOW_VERSION.getTitle();
   /** Constant <code>FILE_SWA="Header.FILE_SWA.getTitle()"</code> */
   public static String FILE_SWA = Header.FILE_SWA.getTitle();
+  public static String FILE_TAG_PREFIX = Header.FILE_TAG_PREFIX.getTitle();
+  public static String FILE_ATTRIBUTES = Header.FILE_ATTRIBUTES.getTitle();
   /** Constant <code>PROCESSING_DATE="Header.PROCESSING_DATE.getTitle()"</code> */
   public static String PROCESSING_DATE = Header.PROCESSING_DATE.getTitle();
   /** Constant <code>PROCESSING_SWID="Header.PROCESSING_SWID.getTitle()"</code> */
@@ -395,7 +405,7 @@ public class FindAllTheFiles {
     // SEQWARE-1297
     // before this ticket, this either reported empty processing events when we don't require files 
     // OR we reported the files. We actually want to report the files if they are present
-    if (!requireFiles && processing.getFiles().size() == 0) {
+    if (!requireFiles && processing.getFiles().isEmpty()) {
       ReturnValue ret = createReturnValue(sample, processing, study, e, ius, lane, sequencerRun, workflowRun, workflow);
       returnValues.add(ret);
     } else {
@@ -405,21 +415,7 @@ public class FindAllTheFiles {
     }
     return numFiles;
   }
-
-  private Set<WorkflowRun> parseWorkflowRunsFromIUSandLane(IUS ius, Lane lane) {
-    // Get the Processings from WorkflowRun
-    Set<WorkflowRun> workflowRuns = new TreeSet<WorkflowRun>();
-    Set<WorkflowRun> someRuns = ius.getWorkflowRuns();
-    Set<WorkflowRun> moreRuns = lane.getWorkflowRuns();
-    if (someRuns != null) {
-      workflowRuns.addAll(someRuns);
-    }
-    if (moreRuns != null) {
-      workflowRuns.addAll(moreRuns);
-    }
-    return workflowRuns;
-  }
-
+  
   private void parseProcessingsFromStack(IUS ius, Lane lane, Set<Processing> currentProcessings) {
     Stack<Processing> processingStack = new Stack<Processing>();
     processingStack.addAll(ius.getProcessings());
@@ -533,6 +529,13 @@ public class FindAllTheFiles {
     // File
     FileMetadata fm = new FileMetadata();
     ret.setAttribute(FILE_SWA, file.getSwAccession().toString());
+      if (file.getSkip() != null && file.getSkip()) {
+          addAttributeToReturnValue(ret, FILE_TAG_PREFIX + "skip", "");
+      }
+      for (FileAttribute fa : file.getFileAttributes()) {
+          String key = FILE_TAG_PREFIX + fa.getTag();
+          addAttributeToReturnValue(ret, key, fa.getValue());
+      }
     fm.setFilePath(file.getFilePath());
     fm.setMetaType(file.getMetaType());
     fm.setDescription(file.getSwAccession().toString());
@@ -566,7 +569,7 @@ public class FindAllTheFiles {
     // Experiment
     if (e != null) {
       String eName = e.getName();
-      if (eName == null && eName.isEmpty()) {
+      if (eName == null || eName.isEmpty()) {
         eName = e.getTitle();
       }
       ret.setAttribute(EXPERIMENT_NAME, eName);
@@ -604,13 +607,12 @@ public class FindAllTheFiles {
         }
         psName.append(name).append(":");
         psSwa.append(parentSample.getSwAccession()).append(":");
+        if (parentSample.getSkip() != null && parentSample.getSkip()) {
+          addAttributeToReturnValue(ret, PARENT_SAMPLE_TAG_PREFIX + "skip." + parentSample.getSwAccession(), "");
+        }
         for (SampleAttribute satt : parentSample.getSampleAttributes()) {
           String key = PARENT_SAMPLE_TAG_PREFIX + satt.getTag() + "." + parentSample.getSwAccession();
-          if (ret.getAttribute(key) != null) {
-            ret.setAttribute(key, ret.getAttribute(key) + ";" + satt.getValue());
-          } else {
-            ret.setAttribute(key, satt.getValue());
-          }
+          addAttributeToReturnValue(ret, key, satt.getValue());
         }
       }
       // Parent Sample
@@ -621,26 +623,24 @@ public class FindAllTheFiles {
       }
       ret.setAttribute(SAMPLE_NAME, sName);
       ret.setAttribute(SAMPLE_SWA, sample.getSwAccession().toString());
+      if (sample.getSkip() != null && sample.getSkip()){
+          addAttributeToReturnValue(ret, SAMPLE_TAG_PREFIX + "skip", "");
+      }
       for (SampleAttribute satt : sample.getSampleAttributes()) {
         String key = SAMPLE_TAG_PREFIX + satt.getTag();
-        if (ret.getAttribute(key) != null) {
-          ret.setAttribute(key, ret.getAttribute(key) + ";" + satt.getValue());
-        } else {
-          ret.setAttribute(key, satt.getValue());
-        }
+        addAttributeToReturnValue(ret, key, satt.getValue());
       }
     }
     // IUS
     if (ius != null) {
       ret.setAttribute(IUS_SWA, ius.getSwAccession().toString());
       ret.setAttribute(IUS_TAG, (ius.getTag() == null ? "NoIndex" : ius.getTag()));
+      if (ius.getSkip() != null && ius.getSkip()){
+          addAttributeToReturnValue(ret, IUS_TAG_PREFIX + "skip", "");
+      }
       for (IUSAttribute iatt : ius.getIusAttributes()) {
         String key = Header.IUS_TAG_PREFIX.getTitle() + iatt.getTag();
-        if (ret.getAttribute(key) != null) {
-          ret.setAttribute(key, ret.getAttribute(key) + ";" + iatt.getValue());
-        } else {
-          ret.setAttribute(key, iatt.getValue());
-        }
+        addAttributeToReturnValue(ret, key, iatt.getValue());
       }
     }
     // Lane
@@ -652,26 +652,24 @@ public class FindAllTheFiles {
         num = lane.getLaneIndex();
       }
       ret.setAttribute(LANE_NUM, new Integer(num + 1).toString());
+      if (lane.getSkip() != null && lane.getSkip()){
+          addAttributeToReturnValue(ret, LANE_TAG_PREFIX + "skip", "");
+      }
       for (LaneAttribute latt : lane.getLaneAttributes()) {
         String key = LANE_TAG_PREFIX + latt.getTag();
-        if (ret.getAttribute(key) != null) {
-          ret.setAttribute(key, ret.getAttribute(key) + ";" + latt.getValue());
-        } else {
-          ret.setAttribute(key, latt.getValue());
-        }
+        addAttributeToReturnValue(ret, key, latt.getValue());
       }
     }
     // Sequencer Run
     if (sequencerRun != null) {
       ret.setAttribute(SEQUENCER_RUN_NAME, sequencerRun.getName());
       ret.setAttribute(SEQUENCER_RUN_SWA, sequencerRun.getSwAccession().toString());
+      if (sequencerRun.getSkip() != null && sequencerRun.getSkip()){
+          addAttributeToReturnValue(ret, SEQUENCER_RUN_TAG_PREFIX + "skip", "");
+      }
       for (SequencerRunAttribute sra : sequencerRun.getSequencerRunAttributes()) {
         String key = SEQUENCER_RUN_TAG_PREFIX + sra.getTag();
-        if (ret.getAttribute(key) != null) {
-          ret.setAttribute(key, ret.getAttribute(key) + ";" + sra.getValue());
-        } else {
-          ret.setAttribute(key, sra.getValue());
-        }
+        addAttributeToReturnValue(ret, key, sra.getValue());
       }
     }
       // WorkflowRun
@@ -759,90 +757,6 @@ public class FindAllTheFiles {
   public void setRequireFiles(boolean requireFiles) {
     this.requireFiles = requireFiles;
   }
-
-//  /**
-//   * <p>filterReturnValuesV2.</p>
-//   *
-//   * @param out a {@link java.io.Writer} object.
-//   * @param returnValues a {@link java.util.List} object.
-//   * @param studyName a {@link java.lang.String} object.
-//   * @param fileType a {@link java.lang.String} object.
-//   * @param duplicates a boolean.
-//   * @param showFailedAndRunning a boolean.
-//   * @param showStatus a boolean.
-//   * @throws java.io.IOException if any.
-//   */
-//  public static void filterReturnValuesV2(Writer out, List<ReturnValue> returnValues, String studyName,
-//      String fileType, boolean duplicates, boolean showFailedAndRunning, boolean showStatus) throws IOException {
-//
-//    List<ReturnValue> newReturnValues = new ArrayList<ReturnValue>();
-//
-//    Log.info("There are " + returnValues.size() + " files in total before filtering");
-//    Set<FileMetadata> set = new TreeSet<FileMetadata>(new Comparator<FileMetadata>() {
-//
-//      @Override
-//      public int compare(FileMetadata t, FileMetadata t1) {
-//        return t.getFilePath().compareTo(t1.getFilePath());
-//      }
-//    });
-//    for (ReturnValue rv : returnValues) {
-//      ArrayList<FileMetadata> cloneFiles = (ArrayList<FileMetadata>) rv.getFiles().clone();
-//
-//      if (!duplicates) {
-//        for (FileMetadata file : cloneFiles) {
-//          if (!set.add(file)) {
-//            Log.debug("Removing file because file is a duplicate: " + file.getFilePath());
-//            rv.getFiles().remove(file);
-//          }
-//        }
-//      }
-//
-//      for (FileMetadata file : cloneFiles) {
-//        if (!fileType.equals(FILETYPE_ALL)) {
-//          if (!file.getMetaType().equals(fileType)) {
-//            Log.debug("Removing file because filetype is wrong:" + file.getMetaType() + " is not " + fileType);
-//            rv.getFiles().remove(file);
-//          }
-//        }
-//      }
-//      if (rv.getFiles().isEmpty()) {
-//        Log.debug("Files are empty. Skipping.");
-//        continue;
-//      }
-//
-//      // if the returnValue isn't successful, remove it
-//      if (rv.getExitStatus() != ReturnValue.SUCCESS) {
-//        Log.error("Exit status: " + rv.getExitStatus());
-//        continue;
-//      }
-//
-//      // if the workflow run is not successful and we don't want to see all of
-//      // the files, then skip it.
-//      String workflowRunStatus = rv.getAttribute(FindAllTheFiles.WORKFLOW_RUN_STATUS);
-//      if (workflowRunStatus != null && !workflowRunStatus.equals(Metadata.SUCCESS)
-//          && !workflowRunStatus.equals(Metadata.COMPLETED)) {
-//        if (!showFailedAndRunning) {
-//          Log.debug("Not showing failed or running workflow run" + workflowRunStatus);
-//          continue;
-//        }
-//      }
-//
-//      replaceSpaces(rv, FindAllTheFiles.EXPERIMENT_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.PARENT_SAMPLE_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.SAMPLE_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.LANE_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.SEQUENCER_RUN_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.WORKFLOW_RUN_NAME);
-//      replaceSpaces(rv, FindAllTheFiles.WORKFLOW_NAME);
-//
-//      for (FileMetadata fm : rv.getFiles()) {
-//        print(out, rv, studyName, showStatus, fm);
-//      }
-//
-//      newReturnValues.add(rv);
-//    }
-//    Log.info("There are " + newReturnValues.size() + " files in total after filtering");
-//  }
 
   /**
    * <p>filterReturnValues.</p>
@@ -981,6 +895,7 @@ public class FindAllTheFiles {
     StringBuilder iusTag = new StringBuilder();
     StringBuilder seqencerrunTag = new StringBuilder();
     StringBuilder processingTag = new StringBuilder();
+    StringBuilder fileTag = new StringBuilder();
     for (String key : ret.getAttributes().keySet()) {
       if (key.startsWith(FindAllTheFiles.PARENT_SAMPLE_TAG_PREFIX)) {
         parentSampleTag.append(key).append("=").append(ret.getAttribute(key)).append(";");
@@ -998,6 +913,8 @@ public class FindAllTheFiles {
         seqencerrunTag.append(key).append("=").append(ret.getAttribute(key)).append(";");
       } else if (key.startsWith(FindAllTheFiles.PROCESSING_TAG_PREFIX)) {
         processingTag.append(key).append("=").append(ret.getAttribute(key)).append(";");
+      } else if (key.startsWith(FindAllTheFiles.FILE_TAG_PREFIX)){
+        fileTag.append(key).append("=").append(ret.getAttribute(key)).append(";");
       }
     }
     StringBuilder sb = new StringBuilder();
@@ -1037,7 +954,8 @@ public class FindAllTheFiles {
     sb.append(processingTag.toString()).append("\t");
     sb.append(fm.getMetaType()).append("\t");
     sb.append(ret.getAttribute(FILE_SWA)).append("\t");
-    sb.append(fm.getFilePath());
+    sb.append(fm.getFilePath()).append("\t");
+    sb.append(fileTag.toString());
     if (reportInputFiles){
         sb.append("\t");
         sb.append(ret.getAttribute(INPUT_FILE_META_TYPES)).append("\t");
@@ -1099,7 +1017,8 @@ public class FindAllTheFiles {
     sb.append(PROCESSING_ATTRIBUTES).append("\t");
     sb.append("File Meta-Type").append("\t");
     sb.append(FILE_SWA).append("\t");
-    sb.append("File Path");
+    sb.append("File Path").append("\t");
+    sb.append(FILE_ATTRIBUTES);
     if (reportInputFiles){
         sb.append("\t");
         sb.append(INPUT_FILE_META_TYPES).append("\t");
