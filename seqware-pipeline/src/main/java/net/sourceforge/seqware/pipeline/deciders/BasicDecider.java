@@ -123,8 +123,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("host", "ho"), "Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host").withRequiredArg();
         //SEQWARE-1622 - check whether files exist
         parser.acceptsAll(Arrays.asList("check-file-exists", "cf"), "Optional: only launch on the file if the file exists");
-        //SEQWARE-X - sort in reverse chronological order
-        parser.acceptsAll(Arrays.asList("reverse-chronological-order", "rc"), "Optional: Process groups of files in reverse chronological order. In --all, each study will be completed in reverse chronological order before proceeding to the next");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
     
@@ -371,9 +369,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             
             List<Entry<String, List<ReturnValue>>> entryList = new ArrayList<Entry<String, List<ReturnValue>>>();
             entryList.addAll(mappedFiles.entrySet());
-            if (options.has("reverse-chronological-order")){
-                Collections.sort(entryList, new ReturnValueProcessingTimeComparator());
-            }
+            Collections.sort(entryList, new ReturnValueProcessingTimeComparator());
             
             for (Entry<String, List<ReturnValue>> entry : entryList) {
                 Log.info("Considering key:" + entry.getKey());
