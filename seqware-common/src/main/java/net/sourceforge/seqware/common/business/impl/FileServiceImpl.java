@@ -40,6 +40,7 @@ public class FileServiceImpl implements FileService {
    * FileDAO. This method is called by the Spring framework at run time.
    * @see FileDAO
    */
+  @Override
   public void setFileDAO(FileDAO dao) {
     this.fileDAO = dao;
   }
@@ -49,6 +50,7 @@ public class FileServiceImpl implements FileService {
    *
    * Inserts an instance of File into the database.
    */
+  @Override
   public void insert(File file) {
     fileDAO.insert(file);
   }
@@ -58,11 +60,13 @@ public class FileServiceImpl implements FileService {
    *
    * Updates an instance of File in the database.
    */
+  @Override
   public void update(File file) {
     fileDAO.update(file);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void delete(File file, boolean deleteRealFiles) {
     Set<Processing> processings = file.getProcessings();
 
@@ -83,6 +87,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public void deleteAll(List<File> files, boolean deleteRealFiles) {
     fileDAO.deleteAll(files);
     if (deleteRealFiles) {
@@ -91,6 +96,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public boolean isExists(String fileName, String folderStore) {
     boolean isExists = false;
     String path = folderStore + fileName;
@@ -101,6 +107,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer fileId) {
     File file = findByID(fileId);
     List<File> files = new ArrayList<File>();
@@ -109,6 +116,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer fileId, String metaType) {
     File file = findByID(fileId);
     List<File> files = new ArrayList<File>();
@@ -119,6 +127,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public Set<File> setWithHasFile(Set<File> list, String metaType) {
     Set<File> result = new TreeSet<File>();
     for (File file : list) {
@@ -130,6 +139,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public File findByPath(String path) {
     File file = null;
     if (path != null) {
@@ -143,6 +153,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public File findByID(Integer fileId) {
     File file = null;
     if (fileId != null) {
