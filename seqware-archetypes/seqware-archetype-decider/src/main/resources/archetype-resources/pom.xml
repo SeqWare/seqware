@@ -9,7 +9,7 @@
     <version>${version}</version>
     <packaging>jar</packaging>
 
-    <name>seqware-decider</name>
+    <name>${artifactId}</name>
     <url>http://maven.apache.org</url>
 
     <properties>

@@ -59,7 +59,6 @@
         <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
-            <version>1.5</version>
             <type>jar</type>
         </dependency>
     </dependencies>
