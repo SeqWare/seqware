@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -1457,7 +1459,17 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public Boolean isDuplicateFile(String filepath) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        File file = null;
+        try {
+            file = ll.findFile("?path=" + filepath);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (JAXBException ex) {
+            throw new RuntimeException(ex);
+        } catch (NotFoundException ex){
+            /** do nothing, this is expected */
+        }
+        return file != null;
     }
 
     /**
@@ -1486,7 +1498,6 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public String listInstalledWorkflows() {
-
         StringBuffer sb = new StringBuffer();
         try {
             for (Workflow w : ll.findWorkflows()) {

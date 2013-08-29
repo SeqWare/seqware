@@ -16,21 +16,16 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.parsers.DocumentBuilderFactory;
 import net.sourceforge.seqware.common.model.Attribute;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 import org.restlet.data.MediaType;
-import org.restlet.ext.xml.DomRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Delete;
-import org.restlet.resource.Get;
 import org.restlet.resource.Put;
-import org.w3c.dom.Document;
 
 /**
  * <p>DatabaseIDResource class.</p>
