@@ -16,7 +16,11 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
+
 import java.util.List;
+
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
@@ -27,6 +31,7 @@ import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -58,7 +63,7 @@ public class SampleIdFilesResource extends BasicRestlet {
         ReturnValueList returnValues = new ReturnValueList();
 
         SampleService ss = BeanFactory.getSampleServiceBean();
-        Sample sample = (Sample) BasicResource.testIfNull(ss.findBySWAccession(BasicResource.parseClientInt(id)));
+        Sample sample = (Sample) testIfNull(ss.findBySWAccession(parseClientInt(id)));
         FindAllTheFiles fatf = new FindAllTheFiles();
         
         if (this.getQueryValue("requireFiles") != null){

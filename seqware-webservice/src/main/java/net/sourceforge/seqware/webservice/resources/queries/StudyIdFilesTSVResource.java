@@ -16,12 +16,16 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.List;
+
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
@@ -30,6 +34,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -104,7 +109,7 @@ public class StudyIdFilesTSVResource extends BasicRestlet {
             fatf.setReportInputFiles(true);
         }
         
-        Study study = (Study) BasicResource.testIfNull(ss.findBySWAccession(BasicResource.parseClientInt(studySWA)));
+        Study study = (Study) testIfNull(ss.findBySWAccession(parseClientInt(studySWA)));
         StringWriter writer = new StringWriter();
         if (handleStudy(study, writer , fatf, null)) {
             return;

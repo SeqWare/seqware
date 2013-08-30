@@ -16,7 +16,11 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
+
 import java.util.List;
+
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
@@ -27,6 +31,7 @@ import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -56,7 +61,7 @@ public class StudyIdFilesResource extends BasicRestlet {
         init(request);
         String id = request.getAttributes().get("studyId").toString();
 
-        List<ReturnValue> returnValues = hello(BasicResource.parseClientInt(id));
+        List<ReturnValue> returnValues = hello(parseClientInt(id));
 
         ReturnValueList list = new ReturnValueList();
         list.setList(returnValues);
@@ -80,7 +85,7 @@ public class StudyIdFilesResource extends BasicRestlet {
             boolean requireFiles = Boolean.valueOf(this.getQueryValue("requireFiles"));
             fatf.setRequireFiles(requireFiles);
         }
-        Study study = (Study) BasicResource.testIfNull(ss.findBySWAccession(studySWA));
+        Study study = (Study) testIfNull(ss.findBySWAccession(studySWA));
         List<ReturnValue> returnValues = fatf.filesFromStudy(study);
         return returnValues;
     }
