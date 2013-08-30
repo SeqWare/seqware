@@ -58,7 +58,7 @@ public class StudyIDResource extends DatabaseIDResource {
     public void getXml() {
         authenticate();
         StudyService ss = BeanFactory.getStudyServiceBean();
-        Study study = (Study) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        Study study = (Study) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<Study> jaxbTool = new JaxbObject<Study>();
 

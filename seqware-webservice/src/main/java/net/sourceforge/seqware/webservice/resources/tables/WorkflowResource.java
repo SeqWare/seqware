@@ -62,7 +62,7 @@ public class WorkflowResource extends DatabaseResource {
 
 
         if (queryValues.get("id") != null) {
-            Workflow p = (Workflow) testIfNull(ss.findByID(Integer.parseInt(queryValues.get("id"))));
+            Workflow p = (Workflow) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
             line = detachWorkflow(p);
 
         } else if (queryValues.get("name") != null) {

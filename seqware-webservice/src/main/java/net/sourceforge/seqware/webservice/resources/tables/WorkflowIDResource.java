@@ -72,7 +72,7 @@ public class WorkflowIDResource extends DatabaseIDResource {
         WorkflowService ss = BeanFactory.getWorkflowServiceBean();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<Workflow> jaxbTool = new JaxbObject<Workflow>();
-        Workflow workflow = (Workflow) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        Workflow workflow = (Workflow) testIfNull(ss.findBySWAccession(getId()));
         Workflow dto = copier.hibernate2dto(Workflow.class, workflow);
 
         if (fields.contains("params")) {

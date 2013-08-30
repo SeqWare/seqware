@@ -107,11 +107,12 @@ public class ExperimentResource extends DatabaseResource {
             } catch (SAXException ex) {
                 throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, ex);
             }
-
+            // SEQWARE-1548
+            o = testIfNull(o);
             if (o.getOwner() == null) {
                 o.setOwner(registration);
             } else {
-                Registration reg = BeanFactory.getRegistrationServiceBean().findByEmailAddress(o.getOwner().getEmailAddress());
+                Registration reg = BeanFactory.getRegistrationServiceBean().findByEmailAddress(testIfNull(o.getOwner().getEmailAddress()));
                 if (reg != null) {
                     o.setOwner(reg);
                 } else
@@ -143,7 +144,7 @@ public class ExperimentResource extends DatabaseResource {
             getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN, e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
-            getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+            getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e.getMessage());

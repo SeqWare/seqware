@@ -17,7 +17,6 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Set;
 import java.util.TreeSet;
 import net.sf.beanlib.CollectionPropertyName;
@@ -26,12 +25,10 @@ import net.sourceforge.seqware.common.business.LaneService;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -71,7 +68,7 @@ public class LaneIDResource extends DatabaseIDResource {
         authenticate();
 
         LaneService ss = BeanFactory.getLaneServiceBean();
-        Lane lane = (Lane) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        Lane lane = (Lane) testIfNull(ss.findBySWAccession(getId()));
         dto = copier.hibernate2dto(Lane.class, lane, new Class<?>[]{LibraryStrategy.class, LibrarySource.class, LibrarySelection.class}, new CollectionPropertyName<?>[]{});
 
         if (fields.contains("sequencerRun")) {
