@@ -17,8 +17,6 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.Engines;
-import it.sauronsoftware.junique.AlreadyLockedException;
-import it.sauronsoftware.junique.JUnique;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,12 +44,12 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import net.sourceforge.seqware.pipeline.tools.RunLock;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
 
 import org.apache.commons.io.FileUtils;
@@ -98,11 +96,6 @@ public class WorkflowStatusChecker extends Plugin {
                       "Optional: if specified, workflow runs that have previously failed will be re-checked.");
     parser.acceptsAll(Arrays.asList("threads-in-thread-pool", "tp"),
                       "Optional: this will determine the number of threads to run with. Default: 1").withRequiredArg().ofType(Integer.class);
-    //SEQWARE-1732 custom lock ID
-    parser.acceptsAll(Arrays.asList("dynamic-lock-file", "dlf"),
-                      "Optional: This option is discouraged and unsupported. A unique lock-file based on the SW_REST_URL is generated. "
-            + "This allows multiple workflow status checkers and workflow launchers to run at the same time, "
-            + "but could lead to a corrupt state in the metadb");
 
     classReturnValue.setExitStatus(ReturnValue.SUCCESS);
   }
@@ -113,19 +106,7 @@ public class WorkflowStatusChecker extends Plugin {
   @Override
   public ReturnValue init() {
 
-    // check to see if this code is already running, if so exit
-    try {
-        String lock = appID;
-        if (options.has("dynamic-lock-file")){
-            Log.stderr("Using a dynamic-lock-file based on your SW_REST_URL. This mode is unsupported.");
-            lock = ConfigTools.getSettings().get("SW_REST_URL");
-        } 
-        JUnique.acquireLock(lock);
-    } catch (AlreadyLockedException e) {
-      Log.error("I could not get a lock for " + appID
-          + " this most likely means the application is already running and this instance will exit!");
-      classReturnValue.setExitStatus(ReturnValue.FAILURE);
-    }
+    RunLock.acquire();
 
     // bail out if failed
     if (classReturnValue.getExitStatus() != ReturnValue.SUCCESS) {
