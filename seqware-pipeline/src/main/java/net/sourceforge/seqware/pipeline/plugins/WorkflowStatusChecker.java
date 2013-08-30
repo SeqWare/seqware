@@ -46,6 +46,7 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
@@ -69,14 +70,14 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowStatusChecker extends Plugin {
-  private ReturnValue ret = new ReturnValue();
+    public static final String WORKFLOW_RUN_ACCESSION = "workflow-run-accession";
+  private ReturnValue classReturnValue = new ReturnValue();
   // NOTE: this is shared with WorkflowLauncher so only one can run at a time
   public static final String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
   private static final String metadata_sync = "synch_for_metadata";
   // variables for use in the app
   private String hostname = null;
   private String username = null;
-  private String programRunner = null;
 
   /**
    * <p>
@@ -87,8 +88,8 @@ public class WorkflowStatusChecker extends Plugin {
     super();
     parser.acceptsAll(Arrays.asList("status-cmd", "s"),
                       "Optional: the Pegasus status command, if you specify this option the command will be run, potentially displaying the summarized/parsed errors, but the database will not be updated.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("workflow-run-accession", "wra"),
-                      "Optional: this will cause the program to only check the status of this particular workflow run.").withRequiredArg();
+    parser.acceptsAll(Arrays.asList(WORKFLOW_RUN_ACCESSION, "wra"),
+                      "Optional: this will cause the program to only check the status of workflow run(s). For multiple runs, comma-separate with no spaces").withRequiredArg().withValuesSeparatedBy(',').ofType(Integer.class);
     parser.acceptsAll(Arrays.asList("workflow-accession", "wa"),
                       "Optional: this will cause the program to only check the status of workflow runs that are this type of workflow.").withRequiredArg();
     parser.acceptsAll(Arrays.asList("force-host", "fh"),
@@ -97,8 +98,13 @@ public class WorkflowStatusChecker extends Plugin {
                       "Optional: if specified, workflow runs that have previously failed will be re-checked.");
     parser.acceptsAll(Arrays.asList("threads-in-thread-pool", "tp"),
                       "Optional: this will determine the number of threads to run with. Default: 1").withRequiredArg().ofType(Integer.class);
+    //SEQWARE-1732 custom lock ID
+    parser.acceptsAll(Arrays.asList("dynamic-lock-file", "dlf"),
+                      "Optional: This option is discouraged and unsupported. A unique lock-file based on the SW_REST_URL is generated. "
+            + "This allows multiple workflow status checkers and workflow launchers to run at the same time, "
+            + "but could lead to a corrupt state in the metadb");
 
-    ret.setExitStatus(ReturnValue.SUCCESS);
+    classReturnValue.setExitStatus(ReturnValue.SUCCESS);
   }
 
   /**
@@ -109,16 +115,21 @@ public class WorkflowStatusChecker extends Plugin {
 
     // check to see if this code is already running, if so exit
     try {
-      JUnique.acquireLock(appID);
+        String lock = appID;
+        if (options.has("dynamic-lock-file")){
+            Log.stderr("Using a dynamic-lock-file based on your SW_REST_URL. This mode is unsupported.");
+            lock = ConfigTools.getSettings().get("SW_REST_URL");
+        } 
+        JUnique.acquireLock(lock);
     } catch (AlreadyLockedException e) {
       Log.error("I could not get a lock for " + appID
           + " this most likely means the application is already running and this instance will exit!");
-      ret.setExitStatus(ReturnValue.FAILURE);
+      classReturnValue.setExitStatus(ReturnValue.FAILURE);
     }
 
     // bail out if failed
-    if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-      return (ret);
+    if (classReturnValue.getExitStatus() != ReturnValue.SUCCESS) {
+      return (classReturnValue);
     }
     LocalhostPair localhost = FileTools.getLocalhost(options);
     // returnValue can be null if we use forcehost
@@ -131,14 +142,13 @@ public class WorkflowStatusChecker extends Plugin {
     // figure out the username
     if (this.config.get("SW_REST_USER") == null || "".equals(this.config.get("SW_REST_USER"))) {
       Log.error("You must define SW_REST_USER in your SeqWare settings file!");
-      ret.setExitStatus(ReturnValue.FAILURE);
+      classReturnValue.setExitStatus(ReturnValue.FAILURE);
     }
     this.username = this.config.get("SW_REST_USER");
-    this.programRunner = FileTools.whoAmI();
 
-    ret.setExitStatus(ReturnValue.SUCCESS);
+    classReturnValue.setExitStatus(ReturnValue.SUCCESS);
 
-    return ret;
+    return classReturnValue;
 
   }
 
@@ -147,7 +157,7 @@ public class WorkflowStatusChecker extends Plugin {
    */
   @Override
   public ReturnValue do_test() {
-    return ret;
+    return classReturnValue;
   }
 
   /**
@@ -175,7 +185,7 @@ public class WorkflowStatusChecker extends Plugin {
       }
 
       // setup thread pool
-      ExecutorService pool = null; // Executors.newFixedThreadPool(4);
+      ExecutorService pool; // Executors.newFixedThreadPool(4);
       if (options.has("threads-in-thread-pool")) {
         int threads = (Integer) options.valueOf("threads-in-thread-pool");
         if (threads <= 0) {
@@ -213,7 +223,7 @@ public class WorkflowStatusChecker extends Plugin {
    */
   @Override
   public ReturnValue clean_up() {
-    return ret;
+    return classReturnValue;
   }
 
   /**
@@ -280,10 +290,6 @@ public class WorkflowStatusChecker extends Plugin {
 
     @Override
     public void run() {
-      boolean hostMatch = true;
-      boolean userMatch = true;
-      boolean workflowRunAccessionMatch = true;
-      boolean workflowAccessionMatch = true;
 
       Log.info("ownerUserName: " + wr.getOwnerUserName());
       Log.info("workflowAccession: " + wr.getWorkflowAccession());
@@ -291,41 +297,41 @@ public class WorkflowStatusChecker extends Plugin {
 
       // check that this workflow run matches the specified workflow if provided
       if (options.has("workflow-accession") && options.valueOf("workflow-accession") != null
-          && !((String) options.valueOf("workflow-accession")).equals(wr.getWorkflowAccession())) {
-        workflowAccessionMatch = false;
+          && !((String) options.valueOf("workflow-accession")).equals(wr.getWorkflowAccession().toString())) {
+        return;
       }
 
       // check if this workflow run accession matches if provided
-      if (options.has("workflow-run-accession") && options.valueOf("workflow-run-accession") != null
-          && !((String) options.valueOf("workflow-run-accession")).equals(wr.getSwAccession().toString())) {
-        workflowRunAccessionMatch = false;
+      if (options.has(WORKFLOW_RUN_ACCESSION)) {
+          List<Integer> valuesOf = (List<Integer>) options.valuesOf(WORKFLOW_RUN_ACCESSION);
+          if(!valuesOf.contains(wr.getSwAccession())){
+              return;
+          }
       }
 
       // check the host is either overridden or this is the same host the
       // workflow was launched from
       if (options.has("force-host") && options.valueOf("force-host") != null
           && !((String) options.valueOf("force-host")).equals(wr.getHost())) {
-        hostMatch = false;
+        return;
       } else if (!options.has("force-host") && WorkflowStatusChecker.this.hostname != null
           && !WorkflowStatusChecker.this.hostname.equals(wr.getHost())) {
-        hostMatch = false;
+        return;
       }
 
       // check the rest API username from SeqWare settings is the same username
       // in the DB
       if (WorkflowStatusChecker.this.username == null || wr.getOwnerUserName() == null
           || !WorkflowStatusChecker.this.username.equals(wr.getOwnerUserName())) {
-        userMatch = false;
+        return;
       }
 
-      if (hostMatch && userMatch && workflowRunAccessionMatch && workflowAccessionMatch) {
-        if (Engines.isOozie(wr.getWorkflowEngine())) {
-          checkOozie();
-        } else {
-          checkPegasus();
-        }
+          if (Engines.isOozie(wr.getWorkflowEngine())) {
+              checkOozie();
+          } else {
+              checkPegasus();
+          }
       }
-    }
 
     private void checkOozie() {
       try {
