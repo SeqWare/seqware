@@ -16,6 +16,8 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -133,7 +135,7 @@ public class WorkflowRuntimeResource
                     String procId = currentProcIds.get(currentProcId).get("procId");
                     String workflowRunId = currentProcIds.get(currentProcId).get("workflowRunId");
                     String workflowName = currentProcIds.get(currentProcId).get("workflowName");
-                    recursiveFindProcessings(currentProcId, BasicResource.parseClientInt(workflowRunId), workflowName);
+                    recursiveFindProcessings(currentProcId, parseClientInt(workflowRunId), workflowName);
                 }
 
                 // at this point the whole hash should be populated

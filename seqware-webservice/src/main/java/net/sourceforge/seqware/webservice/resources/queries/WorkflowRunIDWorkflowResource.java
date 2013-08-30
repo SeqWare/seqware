@@ -16,6 +16,8 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
@@ -25,6 +27,7 @@ import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -54,7 +57,7 @@ public class WorkflowRunIDWorkflowResource extends BasicRestlet {
         
             String id = request.getAttributes().get("workflowRunId").toString();  
             WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-            WorkflowRun run = (WorkflowRun)BasicResource.testIfNull(wrs.findBySWAccession(BasicResource.parseClientInt(id)));
+            WorkflowRun run = (WorkflowRun)testIfNull(wrs.findBySWAccession(parseClientInt(id)));
             Workflow w = run.getWorkflow();
             JaxbObject<Workflow> jaxbTool = new JaxbObject<Workflow>();
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();

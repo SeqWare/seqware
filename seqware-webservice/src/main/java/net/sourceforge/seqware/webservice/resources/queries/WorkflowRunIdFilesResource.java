@@ -16,9 +16,13 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
@@ -28,6 +32,7 @@ import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -58,7 +63,7 @@ public class WorkflowRunIdFilesResource extends BasicRestlet {
         try {
             String id = request.getAttributes().get("workflowRunId").toString();
 
-            List<File> files = hello(BasicResource.parseClientInt(id));
+            List<File> files = hello(parseClientInt(id));
 
             FileList list = new FileList();
             list.setList(files);
@@ -83,7 +88,7 @@ public class WorkflowRunIdFilesResource extends BasicRestlet {
      */
     public List<File> hello(int wrSWA) throws SQLException {
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-        List<File> files = (List<File>) BasicResource.testIfNull(wrs.findFiles(wrSWA));
+        List<File> files = (List<File>) testIfNull(wrs.findFiles(wrSWA));
         List<File> dtoFiles = new ArrayList<File>();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         for (File file : files) {

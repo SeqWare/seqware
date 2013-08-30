@@ -69,7 +69,7 @@ public class DatabaseIDResource extends BasicResource {
     @Override
     public void doInit() {
         super.doInit();
-        this.id = BasicResource.parseClientInt((String) getRequestAttributes().get(attribute));
+        this.id = parseClientInt((String) getRequestAttributes().get(attribute));
         attribute += " " + id;
     }
 
