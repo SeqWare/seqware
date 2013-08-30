@@ -77,7 +77,7 @@ public class LaneResource extends DatabaseResource {
 
     if (queryValues.get("id") != null) {
       JaxbObject<Lane> jaxbTool = new JaxbObject<Lane>();
-      Lane p = (Lane) testIfNull(ss.findByID(Integer.parseInt(queryValues.get("id"))));
+      Lane p = (Lane) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
 
       Lane dto = copier.hibernate2dto(Lane.class, p);
       line = XmlTools.marshalToDocument(jaxbTool, dto);

@@ -51,7 +51,7 @@ public class ExperimentIDFilter extends BasicResource {
             Object val = requestAttributes.get("studyId");
             if (val != null) {
                 StudyService ss = BeanFactory.getStudyServiceBean();
-                Study s = (Study)testIfNull(ss.findBySWAccession(Integer.parseInt(val.toString())));
+                Study s = (Study)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
                 experiments = (SortedSet<Experiment>) testIfNull(s.getExperiments());
             }
         } else {

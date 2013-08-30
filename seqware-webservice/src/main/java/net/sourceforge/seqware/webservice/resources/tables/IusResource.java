@@ -74,7 +74,7 @@ public class IusResource extends DatabaseResource {
 
     Document line;
     if (queryValues.get("id") != null) {
-      IUS p = (IUS) testIfNull(ss.findByID(Integer.parseInt(queryValues.get("id"))));
+      IUS p = (IUS) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
 
       JaxbObject<IUS> jaxbTool = new JaxbObject<IUS>();
       IUS dto = copier.hibernate2dto(IUS.class, p);

@@ -16,8 +16,12 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
+
 import java.sql.SQLException;
 import java.util.*;
+
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
@@ -26,7 +30,9 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.lists.ProcessingList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -57,7 +63,7 @@ public class WorkflowRunIDProcessingsResource extends BasicRestlet {
         try {
             String id = request.getAttributes().get("workflowRunId").toString();
 
-            List<Processing> procs = collectProcessingList(Integer.parseInt(id));
+            List<Processing> procs = collectProcessingList(parseClientInt(id));
 
             ProcessingList list = new ProcessingList();
             list.setList(procs);
