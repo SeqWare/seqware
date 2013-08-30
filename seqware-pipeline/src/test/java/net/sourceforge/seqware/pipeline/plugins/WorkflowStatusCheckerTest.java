@@ -16,7 +16,16 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import it.sauronsoftware.junique.JUnique;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +33,13 @@ import java.util.Map;
 import java.util.Set;
 
 import joptsimple.OptionSet;
-import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
+import net.sourceforge.seqware.pipeline.tools.RunLock;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -39,9 +48,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.mockito.Mockito.*;
-
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -81,7 +87,7 @@ public class WorkflowStatusCheckerTest{
     
     @After
     public void cleanMocks(){
-        JUnique.releaseLock(WorkflowStatusChecker.appID);
+        RunLock.release();
     }
     
     @Test
