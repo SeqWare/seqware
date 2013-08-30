@@ -1,5 +1,7 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -51,7 +53,7 @@ public class ProcessingStructureResource extends BasicRestlet {
         List<Integer> accessionList = new ArrayList<Integer>();
         for(String a: accessions) {
             try {
-                Integer i = BasicResource.parseClientInt(a);
+                Integer i = parseClientInt(a);
                 accessionList.add(i);
             } catch(NumberFormatException e) {
                 response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST, "Invalid swAccession");
