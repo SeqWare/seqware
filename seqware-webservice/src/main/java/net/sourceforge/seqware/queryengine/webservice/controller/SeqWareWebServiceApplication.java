@@ -114,6 +114,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
      *
      * @return a {@link org.restlet.Restlet} object.
      */
+    @Override
     public synchronized Restlet createInboundRoot() {
         final Component component = new Component();
         component.getClients().add(Protocol.CLAP);
@@ -387,6 +388,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         public OptionalSlashRedirect() {
         }
 
+        @Override
         public void handle(Request request, Response response) {
             super.handle(request, response);
 

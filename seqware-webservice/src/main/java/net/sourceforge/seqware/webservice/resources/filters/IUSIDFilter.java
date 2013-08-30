@@ -53,14 +53,14 @@ public class IUSIDFilter extends BasicResource {
             Object val = requestAttributes.get("laneId");
             if (val != null) {
                 LaneService ss = BeanFactory.getLaneServiceBean();
-                Lane s = (Lane)testIfNull(ss.findBySWAccession(Integer.parseInt(val.toString())));
+                Lane s = (Lane)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
                 iuss = (SortedSet<IUS>) testIfNull(s.getIUS());
             }
         } else if (requestAttributes.containsKey("sampleId")) {
             Object val = requestAttributes.get("sampleId");
             if (val != null) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                Sample s = (Sample)testIfNull(ss.findBySWAccession(Integer.parseInt(val.toString())));
+                Sample s = (Sample)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
                 iuss = (SortedSet<IUS>)testIfNull(s.getIUS());
             }
         } else {

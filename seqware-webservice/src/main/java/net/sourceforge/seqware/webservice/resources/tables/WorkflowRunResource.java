@@ -67,7 +67,7 @@ public class WorkflowRunResource extends DatabaseResource {
 
         if (queryValues.get("id") != null) {
             JaxbObject<WorkflowRun> jaxbTool = new JaxbObject<WorkflowRun>();
-            WorkflowRun wr = (WorkflowRun) testIfNull(ss.findByID(Integer.parseInt(queryValues.get("id"))));
+            WorkflowRun wr = (WorkflowRun) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
             WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, wr);
 
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);

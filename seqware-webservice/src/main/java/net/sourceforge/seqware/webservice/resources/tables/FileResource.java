@@ -64,7 +64,7 @@ public class FileResource extends DatabaseResource {
 
         if (queryValues.get("id") != null) {
             JaxbObject<File> jaxbTool = new JaxbObject<File>();
-            File p = (File) testIfNull(ss.findByID(Integer.parseInt(queryValues.get("id"))));
+            File p = (File) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
 
             File dto = copier.hibernate2dto(File.class, p);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
