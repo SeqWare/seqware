@@ -164,6 +164,10 @@ public class XmlTools {
     public static Object unMarshal(JaxbObject jaxbTool, Object expectedType, String string) throws SAXException {
         Object o = null;
         try {
+            // SEQWARE-1549
+            if (string == null) {
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST);
+            }
             Document document = XmlTools.getDocument(string);
             o = jaxbTool.unMarshal(document, expectedType);
 

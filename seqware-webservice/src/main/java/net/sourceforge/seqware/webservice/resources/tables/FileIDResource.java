@@ -23,7 +23,6 @@ import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileAttribute;
-import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
@@ -58,7 +57,7 @@ public class FileIDResource extends DatabaseIDResource {
     public void getXml() {
         FileService ss = BeanFactory.getFileServiceBean();
 
-        File file = (File) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        File file = (File) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<File> jaxbTool = new JaxbObject<File>();
 
@@ -87,6 +86,8 @@ public class FileIDResource extends DatabaseIDResource {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         }
         try {
+            // SEQWARE-1548 
+            newFile = testIfNull(newFile); 
             // persist
             FileService fs = BeanFactory.getFileServiceBean();
             File file = (File) testIfNull(fs.findByID(newFile.getFileId()));

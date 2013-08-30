@@ -17,12 +17,9 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -40,7 +37,6 @@ import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
@@ -60,7 +56,6 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 
-import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.restlet.data.MediaType;
@@ -98,7 +93,7 @@ public class ProcessIDResource extends DatabaseIDResource {
         authenticate();
 
         ProcessingService ss = BeanFactory.getProcessingServiceBean();
-        Processing processing = (Processing) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        Processing processing = (Processing) testIfNull(ss.findBySWAccession(getId()));
         Processing dto = copier.hibernate2dto(Processing.class, processing);
 
         if (fields.contains("workflowRun")) {

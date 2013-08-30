@@ -245,7 +245,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
     }
 
     private WorkflowRun getWorkflowRun(WorkflowRunService ss) throws NumberFormatException {
-        WorkflowRun workflowRun = (WorkflowRun) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        WorkflowRun workflowRun = (WorkflowRun) testIfNull(ss.findBySWAccession(getId()));
         return workflowRun;
     }
 
