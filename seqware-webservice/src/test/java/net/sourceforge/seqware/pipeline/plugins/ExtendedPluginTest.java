@@ -22,14 +22,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -158,7 +156,9 @@ public class ExtendedPluginTest extends PluginTest {
     @Override
     public void setUp() {
         super.setUp();
-        instance.setMetadata(metadata);
+        if (instance != null) {
+            instance.setMetadata(metadata);
+        }
         outStream = new ByteArrayOutputStream();
         errStream = new ByteArrayOutputStream();
         PrintStream pso = new PrintStream(outStream);
