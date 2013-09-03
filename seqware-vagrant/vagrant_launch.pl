@@ -127,6 +127,12 @@ sub find_node_info {
       if ($pip =~ /addr:(\S+)/) { $d->{$host_id}{pip} = $1; }
     }
   }
+
+  my $hosts_file = "";
+  foreach my $host (keys %{$d}) {
+   $hosts_file .= "$host  ".$d->{$host}{pip}."\n";
+  }
+  $configs->{'%{HOSTS}'} = $hosts_file;
  
   return($d);
 }
@@ -156,9 +162,10 @@ sub run_provision_script {
   foreach my $script (@a) {
     $script =~ /\/([^\/]+)$/;
     my $script_name = $1;
-    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." $script ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." bash /tmp/config_script.sh");
+    system("rm /tmp/config_script.sh");
+    setup_os_config_scripts($script, "/tmp/config_script.sh");
+    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." bash /tmp/config_script.sh");
   }
-  # left off here
 }
 
 
