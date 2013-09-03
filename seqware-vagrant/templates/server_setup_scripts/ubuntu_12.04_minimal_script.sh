@@ -14,21 +14,21 @@ dpkg -i cdh4-repository_1.0_all.deb
 curl -s http://archive.cloudera.com/cdh4/ubuntu/precise/amd64/cdh/archive.key | sudo apt-key add -
 
 # setup cloudera manager repo (not used)
-REPOCM=${REPOCM:-cm4}
-CM_REPO_HOST=${CM_REPO_HOST:-archive.cloudera.com}
-CM_MAJOR_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9]\\).*/\\1/')
-CM_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9][0-9]*\\)/\\1/')
-OS_CODENAME=$(lsb_release -sc)
-OS_DISTID=$(lsb_release -si | tr '[A-Z]' '[a-z]')
-if [ $CM_MAJOR_VERSION -ge 4 ]; then
-  cat > /etc/apt/sources.list.d/cloudera-$REPOCM.list <<EOF
-deb [arch=amd64] http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
-deb-src http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
-EOF
-curl -s http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm/archive.key > key
-apt-key add key
-rm key
-fi
+#REPOCM=${REPOCM:-cm4}
+#CM_REPO_HOST=${CM_REPO_HOST:-archive.cloudera.com}
+#CM_MAJOR_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9]\\).*/\\1/')
+#CM_VERSION=$(echo $REPOCM | sed -e 's/cm\\([0-9][0-9]*\\)/\\1/')
+#OS_CODENAME=$(lsb_release -sc)
+#OS_DISTID=$(lsb_release -si | tr '[A-Z]' '[a-z]')
+#if [ $CM_MAJOR_VERSION -ge 4 ]; then
+#  cat > /etc/apt/sources.list.d/cloudera-$REPOCM.list <<EOF
+#deb [arch=amd64] http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
+#deb-src http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm $OS_CODENAME-$REPOCM contrib
+#EOF
+#curl -s http://$CM_REPO_HOST/cm$CM_MAJOR_VERSION/$OS_DISTID/$OS_CODENAME/amd64/cm/archive.key > key
+#apt-key add key
+#rm key
+#fi
 
 # get packages
 apt-get update
