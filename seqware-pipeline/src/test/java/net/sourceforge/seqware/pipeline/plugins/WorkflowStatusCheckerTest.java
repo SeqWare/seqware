@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import it.sauronsoftware.junique.AlreadyLockedException;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
@@ -97,12 +98,11 @@ public class WorkflowStatusCheckerTest{
         Assert.assertNotNull(workflowStatusChecker.getMetadata());
     }
     
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testInitLocking(){
         final ReturnValue ret1 = workflowStatusChecker.init();
         Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
-        final ReturnValue ret2 = workflowStatusChecker.init();
-        Assert.assertTrue("workflowStatusChecker not properly locked in init", ret2.getExitStatus() == ReturnValue.FAILURE);
+        workflowStatusChecker.init();
     }
     
     @Test 
@@ -178,6 +178,7 @@ public class WorkflowStatusCheckerTest{
         PowerMockito.mockStatic(FileTools.class);
         when(FileTools.getLocalhost(options)).thenReturn(new LocalhostPair("localhost", new ReturnValue(ReturnValue.SUCCESS)));
         when(FileTools.isFileOwner(anyString())).thenReturn(true);
+        when(FileTools.determineFilePermissions(anyString())).thenReturn("-rw-------");
         final WorkflowTools workflowTools = mock(WorkflowTools.class);
         PowerMockito.whenNew(WorkflowTools.class).withAnyArguments().thenReturn(workflowTools);
 
