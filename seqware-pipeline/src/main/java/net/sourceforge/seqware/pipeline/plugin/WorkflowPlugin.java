@@ -11,9 +11,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugin;
 
-import it.sauronsoftware.junique.AlreadyLockedException;
-import it.sauronsoftware.junique.JUnique;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +27,7 @@ import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.pipeline.tools.RunLock;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflow.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
@@ -293,16 +291,7 @@ public class WorkflowPlugin extends Plugin {
                            new ArrayList<String>(), options.has(WAIT), nonOptions, inputFiles);
 
     } else if (options.has(LAUNCH_SCHEDULED)) {
-      // check to see if this code is already running, if so exit
-      try {
-        JUnique.acquireLock(appID);
-      } catch (AlreadyLockedException e) {
-        Log.error("I could not get a lock for " + appID
-            + " this most likely means the application is alredy running and this instance will exit!", e);
-        ret.setExitStatus(ReturnValue.FAILURE);
-        return ret;
-      }
-
+      RunLock.acquire();
       launchScheduledWorkflows(w, metadataWriteback);
     } else {
       Log.error("I don't understand the combination of arguments you gave!");
