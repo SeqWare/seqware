@@ -59,8 +59,6 @@ while [ -h "$SCRIPT" ] ; do
     fi
 done
 
-export SEQWARE_JVM_OPTS="${SEQWARE_JVM_OPTS-"-XX:+TieredCompilation -XX:TieredStopAtLevel=1"}"
-
 function make_native_path {
     # ensure we have native paths
     if $cygwin && [[ "$1"  == /* ]]; then
