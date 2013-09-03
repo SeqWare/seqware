@@ -136,11 +136,10 @@ sub find_node_info {
     }
   }
 
-  my $hosts_file = "";
-  foreach my $host (keys %{$d}) {
-   $hosts_file .= "$host  ".$d->{$host}{pip}."\n";
-  }
-  $configs->{'%{HOSTS}'} = $hosts_file;
+#  my $hosts_file = "";
+#  foreach my $host (keys %{$d}) {
+#   $hosts_file .= "$host  ".$d->{$host}{pip}."\n";
+#  } 
  
   return($d);
 }
@@ -167,8 +166,11 @@ sub provision_instances {
 sub run_provision_script {
   my ($config_scripts, $host, $hosts) = @_;
   my $host_str = figure_out_host_str($hosts);
+  $configs->{'%{HOSTS}'} = $host_str;
   my $master_pip = $hosts->{master}{pip};
+  $configs->{'%{MASTER_PIP}'} = $hosts->{master}{pip};
   my $exports = make_exports_str($hosts);
+  $configs->{'%{EXPORTS}'} = $exports;
   my @a = split /,/, $config_scripts;
   foreach my $script (@a) {
     $script =~ /\/([^\/]+)$/;
@@ -176,13 +178,13 @@ sub run_provision_script {
     system("rm /tmp/config_script.sh");
     setup_os_config_scripts($script, "/tmp/config_script.sh");
     run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." bash /tmp/config_script.sh");
-  }
     #replace($script, "/tmp/config_script.sh", '%{HOSTS}', $host_str);
     #replace("/tmp/config_script.sh", "/tmp/config_script.2.sh", '%{MASTER_PIP}', $master_pip);
     #autoreplace("/tmp/config_script.2.sh", "/tmp/config_script.3.sh");
     #replace("/tmp/config_script.3.sh", "/tmp/config_script.sh", '%{EXPORTS}', $exports);
     #run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." sudo bash /tmp/config_script.sh");
     #run("rm /tmp/config_script.sh /tmp/config_script.2.sh");
+  }
 }
 
 # this creates a string to add to /etc/exports
