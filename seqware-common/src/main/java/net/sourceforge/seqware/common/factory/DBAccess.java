@@ -39,34 +39,16 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
  */
 public class DBAccess {
   
-  private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<MetadataDB>() {
-    @Override
-    protected synchronized MetadataDB initialValue() {
-      DataSource ds = null;
-      try {
-        InitialContext initCtx = new InitialContext();
-        ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/SeqWareMetaDB");
-      } catch (NamingException ex) {
-        Log.info("Could not lookup database via context", ex);
-      }
+  private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<MetadataDB>();
 
-      if (ds != null) {
-        Log.debug("Instantiate MetadataDB via datasource " + ds.getClass());
-        try {
-          return new MetadataDB(ds);
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
-        }
-      } else {
-        Log.debug("Obtain MetadataDB via MetadataFactory");
-        Map<String, String> settings = ConfigTools.getSettings();
-        return MetadataFactory.getDB(settings);
-      }
-    }
-  };
-
-  public synchronized static MetadataDB get() {
+  public static MetadataDB get() {
     MetadataDB mdb = metadataDBWrapper.get();
+
+    if (mdb == null){
+      mdb = create();
+      metadataDBWrapper.set(mdb);
+      return mdb;
+    }
 
     boolean cleanup = true;
     try {
@@ -75,11 +57,33 @@ public class DBAccess {
     }
 
     if (cleanup) {
-      mdb.clean_up();
-      metadataDBWrapper.remove();
-      return metadataDBWrapper.get();
+      close();
+      return get();
     } else {
       return mdb;
+    }
+  }
+
+  private static MetadataDB create(){
+    DataSource ds = null;
+    try {
+      InitialContext initCtx = new InitialContext();
+      ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/SeqWareMetaDB");
+    } catch (NamingException ex) {
+      Log.info("Could not lookup database via context", ex);
+    }
+
+    if (ds != null) {
+      Log.debug("Instantiate MetadataDB via datasource " + ds.getClass());
+      try {
+        return new MetadataDB(ds);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      Log.debug("Obtain MetadataDB via MetadataFactory");
+      Map<String, String> settings = ConfigTools.getSettings();
+      return MetadataFactory.getDB(settings);
     }
   }
 
@@ -87,11 +91,10 @@ public class DBAccess {
      * <p>close.</p>
      */
     public synchronized static void close() {
-        if (metadataDBWrapper.get() != null) {
+        MetadataDB mdb = metadataDBWrapper.get();
+        if (mdb != null) {
             Log.debug(metadataDBWrapper.get().toString() + " was closed ");
-            metadataDBWrapper.get().clean_up();
-            metadataDBWrapper.set(null);
-            //db = null;
+            mdb.clean_up();
         }
         metadataDBWrapper.remove();
     }
