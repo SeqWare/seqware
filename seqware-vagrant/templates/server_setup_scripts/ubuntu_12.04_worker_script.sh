@@ -17,7 +17,7 @@ apt-get -q -y --force-yes install git maven sysv-rc-conf xfsprogs hadoop-0.20-ma
 ###perl /vagrant/setup_hdfs_volumes.pl
 
 # configuration for hadoop
-cp /vagrant/conf.worker/etc/hadoop/
+cp /vagrant/conf.worker.tar.gz /etc/hadoop/
 cd /etc/hadoop/
 tar zxf conf.worker.tar.gz
 cd -

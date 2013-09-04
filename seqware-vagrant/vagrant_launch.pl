@@ -86,8 +86,6 @@ if ($skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = ""; }
 
 # process server scripts into single bash script
 setup_os_config_scripts($config_scripts, "$work_dir/os_server_setup.sh");
-# TODO: need to setup these scripts! after nodes launched and we have host info
-#setup_os_config_scripts($secondary_config_scripts, "$work_dir/secondary_os_server_setup.sh");
 prepare_files();
 if (!$skip_launch) {
   # this launches and does first round setup
@@ -177,7 +175,7 @@ sub run_provision_script {
     my $script_name = $1;
     system("rm /tmp/config_script.sh");
     setup_os_config_scripts($script, "/tmp/config_script.sh");
-    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." bash /tmp/config_script.sh");
+    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." sudo bash /tmp/config_script.sh");
     #replace($script, "/tmp/config_script.sh", '%{HOSTS}', $host_str);
     #replace("/tmp/config_script.sh", "/tmp/config_script.2.sh", '%{MASTER_PIP}', $master_pip);
     #autoreplace("/tmp/config_script.2.sh", "/tmp/config_script.3.sh");
@@ -194,9 +192,9 @@ sub make_exports_str {
   foreach my $host (keys %{$hosts}) {
     my $pip = $hosts->{$host}{pip};
     $result .= "
-/home $pip(rw,sync,no_subtree_check)
-/datastore $pip(rw,sync,no_subtree_check)
-/usr/tmp/seqware-oozie $pip(rw,sync,no_subtree_check)
+/home $pip(rw,sync,no_root_squash,no_subtree_check)
+/datastore $pip(rw,sync,no_root_squash,no_subtree_check)
+/usr/tmp/seqware-oozie $pip(rw,sync,no_root_squash,no_subtree_check)
 ";
   }
   print "EXPORT: $result\n"; 
