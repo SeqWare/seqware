@@ -111,6 +111,10 @@ Alternatively, if you wish to still use an embedded tomcat instance for testing,
 
     mvn clean install -DskipITs=false -P extITs,embeddedTomcat
 
+You can also run the integration tests by using a locally installed tomcat instance. Make sure the BASIC_TEST_* and EXTENDED_TEST_* are defined to get this to work:
+
+    mvn clean install -DskipITs=false -P extITs
+
 You can also build individual components such as the new query engine with: 
 
     cd seqware-queryengine
