@@ -73,6 +73,10 @@ If you need to debug a problem set the VAGRANT_LOG variable e.g.:
 Also you can use the "--skip-launch" option to just create the various launch
 files not actually trigger a VM.
 
+Vagrant will often report an error of the form ""Expected(200) <=> Actual(400 Bad Request)"." with no details.
+See the following patch for a fix
+https://github.com/jeremyharris/vagrant-aws/commit/1473c3a45570fdebed2f2b28585244e53345eb1d
+
 ## Shutting Down
 
 You can terminate your instance via the provider interface (Open Stack, AWS, or VirtualBox).
