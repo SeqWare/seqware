@@ -68,6 +68,7 @@ public class OozieBashJob extends OozieJob {
 
     ArrayList<String> args = new ArrayList<String>();
     args.add("java");
+    args.add("-Xmx"+jobObj.getCommand().getMaxMemory());
     args.add("-classpath");
     args.add(seqwareJarPath);
     args.add("net.sourceforge.seqware.pipeline.runner.Runner");
