@@ -502,7 +502,7 @@ public interface Metadata {
    * @param filepath a {@link java.lang.String} object.
    * @return a {@link java.lang.Boolean} object.
    */
-  Boolean isDuplicateFile(String filepath);
+  public Boolean isDuplicateFile(String filepath);
 
   /**
    * <p>findFilesAssociatedWithASequencerRun.</p>
