@@ -1,0 +1,5 @@
+sequencer_run	sample	lane	ius_sw_accession	file_status	mime_type	file
+.	.	10000	4765	.	txt	funky_file1.gz
+.	.	10000	4765	.	txt	funky_file2.gz		
+.	.	10000	4789	.	txt	abc1.gz
+.	.	10000	4789	.	txt	abc2.gz	
