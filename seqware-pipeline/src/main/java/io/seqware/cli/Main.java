@@ -94,10 +94,16 @@ public class Main {
       if (key.equals(s)) {
         args.remove(i);
         if (i < args.size()) {
-          vals.add(args.remove(i));
-        } else {
-          kill("seqware: missing required argument to '%s'.", key);
+          String val = args.remove(i);
+          if (!val.startsWith("--")){
+            String[] ss = val.split(",");
+            if (ss.length > 0) {
+              vals.addAll(Arrays.asList(ss));
+              continue;
+            }
+          }
         }
+        kill("seqware: missing required argument to '%s'.", key);
       } else {
         i++;
       }
