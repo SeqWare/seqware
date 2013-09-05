@@ -35,6 +35,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowV2Utility;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.PegasusWorkflowEngine;
 
 import org.openide.util.lookup.ServiceProvider;
@@ -361,6 +362,12 @@ public class WorkflowPlugin extends Plugin {
     } else if (engine.equalsIgnoreCase("oozie-sge")) {
       String threadsSgeParamFormat = config.get("OOZIE_SGE_THREADS_PARAM_FORMAT");
       String maxMemorySgeParamFormat = config.get("OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT");
+      if (threadsSgeParamFormat == null) {
+        System.err.println("WARNING: No entry in settings for OOZIE_SGE_THREADS_PARAM_FORMAT, omitting threads option from qsub. Fix by providing the format of qsub threads option, using the '"+OozieJob.SGE_THREADS_PARAM_VARIABLE+"' variable.");
+      }
+      if (maxMemorySgeParamFormat == null) {
+        System.err.println("WARNING: No entry in settings for OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT, omitting max-memory option from qsub. Fix by providing the format of qsub max-memory option, using the '"+OozieJob.SGE_MAX_MEMORY_PARAM_VARIABLE+"' variable.");
+      }
       wfEngine = new OozieWorkflowEngine(dataModel, true, threadsSgeParamFormat, maxMemorySgeParamFormat);
     } else {
       throw new IllegalArgumentException("Unknown workflow engine: " + engine);
