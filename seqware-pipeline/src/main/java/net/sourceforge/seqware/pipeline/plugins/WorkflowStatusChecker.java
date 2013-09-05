@@ -156,17 +156,16 @@ public class WorkflowStatusChecker extends Plugin {
 
     } else { // this checks workflows and writes their status back to the DB
 
-      List<WorkflowRun> runningWorkflows;
+      Set<WorkflowRun> runningWorkflows = new HashSet<WorkflowRun>();
 
       if (options.has(WORKFLOW_RUN_ACCESSION)){
-        runningWorkflows = new ArrayList<WorkflowRun>();
         List<Integer> swids = (List<Integer>) options.valuesOf(WORKFLOW_RUN_ACCESSION);
         for(Integer swid : swids){
           WorkflowRun wr = this.metadata.getWorkflowRun(swid);
           runningWorkflows.add(wr);
         }
       } else {
-        runningWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running);
+        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running));
         runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
         runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel));
         runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry));
