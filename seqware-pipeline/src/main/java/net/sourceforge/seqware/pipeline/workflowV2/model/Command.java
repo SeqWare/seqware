@@ -49,8 +49,11 @@ public class Command {
 	}
 
 	public Command setMaxMemory(String mem) {
-		this.mem = mem;
-		return this;
+	  if (mem.matches("\\d+(g|G|m|M|k|K)?")){
+	    this.mem = mem;
+	    return this;
+	  }
+	  throw new IllegalArgumentException("Invalid max-memory value: "+mem);
 	}
 
 	public boolean isGcrSkipIfMissing() {
