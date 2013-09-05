@@ -156,13 +156,23 @@ public class WorkflowStatusChecker extends Plugin {
 
     } else { // this checks workflows and writes their status back to the DB
 
-      // get a list of running workflows
-      List<WorkflowRun> runningWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running);
-      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
-      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel));
-      runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry));
-      if (options.has("check-failed")) {
-        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.failed));
+      List<WorkflowRun> runningWorkflows;
+
+      if (options.has(WORKFLOW_RUN_ACCESSION)){
+        runningWorkflows = new ArrayList<WorkflowRun>();
+        List<Integer> swids = (List<Integer>) options.valuesOf(WORKFLOW_RUN_ACCESSION);
+        for(Integer swid : swids){
+          WorkflowRun wr = this.metadata.getWorkflowRun(swid);
+          runningWorkflows.add(wr);
+        }
+      } else {
+        runningWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running);
+        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
+        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel));
+        runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry));
+        if (options.has("check-failed")) {
+          runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.failed));
+        }
       }
 
       // setup thread pool
@@ -280,14 +290,6 @@ public class WorkflowStatusChecker extends Plugin {
       if (options.has("workflow-accession") && options.valueOf("workflow-accession") != null
           && !((String) options.valueOf("workflow-accession")).equals(wr.getWorkflowAccession().toString())) {
         return;
-      }
-
-      // check if this workflow run accession matches if provided
-      if (options.has(WORKFLOW_RUN_ACCESSION)) {
-          List<Integer> valuesOf = (List<Integer>) options.valuesOf(WORKFLOW_RUN_ACCESSION);
-          if(!valuesOf.contains(wr.getSwAccession())){
-              return;
-          }
       }
 
       // check the host is either overridden or this is the same host the
