@@ -94,10 +94,16 @@ public class Main {
       if (key.equals(s)) {
         args.remove(i);
         if (i < args.size()) {
-          vals.add(args.remove(i));
-        } else {
-          kill("seqware: missing required argument to '%s'.", key);
+          String val = args.remove(i);
+          if (!val.startsWith("--")){
+            String[] ss = val.split(",");
+            if (ss.length > 0) {
+              vals.addAll(Arrays.asList(ss));
+              continue;
+            }
+          }
         }
+        kill("seqware: missing required argument to '%s'.", key);
       } else {
         i++;
       }
@@ -1110,11 +1116,12 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --accession <swid>   Launch the specified workflow-run");
+      out("                       Repeat this parameter to specify multiple workflow-runs");
       out("  --threads <num>      The number of concurrent worker threads (default 1)");
       out("");
     } else {
       String threads = optVal(args, "--threads", null);
-      String wfr = optVal(args, "--accession", null);
+      List<String> wfrs = optVals(args, "--accession");
 
       extras(args, "workflow-run propagate-statuses");
 
@@ -1127,9 +1134,9 @@ public class Main {
         runnerArgs.add("--threads-in-thread-pool");
         runnerArgs.add(threads);
       }
-      if (wfr != null) {
+      if (!wfrs.isEmpty()) {
         runnerArgs.add("--workflow-run-accession");
-        runnerArgs.add(wfr);
+        runnerArgs.add(cdl(wfrs));
       }
 
       run(runnerArgs);

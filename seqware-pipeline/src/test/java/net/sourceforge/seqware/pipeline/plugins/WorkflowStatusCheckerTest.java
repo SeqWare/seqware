@@ -165,6 +165,7 @@ public class WorkflowStatusCheckerTest{
             wr.setOwnerUserName("user");
             wr.setWorkflowAccession(42);
             wr.setWorkflowRunId(42+i);
+            wr.setSwAccession(42+i);
             wr.setCommand("dummyValue");
             wr.setTemplate("dummyValue");
             wr.setCurrentWorkingDir("dummyValue");
