@@ -268,6 +268,9 @@ sub prepare_files {
   # FIXME: break out into config driven provisioniner
   copy("templates/conf.worker.tar.gz", "$work_dir/conf.worker.tar.gz");
   copy("templates/conf.master.tar.gz", "$work_dir/conf.master.tar.gz");
+  # DCC
+  # FIXME: break out into config driven provisioner
+  copy("templates/DCC/settings.yml", "$work_dir/settings.yml");
 }
 
 sub autoreplace {
