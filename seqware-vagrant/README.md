@@ -103,7 +103,7 @@ This will spin up a standard, 2 node SeqWare cluster (using Oozie-Hadoop), will 
 
 Keep in mind you should look at the templates/Vagrantfile.template before you launch to make sure your floating IP addresses are correct.  Also, the specific index dump file and DCC Portal jar file are hard coded in the ubuntu_12.04_master_dcc_portal_script.sh script so you will want to change these if there's an update.  Also, take a look at templates/DCC/settings.yml which has the index name embedded and will need to change if the index is updated.
 
-    perl vagrant_launch.pl --use-openstack --skip-it-tests --os-master-config-scripts templates/server_setup_scripts/ubuntu_12.04_master_script.sh,templates/server_setup_scripts/ubuntu_12.04_elasticsearch_node_script.sh,templates/server_setup_scripts/ubuntu_12.04_master_dcc_portal_script.sh --os-worker-config-scripts templates/server_setup_scripts/ubuntu_12.04_worker_script.sh,templates/server_setup_scripts/ubuntu_12.04_elasticsearch_master_script.sh --os-initial-config-scripts templates/server_setup_scripts/ubuntu_12.04_minimal_script.sh
+    perl vagrant_launch.pl --use-openstack --skip-it-tests --os-master-config-scripts templates/server_setup_scripts/ubuntu_12.04_master_script.sh,templates/server_setup_scripts/ubuntu_12.04_elasticsearch_node_script.sh,templates/server_setup_scripts/ubuntu_12.04_master_dcc_portal_script.sh --os-worker-config-scripts templates/server_setup_scripts/ubuntu_12.04_worker_script.sh,templates/server_setup_scripts/ubuntu_12.04_elasticsearch_node_script.sh --os-initial-config-scripts templates/server_setup_scripts/ubuntu_12.04_minimal_script.sh
 
 Once this finishes launching you can browse the DCC Portal at http://<master_node_IP>:8998/.
 
