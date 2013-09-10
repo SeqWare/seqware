@@ -67,14 +67,42 @@ working directory (which defaults to target, it's the location where Vagrant
 puts all of its runtime files), point to different OS-specific setup script(s),
 and skip the integration tests if desired:
 
-  # example
-  perl vagrant_launch.pl --use-aws --working-dir target-aws --config-files templates/server_setup_scripts/ubuntu_12.04_base_script.sh,templates/server_setup_scripts/ubuntu_12.04_database_script.sh,templates/server_setup_scripts/ubuntu_12.04_portal_script.sh --skip-it-tests
+    # example
+    perl vagrant_launch.pl --use-aws --working-dir target-aws --config-files templates/server_setup_scripts/ubuntu_12.04_base_script.sh,templates/server_setup_scripts/ubuntu_12.04_database_script.sh,templates/server_setup_scripts/ubuntu_12.04_portal_script.sh --skip-it-tests
+
+## OICR Examples
+
+These are in flux right now but I'll try to keep the following up to date.  We're using this seqware-vagrant process for the following projects.
+
+Keep in mind you will want to take a look at the Vagrant template (templates/Vagrantfile.template) and modify as needed for your backend (AWS, OpenStack, Virtualbox) since some params (like floating IP address) are not yet parameters.
+
+### Single Node - All Projects
+
+This is currently broken since I've refactored for cluster launching.  The plan is to generalize this vagrant_launch.pl script so you can choose single or cluster mode and you can choose how many worker nodes to launch.  In the mean time use the develop branch instead if you need to launch a single node otherwise use the sample commands below to launch 2 node clusters for testing.
+
+### SeqWare - Cluster
+
+This will launch a 2 node cluster with a worker and master node. It's designed to use Oozie-Hadoop (not Oozie-SGE but Alex did create config shell scripts for this too).
+
+    perl vagrant_launch.pl --use-openstack --skip-it-tests --os-master-config-scripts templates/server_setup_scripts/ubuntu_12.04_master_script.sh --os-worker-config-scripts templates/server_setup_scripts/ubuntu_12.04_worker_script.sh --os-initial-config-scripts templates/server_setup_scripts/ubuntu_12.04_minimal_script.sh
+
+The only issue with this right now is I don't think HBase is configured to work in HDFS/distributed mode.  Also, see the note above about hard-coded values in the Vagrantfile.template.
+
+### ICGC DCC Portal - Cluster
+
+This will spin up a standard, 2 node SeqWare cluster (using Oozie-Hadoop), will setup elasticsearch, will download a dump of the (small) elasticsearch DCC index, load the dump into elasticsearch, and launch the DCC Portal web app on port 8998.
+
+Keep in mind you should look at the templates/Vagrantfile.template before you launch to make sure your floating IP addresses are correct.  Also, the specific index dump file and DCC Portal jar file are hard coded in the ubuntu_12.04_master_dcc_portal_script.sh script so you will want to change these if there's an update.  Also, take a look at templates/DCC/settings.yml which has the index name embedded and will need to change if the index is updated.
+
+    perl vagrant_launch.pl --use-openstack --skip-it-tests --os-master-config-scripts templates/server_setup_scripts/ubuntu_12.04_master_script.sh,templates/server_setup_scripts/ubuntu_12.04_elasticsearch_master_script.sh,templates/server_setup_scripts/ubuntu_12.04_master_dcc_portal_script.sh --os-worker-config-scripts templates/server_setup_scripts/ubuntu_12.04_worker_script.sh,templates/server_setup_scripts/ubuntu_12.04_elasticsearch_master_script.sh --os-initial-config-scripts templates/server_setup_scripts/ubuntu_12.04_minimal_script.sh
+
+Once this finishes launching you can browse the DCC Portal at http://<master_node_IP>:8998/.
 
 ## Debugging
 
 If you need to debug a problem set the VAGRANT_LOG variable e.g.:
 
-   VAGRANT_LOG=DEBUG perl vagrant_launch.pl --use-aws
+    VAGRANT_LOG=DEBUG perl vagrant_launch.pl --use-aws
 
 Also you can use the "--skip-launch" option to just create the various launch
 files not actually trigger a VM.
