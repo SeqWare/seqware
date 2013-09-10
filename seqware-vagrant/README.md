@@ -50,17 +50,19 @@ slightly tweaked differences.
 
 ## Running with the Wrapper
 
+NOTE: this is out of date, see the "OICR Examples" section for current, cluster-launching examples.
+
 We provide a wrapper script (vagrant_launch.pl) that helps to lauch an instance
 in different cloud environments. It makes sure sensitive information is not
 stored in files that will be checked in and also collects various files from
 other parts of the SeqWare build.
 
-  # for AWS
-  perl vagrant_launch.pl --use-aws
-  # for OpenStack
-  perl vagrant_launch.pl --use-openstack
-  # for VirtualBox
-  perl vagrant_launch.pl --use-virtualbox
+    # for AWS
+    perl vagrant_launch.pl --use-aws
+    # for OpenStack
+    perl vagrant_launch.pl --use-openstack
+    # for VirtualBox
+    perl vagrant_launch.pl --use-virtualbox
 
 This script also lets you point to the config file explicitly, change the
 working directory (which defaults to target, it's the location where Vagrant
@@ -72,9 +74,16 @@ and skip the integration tests if desired:
 
 ## OICR Examples
 
-These are in flux right now but I'll try to keep the following up to date.  We're using this seqware-vagrant process for the following projects.
+These are in flux right now but I'll try to keep the following up to date.  We're using this seqware-vagrant process for the following projects:
+
+* ICGC DCC Portal
+* SeqWare 
 
 Keep in mind you will want to take a look at the Vagrant template (templates/Vagrantfile.template) and modify as needed for your backend (AWS, OpenStack, Virtualbox) since some params (like floating IP address) are not yet parameters.
+
+### Setup
+
+Make sure you setup your vagrant_launch.conf file as described in "Configuration".  See Brian for OICR-specific settings which are described in more detail here: https://wiki.oicr.on.ca/display/SEQWARE/Cluster+or+Node+Launching+with+Vagrant
 
 ### Single Node - All Projects
 
