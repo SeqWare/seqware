@@ -22,6 +22,7 @@ dpkg -i elasticsearch-0.90.1.deb
 
 # fix memory TODO: need to make this an option!
 perl -pi -e 's/\#ES_HEAP_SIZE=2g/ES_HEAP_SIZE=8g/' /etc/init.d/elasticsearch
-perl -pi -e 's/\#bootstrap.mlockall: true/bootstrap.mlockall: true/' /etc/elasticsearch/elasticsearch.yml
+perl -pi -e 's/\# bootstrap.mlockall: true/bootstrap.mlockall: true/' /etc/elasticsearch/elasticsearch.yml
+perl -pi -e 's/\# discovery.zen.minimum_master_nodes: 1/discovery.zen.minimum_master_nodes: 2/' /etc/elasticsearch/elasticsearch.yml
 /etc/init.d/elasticsearch restart
 
