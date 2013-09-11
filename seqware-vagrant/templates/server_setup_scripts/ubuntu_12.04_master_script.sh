@@ -21,7 +21,7 @@ apt-get -q -y --force-yes install postgresql-9.1 postgresql-client-9.1 tomcat6-c
 
 # install Hadoop deps, the master node runs the NameNode, SecondaryNameNode and JobTracker
 # NOTE: shouldn't really use secondary name node on same box for production
-apt-get -q -y --force-yes install hadoop-0.20-mapreduce-jobtracker hadoop-hdfs-namenode hadoop-0.20-mapreduce-tasktracker hadoop-hdfs-datanode hadoop-client hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase-master xfsprogs
+apt-get -q -y --force-yes install hadoop-0.20-mapreduce-jobtracker hadoop-hdfs-namenode hadoop-0.20-mapreduce-tasktracker hadoop-hdfs-datanode hadoop-client hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase hbase-master hbase-regionserver xfsprogs
 
 
 # setup LZO
@@ -38,18 +38,6 @@ cd -
 update-alternatives --install /etc/hadoop/conf hadoop-conf /etc/hadoop/conf.my_cluster 50
 update-alternatives --set hadoop-conf /etc/hadoop/conf.my_cluster
 
-# setup HDFS configs
-#echo '<?xml version="1.0"?>
-#<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-#
-#<configuration>
-#  <property>
-#   <name>fs.defaultFS</name>
-#   <value>hdfs://master/</value>
-#  </property>
-#</configuration>
-#' > /etc/hadoop/conf/core-site.xml
-
 # hdfs config
 # should setup multiple directories in hdfs-site.xml
 # TODO: this assumes /mnt has the ephemeral drive!
@@ -59,28 +47,6 @@ chown -R hdfs:hdfs /data/1/dfs/nn /data/1/dfs/dn
 chmod 700 /data/1/dfs/nn /data/1/dfs/dn
 mkdir -p /data/1/mapred/local
 chown -R mapred:mapred /data/1/mapred
-
-#echo '<?xml version="1.0"?>
-#<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
-#<configuration>
-#  <property>
-#     <name>dfs.name.dir</name>
-#     <value>/var/lib/hadoop-hdfs/cache/hdfs/dfs/name</value>
-#  </property>
-#  <property>
-#     <name>dfs.permissions.superusergroup</name>
-#     <value>hadoop</value>
-#  </property>
-#  <property>
-#     <name>dfs.namenode.name.dir</name>
-#     <value>/data/1/dfs/nn</value>
-#  </property>
-#  <property>
-#     <name>dfs.namenode.data.dir</name>
-#     <value>/data/1/dfs/dn</value>
-#  </property>
-#</configuration>
-#' > /etc/hadoop/conf/hdfs-site.xml
 
 # format HDFS
 sudo -u hdfs hadoop namenode -format -force
@@ -118,10 +84,15 @@ mv ext-2.2 /var/lib/oozie/
 service oozie start
 
 # setup hbase
+# TODO: need hdfs-site.xml configured properly using alternatives, but for now just copy it
+cp /etc/hadoop/conf/hbase-site.xml /etc/hbase/conf/hbase-site.xml
+sudo -u hdfs hadoop fs -mkdir /hbase
+sudo -u hdfs hadoop fs -chown hbase /hbase
 service hbase-master start
+service hbase-regionserver start
 
 # setup daemons to start on boot
-for i in apache2 cron hadoop-hdfs-namenode hadoop-hdfs-datanode hadoop-hdfs-secondarynamenode hadoop-0.20-mapreduce-tasktracker hadoop-0.20-mapreduce-jobtracker hue oozie postgresql tomcat6 hbase-master; do echo $i; sysv-rc-conf $i on; done
+for i in apache2 cron hadoop-hdfs-namenode hadoop-hdfs-datanode hadoop-hdfs-secondarynamenode hadoop-0.20-mapreduce-tasktracker hadoop-0.20-mapreduce-jobtracker hue oozie postgresql tomcat6 hbase-master hbase-regionserver; do echo $i; sysv-rc-conf $i on; done
 
 # configure dirs for seqware
 mkdir -p /usr/tmp/seqware-oozie 

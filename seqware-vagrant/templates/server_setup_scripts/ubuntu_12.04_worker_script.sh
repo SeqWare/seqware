@@ -10,7 +10,7 @@ apt-get update
 export DEBIAN_FRONTEND=noninteractive
 
 # install hadoop
-apt-get -q -y --force-yes install git maven sysv-rc-conf xfsprogs hadoop-0.20-mapreduce-tasktracker hadoop-hdfs-datanode hadoop-client
+apt-get -q -y --force-yes install git maven sysv-rc-conf xfsprogs hadoop-0.20-mapreduce-tasktracker hadoop-hdfs-datanode hadoop-client hbase-regionserver
 
 # setup the HDFS drives
 # TODO
@@ -40,9 +40,11 @@ for x in `cd /etc/init.d ; ls hadoop-hdfs-*` ; do sudo service $x start ; done
 # start mapred
 for x in `cd /etc/init.d ; ls hadoop-0.20-mapreduce-*` ; do sudo service $x start ; done
 
+# TODO: probably need to have multiple zookeepers running
 # setup hbase
-# TODO
-#service hbase-master start
+# TODO: need hdfs-site.xml configured properly using alternatives, but for now just copy it
+cp /etc/hadoop/conf/hbase-site.xml /etc/hbase/conf/hbase-site.xml
+service hbase-regionserver start
 
 # setup daemons to start on boot
 for i in cron hadoop-hdfs-datanode hadoop-0.20-mapreduce-tasktracker; do echo $i; sysv-rc-conf $i on; done
