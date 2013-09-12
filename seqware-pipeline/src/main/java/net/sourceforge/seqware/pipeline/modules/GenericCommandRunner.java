@@ -74,7 +74,6 @@ public class GenericCommandRunner extends Module {
                 "gcr-output-file",
                 "Specify this option one or more times for each output file created by the command called by this module. The argument is a '::' delimited list of type, meta_type, and file_path.").withRequiredArg().ofType(String.class).describedAs("Optional: <type:meta_type:file_path>");
         parser.accepts("gcr-command", "The command being executed (quote as needed).").withRequiredArg().ofType(String.class).describedAs("Required");
-        parser.accepts("gcr-script", "The script file to be executed.").withRequiredArg().ofType(String.class).describedAs("Required");
         parser.accepts(
                 "gcr-algorithm",
                 "You can pass in an algorithm name that will be recorded in the metadb if you are writing back to the metadb, otherwise GenericCommandRunner is used.").withRequiredArg().ofType(String.class).describedAs("Optional");
@@ -205,12 +204,9 @@ public class GenericCommandRunner extends Module {
         ret.setExitStatus(ReturnValue.SUCCESS);
 
         // now look at the options and make sure they make sense
-        if (options.has("gcr-command") && options.has("gcr-script")){
+        if (!options.has("gcr-command") && !options.has("gcr-script")){
           ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-          ret.setStderr("Only one of --gcr-command or --gcr-script may be specified.");
-        } else if (!options.has("gcr-command") && !options.has("gcr-script")){
-          ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-          ret.setStderr("One of --gcr-command or --gcr-script must be specified.");
+          ret.setStderr("Missing required parameter: --gcr-command");
         }
 
         return ret;
@@ -304,13 +300,8 @@ public class GenericCommandRunner extends Module {
                 fm.setType(tokens[0]);
                 fm.setMetaType(tokens[1]);
                 fm.setFilePath(tokens[2]);
-                if (options.has("gcr-command")){
-                  fm.setDescription("A file output from the GenericCommandRunner which executed the command \""
-                      + (String) options.valueOf("gcr-command") + "\".");
-                } else {
-                  fm.setDescription("A file output from the GenericCommandRunner which executed the script \""
-                      + (String) options.valueOf("gcr-script") + "\".");
-                }
+                fm.setDescription("A file output from the GenericCommandRunner which executed the command \""
+                    + (String) options.valueOf("gcr-command") + "\".");
                 ret.getFiles().add(fm);
                 // handler the key-value
                 if (fm.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
@@ -344,22 +335,14 @@ public class GenericCommandRunner extends Module {
         StringBuilder stdout = new StringBuilder();
 
         ArrayList<String> theCommand = new ArrayList<String>();
-        if (options.has("gcr-command")){
-          theCommand.add("bash");
-          theCommand.add("-lc");
-          StringBuffer cmdBuff = new StringBuffer();
-          cmdBuff.append((String) options.valueOf("gcr-command") + " ");
-          for (String token : cmdParameters) {
-              cmdBuff.append(token + " ");
-          }
-          theCommand.add(cmdBuff.toString());
-          Log.stdout("Command run: \nbash -lc " + cmdBuff.toString());
-          stderr.append("TESTING: the command\nbash -lc " + cmdBuff.toString());
-        } else {
-          theCommand.add("bash");
-          theCommand.add("-l");
-          theCommand.add((String)options.valueOf("gcr-script"));
+        theCommand.add("bash");
+        theCommand.add("-lc");
+        StringBuffer cmdBuff = new StringBuffer();
+        cmdBuff.append((String) options.valueOf("gcr-command") + " ");
+        for (String token : cmdParameters) {
+            cmdBuff.append(token + " ");
         }
+        theCommand.add(cmdBuff.toString());
         ReturnValue result = RunTools.runCommand(theCommand.toArray(new String[0]));
         Log.stdout("Command exit code: " + result.getExitStatus());
         // ReturnValue result = RunTools.runCommand(new String[] { "bash", "-c",
