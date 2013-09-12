@@ -66,6 +66,7 @@ sudo -u hdfs hadoop fs -chmod 1777 /var/lib/hadoop-hdfs/cache/mapred/mapred/stag
 sudo -u hdfs hadoop fs -chown -R mapred /var/lib/hadoop-hdfs/cache/mapred
 sudo -u hdfs hadoop fs -mkdir /tmp/mapred/system
 sudo -u hdfs hadoop fs -chown mapred:hadoop /tmp/mapred/system
+sudo -u hdfs hadoop fs -chmod -R a+wr /tmp/hadoop-mapred/mapred
 
 # start mapred
 for x in `cd /etc/init.d ; ls hadoop-0.20-mapreduce-*` ; do sudo service $x start ; done
