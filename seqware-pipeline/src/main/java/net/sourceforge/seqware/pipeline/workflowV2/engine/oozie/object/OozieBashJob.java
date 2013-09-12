@@ -99,7 +99,7 @@ public class OozieBashJob extends OozieJob {
 
     args.add("--gcr-algorithm");
     args.add(jobObj.getAlgo());
-    args.add("--gcr-script");
+    args.add("--gcr-command");
     args.add(jobScript.getAbsolutePath());
     return args;
   }
