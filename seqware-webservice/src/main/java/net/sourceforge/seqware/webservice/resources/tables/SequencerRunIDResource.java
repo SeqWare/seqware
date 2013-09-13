@@ -17,7 +17,6 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -25,7 +24,6 @@ import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
@@ -67,7 +65,7 @@ public class SequencerRunIDResource extends DatabaseIDResource {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<SequencerRun> jaxbTool = new JaxbObject<SequencerRun>();
 
-        SequencerRun run = (SequencerRun) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        SequencerRun run = (SequencerRun) testIfNull(ss.findBySWAccession(getId()));
         SequencerRun dto = copier.hibernate2dto(SequencerRun.class, run);
 
 

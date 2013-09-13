@@ -40,7 +40,7 @@ public class CLIUserPhase4 extends UserPhase4{
     public void testExistingFileInAndAssociateWithSample() throws IOException {
         GenericMetadataSaverET it = new GenericMetadataSaverET();
         String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE), true);
-        String sw_accession = OldUserTutorialSuiteET.getAndCheckProcessingAccession(output);
+        String sw_accession = OldUserTutorialSuiteET.getAndCheckSwid(output);
         AccessionMap.accessionMap.put(UserPhase4.FILE, sw_accession);
     }
    

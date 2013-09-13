@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
 import org.apache.commons.lang.StringUtils;
@@ -207,13 +208,7 @@ public abstract class OozieJob {
       args.add(threadsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, Integer.toString(jobObj.getThreads())));
     }
 
-    StringBuilder contents = new StringBuilder();
-    for (String arg : args) {
-      contents.append(arg);
-      contents.append(" ");
-    }
-
-    write(contents.toString(), file);
+    write(concat(" ", args), file);
     return file;
 
   }
@@ -270,6 +265,25 @@ public abstract class OozieJob {
         // gulp
       }
     }
+  }
+
+  protected void writeScript(String contents, File file){
+    StringBuilder sb = new StringBuilder("#!/usr/bin/env bash\n\nexport "+ConfigTools.SEQWARE_SETTINGS_PROPERTY+"=");
+    sb.append(ConfigTools.getSettingsFilePath());
+    sb.append("\ncd ");
+    sb.append(oozie_working_dir);
+    sb.append("\n");
+    sb.append(contents);
+    write(sb.toString(), file);
+  }
+
+  public static String concat(String delim, List<String> args){
+    StringBuilder sb = new StringBuilder();
+    for (String arg : args) {
+      sb.append(arg);
+      sb.append(delim);
+    }
+    return sb.toString();
   }
 
   public String getName() {

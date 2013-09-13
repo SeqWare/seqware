@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
+public class Lane implements Serializable, Comparable<Lane>, PermissionsAware, ParentAccessionModel {
 
     private static final long serialVersionUID = 5681328115923390568L;
     private Integer laneId;

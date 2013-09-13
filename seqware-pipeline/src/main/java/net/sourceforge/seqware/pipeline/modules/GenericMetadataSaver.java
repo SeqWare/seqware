@@ -20,6 +20,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
+import net.sourceforge.seqware.pipeline.plugins.Metadata;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -48,6 +49,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author briandoconnor@gmail.com
  * @version $Id: $Id
+ * @deprecated Deprecating this in favour of Metadata(plugin) and the new CLI
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class GenericMetadataSaver extends Module {
@@ -60,6 +62,7 @@ public class GenericMetadataSaver extends Module {
    *
    * @return OptionParser this is used to get command line options
    */
+  @Override
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
 
@@ -266,20 +269,7 @@ public class GenericMetadataSaver extends Module {
     if (options.has("gms-output-file")) {
       List<String> files = (List<String>) options.valuesOf("gms-output-file");
       for (String file : files) {
-        FileMetadata fm = new FileMetadata();
-        String[] tokens = file.split("::");
-        if (tokens.length > 0) {
-          fm.setType(tokens[0]);
-        }
-        if (tokens.length > 1) {
-          fm.setMetaType(tokens[1]);
-        }
-        if (tokens.length > 2) {
-          fm.setFilePath(tokens[2]);
-        }
-        if (tokens.length > 3) {
-          fm.setDescription(tokens[3]);
-        }
+        FileMetadata fm = Metadata.fileString2FileMetadata(file);
         ret.getFiles().add(fm);
         if (fm.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
           Map<String, String> map = FileTools.getKeyValueFromFile(fm.getFilePath());
@@ -334,5 +324,7 @@ public class GenericMetadataSaver extends Module {
 
     return (ret);
   }
+
+    
 
 }

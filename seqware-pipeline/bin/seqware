@@ -4,9 +4,9 @@
 # somewhere on your $PATH, like ~/bin. The rest of Seqware will be
 # installed upon first run into the ~/.seqware directory.
 
-CURRENT_SEQWARE_VERSION="${project.version}"
+DEFAULT_SEQWARE_VERSION="${project.version}"
 
-export SEQWARE_VERSION="${SEQWARE_VERSION:-"$CURRENT_SEQWARE_VERSION"}"
+export SEQWARE_VERSION="${SEQWARE_VERSION:-"$DEFAULT_SEQWARE_VERSION"}"
 
 case $SEQWARE_VERSION in
     *SNAPSHOT) SNAPSHOT="YES" ;;
@@ -38,8 +38,8 @@ if $cygwin; then
     export SEQWARE_HOME=`cygpath -w "$SEQWARE_HOME"`
 fi
 
-SEQWARE_JAR="$SEQWARE_HOME/self-installs/seqware-distribution-$SEQWARE_VERSION-full.jar"
-SEQWARE_SETTINGS="$SEQWARE_HOME/settings"
+export SEQWARE_JAR="$SEQWARE_HOME/self-installs/seqware-distribution-$SEQWARE_VERSION-full.jar"
+export SEQWARE_SETTINGS="${SEQWARE_SETTINGS:-"$SEQWARE_HOME/settings"}"
 
 # normalize $0 on certain BSDs
 if [ "$(dirname "$0")" = "." ]; then
@@ -58,8 +58,6 @@ while [ -h "$SCRIPT" ] ; do
         SCRIPT="$(dirname "$SCRIPT"$)/$link"
     fi
 done
-
-export SEQWARE_JVM_OPTS="${SEQWARE_JVM_OPTS-"-XX:+TieredCompilation -XX:TieredStopAtLevel=1"}"
 
 function make_native_path {
     # ensure we have native paths

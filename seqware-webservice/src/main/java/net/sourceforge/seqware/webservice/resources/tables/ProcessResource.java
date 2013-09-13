@@ -70,7 +70,7 @@ public class ProcessResource extends DatabaseResource {
         ProcessingService ss = BeanFactory.getProcessingServiceBean();
         if (queryValues.get("id") != null) {
             JaxbObject<Processing> jaxbTool = new JaxbObject<Processing>();
-            Processing p = (Processing) testIfNull(ss.findByID(Integer.parseInt(queryValues.get("id"))));
+            Processing p = (Processing) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
             Processing dto = copier.hibernate2dto(Processing.class, p);
             if (fields.contains("files")) {
                 Set<File> files = p.getFiles();

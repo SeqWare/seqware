@@ -64,7 +64,7 @@ public class GenericMetadataSaverET {
 
         Random generator = new Random();
         String random = String.valueOf(generator.nextInt());
-        String listOutput = runOldCommand(sampleAccession, inputFile, createTempDir);
+        String listOutput = cli ? runNewCommand(sampleAccession, inputFile, createTempDir) : runOldCommand(sampleAccession, inputFile, createTempDir);
         Log.info(listOutput);
         return listOutput;
     }

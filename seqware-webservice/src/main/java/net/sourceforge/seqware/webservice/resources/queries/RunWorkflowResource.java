@@ -16,9 +16,14 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
+
 import java.util.ArrayList;
 import java.util.SortedSet;
+
 import javax.xml.bind.JAXBException;
+
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.business.WorkflowService;
@@ -30,7 +35,9 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -63,7 +70,7 @@ public class RunWorkflowResource
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         if (request.getMethod().compareTo(Method.GET) == 0) {
             try {
-                Workflow w = (Workflow) testIfNull(ws.findBySWAccession(Integer.parseInt(id)));
+                Workflow w = (Workflow) testIfNull(ws.findBySWAccession(parseClientInt(id)));
                 WorkflowRunList2 list = new WorkflowRunList2();
                 SortedSet<WorkflowRun> wrs = w.getWorkflowRuns();
                 if (wrs != null) {
@@ -84,7 +91,7 @@ public class RunWorkflowResource
         } else if (request.getMethod().compareTo(Method.POST) == 0) {
             WorkflowInfo workflowInfo = new WorkflowInfo();
             Log.debug("ID: "+id);
-            Workflow w = (Workflow) testIfNull(ws.findBySWAccession(Integer.parseInt(id)));
+            Workflow w = (Workflow) testIfNull(ws.findBySWAccession(parseClientInt(id)));
 
             workflowInfo.setCommand(w.getCommand());
             workflowInfo.setDescription(w.getDescription());

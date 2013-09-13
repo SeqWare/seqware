@@ -15,7 +15,6 @@ import java.util.Random;
 import java.util.logging.Level;
 
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
-import net.sourceforge.seqware.queryengine.webservice.model.MetadataDB;
 import net.sourceforge.seqware.queryengine.webservice.util.EnvUtil;
 
 import org.apache.commons.fileupload.FileItem;
@@ -38,6 +37,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import javax.servlet.ServletContext;
+import net.sourceforge.seqware.queryengine.webservice.model.MetadataDB;
 
 import org.restlet.Request;
 

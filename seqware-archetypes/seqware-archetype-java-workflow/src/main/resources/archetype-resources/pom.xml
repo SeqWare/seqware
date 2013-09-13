@@ -19,7 +19,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <seqware-version>1.0.3-SNAPSHOT</seqware-version>
+        <seqware-version>1.0.4-SNAPSHOT</seqware-version>
         <skipITs>true</skipITs>
     </properties>
 
@@ -53,6 +53,7 @@
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-pipeline</artifactId>
             <version>${seqware-version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -212,6 +213,7 @@
                             <outputDirectory>${project.build.directory}/Workflow_Bundle_${workflow-directory-name}_${project.version}_SeqWare_${seqware-version}/Workflow_Bundle_${workflow-directory-name}/${symbol_dollar}{project.version}/bin</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
+                            <excludeScope>provided</excludeScope>
                         </configuration>
                     </execution>
                 </executions>

@@ -338,8 +338,7 @@ public class Bundle {
     String sourceName = source.getName();
     this.outputZip = targetDir + File.separator + sourceName;
     if (sourceFile.equals(targetDir + File.separator + sourceName)) {
-      Log.error("Cannot copy file onto itself!");
-      result.setExitStatus(ReturnValue.FAILURE);
+      Log.stdout("File already in target directory, skipping copy.");
     } else {
       ProvisionFiles pf = new ProvisionFiles();
       pf.setParameters(Arrays.asList("--input-file", sourceFile, "--output-dir", targetDir, "--force-copy"));
@@ -551,9 +550,7 @@ public class Bundle {
         Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the S3 location: " + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
         copyBundleToS3(bundle, permanentBundleLocation);
       } else {
-        // then it's a directory          
-        // now package this up
-        Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the directory: " + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
+        Log.stdout("Now transferring " + bundle.getAbsolutePath() +" to the directory: " + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
         copyBundle(bundle.getAbsolutePath(), permanentBundleLocation);
       }
     }
