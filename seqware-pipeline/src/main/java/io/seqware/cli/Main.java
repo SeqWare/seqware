@@ -49,9 +49,12 @@ public class Main {
     System.err.println(String.format(format, args));
   }
 
+  private static class Kill extends RuntimeException{
+  }
+
   private static void kill(String format, Object... args) {
     err(format, args);
-    System.exit(1);
+    throw new Kill();
   }
 
   private static void invalid(String cmd) {
@@ -91,10 +94,16 @@ public class Main {
       if (key.equals(s)) {
         args.remove(i);
         if (i < args.size()) {
-          vals.add(args.remove(i));
-        } else {
-          kill("seqware: missing required argument to '%s'.", key);
+          String val = args.remove(i);
+          if (!val.startsWith("--")){
+            String[] ss = val.split(",");
+            if (ss.length > 0) {
+              vals.addAll(Arrays.asList(ss));
+              continue;
+            }
+          }
         }
+        kill("seqware: missing required argument to '%s'.", key);
       } else {
         i++;
       }
@@ -489,6 +498,34 @@ public class Main {
     }
   }
 
+  private static void copy(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware copy [--help]");
+      out("       seqware copy <source> <destination>");
+      out("");
+      out("Description:");
+      out("  Convenience tool to copy files between local and remote file systems, e.g. S3.");
+      out("  If destination is a local directory, the input file's name will be used for the");
+      out("  output file.");
+      out("");
+    } else {
+      if (args.size() == 2) {
+        String src = args.remove(0);
+        String dest = args.remove(0);
+
+        extras(args, "copy");
+
+        String destFlag = new File(dest).isDirectory() ? "--output-dir" : "--output-file";
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.ModuleRunner", "--", "--module",
+            "net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles", "--no-metadata", "--", "--force-copy",
+            "--input-file", src, destFlag, dest);
+      } else {
+        kill("seqware: invalid arguments to 'seqware copy'. See 'seqware copy --help'.");
+      }
+    }
+  }
+
   private static void runCreateTable(List<String> args, String table, String... cols) {
     if (flag(args, "--interactive")) {
       extras(args, "create " + table.replace('_', '-'));
@@ -552,22 +589,20 @@ public class Main {
       out("");
       out("Optional fields:");
       out("  --description <val>");
-      out("  --type <val>");
       out("");
     } else {
       String file = reqVal(args, "--file");
       String meta = reqVal(args, "--meta-type");
       String parentId = reqVal(args, "--parent-accession");
-      String type = optVal(args, "--type", "");
+      String type = optVal(args, "--type", ""); 
       String description = optVal(args, "--description", "");
 
       extras(args, "create file");
 
       String concat = String.format("%s::%s::%s::%s", type, meta, file, description);
 
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.ModuleRunner", "--", "--metadata-parent-accession",
-          parentId, "--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", "--",
-          "--gms-output-file", concat, "--gms-algorithm", "ManualProvisionFile");
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--parent-accession",
+          parentId, "--create", "--table", "file", "--field","algorithm::ManualProvisionFile", "--file", concat);
     }
   }
 
@@ -1040,20 +1075,33 @@ public class Main {
       out("  Launch scheduled workflow runs.");
       out("");
       out("Optional parameters:");
-      out("  --accession <swid>   Launch the specified workflow-run");
-      out("                       Repeat this parameter to provide multiple runs");
+      out("  --accession <swid>   Launch the specified workflow-run. Repeat this parameter");
+      out("                       to provide multiple runs.");
+      out("  --host <value>       Use the specified value instead of the local hostname");
+      out("                       when selecting which workflow-runs to launch.");
       out("");
     } else {
       List<String> ids = optVals(args, "--accession");
+      String host = optVal(args, "--host", null);
 
       extras(args, "workflow-run launch-scheduled");
 
-      if (ids.isEmpty()) {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled");
-      } else {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--launch-scheduled",
-            cdl(ids));
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
+      runnerArgs.add("--");
+
+      if (host != null) {
+        runnerArgs.add("--force-host");
+        runnerArgs.add(host);
       }
+
+      runnerArgs.add("--launch-scheduled");
+      if (!ids.isEmpty()) {
+        runnerArgs.add(cdl(ids));
+      }
+
+      run(runnerArgs);
     }
   }
 
@@ -1068,11 +1116,12 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --accession <swid>   Launch the specified workflow-run");
+      out("                       Repeat this parameter to specify multiple workflow-runs");
       out("  --threads <num>      The number of concurrent worker threads (default 1)");
       out("");
     } else {
       String threads = optVal(args, "--threads", null);
-      String wfr = optVal(args, "--accession", null);
+      List<String> wfrs = optVals(args, "--accession");
 
       extras(args, "workflow-run propagate-statuses");
 
@@ -1085,9 +1134,9 @@ public class Main {
         runnerArgs.add("--threads-in-thread-pool");
         runnerArgs.add(threads);
       }
-      if (wfr != null) {
+      if (!wfrs.isEmpty()) {
         runnerArgs.add("--workflow-run-accession");
-        runnerArgs.add(wfr);
+        runnerArgs.add(cdl(wfrs));
       }
 
       run(runnerArgs);
@@ -1179,11 +1228,15 @@ public class Main {
       out("  --accession <swid>  The SWID of the workflow run");
       out("");
     } else {
-      int swid = Integer.parseInt(reqVal(args, "--accession"));
+      String swid = reqVal(args, "--accession");
 
       extras(args, "workflow-run cancel");
 
-      WorkflowRuns.submitCancel(swid);
+      try {
+        WorkflowRuns.submitCancel(Integer.parseInt(swid));
+      } catch (NumberFormatException e) {
+        kill("seqware: invalid seqware accession: '" + swid + "'");
+      }
     }
   }
 
@@ -1262,36 +1315,42 @@ public class Main {
       out("Commands:");
       out("  annotate      Add arbitrary key/value pairs to seqware objects");
       out("  bundle        Interact with a workflow bundle");
+      out("  copy          Copy files between local and remote file systems");
       out("  create        Create new seqware objects (e.g., study)");
       out("  files         Extract information about workflow output files");
       out("  workflow      Interact with workflows");
       out("  workflow-run  Interact with workflow runs");
       out("");
-      out("flags:");
+      out("Flags:");
       out("  --help        Print help out");
       // handled in seqware script:
       out("  --version     Print Seqware's version");
       out("");
     } else {
-      String cmd = args.remove(0);
-      if ("-v".equals(cmd) || "--version".equals(cmd)) {
-        kill("seqware: version information is provided by the wrapper script.");
-      } else if ("annotate".equals(cmd)) {
-        annotate(args);
-      } else if ("bundle".equals(cmd)) {
-        bundle(args);
-      } else if ("create".equals(cmd)) {
-        create(args);
-      } else if ("files".equals(cmd)) {
-        files(args);
-      } else if ("workflow".equals(cmd)) {
-        workflow(args);
-      } else if ("workflow-run".equals(cmd)) {
-        workflowRun(args);
-      } else {
-        invalid(cmd);
+      try {
+        String cmd = args.remove(0);
+        if ("-v".equals(cmd) || "--version".equals(cmd)) {
+          kill("seqware: version information is provided by the wrapper script.");
+        } else if ("annotate".equals(cmd)) {
+          annotate(args);
+        } else if ("bundle".equals(cmd)) {
+          bundle(args);
+        } else if ("copy".equals(cmd)) {
+          copy(args);
+        } else if ("create".equals(cmd)) {
+          create(args);
+        } else if ("files".equals(cmd)) {
+          files(args);
+        } else if ("workflow".equals(cmd)) {
+          workflow(args);
+        } else if ("workflow-run".equals(cmd)) {
+          workflowRun(args);
+        } else {
+          invalid(cmd);
+        }
+      } catch (Kill k){
+        System.exit(1);
       }
     }
   }
-
 }

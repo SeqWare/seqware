@@ -34,6 +34,10 @@ my $skip_launch = 0;
 my $config_scripts = "templates/server_setup_scripts/ubuntu_12.04_minimal_script.sh";
 my $master_config_scripts = "";
 my $worker_config_scripts = "";
+# allow the specification of a specific commit to build and use instead of using the latest from develop
+my $git_commit = 0;
+# allow the hostname to be specified
+my $custom_hostname = "master";
 
 GetOptions (
   "use-aws" => \$launch_aws,
@@ -46,6 +50,8 @@ GetOptions (
   "os-worker-config-scripts=s" => \$worker_config_scripts,
   "skip-it-tests" => \$skip_its,
   "skip-launch" => \$skip_launch,
+  "git-commit=s" => \$git_commit,
+  "custom-hostname=s" => \$custom_hostname,
 );
 
 
@@ -63,6 +69,14 @@ read_config($config_file, $configs);
 if (!defined($configs->{'%{SEQWARE_BUILD_CMD}'})) { $configs->{'%{SEQWARE_BUILD_CMD}'} = $default_seqware_build_cmd; }
 
 $configs->{'%{SEQWARE_VERSION}'} = $seqware_version;
+
+# for jenkins, override the branch command if required
+
+if ($git_commit){
+  $configs->{'%{SEQWARE_BRANCH_CMD}'} = "git checkout $git_commit";
+}
+
+$configs->{'%{custom_hostname}'} = $custom_hostname;
 
 # make this explicit, one or the other, aws is given priority
 if ($launch_vb) {

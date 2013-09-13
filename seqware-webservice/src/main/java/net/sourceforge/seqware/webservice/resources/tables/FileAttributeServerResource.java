@@ -55,8 +55,8 @@ public class FileAttributeServerResource extends BasicResource implements FileAt
     Integer fileSwa;
     Integer id;
     try {
-      fileSwa = Integer.parseInt("" + getRequestAttributes().get("swa"));
-      id = Integer.parseInt("" + getRequestAttributes().get("id"));
+      fileSwa = parseClientInt("" + getRequestAttributes().get("swa"));
+      id = parseClientInt("" + getRequestAttributes().get("id"));
     } catch (NumberFormatException e) {
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
     }
@@ -79,7 +79,7 @@ public class FileAttributeServerResource extends BasicResource implements FileAt
   public void addAttribute(AttributeDto attributeDto) {
     Integer fileSwa;
     try {
-      fileSwa = Integer.parseInt("" + getRequestAttributes().get("swa"));
+      fileSwa = parseClientInt("" + getRequestAttributes().get("swa"));
     } catch (NumberFormatException e) {
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
     }
@@ -104,8 +104,8 @@ public class FileAttributeServerResource extends BasicResource implements FileAt
     Integer fileSwa;
     Integer id;
     try {
-      fileSwa = Integer.parseInt("" + getRequestAttributes().get("swa"));
-      id = Integer.parseInt("" + getRequestAttributes().get("id"));
+      fileSwa = parseClientInt("" + getRequestAttributes().get("swa"));
+      id = parseClientInt("" + getRequestAttributes().get("id"));
     } catch (NumberFormatException e) {
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
     }
@@ -124,8 +124,8 @@ public class FileAttributeServerResource extends BasicResource implements FileAt
     Integer fileSwa;
     Integer id;
     try {
-      fileSwa = Integer.parseInt("" + getRequestAttributes().get("swa"));
-      id = Integer.parseInt("" + getRequestAttributes().get("id"));
+      fileSwa = parseClientInt("" + getRequestAttributes().get("swa"));
+      id = parseClientInt("" + getRequestAttributes().get("id"));
     } catch (NumberFormatException e) {
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
     }

@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
@@ -388,7 +387,6 @@ public class AttributeAnnotatorET {
     
     @AfterClass
     public static void testNewStudyReporter() throws IOException{
-        DBAccess.close();
         // SEQWARE-1682 - check that the new study reporter can report all annotations including file annotations
         File createTempFile = File.createTempFile("study_reporter", "out");
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.StudyReporter "

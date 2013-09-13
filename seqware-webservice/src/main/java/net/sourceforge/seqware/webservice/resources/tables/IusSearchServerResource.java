@@ -80,7 +80,7 @@ public class IusSearchServerResource extends BasicResource implements IusSearchR
     String sequencerRunName = "" + getFirstQueryValue("sequencerRunName");
     Integer lane;
     try {
-      lane = Integer.parseInt("" + getFirstQueryValue("lane"));
+      lane = parseClientInt("" + getFirstQueryValue("lane"));
     } catch (NumberFormatException e) {
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
     }

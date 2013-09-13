@@ -19,6 +19,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -28,6 +29,7 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
@@ -386,19 +388,10 @@ public class MetadataNoConnection implements Metadata {
     return finished;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public ArrayList<String> fix_file_paths(String prefix, ArrayList<String> files) {
-    logger.info("No metadata connection");
-    return new ArrayList<String>();
-  }
-
     /**
      * {@inheritDoc}
      *
-     */
-    
-    
+     */ 
   @Override
   public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
     logger.info("No metadata connection");
@@ -786,6 +779,12 @@ public class MetadataNoConnection implements Metadata {
 
     @Override
     public Experiment getExperiment(int swAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions) {
         logger.info("No metadata connection");
         return null;
     }

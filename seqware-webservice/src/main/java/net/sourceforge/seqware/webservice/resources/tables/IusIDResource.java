@@ -17,7 +17,6 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Set;
 import java.util.TreeSet;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
@@ -25,7 +24,6 @@ import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Registration;
@@ -66,7 +64,7 @@ public class IusIDResource extends DatabaseIDResource {
     public void getXml() {
         authenticate();
         IUSService ss = BeanFactory.getIUSServiceBean();
-        IUS ius = (IUS) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        IUS ius = (IUS) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<IUS> jaxbTool = new JaxbObject<IUS>();
 

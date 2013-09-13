@@ -66,6 +66,8 @@ public class StringUtils {
    * @return a boolean.
    */
   public static boolean hasVariable(String input) {
+    if (input == null)
+      return false;
     Matcher m = pattern.matcher(input);
     return m.find();
   }

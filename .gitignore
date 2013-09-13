@@ -41,6 +41,11 @@ seqware-distribution/docs/site/tmp
 seqware-distribution/docs/site/content/docs/17-plugins.md
 seqware-distribution/docs/site/content/docs/17a-modules.md
 
+# seqware testing stuff
+seqware-pipeline/*.csv
+seqware-pipeline/runnertest.*
+seqware-common/dao-test.log*
+
 # Log files
 dao-test.log
 

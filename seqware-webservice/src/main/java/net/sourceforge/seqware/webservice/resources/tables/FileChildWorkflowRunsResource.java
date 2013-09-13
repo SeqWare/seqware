@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.FileService;
@@ -39,7 +40,9 @@ import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.ArrayUtils;
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
@@ -273,9 +276,19 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
                 
                 Log.info("Executing query: " + query);
                 mdb = DBAccess.get();
-                rs = mdb.executeQuery(query.toString());
-                while (rs.next()) {
-                    int workflowSWID = rs.getInt("sw_accession");
+                
+                List<Integer> workflowSWIDs = mdb.executeQuery(query.toString(), new ResultSetHandler<List<Integer>>(){
+                  @Override
+                  public List<Integer> handle(ResultSet rs) throws SQLException {
+                    List<Integer> ids = new ArrayList<Integer>();
+                    while (rs.next()) {
+                      ids.add(rs.getInt("sw_accession"));
+                    }
+                    return ids;
+                  }
+                });
+                
+                for(int workflowSWID : workflowSWIDs) {
                     WorkflowRun workflowRun = (WorkflowRun) testIfNull(ss.findBySWAccession(workflowSWID));
                     CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(WorkflowRun.class, new String[]{"inputFileAccessions"});
                     WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);

@@ -100,7 +100,7 @@ public class WorkflowRunsFilter extends BasicResource {
 
         WorkflowService ws = BeanFactory.getWorkflowServiceBean();
 
-        Workflow workflow = ws.findByID(Integer.parseInt(workflowId));
+        Workflow workflow = ws.findByID(parseClientInt(workflowId));
 
         String workflowName = workflow.getName().replace(' ', '_');
         String workflowPath = workflow.getCwd();
@@ -117,7 +117,7 @@ public class WorkflowRunsFilter extends BasicResource {
     private Representation postTest(Representation entity) throws FileNotFoundException, IOException {
         WorkflowService ws = BeanFactory.getWorkflowServiceBean();
 
-        Workflow workflow = ws.findByID(Integer.parseInt(workflowId));
+        Workflow workflow = ws.findByID(parseClientInt(workflowId));
 
         String workflowPath = workflow.getCwd();
 

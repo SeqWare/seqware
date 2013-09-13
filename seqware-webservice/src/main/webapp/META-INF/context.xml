@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="">
-  <Resource auth="Container" description="Seqware Hibernate" driverClassName="org.postgresql.Driver" jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.StatementDecoratorInterceptor" name="jdbc/SeqWareMetaDB" password="${seqware_meta_db_password}" testOnBorrow="true" testOnReturn="true" testWhileIdle="true" type="javax.sql.DataSource" url="jdbc:postgresql://${seqware_meta_db_host}:${seqware_meta_db_port}/${seqware_meta_db_name}" username="${seqware_meta_db_user}" validationQuery="SELECT 1"/>
+  <Resource
+    auth="Container"
+    driverClassName="org.postgresql.Driver"
+    factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+    testOnBorrow="true"
+    testOnReturn="true"
+    testWhileIdle="true"
+    validationQuery="SELECT 1"
+    type="javax.sql.DataSource"
+    name="jdbc/SeqWareMetaDB"
+    description="Seqware Hibernate"
+    url="jdbc:postgresql://${seqware_meta_db_host}:${seqware_meta_db_port}/${seqware_meta_db_name}"
+    username="${seqware_meta_db_user}"
+    password="${seqware_meta_db_password}"
+  />
 </Context>

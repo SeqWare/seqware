@@ -16,7 +16,11 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
+
 import java.util.Set;
+
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.ProcessingService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
@@ -25,7 +29,9 @@ import net.sourceforge.seqware.common.model.lists.ProcessingList;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -58,7 +64,7 @@ public class ProcessIdProcessResource extends BasicRestlet {
         String id = request.getAttributes().get("processId").toString();
 
         ProcessingService s = BeanFactory.getProcessingServiceBean();
-        Processing p = (Processing) testIfNull(s.findBySWAccession(Integer.parseInt(id)));
+        Processing p = (Processing) testIfNull(s.findBySWAccession(parseClientInt(id)));
 
         JaxbObject<ProcessingList> jaxbTool = new JaxbObject<ProcessingList>();
 

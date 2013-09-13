@@ -28,6 +28,7 @@ import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.PluginTest;
 import org.junit.*;
 
@@ -41,6 +42,13 @@ import org.junit.*;
 public class BasicDeciderTest extends PluginTest {
     
     private final List<String> fastq_gz = new ArrayList<String>();
+        
+    private BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+    
+    @BeforeClass
+    public static void beforeClass(){
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
+    }
 
     @Before
     @Override
