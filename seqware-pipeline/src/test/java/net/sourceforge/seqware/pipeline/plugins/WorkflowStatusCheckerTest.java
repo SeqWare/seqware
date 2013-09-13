@@ -16,7 +16,17 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import it.sauronsoftware.junique.JUnique;
+import it.sauronsoftware.junique.AlreadyLockedException;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +34,13 @@ import java.util.Map;
 import java.util.Set;
 
 import joptsimple.OptionSet;
-import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
+import net.sourceforge.seqware.pipeline.tools.RunLock;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -39,9 +49,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.mockito.Mockito.*;
-
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -81,7 +88,7 @@ public class WorkflowStatusCheckerTest{
     
     @After
     public void cleanMocks(){
-        JUnique.releaseLock(WorkflowStatusChecker.appID);
+        RunLock.release();
     }
     
     @Test
@@ -91,12 +98,11 @@ public class WorkflowStatusCheckerTest{
         Assert.assertNotNull(workflowStatusChecker.getMetadata());
     }
     
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testInitLocking(){
         final ReturnValue ret1 = workflowStatusChecker.init();
         Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
-        final ReturnValue ret2 = workflowStatusChecker.init();
-        Assert.assertTrue("workflowStatusChecker not properly locked in init", ret2.getExitStatus() == ReturnValue.FAILURE);
+        workflowStatusChecker.init();
     }
     
     @Test 
@@ -159,6 +165,7 @@ public class WorkflowStatusCheckerTest{
             wr.setOwnerUserName("user");
             wr.setWorkflowAccession(42);
             wr.setWorkflowRunId(42+i);
+            wr.setSwAccession(42+i);
             wr.setCommand("dummyValue");
             wr.setTemplate("dummyValue");
             wr.setCurrentWorkingDir("dummyValue");
@@ -172,6 +179,7 @@ public class WorkflowStatusCheckerTest{
         PowerMockito.mockStatic(FileTools.class);
         when(FileTools.getLocalhost(options)).thenReturn(new LocalhostPair("localhost", new ReturnValue(ReturnValue.SUCCESS)));
         when(FileTools.isFileOwner(anyString())).thenReturn(true);
+        when(FileTools.determineFilePermissions(anyString())).thenReturn("-rw-------");
         final WorkflowTools workflowTools = mock(WorkflowTools.class);
         PowerMockito.whenNew(WorkflowTools.class).withAnyArguments().thenReturn(workflowTools);
 

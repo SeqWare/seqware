@@ -52,28 +52,16 @@ See the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) for
 how to make the zipped workflow bundle. After the zip bundle is created, the
 bundle can be provided to the admin for install as below.
 
-	seqware bundle install --zip ~/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
-	
-	Running Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager
-	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.BundleManager@29e97f9f
+	$ seqware bundle install --zip ~/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip 
 	Installing Bundle
-	Bundle: packaged/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
-	Now packaging /tmp/testing/MyHelloWorld/target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/packaged/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to a zip file and transferring to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
-	  PROCESSING INPUT: /tmp/testing/MyHelloWorld/target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/packaged/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip OUTPUT: /home/seqware/released-bundles
-	
-	Mar 28, 2013 10:43:03 AM org.restlet.ext.httpclient.HttpClientHelper start
-	INFO: Starting the Apache HTTP client
-	WORKFLOW_ACCESSION: 6804
-	Bundle Has Been Installed to the MetaDB and Provisioned to packaged/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
-	
-	[seqware@seqwarevm Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>]$ ls -alhtr ~/released-bundles/ | tail -n1
-	-rw-rw-r-- 1 seqware seqware 151M Mar 28 10:42 Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
-	
-	[seqware@master Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_0.13.6.5]$ ls -alhtr ~/provisioned-bundles/ | grep MyHelloWorld
-	drwxrwxr-x 3 seqware seqware 4.0K Apr 17 12:27 Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
+	Bundle: /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	Now packaging /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to a zip file and transferring to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
+	  PROCESSING INPUT: /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip OUTPUT: /home/seqware/released-bundles OUTPUT FILE: null
 
+	WORKFLOW_ACCESSION: 17
+	Bundle Has Been Installed to the MetaDB and Provisioned to /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
 
-What happens here is the <code>Workflow_Bundle_hello_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your released-bundles directory and the metadata about the workflow is saved to the database.
+What happens here is the <code>Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip</code> copied to your released-bundles directory and unzip'd into your provisioned-bundles directory. The metadata about the workflow is then saved to the database.
 
 <%= render '/includes/monitor_workflows/' %>
 
@@ -81,45 +69,31 @@ For more information see the [Monitor Configuration](/docs/6-pipeline/monitor_co
 
 ## How to Cancel Workflows
 
-After launching a workflow, you can cancel it in order to stop further execution. This will set the status of the workflow run to 'failed'.
+After launching a workflow, you can cancel it in order to stop further execution. This will set the status of the workflow run to 'cancelled'.
 
-	java -jar ~/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files workflow.ini --workflow-accession 6730  --parent-accessions 839 --host `hostname --long`                      
-	
-	Running Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher                                            
-	Setting Up Plugin: net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher@288051                                  
-	Mar 28, 2013 11:29:56 AM org.restlet.ext.httpclient.HttpClientHelper start                                           
-	INFO: Starting the Apache HTTP client                                                                                
-	requiresNewLauncher - byClass ${workflow_bundle_dir}/Workflow_Bundle_seqware-archetype-java-workflow/1.0-SNAPSHOT/classes/com/seqware/github/WorkflowClient.java                                                                                              
-	Attempting to instantiate /tmp/1364426207469-0/seqware-archetype-java-workflow/target/Workflow_Bundle_seqware-archetype-java-workflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_seqware-archetype-java-workflow/1.0-SNAPSHOT/classes/com/seqware/github/WorkflowClient.java                                                                                                              
-	  INI FILE: workflow.ini                                                                                                       
-	CREATING DAX IN: /tmp/dax71095297362814544976755889839517                                                                      
-	SUBMITTING TO PEGASUS: pegasus-plan -Dpegasus.user.properties=/home/seqware/.seqware/pegasus/properties --dax /tmp/dax71095297362814544976755889839517 --dir /home/seqware/pegasus-dax -o seqwarevm --force --submit -s seqwarevm                     
-	PEGASUS STATUS COMMAND: pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/seqware-archetype-java-workflow/run0126                                                                                                                           
-	[seqware@seqwarevm testing]$ condor_q                                                                                          
-
-
-	-- Submitter: seqwarevm : <10.0.2.15:57652> : seqwarevm
-	 ID      OWNER            SUBMITTED     RUN_TIME ST PRI SIZE CMD               
-	2848.0   seqware         3/28 11:30   0+00:00:12 R  0   0.3  condor_dagman -f -
-
-	1 jobs; 0 completed, 0 removed, 0 idle, 1 running, 0 held, 0 suspended
-	[seqware@seqwarevm testing]$ condor_rm 2848.0
-	Job 2848.0 marked for removal
-	[seqware@seqwarevm testing]$ condor_q
-
-
-	-- Submitter: seqwarevm : <10.0.2.15:57652> : seqwarevm
-	 ID      OWNER            SUBMITTED     RUN_TIME ST PRI SIZE CMD
-	2850.0   seqware         3/28 11:30   0+00:00:00 X  10  0.1  kickstart -n seqwa
-
-	1 jobs; 0 completed, 1 removed, 0 idle, 0 running, 0 held, 0 suspended
-	[seqware@seqwarevm testing]$ condor_q
-
-
-	-- Submitter: seqwarevm : <10.0.2.15:57652> : seqwarevm
-	 ID      OWNER            SUBMITTED     RUN_TIME ST PRI SIZE CMD
-
-	0 jobs; 0 completed, 0 removed, 0 idle, 0 running, 0 held, 0 suspended
+    $ seqware workflow-run cancel --accession 28
+    $ seqware workflow-run report --accession 28
+	-[ RECORD 0 ]------------------+-------------------------------------
+	Workflow                       | HelloWorld 1.0-SNAPSHOT              
+	Workflow Run SWID              | 28                                   
+	Workflow Run Status            | cancelled                            
+	Workflow Run Create Timestamp  | 2013-08-23 14:58:35.374              
+	Workflow Run Host              | master                               
+	Workflow Run Status Command    | 0000000-130823144527997-oozie-oozi-W 
+	Library Sample Names           |                                      
+	Library Sample SWIDs           |                                      
+	Identity Sample Names          |                                      
+	Identity Sample SWIDs          |                                      
+	Input File Meta-Types          |                                      
+	Input File SWIDs               |                                      
+	Input File Paths               |                                      
+	Immediate Input File Meta-Types|                                      
+	Immediate Input File SWIDs     |                                      
+	Immediate Input File Paths     |                                      
+	Output File Meta-Types         |                                      
+	Output File SWIDs              |                                      
+	Output File Paths              |                                      
+	Workflow Run Time              | 33.0s
 
 
 ## How to Rescue Failed Workflows

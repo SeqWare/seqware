@@ -53,14 +53,14 @@ public class LaneIDFilter extends BasicResource {
             Object val = requestAttributes.get("sequencerRunId");
             if (val != null) {
                 SequencerRunService ss = BeanFactory.getSequencerRunServiceBean();
-                SequencerRun s = (SequencerRun)testIfNull(ss.findBySWAccession(Integer.parseInt(val.toString())));
+                SequencerRun s = (SequencerRun)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
                 lanes = (SortedSet<Lane>) testIfNull(s.getLanes());
             }
         } else if (requestAttributes.containsKey("iusId")) {
             Object val = requestAttributes.get("iusId");
             if (val != null) {
                 IUSService ss = BeanFactory.getIUSServiceBean();
-                IUS s = (IUS)testIfNull(ss.findBySWAccession(Integer.parseInt(val.toString())));
+                IUS s = (IUS)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
                 Lane lane = (Lane)testIfNull(s.getLane());
                 lanes = new ArrayList<Lane>();
                 lanes.add(lane);

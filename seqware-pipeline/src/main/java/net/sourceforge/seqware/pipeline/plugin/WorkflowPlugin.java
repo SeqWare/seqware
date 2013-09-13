@@ -11,9 +11,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugin;
 
-import it.sauronsoftware.junique.AlreadyLockedException;
-import it.sauronsoftware.junique.JUnique;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +27,7 @@ import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.pipeline.tools.RunLock;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflow.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
@@ -37,6 +35,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowV2Utility;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.PegasusWorkflowEngine;
 
 import org.openide.util.lookup.ServiceProvider;
@@ -293,16 +292,7 @@ public class WorkflowPlugin extends Plugin {
                            new ArrayList<String>(), options.has(WAIT), nonOptions, inputFiles);
 
     } else if (options.has(LAUNCH_SCHEDULED)) {
-      // check to see if this code is already running, if so exit
-      try {
-        JUnique.acquireLock(appID);
-      } catch (AlreadyLockedException e) {
-        Log.error("I could not get a lock for " + appID
-            + " this most likely means the application is alredy running and this instance will exit!", e);
-        ret.setExitStatus(ReturnValue.FAILURE);
-        return ret;
-      }
-
+      RunLock.acquire();
       launchScheduledWorkflows(w, metadataWriteback);
     } else {
       Log.error("I don't understand the combination of arguments you gave!");
@@ -372,6 +362,12 @@ public class WorkflowPlugin extends Plugin {
     } else if (engine.equalsIgnoreCase("oozie-sge")) {
       String threadsSgeParamFormat = config.get("OOZIE_SGE_THREADS_PARAM_FORMAT");
       String maxMemorySgeParamFormat = config.get("OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT");
+      if (threadsSgeParamFormat == null) {
+        System.err.println("WARNING: No entry in settings for OOZIE_SGE_THREADS_PARAM_FORMAT, omitting threads option from qsub. Fix by providing the format of qsub threads option, using the '"+OozieJob.SGE_THREADS_PARAM_VARIABLE+"' variable.");
+      }
+      if (maxMemorySgeParamFormat == null) {
+        System.err.println("WARNING: No entry in settings for OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT, omitting max-memory option from qsub. Fix by providing the format of qsub max-memory option, using the '"+OozieJob.SGE_MAX_MEMORY_PARAM_VARIABLE+"' variable.");
+      }
       wfEngine = new OozieWorkflowEngine(dataModel, true, threadsSgeParamFormat, maxMemorySgeParamFormat);
     } else {
       throw new IllegalArgumentException("Unknown workflow engine: " + engine);
@@ -506,6 +502,7 @@ public class WorkflowPlugin extends Plugin {
   public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params,
                                               Metadata metadata, Integer workflowAccession, Integer workflowRunAccession, String workflowEngine) {
     Log.info("launching new workflow");
+    boolean scheduled = workflowRunAccession != null;
     ReturnValue ret = new ReturnValue();
     AbstractWorkflowDataModel dataModel;
     try {
@@ -586,11 +583,13 @@ public class WorkflowPlugin extends Plugin {
 
     String workflowRunToken = engine.getLookupToken();
 
+    String host = scheduled && !options.has(HOST) ? wr.getHost() : (String)options.valueOf(HOST);
+
     if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || workflowRunToken == null) {
       // then something went wrong trying to call pegasus
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), WorkflowRunStatus.failed, workflowRunToken,
-                                   engine.getWorkingDirectory(), "", "", wr.getHost(),
+                                   engine.getWorkingDirectory(), "", "", host,
                                    retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
 
       return retPegasus;
@@ -599,7 +598,7 @@ public class WorkflowPlugin extends Plugin {
       WorkflowRunStatus status = dataModel.isWait() ? WorkflowRunStatus.completed : WorkflowRunStatus.pending;
       metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                                    dataModel.getTags().get("workflow_template"), status, workflowRunToken,
-                                   engine.getWorkingDirectory(), "", "", wr.getHost(),
+                                   engine.getWorkingDirectory(), "", "", host,
                                    retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
       return ret;
     }

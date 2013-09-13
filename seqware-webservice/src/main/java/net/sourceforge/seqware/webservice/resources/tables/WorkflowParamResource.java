@@ -109,7 +109,7 @@ public class WorkflowParamResource extends DatabaseResource {
 
             JaxbObject<WorkflowParam> jaxbTool = new JaxbObject<WorkflowParam>();
 
-            WorkflowParam wp = ((WorkflowParam) testIfNull(ss.findByID(Integer.parseInt(queryValues.get("id")))));
+            WorkflowParam wp = ((WorkflowParam) testIfNull(ss.findByID(parseClientInt(queryValues.get("id")))));
             WorkflowParam dto = copier.hibernate2dto(WorkflowParam.class, wp);
             Workflow w = wp.getWorkflow();
             Workflow detachedW = copier.hibernate2dto(Workflow.class, w);

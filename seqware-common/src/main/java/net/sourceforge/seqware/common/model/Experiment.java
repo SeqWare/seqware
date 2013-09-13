@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Experiment implements Serializable, Comparable<Experiment>, PermissionsAware {
+public class Experiment implements Serializable, Comparable<Experiment>, PermissionsAware, ParentAccessionModel {
 
   private static final long serialVersionUID = 2L;
   private Integer experimentId;

@@ -17,20 +17,16 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.*;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -60,7 +56,8 @@ public class ExperimentIDResource extends DatabaseIDResource {
     @Get
     public void getXml() {
         ExperimentService ss = BeanFactory.getExperimentServiceBean();
-        Experiment experiment = (Experiment) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        
+        Experiment experiment = (Experiment) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<Experiment> jaxbTool = new JaxbObject<Experiment>();
 
@@ -101,7 +98,7 @@ public class ExperimentIDResource extends DatabaseIDResource {
         }
         try {
             ExperimentService service = BeanFactory.getExperimentServiceBean();
-            Experiment exp = (Experiment) testIfNull(service.findByID(newObj.getExperimentId()));
+            Experiment exp = (Experiment) testIfNull(service.findByID(testIfNull(newObj).getExperimentId()));
             exp.givesPermission(registration);
 
             //simple types

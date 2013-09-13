@@ -92,7 +92,7 @@ public class TestDatabaseCreator {
             connectionToSeqware = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
             result = run.query(connectionToSeqware, query, h, params);
         } catch(Exception e){
-            return null;
+            throw new RuntimeException(e);
         } finally {
             // Use this helper method so we don't have to check for null
             DbUtils.closeQuietly(connectionToSeqware);

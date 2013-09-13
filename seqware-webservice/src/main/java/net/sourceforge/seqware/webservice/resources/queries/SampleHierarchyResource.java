@@ -20,7 +20,9 @@ import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchies;
 import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchy;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,29 +36,29 @@ public class SampleHierarchyResource extends BasicRestlet {
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
         if (request.getMethod().compareTo(Method.GET) == 0) {      
-        	List<SampleHierarchy> shs = new ArrayList<SampleHierarchy>();
-                ResultSet rs = null;
+        	List<SampleHierarchy> shs;
         	try {
-			rs = DBAccess.get().executeQuery("select sample_id, parent_id from sample_hierarchy" );
-			while(rs.next()) {
-				SampleHierarchy sh = new SampleHierarchy();
-				sh.setSampleId(rs.getInt("sample_id"));
-                                if(null == rs.getString("parent_id")) {
-                                     sh.setParentId(-1);
-                                } else {                                          
-                                     sh.setParentId(rs.getInt("parent_id"));
-                                }
-				shs.add(sh);
-			}			
+			shs = DBAccess.get().executeQuery("select sample_id, parent_id from sample_hierarchy", new ResultSetHandler<List<SampleHierarchy>>(){
+        @Override
+        public List<SampleHierarchy> handle(ResultSet rs) throws SQLException {
+          List<SampleHierarchy> shs = new ArrayList<SampleHierarchy>();
+          while(rs.next()) {
+            SampleHierarchy sh = new SampleHierarchy();
+            sh.setSampleId(rs.getInt("sample_id"));
+                                    if(null == rs.getString("parent_id")) {
+                                         sh.setParentId(-1);
+                                    } else {                                          
+                                         sh.setParentId(rs.getInt("parent_id"));
+                                    }
+            shs.add(sh);
+          }     
+          return shs;
+        }
+			});
 		} catch (SQLException e) {
-                     e.printStackTrace();
+                     throw new RuntimeException(e);
 		} finally {
-                    try {
-                        if (rs != null) {rs.close();}
                         DBAccess.close();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(SampleHierarchyResource.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 }
                 SampleHierarchies ret = new SampleHierarchies();
                 ret.setSampleHierarchies(shs);

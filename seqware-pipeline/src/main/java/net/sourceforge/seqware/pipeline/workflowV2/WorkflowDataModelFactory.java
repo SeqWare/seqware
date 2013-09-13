@@ -58,7 +58,11 @@ public class WorkflowDataModelFactory {
      * @return
      */
     private String replaceWBD(String input, String wbd) {
+      if (input != null){
         return (input.replaceAll("\\$\\{workflow_bundle_dir\\}", wbd));
+      } else {
+        return null;
+      }
     }
 
     /**

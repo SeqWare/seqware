@@ -18,7 +18,6 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.util.*;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
-import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.*;
@@ -59,7 +58,7 @@ public class SampleIDResource extends DatabaseIDResource {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
 
         SampleService ss = BeanFactory.getSampleServiceBean();
-        Sample sample = (Sample) testIfNull(ss.findBySWAccession(Integer.parseInt(getId())));
+        Sample sample = (Sample) testIfNull(ss.findBySWAccession(getId()));
         Sample dto = copier.hibernate2dto(Sample.class, sample);
 
         if (fields.contains("lanes")) {

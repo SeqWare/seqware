@@ -80,7 +80,7 @@ public class IusFilesServerResource extends BasicResource implements IusFilesRes
     
     Integer iusId;
     try {
-      iusId = Integer.parseInt("" + getRequestAttributes().get("id"));
+      iusId = parseClientInt("" + getRequestAttributes().get("id"));
     } catch (NumberFormatException e) {
       throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
     }

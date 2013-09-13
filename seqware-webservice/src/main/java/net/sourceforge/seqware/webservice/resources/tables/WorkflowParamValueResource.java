@@ -97,7 +97,7 @@ public class WorkflowParamValueResource extends DatabaseResource {
         WorkflowParamValueService ss = BeanFactory.getWorkflowParamValueServiceBean();
         Document line;
         if (queryValues.get("id") != null) {
-            WorkflowParamValue wp = ((WorkflowParamValue) testIfNull(ss.findByID(Integer.parseInt(queryValues.get("id")))));
+            WorkflowParamValue wp = ((WorkflowParamValue) testIfNull(ss.findByID(parseClientInt(queryValues.get("id")))));
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             JaxbObject<WorkflowParamValue> jaxbTool = new JaxbObject<WorkflowParamValue>();
 

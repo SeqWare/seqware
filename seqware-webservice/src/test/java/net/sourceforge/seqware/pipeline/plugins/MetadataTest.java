@@ -16,28 +16,22 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.io.*;
-import java.math.BigInteger;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunStatus;
-import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
+import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.*;
-import org.junit.rules.TestRule;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
 
 /**
  * Runs the tests for the Metadata plugin indicated on this
@@ -45,113 +39,17 @@ import org.junit.runner.Description;
  *
  * @author mtaschuk
  */
-public class MetadataTest extends PluginTest {
-
-    private ByteArrayOutputStream outStream = null;
-    private ByteArrayOutputStream errStream = null;
-    private Pattern swidPattern = Pattern.compile("SWID: ([\\d]+)");
-    private Pattern errorPattern = Pattern.compile("ERROR|error|Error|FATAL|fatal|Fatal|WARN|warn|Warn");
-    private PrintStream systemErr = System.err;
-    private PrintStream systemOut = System.out;
-
+public class MetadataTest extends ExtendedPluginTest {
+    
     @Before
     @Override
     public void setUp() {
-        super.setUp();        
         instance = new Metadata();
-        instance.setMetadata(metadata);
-
-        outStream = new ByteArrayOutputStream();
-        errStream = new ByteArrayOutputStream();
-        PrintStream pso = new PrintStream(outStream);
-        PrintStream pse = new PrintStream(errStream) {
-
-            @Override
-            public PrintStream append(CharSequence csq) {
-//                systemErr.append(csq);
-                return super.append(csq);
-            }
-
-            @Override
-            public void print(String s) {
-//                systemErr.print(s);
-                super.print(s);
-            }
-        };
-        System.setOut(pso);
-        System.setErr(pse);
+        super.setUp();
     }
 
-    @Override
-    public void tearDown() {
-        super.tearDown();
-    }
-
+    
     public MetadataTest() {
-    }
-
-    public String getOut() {
-        return parsePrintStream(outStream);
-    }
-
-    public String getErr() {
-        return parsePrintStream(errStream);
-    }
-
-    public String parsePrintStream(ByteArrayOutputStream stream) {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader r = null;
-        try {
-            ByteArrayInputStream inStream = new ByteArrayInputStream(stream.toByteArray());
-            r = new BufferedReader(new InputStreamReader(inStream));
-
-            String s = r.readLine();
-            while (s != null) {
-                s = s.trim();
-                //remove any blank lines
-                if (s.isEmpty()) {
-                    s = r.readLine();
-                    continue;
-                }
-                if (s.endsWith("[")) {
-                    while (s != null && !s.contains("]")) {
-                        sb.append(s);
-                        s = r.readLine();
-                    }
-                }
-                sb.append(s).append("\n");
-                s = r.readLine();
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(MetadataTest.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (r != null) {
-                try {
-                    r.close();
-                } catch (IOException ex) {
-                    systemErr.println("Couldn't close System.out reader" + ex.getMessage());
-                }
-            }
-        }
-
-        return sb.toString();
-    }
-
-    private void checkErrors(String s) {
-        Matcher matcher = errorPattern.matcher(s);
-        systemErr.println("~~~~~~~~~~" + s);
-        Assert.assertFalse("Output contains errors:" + s, matcher.find());
-//        systemErr.println("~~~~~~~~~~"+matcher.group());
-
-    }
-
-    private void checkFields(Map<String, String> expectedFields) {
-        String out = getOut();
-        for (String s : out.split("\n")) {
-            String[] tokens = s.split("\t");
-            Assert.assertTrue("Unknown field exists: " + s, expectedFields.containsKey(tokens[0]));
-            Assert.assertEquals("Field has different parameter type than expected", expectedFields.get(tokens[0]), tokens[1]);
-        }
     }
 
     @Test
@@ -284,20 +182,6 @@ public class MetadataTest extends PluginTest {
         launchPlugin("--table", "ius", "--list-fields");
 
         checkFields(expectedFields);
-    }
-
-    @Test
-    public void testMatcher() {
-        String string = "[SeqWare Pipeline] ERROR [2012/11/01 15:53:51] | "
-                + "MetadataWS.findObject with search string /288023 encountered error "
-                + "Internal Server Error\nExperiment: null\nSWID: 6740";
-        Matcher match = swidPattern.matcher(string);
-        Assert.assertTrue(match.find());
-        Assert.assertEquals("6740", match.group(1));
-        match = errorPattern.matcher(string);
-        Assert.assertTrue(match.find());
-        Assert.assertEquals("ERROR", match.group(0));
-
     }
     private String studyAccession = null;
 
@@ -615,6 +499,186 @@ public class MetadataTest extends PluginTest {
     }
     
     @Test
+    public void testCreateWorkflowRun() {
+        launchPlugin("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::4",
+                "--field", "status::completed");
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
+        Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
+        
+    }
+    
+    @Test
+    public void testCreateWorkflowRunWrongWorkflowFail() {
+        instance.setParams(Arrays.asList("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::100000",
+                "--field", "status::completed"));
+        String s = getOut();
+        checkExpectedIncorrectParameters();
+    }
+    
+    @Test
+    public void testCreateWorkflowRunWithFiles() {
+        launchPlugin("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::4",
+                "--field", "status::completed",
+                "--file","cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
+                "--file","hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator, so 
+        // let's try some workflow run reporter parsing
+        WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
+        String workflowRunReport = ((MetadataWS)metadata).getWorkflowRunReport(integer);
+        Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
+        Assert.assertTrue("could not find files", workflowRunReport.contains("/datastore/adamantium.gz") && workflowRunReport.contains("/datastore/corbomite.gz"));
+    }
+    
+    @Test
+    public void testCreateWorkflowRunWithParentAccessions() {
+        launchPlugin("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::4",
+                "--field", "status::completed",
+                "--parent-accession","834", // experiment
+                "--parent-accession", "4765", // ius 
+                "--parent-accession", "4707", // lane
+                "--parent-accession", "4760", // sample
+                "--parent-accession", "4715", // sequencer_run
+                "--parent-accession", "120", //study
+                "--parent-accession", "10" //processing
+        );
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator, so 
+        // let's try some workflow run reporter parsing
+        WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
+        String workflowRunReport = metadata.getWorkflowRunReport(integer);
+        Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
+    }
+    
+    @Test
+    public void testCreateFile() {
+        final String algorithm = "kryptonite_algorithm1";
+        final String type = "kryptonite_type1";
+        final String meta_type = "kryptonite/gzip";
+        final String file_path = "/datastore/kryptonite.gz";
+        final String description = "glowing_metal";
+        launchPlugin("--table", "file", "--create",
+                "--file",type+"::"+meta_type+"::"+file_path + "::" + description,
+                "--field", "algorithm::" + algorithm
+                );
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid); 
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select f.sw_accession, p.algorithm from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?", Integer.valueOf(integer));
+        int file_sw_accession = (Integer)runQuery[0];
+        String dbAlgorithm = (String)runQuery[1];
+        
+        net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
+        Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
+        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) 
+                && file.getMetaType().equals(meta_type) && file.getDescription().equals(description)
+                && file.getType().equals(type));
+        Assert.assertTrue("algorithm incorrect", dbAlgorithm.equals(algorithm));
+    }
+    
+    @Test
+    public void testCreateFileWithParentAccessions() {
+        final String algorithm = "kryptonite_algorithm1";
+        final String type = "cool_type1";
+        final String meta_type = "adamantium/gzip";
+        final String file_path = "/datastore/adamantium.gz";
+        launchPlugin("--table", "file", "--create",
+                "--file",type+"::"+meta_type+"::"+file_path,
+                "--parent-accession","834", // experiment
+                "--parent-accession", "4765", // ius 
+                "--parent-accession", "4707", // lane
+                "--parent-accession", "4760", // sample
+                "--parent-accession", "4715", // sequencer_run
+                "--parent-accession", "120", //study
+                "--parent-accession", "10", //processing
+                "--field", "algorithm::" + algorithm
+        );
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select f.sw_accession, p.processing_id from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?", Integer.valueOf(integer));
+        int file_sw_accession = (Integer)runQuery[0];
+        int processing_id = (Integer)runQuery[1];
+
+        net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
+        Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
+        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) && file.getMetaType().equals(meta_type));
+        // tests to verify that parent-accession links are created properly
+        runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT("
+                + "(select count(*) from processing_experiments WHERE processing_id = ?),"
+                + "(select count(*) from processing_files WHERE processing_id = ?),"
+                + "(select count(*) from processing_ius WHERE processing_id = ?),"
+                + "(select count(*) from processing_lanes WHERE processing_id = ?),"
+                + "(select count(*) from processing_samples WHERE processing_id = ?),"
+                + "(select count(*) from processing_sequencer_runs WHERE processing_id = ?),"
+                + "(select count(*) from processing_studies WHERE processing_id = ?),"
+                + "(select count(*) from processing_relationship WHERE child_id = ?)"
+                + ")", Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id)
+                , Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id));
+        String result = runQuery[0].toString();
+        Assert.assertTrue("parent links not created", result.equals("(1,1,1,1,1,1,1,1)"));
+
+    }
+
+    @Test
+    public void testCreateWorkflowRunWithFilesAndAccessions() {
+        launchPlugin("--table", "workflow_run", "--create",
+                "--field", "workflow_accession::4",
+                "--field", "status::completed",
+                 "--parent-accession","834", // experiment
+                "--parent-accession", "4765", // ius 
+                "--parent-accession", "4707", // lane
+                "--parent-accession", "4760", // sample
+                "--parent-accession", "4715", // sequencer_run
+                "--parent-accession", "120", //study
+                "--parent-accession", "10", //processing
+                "--file","cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
+                "--file","hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator, so 
+        // let's try some workflow run reporter parsing
+        WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
+        String workflowRunReport = ((MetadataWS)metadata).getWorkflowRunReport(integer);
+        Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
+        Assert.assertTrue("could not find files", workflowRunReport.contains("/datastore/adamantium.gz") && workflowRunReport.contains("/datastore/corbomite.gz"));
+    }
+    
+    
+    
+    @Test
+    public void testCreateWorkflow() {
+        launchPlugin("--table", "workflow", "--create",
+                "--field", "name::CalculateMeaningOfLife",
+                "--field", "version::1",
+                "--field", "description::'Workflow that simulates the Earth'"
+                );
+        String s = getOut();
+        String swid = getAndCheckSwid(s);
+        int integer = Integer.valueOf(swid);
+        Workflow workflow = metadata.getWorkflow(integer);
+        Assert.assertTrue("could not find workflow", workflow != null && workflow.getSwAccession() == integer);
+        
+    }
+    
+    
+    
+    @Test
     public void testCreateSampleWithExperimentFail() {
         instance.setParams(Arrays.asList("--table", "sample", "--create",
                 "--field", "experiment_accession::100000",
@@ -726,16 +790,13 @@ public class MetadataTest extends PluginTest {
 
     @Test
     public void testCreateIUSWrongLaneFail() {
-        String lAcc = laneAccession;
-        if (lAcc == null) {
-            lAcc = "4707";
-        }
+        // set an invalid lAcc 
+        String lAcc = "20000";
         String sAcc = sampleAccession;
         if (sAcc == null) {
             sAcc = "4760";
         }
-        // set an invalid lAcc 
-        lAcc = "20000";
+
 
         instance.setParams(Arrays.asList("--table", "ius", "--create",
                 "--field", "name::ius",
@@ -753,12 +814,9 @@ public class MetadataTest extends PluginTest {
         if (lAcc == null) {
             lAcc = "4707";
         }
-        String sAcc = sampleAccession;
-        if (sAcc == null) {
-            sAcc = "4760";
-        }
         // set an invalid accession
-        sAcc = "20000";
+        String sAcc = "20000";
+        
 
         instance.setParams(Arrays.asList("--table", "ius", "--create",
                 "--field", "name::ius",
@@ -945,20 +1003,7 @@ public class MetadataTest extends PluginTest {
         getAndCheckSwid(s);
 
     }
-
-    @Test
-    public void testPromptString() {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("test-default", "");
-        params.put("test-value", "value");
-        TestConsoleAdapter.initializeTestInstance().setLine(params);
-        Assert.assertNull(((Metadata) instance).promptString("test-default", null));
-        Assert.assertEquals("Failed while testing for default", "", ((Metadata) instance).promptString("test-default", ""));
-        Assert.assertEquals("Failed while testing for default", "default", ((Metadata) instance).promptString("test-default", "default"));
-        Assert.assertEquals("Failed while testing for a value", "value", ((Metadata) instance).promptString("test-value", "default"));
-        systemOut.println(getOut());
-    }
-
+    
     @Test
     public void testPromptBoolean() {
         //can test the error checking by extending the TestConsoleAdapter to
@@ -985,47 +1030,18 @@ public class MetadataTest extends PluginTest {
         Assert.assertTrue("Failed while testing for default", 5 == ((Metadata) instance).promptInteger("test-default", 5));
         Assert.assertTrue("Failed while testing for a value", 10 == ((Metadata) instance).promptInteger("test-value", 5));
         systemOut.println(getOut());
-
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    private String getAndCheckSwid(String s) throws NumberFormatException {
-        Matcher match = swidPattern.matcher(s);
-        Assert.assertTrue("SWID not found in output.", match.find());
-        String swid = match.group(1);
-        Assert.assertFalse("The SWID was empty", swid.trim().isEmpty());
-        Integer.parseInt(swid.trim());
-        return swid;
-    }
-    @Rule
-    public TestRule watchman = new TestWatcher() {
-        //This doesn't catch logs that are sent to Log4J
-
-        @Override
-        protected void succeeded(Description d) {
-            // do not fail on tests that intend on failing
-            if (!d.getMethodName().endsWith("Fail")) {
-                checkErrors(getErr());
-                checkErrors(getOut());
-            }
-        }
-    };
-
-    /**
-     * Run an instance with an error and/or failure expected
-     */
-    private void checkExpectedFailure() {
-        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
-        checkReturnValue(ReturnValue.SUCCESS, instance.init());
-        checkReturnValue(ReturnValue.FAILURE, instance.do_run());
-    }
-
-    /**
-     * Run an instance with incorrect parameters expected.
-     */
-    private void checkExpectedIncorrectParameters() {
-        checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
-        checkReturnValue(ReturnValue.SUCCESS, instance.init());
-        checkReturnValue(ReturnValue.INVALIDPARAMETERS, instance.do_run());
+    @Test
+    public void testPromptString() {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("test-default", "");
+        params.put("test-value", "value");
+        TestConsoleAdapter.initializeTestInstance().setLine(params);
+        Assert.assertNull(((Metadata) instance).promptString("test-default", null));
+        Assert.assertEquals("Failed while testing for default", "", ((Metadata) instance).promptString("test-default", ""));
+        Assert.assertEquals("Failed while testing for default", "default", ((Metadata) instance).promptString("test-default", "default"));
+        Assert.assertEquals("Failed while testing for a value", "value", ((Metadata) instance).promptString("test-value", "default"));
+        systemOut.println(getOut());
     }
 }

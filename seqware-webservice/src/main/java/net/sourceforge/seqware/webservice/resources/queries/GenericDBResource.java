@@ -19,8 +19,11 @@ package net.sourceforge.seqware.webservice.resources.queries;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
+import org.apache.commons.dbutils.ResultSetHandler;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -61,24 +64,19 @@ public class GenericDBResource extends BasicRestlet implements WadlDescribable {
         }
 
         if (request.getMethod() == Method.GET) {
-            ResultSet rs = null;
             try {
-                rs = DBAccess.get().executeQuery(query);
-                String table = printResultSet(rs);
+              String table = DBAccess.get().executeQuery(query, new ResultSetHandler<String>(){
+                @Override
+                public String handle(ResultSet rs) throws SQLException {
+                  return printResultSet(rs);
+                }
+              });
                 response.setEntity(table, MediaType.TEXT_PLAIN);
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 response.setStatus(Status.SERVER_ERROR_INTERNAL, ex);
 
             } finally {
-                if (rs != null) {
-                    try {
-                        rs.close();
-                    } catch (SQLException ex) {
-                        ex.printStackTrace();
-                        response.setStatus(Status.SERVER_ERROR_INTERNAL, ex);
-                    }
-                }
                 DBAccess.close();
             }
         } else if (request.getMethod() == Method.PUT) {

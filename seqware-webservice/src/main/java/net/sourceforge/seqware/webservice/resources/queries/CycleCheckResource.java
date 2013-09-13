@@ -16,8 +16,11 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
 import net.sourceforge.seqware.common.hibernate.CheckForCycles;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
@@ -51,7 +54,7 @@ public class CycleCheckResource
 
         if (request.getMethod().compareTo(Method.GET) == 0) {
             CheckForCycles cfc = new CheckForCycles();
-            String results = cfc.checkStudy(Integer.parseInt(id));
+            String results = cfc.checkStudy(parseClientInt(id));
             response.setEntity(results, MediaType.TEXT_PLAIN);
         } else {
             response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);

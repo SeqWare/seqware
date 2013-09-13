@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class IUS implements Serializable, Comparable<IUS>, PermissionsAware {
+public class IUS implements Serializable, Comparable<IUS>, PermissionsAware, ParentAccessionModel {
 
     private static final long serialVersionUID = 3472028115923390568L;
     private Integer iusId;
