@@ -1,5 +1,6 @@
 use strict;
 use Getopt::Long;
+use Data::Dumper;
 
 # VARS
 
@@ -7,6 +8,9 @@ use Getopt::Long;
 # OS_AUTH_URL=https://api.opensciencedatacloud.org:5000/sullivan/v2.0/
 # EC2_URL=https://api.opensciencedatacloud.org:8773/sullivan/services/Cloud
 
+# TODO:
+# * need to prepare /etc/hosts as %{HOSTS}
+# * need to find/replace post-initialization scripts
 
 # skips all unit and integration tests
 my $default_seqware_build_cmd = 'mvn clean install -DskipTests';
@@ -27,7 +31,9 @@ my $work_dir = "target";
 my $config_file = 'vagrant_launch.conf';
 my $skip_its = 0;
 my $skip_launch = 0;
-my $config_scripts = "templates/server_setup_scripts/ubuntu_12.04_master_script.sh";
+my $config_scripts = "templates/server_setup_scripts/ubuntu_12.04_minimal_script.sh";
+my $master_config_scripts = "";
+my $worker_config_scripts = "";
 # allow the specification of a specific commit to build and use instead of using the latest from develop
 my $git_commit = 0;
 # allow the hostname to be specified
@@ -39,7 +45,9 @@ GetOptions (
   "use-openstack" => \$launch_os,
   "working-dir=s" => \$work_dir,
   "config-file=s" => \$config_file,
-  "os-config-scripts=s" => \$config_scripts,
+  "os-initial-config-scripts=s" => \$config_scripts,
+  "os-master-config-scripts=s" => \$master_config_scripts,
+  "os-worker-config-scripts=s" => \$worker_config_scripts,
   "skip-it-tests" => \$skip_its,
   "skip-launch" => \$skip_launch,
   "git-commit=s" => \$git_commit,
@@ -94,11 +102,130 @@ if ($skip_its) { $configs->{'%{SEQWARE_IT_CMD}'} = ""; }
 setup_os_config_scripts($config_scripts, "$work_dir/os_server_setup.sh");
 prepare_files();
 if (!$skip_launch) {
+  # this launches and does first round setup
   launch_instances();
+  # this finds IP addresses and does second round of setup
+  provision_instances();
 }
 
 
 # SUBS
+
+sub find_node_info {
+  my $d = {};
+
+  my $node_list = `cd $work_dir && vagrant status`;
+  print "$node_list\n";
+  my @t = split /\n/, $node_list;
+  foreach my $l (@t) {
+    chomp $l;
+    my $host_id = "";
+    if ($l =~ /(\S+)\s+active/) {
+      # openstack
+      $host_id = $1;
+    } if ($l =~ /(\S+)\s+running/) {
+      # aws 
+      $host_id = $1;
+    }
+    if ($host_id ne "") {
+      my $host_id = $1;
+      my $host_info = `cd $work_dir && vagrant ssh-config $host_id`;
+      my @h = split /\n/, $host_info;
+      my $ip = "";
+      my $user = "";
+      my $key = "";
+      foreach my $hl (@h) {
+        chomp $hl;
+        if ($hl =~ /HostName\s+(\S+)/) { $ip = $1; }
+        if ($hl =~ /User\s+(\S+)/) { $user = $1; }
+        if ($hl =~ /IdentityFile\s+(\S+)/) { $key = $1; }
+      }
+      $d->{$host_id}{ip} = $ip;
+      $d->{$host_id}{user} = $user;
+      $d->{$host_id}{key} = $key;
+      my $pip = `cd $work_dir && ssh -o StrictHostKeyChecking=no -i $key $user\@$ip "/sbin/ifconfig | grep -A 1 eth0 | grep inet"`;
+      if ($pip =~ /addr:(\S+)/) { $d->{$host_id}{pip} = $1; }
+    }
+  }
+
+#  my $hosts_file = "";
+#  foreach my $host (keys %{$d}) {
+#   $hosts_file .= "$host  ".$d->{$host}{pip}."\n";
+#  } 
+ 
+  return($d);
+}
+
+# this finds all the host IP addresses and then runs the second provisioning on them
+sub provision_instances {
+  # first, find all the hosts and get their info
+  my $hosts = find_node_info();
+  print Dumper($hosts);
+
+  foreach my $host (keys %{$hosts}) {
+    print "PROVISION: $host\n";
+    if ($host =~ /master/) {
+      # has all the master daemons
+      run_provision_script($master_config_scripts, $hosts->{$host}, $hosts);
+    } else {
+      # then it's a worker node
+      run_provision_script($worker_config_scripts, $hosts->{$host}, $hosts);
+    }
+  }
+}
+
+# TODO: don't I need to process the script files before sending them over? I'll need to fill in with host info for sure!
+sub run_provision_script {
+  my ($config_scripts, $host, $hosts) = @_;
+  my $host_str = figure_out_host_str($hosts);
+  $configs->{'%{HOSTS}'} = $host_str;
+  my $master_pip = $hosts->{master}{pip};
+  $configs->{'%{MASTER_PIP}'} = $hosts->{master}{pip};
+  my $exports = make_exports_str($hosts);
+  $configs->{'%{EXPORTS}'} = $exports;
+  my @a = split /,/, $config_scripts;
+  foreach my $script (@a) {
+    $script =~ /\/([^\/]+)$/;
+    my $script_name = $1;
+    system("rm /tmp/config_script.sh");
+    setup_os_config_scripts($script, "/tmp/config_script.sh");
+    run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." sudo bash /tmp/config_script.sh");
+    #replace($script, "/tmp/config_script.sh", '%{HOSTS}', $host_str);
+    #replace("/tmp/config_script.sh", "/tmp/config_script.2.sh", '%{MASTER_PIP}', $master_pip);
+    #autoreplace("/tmp/config_script.2.sh", "/tmp/config_script.3.sh");
+    #replace("/tmp/config_script.3.sh", "/tmp/config_script.sh", '%{EXPORTS}', $exports);
+    #run("scp -o StrictHostKeyChecking=no -i ".$host->{key}." /tmp/config_script.sh ".$host->{user}."@".$host->{ip}.":/tmp/config_script.sh && ssh -o StrictHostKeyChecking=no -i ".$host->{key}." ".$host->{user}."@".$host->{ip}." sudo bash /tmp/config_script.sh");
+    #run("rm /tmp/config_script.sh /tmp/config_script.2.sh");
+  }
+}
+
+# this creates a string to add to /etc/exports
+sub make_exports_str {
+  my $hosts = shift;
+  my $result = "";
+  foreach my $host (keys %{$hosts}) {
+    my $pip = $hosts->{$host}{pip};
+    $result .= "
+/home $pip(rw,sync,no_root_squash,no_subtree_check)
+/datastore $pip(rw,sync,no_root_squash,no_subtree_check)
+/usr/tmp/seqware-oozie $pip(rw,sync,no_root_squash,no_subtree_check)
+";
+  }
+  print "EXPORT: $result\n"; 
+  return($result);
+}
+
+# this creates the /etc/hosts additions
+sub figure_out_host_str {
+  my ($hosts) = @_;
+  my $s = "";
+  foreach my $host (keys %{$hosts}) {
+    $s .= $hosts->{$host}{pip}."  $host\n";
+  }
+  print "HOSTS: $s\n";
+  return($s);
+}
+
 
 # this basically cats files together after doing an autoreplace
 sub setup_os_config_scripts() {
@@ -151,6 +278,13 @@ sub prepare_files {
   copy("templates/user_data.txt", "$work_dir/user_data.txt");
   # script for setting up hadoop hdfs
   copy("templates/setup_hdfs_volumes.pl", "$work_dir/setup_hdfs_volumes.pl");
+  # hadoop settings files
+  # FIXME: break out into config driven provisioniner
+  copy("templates/conf.worker.tar.gz", "$work_dir/conf.worker.tar.gz");
+  copy("templates/conf.master.tar.gz", "$work_dir/conf.master.tar.gz");
+  # DCC
+  # FIXME: break out into config driven provisioner
+  copy("templates/DCC/settings.yml", "$work_dir/settings.yml");
 }
 
 sub autoreplace {
