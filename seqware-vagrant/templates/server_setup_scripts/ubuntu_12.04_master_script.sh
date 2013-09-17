@@ -28,7 +28,7 @@ apt-get -q -y --force-yes install postgresql-9.1 postgresql-client-9.1 tomcat6-c
 
 # install Hadoop deps, the master node runs the NameNode, SecondaryNameNode and JobTracker
 # NOTE: shouldn't really use secondary name node on same box for production
-apt-get -q -y --force-yes install hadoop-0.20-mapreduce-jobtracker hadoop-hdfs-namenode hadoop-0.20-mapreduce-tasktracker hadoop-hdfs-datanode hadoop-client hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase hbase-master hbase-regionserver xfsprogs
+apt-get -q -y --force-yes install hadoop-0.20-mapreduce-jobtracker hadoop-hdfs-namenode hadoop-0.20-mapreduce-tasktracker hadoop-hdfs-datanode hadoop-client hue hue-server hue-plugins oozie oozie-client postgresql-9.1 postgresql-client-9.1 tomcat6-common tomcat6 apache2 git maven sysv-rc-conf hbase hbase-master hbase-regionserver xfsprogs hbase-thrift
 
 
 # setup LZO
