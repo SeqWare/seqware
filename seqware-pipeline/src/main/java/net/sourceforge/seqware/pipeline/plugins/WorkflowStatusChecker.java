@@ -381,9 +381,15 @@ public class WorkflowStatusChecker extends Plugin {
 
         if (wr.getWorkflowEngine().equals("oozie-sge")) {
           File dir = OozieJob.scriptsDir(wr.getCurrentWorkingDir());
-          Set<String> extIds = sgeIds(wfJob);
-          out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, extIds));
-          err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, extIds));
+          if (dir.exists()){
+            Set<String> extIds = sgeIds(wfJob);
+            out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, extIds));
+            err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, extIds));
+          } else {
+            // working dir has been deleted, do not wipe-out the stored output
+            out = wr.getStdOut();
+            err = wr.getStdErr();
+          }
         } else {
           StringBuilder sb = new StringBuilder();
           for (WorkflowAction action : wfJob.getActions()) {
