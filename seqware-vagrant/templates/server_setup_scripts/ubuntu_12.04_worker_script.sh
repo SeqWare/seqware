@@ -66,7 +66,8 @@ chmod a+rwx /datastore
 
 
 # add seqware user
-useradd -d /home/seqware -m seqware -s /bin/bash
+# seems duplicated from minimal script
+# useradd -d /home/seqware -m seqware -s /bin/bash
 
 # required for running oozie jobs
 mkdir /usr/lib/hadoop-0.20-mapreduce/.seqware
