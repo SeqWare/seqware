@@ -478,7 +478,22 @@ public class WorkflowStatusChecker extends Plugin {
         sqwStatus = WorkflowRunStatus.failed;
         break;
       case KILLED:
-        sqwStatus = WorkflowRunStatus.cancelled;
+        /*
+         * NOTE: At the time of this writing, Oozie workflows that fail due to
+         * an error have an oozie status of KILLED. This would result in failed
+         * workflows appearing in seqware as 'cancelled'.
+         * 
+         * To compensate for this idiosyncrasy, we will treat KILLED workflow
+         * runs as FAILED. Workflow runs that are cancelled via seqware will
+         * correctly have their status properly set to 'cancelled', since we are
+         * aware of the intent.
+         * 
+         * The drawback is that workflow runs killed via other means, e.g., HUE,
+         * will be propagated back to seqware as 'failed'. I feel this is the
+         * best of the bad options.
+         */
+        // sqwStatus = WorkflowRunStatus.cancelled;
+        sqwStatus = WorkflowRunStatus.failed;
         break;
       case SUCCEEDED:
         sqwStatus = WorkflowRunStatus.completed;
