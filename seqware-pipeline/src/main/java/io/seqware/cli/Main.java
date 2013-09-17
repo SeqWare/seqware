@@ -1115,7 +1115,7 @@ public class Main {
       out("  Propagate workflow engine statuses to seqware meta DB.");
       out("");
       out("Optional parameters:");
-      out("  --accession <swid>   Launch the specified workflow-run");
+      out("  --accession <swid>   Propagte the status of the specified workflow-run");
       out("                       Repeat this parameter to specify multiple workflow-runs");
       out("  --threads <num>      The number of concurrent worker threads (default 1)");
       out("");
