@@ -20,12 +20,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -37,6 +40,7 @@ public class DeveloperPhase1 {
     
     public static final String WORKFLOW = "Workflow";
     public static File BundleDir = null;
+    public static File BuildDir = null;
     public static File JavaClient = null;
     
     @BeforeClass
@@ -73,6 +77,7 @@ public class DeveloperPhase1 {
         
         // allocate needed items for future tests
         BundleDir = bundleDir;
+        BuildDir = FileUtils.listFiles(new File(bundleDir, "target"), new WildcardFileFilter("Workflow_Bundle_*"), null).iterator().next();
         JavaClient = workflowClientJava;
         
     }
