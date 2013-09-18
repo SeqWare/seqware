@@ -130,7 +130,11 @@ public class Bundle {
     String bundleName = bundle.getName();
     bundleName = bundleName.replaceAll(".zip", "");
     File outputDir = new File(bundleDir + File.separator + bundleName);
-    FileTools.unzipFile(bundle, outputDir);
+    if (outputDir.exists()){
+      Log.stdout("Expanded bundle directory already exists, skipping unzip.");
+    } else {
+      FileTools.unzipFile(bundle, outputDir);
+    }
     ret.setAttribute("outputDir", outputDir.getAbsolutePath());
     setOutputDir(outputDir.getAbsolutePath());
     FileTools.listFilesRecursive(outputDir, filesArray);
