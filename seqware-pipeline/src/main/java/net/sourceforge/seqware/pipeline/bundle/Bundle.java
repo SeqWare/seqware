@@ -385,6 +385,18 @@ public class Bundle {
           bi.parseFromFile(file);
         }
         // TODO: add more validation here based on what's pulled out of the metadata bundle
+
+        for (WorkflowInfo wi : bi.getWorkflowInfo()) {
+          // ensure conf file exists
+          String orig = wi.getConfigPath();
+          String abs = orig.replaceAll("\\$\\{workflow_bundle_dir\\}", outputDir);
+          File f = new File(abs);
+          if (!f.exists()){
+            ret.setExitStatus(ReturnValue.FAILURE);
+            ret.setStderr("ERROR: Configuration file does not exist: " + orig);
+          }
+        }
+
       }
     } catch (Exception e) {
       ret.setExitStatus(ReturnValue.FAILURE);
