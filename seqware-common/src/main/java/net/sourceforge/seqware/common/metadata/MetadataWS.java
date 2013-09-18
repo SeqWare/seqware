@@ -189,17 +189,6 @@ public class MetadataWS implements Metadata {
         workflow.setWorkflowType(workflow_type);
         workflow.setWorkflowEngine(workflow_engine);
 
-        Log.info("Posting workflow");
-        try {
-            workflow = ll.addWorkflow(workflow);
-            Log.stdout("WORKFLOW_ACCESSION: " + workflow.getSwAccession());
-            ret.setAttribute("sw_accession", workflow.getSwAccession().toString());
-            ret.setReturnValue(workflow.getWorkflowId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            ret.setExitStatus(ReturnValue.FAILURE);
-            return ret;
-        }
         // open the ini file and parse each item
         // FIXME: this assumes there is one ini file which is generally fine for
         // bundled workflows but we could make this more flexible
@@ -215,7 +204,19 @@ public class MetadataWS implements Metadata {
           }
       }
 
-        // foreach workflow param add an entry in the workflow_param table
+      Log.info("Posting workflow");
+      try {
+          workflow = ll.addWorkflow(workflow);
+          Log.stdout("WORKFLOW_ACCESSION: " + workflow.getSwAccession());
+          ret.setAttribute("sw_accession", workflow.getSwAccession().toString());
+          ret.setReturnValue(workflow.getWorkflowId());
+      } catch (Exception e) {
+          e.printStackTrace();
+          ret.setExitStatus(ReturnValue.FAILURE);
+          return ret;
+      }
+
+      // foreach workflow param add an entry in the workflow_param table
         int count = 0;
         for (String key : hm.keySet()) {
             count++;
