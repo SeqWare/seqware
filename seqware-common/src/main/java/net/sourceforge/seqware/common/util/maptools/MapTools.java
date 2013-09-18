@@ -1,5 +1,7 @@
 package net.sourceforge.seqware.common.util.maptools;
 
+import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+
 import net.sourceforge.seqware.common.util.Log;
 
 /**
@@ -89,12 +92,8 @@ public class MapTools {
                     hm.put(kv[0], detailsMap);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.stderr(e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.stderr(e.getMessage());
+        } catch (Exception e) {
+            rethrow(e);
         }
 
     }
