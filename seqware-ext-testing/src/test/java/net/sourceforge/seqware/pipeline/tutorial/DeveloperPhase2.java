@@ -51,12 +51,14 @@ public class DeveloperPhase2 {
     }
 
     protected void testWorkflow() throws IOException {
-        ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BundleDir.getAbsolutePath() + 
+      String buildDir =  DeveloperPhase1.BundleDir.getAbsolutePath() + "/target/Workflow_Bundle_*";
+        ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + buildDir + 
                " -t --workflow seqware-archetype-java-workflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
     }
 
     protected void packageBundle(File tempPackageDir) throws IOException {
+      String buildDir =  DeveloperPhase1.BundleDir.getAbsolutePath() + "/target/Workflow_Bundle_*";
         ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + tempPackageDir.getAbsolutePath() + 
-               " -p " + DeveloperPhase1.BundleDir.getAbsolutePath() , ReturnValue.SUCCESS, null);
+               " -p " + buildDir , ReturnValue.SUCCESS, null);
     }
 }
