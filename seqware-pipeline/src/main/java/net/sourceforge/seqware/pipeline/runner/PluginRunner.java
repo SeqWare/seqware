@@ -304,8 +304,12 @@ public class PluginRunner {
 
     // On failure, update metadb and exit
     if (newReturn.getExitStatus() > ReturnValue.SUCCESS) {
-      Log.stderr("The method '" + methodName + "' exited abnormally so the Runner will terminate here!");
-      Log.stderr("Return value was: " + newReturn.getExitStatus());
+      if (newReturn.getStderr() != null){
+        Log.stderr(newReturn.getStderr());
+      } else {
+        Log.stderr("The method '" + methodName + "' exited abnormally so the Runner will terminate here!");
+        Log.stderr("Return value was: " + newReturn.getExitStatus());
+      }
       System.exit(newReturn.getExitStatus());
     }
 

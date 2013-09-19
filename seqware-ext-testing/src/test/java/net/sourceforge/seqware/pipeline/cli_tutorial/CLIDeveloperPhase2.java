@@ -30,12 +30,12 @@ public class CLIDeveloperPhase2 extends DeveloperPhase2{
     
     @Override
     protected void testWorkflow() throws IOException {
-        ITUtility.runSeqwareCLI(" bundle test  --dir " + DeveloperPhase1.BundleDir.getAbsolutePath(), ReturnValue.SUCCESS, null);
+        ITUtility.runSeqwareCLI(" bundle test  --dir " + DeveloperPhase1.BuildDir.getAbsolutePath(), ReturnValue.SUCCESS, null);
     }
 
     @Override
     protected void packageBundle(File tempPackageDir) throws IOException {
         ITUtility.runSeqwareCLI(" bundle package --to  " + tempPackageDir.getAbsolutePath() + 
-               " --dir " + DeveloperPhase1.BundleDir.getAbsolutePath() , ReturnValue.SUCCESS, null);
+               " --dir " + DeveloperPhase1.BuildDir.getAbsolutePath() , ReturnValue.SUCCESS, null);
     }
 }

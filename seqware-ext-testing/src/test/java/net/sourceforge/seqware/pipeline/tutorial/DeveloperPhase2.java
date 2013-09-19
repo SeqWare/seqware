@@ -17,11 +17,14 @@
 package net.sourceforge.seqware.pipeline.tutorial;
 
 import com.google.common.io.Files;
+
 import java.io.File;
 import java.io.IOException;
+
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -51,12 +54,12 @@ public class DeveloperPhase2 {
     }
 
     protected void testWorkflow() throws IOException {
-        ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BundleDir.getAbsolutePath() + 
+        ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BuildDir.getAbsolutePath() + 
                " -t --workflow seqware-archetype-java-workflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
     }
 
     protected void packageBundle(File tempPackageDir) throws IOException {
         ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + tempPackageDir.getAbsolutePath() + 
-               " -p " + DeveloperPhase1.BundleDir.getAbsolutePath() , ReturnValue.SUCCESS, null);
+               " -p " + DeveloperPhase1.BuildDir.getAbsolutePath() , ReturnValue.SUCCESS, null);
     }
 }
