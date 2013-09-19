@@ -77,9 +77,19 @@ public class DeveloperPhase1 {
         
         // allocate needed items for future tests
         BundleDir = bundleDir;
-        BuildDir = FileUtils.listFilesAndDirs(new File(bundleDir, "target"), new WildcardFileFilter("Workflow_Bundle_*"), null).iterator().next();
+        BuildDir = findTargetBundleDir(bundleDir);
         JavaClient = workflowClientJava;
         
+    }
+
+    public static File findTargetBundleDir(File projectDir) {
+      File targetDir = new File(projectDir, "target");
+      for (File f : targetDir.listFiles()){
+        if (f.isDirectory() && f.getName().startsWith("Workflow_Bundle_")){
+          return f;
+        }
+      }
+      throw new RuntimeException("Could not locate target/WorkflowBundle_* directory");
     }
     
     @Test
