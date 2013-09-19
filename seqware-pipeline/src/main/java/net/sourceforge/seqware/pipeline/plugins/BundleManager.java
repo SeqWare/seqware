@@ -138,18 +138,24 @@ public class BundleManager extends Plugin {
                 println("Bundle Validates!");
             }
         } else if (options.has("bundle") && options.has("test")) {
-            println("Testing Bundle");
-            String bundlePath = (String) options.valueOf("bundle");
-            File bundle = new File(bundlePath);
-            if (options.has("workflow") && options.has("version")) {
-                // then just run the test for a particular workflow and version
-                ret = b.testBundle(bundle, specificMetadataFile, (String) options.valueOf("workflow"), (String) options.valueOf("version"));
-            } else {
-                ret = b.testBundle(bundle, specificMetadataFile);
-            }
-            if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-                println("Bundle Passed Test!");
-            }
+          println("Validating Bundle structure");
+          String bundlePath = (String) options.valueOf("bundle");
+          File bundle = new File(bundlePath);
+          ret = b.validateBundle(bundle);
+          if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+              println("Bundle Validates!");
+              println("Testing Bundle");
+              if (options.has("workflow") && options.has("version")) {
+                  // then just run the test for a particular workflow and version
+                  ret = b.testBundle(bundle, specificMetadataFile, (String) options.valueOf("workflow"), (String) options.valueOf("version"));
+              } else {
+                  ret = b.testBundle(bundle, specificMetadataFile);
+              }
+              if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+                  println("Bundle Passed Test!");
+              }
+          }
+
         } else if (options.has("bundle") && options.has("path-to-package")) {
             println("Packaging Bundle");
             String bundleOutput = (String) options.valueOf("bundle");
