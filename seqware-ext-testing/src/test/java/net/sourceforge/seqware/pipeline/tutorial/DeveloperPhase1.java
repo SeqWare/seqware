@@ -77,7 +77,7 @@ public class DeveloperPhase1 {
         
         // allocate needed items for future tests
         BundleDir = bundleDir;
-        BuildDir = FileUtils.listFiles(new File(bundleDir, "target"), new WildcardFileFilter("Workflow_Bundle_*"), null).iterator().next();
+        BuildDir = FileUtils.listFilesAndDirs(new File(bundleDir, "target"), new WildcardFileFilter("Workflow_Bundle_*"), null).iterator().next();
         JavaClient = workflowClientJava;
         
     }
