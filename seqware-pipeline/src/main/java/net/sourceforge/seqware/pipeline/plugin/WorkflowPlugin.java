@@ -143,11 +143,16 @@ public class WorkflowPlugin extends Plugin {
     }
     
     if (options.has("workflow-engine")){
-      if (!ENGINES.contains(options.valueOf("workflow-engine"))){
+      if (!ENGINES.contains((String)options.valueOf("workflow-engine"))){
         Log.error("Invalid workflow-engine value. Must be one of: "+ENGINES_LIST);
         ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
         return ret;
       }
+    }
+    if (options.has(WAIT) && options.has(LAUNCH_SCHEDULED)){
+        Log.error("Cannot launch scheduled workflows with wait");
+        ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
+        return ret;
     }
 
     // wrong assumption here I think, --host is possible even when not
