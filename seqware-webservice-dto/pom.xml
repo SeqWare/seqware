@@ -4,7 +4,7 @@
     <parent>
         <artifactId>seqware</artifactId>
         <groupId>com.github.seqware</groupId>
-        <version>1.0.4-SNAPSHOT</version>
+        <version>1.0.5-SNAPSHOT</version>
     </parent>
     <artifactId>seqware-webservice-dto</artifactId>
     <name>seqware-webservice-dto</name>
