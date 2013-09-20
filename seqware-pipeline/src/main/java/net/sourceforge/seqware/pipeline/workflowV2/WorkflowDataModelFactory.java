@@ -260,6 +260,7 @@ public class WorkflowDataModelFactory {
             WorkflowXmlParser xmlParser = new WorkflowXmlParser();
             xmlParser.parseXml(dataModel, metaInfo.get("workflow_template"));
         }
+        AbstractWorkflowDataModel.prepare(dataModel);
         //set wait
         dataModel.setWait(this.options.has("wait"));
         Log.info("returning datamodel");
