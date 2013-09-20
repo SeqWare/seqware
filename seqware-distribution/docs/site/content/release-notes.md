@@ -9,6 +9,57 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.0.4 (2013-09-20)
+
+###Defect
+
+* [SEQWARE-1574] - WebService - Clear up the connection pool mess
+* [SEQWARE-1699] - NullPointerException when launching a scheduled workflow
+* [SEQWARE-1722] - Oozie engine does not emit all GCR flags
+* [SEQWARE-1750] - Workflow run relaunches indefinently
+
+### Improvement
+
+* [SEQWARE-1622] - Have BasicDecider check to see if the files exist before launching
+* [SEQWARE-1726] - SeqWare MetaDB - Generate docs for the schema and upload to our seqware.io site
+
+### Story
+
+* [SEQWARE-137] - need to add workflow to X tables in the db for study, experiment, sample, etc and allow for linking via the WorfklowLauncher
+* [SEQWARE-1625] - BasicDecider improvements
+* [SEQWARE-1733] - Clean-up metadata tools
+
+### Task
+
+* [SEQWARE-1433] - WorkflowLauncher needs to set the host regardless of the launching method
+* [SEQWARE-1512] - Cleanup DBAccess
+* [SEQWARE-1513] - Modify the Maven archetype for decider jars to follow the PDE syntax (matches the workflow)
+* [SEQWARE-1580] - WorkflowStatusChecker can short-circuit evaluation
+* [SEQWARE-1593] - WorkflowStatusChecker can only run for single workflow-run-accession
+* [SEQWARE-1605] - Pipeline - Create a generic methods HTML report for each workflow_run
+* [SEQWARE-1706] - Add skip attribute to Old StudyReporter
+* [SEQWARE-1731] - Work with HelpDesk to create Jenkins back-up procedure
+* [SEQWARE-1744] - FileLinker plugin
+
+### Technical task
+
+* [SEQWARE-473] - Pipeline JAR should know what version of the webservice it is compatible with
+* [SEQWARE-616] - Decide which File Injection Tools should exist
+* [SEQWARE-1241] - Figure out a way to use archetypes without having to checkout and install the SeqWare git repo
+* [SEQWARE-1547] - Check if ID is an integer to avoid NumberFormatException
+* [SEQWARE-1548] - Check for potential NullPointers
+* [SEQWARE-1549] - Check that JaxbObject handles nulls properly
+* [SEQWARE-1616] - Code review of workflow engines and action executors with Alex
+* [SEQWARE-1626] - Have the BasicDecider print out the defaults for each command-line option
+* [SEQWARE-1655] - Add an option for running in reverse chronological order
+* [SEQWARE-1712] - Implement system monitoring tools in Portal or other location
+* [SEQWARE-1734] - Update FileLinker to use WS
+* [SEQWARE-1736] - Create tests for FileLinker
+* [SEQWARE-1737] - Deprecate GenericMetadataSaver
+* [SEQWARE-1738] - Delete BulkProvisionFiles and ProcessingTaskGroup
+
+
+
 ## 0.13.6.10 (2013-08-21)
 * Reduce the amount of temporary file space used by the basic decider 
 
