@@ -9,7 +9,7 @@
     <description>SeqWare module archetype</description>
 
     <parent>
-        <version>1.0.4-SNAPSHOT</version>
+        <version>1.0.5-SNAPSHOT</version>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
 	<relativePath>../../pom.xml</relativePath>
