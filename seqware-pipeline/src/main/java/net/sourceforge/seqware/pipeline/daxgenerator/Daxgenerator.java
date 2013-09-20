@@ -72,7 +72,7 @@ public class Daxgenerator {
         // empty hash map
         if (iniFiles != null && iniFiles.length > 0) {
             for (int i = 0; i < iniFiles.length; i++) {
-                Log.stdout("  INI FILE: "+iniFiles[i]);
+                Log.debug("  INI FILE: "+iniFiles[i]);
                 if ((new File(iniFiles[i])).exists()) {
                   MapTools.ini2Map(iniFiles[i], map);
                 }
