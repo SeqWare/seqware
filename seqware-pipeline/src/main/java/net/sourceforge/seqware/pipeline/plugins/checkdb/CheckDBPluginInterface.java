@@ -16,16 +16,17 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.checkdb;
 
-import java.util.Map;
-import net.sourceforge.seqware.common.metadata.MetadataDB;
+import java.sql.SQLException;
+import java.util.Set;
+import java.util.SortedMap;
 
 /**
  *
  * @author dyuen
  */
-public interface CheckDBPlugin {
+public interface CheckDBPluginInterface {
     
-    public Map<Level, String> check(MetadataDB db);
+    public void check(SelectQueryRunner qRunner, SortedMap<Level, Set<String>> results) throws SQLException;
     
     public enum Level{
         SEVERE,
