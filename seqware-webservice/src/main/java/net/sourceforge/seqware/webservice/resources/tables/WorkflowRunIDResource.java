@@ -203,7 +203,6 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         wr.setWorkflowEngine(newWR.getWorkflowEngine());
         if (newWR.getInputFileAccessions() != null){
             Log.debug("Saving " + wr.getInputFileAccessions().size() + " input files");
-            wr.getInputFileAccessions().clear();
             wr.getInputFileAccessions().addAll(newWR.getInputFileAccessions());
         }
         
