@@ -1,12 +1,21 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
+import static net.sourceforge.seqware.common.util.Str.isSafe;
+import static net.sourceforge.seqware.common.util.Str.safe;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import net.sourceforge.seqware.common.util.Str;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
+import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Environment;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
@@ -48,6 +57,28 @@ public abstract class AbstractWorkflowDataModel  {
     	this.parentAccessions = new ArrayList<String>();
     }
     
+    /**
+     * Validates and potentially modifies the specified model in preparation for launching.
+     * @param m the model to prepare
+     */
+    public static void prepare(AbstractWorkflowDataModel model) {
+      Map<String,SqwFile> m = new HashMap<String,SqwFile>();
+      for (Map.Entry<String,SqwFile> e : model.files.entrySet()){
+        String name = safe(e.getKey());
+        if (m.containsKey(name)){
+          throw new RuntimeException("Ensuring provision file job names are safe would result in colliding names: "+name);
+        } else {
+          m.put(name, e.getValue());
+        }
+      }
+      model.files = m;
+
+      for (AbstractJob j : model.workflow.getJobs()) {
+        // disregarding naming collisions since it won't result in losing objects, and is handled elsewhere.
+        j.setAlgo(safe(j.getAlgo()));
+      }
+    }
+
     /**
      * to be Overridden by the workflow author
      */
