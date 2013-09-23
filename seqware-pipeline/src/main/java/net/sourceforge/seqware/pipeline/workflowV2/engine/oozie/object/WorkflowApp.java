@@ -397,10 +397,10 @@ public class WorkflowApp {
   }
 
   private void setAccessionFileRelations(OozieJob parent) {
-    Log.stdout("SETTING ACCESSIONS FOR CHILDREN FOR PARENT JOB " + parent.getName());
+    Log.debug("SETTING ACCESSIONS FOR CHILDREN FOR PARENT JOB " + parent.getName());
     for (OozieJob pjob : parent.getChildren()) {
       pjob.addParentAccessionFile(parent.getAccessionFile());
-      Log.stdout("RECURSIVE SETTING ACCESSIONS FOR CHILDOB " + pjob.getName());
+      Log.debug("RECURSIVE SETTING ACCESSIONS FOR CHILDOB " + pjob.getName());
       // FIXME: there is some (potentially very serious) bug here were loops
       // exist in the processing output provision parent/child relationships!
       // if (!pjob.getChildren().contains(parent)) {
