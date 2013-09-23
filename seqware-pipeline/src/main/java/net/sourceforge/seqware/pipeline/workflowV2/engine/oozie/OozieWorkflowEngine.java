@@ -106,8 +106,10 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     conf.set("hbase.zookeeper.property.clientPort", this.dataModel.getEnv().getHbase_zookeeper_property_clientPort());
     conf.set("hbase.master", this.dataModel.getEnv().getHbase_master());
     conf.set("mapred.job.tracker", this.dataModel.getEnv().getMapred_job_tracker());
-    conf.set("fs.default.name", this.dataModel.getEnv().getFs_default_name());
-    conf.set("fs.defaultFS", this.dataModel.getEnv().getFs_defaultFS());
+    if (this.dataModel.getEnv().getFs_default_name() != null)
+      conf.set("fs.default.name", this.dataModel.getEnv().getFs_default_name());
+    if (this.dataModel.getEnv().getFs_defaultFS() != null)
+      conf.set("fs.defaultFS", this.dataModel.getEnv().getFs_defaultFS());
     conf.set("fs.hdfs.impl", this.dataModel.getEnv().getFs_hdfs_impl());
     // conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_CORE_XML()));
     // conf.addResource(new
@@ -129,6 +131,9 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
       // copy lib
       this.copyFromLocal(fileSystem, seqwareJarPath(objectModel), this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
           + this.dir.getName() + "/lib");
+
+      Path absDest = fileSystem.getFileStatus(path).getPath();
+      System.out.println("Files copied to " + absDest);
 
       fileSystem.close();
     } catch (RuntimeException e) {
@@ -210,11 +215,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
         return;
       }
 
-      // Get the filename out of the file path
-      String filename = source.substring(source.lastIndexOf('/') + 1, source.length());
-
       fileSystem.copyFromLocalFile(srcPath, dstPath);
-      System.out.println("File " + filename + " copied to " + dest);
     } catch (RuntimeException e) {
       throw e;
     } catch (Exception e) {
