@@ -16,11 +16,8 @@ import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 
 /*
  * TODO:
- * - update seqware script to pull jar from proper location
  * - apply user-role filtering of available commands
  * - add descriptions to fields of create
- * - add copying helpers (e.g., S3)
- * - probably need to add developer functionality for controlled launching of bundle workflow
  */
 public class Main {
 
@@ -868,16 +865,24 @@ public class Main {
     if (isHelp(args, false)) {
       out("");
       out("Usage: seqware workflow list --help");
-      out("       seqware workflow list");
+      out("       seqware workflow list [params]");
       out("");
       out("Description:");
       out("  List all installed workflows.");
       out("");
+      out("Optional parameters:");
+      out("  --tsv             Emit a tab-separated values list");
+      out("");
     } else {
+      boolean tsv = flag(args, "--tsv");
+
       extras(args, "workflow list");
 
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--list-installed",
-          "--human-expanded");
+      if (tsv) {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--list-installed");
+      } else {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--list-installed", "--human-expanded");
+      }
     }
   }
 
