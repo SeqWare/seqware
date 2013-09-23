@@ -1091,6 +1091,10 @@ public class Main {
 
       extras(args, "workflow-run launch-scheduled");
 
+      if (!ids.isEmpty() && host != null){
+        kill("seqware: cannot specify both '--accession' and '--host'.");
+      }
+
       List<String> runnerArgs = new ArrayList<String>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
@@ -1120,28 +1124,40 @@ public class Main {
       out("  Propagate workflow engine statuses to seqware meta DB.");
       out("");
       out("Optional parameters:");
-      out("  --accession <swid>   Propagte the status of the specified workflow-run");
-      out("                       Repeat this parameter to specify multiple workflow-runs");
+      out("  --accession <swid>   Propagte the status of the specified workflow-run.");
+      out("                       Repeat this parameter to specify multiple workflow-runs.");
+      out("  --host <value>       Use the specified value instead of the local hostname");
+      out("                       when selecting which workflow-runs to check.");
       out("  --threads <num>      The number of concurrent worker threads (default 1)");
       out("");
     } else {
       String threads = optVal(args, "--threads", null);
-      List<String> wfrs = optVals(args, "--accession");
+      List<String> ids = optVals(args, "--accession");
+      String host = optVal(args, "--host", null);
 
       extras(args, "workflow-run propagate-statuses");
+
+      if (!ids.isEmpty() && host != null){
+        kill("seqware: cannot specify both '--accession' and '--host'.");
+      }
 
       List<String> runnerArgs = new ArrayList<String>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker");
       runnerArgs.add("--");
 
+      if (host != null) {
+        runnerArgs.add("--force-host");
+        runnerArgs.add(host);
+      }
+
       if (threads != null) {
         runnerArgs.add("--threads-in-thread-pool");
         runnerArgs.add(threads);
       }
-      if (!wfrs.isEmpty()) {
+      if (!ids.isEmpty()) {
         runnerArgs.add("--workflow-run-accession");
-        runnerArgs.add(cdl(wfrs));
+        runnerArgs.add(cdl(ids));
       }
 
       run(runnerArgs);
