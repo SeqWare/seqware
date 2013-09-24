@@ -16,34 +16,45 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.checkdb.plugins;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.SelectQueryRunner;
+import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
+import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Checks the metadb for issues specifically with the sample hierarchy
+ * Checks the metadb for issues with attributes
  * @author dyuen
  */
 @ServiceProvider(service = CheckDBPluginInterface.class)
-public class SampleHierarchyPlugin implements CheckDBPluginInterface {
+public class AttributePlugin implements CheckDBPluginInterface {
 
     @Override
     public void check(SelectQueryRunner qRunner, SortedMap<Level, Set<String>> result) throws SQLException {
-        String query = "WITH sample_parent_count AS (\n"
-                + "  select sample_id, count(parent_id) AS parent_count from sample_hierarchy GROUP BY sample_id\n"
-                + ")\n"
-                + "SELECT * from sample s \n"
-                + "JOIN sample_parent_count spc ON s.sample_id=spc.sample_id \n"
-                + "WHERE parent_count > 1;";
+        try {
+            String path = AttributePlugin.class.getResource("duplicate_attribute_keys.sql").getPath();
+            String query = FileUtils.readFileToString(new File(path));
+            List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
+            if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Entities with duplicate attribute keys in non-sample tables: " + executeQuery.toString());
 
-        List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) {
-            result.get(Level.SEVERE).add("Unreferenced Experiments: " + executeQuery.toString());
+            path = WorkflowRunConventionsPlugin.class.getResource("duplicate_sample_attribute_keys.sql").getPath();
+            query = FileUtils.readFileToString(new File(path));
+            executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
+            if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Samples with duplicate attribute keys: " + executeQuery.toString());
+            
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
 
     }
