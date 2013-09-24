@@ -295,9 +295,9 @@ When using the Oozie-SGE engine, some additional files are included:
 
 Prior to testing your bundle, it will be worthwhile to ensure that the files generated are what you expect.  You can accomplish this with the `dry-run` command:
 
-    $ seqware bundle dry-run --dir target/Workflow_Bundle_* --ini workflow.ini --name HelloWorld --version 1.0-SNAPSHOT --engine oozie
+    $ seqware bundle dry-run --dir target/Workflow_Bundle_* --name HelloWorld --version 1.0-SNAPSHOT
     Using working directory: /tmp/oozie-861c827c-b4d1-4124-893d-012e2a31ca9a
-    Files copied to hdfs://example.com:8020/user/seqware/seqware_workflow/oozie-861c827c-b4d1-4124-893d-012e2a31ca9a
+    Files copied to hdfs://10.0.0.1:8020/user/seqware/seqware_workflow/oozie-861c827c-b4d1-4124-893d-012e2a31ca9a
     $ ls /home/seqware/tmp/oozie-861c827c-b4d1-4124-893d-012e2a31ca9a/generated-scripts/
     bash_cp_4.sh  bash_cp_5.sh  bash_mkdir_3.sh  start_0.sh
 
@@ -308,23 +308,22 @@ At this point, the individual scripts can be executed to ensure they do what you
 
 ## Testing the Workflow 
 
-The next step after authoring your workflows in the Java workflow language, and verifying the generated scripts, is to run them in a test mode.
+The next step after authoring your workflows in the Java workflow language, and verifying the generated scripts, is to run them:
 
-The SeqWare command line can be used to test run all workflows in a bundle:
+    $ seqware bundle launch --dir target/Workflow_Bundle_* --name HelloWorld --version 1.0-SNAPSHOT
+    Using working directory: /tmp/oozie-ed2961be-555b-45bb-b009-690d8cefb4c4
+    Files copied to hdfs://10.0.0.1:8020/user/seqware/seqware_workflow/oozie-ed2961be-555b-45bb-b009-690d8cefb4c4
+    Submitted Oozie job: 0000009-130918173155061-oozie-oozi-W
+    Workflow job running ...
+    Application Path   : hdfs://10.0.0.1:8020/user/seqware/seqware_workflow/oozie-ed2961be-555b-45bb-b009-690d8cefb4c4
+    Application Name   : HelloWorld
+    Application Status : RUNNING
+    Application Actions:
+       Name: :start: Type: :START: Status: OK
+       Name: start_0 Type: java Status: PREP
+    Workflow job running ...
 
-    $ seqware bundle test --dir target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
-    Testing Bundle
-      Running Test Command:
-    java -jar /home/seqware/workflow-dev/MyHelloWorld/target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/lib/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir /home/seqware/workflow-dev/MyHelloWorld/target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %> --workflow MyHelloWorld --version 1.0-SNAPSHOT --ini-files /home/seqware/workflow-dev/MyHelloWorld/target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/config/workflow.ini 
-    Bundle Passed Test!
-
-Note: you can safely ignore the underlying java command that launches the workflow. 
-
-Alternately, a specific workflow in the bundle can be launched:
-
-    $ seqware bundle launch --name MyHelloWorld --version 1.0-SNAPSHOT --dir target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
-
-Both of the above bypass the whole workflow scheduling and asynchronous launching process that you saw in the User Tutorial. What you lose is the metadata tracking functionality. The command runs the workflow which produces file outputs but that is all, no record of the run will be recorded in the MetaDB.
+The above will bypass the whole workflow scheduling and asynchronous launching process that you saw in the User Tutorial. What you lose is the metadata tracking functionality. The command runs the workflow which produces file outputs but that is all, no record of the run will be recorded in the MetaDB.
 
 ### Running with the Oozie-SGE Workflow Engine
 
@@ -362,9 +361,9 @@ Assuming the workflow above worked fine the next step is to package it.
 
     $ mkdir ~/packaged-bundles
     $ seqware bundle package --dir target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/ --to ~/packaged-bundles/
+    Validating Bundle structure
     Packaging Bundle
-    Bundle: /home/seqware/packaged-bundles path: /home/seqware/workflow-dev/MyHelloWorld/target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
-    Bundle Has Been Packaged to /home/seqware/packaged-bundles!
+    Bundle has been packaged to /home/seqware/packaged-bundles
 
 What happens here is the <code>Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your output directory (`~/packaged-bundles`) and that can be provided to an admin for installation.
 
