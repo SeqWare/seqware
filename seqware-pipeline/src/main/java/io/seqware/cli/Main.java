@@ -287,19 +287,33 @@ public class Main {
       out("");
       out("Usage: seqware bundle test [--help]");
       out("       seqware bundle test --dir <bundle-dir>");
+      out("       seqware bundle test --dir <bundle-dir> --name <name> --version <version>");
       out("");
       out("Description:");
-      out("  Test-launch all the workflows in a bundle directory.");
+      out("  Test-launch the workflows in a bundle directory.");
+      out("  Uses the value of the 'test' node(s) in metadata.xml.");
       out("");
-      out("Parameters:");
+      out("Required parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
+      out("");
+      out("Optional parameters:");
+      out("  --name <wf-name>    The name of the workflow in the bundle to test");
+      out("  --version <ver>     The version of the workflow in the bundle to test");
       out("");
     } else {
       String dir = reqVal(args, "--dir");
+      String name = optVal(args, "--name", null);
+      String version = optVal(args, "--version", null);
 
       extras(args, "bundle test");
 
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--test", "--bundle", dir);
+      if (name == null && version == null){
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--test", "--bundle", dir);  
+      } else if (name != null && version != null) {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--test", "--bundle", dir, "--workflow", name, "--version", version);
+      } else {
+        kill("seqware: both '--name' and '--version' must be provided to test a single workflow.");
+      }
     }
   }
 
@@ -330,7 +344,6 @@ public class Main {
       out("  --ini <ini-file>    An ini file to configure the workflow run");
       out("                      Defaults to the workflow.ini file inside the bundle-dir");
       out("                      Repeat this parameter to provide multiple files");
-      out("  --metadata          Perform metadata write-back of the workflow run");
       out("");
     } else {
       String dir = reqVal(args, "--dir");
@@ -338,7 +351,6 @@ public class Main {
       String version = reqVal(args, "--version");
       String engine = optVal(args, "--engine", null);
       List<String> inis = optVals(args, "--ini");
-      boolean md = flag(args, "--metadata");
 
       extras(args, "bundle launch");
 
@@ -351,11 +363,7 @@ public class Main {
                                                                     "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher",
                                                                     "--", "--wait", "--bundle", dir, "--workflow",
                                                                     name, "--version", version, "--ini-files",
-                                                                    cdl(inis)));
-      if (!md) {
-        runnerArgs.add("--no-metadata");
-      }
-
+                                                                    cdl(inis), "--no-metadata"));
       if (engine != null) {
         runnerArgs.add("--workflow-engine");
         runnerArgs.add(engine);
