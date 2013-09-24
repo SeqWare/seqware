@@ -299,7 +299,7 @@ public class Main {
       extras(args, "bundle launch");
 
       if (inis.isEmpty()){
-        inis.add(Bundle.getWorkflowInfo(new File(dir), name, version).getConfigPath());
+        inis.add(Bundle.getWorkflowConfigPath(new File(dir), name, version));
       }
 
       if (engine == null) {
@@ -345,7 +345,7 @@ public class Main {
       extras(args, "bundle dry-run");
       
       if (inis.isEmpty()){
-        inis.add(Bundle.getWorkflowInfo(new File(dir), name, version).getConfigPath());
+        inis.add(Bundle.getWorkflowConfigPath(new File(dir), name, version));
       }
 
       if (engine == null) {

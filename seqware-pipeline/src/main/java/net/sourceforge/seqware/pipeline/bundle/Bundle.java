@@ -84,6 +84,17 @@ public class Bundle {
     }
     throw new RuntimeException("Could not find workflow with name '"+name+"' and version '"+version+"'");
   }
+  
+  public static String resolveWorkflowBundleDirPath(String path, File bundleDir){
+    if (path.contains("${workflow_bundle_dir}")){
+      path = path.replaceAll("\\$\\{workflow_bundle_dir\\}", bundleDir.getAbsolutePath());
+    }
+    return path;
+  }
+  
+  public static String getWorkflowConfigPath(File bundleDir, String name, String version){
+    return resolveWorkflowBundleDirPath(getWorkflowInfo(bundleDir, name, version).getConfigPath(), bundleDir);
+  }
 
   /**
    * <p>getBundleInfo.</p>
