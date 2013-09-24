@@ -291,14 +291,17 @@ public class WorkflowStatusChecker extends Plugin {
         return;
       }
 
-      // check the host is either overridden or this is the same host the
-      // workflow was launched from
-      if (options.has("force-host") && options.valueOf("force-host") != null
-          && !((String) options.valueOf("force-host")).equals(wr.getHost())) {
-        return;
-      } else if (!options.has("force-host") && WorkflowStatusChecker.this.hostname != null
-          && !WorkflowStatusChecker.this.hostname.equals(wr.getHost())) {
-        return;
+      // ignore host matching when run accession is specified
+      if (options.has(WORKFLOW_RUN_ACCESSION) == false) {
+        // check the host is either overridden or this is the same host the
+        // workflow was launched from
+        if (options.has("force-host") && options.valueOf("force-host") != null
+            && !((String) options.valueOf("force-host")).equals(wr.getHost())) {
+          return;
+        } else if (!options.has("force-host") && WorkflowStatusChecker.this.hostname != null
+            && !WorkflowStatusChecker.this.hostname.equals(wr.getHost())) {
+          return;
+        }
       }
 
       // check the rest API username from SeqWare settings is the same username
