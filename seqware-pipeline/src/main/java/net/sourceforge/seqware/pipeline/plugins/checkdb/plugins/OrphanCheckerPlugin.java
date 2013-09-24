@@ -57,10 +57,6 @@ public class OrphanCheckerPlugin implements CheckDBPluginInterface {
         // processing, which is just weird
         executeQuery = qRunner.executeQuery("SELECT sw_accession FROM processing WHERE workflow_run_id IS NULL AND ancestor_workflow_run_id IS NULL;", new ColumnListHandler<Integer>());
         if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Processings attached to no workflow runs: " + executeQuery.toString());
-
-        // TODO: we need a better orphan check, processing not connected via processing_relationship or processing_ius?
-//        executeQuery = qRunner.executeQuery("SELECT sw_accession FROM processing WHERE processing_id NOT IN (select parent_id FROM processing_relationship UNION select child_id from processing_relationship);", new ColumnListHandler<Integer>());
-//        if (executeQuery.size() > 0) result.get(Level.TRIVIAL).add("Processings not in any relationships: " + executeQuery.toString());
     }
     
 }
