@@ -12,6 +12,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 
 /*
@@ -324,7 +325,8 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --engine <type>     The engine that will process the workflow run");
-      out("                      May be one of: 'oozie' or 'oozie-sge'");
+      out("                      May be one of: "+WorkflowPlugin.ENGINES_LIST);
+      out("                      Defaults to "+WorkflowPlugin.DEFAULT_ENGINE);
       out("  --ini <ini-file>    An ini file to configure the workflow run");
       out("                      Defaults to the workflow.ini file inside the bundle-dir");
       out("                      Repeat this parameter to provide multiple files");
@@ -381,7 +383,8 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --engine <type>     The engine that will process the workflow run");
-      out("                      May be one of: 'oozie' or 'oozie-sge'");
+      out("                      May be one of: "+WorkflowPlugin.ENGINES_LIST);
+      out("                      Defaults to "+WorkflowPlugin.DEFAULT_ENGINE);
       out("");
     } else {
       String dir = reqVal(args, "--dir");
@@ -955,7 +958,8 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --engine <type>            The engine that will process the workflow run");
-      out("                             May be one of: 'oozie' or 'oozie-sge'");
+      out("                             May be one of: "+WorkflowPlugin.ENGINES_LIST);
+      out("                             Defaults to "+WorkflowPlugin.DEFAULT_ENGINE);
       out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
       out("                             Repeat this parameter to provide multiple parents");
       out("");
@@ -1049,10 +1053,10 @@ public class Main {
       out("  Interact with workflows.");
       out("");
       out("Sub-commands:");
-      out("  ini               Generate an ini file for a workflow");
-      out("  list              List all installed workflows");
-      out("  report            List the details of all runs of a given workflow");
-      out("  schedule          Schedule a workflow to be run");
+      out("  ini           Generate an ini file for a workflow");
+      out("  list          List all installed workflows");
+      out("  report        List the details of all runs of a given workflow");
+      out("  schedule      Schedule a workflow to be run");
       out("");
     } else {
       String cmd = args.remove(0);
@@ -1335,7 +1339,7 @@ public class Main {
       out("");
       out("Commands:");
       out("  annotate      Add arbitrary key/value pairs to seqware objects");
-      out("  bundle        Interact with a workflow bundle");
+      out("  bundle        Interact with a workflow bundle during development/admin");
       out("  copy          Copy files between local and remote file systems");
       out("  create        Create new seqware objects (e.g., study)");
       out("  files         Extract information about workflow output files");

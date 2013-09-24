@@ -67,10 +67,10 @@ Typically, these encode a series of calls to command line tools that operate on
 files read from and written to a shared filesystem. Individual steps usually
 run on a randomly chosen cluster node.
 
-* [Legacy FTL Workflows](/docs/6-pipeline/legacy-ftl-workflows/)
-: This is our older, more verbose workflow language based on FreeMarker. This provides information on the structure of a typical workflow descriptor written in this language. FTL is semi-deprecated, do not use it for new workflows.
 * [Java Workflows](/docs/6-pipeline/java-workflows/)
 : This is our newer workflow language that is much simpler than the FTL and more expressive. We recommend this for all new workflow development.
+* [Deprecated FTL Workflows](/docs/6-pipeline/legacy-ftl-workflows/)
+: This is our older, more verbose workflow language based on FreeMarker. This provides information on the structure of a typical workflow descriptor written in this language. FTL is deprecated, do not use it for new workflows.
 * [Workflow Bundle Conventions](/docs/6-pipeline/workflow_bundles/)
 : We rely on a bundle format for packaging up and exchanging workflows. This document describes the format and directory structure.
 * [Workflow Config Files](/docs/6-pipeline/config_files/)
@@ -130,7 +130,43 @@ Other useful tools used for import, export, and annotation of results.
 
 ## Command Line Reference
 
-This documentation is auto-generated and covers our Plugins (which are utility tools used outside of workflows) and our Modules (which model custom steps in workflows and know how to integrate with the SeqWare MetaDB for metadata writeback).
+We have provided a new, simplified command line interface.  The best way to learn its features is to simply add `--help`.
+
+	$ seqware --help
+
+	Usage: seqware [<flag>]
+	       seqware <command> [--help]
+
+	Commands:
+	  annotate      Add arbitrary key/value pairs to seqware objects
+	  bundle        Interact with a workflow bundle
+	  copy          Copy files between local and remote file systems
+	  create        Create new seqware objects (e.g., study)
+	  files         Extract information about workflow output files
+	  workflow      Interact with workflows
+	  workflow-run  Interact with workflow runs
+
+	Flags:
+	  --help        Print help out
+	  --version     Print Seqware's version
+
+	$ seqware workflow --help
+
+	Usage: seqware workflow [--help]
+	       seqware workflow <sub-command> [--help]
+
+	Description:
+	  Interact with workflows.
+
+	Sub-commands:
+	  ini           Generate an ini file for a workflow
+	  list          List all installed workflows
+	  report        List the details of all runs of a given workflow
+	  schedule      Schedule a workflow to be run
+
+Most commands will print the help if no arguments are provided.
+
+The old command line still exists, and its documentation is auto-generated and covers the Plugins (which are utility tools used outside of workflows) and Modules (which model custom steps in workflows and know how to integrate with the SeqWare MetaDB for metadata writeback).
 
 * [Plugins](/docs/17-plugins/)
 : The command line utilities of SeqWare.
