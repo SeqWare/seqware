@@ -4,9 +4,14 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.NameFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -56,6 +61,28 @@ public class Bundle {
     this.config = config;
     permanentBundleLocation = config.get("SW_BUNDLE_REPO_DIR");
     bundleDir = config.get("SW_BUNDLE_DIR");
+  }
+  
+  public static BundleInfo getBundleInfo(File bundleDir){
+    bundleDir = bundleDir.getAbsoluteFile();
+    Collection<File> files = FileUtils.listFiles(bundleDir, new NameFileFilter("metadata.xml"), TrueFileFilter.TRUE);
+    if (files.isEmpty()){
+      throw new RuntimeException("Could not find metadata.xml.");
+    } else {
+      BundleInfo bi = new BundleInfo();
+      bi.parseFromFile(files.iterator().next());
+      return bi;
+    }
+  }
+  
+  public static WorkflowInfo getWorkflowInfo(File bundleDir, String name, String version){
+    BundleInfo bi = getBundleInfo(bundleDir);
+    for (WorkflowInfo wi : bi.getWorkflowInfo()){
+      if (wi.getName().equals(name) && wi.getVersion().equals(version)){
+        return wi;
+      }
+    }
+    throw new RuntimeException("Could not find workflow with name '"+name+"' and version '"+version+"'");
   }
 
   /**
