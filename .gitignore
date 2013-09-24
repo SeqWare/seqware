@@ -53,3 +53,4 @@ dao-test.log
 seqware-vagrant/credentials.settings
 seqware-vagrant/.vagrant
 seqware-vagrant/vagrant_launch.conf
+seqware-vagrant/vagrant_cluster_launch.json
