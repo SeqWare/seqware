@@ -1124,7 +1124,7 @@ public class Main {
       out("  Propagate workflow engine statuses to seqware meta DB.");
       out("");
       out("Optional parameters:");
-      out("  --accession <swid>   Propagte the status of the specified workflow-run.");
+      out("  --accession <swid>   Propagate the status of the specified workflow-run.");
       out("                       Repeat this parameter to specify multiple workflow-runs.");
       out("  --host <value>       Use the specified value instead of the local hostname");
       out("                       when selecting which workflow-runs to check.");
