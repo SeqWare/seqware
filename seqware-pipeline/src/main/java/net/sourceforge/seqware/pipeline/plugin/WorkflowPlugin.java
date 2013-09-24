@@ -116,7 +116,7 @@ public class WorkflowPlugin extends Plugin {
   }
 
   public static final String ENGINES_LIST = "pegasus, oozie, oozie-sge";
-  public static final String DEFAULT_ENGINE = "pegasus";
+  public static final String DEFAULT_ENGINE = "oozie";
   public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(ENGINES_LIST.split(", "))));
   
   private String getEngineParam(){

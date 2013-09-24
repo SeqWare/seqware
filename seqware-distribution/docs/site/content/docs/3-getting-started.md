@@ -42,21 +42,6 @@ The [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) picks up
 where the User Tutorial left off and shows you how to create new workflow
 bundles and make those available to other users of the system.
 
-### 1.0.x Preview
-
-We have also included a preview section on release 1.0.x in the Developer
-Guide, see [Running with the Oozie Workflow
-Engine](/docs/3-getting-started/developer-tutorial/#running-with-the-oozie-workflow-engine).
-The big new feature in this release is the support for a new workflow engine
-using [Oozie](http://oozie.apache.org/) (in addition to the existing Pegasus
-workflow engine).  Each engine supports Java workflows so the same workflows
-written using the 0.13.x series can be used with the Oozie engine simply using
-a runtime parameter.
-
-You will need to use a development AMI to try 1.0.x, see our [Installation
-Guide](/docs/2-installation/#option-2-installing-with-a-cloud-vm) for more
-information.
-
 ## Administrator Tutorial
 
 Finally, the last tutorial is the [Admin
