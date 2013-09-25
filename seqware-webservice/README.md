@@ -145,6 +145,11 @@ boconnor@oslo ~/Development/gitroot/seqware-sandbox/seqware-webservice/target $ 
 
 =]
 
+## Prerequisite
+
+You will need a postgres instance running with the test_seqware_meta_db database available.
+If you wish to use a different database, edit seqware-webservice->Web Pages->WEB-INF->glassfish-resources.xml
+
 
 ## Running from NetBeans IDE
 
