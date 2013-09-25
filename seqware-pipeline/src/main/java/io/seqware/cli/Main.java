@@ -346,8 +346,9 @@ public class Main {
       name = wi.getName();
       version = wi.getVersion();
       if (inis.isEmpty()) {
-        inis.add(Bundle.resolveWorkflowBundleDirPath(wi.getConfigPath(), bundleDir));
+        inis.add(wi.getConfigPath());
       }
+      inis = resolveFiles(bundleDir, inis);
 
       out("Performing launch of workflow '" + name + "' version '" + version + "'");
 
@@ -360,6 +361,20 @@ public class Main {
             engine);
       }
     }
+  }
+
+  private static List<String> resolveFiles(File bundleDir, List<String> filenames) {
+    List<String> resolved = new ArrayList<String>();
+    for (String filename : filenames) {
+      String s = Bundle.resolveWorkflowBundleDirPath(bundleDir, filename);
+      File f = new File(s);
+      if (!f.exists()) {
+        kill("seqware: could not find file " + f.getAbsolutePath());
+      } else {
+        resolved.add(f.getAbsolutePath());
+      }
+    }
+    return resolved;
   }
 
   private static void bundleDryRun(List<String> args) {
@@ -399,8 +414,9 @@ public class Main {
       name = wi.getName();
       version = wi.getVersion();
       if (inis.isEmpty()) {
-        inis.add(Bundle.resolveWorkflowBundleDirPath(wi.getConfigPath(), bundleDir));
+        inis.add(wi.getConfigPath());
       }
+      inis = resolveFiles(bundleDir, inis);
 
       out("Performing dry-run of workflow '" + name + "' version '" + version + "'");
 

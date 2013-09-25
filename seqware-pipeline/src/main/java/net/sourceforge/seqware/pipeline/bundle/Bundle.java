@@ -75,7 +75,7 @@ public class Bundle {
     }
   }
   
-  public static String resolveWorkflowBundleDirPath(String path, File bundleDir){
+  public static String resolveWorkflowBundleDirPath(File bundleDir, String path){
     if (path.contains("${workflow_bundle_dir}")){
       path = path.replaceAll("\\$\\{workflow_bundle_dir\\}", bundleDir.getAbsolutePath());
     }
