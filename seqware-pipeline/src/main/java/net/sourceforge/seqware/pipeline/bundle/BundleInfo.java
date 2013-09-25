@@ -50,11 +50,11 @@ public class BundleInfo {
 
           Element eElement = (Element) nNode;
 
-          String testCommand = eElement.getElementsByTagName("test").item(0).getAttributes().getNamedItem("command")
-              .getNodeValue();
-
-          String templatePath = eElement.getElementsByTagName("workflow_template").item(0).getAttributes()
-              .getNamedItem("path").getNodeValue();
+          String templatePath = null;
+          NodeList nodes = eElement.getElementsByTagName("workflow_template");
+          if (nodes.getLength() > 0){
+            templatePath = nodes.item(0).getAttributes().getNamedItem("path").getNodeValue();
+          }
 
           String classesPath = null;
           if (null != eElement.getElementsByTagName("classes").item(0)) {
@@ -64,9 +64,6 @@ public class BundleInfo {
 
           String configPath = eElement.getElementsByTagName("config").item(0).getAttributes().getNamedItem("path")
               .getNodeValue();
-
-          String command = eElement.getElementsByTagName("workflow_command").item(0).getAttributes()
-              .getNamedItem("command").getNodeValue();
 
           String computeReq = eElement.getElementsByTagName("requirements").item(0).getAttributes()
               .getNamedItem("compute").getNodeValue();
@@ -95,13 +92,11 @@ public class BundleInfo {
           wi.setName(eElement.getAttribute("name"));
           wi.setVersion(eElement.getAttribute("version"));
           wi.setDescription(getTagValue("description", eElement));
-          wi.setTestCmd(testCommand);
           wi.setTemplatePath(templatePath);
           wi.setConfigPath(configPath);
           wi.setComputeReq(computeReq);
           wi.setMemReq(memReq);
           wi.setNetworkReq(networkReq);
-          wi.setCommand(command);
           wi.setClassesDir(classesPath);
           wi.setBaseDir(eElement.getAttribute("basedir"));
           wi.setWorkflowSqwVersion(eElement.getAttribute("seqware_version"));
