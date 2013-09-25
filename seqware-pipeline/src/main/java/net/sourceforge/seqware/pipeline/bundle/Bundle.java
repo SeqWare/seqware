@@ -9,19 +9,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
+import net.sourceforge.seqware.common.util.runtools.RunTools;
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
+import net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-
-import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
-import net.sourceforge.seqware.common.util.filetools.FileTools;
-import net.sourceforge.seqware.common.util.runtools.RunTools;
-import net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 
 /**
  * This is a utility class that lets you manipulate a workflow bundle.
@@ -63,7 +63,7 @@ public class Bundle {
     bundleDir = config.get("SW_BUNDLE_DIR");
   }
   
-  public static BundleInfo getBundleInfo(File bundleDir){
+  public static BundleInfo findBundleInfo(File bundleDir){
     bundleDir = bundleDir.getAbsoluteFile();
     Collection<File> files = FileUtils.listFiles(bundleDir, new NameFileFilter("metadata.xml"), TrueFileFilter.TRUE);
     if (files.isEmpty()){
@@ -75,16 +75,6 @@ public class Bundle {
     }
   }
   
-  public static WorkflowInfo getWorkflowInfo(File bundleDir, String name, String version){
-    BundleInfo bi = getBundleInfo(bundleDir);
-    for (WorkflowInfo wi : bi.getWorkflowInfo()){
-      if (wi.getName().equals(name) && wi.getVersion().equals(version)){
-        return wi;
-      }
-    }
-    throw new RuntimeException("Could not find workflow with name '"+name+"' and version '"+version+"'");
-  }
-  
   public static String resolveWorkflowBundleDirPath(String path, File bundleDir){
     if (path.contains("${workflow_bundle_dir}")){
       path = path.replaceAll("\\$\\{workflow_bundle_dir\\}", bundleDir.getAbsolutePath());
@@ -92,10 +82,6 @@ public class Bundle {
     return path;
   }
   
-  public static String getWorkflowConfigPath(File bundleDir, String name, String version){
-    return resolveWorkflowBundleDirPath(getWorkflowInfo(bundleDir, name, version).getConfigPath(), bundleDir);
-  }
-
   /**
    * <p>getBundleInfo.</p>
    *
