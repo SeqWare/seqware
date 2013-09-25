@@ -87,32 +87,35 @@ single box if using a VirtualBox VM.
 
 <img src="/assets/images/seqware_tool_interaction.png" width="600px"/>
 
-For more information about the command line tools see the
-[Plugin](/docs/17-plugins/) and [Modules](/docs/17a-modules/) references which
-gives the usage for all our command line utilities.
+For more information about the command line tools see `seqware --help`.
 
 ## The SeqWare Settings File
 
 SeqWare uses a simple configuration file that has been set up for
-you already on the VM. By default the location is ~/.seqware/settings.
+you already on the VM. By default the location is `~/.seqware/settings`.
 
 This file contains the web address of the SeqWare Web Service, your username
-and password, and you Amazon public and private keys that will allow you to
+and password, Amazon public and private keys that will allow you to
 push and pull data files to and from the cloud, etc. For this tutorial the
 config file should be ready to go, you will not need to modify it.
+
+<p class="warning"><strong>Note:</strong>In addition to the settings needed to
+schedule a workflow run, the provided settings file includes values needed to
+launch workflow runs and interact with supporting systems. For now, you can
+safely ignore them.</p>
 
 For more information see the [Settings](/docs/6-pipeline/user-configuration/)
 documentation which covers the details on the user config file.
 
 ## Creating Studies, Experiments, and Samples
 
-This tutorial starts with creating study, experiment, and sample objects in
+This tutorial starts with creating a hierarchy of study, experiment, and sample objects in
 the SeqWare MetaDB.  SeqWare MetaDB lets you track studies, experiment, and
 samples and then link those to files (like FASTQ or something similar). You can
 then run workflows on those files, track the resulting files, and use those
 files for the next workflow.
 
-You can run workflows without metadata writeback to the MetaDB, but most users
+You can run workflows without metadata writeback to the MetaDB (i.e., without tracking the provenance of output files), but most users
 will want to associate a run of a workflow with a particular sample, so that is
 why we start with setting up this information.  You will want to set up your
 study, experiments, and samples before uploading your text or other data files.
@@ -162,7 +165,7 @@ Now, for a given object, you can find out what fields you need to specify:
       --study-type <val>           Dynamic-valued field
       --title <val>
 
-As noted above, the simplest way for a human to enter this data would be to use <kbd>--interactive</kbd> option.  For now, we will use the scriptable input mechanism:
+As noted above, the simplest way for a human to enter this data would be to use `--interactive` option.  For now, we will use the scriptable input mechanism:
 
     $ seqware create study --title 'New Test Study' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4
 
@@ -203,7 +206,7 @@ So far we've created multiple objects inside the MetaDB.  Now we will create a "
 
     $ echo 'testing HelloWorld' > /datastore/input.txt
 
-Notice that we placed the file inside `/datastore` so thatit can be visible to other users, namely the Portal and MapReduce. See the [Portal documentation](/docs/5-portal/) for
+Notice that we placed the file inside `/datastore` so that it can be visible to other users, namely the Portal and MapReduce. See the [Portal documentation](/docs/5-portal/) for
 information on setting the shared directory it expects to find uploaded files
 in.
 
@@ -216,7 +219,7 @@ Now we can associate that file with the sample:
 Note that the SWID returned is for a processing event, not the file itself (which has its own SWID).  This processing SWID is what will be used below to attach a workflow run into the existing hierarchy.
 
 <p class="warning"><strong>Tip:</strong> you can find a list of the meta types
-(like chemical/seq-na-text-gzip or text/plain above) at <a
+(like `chemical/seq-na-text-gzip` or `text/plain` above) at <a
 href="http://seqware.github.io/docs/16-module-conventions/">Module
 Conventions - Module MIME Types</a>. This is the list we add to as needed when
 creating new workflows.  It is extremely important to be consistent with these
@@ -313,12 +316,12 @@ to the following:
     input_file=/datastore/input.txt
     output_prefix=/datastore/
 
-## Triggering a Workflow and Monitoring Progress 
+## Scheduling a Workflow Run and Monitoring Progress 
 
 At this point you know what workflow you are going to run and you have a
 customized ini file that contains the <tt>input_file</tt> and
-<tt>output_prefix</tt>. The next step is to launch the workflow using the ini
-file you prepared. Make sure you use the correct workflow accession (SWID: 1) and input file accession (SWID: 5).
+<tt>output_prefix</tt>. The next step is to schedule the workflow using the ini
+file you prepared ("schedule" because the actual launching of the workflow will be performed asynchronously by a background process). Make sure you use the correct workflow accession (SWID: 1) and input file accession (SWID: 5).
 
     $ seqware workflow schedule --accession 1 --parent-accession 5 --ini workflow.ini --host `hostname --long` 
 
@@ -333,7 +336,7 @@ This schedules the workflow to run on the VM. Notice it also prints the
 workflow run accession which you can use to help monitor the workflow.
 
 You can then monitor workflow progress (and getting a list of the outputs)
-using the WorkflowRunReporter plugin. This will let you script the monitoring
+using the `workflow report` command. This will let you script the monitoring
 of workflow runs. After about ten minutes, the workflow should complete. 
 
     $ seqware workflow report --accession 1
@@ -378,16 +381,16 @@ use the <tt>--out</tt> option if you wish to specify the file name.
 
 ## The Resulting Structure in MetaDB
 
-After a few minutes the HelloWorld workflow you just launched should be
+After a few minutes the HelloWorld workflow run should be
 complete with a status of "completed".  If you have followed the directions
-carefully for creating a study, experiment, and sample in the MetaDB, uploading
-an input file with ProvisionFile, and running a workflow you should have a
+carefully for creating a study, experiment, sample, and file in the MetaDB,
+and running a workflow you should have a
 structure very similar to the following present in the MetaDB:
 
 <img src="/assets/images/20130414_sample_workflow_run.png" width="600px"/>
 
 You can see the study, experiment, and sample linked together along with
-a processing event (ProvisionFiles) attached directly to the sample. This
+a file processing event attached directly to the sample. This
 event is associated with the <tt>input.txt</tt> file and it is the parent
 of the first step in the HelloWorld workflow run. This workflow run
 has three steps in this example and the final step is associated to the 
@@ -429,7 +432,7 @@ bundle that is hosted on Amazon's S3:
 Here the zip report bundle is downloaded to the seqware home directory.  In
 this way you can pull back the results of workflows entirely through scripts.
 
-Also note the Sstudy report gives you SWIDs for processing events and
+Also note the study report gives you SWIDs for processing events and
 entities such as studies, samples, and experiments.  You can use this report to
 find these SWIDs that are used as “parents” for subsequent workflow runs.
 
