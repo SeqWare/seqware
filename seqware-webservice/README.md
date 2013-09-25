@@ -144,3 +144,16 @@ Use the CycleRecoverable interface to deal with cycles programmatically.
 boconnor@oslo ~/Development/gitroot/seqware-sandbox/seqware-webservice/target $ java -cp classes:/usr/local/glassfish-3.1.2.2/glassfish/lib/*:/usr/local/glassfish-3.1.2.2/glassfish/modules/* io.seqware.webservice.client.SeqWareWebserviceClient
 
 =]
+
+
+## Running from NetBeans IDE
+
+* Use one of:
+** NetBeans 7.3.0 with Glassfish 3.1.2.2 included 
+** NetBeans 7.3.1+ and download GlassFish 3.1.2.2 and install it as a server 
+* Go through the tutorial above http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/RESTfulWebServices/RESTfulWebservices.htm?print=preview and follow steps 1 through 3a under "Generate RESTful Web Services" You want to register a JDNI name which is consistent with your local install of seqware metadb. You may need to add a Database connection under the Services tab if you have not already
+* Run the project as a whole  
+
+## Running in standalone Glassfish
+
+
