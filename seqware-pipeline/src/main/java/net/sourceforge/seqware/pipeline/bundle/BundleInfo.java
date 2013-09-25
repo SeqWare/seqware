@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import net.sourceforge.seqware.common.util.Log;
 
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 
@@ -26,6 +25,7 @@ import org.xml.sax.SAXException;
 public class BundleInfo {
 
   private ArrayList<WorkflowInfo> workflows = new ArrayList<WorkflowInfo>();
+  private File metadata = null;
 
   /**
    * <p>parseFromFile.</p>
@@ -110,7 +110,7 @@ public class BundleInfo {
           wi.setWorkflowType(workflowTypeReq);
           
           workflows.add(wi);
-
+          this.metadata = metadata;
         }
       }
 
@@ -125,6 +125,10 @@ public class BundleInfo {
       e.printStackTrace();
     }
 
+  }
+  
+  public File parsedFrom(){
+    return metadata;
   }
 
   /**
