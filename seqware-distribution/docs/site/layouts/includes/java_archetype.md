@@ -1,5 +1,5 @@
 The first step to get started is to generate your workflow skeleton using Maven 
-archetypes. You will want to do this in a directory without pom.xml files (i.e. 
+archetypes. You will want to do this in a directory without `pom.xml` files (i.e. 
 outside of the SeqWare development directories).  Here we are working in the workflow-dev directory: 
 
     $ cd ~/workflow-dev
@@ -9,6 +9,8 @@ outside of the SeqWare development directories).  Here we are working in the wor
     830: local -> com.github.seqware:seqware-archetype-java-workflow (SeqWare Java workflow archetype)
     831: local -> com.github.seqware:seqware-archetype-module (SeqWare module archetype)
     Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 294: 
+
+<p class="warning"><strong>Note:</strong>You can inform Maven about the archetypes by downloading the latest <a href="https://github.com/SeqWare/seqware/releases/download/<%= seqware_release_version %>/archetype-catalog.xml">archetype-catalog.xml</a> file and placing it in `~/.m2/`.</p>
 
 The numbers used to identify  the archetypes will vary 
 depending on what you have installed, so you will need to scan through the list 
