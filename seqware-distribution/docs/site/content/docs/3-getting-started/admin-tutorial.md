@@ -69,7 +69,7 @@ For more information see the [Monitor Configuration](/docs/6-pipeline/monitor_co
 
 ## How to Cancel Workflows
 
-After launching a workflow, you can cancel it in order to stop further execution. This will set the status of the workflow run to 'cancelled'.
+After launching a workflow, you can cancel it in order to stop further execution. This will set the status of the workflow run to `submitted_cancel`, and after the next status propagation, will set the status to `cancelled`.
 
     $ seqware workflow-run cancel --accession 28
     $ seqware workflow-run report --accession 28
@@ -96,9 +96,9 @@ After launching a workflow, you can cancel it in order to stop further execution
 	Workflow Run Time              | 33.0s
 
 
-## How to Rescue Failed Workflows
+## How to Retry Failed and Cancelled Workflows
 
-<%= render '/includes/debug/pegasus_restart/' %>
+<%= render '/includes/debug/oozie_restart/' %>
 
 ## See Also
 

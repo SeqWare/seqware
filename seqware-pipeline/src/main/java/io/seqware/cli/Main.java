@@ -12,6 +12,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
+import net.sourceforge.seqware.pipeline.bundle.Bundle;
+import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
+import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 
 /*
@@ -46,7 +50,7 @@ public class Main {
     System.err.println(String.format(format, args));
   }
 
-  private static class Kill extends RuntimeException{
+  private static class Kill extends RuntimeException {
   }
 
   private static void kill(String format, Object... args) {
@@ -92,7 +96,7 @@ public class Main {
         args.remove(i);
         if (i < args.size()) {
           String val = args.remove(i);
-          if (!val.startsWith("--")){
+          if (!val.startsWith("--")) {
             String[] ss = val.split(",");
             if (ss.length > 0) {
               vals.addAll(Arrays.asList(ss));
@@ -148,22 +152,6 @@ public class Main {
 
     String first = args.get(0);
     return first.equals("-h") || first.equals("--help");
-  }
-
-  private static boolean isDev() {
-    return Boolean.parseBoolean(System.getenv("SEQWARE_DEV"));
-  }
-
-  private static boolean isAdmin() {
-    return Boolean.parseBoolean(System.getenv("SEQWARE_ADMIN"));
-  }
-
-  private static boolean isDaemon() {
-    return Boolean.parseBoolean(System.getenv("SEQWARE_DAEMON"));
-  }
-
-  private static boolean isSuperUser() {
-    return isDev() || isAdmin() || isDaemon();
   }
 
   public static final AtomicBoolean DEBUG = new AtomicBoolean(false);
@@ -281,31 +269,44 @@ public class Main {
     }
   }
 
-  private static void bundleTest(List<String> args) {
-    if (isHelp(args, true)) {
-      out("");
-      out("Usage: seqware bundle test [--help]");
-      out("       seqware bundle test --dir <bundle-dir>");
-      out("");
-      out("Description:");
-      out("  Test-launch all the workflows in a bundle directory.");
-      out("");
-      out("Parameters:");
-      out("  --dir <bundle-dir>  The root directory of the bundle");
-      out("");
-    } else {
-      String dir = reqVal(args, "--dir");
+  private static WorkflowInfo findWorkflowInfo(File dir, String name, String version) {
+    BundleInfo bi = Bundle.findBundleInfo(dir);
 
-      extras(args, "bundle test");
+    List<WorkflowInfo> found = new ArrayList<WorkflowInfo>();
 
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--test", "--bundle", dir);
+    for (WorkflowInfo wi : bi.getWorkflowInfo()) {
+      boolean n = name == null || wi.getName().equals(name);
+      boolean v = version == null || wi.getVersion().equals(version);
+      if (n && v)
+        found.add(wi);
     }
-  }
 
-  // TODO: move this logic to somewhere that is responsible for understanding
-  // the directory structure of a built workflow.
-  private static String defaultIniFile(String bundleDir, String workflowName, String workflowVersion) {
-    return String.format("%s/Workflow_Bundle_%s/%s/config/workflow.ini", bundleDir, workflowName, workflowVersion);
+    if (found.isEmpty()) {
+      if (name == null && version == null) {
+        kill("seqware: no workflow defined in " + bi.parsedFrom().getAbsolutePath());
+      } else if (version == null) {
+        kill("seqware: no workflow with name '" + name + "' defined in " + bi.parsedFrom().getAbsolutePath());
+      } else if (name == null) {
+        kill("seqware: no workflow with version '" + version + "' defined in " + bi.parsedFrom().getAbsolutePath());
+      } else {
+        kill("seqware: no workflow with name '" + name + "' and version '" + version + "' defined in "
+             + bi.parsedFrom().getAbsolutePath());
+      }
+    } else if (found.size() > 1) {
+      if (name == null && version == null) {
+        kill("seqware: multiple workflows defined in " + bi.parsedFrom().getAbsolutePath());
+      } else if (version == null) {
+        kill("seqware: multiple workflows with name '" + name + "' defined in " + bi.parsedFrom().getAbsolutePath());
+      } else if (name == null) {
+        kill("seqware: multiple workflows with version '" + version + "' defined in "
+             + bi.parsedFrom().getAbsolutePath());
+      } else {
+        kill("seqware: multiple workflows with name '" + name + "' and version '" + version + "' defined in "
+             + bi.parsedFrom().getAbsolutePath());
+      }
+    }
+
+    return found.get(0);
   }
 
   private static void bundleLaunch(List<String> args) {
@@ -319,48 +320,61 @@ public class Main {
       out("");
       out("Required parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
-      out("  --name <wf-name>    The name of the workflow in the bundle");
-      out("  --version <ver>     The version of the workflow in the bundle");
       out("");
       out("Optional parameters:");
-      out("  --engine <type>     The engine that will process the workflow run");
-      out("                      May be one of: 'oozie' or 'oozie-sge'");
-      out("  --ini <ini-file>    An ini file to configure the workflow run");
-      out("                      Defaults to the workflow.ini file inside the bundle-dir");
-      out("                      Repeat this parameter to provide multiple files");
-      out("  --metadata          Perform metadata write-back of the workflow run");
+      out("  --engine <type>     The engine that will process the workflow run.");
+      out("                      May be one of: " + WorkflowPlugin.ENGINES_LIST);
+      out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+      out("                      or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
+      out("  --ini <ini-file>    An ini file to configure the workflow run.");
+      out("                      Repeat this parameter to provide multiple files.");
+      out("                      Defaults to the value of the 'config' node in metadata.xml.");
+      out("  --name <wf-name>    The name of the workflow in the bundle.");
+      out("  --version <ver>     The version of the workflow in the bundle.");
       out("");
     } else {
       String dir = reqVal(args, "--dir");
-      String name = reqVal(args, "--name");
-      String version = reqVal(args, "--version");
-      String engine = optVal(args, "--engine", null);
       List<String> inis = optVals(args, "--ini");
-      boolean md = flag(args, "--metadata");
+      String name = optVal(args, "--name", null);
+      String version = optVal(args, "--version", null);
+      String engine = optVal(args, "--engine", null);
 
       extras(args, "bundle launch");
 
+      File bundleDir = new File(dir);
+      WorkflowInfo wi = findWorkflowInfo(bundleDir, name, version);
+      name = wi.getName();
+      version = wi.getVersion();
       if (inis.isEmpty()) {
-        inis = Arrays.asList(defaultIniFile(dir, name, version));
+        inis.add(wi.getConfigPath());
       }
+      inis = resolveFiles(bundleDir, inis);
 
-      List<String> runnerArgs = new ArrayList<String>(
-                                                      Arrays.asList("--plugin",
-                                                                    "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher",
-                                                                    "--", "--wait", "--bundle", dir, "--workflow",
-                                                                    name, "--version", version, "--ini-files",
-                                                                    cdl(inis)));
-      if (!md) {
-        runnerArgs.add("--no-metadata");
+      out("Performing launch of workflow '" + name + "' version '" + version + "'");
+
+      if (engine == null) {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata");
+      } else {
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--workflow-engine",
+            engine);
       }
-
-      if (engine != null) {
-        runnerArgs.add("--workflow-engine");
-        runnerArgs.add(engine);
-      }
-
-      run(runnerArgs);
     }
+  }
+
+  private static List<String> resolveFiles(File bundleDir, List<String> filenames) {
+    List<String> resolved = new ArrayList<String>();
+    for (String filename : filenames) {
+      String s = Bundle.resolveWorkflowBundleDirPath(bundleDir, filename);
+      File f = new File(s);
+      if (!f.exists()) {
+        kill("seqware: could not find file " + f.getAbsolutePath());
+      } else {
+        resolved.add(f.getAbsolutePath());
+      }
+    }
+    return resolved;
   }
 
   private static void bundleDryRun(List<String> args) {
@@ -374,23 +388,37 @@ public class Main {
       out("");
       out("Required parameters:");
       out("  --dir <bundle-dir>  The root directory of the bundle");
+      out("");
+      out("Optional parameters:");
+      out("  --engine <type>     The engine that will process the workflow run.");
+      out("                      May be one of: " + WorkflowPlugin.ENGINES_LIST);
+      out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+      out("                      or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
       out("  --ini <ini-file>    An ini file to configure the workflow run");
       out("                      Repeat this parameter to provide multiple files");
+      out("                      Defaults to the value of the 'config' node in metadata.xml");
       out("  --name <wf-name>    The name of the workflow in the bundle");
       out("  --version <ver>     The version of the workflow in the bundle");
       out("");
-      out("Optional parameters:");
-      out("  --engine <type>     The engine that will process the workflow run");
-      out("                      May be one of: 'oozie' or 'oozie-sge'");
-      out("");
     } else {
       String dir = reqVal(args, "--dir");
-      List<String> inis = reqVals(args, "--ini");
-      String name = reqVal(args, "--name");
-      String version = reqVal(args, "--version");
+      List<String> inis = optVals(args, "--ini");
+      String name = optVal(args, "--name", null);
+      String version = optVal(args, "--version", null);
       String engine = optVal(args, "--engine", null);
 
       extras(args, "bundle dry-run");
+
+      File bundleDir = new File(dir);
+      WorkflowInfo wi = findWorkflowInfo(bundleDir, name, version);
+      name = wi.getName();
+      version = wi.getVersion();
+      if (inis.isEmpty()) {
+        inis.add(wi.getConfigPath());
+      }
+      inis = resolveFiles(bundleDir, inis);
+
+      out("Performing dry-run of workflow '" + name + "' version '" + version + "'");
 
       if (engine == null) {
         run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir,
@@ -487,8 +515,6 @@ public class Main {
         bundleList(args);
       } else if ("package".equals(cmd)) {
         bundlePackage(args);
-      } else if ("test".equals(cmd)) {
-        bundleTest(args);
       } else {
         invalid("bundle", cmd);
       }
@@ -591,15 +617,15 @@ public class Main {
       String file = reqVal(args, "--file");
       String meta = reqVal(args, "--meta-type");
       String parentId = reqVal(args, "--parent-accession");
-      String type = optVal(args, "--type", ""); 
+      String type = optVal(args, "--type", "");
       String description = optVal(args, "--description", "");
 
       extras(args, "create file");
 
       String concat = String.format("%s::%s::%s::%s", type, meta, file, description);
 
-      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--parent-accession",
-          parentId, "--create", "--table", "file", "--field","algorithm::ManualProvisionFile", "--file", concat);
+      run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--parent-accession", parentId,
+          "--create", "--table", "file", "--field", "algorithm::ManualProvisionFile", "--file", concat);
     }
   }
 
@@ -881,7 +907,8 @@ public class Main {
       if (tsv) {
         run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--list-installed");
       } else {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--list-installed", "--human-expanded");
+        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--list-installed",
+            "--human-expanded");
       }
     }
   }
@@ -954,8 +981,10 @@ public class Main {
       out("                             Repeat this parameter to provide multiple files");
       out("");
       out("Optional parameters:");
-      out("  --engine <type>            The engine that will process the workflow run");
-      out("                             May be one of: 'oozie' or 'oozie-sge'");
+      out("  --engine <type>            The engine that will process the workflow run.");
+      out("                             May be one of: " + WorkflowPlugin.ENGINES_LIST);
+      out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+      out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
       out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
       out("                             Repeat this parameter to provide multiple parents");
       out("");
@@ -1049,10 +1078,10 @@ public class Main {
       out("  Interact with workflows.");
       out("");
       out("Sub-commands:");
-      out("  ini               Generate an ini file for a workflow");
-      out("  list              List all installed workflows");
-      out("  report            List the details of all runs of a given workflow");
-      out("  schedule          Schedule a workflow to be run");
+      out("  ini           Generate an ini file for a workflow");
+      out("  list          List all installed workflows");
+      out("  report        List the details of all runs of a given workflow");
+      out("  schedule      Schedule a workflow to be run");
       out("");
     } else {
       String cmd = args.remove(0);
@@ -1091,7 +1120,7 @@ public class Main {
 
       extras(args, "workflow-run launch-scheduled");
 
-      if (!ids.isEmpty() && host != null){
+      if (!ids.isEmpty() && host != null) {
         kill("seqware: cannot specify both '--accession' and '--host'.");
       }
 
@@ -1137,7 +1166,7 @@ public class Main {
 
       extras(args, "workflow-run propagate-statuses");
 
-      if (!ids.isEmpty() && host != null){
+      if (!ids.isEmpty() && host != null) {
         kill("seqware: cannot specify both '--accession' and '--host'.");
       }
 
@@ -1335,7 +1364,7 @@ public class Main {
       out("");
       out("Commands:");
       out("  annotate      Add arbitrary key/value pairs to seqware objects");
-      out("  bundle        Interact with a workflow bundle");
+      out("  bundle        Interact with a workflow bundle during development/admin");
       out("  copy          Copy files between local and remote file systems");
       out("  create        Create new seqware objects (e.g., study)");
       out("  files         Extract information about workflow output files");
@@ -1369,7 +1398,7 @@ public class Main {
         } else {
           invalid(cmd);
         }
-      } catch (Kill k){
+      } catch (Kill k) {
         System.exit(1);
       }
     }

@@ -157,14 +157,17 @@ public class BundleManager extends Plugin {
           }
 
         } else if (options.has("bundle") && options.has("path-to-package")) {
+          println("Validating Bundle structure");
+          File bundleDir = new File((String) options.valueOf("path-to-package"));
+          File bundleZip = new File((String) options.valueOf("bundle"));
+          ret = b.validateBundle(bundleDir);
+          if (ret.getExitStatus() == ReturnValue.SUCCESS) {
             println("Packaging Bundle");
-            String bundleOutput = (String) options.valueOf("bundle");
-            String bundlePath = (String) options.valueOf("path-to-package");
-            println("Bundle: " + bundleOutput + " path: " + bundlePath);
-            ret = b.packageBundle(new File(bundlePath), new File(bundleOutput));
+            ret = b.packageBundle(bundleDir, bundleZip);
             if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-                println("Bundle Has Been Packaged to " + options.valueOf("bundle") + "!");
+                println("Bundle has been packaged to " + bundleZip.getAbsolutePath());
             }
+          }
         } else if (options.has("bundle") && options.has("install")) {
             
             if (killIfDirectDB()) {
