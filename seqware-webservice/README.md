@@ -156,4 +156,11 @@ boconnor@oslo ~/Development/gitroot/seqware-sandbox/seqware-webservice/target $ 
 
 ## Running in standalone Glassfish
 
+* mvn clean install
+* cd to your Glassfish 3.1.2.2 installation binaries (or include them in your path) (cd ~/glassfish3/bin)
+* start your Glassfish server ./asadmin start-domain --verbose 
+* list existing applications ./asadmin list-applications
+* undeploy an existing application ./asadmin undeploy seqware-webservice
+* deploy the web service ./asadmin deploy --name seqware-webservice --contextroot seqware-webservice  ~/seqware-sandbox/seqware-webservice/target/seqware-webservice-1.0-SNAPSHOT.war 
+* browse to http://localhost:8080/seqware-webservice/test-services.html
 
