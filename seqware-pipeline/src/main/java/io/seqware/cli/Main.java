@@ -282,12 +282,13 @@ public class Main {
       out("  --version <ver>     The version of the workflow in the bundle");
       out("");
       out("Optional parameters:");
-      out("  --engine <type>     The engine that will process the workflow run");
+      out("  --engine <type>     The engine that will process the workflow run.");
       out("                      May be one of: " + WorkflowPlugin.ENGINES_LIST);
-      out("                      Defaults to " + WorkflowPlugin.DEFAULT_ENGINE);
-      out("  --ini <ini-file>    An ini file to configure the workflow run");
-      out("                      Repeat this parameter to provide multiple files");
-      out("                      Defaults to the value of the 'config' node in metadata.xml");
+      out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+      out("                      or '" + WorkflowPlugin.DEFAULT_ENGINE+"' if not specified.");
+      out("  --ini <ini-file>    An ini file to configure the workflow run.");
+      out("                      Repeat this parameter to provide multiple files.");
+      out("                      Defaults to the value of the 'config' node in metadata.xml.");
       out("");
     } else {
       String dir = reqVal(args, "--dir");
@@ -328,9 +329,10 @@ public class Main {
       out("  --version <ver>     The version of the workflow in the bundle");
       out("");
       out("Optional parameters:");
-      out("  --engine <type>     The engine that will process the workflow run");
+      out("  --engine <type>     The engine that will process the workflow run.");
       out("                      May be one of: " + WorkflowPlugin.ENGINES_LIST);
-      out("                      Defaults to " + WorkflowPlugin.DEFAULT_ENGINE);
+      out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+      out("                      or '" + WorkflowPlugin.DEFAULT_ENGINE+"' if not specified.");
       out("  --ini <ini-file>    An ini file to configure the workflow run");
       out("                      Repeat this parameter to provide multiple files");
       out("                      Defaults to the value of the 'config' node in metadata.xml");
@@ -909,9 +911,10 @@ public class Main {
       out("                             Repeat this parameter to provide multiple files");
       out("");
       out("Optional parameters:");
-      out("  --engine <type>            The engine that will process the workflow run");
+      out("  --engine <type>            The engine that will process the workflow run.");
       out("                             May be one of: " + WorkflowPlugin.ENGINES_LIST);
-      out("                             Defaults to " + WorkflowPlugin.DEFAULT_ENGINE);
+      out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+      out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE+"' if not specified.");
       out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
       out("                             Repeat this parameter to provide multiple parents");
       out("");
