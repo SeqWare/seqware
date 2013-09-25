@@ -1247,7 +1247,8 @@
 		}
 
 		// replace link content with link URL
-		if ($(this).text().substring(0, 4) === 'http'){
+		var s = $(this).text().trim();
+		if (s === '' || s.substring(0, 4) === 'http'){
 			this.innerHTML = this.href;
 		}
 	});
@@ -1424,7 +1425,7 @@ The MetaDB is accessible the the command line. The password is "seqware".
 psql -U seqware -W seqware_meta_db
 </pre>
 
-<h3>SeqWare Pipeline - Pegasus</h3>
+<h3>SeqWare Pipeline</h3>
 
 <p>
 The Pipeline is a developer tool and is, therefore, focused on the command line. The goal is to give you a toolset that you can use to make workflow bundles that process NGS data in a cluster and environment agnostic way. You will find a sample workflow bundle in the following directory:
@@ -1439,7 +1440,7 @@ You can find a ton of information about workflow development on the SeqWare site
 <h3>SeqWare Pipeline - Oozie</h3>
 
 <p>
-There is an alternative workflow engine for SeqWare Pipeline also installed on this VM.  Unlike the default Pegasus backend, which uses Condor, the Globus Toolkit, and SGE, this new backend is based on Hadoop with Oozie as the scheduling engine. It's still in development but will provide a faster and simpler workflow execution environment that should be transparent for workflow authors to use.  This backend has a web interface that makes it very easy to monitor workflows. See the oozie console at:
+The workflow engine for SeqWare Pipeline is also installed on this VM.  This backend is based on Hadoop with Oozie as the scheduling engine, providing a fast and simple workflow execution environment that should be transparent for workflow authors to use.  This backend has a web interface that makes it very easy to monitor workflows. See the oozie console at:
 </p>
 
 <p>
@@ -1460,6 +1461,15 @@ itor your running SeqWare workflows.
 
 <p>
 You can find a ton of information about workflow development on the SeqWare site, see our <a href="http://seqware.github.io/docs/">Documentation</a> page for more information.
+</p>
+
+<p>The following Hadoop-related URLs may also prove useful:
+	<ul>
+		<li>HDFS NameNode: <a href=":50070/">http://hostname:50070</a></li>
+		<li>MapReduce Admin: <a href=":50030/">http://hostname:50030</a></li>
+		<li>HBase Master: <a href=":60010/">http://hostname:60010</a></li>
+		<li>HBase RegionServer: <a href=":60030/">http://hostname:60030</a></li>
+	</ul>
 </p>
 
 <h3>SeqWare Portal</h3>
