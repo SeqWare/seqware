@@ -164,3 +164,8 @@ boconnor@oslo ~/Development/gitroot/seqware-sandbox/seqware-webservice/target $ 
 * deploy the web service ./asadmin deploy --name seqware-webservice --contextroot seqware-webservice  ~/seqware-sandbox/seqware-webservice/target/seqware-webservice-1.0-SNAPSHOT.war 
 * browse to http://localhost:8080/seqware-webservice/test-services.html
 
+
+## Running with embedded Glassfish with a maven target
+
+* mvn embedded-glassfish:run
+

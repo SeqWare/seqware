@@ -16,6 +16,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.2-1002-jdbc4</version>
+            <scope>compile</scope>
+        </dependency> 
+        <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
             <version>2.3.2</version>
@@ -117,6 +123,18 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.glassfish.embedded</groupId>
+                <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                <version>3.1.2.2</version>
+                <configuration>
+                    <contextRoot>seqware-webservice</contextRoot>
+                    <name>seqware-webservice</name>
+                    <port>8080</port>
+                    <dbVendorName>postgresql</dbVendorName>
+                    <libraries>${project.build.directory}/lib/postgresql-9.1-901.jdbc4.jar</libraries>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
@@ -154,7 +172,7 @@
                             <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
                     </execution>
-                        <execution>
+                    <execution>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy</goal>
