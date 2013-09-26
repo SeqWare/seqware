@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.rendersnake.HtmlCanvas;
  */
 @ServiceProvider(service = PluginInterface.class)
 public final class CheckDB extends Plugin {
+    public static final int NUMBER_TO_OUTPUT = 100;
 
     private ReturnValue ret = new ReturnValue();
 
@@ -162,4 +164,21 @@ public final class CheckDB extends Plugin {
         return ret;
     }
 
+    /**
+     * Convenience method for processing output and appending it to the warning map 
+     * @param result
+     * @param level
+     * @param description
+     * @param list 
+     */
+    public static void processOutput(SortedMap<Level, Set<String>> result, Level level, String description, List<Integer> list){
+        if (list.size() > 0){
+            Collections.sort(list);
+            if (list.size() > NUMBER_TO_OUTPUT){
+                result.get(level).add(description + list.subList(0, NUMBER_TO_OUTPUT).toString() + " (Truncated, "+list.size()+" in total)");
+            } else{
+                result.get(level).add(description + list.toString());
+            } 
+        }
+    }
 }

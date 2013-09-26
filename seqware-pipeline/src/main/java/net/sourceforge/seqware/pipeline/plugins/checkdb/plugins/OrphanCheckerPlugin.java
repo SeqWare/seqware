@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
-import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.SelectQueryRunner;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
@@ -38,25 +38,26 @@ public class OrphanCheckerPlugin implements CheckDBPluginInterface {
 
         // orphans when nothing references a particular entity
         List<Integer> executeQuery = qRunner.executeQuery("SELECT sw_accession FROM experiment WHERE experiment_id NOT IN (SELECT experiment_id FROM sample);", new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) result.get(Level.TRIVIAL).add("Unreferenced Experiments: " + executeQuery.toString());
-        executeQuery = qRunner.executeQuery("SELECT sw_accession FROM sample WHERE sample_id NOT IN (select sample_id from ius UNION select sample_id from lane);", new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) result.get(Level.TRIVIAL).add("Unreferenced samples: "  + executeQuery.toString());
+        CheckDB.processOutput(result, Level.TRIVIAL,  "Unreferenced Experiments: " , executeQuery);
+        // Tony mentioned that many samples will not be referenced until a sequencer_run is added
+        // executeQuery = qRunner.executeQuery("SELECT sw_accession FROM sample WHERE sample_id NOT IN (select sample_id from ius UNION select sample_id from lane);", new ColumnListHandler<Integer>());
+        // CheckDB.processOutput(result, Level.TRIVIAL,  "Unreferenced samples: " , executeQuery);
         executeQuery = qRunner.executeQuery("SELECT sw_accession FROM ius WHERE ius_id NOT IN (select ius_id from processing_ius);", new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) result.get(Level.TRIVIAL).add("Unreferenced IUSes: " + executeQuery.toString());
+        CheckDB.processOutput(result, Level.TRIVIAL,  "Unreferenced IUSes: " , executeQuery);
         executeQuery = qRunner.executeQuery("SELECT sw_accession FROM file WHERE file_id NOT IN (select file_id from processing_files);", new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) result.get(Level.TRIVIAL).add("Unreferenced Files: " + executeQuery.toString());
-        executeQuery = qRunner.executeQuery("SELECT sw_accession FROM workflow WHERE workflow_id NOT IN (select workflow_id from workflow_run);", new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) result.get(Level.TRIVIAL).add("Unreferenced Workflows: " + executeQuery.toString());       
+        CheckDB.processOutput(result, Level.TRIVIAL,  "Unreferenced Files: " , executeQuery);
+        executeQuery = qRunner.executeQuery("SELECT sw_accession FROM workflow WHERE workflow_id NOT IN (select workflow_id from workflow_run);", new ColumnListHandler<Integer>());     
+        CheckDB.processOutput(result, Level.TRIVIAL,  "Unreferenced Workflows: " , executeQuery);
         
         // orphans when what should really be a not-null foreign key is null
         executeQuery = qRunner.executeQuery("SELECT sw_accession FROM sample WHERE experiment_id IS NULL;", new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Samples not attached to experiments: " + executeQuery.toString());
+        CheckDB.processOutput(result, Level.SEVERE,  "Samples not attached to experiments: " , executeQuery);
         executeQuery = qRunner.executeQuery("SELECT sw_accession FROM lane WHERE sequencer_run_id IS NULL;", new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Lanes not attached to sequencer runs: " + executeQuery.toString());
-      
+        CheckDB.processOutput(result, Level.SEVERE,  "Lanes not attached to sequencer runs: " , executeQuery);
+        
         // processing, which is just weird
         executeQuery = qRunner.executeQuery("SELECT sw_accession FROM processing WHERE workflow_run_id IS NULL AND ancestor_workflow_run_id IS NULL;", new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Processings attached to no workflow runs: " + executeQuery.toString());
+        CheckDB.processOutput(result, Level.SEVERE,  "Processings attached to no workflow runs: " , executeQuery);
     }
     
 }
