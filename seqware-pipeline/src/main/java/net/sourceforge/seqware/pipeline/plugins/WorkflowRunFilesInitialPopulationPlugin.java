@@ -224,10 +224,12 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     private List<Integer> getListOfFiles(int workflowRunAcc) {
         Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
-        List<Integer> indices = new ArrayList<Integer>();
+        List<Integer> ranOnList = new ArrayList<Integer>();
+        if (map.isEmpty()){
+            return ranOnList;
+        }
         String ranOnString = map.get("Immediate Input File SWIDs");
         String[] ranOnArr = ranOnString.split(",");
-        List<Integer> ranOnList = new ArrayList<Integer>();
         if (ranOnString.isEmpty()) {
             return ranOnList;
         }
@@ -250,10 +252,13 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
 
     private Map<String, String> generateWorkflowRunMap(int workflowRunAcc) {
         String report = metadata.getWorkflowRunReport(workflowRunAcc);
+        Map<String, String> map = new TreeMap<String, String>();
+        if (report == null){
+            return map;
+        }
         String[] lines = report.split("\n");
         String[] reportHeader = lines[0].split("\t");
         String[] data = lines[1].split("\t");
-        Map<String, String> map = new TreeMap<String, String>();
         for (int i = 0; i < reportHeader.length; i++) {
             map.put(reportHeader[i].trim(), data[i].trim());
         }
