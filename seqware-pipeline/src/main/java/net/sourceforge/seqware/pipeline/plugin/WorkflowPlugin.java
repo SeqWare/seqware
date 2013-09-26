@@ -459,17 +459,22 @@ public class WorkflowPlugin extends Plugin {
     for (WorkflowRun wr : scheduledWorkflows) {
       Log.stdout("Working Run: " + wr.getSwAccession());
 
-      if (scheduledAccessions.isEmpty()
-          || (scheduledAccessions.size() > 0 && scheduledAccessions.contains(wr.getSwAccession().toString()))) {
+      if (scheduledAccessions.isEmpty() && !isWorkflowRunValidByLocalhost(wr)){
+        Log.stdout("Skipping run due to host check: " + wr.getSwAccession());
+        continue;
+      }
 
-        boolean validWorkflowRunByHost = isWorkflowRunValidByLocalhost(wr);
+      if (!scheduledAccessions.isEmpty() && !scheduledAccessions.contains(wr.getSwAccession().toString())){
+        Log.stdout("Skipping run due to accession check: " + wr.getSwAccession());
+        continue;
+      }
+
 
         // SEQWARE-1451
         // Workflow launcher totally dies one workflow freemarker run dies
         // let's just wrap and report these errors and fail onto the next one
         try {
 
-          if (validWorkflowRunByHost) {
             Log.stdout("Valid run by host check: " + wr.getSwAccession());
             WorkflowRun wrWithWorkflow = this.metadata.getWorkflowRunWithWorkflow(wr.getSwAccession().toString());
             boolean requiresNewLauncher = WorkflowV2Utility.requiresNewLauncher(wrWithWorkflow.getWorkflow());
@@ -482,14 +487,10 @@ public class WorkflowPlugin extends Plugin {
               WorkflowPlugin.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(),
                                                wr.getSwAccession(), wr.getWorkflowEngine());
             }
-          } else {
-            Log.stdout("Invalid run by host check: " + wr.getSwAccession());
-          }
 
         } catch (Exception e) {
           Log.fatal("Workflowrun launch with accession: " + wr.getSwAccession() + " failed", e);
         }
-      }
     }
   }
 
