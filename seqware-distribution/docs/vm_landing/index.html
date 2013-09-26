@@ -1237,21 +1237,31 @@
 </script>
 
 <script>
-	$('a').each(function(){
 
-		// Handle port-relative links
-		var port = this.getAttribute('href').match(/^:(\d+)(.*)/);
+	function portRelative(a){
+		var port = a.getAttribute('href').match(/^:(\d+)(.*)/);
 		if (port){
-			this.href = port[2];
-			this.port = port[1];
+			a.href = port[2];
+			a.port = port[1];
 		}
+	}
 
-		// replace link content with link URL
-		var s = $(this).text().trim();
+	function urlContent(a){
+		var s = $(a).text().trim();
 		if (s === '' || s.substring(0, 4) === 'http'){
-			this.innerHTML = this.href;
+			a.innerHTML = a.href;
 		}
-	});
+	}
+
+	function fixupLinks(){
+		$('a').each(function(){
+			portRelative(this);
+			urlContent(this);
+		});
+	}
+
+	$(fixupLinks);
+
 </script>
 	 
 </head>
