@@ -164,6 +164,7 @@ If you wish to use a different database, edit seqware-webservice->Web Pages->WEB
 * mvn clean install
 * cd to your Glassfish 3.1.2.2 installation binaries (or include them in your path) (cd ~/glassfish3/bin)
 * start your Glassfish server ./asadmin start-domain --verbose 
+* copy the postgres jar into the domain lib (cp ~/seqware-sandbox/seqware-webservice/target/lib/postgresql-9.1-901.jdbc4.jar ~/glassfish3/glassfish/domains/domain1/lib)
 * list existing applications ./asadmin list-applications
 * undeploy an existing application ./asadmin undeploy seqware-webservice
 * deploy the web service ./asadmin deploy --name seqware-webservice --contextroot seqware-webservice  ~/seqware-sandbox/seqware-webservice/target/seqware-webservice-1.0-SNAPSHOT.war 
