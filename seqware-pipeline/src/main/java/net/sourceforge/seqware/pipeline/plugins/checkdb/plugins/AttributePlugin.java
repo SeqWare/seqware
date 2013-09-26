@@ -19,16 +19,12 @@ package net.sourceforge.seqware.pipeline.plugins.checkdb.plugins;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.TreeMap;
+import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.SelectQueryRunner;
-import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
 import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
@@ -46,12 +42,11 @@ public class AttributePlugin implements CheckDBPluginInterface {
             String path = AttributePlugin.class.getResource("duplicate_attribute_keys.sql").getPath();
             String query = FileUtils.readFileToString(new File(path));
             List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Entities with duplicate attribute keys in non-sample tables: " + executeQuery.toString());
-
+            CheckDB.processOutput(result, Level.SEVERE,  "Entities with duplicate attribute keys in non-sample tables: " , executeQuery);
             path = WorkflowRunConventionsPlugin.class.getResource("duplicate_sample_attribute_keys.sql").getPath();
             query = FileUtils.readFileToString(new File(path));
             executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Samples with duplicate attribute keys: " + executeQuery.toString());
+            CheckDB.processOutput(result, Level.SEVERE,  "Samples with duplicate attribute keys: " , executeQuery);
             
         } catch (IOException ex) {
             throw new RuntimeException(ex);

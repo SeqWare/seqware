@@ -117,6 +117,6 @@ union all
 
 SELECT workflow_run_swa, count(distinct study_swa) FROM short_study_report GROUP BY workflow_run_swa 
 UNION
-SELECT sw_accession,0 FROM workflow_run EXCEPT select workflow_run_swa,0  FROM short_study_report
+SELECT sw_accession,0 FROM workflow_run WHERE status = 'completed' EXCEPT select workflow_run_swa,0  FROM short_study_report
 
 ORDER BY count

@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
+import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.SelectQueryRunner;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
@@ -42,10 +43,7 @@ public class SampleHierarchyPlugin implements CheckDBPluginInterface {
                 + "WHERE parent_count > 1;";
 
         List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-        if (executeQuery.size() > 0) {
-            result.get(Level.SEVERE).add("Unreferenced Experiments: " + executeQuery.toString());
-        }
-
+        CheckDB.processOutput(result, Level.SEVERE,  "Samples with more than one parent: " , executeQuery);
     }
     
 }

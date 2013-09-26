@@ -26,7 +26,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.SelectQueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
@@ -44,10 +47,11 @@ public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
     @Override
     public void check(SelectQueryRunner qRunner, SortedMap<Level, Set<String>> result) throws SQLException {
         try {
-            List<Integer> executeQuery = qRunner.executeQuery("select sw_accession from workflow_run WHERE workflow_run_id NOT IN (select workflow_run_id FROM ius_workflow_runs);", new ColumnListHandler<Integer>());
-            if (executeQuery.size() > 0) result.get(Level.TRIVIAL).add("Workflow runs not connected to an IUS via ius_workflow_runs: " + executeQuery.toString());
-//            executeQuery = qRunner.executeQuery("SELECT sw_accession FROM processing WHERE workflow_run_id IS NULL AND ancestor_workflow_run_id IS NULL;", new ColumnListHandler<Integer>());
-//            if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Processings attached to no workflow runs: " + executeQuery.toString());
+            /**
+             * May not be true for downsteam workflow runs
+            * List<Integer> executeQuery = qRunner.executeQuery("select sw_accession from workflow_run WHERE workflow_run_id NOT IN (select workflow_run_id FROM ius_workflow_runs);", new ColumnListHandler<Integer>());
+            * CheckDB.processOutput(result, Level.TRIVIAL,  "Workflow runs not connected to an IUS via ius_workflow_runs: " , executeQuery);
+            **/
             // workflow runs not connected to a study
             String path = WorkflowRunConventionsPlugin.class.getResource("workflow_runs_not_connected_to_study.sql").getPath();
             String query = FileUtils.readFileToString(new File(path));
@@ -55,7 +59,7 @@ public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
             
             List<Integer> unreachableByStudy = new ArrayList<Integer>();
             // number studies -> workflow runs
-            SortedMap<Integer, Set<Integer>> reachableByMultipleStudies = new TreeMap<Integer, Set<Integer>>();
+            SortedMap<Integer, SortedSet<Integer>> reachableByMultipleStudies = new TreeMap<Integer, SortedSet<Integer>>();
             
             for(Object[] pair : workflow_run_study_pairs){
                 int studyCount = Integer.valueOf(pair[1].toString());
@@ -67,35 +71,33 @@ public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
                     unreachableByStudy.add(sw_accession);
                 } else if (studyCount > 1){
                     if (!reachableByMultipleStudies.containsKey(studyCount)){
-                        reachableByMultipleStudies.put(studyCount, new HashSet<Integer>());
+                        reachableByMultipleStudies.put(studyCount, new TreeSet<Integer>());
                     }
                     reachableByMultipleStudies.get(studyCount).add(sw_accession);
                 }
             }
-            
-            if (unreachableByStudy.size() > 0) result.get(Level.SEVERE).add("Workflow runs not reachable by studies: " + unreachableByStudy.toString());
+            CheckDB.processOutput(result, Level.SEVERE,  "'Completed' Workflow runs not reachable by studies: " , unreachableByStudy);
             // workflow runs connected to more than one study
             if (reachableByMultipleStudies.size() > 0){
-                for(Entry<Integer, Set<Integer>> e : reachableByMultipleStudies.entrySet()){
-                    result.get(Level.WARNING).add("Workflow runs reachable by "+e.getKey()+" studies: " + e.getValue().toString());
+                for(Entry<Integer, SortedSet<Integer>> e : reachableByMultipleStudies.entrySet()){
+                    CheckDB.processOutput(result, Level.WARNING,  "'Completed' Workflow runs reachable by "+e.getKey()+" studies: " , new ArrayList<Integer>(e.getValue()));
                 }
             }
             
-            path = WorkflowRunConventionsPlugin.class.getResource("workflow_runs_not_connected_to_study.sql").getPath();
+            path = WorkflowRunConventionsPlugin.class.getResource("workflow_runs_not_connected_in_hierarchy.sql").getPath();
             query = FileUtils.readFileToString(new File(path));
-            executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            if (executeQuery.size() > 0) result.get(Level.SEVERE).add("Workflow runs reachable by ius_workflow_runs but not via the processing_hierarchy: " + executeQuery.toString());
+            List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
+            CheckDB.processOutput(result, Level.SEVERE, "'Completed' Workflow runs reachable by ius_workflow_runs but not via the processing_hierarchy: " , executeQuery);
             
             path = WorkflowRunConventionsPlugin.class.getResource("new_input_files_versus_old.sql").getPath();
             query = FileUtils.readFileToString(new File(path));
             executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            if (executeQuery.size() > 0) result.get(Level.TRIVIAL).add("Workflow runs with input files via workflow_run_input_files but not via the processing hierarchy: " + executeQuery.toString());
+            CheckDB.processOutput(result, Level.TRIVIAL, "Workflow runs with input files via workflow_run_input_files but not via the processing hierarchy: " , executeQuery);
             
             path = WorkflowRunConventionsPlugin.class.getResource("old_input_files_versus_new.sql").getPath();
             query = FileUtils.readFileToString(new File(path));
             executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            if (executeQuery.size() > 0) result.get(Level.TRIVIAL).add("Workflow runs with input files via the processing hierarchy but not via workflow_run_input_files: " + executeQuery.toString());
-            
+            CheckDB.processOutput(result, Level.TRIVIAL, "Workflow runs with input files via the processing hierarchy but not via workflow_run_input_files: " , executeQuery);            
             
         } catch (IOException ex) {
             throw new RuntimeException(ex);
