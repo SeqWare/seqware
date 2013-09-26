@@ -174,3 +174,12 @@ If you wish to use a different database, edit seqware-webservice->Web Pages->WEB
 
 * mvn embedded-glassfish:run
 
+
+## Troubleshooting
+
+* If you have issues starting the server, check that you do not have other services blocking the port 8080 (such as apache2 or tomcat)
+* Currently, when deleting a object with foreign key references to it (for example an experiment referenced by samples), deletion should fail with HTTP status 500 (javax.servlet.ServletException: javax.transaction.RollbackException: Transaction marked for rollback.) 
+* A successful delete will return with HTTP status 200 
+* Cascading is controlled by JPA annotations on the actual model objects
+** for example, in the current io.seqware.webservice.model.Experiment, deletes will cascade to ProcessingExperiments and Experiment attribute due to CascadeType.All
+
