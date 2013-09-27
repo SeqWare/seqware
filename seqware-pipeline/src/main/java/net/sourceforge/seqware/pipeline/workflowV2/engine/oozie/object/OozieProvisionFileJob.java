@@ -47,7 +47,7 @@ public class OozieProvisionFileJob extends OozieJob {
 
     add(java, "main-class", "net.sourceforge.seqware.pipeline.runner.Runner");
     String settings = String.format("-D%s='%s'", ConfigTools.SEQWARE_SETTINGS_PROPERTY, ConfigTools.getSettingsFilePath());
-    add(java, "arg", settings);
+    add(java, "java-opts", settings);
     for (String arg : runnerArgs()) {
       add(java, "arg", arg);
     }
