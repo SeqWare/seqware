@@ -109,10 +109,8 @@ public class MapTools {
         // Load config ini from disk
         try {
             ini2Map(new FileInputStream(iniFile), hm, keyToUpper);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            rethrow(e);
         }
     }
 
