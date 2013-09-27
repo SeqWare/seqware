@@ -44,9 +44,10 @@ public class OozieProvisionFileJob extends OozieJob {
     addProp(config, "oozie.launcher.mapred.job.reduce.memory.mb", jobObj.getMaxMemory());
     addProp(config, "oozie.launcher.mapreduce.map.memory.physical.mb", jobObj.getMaxMemory());
     addProp(config, "oozie.launcher.mapreduce.reduce.memory.physical.mb", jobObj.getMaxMemory());
-    addProp(config, ConfigTools.SEQWARE_SETTINGS_PROPERTY, ConfigTools.getSettingsFilePath());
 
     add(java, "main-class", "net.sourceforge.seqware.pipeline.runner.Runner");
+    String settings = String.format("-D%s='%s'", ConfigTools.SEQWARE_SETTINGS_PROPERTY, ConfigTools.getSettingsFilePath());
+    add(java, "arg", settings);
     for (String arg : runnerArgs()) {
       add(java, "arg", arg);
     }
