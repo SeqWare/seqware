@@ -168,8 +168,9 @@ Now, for a given object, you can find out what fields you need to specify:
 As noted above, the simplest way for a human to enter this data would be to use `--interactive` option.  For now, we will use the scriptable input mechanism:
 
     $ seqware create study --title 'New Test Study' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4
+    
+    Created study with SWID: 2
 
-    SWID: 2
 
 The output of the above command is the SWID or "accession" number that uniquely identifies the object across the database, and is used used to link together
 objects.  For example, you will use the above number to identify the parent for the experiment you create below.  If you do not track
@@ -181,14 +182,14 @@ above:
 
     $ seqware create experiment --title 'New Test Experiment' --description 'This is a test description' --platform-id 26 --study-accession 2
 
-    SWID: 3
+    Created experiment with SWID: 3
 
 Again, you use the SWID from the above output in the next step to create an
 associated sample:
 
     $ seqware create sample --title 'New Test Sample' --description 'This is a test description' --organism-id 26 --experiment-accession 3
 
-    SWID: 4
+    Created sample with SWID: 4
 
 At this point you should have a nice study/experiment/sample hierarchy.  You
 can, of course, add multiple samples per experiment and multiple experiments
@@ -214,7 +215,7 @@ Now we can associate that file with the sample:
 
     $ seqware create file --parent-accession 4 --meta-type text/plain --file /datastore/input.txt
 
-    MetaDB ProcessingAccession for this run is: 5
+    Created file processing with SWID: 5
 
 Note that the SWID returned is for a processing event, not the file itself (which has its own SWID).  This processing SWID is what will be used below to attach a workflow run into the existing hierarchy.
 
@@ -244,10 +245,10 @@ includes:
 
     $ seqware workflow list
     -[ RECORD 0 ]----+--------------------------------------------------------------------------------------------------
-    Name             | HelloWorld                                                                                        
-    Version          | 1.0-SNAPSHOT                                                                                      
-    Creation Date    | Mon Aug 19 16:34:24 UTC 2013                                                                      
-    SeqWare Accession| 1                                                                                                 
+    Name             | HelloWorld
+    Version          | 1.0-SNAPSHOT
+    Creation Date    | Mon Sep 30 16:58:18 UTC 2013
+    SeqWare Accession| 1
     Bundle Location  | /home/seqware/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
 
 The fourth column includes the SWID for this workflow that you will use in the
@@ -325,7 +326,7 @@ file you prepared ("schedule" because the actual launching of the workflow will 
 
     $ seqware workflow schedule --accession 1 --parent-accession 5 --ini workflow.ini --host `hostname --long` 
 
-    WORKFLOW_RUN ACCESSION: 8
+    Created workflow run with SWID: 8
 
 <p class="warning"><strong>Tip:</strong> the accession specifies which workflow to run, and the parent-accession is the SWID of the processing event that associated the input file with the sample.  This allows the workflow run to be linked into the study hierarchy. You MUST specify this
 otherwise the workflow's results will not be linked to anything (they will be
@@ -341,26 +342,27 @@ of workflow runs. After about ten minutes, the workflow should complete.
 
     $ seqware workflow report --accession 1
     -[ RECORD 0 ]------------------+-------------------------------------
-    Workflow                       | HelloWorld 1.0-SNAPSHOT              
-    Workflow Run SWID              | 8                                    
-    Workflow Run Status            | completed                            
-    Workflow Run Create Timestamp  | 2013-08-19 17:18:40.294              
-    Workflow Run Host              | vm-cluster-node1                     
-    Workflow Run Status Command    | 0000000-130819144000721-oozie-oozi-W 
-    Library Sample Names           |                                      
-    Library Sample SWIDs           |                                      
-    Identity Sample Names          | New Test Sample                      
-    Identity Sample SWIDs          | 4                                    
-    Input File Meta-Types          | text/plain                           
-    Input File SWIDs               | 7                                    
-    Input File Paths               | /datastore/input.txt                 
-    Immediate Input File Meta-Types| text/plain                           
-    Immediate Input File SWIDs     | 7                                    
-    Immediate Input File Paths     | /datastore/input.txt                 
-    Output File Meta-Types         | text/plain                           
-    Output File SWIDs              | 16                                   
+    Workflow                       | HelloWorld 1.0-SNAPSHOT
+    Workflow Run SWID              | 8
+    Workflow Run Status            | completed
+    Workflow Run Create Timestamp  | 2013-09-30 17:51:56.547
+    Workflow Run Host              | master
+    Workflow Run Working Dir       | /usr/tmp/seqware-oozie/oozie-a6a216c2-0d1b-4ce5-8ea2-08a4ee9a1838
+    Workflow Run Engine ID         | 0000002-130930164344053-oozie-oozi-W
+    Library Sample Names           |
+    Library Sample SWIDs           |
+    Identity Sample Names          | New Test Sample
+    Identity Sample SWIDs          | 4
+    Input File Meta-Types          | text/plain
+    Input File SWIDs               | 7
+    Input File Paths               | /datastore/input.txt
+    Immediate Input File Meta-Types| text/plain
+    Immediate Input File SWIDs     | 7
+    Immediate Input File Paths     | /datastore/input.txt
+    Output File Meta-Types         | text/plain
+    Output File SWIDs              | 29
     Output File Paths              | output
-    Workflow Run Time              | 1m 47.0s
+    Workflow Run Time              | 51.0s
 
 This output includes several columns of interest including the status of the
 workflow, the output file types, and their locations. See the `--help` for more options related to report generation.
@@ -376,7 +378,7 @@ workflow run, which can be useful for debugging failed runs:
 	seqware workflow-run stdout --accession 8
 
 By default this command automatically creates output files for stderr and stdout,
-for example <tt>20130819_193805__workflowrun_8_STDERR.csv</tt>.  You can
+for example <tt>20130930_175543__workflowrun_8_STDERR.csv</tt>.  You can
 use the <tt>--out</tt> option if you wish to specify the file name.
 
 ## The Resulting Structure in MetaDB
