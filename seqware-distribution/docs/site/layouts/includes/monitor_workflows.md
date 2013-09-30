@@ -6,7 +6,7 @@ typically schedule jobs and then launch them asynchronously via a cronjob.
 A user will schedule workflow launches using a command similar to
 that below:
 
-    $ seqware workflow schedule --accession $workflow_acc --parent-accession 99  --ini workflow.ini --host `hostname --long` 
+    $ seqware workflow schedule --accession 1 --parent-accession 99  --ini workflow.ini --host `hostname --long` 
 
 Then in a cronjob we use the following command to launch scheduled jobs: 
 

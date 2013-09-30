@@ -441,6 +441,40 @@ find these SWIDs that are used as “parents” for subsequent workflow runs.
 You can find more information on this report tool on the [Study
 Reporter](/docs/21-study-reporter/) page.
 
+## How to Cancel Workflows
+
+After launching a workflow, you can cancel it in order to stop further execution. This will set the status of the workflow run to `submitted_cancel`, and after the next status propagation, will set the status to `cancelled`.
+
+    $ seqware workflow-run cancel --accession 28
+    $ seqware workflow-run report --accession 28
+    -[ RECORD 0 ]------------------+-------------------------------------
+    Workflow                       | HelloWorld 1.0-SNAPSHOT              
+    Workflow Run SWID              | 28                                   
+    Workflow Run Status            | cancelled                            
+    Workflow Run Create Timestamp  | 2013-08-23 14:58:35.374              
+    Workflow Run Host              | master                               
+    Workflow Run Status Command    | 0000000-130823144527997-oozie-oozi-W 
+    Library Sample Names           |                                      
+    Library Sample SWIDs           |                                      
+    Identity Sample Names          |                                      
+    Identity Sample SWIDs          |                                      
+    Input File Meta-Types          |                                      
+    Input File SWIDs               |                                      
+    Input File Paths               |                                      
+    Immediate Input File Meta-Types|                                      
+    Immediate Input File SWIDs     |                                      
+    Immediate Input File Paths     |                                      
+    Output File Meta-Types         |                                      
+    Output File SWIDs              |                                      
+    Output File Paths              |                                      
+    Workflow Run Time              | 33.0s
+
+
+## How to Retry Failed and Cancelled Workflows
+
+<%= render '/includes/debug/oozie_restart/' %>
+
+
 ## Next Steps
 
 See the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) for
