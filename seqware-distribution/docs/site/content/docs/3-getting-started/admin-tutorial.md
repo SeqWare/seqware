@@ -36,17 +36,15 @@ By the end of these tutorials you will:
 ## How to Install a Workflow
 
 <!-- make this install from a zip for the admin guide --> 
-When provided with a tested workflow from a workflow developer, the next step
+When provided with a tested workflow bundle from a workflow developer, the next step
 is to install it, this means it will be inserted into the MetaDB via a running
-web service.  During this process it will copy the bundle and put it into your
-released-bundles directory and provision it into your provisioned bundles
+web service.  During this process it will copy the bundle into your
+released-bundles directory and provision it into your provisioned-bundles
 directory. The provisioned bundles directory is where running workflows will
 access their files.
 
 Here is an example showing how this process works on the VM and what is
 happening in the database and your released-bundles directory as you do this.
-You may want to delete the zip file that is in the released-bundles directory
-before you do this step below (or back it up somewhere first).
 
 See the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) for
 how to make the zipped workflow bundle. After the zip bundle is created, the
@@ -66,39 +64,6 @@ What happens here is the <code>Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare
 <%= render '/includes/monitor_workflows/' %>
 
 For more information see the [Monitor Configuration](/docs/6-pipeline/monitor_configuration/) documentation.
-
-## How to Cancel Workflows
-
-After launching a workflow, you can cancel it in order to stop further execution. This will set the status of the workflow run to `submitted_cancel`, and after the next status propagation, will set the status to `cancelled`.
-
-    $ seqware workflow-run cancel --accession 28
-    $ seqware workflow-run report --accession 28
-	-[ RECORD 0 ]------------------+-------------------------------------
-	Workflow                       | HelloWorld 1.0-SNAPSHOT              
-	Workflow Run SWID              | 28                                   
-	Workflow Run Status            | cancelled                            
-	Workflow Run Create Timestamp  | 2013-08-23 14:58:35.374              
-	Workflow Run Host              | master                               
-	Workflow Run Status Command    | 0000000-130823144527997-oozie-oozi-W 
-	Library Sample Names           |                                      
-	Library Sample SWIDs           |                                      
-	Identity Sample Names          |                                      
-	Identity Sample SWIDs          |                                      
-	Input File Meta-Types          |                                      
-	Input File SWIDs               |                                      
-	Input File Paths               |                                      
-	Immediate Input File Meta-Types|                                      
-	Immediate Input File SWIDs     |                                      
-	Immediate Input File Paths     |                                      
-	Output File Meta-Types         |                                      
-	Output File SWIDs              |                                      
-	Output File Paths              |                                      
-	Workflow Run Time              | 33.0s
-
-
-## How to Retry Failed and Cancelled Workflows
-
-<%= render '/includes/debug/oozie_restart/' %>
 
 ## See Also
 
