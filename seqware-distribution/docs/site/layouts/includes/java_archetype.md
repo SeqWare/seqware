@@ -10,7 +10,7 @@ outside of the SeqWare development directories).  Here we are working in the wor
     831: local -> com.github.seqware:seqware-archetype-module (SeqWare module archetype)
     Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 294: 
 
-<p class="warning"><strong>Note:</strong>You can inform Maven about the archetypes by downloading the latest <a href="https://github.com/SeqWare/seqware/releases/download/<%= seqware_release_version %>/archetype-catalog.xml">archetype-catalog.xml</a> file and placing it in <code>~/.m2/<code>.</p>
+<p class="warning"><strong>Note:</strong>You can inform Maven about the archetypes by downloading the latest <a href="https://github.com/SeqWare/seqware/releases/download/<%= seqware_release_version %>/archetype-catalog.xml">archetype-catalog.xml</a> file and placing it in <code>~/.m2/</code>.</p>
 
 The numbers used to identify  the archetypes will vary 
 depending on what you have installed, so you will need to scan through the list 

@@ -308,7 +308,7 @@ At this point, the individual scripts can be executed to ensure they do what you
 
 The next step after authoring your workflows in the Java workflow language, and verifying the generated scripts, is to run them:
 
-    $ seqware bundle launch --dir target/Workflow_Bundle_* --name HelloWorld --version 1.0-SNAPSHOT
+    $ seqware bundle launch --dir target/Workflow_Bundle_*
     Using working directory: /tmp/oozie-ed2961be-555b-45bb-b009-690d8cefb4c4
     Files copied to hdfs://10.0.0.1:8020/user/seqware/seqware_workflow/oozie-ed2961be-555b-45bb-b009-690d8cefb4c4
     Submitted Oozie job: 0000009-130918173155061-oozie-oozi-W

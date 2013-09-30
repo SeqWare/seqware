@@ -234,16 +234,7 @@ and their parameters.  To see the list of available workflows you can execute
 the following command:
 
     $ seqware workflow list
-
-First, you will get a tab-delimited list of workflows showing their name, version, and 
-(most importantly) their SWID that you can use in scripts. In the second and third examples
-, you will get a more user-friendly versions of the output. 
-
-In this example we are going to use the latest (at the time of this writing)
-HelloWorld workflow bundle (SWID 1 below).  The output of the above command
-includes:
-
-    $ seqware workflow list
+    
     -[ RECORD 0 ]----+--------------------------------------------------------------------------------------------------
     Name             | HelloWorld
     Version          | 1.0-SNAPSHOT
@@ -251,10 +242,10 @@ includes:
     SeqWare Accession| 1
     Bundle Location  | /home/seqware/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
 
-The fourth column includes the SWID for this workflow that you will use in the
+The list of workflows (just one for now) shows the name, version, and 
+the SWID of the installed workflows. You will use the SWID in the
 next command to find all the parameters (and their defaults) that this workflow
-takes.  Here is the command, notice we redirect the output to create a basic ini
-file that can later be customized and used to submit a run of this workflow:
+takes:
 
     $ seqware workflow ini --accession 1
 
@@ -360,7 +351,7 @@ of workflow runs. After about ten minutes, the workflow should complete.
     Immediate Input File SWIDs     | 7
     Immediate Input File Paths     | /datastore/input.txt
     Output File Meta-Types         | text/plain
-    Output File SWIDs              | 29
+    Output File SWIDs              | 15
     Output File Paths              | output
     Workflow Run Time              | 51.0s
 
