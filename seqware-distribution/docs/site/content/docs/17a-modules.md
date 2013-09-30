@@ -6,6 +6,9 @@ markdown:              advanced
 
 ---
 
+
+##  GenericCommandRunner
+net.sourceforge.seqware.pipeline.modules.GenericCommandRunner
 This is a simple command runner.
 
 | Command-line option | Description |
@@ -19,6 +22,9 @@ This is a simple command runner.
 |--gcr-stderr|Optional: Returns stderr (stderr of the command called is normally suppressed, except in case of failure)|
 |--gcr-stdout|Optional: Reports stdout (stdout of the command called is normally suppressed, except in case of failure)|
 
+
+##  GenericMetadataSaver
+net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver
 This is a simple metadata saver.
 
 | Command-line option | Description |
@@ -28,12 +34,18 @@ This is a simple metadata saver.
 |--gms-suppress-output-file-check|If provided, this will suppress checking that the gms-output-file options contain valid file paths. Useful if these are remote resources like HTTP or S3 file URLs.|
 
 
+##  ProvisionDependenciesBundle
+net.sourceforge.seqware.pipeline.modules.utilities.ProvisionDependenciesBundle
+
 
 | Command-line option | Description |
 |--------------------|--------------|
 |--i, --input-file|Required: input file, multiple should be specified seperately|
 |--o, --output-dir|Required: output file location|
 
+
+##  ProvisionFiles
+net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles
 
 
 | Command-line option | Description |
@@ -59,6 +71,9 @@ This is a simple metadata saver.
 |--v, --verbose|Optional: verbose causes the S3 transfer status to display.|
 
 
+##  S3CreateFileURLs
+net.sourceforge.seqware.pipeline.modules.utilities.S3CreateFileURLs
+
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -67,12 +82,18 @@ This is a simple metadata saver.
 |--u, --s3-url|A URL of the form s3://<bucket>/<path>/<file> or s3://<bucket> if using the --all-files option|
 
 
+##  S3DeleteFiles
+net.sourceforge.seqware.pipeline.modules.utilities.S3DeleteFiles
+
 
 | Command-line option | Description |
 |--------------------|--------------|
 |--f, --s3-url-file|Optional: a file containing one URL per line of the form s3://<bucket>/<path>/<file>|
 |--u, --s3-url|Optional: a URL of the form s3://<bucket>/<path>/<file>|
 
+
+##  S3ListFiles
+net.sourceforge.seqware.pipeline.modules.utilities.S3ListFiles
 
 
 | Command-line option | Description |
@@ -84,6 +105,9 @@ This is a simple metadata saver.
 |--u, --s3-url|Optional: a URL of the form s3://<bucket>/<path>/<file>|
 |--t, --tab-output-file|Optional: tab-formated output file.|
 
+
+##  S3UploadDirectory
+net.sourceforge.seqware.pipeline.modules.utilities.S3UploadDirectory
 
 
 | Command-line option | Description |
