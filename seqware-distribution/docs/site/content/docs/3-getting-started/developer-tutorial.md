@@ -157,8 +157,7 @@ are present in this bundle (a single Workflow Bundle can contain many workflows)
       Requirements Compute: single Memory: 20M Network: local
 
 
-
-This shows one workflow in the generated workflow bundle. The variables (e.g., `${workflow-name}`) will be replaced when the bundle is built with `mvn install`.
+This shows the one workflow in the generated workflow bundle.
 
 ### Directory Organization
 
@@ -287,7 +286,7 @@ example:
 
 <%= render '/includes/maven_workflow_build/' %>
 
-## Debugging the Workflow
+## Testing the Workflow
 
 During the launch process, a number of files are generated into the `generated-scripts` directory inside the run's working directory.  For each job in a workflow, a `<job-name>.sh` script contains the content of the associated `BashJob` defined by the developer.
 
@@ -306,9 +305,6 @@ Prior to testing your bundle, it will be worthwhile to ensure that the files gen
 In the above, `/tmp` is the configured location of `OOZIE_WORK_DIR`. Each of the scripts represents a bash job specified by the developer, with the exception of `start_0.sh` which creates the directories specified in the workflow's `setupDirectory()` method.
 
 At this point, the individual scripts can be executed to ensure they do what you expect.
-
-
-## Testing the Workflow 
 
 The next step after authoring your workflows in the Java workflow language, and verifying the generated scripts, is to run them:
 
