@@ -73,6 +73,10 @@ In order to publish to our unstable docs supporting the development of 1.0.0, ch
     cd seqware-distribution 
     mvn site-deploy
 
+If doing this in succession, you will see a git checkout error.  Until we fix the maven pom, you will need to:
+
+    rm -Rf target/scmpublish-checkout/
+
 Then you would look at the site at: http://seqware.github.io/unstable.seqware.github.com/
 
 
