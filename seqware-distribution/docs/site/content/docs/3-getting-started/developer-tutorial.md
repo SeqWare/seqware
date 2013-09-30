@@ -151,7 +151,7 @@ are present in this bundle (a single Workflow Bundle can contain many workflows)
       Name: MyHelloWorld
       Version: 1.0-SNAPSHOT
       Description: Add a description of the workflow here.
-      Workflow Class: com.github.seqware.WorkflowClient.java
+      Workflow Class: ${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/classes/com/github/seqware/WorkflowClient.java
       Config Path: ${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/config/workflow.ini
       Requirements Compute: single Memory: 20M Network: local
 
