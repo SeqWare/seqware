@@ -141,7 +141,9 @@ The first thing you should do is take a look at the workflow manifest showing wh
 are present in this bundle (a single Workflow Bundle can contain many workflows).
 
     $ cd MyHelloWorld
-    $ seqware bundle list --dir .
+    $ mvn install
+    ...
+    $ seqware bundle list --dir target/Workflow*
 
     List Workflows:
 
