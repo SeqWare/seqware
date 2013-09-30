@@ -223,7 +223,11 @@ public class BundleManager extends Plugin {
             if (options.has("human-expanded")) {
                 params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
                 params = TabExpansionUtil.expansion(params);
-                println(params);
+                if (params.trim().equals("")){
+                  println("No workflows installed.");
+                } else {
+                  println(params);
+                }
             } else if (options.has("human-aligned")){
                 params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
                 params = TabExpansionUtil.aligned(params);
