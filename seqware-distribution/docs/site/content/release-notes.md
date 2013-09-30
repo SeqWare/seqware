@@ -9,6 +9,9 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 0.13.6.10 (2013-09-27)
+* [SEQWARE-1748] - Calling WorkflowLauncher with multiple parent-accession results in error
+
 ## 1.0.4 (2013-09-20)
 
 ###Defect
