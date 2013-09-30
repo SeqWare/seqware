@@ -674,7 +674,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       map.put("workflow_run_accession", workflowRunAccession);
       // my new preferred variable name
       map.put("workflow-run-accession", workflowRunAccession);
-      Log.stdout("WORKFLOW_RUN ACCESSION: " + workflowRunAccession);
+      Log.stdout("Created workflow run with SWID: " + workflowRunAccession);
 
       // need to link all the parents to this workflow run accession
       // this is actually linking them in the DB
