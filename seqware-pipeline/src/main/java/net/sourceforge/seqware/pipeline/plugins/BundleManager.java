@@ -119,13 +119,14 @@ public class BundleManager extends Plugin {
             for (WorkflowInfo wi : bi.getWorkflowInfo()) {
                 println(" Workflow:");
 
-                println("  Name : " + wi.getName());
-                println("  Version : " + wi.getVersion());
-                println("  Description : " + wi.getDescription());
-
-                println("  Test Command: " + wi.getTestCmd());
-                println("  Template Path:" + wi.getTemplatePath());
-                println("  Config Path:" + wi.getConfigPath());
+                println("  Name: " + wi.getName());
+                println("  Version: " + wi.getVersion());
+                println("  Description: " + wi.getDescription());
+                if (wi.getTemplatePath() != null)
+                println("  Template Path: " + wi.getTemplatePath());
+                if (wi.getWorkflowClass() != null)
+                println("  Workflow Class: " + wi.getTemplatePath());
+                println("  Config Path: " + wi.getConfigPath());
                 println("  Requirements Compute: " + wi.getComputeReq() + " Memory: " + wi.getMemReq() + " Network: " + wi.getNetworkReq() + "\n");
 
             }
