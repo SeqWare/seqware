@@ -6,33 +6,18 @@ markdown:              advanced
 
 ---
 
-##  BulkProvisionFiles
-net.sourceforge.seqware.pipeline.modules.utilities.BulkProvisionFiles
-
-
-
-| Command-line option | Description |
-|--------------------|--------------|
-|--i, --input-file|Required: input file, multiple should be specified seperately|
-|--o, --output-dir|Required: output file location|
-|--v, --verbose|Optional: verbose causes the S3 transfer status to display.|
-
-##  GenericCommandRunner
-net.sourceforge.seqware.pipeline.modules.GenericCommandRunner
-
 This is a simple command runner.
 
 | Command-line option | Description |
 |--------------------|--------------|
 |--gcr-algorithm|You can pass in an algorithm name that will be recorded in the metadb if you are writing back to the metadb, otherwise GenericCommandRunner is used.|
 |--gcr-check-output-file|Specify the path to the file.|
-|--gcr-command|The command being executed.|
+|--gcr-command|The command being executed (quote as needed).|
 |--gcr-output-file|Specify this option one or more times for each output file created by the command called by this module. The argument is a '::' delimited list of type, meta_type, and file_path.|
 |--gcr-skip-if-missing|If the registered output files don't exist don't worry about it. Useful for workflows that can produce variable file outputs but also potentially dangerous.|
 |--gcr-skip-if-output-exists|If the registered output files exist then this step won't be run again. This only works if gcr-output-file is defined too since we need to be able to check the output files to see if they exist. If this step produces no output files then it's hard to say if it was run successfully before.|
-
-##  GenericMetadataSaver
-net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver
+|--gcr-stderr|Optional: Returns stderr (stderr of the command called is normally suppressed, except in case of failure)|
+|--gcr-stdout|Optional: Reports stdout (stdout of the command called is normally suppressed, except in case of failure)|
 
 This is a simple metadata saver.
 
@@ -42,18 +27,12 @@ This is a simple metadata saver.
 |--gms-output-file|Specify this option one or more times for each output file created by the command called by this module. The argument is a '::' delimited list of type, meta_type, and file_path.|
 |--gms-suppress-output-file-check|If provided, this will suppress checking that the gms-output-file options contain valid file paths. Useful if these are remote resources like HTTP or S3 file URLs.|
 
-##  ProvisionDependenciesBundle
-net.sourceforge.seqware.pipeline.modules.utilities.ProvisionDependenciesBundle
-
 
 
 | Command-line option | Description |
 |--------------------|--------------|
 |--i, --input-file|Required: input file, multiple should be specified seperately|
 |--o, --output-dir|Required: output file location|
-
-##  ProvisionFiles
-net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles
 
 
 
@@ -79,9 +58,6 @@ net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles
 |--skip-record-file|Optional: If specified, do not record new entries in the file table.|
 |--v, --verbose|Optional: verbose causes the S3 transfer status to display.|
 
-##  S3CreateFileURLs
-net.sourceforge.seqware.pipeline.modules.utilities.S3CreateFileURLs
-
 
 
 | Command-line option | Description |
@@ -90,18 +66,12 @@ net.sourceforge.seqware.pipeline.modules.utilities.S3CreateFileURLs
 |--l, --lifetime|How long (in minutes) should this URL be valid for (129600 = 90 days, 86400 = 60 days, 43200 = 30 days, 10080 = 7 days, 1440 = 1 day).|
 |--u, --s3-url|A URL of the form s3://<bucket>/<path>/<file> or s3://<bucket> if using the --all-files option|
 
-##  S3DeleteFiles
-net.sourceforge.seqware.pipeline.modules.utilities.S3DeleteFiles
-
 
 
 | Command-line option | Description |
 |--------------------|--------------|
 |--f, --s3-url-file|Optional: a file containing one URL per line of the form s3://<bucket>/<path>/<file>|
 |--u, --s3-url|Optional: a URL of the form s3://<bucket>/<path>/<file>|
-
-##  S3ListFiles
-net.sourceforge.seqware.pipeline.modules.utilities.S3ListFiles
 
 
 
@@ -113,9 +83,6 @@ net.sourceforge.seqware.pipeline.modules.utilities.S3ListFiles
 |--s, --search-local-dir|Optional: attempt to match files in S3 with files in this local directory.|
 |--u, --s3-url|Optional: a URL of the form s3://<bucket>/<path>/<file>|
 |--t, --tab-output-file|Optional: tab-formated output file.|
-
-##  S3UploadDirectory
-net.sourceforge.seqware.pipeline.modules.utilities.S3UploadDirectory
 
 
 
