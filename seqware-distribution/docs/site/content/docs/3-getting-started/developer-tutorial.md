@@ -148,14 +148,12 @@ are present in this bundle (a single Workflow Bundle can contain many workflows)
     List Workflows:
 
      Workflow:
-      Name : ${workflow-name}
-      Version : ${workflow-version}
-      Description : ${workflow-description}
-      Test Command: java -jar ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/lib/seqware-distribution-${seqware-version}-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir ${workflow_bundle_dir} --workflow ${workflow-name} --version ${workflow-version} --ini-files ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/config/workflow.ini 
-      Template Path:
-      Config Path:${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/config/workflow.ini
+      Name: MyHelloWorld
+      Version: 1.0-SNAPSHOT
+      Description: Add a description of the workflow here.
+      Workflow Class: com.github.seqware.WorkflowClient.java
+      Config Path: ${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/config/workflow.ini
       Requirements Compute: single Memory: 20M Network: local
-
 
 This shows the one workflow in the generated workflow bundle.
 
