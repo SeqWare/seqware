@@ -8,7 +8,8 @@ markdown:              advanced
 
 
 ##  AttributeAnnotator
-net.sourceforge.seqware.pipeline.plugins.AttributeAnnotatorExperimental plugin. Allows the annotation of objects in the database with 'skip' values.
+net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator
+Experimental plugin. Allows the annotation of objects in the database with 'skip' values.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -29,7 +30,8 @@ net.sourceforge.seqware.pipeline.plugins.AttributeAnnotatorExperimental plugin. 
 
 
 ##  BasicDecider
-net.sourceforge.seqware.pipeline.deciders.BasicDeciderThe decider from which all other deciders came
+net.sourceforge.seqware.pipeline.deciders.BasicDecider
+The decider from which all other deciders came
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -55,7 +57,8 @@ net.sourceforge.seqware.pipeline.deciders.BasicDeciderThe decider from which all
 
 
 ##  BatchMetadataInjection
-net.sourceforge.seqware.pipeline.plugins.BatchMetadataInjectionImport objects into the database using different file formats.
+net.sourceforge.seqware.pipeline.plugins.BatchMetadataInjection
+Import objects into the database using different file formats.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -74,7 +77,8 @@ net.sourceforge.seqware.pipeline.plugins.BatchMetadataInjectionImport objects in
 
 
 ##  BundleManager
-net.sourceforge.seqware.pipeline.plugins.BundleManagerA plugin that lets you create, test, and install workflow bundles.
+net.sourceforge.seqware.pipeline.plugins.BundleManager
+A plugin that lets you create, test, and install workflow bundles.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -100,7 +104,8 @@ net.sourceforge.seqware.pipeline.plugins.BundleManagerA plugin that lets you cre
 
 
 ##  CycleChecker
-net.sourceforge.seqware.pipeline.plugins.CycleCheckerChecks for cycles in the sample hierarchy and processing hierarchy of a particular study and prints some information about the study
+net.sourceforge.seqware.pipeline.plugins.CycleChecker
+Checks for cycles in the sample hierarchy and processing hierarchy of a particular study and prints some information about the study
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -108,7 +113,8 @@ net.sourceforge.seqware.pipeline.plugins.CycleCheckerChecks for cycles in the sa
 
 
 ##  FileLinker
-net.sourceforge.seqware.pipeline.plugins.FileLinkerTakes a list of files and enters them into the database, linking them with the appropriate IUSes and creating workflow runs for the 'FileImport' workflow. For more information, see http://seqware.github.com/docs/22-filelinker/
+net.sourceforge.seqware.pipeline.plugins.FileLinker
+Takes a list of files and enters them into the database, linking them with the appropriate IUSes and creating workflow runs for the 'FileImport' workflow. For more information, see http://seqware.github.com/docs/22-filelinker/
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -118,7 +124,8 @@ net.sourceforge.seqware.pipeline.plugins.FileLinkerTakes a list of files and ent
 
 
 ##  HelloWorld
-net.sourceforge.seqware.pipeline.plugins.HelloWorldA very simple HelloWorld to show how to make plugins.
+net.sourceforge.seqware.pipeline.plugins.HelloWorld
+A very simple HelloWorld to show how to make plugins.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -126,7 +133,8 @@ net.sourceforge.seqware.pipeline.plugins.HelloWorldA very simple HelloWorld to s
 
 
 ##  MarkdownPlugin
-net.sourceforge.seqware.pipeline.plugins.MarkdownPluginA plugin that generates markdown documentation for all plugins.
+net.sourceforge.seqware.pipeline.plugins.MarkdownPlugin
+A plugin that generates markdown documentation for all plugins.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -136,7 +144,8 @@ net.sourceforge.seqware.pipeline.plugins.MarkdownPluginA plugin that generates m
 
 
 ##  Metadata
-net.sourceforge.seqware.pipeline.plugins.MetadataThis plugin lets you list, read, and write to a collection of tables in the underlying MetaDB. This makes it easier to automate the creation of entities in the database which can be used as parents for file uploads and triggered workflows.
+net.sourceforge.seqware.pipeline.plugins.Metadata
+This plugin lets you list, read, and write to a collection of tables in the underlying MetaDB. This makes it easier to automate the creation of entities in the database which can be used as parents for file uploads and triggered workflows.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -152,12 +161,14 @@ net.sourceforge.seqware.pipeline.plugins.MetadataThis plugin lets you list, read
 
 
 ##  ModuleRunner
-net.sourceforge.seqware.pipeline.plugins.ModuleRunnerDescription: A wrapper around Runner which will either list all Modules in the classpath (if no args are passed) or trigger a specific Module. Great for running Modules standalone.
+net.sourceforge.seqware.pipeline.plugins.ModuleRunner
+Description: A wrapper around Runner which will either list all Modules in the classpath (if no args are passed) or trigger a specific Module. Great for running Modules standalone.
 
 
 
 ##  OozieXML2Dot
-net.sourceforge.seqware.pipeline.plugins.OozieXML2DotThis take an input file of oozie workflow xml, and translate the relation of all actions into dot format
+net.sourceforge.seqware.pipeline.plugins.OozieXML2Dot
+This take an input file of oozie workflow xml, and translate the relation of all actions into dot format
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -165,7 +176,8 @@ net.sourceforge.seqware.pipeline.plugins.OozieXML2DotThis take an input file of 
 
 
 ##  ProcessingDataStructure2Dot
-net.sourceforge.seqware.pipeline.plugins.ProcessingDataStructure2DotThis plugin will take in a sw_accession of a processing, and translate the hierarchy of the processing relationship into dot format
+net.sourceforge.seqware.pipeline.plugins.ProcessingDataStructure2Dot
+This plugin will take in a sw_accession of a processing, and translate the hierarchy of the processing relationship into dot format
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -174,7 +186,8 @@ net.sourceforge.seqware.pipeline.plugins.ProcessingDataStructure2DotThis plugin 
 
 
 ##  SequencerRunReporter
-net.sourceforge.seqware.pipeline.plugins.SequencerRunReporterPrints a tab-delimited file describing the sequencer run, lane, sample, and algorithms run on every IUS in the database. For more information, see see http://seqware.github.com/docs/20-sequencer-run-reporter/
+net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter
+Prints a tab-delimited file describing the sequencer run, lane, sample, and algorithms run on every IUS in the database. For more information, see see http://seqware.github.com/docs/20-sequencer-run-reporter/
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -182,7 +195,8 @@ net.sourceforge.seqware.pipeline.plugins.SequencerRunReporterPrints a tab-delimi
 
 
 ##  StudyReporter
-net.sourceforge.seqware.pipeline.plugins.StudyReporterGenerates a tab-delimited report of all output files (and their relationships and metadata) from a specified study or from all studies.
+net.sourceforge.seqware.pipeline.plugins.StudyReporter
+Generates a tab-delimited report of all output files (and their relationships and metadata) from a specified study or from all studies.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -192,7 +206,8 @@ net.sourceforge.seqware.pipeline.plugins.StudyReporterGenerates a tab-delimited 
 
 
 ##  SymLinkFileReporter
-net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporterCreate a nested tree structure of all of the output files from a particular sample, or all of the samples in a study by using the SymLinkFileReporter plugin. This plugin also creates a CSV file with all of the accompanying information for every file. For more information, see see http://seqware.github.com/docs/21-study-reporter/
+net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter
+Create a nested tree structure of all of the output files from a particular sample, or all of the samples in a study by using the SymLinkFileReporter plugin. This plugin also creates a CSV file with all of the accompanying information for every file. For more information, see see http://seqware.github.com/docs/21-study-reporter/
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -214,7 +229,8 @@ net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporterCreate a nested tree
 
 
 ##  WorkflowLauncher
-net.sourceforge.seqware.pipeline.plugins.WorkflowLauncherA plugin that lets you launch workflow bundles once you have installed them via the BundleManager.
+net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher
+A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -241,7 +257,8 @@ net.sourceforge.seqware.pipeline.plugins.WorkflowLauncherA plugin that lets you 
 
 
 ##  WorkflowPlugin
-net.sourceforge.seqware.pipeline.plugin.WorkflowPluginA plugin that lets you launch workflow bundles once you have installed them via the BundleManager.
+net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin
+A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -268,7 +285,8 @@ net.sourceforge.seqware.pipeline.plugin.WorkflowPluginA plugin that lets you lau
 
 
 ##  WorkflowRunFilesInitialPopulationPlugin
-net.sourceforge.seqware.pipeline.plugins.WorkflowRunFilesInitialPopulationPluginThis plugin does the initial population of workflow run files in order to track input files.
+net.sourceforge.seqware.pipeline.plugins.WorkflowRunFilesInitialPopulationPlugin
+This plugin does the initial population of workflow run files in order to track input files.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -278,7 +296,8 @@ net.sourceforge.seqware.pipeline.plugins.WorkflowRunFilesInitialPopulationPlugin
 
 
 ##  WorkflowRunReporter
-net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporterThis plugin creates a tab-separated file that describes one or more workflow runs, including the identity, library samples and input and output files. For more information, see see http://seqware.github.com/docs/19-workflow-run-reporter/
+net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter
+This plugin creates a tab-separated file that describes one or more workflow runs, including the identity, library samples and input and output files. For more information, see see http://seqware.github.com/docs/19-workflow-run-reporter/
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -293,7 +312,8 @@ net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporterThis plugin creates 
 
 
 ##  WorkflowStatusChecker
-net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerThis plugin lets you monitor the status of running workflows and updates the metadata object with their status.  Keep in mind a few things: 1) if the status command is specified no data will be saved to the DB, this tool is just useful for gathering error reports, 2) status commands that are malformed or whose status directory is not present on the filesystem will be skipped and an error noted, 3) by default every running or unknown workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file and the hostname is the same as 'hostname --long', and 4) you can force the checking of workflows with a particular host value but be careful with that.
+net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker
+This plugin lets you monitor the status of running workflows and updates the metadata object with their status.  Keep in mind a few things: 1) if the status command is specified no data will be saved to the DB, this tool is just useful for gathering error reports, 2) status commands that are malformed or whose status directory is not present on the filesystem will be skipped and an error noted, 3) by default every running or unknown workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file and the hostname is the same as 'hostname --long', and 4) you can force the checking of workflows with a particular host value but be careful with that.
 
 | Command-line option | Description |
 |--------------------|--------------|
