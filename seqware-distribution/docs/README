@@ -12,9 +12,13 @@ what I had to do to get their very nice sample website to compile:
 
 sudo apt-get install ruby1.9.1 ruby-rvm ruby-rdiscount ruby-nokogiri
 
-
 sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress
 
+Additional setup for Linux Mint 13:
+First, the ruby-rvm package did not install correctly
+* sudo apt-get remove ruby-rvm 
+* sudo apt-get install ruby1.9.1-dev
+* sudo gem install yajl-ruby pygments.rb 
 
 Hack on Linux Mint 13:
 
