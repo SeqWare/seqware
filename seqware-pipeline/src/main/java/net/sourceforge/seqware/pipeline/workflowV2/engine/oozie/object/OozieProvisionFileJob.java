@@ -73,6 +73,19 @@ public class OozieProvisionFileJob extends OozieJob {
   private List<String> runnerArgs() {
     List<String> args = runnerMetaDataArgs();
 
+    /*
+     * So, despite the fact that ProvisionFiles knows the destination of the
+     * file, we still need the following since ProvisionFiles reports just the
+     * filename as the destination, and then Runner prepends that file name with
+     * the value of the following. Madness.
+     * 
+     * Based on code from pegasus.object.ProvisionFilesJob.buildCommandString()
+     */
+    if (file.getOutputPath() == null) {
+      args.add("--metadata-output-file-prefix");
+      args.add(this.metadataOutputPrefix + "/" + this.outputDir);
+    }
+
     args.add("--module");
     args.add("net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles");
 
