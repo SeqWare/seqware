@@ -133,14 +133,14 @@ public class Runner {
             "metadata-parentID-file",
             "Optional (DEPRECATED): The same as --metadata-parentID, but is a path to a file, to parse for parent processing ID's. This is deprecated, use metadata-parent-accession-file going forward.")
         .withRequiredArg().ofType(String.class)
-        .describedAs("Path to a line-delimeted file containing one or more parent processing IDs");
+        .describedAs("Path to a line-delimited file containing one or more parent processing IDs");
     parser
         .accepts(
             "metadata-parent-accession",
             "Optional: Specifies one of the SeqWare accessions (sw_accession column in the DB) for metadata write back. This is an alternative "
                 + "to processing parentID (see --metadata-parentID) that allows you to specify an IUS, lane, sequencer run, or other processing event as a parent. "
-                + " This option can be specified zero or more times.")
-        .withRequiredArg()
+                + " This option can be specified zero or more times and the value can also be comma-separated.")
+        .withRequiredArg().withValuesSeparatedBy(',')
         .ofType(Integer.class)
         .describedAs(
             "The sw_accession of the parent for this event, for constructing the dependency tree in the metadb");

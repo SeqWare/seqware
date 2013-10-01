@@ -44,9 +44,10 @@ public class OozieProvisionFileJob extends OozieJob {
     addProp(config, "oozie.launcher.mapred.job.reduce.memory.mb", jobObj.getMaxMemory());
     addProp(config, "oozie.launcher.mapreduce.map.memory.physical.mb", jobObj.getMaxMemory());
     addProp(config, "oozie.launcher.mapreduce.reduce.memory.physical.mb", jobObj.getMaxMemory());
-    addProp(config, ConfigTools.SEQWARE_SETTINGS_PROPERTY, ConfigTools.getSettingsFilePath());
 
     add(java, "main-class", "net.sourceforge.seqware.pipeline.runner.Runner");
+    String settings = String.format("-D%s='%s'", ConfigTools.SEQWARE_SETTINGS_PROPERTY, ConfigTools.getSettingsFilePath());
+    add(java, "java-opts", settings);
     for (String arg : runnerArgs()) {
       add(java, "arg", arg);
     }
@@ -71,6 +72,19 @@ public class OozieProvisionFileJob extends OozieJob {
 
   private List<String> runnerArgs() {
     List<String> args = runnerMetaDataArgs();
+
+    /*
+     * So, despite the fact that ProvisionFiles knows the destination of the
+     * file, we still need the following since ProvisionFiles reports just the
+     * filename as the destination, and then Runner prepends that file name with
+     * the value of the following. Madness.
+     * 
+     * Based on code from pegasus.object.ProvisionFilesJob.buildCommandString()
+     */
+    if (file.getOutputPath() == null) {
+      args.add("--metadata-output-file-prefix");
+      args.add(this.metadataOutputPrefix + "/" + this.outputDir);
+    }
 
     args.add("--module");
     args.add("net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles");

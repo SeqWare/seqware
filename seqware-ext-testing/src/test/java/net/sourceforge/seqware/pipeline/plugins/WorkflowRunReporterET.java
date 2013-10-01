@@ -55,7 +55,7 @@ public class WorkflowRunReporterET {
         List<String> readLines = FileUtils.readLines(testOutFile);
         Assert.assertTrue("incorrect number of lines", readLines.size() == 2);
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
-        Assert.assertTrue("incorrect output checksum", checksumCRC32 == 684521512L);
+        Assert.assertTrue("incorrect output checksum" + checksumCRC32 , checksumCRC32 == 255117433L);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class WorkflowRunReporterET {
         List<String> readLines = FileUtils.readLines(testOutFile);
         Assert.assertTrue("incorrect number of lines ", readLines.size() == 7);
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
-        Assert.assertTrue("incorrect output checksum " + checksumCRC32, checksumCRC32 == 3712295835L);
+        Assert.assertTrue("incorrect output checksum " + checksumCRC32, checksumCRC32 == 2196935470L);
     }
     
     @Test
@@ -106,7 +106,7 @@ public class WorkflowRunReporterET {
         List<String> readLines = FileUtils.readLines(testOutFile);
         Assert.assertTrue("incorrect number of lines ", readLines.size() == 4);
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
-        Assert.assertTrue("incorrect output checksum " + checksumCRC32, checksumCRC32 == 1475250685L);
+        Assert.assertTrue("incorrect output checksum " + checksumCRC32, checksumCRC32 == 4072825873L);
     }
     
     @Test

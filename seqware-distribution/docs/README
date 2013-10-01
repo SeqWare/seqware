@@ -12,9 +12,13 @@ what I had to do to get their very nice sample website to compile:
 
 sudo apt-get install ruby1.9.1 ruby-rvm ruby-rdiscount ruby-nokogiri
 
-
 sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress
 
+Additional setup for Linux Mint 13:
+First, the ruby-rvm package did not install correctly
+* sudo apt-get remove ruby-rvm 
+* sudo apt-get install ruby1.9.1-dev
+* sudo gem install yajl-ruby pygments.rb 
 
 Hack on Linux Mint 13:
 
@@ -58,3 +62,27 @@ Modify the index.html so the logo points to /seqware/ and the css points to /seq
 
 Push to github (gh-pages):
 mvn site-deploy
+
+In order to publish to seqware.github.com, checkout our current hotfix and publish our site:
+
+    git checkout hotfix/0.13.6.7
+    cd seqware-distribution 
+    mvn site-deploy
+
+Then you would look at the site at: http://seqware.github.io
+
+In order to publish to our unstable docs supporting the development of 1.0.0, checkout from develop and publish:
+
+    git checkout develop 
+    cd seqware-distribution 
+    mvn site-deploy
+
+If doing this in succession, you will see a git checkout error.  Until we fix the maven pom, you will need to:
+
+    rm -Rf target/scmpublish-checkout/
+
+Then you would look at the site at: http://seqware.github.io/unstable.seqware.github.com/
+
+
+
+

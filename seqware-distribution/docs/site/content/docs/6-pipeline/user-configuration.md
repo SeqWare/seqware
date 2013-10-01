@@ -36,33 +36,63 @@ settings file needs to have read and write permissions for only the owner for se
 Our tools will abort and refuse to run if this is not set. 
 
 <pre><code>#!ini
-#
+
 # SEQWARE PIPELINE SETTINGS
-# GENERAL SETTINGS
+
+# The settings in this file are tagged by when they are used.
+# COMMON: Used by all components
+# INSTALL: Used when installing a workflow bundle
+# SCHEDULE: Used when a user wants to schedule a workflow run
+# LAUNCH: Used when a workflow run is to be launched
 #
-# SeqWare MetaDB communication method, can be "database" or "webservice" or "none"
+# Remote users need COMMON and SCHEDULE.
+# Workflow developers need COMMON and LAUNCH for testing.
+# Administrators need COMMON and INSTALL.
+# Cronjobs/daemon processes will need COMMON and LAUNCH.
+
+
+# COMMON
+
+# SeqWare MetaDB communication method, can be 'database' or 'webservice' or 'none'
 SW_METADATA_METHOD=webservice
-# a directory to copy bundles to for archiving/installing
+
+# SeqWare webservice settings. Only used if SW_METADATA_METHOD=webservice
+SW_REST_URL=http://localhost:8080/SeqWareWebService
+SW_REST_USER=admin@admin.com
+SW_REST_PASS=admin
+
+# SeqWare database settings. Only used if SW_METADATA_METHOD=database
+SW_DB_USER=seqware
+SW_DB_PASS=seqware
+SW_DB_SERVER=localhost
+SW_DB=seqware_meta_db
+
+# Amazon cloud settings. Only used if reading and writing to S3 buckets.
+AWS_ACCESS_KEY=FILLMEIN
+AWS_SECRET_KEY=FILLMEIN
+
+
+# SCHEDULE, LAUNCH
+
+# the default engine to use if otherwise unspecified (one of: oozie, oozie-sge, pegasus)
+SW_DEFAULT_WORKFLOW_ENGINE=oozie
+
+
+# INSTALL, LAUNCH
+
+# The directory containing bundle directories (into which bundle archives are unzipped)
 SW_BUNDLE_DIR=/home/seqware/SeqWare/provisioned-bundles
-# the central repository for installed bundles
+
+
+# INSTALL
+
+# The directory containing bundle archives (into which a bundle archive is first copied during install)
 SW_BUNDLE_REPO_DIR=/home/seqware/SeqWare/released-bundles
-# the default engine to use if otherwise unspecified (one of: pegasus, oozie, oozie-sge)
-SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
-#
-# SEQWARE PIPELINE SETTINGS
-# PEGASUS WORKFLOW ENGINE SETTINGS
-#
-# the name of the cluster as defined in the Pegasus sites.xml config file
-SW_CLUSTER=seqwarevm
-# the directory used to store the generated DAX workflow documents before submission to the cluster
-SW_DAX_DIR=/home/seqware/SeqWare/pegasus-dax
-# the directory containing all the Pegasus config files this instance of SeqWare should use
-SW_PEGASUS_CONFIG_DIR=/home/seqware/.seqware/pegasus
-#
-# SEQWARE PIPELINE
-# OOZIE WORKFLOW ENGINE SETTINGS
-# only used if you specify "-–workflow-engine Oozie" to WorkflowLauncher
-#
+
+
+# LAUNCH
+
+# Oozie engine settings. Only used for both 'oozie' and 'oozie-sge' engines.
 OOZIE_URL=http://localhost:11000/oozie
 OOZIE_APP_ROOT=seqware_workflow
 OOZIE_APP_PATH=hdfs://localhost:8020/user/seqware/
@@ -70,76 +100,25 @@ OOZIE_JOBTRACKER=localhost:8021
 OOZIE_NAMENODE=hdfs://localhost:8020
 OOZIE_QUEUENAME=default
 OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
-
-#
-# OOZIE-SGE SETTINGS:
-
-# Format of qsub flag for specifying number of threads.
-# If present, ${threads} will be replaced with the job-specific value.
-OOZIE_SGE_THREADS_PARAM_FORMAT=-pe serial ${threads}
-
-# Format of qsub flag for specifying the max memory.
-# If present, ${maxMemory} will be replaced with the job-specific value.
-OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT=-l h_vmem=${maxMemory}M
-
-#
-# SEQWARE WEBSERVICE SETTINGS
-# these settings are only used if the SW_METADATA_METHOD=webservice
-#
-# the base URL for the RESTful SeqWare API
-SW_REST_URL=http://localhost:8080/SeqWareWebService
-# the username and password to connect to the REST API, this is used by SeqWare Pipeline to write back processing info to the DB
-SW_REST_USER=admin@admin.com
-SW_REST_PASS=admin
-#
-# SEQWARE DATABASE SETTINGS
-# these settings are only used if the SW_METADATA_METHOD=database
-#
-SW_DB_USER=seqware
-SW_DB_PASS=seqware
-SW_DB_SERVER=localhost
-SW_DB=test_seqware_meta_db
-
-## Test databases
-## Used only by SeqWare developers, these settings override the database supporting the extended integration tests
-## WARNING: If used, seqware will automatically drop, mutate, and re-create these databases. In addition, 
-## the SW_REST_URL will be used for tests against a webservice. 
-
-#BASIC_TEST_DB_HOST=sqwdev.res.oicr.on.ca
-#BASIC_TEST_DB_NAME=seqware_meta_db_2013_07_04_preindex
-#BASIC_TEST_DB_USER=seqware
-#BASIC_TEST_DB_PASSWORD=seqware
-
-#EXTENDED_TEST_DB_HOST=sqwdev.res.oicr.on.ca
-#EXTENDED_TEST_DB_NAME=seqware_meta_db_2013_07_04_preindex
-#EXTENDED_TEST_DB_USER=seqware
-#EXTENDED_TEST_DB_PASSWORD=seqware
-
-#
-# AMAZON CLOUD SETTINGS (OPTIONAL)
-# used by tools reading and writing to S3 buckets (dependency data/software bundles, inputs, outputs, etc)
-#
-AWS_ACCESS_KEY=FILLMEIN
-AWS_SECRET_KEY=FILLMEIN
-#
-# SEQWARE QUERY ENGINE (OPTIONAL)
-#
-HBASE.ZOOKEEPER.QUORUM=localhost
-HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT=2181
-HBASE.MASTER=localhost:60000
-QE_NAMESPACE=SeqWareQE
-QE_DEVELOPMENT_DEPENDENCY=file:/home/seqware/jars/seqware-distribution-0.13.6.5-qe-full.jar
-QE_PERSIST=true
-QE_HBASE_REMOTE_TESTING=false
-QE_HBASE_PROPERTIES=LOCAL
-#
-# SEQWARE GENERAL HADOOP SETTINGS
-# optional if not using oozie
-#
 MAPRED.JOB.TRACKER=localhost:8021
-FS.DEFAULT.NAME=hdfs://localhost:8020
 FS.DEFAULTFS=hdfs://localhost:8020
 FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem
+
+# Oozie-SGE engine settings. Only used for 'oozie-sge' engine.
+## Format of qsub flag for specifying number of threads.
+## If present, ${threads} will be replaced with the job-specific value.
+OOZIE_SGE_THREADS_PARAM_FORMAT=-pe serial ${threads}
+## Format of qsub flag for specifying the max memory.
+## If present, ${maxMemory} will be replaced with the job-specific value.
+OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT=-l h_vmem=${maxMemory}M
+
+# Pegasus engine settings.  Only used for 'pegasus' engine.
+## the name of the cluster as defined in the Pegasus sites.xml config file
+SW_CLUSTER=seqwarevm
+## the directory used to store the generated DAX workflow documents before submission to the cluster
+SW_DAX_DIR=/home/seqware/SeqWare/pegasus-dax
+## the directory containing all the Pegasus config files this instance of SeqWare should use
+SW_PEGASUS_CONFIG_DIR=/home/seqware/.seqware/pegasus
 </code></pre>
 
 ## Pegasus Workflow Engine Configuration

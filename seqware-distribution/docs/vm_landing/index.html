@@ -1235,6 +1235,34 @@
 		$( "#tabs" ).tabs();
 	});
 </script>
+
+<script>
+
+	function portRelative(a){
+		var port = a.getAttribute('href').match(/^:(\d+)(.*)/);
+		if (port){
+			a.href = port[2];
+			a.port = port[1];
+		}
+	}
+
+	function urlContent(a){
+		var s = $(a).text().trim();
+		if (s === '' || s.substring(0, 4) === 'http'){
+			a.innerHTML = a.href;
+		}
+	}
+
+	function fixupLinks(){
+		$('a').each(function(){
+			portRelative(this);
+			urlContent(this);
+		});
+	}
+
+	$(fixupLinks);
+
+</script>
 	 
 </head>
 <body class="m-inner m-private">
@@ -1255,7 +1283,7 @@
     <!-- Top Navigation Bar, start -->
     <ul class="b-header-nav">
         <li id="h_li_source"><a href="http://seqware.github.io/">SeqWare GitHub Site</a></li>
-        <li id="h_li_index"><a href="/SeqWarePortal/Welcome.htm" onclick="javascript:event.target.port=8080">Portal Home</a></li>
+        <li id="h_li_index"><a href=":8080/SeqWarePortal/Welcome.htm">Portal Home</a></li>
         <li id="h_li_documentation"><a href="http://nimbusinformatics.com/">Nimbus Website</a></li>
         <li id="h_li_services"><a href="http://nimbusinformatics.com/services.jsp">Services</a></li>
         <!-- li id="h_li_about"><a href="about.html">About</a></li-->
@@ -1290,7 +1318,7 @@
     <div class="b-news-content">
         <ul>
         	
-        		<li><a href="/SeqWarePortal/login.htm" onclick="javascript:event.target.port=8080">Log in</a></li>
+        		<li><a href=":8080/SeqWarePortal/login.htm">Log in</a></li>
         	
         	            
         </ul>
@@ -1407,7 +1435,7 @@ The MetaDB is accessible the the command line. The password is "seqware".
 psql -U seqware -W seqware_meta_db
 </pre>
 
-<h3>SeqWare Pipeline - Pegasus</h3>
+<h3>SeqWare Pipeline</h3>
 
 <p>
 The Pipeline is a developer tool and is, therefore, focused on the command line. The goal is to give you a toolset that you can use to make workflow bundles that process NGS data in a cluster and environment agnostic way. You will find a sample workflow bundle in the following directory:
@@ -1422,17 +1450,17 @@ You can find a ton of information about workflow development on the SeqWare site
 <h3>SeqWare Pipeline - Oozie</h3>
 
 <p>
-There is an alternative workflow engine for SeqWare Pipeline also installed on this VM.  Unlike the default Pegasus backend, which uses Condor, the Globus Toolkit, and SGE, this new backend is based on Hadoop with Oozie as the scheduling engine. It's still in development but will provide a faster and simpler workflow execution environment that should be transparent for workflow authors to use.  This backend has a web interface that makes it very easy to monitor workflows. See the oozie console at:
+The workflow engine for SeqWare Pipeline is also installed on this VM.  This backend is based on Hadoop with Oozie as the scheduling engine, providing a fast and simple workflow execution environment that should be transparent for workflow authors to use.  This backend has a web interface that makes it very easy to monitor workflows. See the oozie console at:
 </p>
 
 <p>
-<a href="/oozie/" onclick="javascript:event.target.port=11000">http://hostname:11000/oozie/</a>
+<a href=":11000/oozie/">http://hostname:11000/oozie/</a>
 </p>
 
 <p>Hue provides a nice, alternative view on Oozie workflows, you can reach it here:</p>
 
 <p>
-<a href="/oozie/" onclick="javascript:event.target.port=8888">http://hostname:8888/oozie/</a>
+<a href=":8888/oozie/">http://hostname:8888/oozie/</a>
 </p>
 
 <p>
@@ -1445,13 +1473,22 @@ itor your running SeqWare workflows.
 You can find a ton of information about workflow development on the SeqWare site, see our <a href="http://seqware.github.io/docs/">Documentation</a> page for more information.
 </p>
 
+<p>The following Hadoop-related URLs may also prove useful:
+	<ul>
+		<li>HDFS NameNode: <a href=":50070/">http://hostname:50070</a></li>
+		<li>MapReduce Admin: <a href=":50030/">http://hostname:50030</a></li>
+		<li>HBase Master: <a href=":60010/">http://hostname:60010</a></li>
+		<li>HBase RegionServer: <a href=":60030/">http://hostname:60030</a></li>
+	</ul>
+</p>
+
 <h3>SeqWare Portal</h3>
 
-<p>The Portal is a lightweight LIMS system that is focused on showing you the status of workflows and the data they produce. It is located at <a href="/SeqWarePortal/" onclick="javascript:event.target.port=8080">http://hostname:8080/SeqWarePortal</a>. Please login with username "admin@admin.com" and password "admin".  If you run workflows using SeqWare Pipeline you will see results through the Portal.</p>
+<p>The Portal is a lightweight LIMS system that is focused on showing you the status of workflows and the data they produce. It is located at <a href=":8080/SeqWarePortal/">http://hostname:8080/SeqWarePortal</a>. Please login with username "admin@admin.com" and password "admin".  If you run workflows using SeqWare Pipeline you will see results through the Portal.</p>
 
 <h3>SeqWare Web Service</h3>
 
-<p>The Web Service is located at <a href="/SeqWareWebService/experiments" onclick="javascript:event.target.port=8080">http://hostname:8080/SeqWareWebService</a>. Please login with username "admin@admin.com" and password "admin".  This is a RESTful web service so functionality through the web browser is generally limited. It is designed for programmatic access and is used by our command line tools in the SeqWare Pipeline project.  For details about the API please see our API <a href="http://seqware.github.io/docs/11-api/">documentation</a>.</p>
+<p>The Web Service is located at <a href=":8080/SeqWareWebService/experiments">http://hostname:8080/SeqWareWebService</a>. Please login with username "admin@admin.com" and password "admin".  This is a RESTful web service so functionality through the web browser is generally limited. It is designed for programmatic access and is used by our command line tools in the SeqWare Pipeline project.  For details about the API please see our API <a href="http://seqware.github.io/docs/11-api/">documentation</a>.</p>
 
 <h3>SeqWare Query Engine</h3>
 
