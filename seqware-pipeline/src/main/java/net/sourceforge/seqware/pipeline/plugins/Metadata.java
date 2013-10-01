@@ -287,7 +287,7 @@ public class Metadata extends Plugin {
         if (checkFields(necessaryFields)) {
             // create a new workflow!
             localRet = metadata.addWorkflow(fields.get("name"), fields.get("version"), fields.get("description"), null, null, null, null, false, null, false, null, null, null);
-            print("SWID: " + localRet.getAttribute("sw_accession"));
+            print("Created workflow with SWID: " + localRet.getAttribute("sw_accession"));
         } else {
             Log.error("You need to supply name, version, and description for the workflow table.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
@@ -325,7 +325,7 @@ public class Metadata extends Plugin {
                 return localRet;
             }
             int workflowRunAccession = metadata.get_workflow_run_accession(workflowRunId);
-            print("SWID: " + workflowRunAccession);
+            print("Created workflow run with SWID: " + workflowRunAccession);
 
             // create and update processing
             ReturnValue metaret = metadata.add_empty_processing_event_by_parent_accession(parents);
@@ -402,7 +402,7 @@ public class Metadata extends Plugin {
             // send up the files via ReturnValue (ewww)
             metadata.update_processing_event(procID, newRet);
             int mapProcessingIdToAccession = metadata.mapProcessingIdToAccession(procID);
-            print("SWID: " + mapProcessingIdToAccession);
+            print("Created file processing with SWID: " + mapProcessingIdToAccession);
 
         } else {
             Log.error("You need to supply workflow_accession and status for the workflow_run table.");
@@ -431,7 +431,7 @@ public class Metadata extends Plugin {
                 print ("Invalid parameters, please check your id values");
                 return localRet;
             }
-            print("SWID: " + localRet.getAttribute("sw_accession"));
+            print("Created study with SWID: " + localRet.getAttribute("sw_accession"));
         } else {
             printErrorMessage(necessaryFields, null);
             //Log.error("You need to supply title, description, accession, center_name, and center_project_name for the study table along with an integer for study_type [1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other]. Alternatively, enable --interactive mode.");
@@ -470,7 +470,7 @@ public class Metadata extends Plugin {
                 print ("Invalid parameters, please check your id values");
                 return localRet;
             }
-            print("SWID: " + localRet.getAttribute("sw_accession"));
+            print("Created experiment with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, null);
@@ -512,7 +512,7 @@ public class Metadata extends Plugin {
                 print ("Invalid parameters, please check your id values");
                 return localRet;
             }
-            print("SWID: " + localRet.getAttribute("sw_accession"));
+            print("Created sample with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, optionalFields);
@@ -581,7 +581,7 @@ public class Metadata extends Plugin {
                     "true".equalsIgnoreCase(fields.get("skip")), fields.get("file_path"),
                     fields.get("status") == null ? null : SequencerRunStatus.valueOf(fields.get("status")));
 
-            print("SWID: " + localRet.getAttribute("sw_accession"));
+            print("Created sequencer run with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, optionalFields);
@@ -611,7 +611,7 @@ public class Metadata extends Plugin {
                 print ("Invalid parameters, please check your id values");
                 return localRet;
             }
-            print("SWID: " + localRet.getAttribute("sw_accession"));
+            print("Created lane with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, null);
@@ -640,7 +640,7 @@ public class Metadata extends Plugin {
                 print ("Invalid parameters, please check your id values");
                 return localRet;
             }
-            print("SWID: " + localRet.getAttribute("sw_accession"));
+            print("Created IUS with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, null);
