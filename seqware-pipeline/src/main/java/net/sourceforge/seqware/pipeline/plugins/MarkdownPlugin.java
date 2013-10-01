@@ -284,6 +284,7 @@ public class MarkdownPlugin extends Plugin {
         bufferedWriter.append("##  " + simpleName);
         bufferedWriter.newLine();
         bufferedWriter.append(plug.getClass().getPackage().getName() + "." + simpleName);
+        bufferedWriter.newLine();
         bufferedWriter.append(((PluginInterface) plug).get_description());
         bufferedWriter.newLine();
         bufferedWriter.newLine();
@@ -298,6 +299,11 @@ public class MarkdownPlugin extends Plugin {
 
     private void writeModuleDescription(Object plug, BufferedWriter bufferedWriter) throws SecurityException, IllegalAccessException, IOException, IllegalArgumentException {
         Module mod = (Module) plug;
+        bufferedWriter.newLine();
+        bufferedWriter.append("##  " + plug.getClass().getSimpleName());
+        bufferedWriter.newLine();
+        bufferedWriter.append(plug.getClass().getPackage().getName() + "." + plug.getClass().getSimpleName());
+        bufferedWriter.newLine();
         String description = "";
         try {
             ReturnValue init = mod.init();
@@ -362,6 +368,7 @@ public class MarkdownPlugin extends Plugin {
         MarkdownPlugin mp = new MarkdownPlugin();
         mp.init();
         List<String> arr = new ArrayList<String>();
+        arr.add("-m");
         mp.setParams(arr);
         mp.parse_parameters();
         mp.do_run();

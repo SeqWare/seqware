@@ -60,7 +60,7 @@ public class WorkflowLauncherET {
                 + "-- --workflow-accession 6594 --schedule --ini-file "+workflowIni.getAbsolutePath()+" --host seqware --input-files 835";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
-        String extractValueFrom = ITUtility.extractValueFrom(listOutput, "WORKFLOW_RUN ACCESSION:");
+        String extractValueFrom = ITUtility.extractValueFrom(listOutput, "Created workflow run with SWID:");
         int wr_accession = Integer.valueOf(extractValueFrom);
        
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select count(*) from workflow_run r, workflow_run_input_files j WHERE r.workflow_run_id=j.workflow_run_id AND r.sw_accession=?", wr_accession);
@@ -74,7 +74,7 @@ public class WorkflowLauncherET {
                 + "-- --workflow-accession 6594 --schedule --ini-file "+workflowIni.getAbsolutePath()+" --host seqware --input-files 835,838,866,867,870";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
-        String extractValueFrom = ITUtility.extractValueFrom(listOutput, "WORKFLOW_RUN ACCESSION:");
+        String extractValueFrom = ITUtility.extractValueFrom(listOutput, "Created workflow run with SWID:");
         int wr_accession = Integer.valueOf(extractValueFrom);
        
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select count(*) from workflow_run r, workflow_run_input_files j WHERE r.workflow_run_id=j.workflow_run_id AND r.sw_accession=?", wr_accession);
