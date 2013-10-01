@@ -365,8 +365,8 @@ public class Bundle {
     File source = new File(sourceFile);
     String sourceName = source.getName();
     this.outputZip = targetDir + File.separator + sourceName;
-    if (sourceFile.equals(targetDir + File.separator + sourceName)) {
-      Log.stdout("File already in target directory, skipping copy.");
+    if (new File(outputZip).exists()) {
+      Log.stdout("Bundle archive already in target directory, skipping copy.");
     } else {
       ProvisionFiles pf = new ProvisionFiles();
       pf.setParameters(Arrays.asList("--input-file", sourceFile, "--output-dir", targetDir, "--force-copy"));
