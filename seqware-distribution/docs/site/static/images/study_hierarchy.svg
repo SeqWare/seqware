@@ -13,10 +13,50 @@
    height="1052.3622047"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.2 r9819"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="study_hierarchy.svg">
   <defs
      id="defs4">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5828"
+       is_visible="true" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5824"
+       is_visible="true" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5820"
+       is_visible="true" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5816"
+       is_visible="true" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5808"
+       is_visible="true" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5804"
+       is_visible="true" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5800"
+       is_visible="true" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5796"
+       is_visible="true" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5792"
+       is_visible="true" />
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect5788"
+       is_visible="true" />
     <marker
        inkscape:stockid="Arrow2Lstart"
        orient="auto"
@@ -72,17 +112,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="245.72343"
-     inkscape:cy="600.88912"
+     inkscape:zoom="1.4"
+     inkscape:cx="435.40553"
+     inkscape:cy="377.21977"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g10299"
      showgrid="false"
-     inkscape:window-width="721"
-     inkscape:window-height="415"
-     inkscape:window-x="348"
-     inkscape:window-y="269"
-     inkscape:window-maximized="0" />
+     inkscape:window-width="1920"
+     inkscape:window-height="1176"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -91,7 +131,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1896,7 +1936,7 @@
          height="26.428572"
          width="26.428572"
          id="rect3866-8-0"
-         style="fill:#fcffd6;fill-opacity:1;stroke:#000000;stroke-width:5.60000000999999958;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+         style="fill:#fcffd6;fill-opacity:1;stroke:#000000;stroke-width:5.00000001;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
       <rect
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
@@ -2828,6 +2868,49 @@
            x="724.68744"
            id="tspan4551-3-3"
            sodipodi:role="line">ancestor_workflow_run_id</tspan></text>
+      <rect
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/mtaschuk/Pictures/study_hierarchy.png"
+         transform="matrix(-0.70710678,0.70710678,-0.70710678,-0.70710678,0,0)"
+         y="-964.08093"
+         x="404.47409"
+         height="26.428572"
+         width="26.428572"
+         id="rect3866-0-9"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:3.99999999, 3.99999999;stroke-dashoffset:0" />
+      <text
+         inkscape:export-ydpi="90"
+         inkscape:export-xdpi="90"
+         inkscape:export-filename="/home/mtaschuk/Pictures/study_hierarchy.png"
+         sodipodi:linespacing="125%"
+         id="text3868-71-6-0"
+         y="966.69061"
+         x="267.07574"
+         style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Courier 10 Pitch;-inkscape-font-specification:Courier 10 Pitch"
+         xml:space="preserve"><tspan
+           style="font-size:6px"
+           id="tspan3872-0-1-7"
+           y="966.69061"
+           x="267.07574"
+           sodipodi:role="line">workflow_run_input_files</tspan><tspan
+           style="font-size:6px"
+           y="974.19061"
+           x="267.07574"
+           sodipodi:role="line"
+           id="tspan5720" /></text>
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:4,2;stroke-dashoffset:0"
+         d="m 287.85714,858.07647 89.28572,91.42857"
+         id="path5782"
+         inkscape:connector-curvature="0" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:4,2;stroke-dashoffset:0"
+         d="m 376.42857,987.36218 300,-1.42857 L 798.57143,971.6479 660,715.93361"
+         id="path5826"
+         inkscape:path-effect="#path-effect5828"
+         inkscape:original-d="m 376.42857,987.36218 300,-1.42857 L 798.57143,971.6479 660,715.93361"
+         inkscape:connector-curvature="0" />
     </g>
     <rect
        style="fill:none;stroke:#000000;stroke-opacity:1"
@@ -2927,7 +3010,7 @@
          sodipodi:role="line"
          x="135.50523"
          y="212.65471"
-         id="tspan10112">but may not exit</tspan></text>
+         id="tspan10112">but may not exist</tspan></text>
     <rect
        style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-opacity:1"
        id="rect2985-4-48-4-03-66-9-2"

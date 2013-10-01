@@ -6,14 +6,7 @@ terminal to the location where we installed the SeqWare tools.
 Alternatively, on the Amazon AMI follow the directions to log in
 [here](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html).
 Make sure that you launch our VM with the "cc1.4xlarge" instance type.
-Also, please wait roughly 10 minutes for our startup scripts to run and fully setup your instance. You can verify whether the scripts have completed by looking for a touch file.
-
-    $ cat /tmp/seqware_setup_ran 
-    Fri 23 Aug 2013 09:52:24 EDT
-    $ date
-    Fri 23 Aug 2013 10:03:11 EDT
-
-The date command shows the current time, the cat command shows you when the setup script finished running.
+Also, please wait roughly 10 minutes for our startup scripts to run and fully setup your instance.
 
 Once logging into the remote instance you need to "switch user" to
 <kbd>seqware</kbd>, e.g.:
@@ -27,4 +20,4 @@ use the instance name provided by the AWS console. For example, it will look sim
 
 	http://ec2-54-224-22-195.compute-1.amazonaws.com
 
-You fill in your instance DNS name from the Amazon console in place of ec2-54-224-22-195.compute-1.amazonaws.com above.
+You fill in your instance DNS name from the Amazon console in place of ec2-54-224-22-195.compute-1.amazonaws.com above. Make sure you check your security group settings to ensure port 80 (and the other ports referenced in the landing page) are open.

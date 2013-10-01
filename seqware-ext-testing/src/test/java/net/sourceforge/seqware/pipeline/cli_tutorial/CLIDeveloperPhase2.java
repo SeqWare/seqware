@@ -30,7 +30,7 @@ public class CLIDeveloperPhase2 extends DeveloperPhase2{
     
     @Override
     protected void testWorkflow() throws IOException {
-        ITUtility.runSeqwareCLI(" bundle test  --dir " + DeveloperPhase1.BuildDir.getAbsolutePath(), ReturnValue.SUCCESS, null);
+        ITUtility.runSeqwareCLI(" bundle launch  --dir " + DeveloperPhase1.BuildDir.getAbsolutePath(), ReturnValue.SUCCESS, null);
     }
 
     @Override

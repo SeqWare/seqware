@@ -4,19 +4,24 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
-import net.sourceforge.seqware.common.util.filetools.FileTools;
-import net.sourceforge.seqware.common.util.runtools.RunTools;
-import net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
+import net.sourceforge.seqware.common.util.runtools.RunTools;
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
+import net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.NameFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 
 /**
  * This is a utility class that lets you manipulate a workflow bundle.
@@ -57,7 +62,26 @@ public class Bundle {
     permanentBundleLocation = config.get("SW_BUNDLE_REPO_DIR");
     bundleDir = config.get("SW_BUNDLE_DIR");
   }
-
+  
+  public static BundleInfo findBundleInfo(File bundleDir){
+    bundleDir = bundleDir.getAbsoluteFile();
+    Collection<File> files = FileUtils.listFiles(bundleDir, new NameFileFilter("metadata.xml"), TrueFileFilter.TRUE);
+    if (files.isEmpty()){
+      throw new RuntimeException("Could not find metadata.xml.");
+    } else {
+      BundleInfo bi = new BundleInfo();
+      bi.parseFromFile(files.iterator().next());
+      return bi;
+    }
+  }
+  
+  public static String resolveWorkflowBundleDirPath(File bundleDir, String path){
+    if (path.contains("${workflow_bundle_dir}")){
+      path = path.replaceAll("\\$\\{workflow_bundle_dir\\}", bundleDir.getAbsolutePath());
+    }
+    return path;
+  }
+  
   /**
    * <p>getBundleInfo.</p>
    *
@@ -341,8 +365,8 @@ public class Bundle {
     File source = new File(sourceFile);
     String sourceName = source.getName();
     this.outputZip = targetDir + File.separator + sourceName;
-    if (sourceFile.equals(targetDir + File.separator + sourceName)) {
-      Log.stdout("File already in target directory, skipping copy.");
+    if (new File(outputZip).exists()) {
+      Log.stdout("Bundle archive already in target directory, skipping copy.");
     } else {
       ProvisionFiles pf = new ProvisionFiles();
       pf.setParameters(Arrays.asList("--input-file", sourceFile, "--output-dir", targetDir, "--force-copy"));

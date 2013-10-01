@@ -77,6 +77,8 @@ Maven now runs unit tests as follows (unit tests in the SeqWare context are quic
 
 In order to run the integration tests on the entire project, please ensure that you have followed the steps in each of the integration testing guides for our sub-projects. This includes [MetaDB](http://seqware.github.com/docs/github_readme/3-metadb/) , [Web Service](http://seqware.github.com/docs/github_readme/4-webservice/) , and [Query Engine](http://seqware.github.com/docs/github_readme/2-queryengine/). 
 
+**WARNING:  While integration and extended tests are running, launching workflows and workflow status checking MUST not occur.  If you have a cronjob performing these tasks it MUST be disabled prior to integration and extended testing.**
+
 When this is complete: 
 
     export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=512m" 
@@ -122,21 +124,21 @@ You can also build individual components such as the new query engine with:
 
 ### Building Our Site
 
-In order to publish to seqware.github.com, checkout our current hotfix and publish our site:
+In order to publish to legacy.seqware.github.com, checkout our current master and publish our site:
 
-    git checkout hotfix/0.13.6.7
+    git checkout master 
     cd seqware-distribution 
     mvn site-deploy
 
-Then you would look at the site at: http://seqware.github.io
+Then you would look at the site at: http://seqware.github.io/legacy.seqware.github.com/
 
-In order to publish to our unstable docs supporting the development of 1.0.0, checkout from develop and publish:
+In order to publish to our current docs supporting the 1.0.x, checkout from develop and publish:
 
     git checkout develop 
     cd seqware-distribution 
     mvn site-deploy
 
-Then you would look at the site at: http://seqware.github.io/unstable.seqware.github.com/
+Then you would look at the site at: http://seqware.github.io
 
 ###Problems with Maven
 

@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Place in ~/.m2/ to inform maven about these archetypes.
+
+ Example non-interactive archetype generation:
+ mvn archetype:generate \
+  -DinteractiveMode=false \
+  -DarchetypeCatalog=local \
+  -DarchetypeGroupId=com.github.seqware \
+  -DarchetypeArtifactId=seqware-archetype-java-workflow \
+  -DgroupId=com.example \
+  -DartifactId=MyHelloWorld
+-->
 <archetype-catalog xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0 http://maven.apache.org/xsd/archetype-catalog-1.0.0.xsd"
     xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-catalog/1.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">

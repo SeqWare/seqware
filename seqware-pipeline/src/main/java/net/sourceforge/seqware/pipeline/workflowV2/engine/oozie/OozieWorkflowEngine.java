@@ -1,5 +1,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie;
 
+import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.util.Properties;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
@@ -19,6 +22,7 @@ import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
+import org.apache.oozie.client.WorkflowJob.Status;
 
 public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 
@@ -68,19 +72,26 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
       Log.stdout("Submitted Oozie job: " + jobId);
 
       if (dataModel.isWait()) {
+        Log.stdout("");
+        Log.stdout("Polling workflow run status every 10 seconds.");
+        Log.stdout("Terminating this program will NOT affect the running workflow.");
+        Thread.sleep(2 * 1000);
+        
         while (wc.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) {
-          Log.stdout("Workflow job running ...");
+          Log.stdout("\nWorkflow job running ...");
           printWorkflowInfo(wc.getJobInfo(jobId));
           Thread.sleep(10 * 1000);
         }
-        Log.stdout("Workflow job completed ...");
-        printWorkflowInfo(wc.getJobInfo(jobId));
+        Log.stdout("\nWorkflow job completed ...");
+        WorkflowJob job = wc.getJobInfo(jobId);
+        printWorkflowInfo(job);
+        if (job.getStatus() != Status.SUCCEEDED){
+          ret = new ReturnValue(ReturnValue.FAILURE);
+        }
       }
 
-    } catch (RuntimeException e) {
-      throw e;
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      rethrow(e);
     }
 
     return ret;
@@ -106,8 +117,10 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     conf.set("hbase.zookeeper.property.clientPort", this.dataModel.getEnv().getHbase_zookeeper_property_clientPort());
     conf.set("hbase.master", this.dataModel.getEnv().getHbase_master());
     conf.set("mapred.job.tracker", this.dataModel.getEnv().getMapred_job_tracker());
-    conf.set("fs.default.name", this.dataModel.getEnv().getFs_default_name());
-    conf.set("fs.defaultFS", this.dataModel.getEnv().getFs_defaultFS());
+    if (this.dataModel.getEnv().getFs_default_name() != null)
+      conf.set("fs.default.name", this.dataModel.getEnv().getFs_default_name());
+    if (this.dataModel.getEnv().getFs_defaultFS() != null)
+      conf.set("fs.defaultFS", this.dataModel.getEnv().getFs_defaultFS());
     conf.set("fs.hdfs.impl", this.dataModel.getEnv().getFs_hdfs_impl());
     // conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_CORE_XML()));
     // conf.addResource(new
@@ -129,6 +142,9 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
       // copy lib
       this.copyFromLocal(fileSystem, seqwareJarPath(objectModel), this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
           + this.dir.getName() + "/lib");
+
+      Path absDest = fileSystem.getFileStatus(path).getPath();
+      System.out.println("Files copied to " + absDest);
 
       fileSystem.close();
     } catch (RuntimeException e) {
@@ -210,11 +226,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
         return;
       }
 
-      // Get the filename out of the file path
-      String filename = source.substring(source.lastIndexOf('/') + 1, source.length());
-
       fileSystem.copyFromLocalFile(srcPath, dstPath);
-      System.out.println("File " + filename + " copied to " + dest);
     } catch (RuntimeException e) {
       throw e;
     } catch (Exception e) {
