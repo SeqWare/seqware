@@ -185,6 +185,9 @@ public class WorkflowRunReport {
      * @return a {@link java.lang.String} object.
      */
     public String calculateTotalTime(Collection<Processing> processings) {
+      if (processings.isEmpty())
+        return "";
+      
         Date earlyDate = new Date(Long.MAX_VALUE), lateDate = new Date(0);
 
         for (Processing p : processings) {

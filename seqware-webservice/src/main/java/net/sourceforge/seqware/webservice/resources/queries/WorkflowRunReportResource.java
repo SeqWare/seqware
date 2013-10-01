@@ -209,8 +209,12 @@ public class WorkflowRunReportResource
         builder.append(wrrr.getWorkflowRun().getStatus()).append("\t");
         builder.append(wrrr.getWorkflowRun().getCreateTimestamp().toString()).append("\t");
         builder.append(wrrr.getWorkflowRun().getHost()).append("\t");
-        builder.append(wrrr.getWorkflowRun().getCurrentWorkingDir()).append("\t");
-        builder.append(wrrr.getWorkflowRun().getStatusCmd()).append("\t");
+        if (wrrr.getWorkflowRun().getCurrentWorkingDir() != null)
+          builder.append(wrrr.getWorkflowRun().getCurrentWorkingDir());
+        builder.append("\t");
+        if (wrrr.getWorkflowRun().getStatusCmd() != null)
+          builder.append(wrrr.getWorkflowRun().getStatusCmd());
+        builder.append("\t");
 
         parseSamples(builder, wrrr.getLibrarySamples());
         parseSamples(builder, wrrr.getIdentitySamples());

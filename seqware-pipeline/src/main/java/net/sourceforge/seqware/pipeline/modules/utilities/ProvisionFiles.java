@@ -392,7 +392,13 @@ public class ProvisionFiles extends Module {
     }
 
     for (String input : inputs) {
-      Log.stdout("  PROCESSING INPUT: " + input + " OUTPUT: " + options.valueOf("output-dir") + " OUTPUT FILE: " + options.valueOf("output-file"));
+      Log.stdout("Processing input: " + input);
+      if (options.has("output-dir")){
+        Log.stdout("      output-dir: " + options.valueOf("output-dir"));
+      }
+      if (options.has("output-file")){
+        Log.stdout("     output-file: " + options.valueOf("output-file"));
+      }
       this.size = 0;
       this.position = 0;
       this.fileName = "";
