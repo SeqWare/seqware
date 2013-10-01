@@ -15,10 +15,6 @@
     <url>https://github.com/SeqWare/seqware</url>
 
     <dependencies>
-   <!-- <dependency>
-            <groupId>com.github.seqware</groupId>
-            <artifactId>seqware-queryengine</artifactId>
-        </dependency> -->
         <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-pipeline</artifactId>
@@ -114,27 +110,6 @@
                             </descriptors>
                         </configuration>
                     </execution>
-               <!-- <execution>
-                        <id>executable-queryengine-jar-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>net.sourceforge.seqware.pipeline.runner.PluginRunner</mainClass>
-                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                                </manifest>
-                                <manifestEntries>
-                                    <Implementation-Build>${buildNumber}</Implementation-Build>
-                                </manifestEntries>
-                            </archive>
-                            <descriptors>
-                                <descriptor>src/assemble/seqware-queryengine.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                    </execution> -->
                 </executions>
             </plugin>
             <plugin>
@@ -154,7 +129,6 @@
                             <ignorePathsToDelete>
                                 <ignorePathToDelete>javadoc</ignorePathToDelete>
                                 <ignorePathToDelete>manuals</ignorePathToDelete>
-                           <!-- <ignorePathToDelete>queryengine-api</ignorePathToDelete> -->
                                 <ignorePathToDelete>webservice-api</ignorePathToDelete>
                                 <ignorePathToDelete>pictures</ignorePathToDelete>
                             </ignorePathsToDelete>
