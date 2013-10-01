@@ -200,7 +200,7 @@ public class PluginRunnerET {
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
 
-            String extractValueFrom = ITUtility.extractValueFrom(listOutput, "WORKFLOW_RUN ACCESSION:");
+            String extractValueFrom = ITUtility.extractValueFrom(listOutput, "Created workflow run with SWID:");
             int wr_accession = Integer.valueOf(extractValueFrom);
             wr_accessions.put(e.getKey(), wr_accession);
             launchedWorkflowRuns.add(wr_accession);
