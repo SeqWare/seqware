@@ -9,7 +9,17 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
-## 0.13.6.10 (2013-09-27)
+## 1.0.5 (2013-10-01)
+
+### Improvement
+* [SEQWARE-1647] - Java workflows: provisioned files are not written to directories with random numbers
+
+### Technical task
+* [SEQWARE-1588] - Add output checking to WorkflowRunReporter and SymLinkReporter steps of user tutorial ITs
+* [SEQWARE-1760] - Orphan Checking Plugin
+* [SEQWARE-1761] - WorkflowRun Conventions
+
+## 0.13.6.11 (2013-09-27)
 * [SEQWARE-1748] - Calling WorkflowLauncher with multiple parent-accession results in error
 
 ## 1.0.4 (2013-09-20)
