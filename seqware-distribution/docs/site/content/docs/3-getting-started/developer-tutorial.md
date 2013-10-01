@@ -141,22 +141,21 @@ The first thing you should do is take a look at the workflow manifest showing wh
 are present in this bundle (a single Workflow Bundle can contain many workflows).
 
     $ cd MyHelloWorld
-    $ seqware bundle list --dir .
+    $ mvn install
+    ...
+    $ seqware bundle list --dir target/Workflow*
 
     List Workflows:
 
      Workflow:
-      Name : ${workflow-name}
-      Version : ${workflow-version}
-      Description : ${workflow-description}
-      Test Command: java -jar ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/lib/seqware-distribution-${seqware-version}-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --no-metadata --provisioned-bundle-dir ${workflow_bundle_dir} --workflow ${workflow-name} --version ${workflow-version} --ini-files ${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/config/workflow.ini 
-      Template Path:
-      Config Path:${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/config/workflow.ini
+      Name: MyHelloWorld
+      Version: 1.0-SNAPSHOT
+      Description: Add a description of the workflow here.
+      Workflow Class: ${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/classes/com/github/seqware/WorkflowClient.java
+      Config Path: ${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/config/workflow.ini
       Requirements Compute: single Memory: 20M Network: local
 
-
-
-This shows one workflow in the generated workflow bundle. The variables (e.g., `${workflow-name}`) will be replaced when the bundle is built with `mvn install`.
+This shows the one workflow in the generated workflow bundle.
 
 ### Directory Organization
 
@@ -285,7 +284,7 @@ example:
 
 <%= render '/includes/maven_workflow_build/' %>
 
-## Debugging the Workflow
+## Testing the Workflow
 
 During the launch process, a number of files are generated into the `generated-scripts` directory inside the run's working directory.  For each job in a workflow, a `<job-name>.sh` script contains the content of the associated `BashJob` defined by the developer.
 
@@ -295,33 +294,38 @@ When using the Oozie-SGE engine, some additional files are included:
 
 Prior to testing your bundle, it will be worthwhile to ensure that the files generated are what you expect.  You can accomplish this with the `dry-run` command:
 
-    $ seqware bundle dry-run --dir target/Workflow_Bundle_* --name HelloWorld --version 1.0-SNAPSHOT
-    Using working directory: /tmp/oozie-861c827c-b4d1-4124-893d-012e2a31ca9a
-    Files copied to hdfs://10.0.0.1:8020/user/seqware/seqware_workflow/oozie-861c827c-b4d1-4124-893d-012e2a31ca9a
-    $ ls /home/seqware/tmp/oozie-861c827c-b4d1-4124-893d-012e2a31ca9a/generated-scripts/
+    $ seqware bundle dry-run --dir target/Workflow_Bundle_*
+    Performing dry-run of workflow 'MyHelloWorld' version '1.0-SNAPSHOT'
+    Using working directory: /usr/tmp/seqware-oozie/oozie-3d971491-ca43-48fb-a5d8-a73e18e7db44
+    Files copied to hdfs://master:8020/user/seqware/seqware_workflow/oozie-3d971491-ca43-48fb-a5d8-a73e18e7db44
+
+    $ ls /usr/tmp/seqware-oozie/oozie-3d971491-ca43-48fb-a5d8-a73e18e7db44
     bash_cp_4.sh  bash_cp_5.sh  bash_mkdir_3.sh  start_0.sh
 
-In the above, `/tmp` is the configured location of `OOZIE_WORK_DIR`. Each of the scripts represents a bash job specified by the developer, with the exception of `start_0.sh` which creates the directories specified in the workflow's `setupDirectory()` method.
+In the above, `/usr/tmp/seqware-oozie` is the configured location of `OOZIE_WORK_DIR`. Each of the scripts represents a bash job specified by the developer, with the exception of `start_0.sh` which creates the directories specified in the workflow's `setupDirectory()` method.
 
 At this point, the individual scripts can be executed to ensure they do what you expect.
 
-
-## Testing the Workflow 
-
 The next step after authoring your workflows in the Java workflow language, and verifying the generated scripts, is to run them:
 
-    $ seqware bundle launch --dir target/Workflow_Bundle_* --name HelloWorld --version 1.0-SNAPSHOT
-    Using working directory: /tmp/oozie-ed2961be-555b-45bb-b009-690d8cefb4c4
-    Files copied to hdfs://10.0.0.1:8020/user/seqware/seqware_workflow/oozie-ed2961be-555b-45bb-b009-690d8cefb4c4
-    Submitted Oozie job: 0000009-130918173155061-oozie-oozi-W
+    $ seqware bundle launch --dir target/Workflow_Bundle_*
+    Performing launch of workflow 'MyHelloWorld' version '1.0-SNAPSHOT'
+    Using working directory: /usr/tmp/seqware-oozie/oozie-eccfb3b6-cda5-46c3-89ce-7839d4210531
+    Files copied to hdfs://master:8020/user/seqware/seqware_workflow/oozie-eccfb3b6-cda5-46c3-89ce-7839d4210531
+    Submitted Oozie job: 0000001-130930203123321-oozie-oozi-W
+
+    Polling workflow run status every 10 seconds.
+    Terminating this program will NOT affect the running workflow.
+
     Workflow job running ...
-    Application Path   : hdfs://10.0.0.1:8020/user/seqware/seqware_workflow/oozie-ed2961be-555b-45bb-b009-690d8cefb4c4
-    Application Name   : HelloWorld
+    Application Path   : hdfs://master:8020/user/seqware/seqware_workflow/oozie-eccfb3b6-cda5-46c3-89ce-7839d4210531
+    Application Name   : MyHelloWorld
     Application Status : RUNNING
     Application Actions:
        Name: :start: Type: :START: Status: OK
-       Name: start_0 Type: java Status: PREP
-    Workflow job running ...
+       Name: start_0 Type: java Status: RUNNING
+    ...
+
 
 The above will bypass the whole workflow scheduling and asynchronous launching process that you saw in the User Tutorial. What you lose is the metadata tracking functionality. The command runs the workflow which produces file outputs but that is all, no record of the run will be recorded in the MetaDB.
 
@@ -347,7 +351,7 @@ run on a traditional Sun Grid Engine (SGE) cluster.  For workflows that execute 
 In this following example the same workflow as above is executed with the oozie-sge engine:
 
     $ cd /home/seqware/workflow-dev/MyHelloWorld
-    $ seqware bundle launch --name MyHelloWorld --version 1.0-SNAPSHOT --dir target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/ --engine oozie-sge
+    $ seqware bundle launch --dir target/Workflow_Bundle_* --engine oozie-sge
 
 This will cause the workflow to run and not exit until it finishes.  You can also monitor the workflow using the Hue web
 application installed at http://hostname:8888/oozie/. For our VMs the username
@@ -360,7 +364,7 @@ you can very easily get to the logs for each step, for example.
 Assuming the workflow above worked fine the next step is to package it.
 
     $ mkdir ~/packaged-bundles
-    $ seqware bundle package --dir target/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/ --to ~/packaged-bundles/
+    $ seqware bundle package --dir target/Workflow_Bundle_* --to ~/packaged-bundles/
     Validating Bundle structure
     Packaging Bundle
     Bundle has been packaged to /home/seqware/packaged-bundles
