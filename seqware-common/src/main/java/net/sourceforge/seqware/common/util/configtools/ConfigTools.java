@@ -24,17 +24,13 @@ public class ConfigTools {
   /** Constant <code>SEQWARE_SETTINGS_PROPERTY="SEQWARE_SETTINGS"</code> */
   public static final String SEQWARE_SETTINGS_PROPERTY = "SEQWARE_SETTINGS";
 
-  public static Map<String, String> getSettings() {
-      return getSettings(false);
-  }
-  
   /**
    * The output keys are always uppercase!
    *
    * @throws java.lang.Exception if any.
    * @return a {@link java.util.Map} object.
    */
-  public static Map<String, String> getSettings(boolean ignorePermissions) {
+  public static Map<String, String> getSettings() {
 
     // first, try to figure out the location of the settings file
     String settings = getSettingsFilePath();
@@ -47,23 +43,6 @@ public class ConfigTools {
     } else if (!settingsFile.isFile()) {
       throw new RuntimeException("The settings file " + settings + " is not a file!");
     }
-
-    //SEQWARE-1595 : it seems that the Java 6 File API cannot retrieve permissions separated by owner and group
-    // will use Linux command until Java 7 NIO (hopefully)
-    String settingPerms = FileTools.determineFilePermissions(settings);
-    if (!ignorePermissions && !settingPerms.equals("-rw-------") && !settingPerms.equals("-rwx------")){  
-        String bigWarning = "*** SECURITY WARNING ***\nSeqWare settings file has incorrect file permissions. It should only be readable and writeable by the owner.\n In other words, run \"chmod 600 ~/.seqware/settings\"";
-        Log.fatal(bigWarning);
-        Log.stderr(bigWarning);
-    }
-    
-    // else it should be OK
-    // make sure the permissions are OK
-    //settingsFile.setExecutable(false, false);
-    //settingsFile.setWritable(false, false);
-    //settingsFile.setWritable(true, true);
-    //settingsFile.setReadable(false, false);
-    //settingsFile.setReadable(true, true);
 
     HashMap<String, String> hm = new HashMap<String, String>();
 
