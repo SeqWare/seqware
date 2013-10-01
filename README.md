@@ -124,24 +124,21 @@ You can also build individual components such as the new query engine with:
 
 ### Building Our Site
 
-In order to publish to seqware.github.com, checkout our current hotfix and publish our site:
+In order to publish to legacy.seqware.github.com, checkout our current master and publish our site:
 
-    git checkout hotfix/0.13.6.7
+    git checkout master 
     cd seqware-distribution 
     mvn site-deploy
 
-Then you would look at the site at: http://seqware.github.io
+Then you would look at the site at: http://seqware.github.io/legacy.seqware.github.com/
 
-A historical copy of this site has been stored at: http://seqware.github.io/legacy.seqware.github.com/
-in advance of the migration to 1.0.x.
-
-In order to publish to our unstable docs supporting the development of 1.0.0, checkout from develop and publish:
+In order to publish to our current docs supporting the 1.0.x, checkout from develop and publish:
 
     git checkout develop 
     cd seqware-distribution 
     mvn site-deploy
 
-Then you would look at the site at: http://seqware.github.io/unstable.seqware.github.com/
+Then you would look at the site at: http://seqware.github.io
 
 ###Problems with Maven
 
