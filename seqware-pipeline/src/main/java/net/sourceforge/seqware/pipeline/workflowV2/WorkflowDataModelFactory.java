@@ -130,7 +130,7 @@ public class WorkflowDataModelFactory {
 //            Log.info("CLASSPATH: " + clazzPath);
 //            // get user defined classes
             String classpath = metaInfo.get("workflow_class");
-            Log.stdout("Attempting to instantiate " + classpath);
+            Log.debug("Attempting to instantiate " + classpath);
             WorkflowClassFinder finder = new WorkflowClassFinder();
             clazz = finder.findFirstWorkflowClass(classpath);
 
@@ -260,6 +260,7 @@ public class WorkflowDataModelFactory {
             WorkflowXmlParser xmlParser = new WorkflowXmlParser();
             xmlParser.parseXml(dataModel, metaInfo.get("workflow_template"));
         }
+        AbstractWorkflowDataModel.prepare(dataModel);
         //set wait
         dataModel.setWait(this.options.has("wait"));
         Log.info("returning datamodel");
@@ -379,7 +380,7 @@ public class WorkflowDataModelFactory {
             for (String ini : iniFiles) {
                 //the ini file path might actually have ${workflow_bundle_dir} in the name
                 String newIni = replaceWBD(ini, bundlePath);
-                Log.stdout("  INI FILE: " + ini);
+                Log.debug("  INI FILE: " + ini);
                 if ((new File(ini)).exists()) {
                     MapTools.ini2Map(ini, map);
                 }

@@ -119,13 +119,14 @@ public class BundleManager extends Plugin {
             for (WorkflowInfo wi : bi.getWorkflowInfo()) {
                 println(" Workflow:");
 
-                println("  Name : " + wi.getName());
-                println("  Version : " + wi.getVersion());
-                println("  Description : " + wi.getDescription());
-
-                println("  Test Command: " + wi.getTestCmd());
-                println("  Template Path:" + wi.getTemplatePath());
-                println("  Config Path:" + wi.getConfigPath());
+                println("  Name: " + wi.getName());
+                println("  Version: " + wi.getVersion());
+                println("  Description: " + wi.getDescription());
+                if (wi.getTemplatePath() != null)
+                  println("  Template Path: " + wi.getTemplatePath());
+                if (wi.getWorkflowClass() != null)
+                  println("  Workflow Class: " + wi.getWorkflowClass());
+                println("  Config Path: " + wi.getConfigPath());
                 println("  Requirements Compute: " + wi.getComputeReq() + " Memory: " + wi.getMemReq() + " Network: " + wi.getNetworkReq() + "\n");
 
             }
@@ -157,14 +158,17 @@ public class BundleManager extends Plugin {
           }
 
         } else if (options.has("bundle") && options.has("path-to-package")) {
+          println("Validating Bundle structure");
+          File bundleDir = new File((String) options.valueOf("path-to-package"));
+          File bundleZip = new File((String) options.valueOf("bundle"));
+          ret = b.validateBundle(bundleDir);
+          if (ret.getExitStatus() == ReturnValue.SUCCESS) {
             println("Packaging Bundle");
-            String bundleOutput = (String) options.valueOf("bundle");
-            String bundlePath = (String) options.valueOf("path-to-package");
-            println("Bundle: " + bundleOutput + " path: " + bundlePath);
-            ret = b.packageBundle(new File(bundlePath), new File(bundleOutput));
+            ret = b.packageBundle(bundleDir, bundleZip);
             if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-                println("Bundle Has Been Packaged to " + options.valueOf("bundle") + "!");
+                println("Bundle has been packaged to " + bundleZip.getAbsolutePath());
             }
+          }
         } else if (options.has("bundle") && options.has("install")) {
             
             if (killIfDirectDB()) {
@@ -220,7 +224,11 @@ public class BundleManager extends Plugin {
             if (options.has("human-expanded")) {
                 params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
                 params = TabExpansionUtil.expansion(params);
-                println(params);
+                if (params.trim().equals("")){
+                  println("No workflows installed.");
+                } else {
+                  println(params);
+                }
             } else if (options.has("human-aligned")){
                 params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
                 params = TabExpansionUtil.aligned(params);

@@ -761,9 +761,9 @@ public class MetadataWSTest {
     
     @Test
     public void testUpdateWorkflowRunWithInputFiles() {
-        final int wr_sw_accession = 863;
+        final int wr_sw_accession = 6603;
         WorkflowRun wr = instance.getWorkflowRun(wr_sw_accession);
-        // try emptying it and asking for it back
+        // should already be blank
         instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
                 wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
                 wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), new HashSet<Integer>());
@@ -794,20 +794,6 @@ public class MetadataWSTest {
                 wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
         wr = instance.getWorkflowRun(wr_sw_accession);
         Assert.assertTrue("updated  input file set  should be size 4, was " + wr.getInputFileAccessions().size(), wr.getInputFileAccessions().size() == 4);
-        // try deleting the set and asking for it back (protects against cascading error as well)
-        wr.getInputFileAccessions().clear();
-        instance.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
-                wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
-                wr.getHost(), wr.getStdOut(), wr.getStdErr(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-        wr = instance.getWorkflowRun(wr_sw_accession);
-        Assert.assertTrue("final size zero input file set should be blank", wr.getInputFileAccessions().isEmpty());
-        // make sure we didn't cascade any deletes
-        File f1 = instance.getFile(f1_sw_accession);
-        File f2 = instance.getFile(f2_sw_accession);
-        File f3 = instance.getFile(f3_sw_accession);
-        File f4 = instance.getFile(f4_sw_accession);
-        Assert.assertTrue("workflowrun was cascade deleted!", wr.getSwAccession() == wr_sw_accession);
-        Assert.assertTrue("files were cascade deleted!", f1.getSwAccession() == f1_sw_accession && f2.getSwAccession() == f2_sw_accession && f3.getSwAccession() == f3_sw_accession && f4.getSwAccession() == f4_sw_accession);
     }
 
     @Test

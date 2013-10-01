@@ -29,6 +29,28 @@ at the institute (we use the Pegasus Workflow Engine):
 0. Modify a small set of config files on the VM to point to this new SGE
 0. Run a workflow to verify jobs flow to the real cluster
 
+## Oozie Workflow Engine
+
+These directions cover connecting the Oozie Workflow Engine to an actual Hadoop
+cluster. This engine is an alternative to the SGE engine above.  
+
+### Connecting to a Hadoop Cluster
+
+We use the Cloudera packages on the SeqWare VM to install and configure the
+Hadoop system.  Please see the excellent documentation on [Cloudera's
+Website](http://www.cloudera.com/) that will walk you through the process of
+building a Hadoop cluster. You will want to match the Cloudera version on the
+SeqWare VM with that of your Hadoop cluster and you may want to turn off the
+namenode, datanode, tasktracker, jobtracker, etc on the SeqWare VM since these
+functions will use your real Hadoop cluster. Essentially you will just use the
+SeqWare VM as the Oozie host (so you will want to leave that installed on the
+VM).  See the Cloudera documentation for information on configuring Oozie on
+the VM to talk to your Hadoop cluster.
+
+From the SeqWare perspective you will need to tell SeqWare which HDFS/MapReduce
+cluster to talk to, see the Oozie and Hadoop sections of the [SeqWare
+Configuration Guide](/docs/6-pipeline/user-configuration/).  
+
 ## Pegasus Workflow Engine
 
 How to connect the Pipeline's Pegasus Workflow Engine to a real SGE cluster.
@@ -86,24 +108,3 @@ Finally you can submit and run a workflow just as you normally do following the
 [User Tutorial](/docs/3-getting-started/user-tutorial/). You should see jobs
 running on the cluster rather than locally using a tool like <tt>qstat</tt>.
 
-## Oozie Workflow Engine
-
-These directions cover connecting the Oozie Workflow Engine to an actual Hadoop
-cluster. This engine is an alternative to the SGE engine above.  
-
-### Connecting to a Hadoop Cluster
-
-We use the Cloudera packages on the SeqWare VM to install and configure the
-Hadoop system.  Please see the excellent documentation on [Cloudera's
-Website](http://www.cloudera.com/) that will walk you through the process of
-building a Hadoop cluster. You will want to match the Cloudera version on the
-SeqWare VM with that of your Hadoop cluster and you may want to turn off the
-namenode, datanode, tasktracker, jobtracker, etc on the SeqWare VM since these
-functions will use your real Hadoop cluster. Essentially you will just use the
-SeqWare VM as the Oozie host (so you will want to leave that installed on the
-VM).  See the Cloudera documentation for information on configuring Oozie on
-the VM to talk to your Hadoop cluster.
-
-From the SeqWare perspective you will need to tell SeqWare which HDFS/MapReduce
-cluster to talk to, see the Oozie and Hadoop sections of the [SeqWare
-Configuration Guide](/docs/6-pipeline/user-configuration/).  
