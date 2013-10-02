@@ -5,7 +5,10 @@
 package io.seqware.webservice.controller;
 
 import java.util.List;
+import java.util.Set;
 import javax.persistence.EntityManager;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 /**
  *
@@ -22,7 +25,14 @@ public abstract class AbstractFacade<T> {
   protected abstract EntityManager getEntityManager();
 
   public void create(T entity) {
+    try{
     getEntityManager().persist(entity);
+    } catch (ConstraintViolationException e){
+        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
+        for(ConstraintViolation cv : constraintViolations){
+            System.out.println(cv.getMessage());
+        }
+    }
   }
 
   public void edit(T entity) {
