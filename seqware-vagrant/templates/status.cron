@@ -1,7 +1,0 @@
-#!/bin/bash
-
-source /home/seqware/.bash_profile
-
-seqware workflow-run launch-scheduled
-seqware workflow-run propagate-statuses --threads 10
-
