@@ -16,7 +16,7 @@ The SeqWare Query Engine is intended to be a universal store for sequence varian
 Most users will want to use our pre-configured VMs, see the [SeqWare Install
 Guide](/docs/2-installation/) for how to get the VM.
 
-Please see the [Install Guide](/docs/github_readme/2-queryengine/) for installing Query Engine from scratch.
+Please see the [Install Guide](https://github.com/SeqWare/queryengine/blob/develop/README.md) for installing Query Engine from scratch.
 
 ## Loading Data
 
