@@ -15,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -24,6 +26,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -47,6 +50,11 @@ import javax.xml.bind.annotation.XmlTransient;
   @NamedQuery(name = "File.findBySize", query = "SELECT f FROM File f WHERE f.size = :size"),
   @NamedQuery(name = "File.findBySkip", query = "SELECT f FROM File f WHERE f.skip = :skip")})
 public class File implements Serializable {
+    @JoinTable(name = "workflow_run_input_files", joinColumns = {
+        @JoinColumn(name = "file_id", referencedColumnName = "file_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "workflow_run_id", referencedColumnName = "workflow_run_id")})
+    @ManyToMany
+    private Collection<WorkflowRun> workflowRunCollection;
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -262,5 +270,15 @@ public class File implements Serializable {
   public String toString() {
     return "io.seqware.webservice.model.File[ fileId=" + fileId + " ]";
   }
+
+    @XmlTransient
+    @JsonIgnore
+    public Collection<WorkflowRun> getWorkflowRunCollection() {
+        return workflowRunCollection;
+    }
+
+    public void setWorkflowRunCollection(Collection<WorkflowRun> workflowRunCollection) {
+        this.workflowRunCollection = workflowRunCollection;
+    }
   
 }
