@@ -29,7 +29,6 @@ By the end of these tutorials you will:
 
 * install workflows
 * monitor workflows
-* cancel and restart workflows
 * see how to connect a local VM to a local cluster for running large-scale workflows
 * see how to launch a cluster on Amazon’s cloud for running large-scale workflows
 
@@ -54,9 +53,9 @@ bundle can be provided to the admin for install as below.
 	Now transferring /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
 Processing input: /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
       output-dir: /home/seqware/released-bundles
-
-WORKFLOW_ACCESSION: 16
-Bundle Has Been Installed to the MetaDB and Provisioned to /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
+	
+	WORKFLOW_ACCESSION: 16
+	Bundle Has Been Installed to the MetaDB and Provisioned to /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
 
 
 What happens here is the <code>Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip</code> copied to your released-bundles directory and unzip'd into your provisioned-bundles directory. The metadata about the workflow is then saved to the database.
