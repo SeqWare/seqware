@@ -41,6 +41,7 @@ you will be able to:
 * generate a report on the outputs of your workflows
 * download files produced by a workflow
 * debug workflows by downloading stdout and stderr for your workflows
+* cancel and restart workflows
 
 <p class="warning"><strong>Tip:</strong>If you want to see how to do the same
 steps covered in this tutorial via the Portal web GUI instead of command line
