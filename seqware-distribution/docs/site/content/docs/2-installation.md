@@ -104,8 +104,11 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 
 #### Stable Public AMI(s):
 
-* **ami-c386e8aa**
-: 20130531, SeqWare_v0.13.6.7rc_CentOS_GenericDevBox_v18, SeqWare Version 0.13.6.7. Make sure you launch in Virginia and select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
+* **ami-f99acc90**
+: 20131004, SeqWare-1.0.6 (use m1.xlarge)
+
+* ~~ **ami-c386e8aa**
+: 20130531, SeqWare_v0.13.6.7rc_CentOS_GenericDevBox_v18, SeqWare Version 0.13.6.7. Make sure you launch in Virginia and select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance). ~~
 
 * ~~ **ami-c386e8aa**
 : 20130517, SWStandaloneCentOS_v2_GenericDevBox_v17, SeqWare Version 0.13.6.5. Make sure you launch in Virginia and select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance). ~~
@@ -118,8 +121,8 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 
 #### Development Public AMI(s):
 
-* **ami-7be48e12**
-: 20130531, SeqWare_v1.0.1-SNAPSHOT_CentOS_GenericDevBox_v19, SeqWare Version 1.0.1-SNAPSHOT that includes support for running Java workflows on the Oozie workflow engine. Make sure you launch in Virginia select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
+* ~~ **ami-7be48e12**
+: 20130531, SeqWare_v1.0.1-SNAPSHOT_CentOS_GenericDevBox_v19, SeqWare Version 1.0.1-SNAPSHOT that includes support for running Java workflows on the Oozie workflow engine. Make sure you launch in Virginia select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance). ~~
 
 * ~~ **ami-01660f68**
 : 20130517, SeqWare_v1.0.0rc_CentOS_GenericStandaloneDevBox_v18, SeqWare Version 1.0.0-SNAPSHOT from today (a pre-release) that includes support for running Java workflows on the Oozie workflow engine. Make sure you launch in Virginia select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance). ~~
