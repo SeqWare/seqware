@@ -18,3 +18,8 @@
 /seqware-webservice-client-prototype-2/HTML5Application/nbproject/private
 /seqware-webservice-client-prototype-2/HTML5Application1/nbproject/private/
 /seqware-webservice/target/
+
+# Eclipse files
+.classpath
+.project
+.settings
