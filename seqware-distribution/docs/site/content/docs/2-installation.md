@@ -104,8 +104,8 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 
 #### Stable Public AMI(s):
 
-* **ami-f99acc90**
-: 20131004, SeqWare-1.0.6 (use m1.xlarge)
+* **ami-f54e1f9c**
+: 20131007, SeqWare-1.0.6 (use m1.xlarge)
 
 * ~~ **ami-c386e8aa**
 : 20130531, SeqWare_v0.13.6.7rc_CentOS_GenericDevBox_v18, SeqWare Version 0.13.6.7. Make sure you launch in Virginia and select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance). ~~
