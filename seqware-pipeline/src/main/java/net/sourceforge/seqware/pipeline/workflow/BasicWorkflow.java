@@ -661,6 +661,20 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         map.put("parent-accessions", parentAccessionsStr.toString());
       }
 
+      /* Load ini (thus ensuring it exists) prior to writing to the DB. */
+      String[] iniCompleteFilePaths = iniFilesStr.toString().split(",");
+      for (String currIniFile : iniCompleteFilePaths) {
+        MapTools.ini2Map(currIniFile, map);
+      }
+      MapTools.cli2Map(cmdLineOptions.toArray(new String[0]), map);
+      // make a single string from the map
+      StringBuffer mapBuffer = new StringBuffer();
+      for (String key : map.keySet()) {
+        Log.info("KEY: " + key + " VALUE: " + map.get(key));
+        // Log.error(key+"="+map.get(key));
+        mapBuffer.append(key + "=" + map.get(key) + "\n");
+      }
+
       // need to figure out workflow_run_accession
       workflowAccession = wi.getWorkflowAccession();
       // create the workflow_run row if it doesn't exist
@@ -684,25 +698,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         } catch (Exception e) {
           Log.error(e.getMessage());
         }
-      }
-
-      /*
-       * At this point metadata objects have been created in the DB. The next
-       * step is to prepare an ini file and submit to the metadata layer to save
-       * in the workflow_run table. Just fill the map object with the contents
-       * and then write out to disk
-       */
-      String[] iniCompleteFilePaths = iniFilesStr.toString().split(",");
-      for (String currIniFile : iniCompleteFilePaths) {
-        MapTools.ini2Map(currIniFile, map);
-      }
-      MapTools.cli2Map(cmdLineOptions.toArray(new String[0]), map);
-      // make a single string from the map
-      StringBuffer mapBuffer = new StringBuffer();
-      for (String key : map.keySet()) {
-        Log.info("KEY: " + key + " VALUE: " + map.get(key));
-        // Log.error(key+"="+map.get(key));
-        mapBuffer.append(key + "=" + map.get(key) + "\n");
       }
 
       this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.submitted, null,
