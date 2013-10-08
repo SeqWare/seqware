@@ -353,7 +353,7 @@ of workflow runs. After about ten minutes, the workflow should complete.
     Immediate Input File Paths     | /datastore/input.txt
     Output File Meta-Types         | text/plain
     Output File SWIDs              | 15
-    Output File Paths              | output
+    Output File Paths              | /datastore/seqware-results/output
     Workflow Run Time              | 51.0s
 
 This output includes several columns of interest including the status of the
