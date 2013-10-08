@@ -103,9 +103,9 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     sequencerRun.setCreateTimestamp(new Date());
 
     if (sequencerRun.getProcess()) {
-      sequencerRun.setStatus(SequencerRunStatus.ready_to_process);
+      sequencerRun.setStatus(SequencerRunStatus.Completed);
     } else {
-      sequencerRun.setStatus(SequencerRunStatus.not_ready_to_process);
+      sequencerRun.setStatus(null);
     }
     return(sequencerRunDAO.insert(sequencerRun));
   }
@@ -167,9 +167,9 @@ public class SequencerRunServiceImpl implements SequencerRunService {
      */
 
     if (sequencerRun.getProcess()) {
-      sequencerRun.setStatus(SequencerRunStatus.ready_to_process);
+      sequencerRun.setStatus(SequencerRunStatus.Completed);
     } else {
-      sequencerRun.setStatus(SequencerRunStatus.not_ready_to_process);
+      sequencerRun.setStatus(null);
     }
     return(sequencerRunDAO.insert(sequencerRun));
   }
@@ -182,9 +182,9 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   public void update(SequencerRun sequencerRun) {
 
     if (sequencerRun.getProcess()) {
-      sequencerRun.setStatus(SequencerRunStatus.ready_to_process);
+      sequencerRun.setStatus(SequencerRunStatus.Completed);
     } else {
-      sequencerRun.setStatus(SequencerRunStatus.not_ready_to_process);
+      sequencerRun.setStatus(null);
     }
 
     sequencerRunDAO.update(sequencerRun);

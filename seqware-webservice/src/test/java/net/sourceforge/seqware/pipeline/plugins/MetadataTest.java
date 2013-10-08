@@ -335,7 +335,7 @@ public class MetadataTest extends ExtendedPluginTest {
 
     @Test
     public void testCreateSequencerRunWithStatus() {
-        SequencerRunStatus funky_status = SequencerRunStatus.ready_to_process;
+        SequencerRunStatus funky_status = SequencerRunStatus.Completed;
         launchPlugin("--table", "sequencer_run", "--create",
                 "--field", "name::SR" + System.currentTimeMillis(),
                 "--field", "description::SRD",
