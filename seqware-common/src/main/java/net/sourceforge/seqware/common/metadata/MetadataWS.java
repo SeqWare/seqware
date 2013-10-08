@@ -207,7 +207,7 @@ public class MetadataWS implements Metadata {
       Log.info("Posting workflow");
       try {
           workflow = ll.addWorkflow(workflow);
-          Log.stdout("WORKFLOW_ACCESSION: " + workflow.getSwAccession());
+          Log.stdout("Added '" + workflow.getName() + "' (SWID: "+ workflow.getSwAccession() +")");
           ret.setAttribute("sw_accession", workflow.getSwAccession().toString());
           ret.setReturnValue(workflow.getWorkflowId());
       } catch (Exception e) {
