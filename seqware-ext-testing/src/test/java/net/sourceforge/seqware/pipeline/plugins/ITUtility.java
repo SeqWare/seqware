@@ -179,12 +179,12 @@ public class ITUtility {
         }
     }
 
-    private static Pattern swid = Pattern.compile("SWID:?\\s*(\\d+)");
+    private static Pattern swid = Pattern.compile("SWID\\D*(\\d+)");
     public static int extractSwid(String s){
       String[] lines = s.split(System.getProperty("line.separator"));
       for (String line : lines){
         Matcher m = swid.matcher(line);
-        if (m.matches()){
+        if (m.find()){
           return Integer.parseInt(m.group(1));
         }
       }
