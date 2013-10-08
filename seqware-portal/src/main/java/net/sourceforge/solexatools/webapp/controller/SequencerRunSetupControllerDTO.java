@@ -61,7 +61,7 @@ public class SequencerRunSetupControllerDTO extends BaseCommandController {
   		SequencerRun				sequencerRun		= getRequestedSequencerRun(request);
   
   		if (sequencerRun != null) {
-  			if (sequencerRun.getStatus()  == SequencerRunStatus.ready_to_process) {
+  			if (sequencerRun.getStatus()  == SequencerRunStatus.Completed) {
   				sequencerRun.setProcess(true);
   			} else {
   				sequencerRun.setProcess(false);
