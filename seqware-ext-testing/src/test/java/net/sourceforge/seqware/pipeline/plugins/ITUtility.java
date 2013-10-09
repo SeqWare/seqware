@@ -17,14 +17,19 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import com.google.common.io.Files;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
+
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
@@ -172,6 +177,18 @@ public class ITUtility {
             Log.error(outputStream.toString());
             throw e;
         }
+    }
+
+    private static Pattern swid = Pattern.compile("SWID\\D*(\\d+)");
+    public static int extractSwid(String s){
+      String[] lines = s.split(System.getProperty("line.separator"));
+      for (String line : lines){
+        Matcher m = swid.matcher(line);
+        if (m.find()){
+          return Integer.parseInt(m.group(1));
+        }
+      }
+      throw new RuntimeException("Could not parse SWID from string: "+s);
     }
 
     public static String extractValueFrom(String listOutput, String key) {

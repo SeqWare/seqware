@@ -134,8 +134,7 @@ public class PluginRunnerET {
             String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS, null);
             Log.info(installOutput);     
             
-            String extractValueFrom = ITUtility.extractValueFrom(installOutput, "WORKFLOW_ACCESSION:");
-            int accession = Integer.valueOf(extractValueFrom);
+            int accession = ITUtility.extractSwid(installOutput);
             installedWorkflows.put(workflow, accession);
             Log.info("Found workflow " + workflow + " with accession " + accession);          
             
@@ -200,8 +199,7 @@ public class PluginRunnerET {
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
 
-            String extractValueFrom = ITUtility.extractValueFrom(listOutput, "Created workflow run with SWID:");
-            int wr_accession = Integer.valueOf(extractValueFrom);
+            int wr_accession = ITUtility.extractSwid(listOutput);
             wr_accessions.put(e.getKey(), wr_accession);
             launchedWorkflowRuns.add(wr_accession);
             Log.info("Scheduled workflow " + e.getKey() + " with accession " + wr_accession);
