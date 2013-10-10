@@ -32,42 +32,9 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 public class SeqWareWebserviceClient {
    private WebResource webResource;
    private Client client;
-   // you will need to change this
-   // private static final String BASE_URI =
-   // "http://localhost:41217/seqware-webservice/webresources";
    private static final String BASE_URI = "http://localhost:8080/seqware-webservice/webresources";
 
    public static void main(String args[]) throws UniformInterfaceException {
-      // SeqWareWebserviceClient client1=new SeqWareWebserviceClient();
-
-      // test writing
-      /*
-       * Organism o=new Organism(); o.setAccession("hsapien_2hg192");
-       * o.setName("Human3"); //o.setCode("TEST3323Humann");
-       * o.setNcbiTaxid(1282291); //ClientResponse res = client1.create_XML(o);
-       * 
-       * //System.out.println("HERE: "+res.getClientResponseStatus()+
-       * " HTTP STATUS CODE: "+res.getStatus());
-       * 
-       * // now test query and retreival ClientResponse
-       * response=client1.findAll_XML(ClientResponse.class);
-       * GenericType<List<Organism>> genericType = new
-       * GenericType<List<Organism>>() {}; // Returns an ArrayList of Players
-       * from the web service List<Organism> data= new ArrayList<Organism>();
-       * data=(response.getEntity(genericType)); for(Organism org : data) {
-       * System.out.println("ORG: "+org.getName()+" "+org.getCode()); }
-       * 
-       * // update ClientResponse response1=
-       * client1.find_XML(ClientResponse.class,"3"); Organism oldOrg =
-       * response1.getEntity(new GenericType<Organism>() {});
-       * oldOrg.setName(" foo "); oldOrg.setAccession("39239230");
-       * oldOrg.setNcbiTaxid(129291);
-       * System.out.println("NAME: "+oldOrg.getName(
-       * )+" ID: "+oldOrg.getOrganismId()); client1.edit_XML(oldOrg);
-       * //System.out
-       * .println("DID THE UPDATE WORK?: "+res2.getClientResponseStatus
-       * ()+" HTTP STATUS CODE: "+res2.getStatus());
-       */
 
       // some testing for workflow_runs
       SeqWareWebserviceClient processingClient = new SeqWareWebserviceClient("processing");
@@ -103,15 +70,6 @@ public class SeqWareWebserviceClient {
          }
       }
 
-      /*
-       * SeqWareWebserviceClient client1=new SeqWareWebserviceClient("study");
-       * ClientResponse response=client1.findAll_XML(ClientResponse.class);
-       * GenericType<List<Study>> genericType = new GenericType<List<Study>>()
-       * {}; List<Study> data=response.getEntity(genericType); for(Study obj :
-       * data) {
-       * System.out.println("STUDY: "+obj.getTitle()+" OTHER: "+obj.getAccession
-       * ()); }
-       */
    }
 
    public SeqWareWebserviceClient(String modelName) {
