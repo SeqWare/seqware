@@ -72,10 +72,30 @@ public class SeqWareWebserviceClient {
 
    }
 
+   /**
+    * Constructs a SeqWare web service client for the given resource with the
+    * default url {@code http://localhost:8080/seqware-webservice/webresources}.
+    * 
+    * @param modelName
+    *           Lowercase resource name. (e.g. study, registration, sample)
+    */
    public SeqWareWebserviceClient(String modelName) {
+      this(modelName, BASE_URI);
+   }
+
+   /**
+    * Constructs a SeqWare web service client for the given resource and url.
+    * 
+    * @param modelName
+    *           Lowercase resource name. (e.g. study, registration, sample)
+    * @param baseUri
+    *           Url for the webservice in the form
+    *           {@code http://localhost:8080/seqware-webservice/webresources}.
+    */
+   public SeqWareWebserviceClient(String modelName, String baseUri) {
       ClientConfig config = new DefaultClientConfig();
       client = Client.create(config);
-      webResource = client.resource(BASE_URI).path("io.seqware.webservice.model." + modelName);
+      webResource = client.resource(baseUri).path("io.seqware.webservice.model." + modelName);
    }
 
    public void remove(String id) throws UniformInterfaceException {
