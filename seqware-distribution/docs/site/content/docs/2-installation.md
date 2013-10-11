@@ -43,7 +43,7 @@ Next, you will need to download our current VM image which is linked below.
 Please make sure you are using the latest version, when we post a new one we
 will tweet about it so consider following us on Twitter.
 
-* [SeqWareVM_0.12.5-r5163_CentOS_6.2_20120904.ova](https://s3.amazonaws.com/nimbusinformatics.exchange/public/SeqWareVM_0.12.5_r5163_CentOS_6.2_20120904b.ova)
+* [SeqWare-1.0.6.ova](https://s3.amazonaws.com/nimbusinformatics.exchange/public/SeqWare-1.0.6.ova)
 
 Open VirtualBox and use the "Import Appliance" tool to create a new SeqWare VM
 on your system. Make sure you set the memory to the max you can afford, I
@@ -67,6 +67,8 @@ makes use of various virtualization extensions which most modern PCs support
 
 The login username is <kbd>seqware</kbd> and the password is <kbd>seqware</kbd>. If you need to become <kbd>root</kbd> the password is the same.
 
+By default the VM will open port 2222 for ssh. You can connect to the running VM from an external console using the following command: `ssh -p 2222 root@127.0.0.1`
+
 ### What Can You Do With It?
 
 As the note above mentioned, you can use this VM to see what each of the
@@ -80,7 +82,6 @@ exactly what we did at OICR, our SeqWare hosts are all virtual machines that
 can submit workflow jobs to our physical cluster. You can find more information
 on this in the "SeqWare Pipeline" section of our documentation.
 
-<img src="/assets/images/vm_screen.png" alt="SeqWare VM" width="600px"/>
 
 ## Option 2 -Installing with a Cloud VM
 
