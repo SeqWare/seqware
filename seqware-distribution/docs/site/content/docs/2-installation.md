@@ -43,7 +43,7 @@ Next, you will need to download our current VM image which is linked below.
 Please make sure you are using the latest version, when we post a new one we
 will tweet about it so consider following us on Twitter.
 
-* [SeqWare-1.0.6.ova](https://s3.amazonaws.com/nimbusinformatics.exchange/public/SeqWare-1.0.6.ova)
+* [SeqWare-1.0.6.ova](https://s3.amazonaws.com/oicr.vm/public/SeqWare-1.0.6.ova)
 
 Open VirtualBox and use the "Import Appliance" tool to create a new SeqWare VM
 on your system. Make sure you set the memory to the max you can afford, I
