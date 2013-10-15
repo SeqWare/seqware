@@ -105,7 +105,7 @@
                     <name>seqware-admin-webservice</name>
                     <port>38080</port>
                     <dbVendorName>postgresql</dbVendorName>
-                    <libraries>${project.parent.basedir}/seqware-admin-webservice/target/lib/postgresql-9.1-901.jdbc4.jar</libraries>
+                    <libraries>${project.parent.basedir}/seqware-admin-webservice/target/lib/postgresql-${postgresql.version}.jar</libraries>
                     <goalPrefix>embedded-glassfish</goalPrefix>
                 </configuration>
                 <executions>

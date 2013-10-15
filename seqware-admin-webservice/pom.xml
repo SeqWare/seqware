@@ -23,7 +23,6 @@
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.1-901.jdbc4</version>
             <scope>compile</scope>
         </dependency> 
         <dependency>
@@ -139,7 +138,7 @@
                     <name>seqware-admin-webservice</name>
                     <port>38080</port>
                     <dbVendorName>postgresql</dbVendorName>
-                    <libraries>${project.build.directory}/lib/postgresql-9.1-901.jdbc4.jar</libraries>
+                    <libraries>${project.build.directory}/lib/postgresql-${postgresql.version}.jar</libraries>
                     <autoDelete>true</autoDelete>
                     <goalPrefix>embedded-glassfish</goalPrefix>
                 </configuration>
