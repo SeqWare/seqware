@@ -178,14 +178,18 @@ elif [ "$1" = "init" ]; then
     touch $SEQWARE_SETTINGS
     chmod 600 $SEQWARE_SETTINGS
     
-    echo "# SeqWare MetaDB communication method, can be one of: database, webservice, or none" > $SEQWARE_SETTINGS
+    echo "# For full details of the available configuration entries, see:" >> $SEQWARE_SETTINGS
+    echo "# http://seqware.github.io/docs/6-pipeline/user-configuration/" >> $SEQWARE_SETTINGS
+    echo >> $SEQWARE_SETTINGS
+    echo "# SeqWare MetaDB communication method, can be one of: database, webservice, or none" >> $SEQWARE_SETTINGS
     echo "SW_METADATA_METHOD=webservice" >> $SEQWARE_SETTINGS
     
     echo
     echo "Initializing Seqware settings:"
     echo -n "  Seqware WebService URL: "
     read WEBSERVICE_URL
-    echo "# the base URL for the RESTful SeqWare API" >> $SEQWARE_SETTINGS
+    echo >> $SEQWARE_SETTINGS
+    echo "# SeqWare webservice settings. Only used if SW_METADATA_METHOD=webservice" >> $SEQWARE_SETTINGS
     echo "SW_REST_URL=$WEBSERVICE_URL" >> $SEQWARE_SETTINGS
     
     echo -n "  Seqware WebService Username: "
@@ -210,6 +214,15 @@ elif [ "$1" = "init" ]; then
     
     echo "SW_REST_PASS=$WEBSERVICE_PASSWORD" >> $SEQWARE_SETTINGS
     
+    echo
+    echo -n "  Default Workflow Engine [oozie]: "
+    read DEFAULT_ENGINE
+    DEFAULT_ENGINE=${DEFAULT_ENGINE:-oozie}
+
+    echo >> $SEQWARE_SETTINGS
+    echo "# the default engine to use if otherwise unspecified (one of: oozie, oozie-sge, pegasus)" >> $SEQWARE_SETTINGS
+    echo "SW_DEFAULT_WORKFLOW_ENGINE=$DEFAULT_ENGINE" >> $SEQWARE_SETTINGS
+
     echo
     echo "Created Seqware settings file at $SEQWARE_SETTINGS"
     echo
