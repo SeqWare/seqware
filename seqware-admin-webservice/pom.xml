@@ -140,6 +140,8 @@
                     <port>38080</port>
                     <dbVendorName>postgresql</dbVendorName>
                     <libraries>${project.build.directory}/lib/postgresql-9.1-901.jdbc4.jar</libraries>
+                    <autoDelete>true</autoDelete>
+                    <goalPrefix>embedded-glassfish</goalPrefix>
                 </configuration>
             </plugin>
             <plugin>
@@ -160,6 +162,7 @@
                 <version>2.1.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <attachClasses>true</attachClasses>
                 </configuration>
             </plugin>
             <plugin>
