@@ -30,7 +30,7 @@ import org.openide.util.lookup.ServiceProvider;
 import org.rendersnake.HtmlCanvas;
 
 /**
- * A hbck for your SeqWare metadb
+ * A database validation tool for your SeqWare metadb
  *
  * @author dyuen ProviderFor(PluginInterface.class)
  * @version $Id: $Id
@@ -39,7 +39,6 @@ import org.rendersnake.HtmlCanvas;
 public final class CheckDB extends Plugin {
     public static final int NUMBER_TO_OUTPUT = 100;
 
-    private ReturnValue ret = new ReturnValue();
 
     /**
      * <p>Constructor for HelloWorld.</p>
@@ -47,7 +46,6 @@ public final class CheckDB extends Plugin {
     public CheckDB() {
         super();
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
-        ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
     /* (non-Javadoc)
@@ -57,8 +55,8 @@ public final class CheckDB extends Plugin {
      * {@inheritDoc}
      */
     @Override
-    public ReturnValue init() {
-        return ret;
+    public final ReturnValue init() {
+        return new ReturnValue();
     }
 
     /* (non-Javadoc)
@@ -70,7 +68,7 @@ public final class CheckDB extends Plugin {
     @Override
     public ReturnValue do_test() {
         // TODO Auto-generated method stub
-        return ret;
+        return new ReturnValue();
     }
 
     /* (non-Javadoc)
@@ -80,7 +78,8 @@ public final class CheckDB extends Plugin {
      * {@inheritDoc}
      */
     @Override
-    public ReturnValue do_run() {
+    public final ReturnValue do_run() {
+        ReturnValue ret = new ReturnValue();
         Collection<CheckDBPluginInterface> plugins = (Collection<CheckDBPluginInterface>) Lookup.getDefault().lookupAll(CheckDBPluginInterface.class);
         Map<CheckDBPluginInterface, SortedMap<CheckDBPluginInterface.Level, Set<String>>> resultMap = new HashMap<CheckDBPluginInterface, SortedMap<CheckDBPluginInterface.Level, Set<String>>>();
         for(CheckDBPluginInterface plugin : plugins){
@@ -128,6 +127,7 @@ public final class CheckDB extends Plugin {
             ret.setUrl(createTempFile.toURI().toURL().toString());
         } catch (IOException ex) {
             Log.fatal("Could not render HTML report", ex);
+            ret.setExitStatus(ReturnValue.FAILURE);
         }
         
         return ret;
@@ -140,8 +140,8 @@ public final class CheckDB extends Plugin {
      * @return a {@link java.lang.String} object.
      */
     @Override
-    public String get_description() {
-        return ("An hbck for your seqware install.");
+    public final String get_description() {
+        return ("An database validation tool for your SeqWare metadb.");
     }
 
 
@@ -149,7 +149,7 @@ public final class CheckDB extends Plugin {
 
     
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public final static void main(String[] args) throws IOException, URISyntaxException {
         CheckDB mp = new CheckDB();
         mp.init();
         List<String> arr = new ArrayList<String>();
@@ -160,8 +160,8 @@ public final class CheckDB extends Plugin {
     }
 
     @Override
-    public ReturnValue clean_up() {
-        return ret;
+    public final ReturnValue clean_up() {
+        return new ReturnValue();
     }
 
     /**
