@@ -32,7 +32,7 @@ public final class SelectQueryRunner {
         this.mdb = mdb;
     }
     
-    public <T> T executeQuery(String s, ResultSetHandler<T> h) throws SQLException {
+    public final <T> T executeQuery(String s, ResultSetHandler<T> h) throws SQLException {
         return this.mdb.executeQuery(s, h);
     }
 }
