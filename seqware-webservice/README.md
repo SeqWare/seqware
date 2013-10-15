@@ -132,8 +132,8 @@ Use the CycleRecoverable interface to deal with cycles programmatically.
 
 !!!!Sample URLs:
 
-* http://localhost:41217/seqware-webservice/webresources/io.seqware.webservice.model.workflowrun/566
-* http://localhost:41217/seqware-webservice/webresources/io.seqware.webservice.model.processing/43
+* http://localhost:41217/seqware-admin-webservice/webresources/io.seqware.webservice.model.workflowrun/566
+* http://localhost:41217/seqware-admin-webservice/webresources/io.seqware.webservice.model.processing/43
 
 
 !!!!Running
@@ -141,14 +141,14 @@ Use the CycleRecoverable interface to deal with cycles programmatically.
 =bash [=
 # manually running:
 
-boconnor@oslo ~/Development/gitroot/seqware-sandbox/seqware-webservice/target $ java -cp classes:/usr/local/glassfish-3.1.2.2/glassfish/lib/*:/usr/local/glassfish-3.1.2.2/glassfish/modules/* io.seqware.webservice.client.SeqWareWebserviceClient
+boconnor@oslo ~/Development/gitroot/seqware-sandbox/seqware-admin-webservice/target $ java -cp classes:/usr/local/glassfish-3.1.2.2/glassfish/lib/*:/usr/local/glassfish-3.1.2.2/glassfish/modules/* io.seqware.webservice.client.SeqWareWebserviceClient
 
 =]
 
 ## Prerequisite
 
 You will need a postgres instance running with the test_seqware_meta_db database available.
-If you wish to use a different database, edit seqware-webservice->Web Pages->WEB-INF->glassfish-resources.xml
+If you wish to use a different database, edit seqware-admin-webservice->Web Pages->WEB-INF->glassfish-resources.xml
 
 
 ## Running from NetBeans IDE
@@ -164,11 +164,11 @@ If you wish to use a different database, edit seqware-webservice->Web Pages->WEB
 * mvn clean install
 * cd to your Glassfish 3.1.2.2 installation binaries (or include them in your path) (cd ~/glassfish3/bin)
 * start your Glassfish server ./asadmin start-domain --verbose 
-* copy the postgres jar into the domain lib (cp ~/seqware-sandbox/seqware-webservice/target/lib/postgresql-9.1-901.jdbc4.jar ~/glassfish3/glassfish/domains/domain1/lib)
+* copy the postgres jar into the domain lib (cp ~/seqware-sandbox/seqware-admin-webservice/target/lib/postgresql-9.1-901.jdbc4.jar ~/glassfish3/glassfish/domains/domain1/lib)
 * list existing applications ./asadmin list-applications
-* undeploy an existing application ./asadmin undeploy seqware-webservice
-* deploy the web service ./asadmin deploy --name seqware-webservice --contextroot seqware-webservice  ~/seqware-sandbox/seqware-webservice/target/seqware-webservice-1.0-SNAPSHOT.war 
-* browse to http://localhost:8080/seqware-webservice/test-services.html
+* undeploy an existing application ./asadmin undeploy seqware-admin-webservice
+* deploy the web service ./asadmin deploy --name seqware-admin-webservice --contextroot seqware-admin-webservice  ~/seqware-sandbox/seqware-admin-webservice/target/seqware-admin-webservice-1.0-SNAPSHOT.war 
+* browse to http://localhost:38080/seqware-admin-webservice/test-services.html
 
 
 ## Running with embedded Glassfish with a maven target
@@ -178,7 +178,7 @@ If you wish to use a different database, edit seqware-webservice->Web Pages->WEB
 
 ## Troubleshooting
 
-* If you have issues starting the server, check that you do not have other services blocking the port 8080 (such as apache2 or tomcat)
+* If you have issues starting the server, check that you do not have other services blocking the port 38080 (such as apache2 or tomcat)
 * Currently, when deleting a object with foreign key references to it (for example an experiment referenced by samples), deletion should fail with HTTP status 500 (javax.servlet.ServletException: javax.transaction.RollbackException: Transaction marked for rollback.) 
 * A successful delete will return with HTTP status 200 
 * Cascading is controlled by JPA annotations on the actual model objects

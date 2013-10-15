@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.seqware</groupId>
-    <artifactId>seqware-webservice</artifactId>
+    <artifactId>seqware-admin-webservice</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>seqware-webservice</name>
+    <name>seqware-admin-webservice</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -130,9 +130,9 @@
                 <artifactId>maven-embedded-glassfish-plugin</artifactId>
                 <version>3.1.2.2</version>
                 <configuration>
-                    <contextRoot>seqware-webservice</contextRoot>
-                    <name>seqware-webservice</name>
-                    <port>8080</port>
+                    <contextRoot>seqware-admin-webservice</contextRoot>
+                    <name>seqware-admin-webservice</name>
+                    <port>38080</port>
                     <dbVendorName>postgresql</dbVendorName>
                     <libraries>${project.build.directory}/lib/postgresql-9.1-901.jdbc4.jar</libraries>
                 </configuration>

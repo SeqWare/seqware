@@ -26,7 +26,7 @@ import javax.ws.rs.Produces;
 @Stateless
 @Path("io.seqware.webservice.model.sampleattribute")
 public class SampleAttributeFacadeREST extends AbstractFacade<SampleAttribute> {
-  @PersistenceContext(unitName = "io.seqware_seqware-webservice_war_1.0-SNAPSHOTPU")
+  @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
   private EntityManager em;
 
   public SampleAttributeFacadeREST() {

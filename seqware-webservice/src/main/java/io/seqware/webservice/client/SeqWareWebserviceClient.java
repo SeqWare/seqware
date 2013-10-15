@@ -32,7 +32,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 public class SeqWareWebserviceClient {
    private WebResource webResource;
    private Client client;
-   private static final String BASE_URI = "http://localhost:8080/seqware-webservice/webresources";
+   private static final String BASE_URI = "http://localhost:38080/seqware-admin-webservice/webresources";
 
    public static void main(String args[]) throws UniformInterfaceException {
 
@@ -74,7 +74,7 @@ public class SeqWareWebserviceClient {
 
    /**
     * Constructs a SeqWare web service client for the given resource with the
-    * default url {@code http://localhost:8080/seqware-webservice/webresources}.
+    * default url {@code http://localhost:38080/seqware-admin-webservice/webresources}.
     * 
     * @param modelName
     *           Lowercase resource name. (e.g. study, registration, sample)
@@ -90,7 +90,7 @@ public class SeqWareWebserviceClient {
     *           Lowercase resource name. (e.g. study, registration, sample)
     * @param baseUri
     *           Url for the webservice in the form
-    *           {@code http://localhost:8080/seqware-webservice/webresources}.
+    *           {@code http://localhost:38080/seqware-admin-webservice/webresources}.
     */
    public SeqWareWebserviceClient(String modelName, String baseUri) {
       ClientConfig config = new DefaultClientConfig();
