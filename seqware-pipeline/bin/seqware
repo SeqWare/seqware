@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Ensure this file is executable via `chmod a+x seqware`, then place it
-# somewhere on your $PATH, like ~/bin. The rest of Seqware will be
+# somewhere on your $PATH, like ~/bin. The rest of SeqWare will be
 # installed upon first run into the ~/.seqware directory.
 
 DEFAULT_SEQWARE_VERSION="${project.version}"
@@ -147,7 +147,7 @@ if [ "$1" = "self-install" ]; then
         exit 1
     fi
 
-    echo "Downloading Seqware to $SEQWARE_JAR now..."
+    echo "Downloading SeqWare to $SEQWARE_JAR now..."
     mkdir -p "$(dirname "$SEQWARE_JAR")"
     
     if [ $SNAPSHOT = "YES" ]; then
@@ -170,7 +170,7 @@ if [ "$1" = "self-install" ]; then
     fi
 elif [ "$1" = "init" ]; then
     if [ -r "$SEQWARE_SETTINGS" ]; then
-        echo "The Seqware settings file already exists at $SEQWARE_SETTINGS."
+        echo "The SeqWare settings file already exists at $SEQWARE_SETTINGS."
         echo "If you wish to re-initialize, delete it and rerun \"$0 init\"."
         exit 1
     fi
@@ -185,18 +185,18 @@ elif [ "$1" = "init" ]; then
     echo "SW_METADATA_METHOD=webservice" >> $SEQWARE_SETTINGS
     
     echo
-    echo "Initializing Seqware settings:"
-    echo -n "  Seqware WebService URL: "
+    echo "Initializing SeqWare settings:"
+    echo -n "  SeqWare WebService URL: "
     read WEBSERVICE_URL
     echo >> $SEQWARE_SETTINGS
     echo "# SeqWare webservice settings. Only used if SW_METADATA_METHOD=webservice" >> $SEQWARE_SETTINGS
     echo "SW_REST_URL=$WEBSERVICE_URL" >> $SEQWARE_SETTINGS
     
-    echo -n "  Seqware WebService Username: "
+    echo -n "  SeqWare WebService Username: "
     read WEBSERVICE_USERNAME
     echo "SW_REST_USER=$WEBSERVICE_USERNAME" >> $SEQWARE_SETTINGS
     
-    prompt="  Seqware WebService Password: "
+    prompt="  SeqWare WebService Password: "
     while IFS= read -p "$prompt" -r -s -n 1 char
     do
         if [[ $char == $'\0' ]]
@@ -224,9 +224,9 @@ elif [ "$1" = "init" ]; then
     echo "SW_DEFAULT_WORKFLOW_ENGINE=$DEFAULT_ENGINE" >> $SEQWARE_SETTINGS
 
     echo
-    echo "Created Seqware settings file at $SEQWARE_SETTINGS"
+    echo "Created SeqWare settings file at $SEQWARE_SETTINGS"
     echo
-    echo "Seqware is ready to use!"
+    echo "SeqWare is ready to use!"
     
 elif [ "$1" = "upgrade" ]; then
     if [ $SNAPSHOT = "YES" ]; then
@@ -266,7 +266,7 @@ elif [ "$1" = "upgrade" ]; then
         esac
     fi
 elif [ "$1" = "version" -o "$1" = "-v" -o "$1" = "--version" ]; then
-    echo "Seqware version $SEQWARE_VERSION"
+    echo "SeqWare version $SEQWARE_VERSION"
 else
     $JAVA_CMD $SEQWARE_JVM_OPTS io.seqware.cli.Main "$@"
     
