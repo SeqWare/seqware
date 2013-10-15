@@ -145,6 +145,7 @@
         <module>seqware-meta-db</module>
         <module>seqware-common</module>
         <module>seqware-pipeline</module>
+        <module>seqware-admin-webservice</module>
         <module>seqware-webservice-dto</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
