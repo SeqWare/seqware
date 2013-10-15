@@ -39,7 +39,7 @@ public class ConfigTools {
     File settingsFile = new File(settings);
 
     if (!settingsFile.exists()) {
-      throw new RuntimeException("The settings file " + settings + " does not exist!");
+      throw new RuntimeException("The settings file " + settings + " does not exist, or user '"+System.getProperty("user.name")+"' does not have permissions to read it!");
     } else if (!settingsFile.isFile()) {
       throw new RuntimeException("The settings file " + settings + " is not a file!");
     }
