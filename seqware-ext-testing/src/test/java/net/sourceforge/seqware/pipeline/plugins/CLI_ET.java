@@ -50,7 +50,7 @@ public class CLI_ET {
     public void checkVersion() throws IOException {
         String listCommand = "--version";
         String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
-        Assert.assertTrue("output does not contain version", listOutput.startsWith("Seqware version"));
+        Assert.assertTrue("output does not contain version", listOutput.startsWith("SeqWare version"));
     }
     
     @Test
