@@ -16,12 +16,14 @@
  */
 package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
@@ -32,6 +34,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.PerlJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.WorkflowExecutableUtils;
+
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -160,7 +163,7 @@ public class Adag  {
 						pjob.addParent(parent);
 					}
 					//add mkdir to the first job, then set the file path
-					String outputDir = "provisionfiles/" + file.getUniqueDir() ;
+          String outputDir = new File(entry.getValue().getOutputPath()).getParent();
 					job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
 					pjob.setOutputDir(outputDir);
 				} else {
@@ -215,10 +218,11 @@ public class Adag  {
 								parentPfjob.setParentAccessions(file.getParentAccessions());
 							}
 							this.jobs.add(parentPfjob);
-							parentPfjob.setOutputDir("provisionfiles/"+file.getUniqueDir()) ;
+							String outputDir = new File(file.getOutputPath()).getParent();
+							parentPfjob.setOutputDir(outputDir) ;
 							pjob.addParent(parentPfjob);	
 							//add mkdir to the first job, then set the file path
-							job0.getCommand().addArgument("mkdir -p " + "provisionfiles/"+file.getUniqueDir() + "; ");
+							job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
 					} else {
 							//create a provisionFileJob;
 							AbstractJob pfjob = new BashJob("provisionFile_out");

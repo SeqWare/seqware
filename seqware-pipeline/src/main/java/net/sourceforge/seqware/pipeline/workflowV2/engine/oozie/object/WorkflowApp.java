@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.sourceforge.seqware.common.util.Log;
 
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
@@ -195,7 +195,7 @@ public class WorkflowApp {
             ojob.addParent(parent);
           }
           // add mkdir to the first job, then set the file path
-          String outputDir = this.unqiueWorkingDir + "/provisionfiles/" + entry.getValue().getUniqueDir();
+          String outputDir = new File(entry.getValue().getOutputPath()).getParent();
           job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
           ojob.setOutputDir(outputDir);
         } else {
@@ -242,10 +242,11 @@ public class WorkflowApp {
               parentPfjob.setWorkflowRunAccession(workflowRunAccession);
             }
             this.jobs.add(parentPfjob);
-            parentPfjob.setOutputDir("provisionfiles/" + file.getUniqueDir());
+            String outputDir = new File(file.getOutputPath()).getParent();
+            parentPfjob.setOutputDir(outputDir);
             pjob.addParent(parentPfjob);
             // add mkdir to the first job, then set the file path
-            job0.getCommand().addArgument("mkdir -p " + "provisionfiles/" + file.getUniqueDir() + "; ");
+            job0.getCommand().addArgument("mkdir -p " + outputDir + "; ");
           } else {
             // create a provisionFileJob;
             AbstractJob pfjob = new BashJob("provisionFile_out");
