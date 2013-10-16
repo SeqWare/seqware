@@ -10,6 +10,11 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <seqware_meta_db_name>test_seqware_meta_db</seqware_meta_db_name>
+        <seqware_meta_db_port>5432</seqware_meta_db_port>
+        <seqware_meta_db_password>seqware</seqware_meta_db_password>
+        <seqware_meta_db_user>seqware</seqware_meta_db_user>
+	<seqware_meta_db_host>localhost</seqware_meta_db_host>
     </properties>
 
     <parent>
@@ -114,6 +119,12 @@
             <version>1.11.1</version>
         </dependency>
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
@@ -124,11 +135,11 @@
             <artifactId>joda-time</artifactId>
             <version>2.3</version>
         </dependency>
-        
+
     </dependencies>
 
     <build>
-        <plugins>
+        <plugins>        
             <plugin>
                 <groupId>org.glassfish.embedded</groupId>
                 <artifactId>maven-embedded-glassfish-plugin</artifactId>
@@ -143,6 +154,7 @@
                     <goalPrefix>embedded-glassfish</goalPrefix>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -158,7 +170,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>${maven-war-plugin.version}</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <attachClasses>true</attachClasses>
@@ -202,6 +214,31 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+			
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <argLine>${itCoverageAgent} -Xms512m -Xmx512m</argLine>
+                    <forkMode>pertest</forkMode>		    
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <repositories>
@@ -212,4 +249,26 @@
             <name>Repository for library EclipseLink (JPA 2.0)</name>
         </repository>
     </repositories>
+    <!--
+     <profiles>
+        <profile>
+            <id>embeddedTomcat</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.tomcat.maven</groupId>
+                        <artifactId>tomcat6-maven-plugin</artifactId>
+                        <configuration>   
+                            <port>38080</port>
+                            <contextFile>target/seqware-admin-webservice-${project.version}/META-INF/context.xml</contextFile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    -->
 </project>
