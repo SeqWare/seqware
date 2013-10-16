@@ -147,6 +147,7 @@
         <module>seqware-pipeline</module>
         <module>seqware-admin-webservice</module>
         <module>seqware-webservice-dto</module>
+        <module>seqware-ext-admin-testing</module>
         <module>seqware-webservice</module>
         <module>seqware-portal</module>
         <module>seqware-archetypes/seqware-archetype-decider</module>
@@ -548,6 +549,7 @@
                     <version>2.1</version>
                     <configuration>
                         <port>8889</port>
+			<useNaming>true</useNaming>
                     </configuration>
                     <executions>
                         <execution>
@@ -558,7 +560,7 @@
                             <phase>pre-integration-test</phase>
                             <configuration>
                                 <fork>true</fork>
-                                <skip>${skipITs}</skip>
+                            <!--    <skip>${skipITs}</skip> -->
                             </configuration>
                         </execution>
                         <execution>
@@ -567,7 +569,7 @@
                                 <goal>shutdown</goal>
                             </goals>
                             <configuration>
-                                <skip>${skipITs}</skip> 
+                          <!--      <skip>${skipITs}</skip>  -->
                             </configuration>
                             <phase>post-integration-test</phase>
                         </execution>

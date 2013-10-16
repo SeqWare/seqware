@@ -515,6 +515,8 @@
                         <artifactId>tomcat6-maven-plugin</artifactId>
 			 <configuration>   
                             <contextFile>target/seqware-webservice-${project.version}/META-INF/context.xml</contextFile>
+                            <!-- <useSeparateTomcatClassLoader>true</useSeparateTomcatClassLoader>
+                            <useNaming>false</useNaming> -->
                         </configuration>
 
                     </plugin>
