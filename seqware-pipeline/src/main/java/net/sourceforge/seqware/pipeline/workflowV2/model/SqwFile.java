@@ -1,7 +1,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,17 +15,46 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class SqwFile {
   private String type;
-  private String location;
-  private String outputLocation;
+  private String sourcePath;
+  private String outputPath;
   private boolean input = true;
   private boolean forceCopy;
-  private String uniqueDir;
-  private List<String> parentAccessions;
+  private List<String> parentAccessions = new ArrayList<String>();
 
   public SqwFile() {
-    // need to create a random directory for later reference
-    this.uniqueDir = Long.toString(System.nanoTime());
-    this.parentAccessions = new ArrayList<String>();
+  }
+
+  /**
+   * Constructor for input files; output path is defaulted to #{@link SqwFile#provisionPath(String)}.
+   */
+  public SqwFile(String type, String inputPath) {
+    setType(type);
+    setIsInput(true);
+    setSourcePath(inputPath);
+    setForceCopy(false);
+  }
+
+  /**
+   * Constructor for output files; forceCopy is defaulted to true.
+   */
+  public SqwFile(String type, String sourcePath, String outputPath) {
+    setType(type);
+    setIsInput(false);
+    setSourcePath(sourcePath);
+    setOutputPath(outputPath);
+    setForceCopy(true);
+  }
+
+  public static String provisionPath(String sourcePath) {
+    String unique = Long.toString(System.nanoTime());
+    String dir = "provisionfiles/" + unique + "/" + FilenameUtils.getName(sourcePath);
+    return dir;
+  }
+
+  private void checkOutputPath() {
+    if (input && outputPath == null && sourcePath != null) {
+      outputPath = provisionPath(sourcePath);
+    }
   }
 
   public String getType() {
@@ -37,19 +66,21 @@ public class SqwFile {
   }
 
   public String getSourcePath() {
-    return location;
+    return sourcePath;
   }
 
   public void setSourcePath(String location) {
-    this.location = location;
+    this.sourcePath = location;
+    checkOutputPath();
   }
 
   public String getOutputPath() {
-    return outputLocation;
+    return outputPath;
   }
 
   public void setOutputPath(String location) {
-    this.outputLocation = location;
+    this.outputPath = location;
+    checkOutputPath();
   }
 
   /**
@@ -77,6 +108,7 @@ public class SqwFile {
    */
   public void setIsInput(boolean isInupt) {
     this.input = isInupt;
+    checkOutputPath();
   }
 
   /**
@@ -86,6 +118,7 @@ public class SqwFile {
    */
   public void setIsOutput(boolean isOutput) {
     this.input = !isOutput;
+    checkOutputPath();
   }
 
   @Override
@@ -97,14 +130,14 @@ public class SqwFile {
     SqwFile rhs = (SqwFile) obj;
     return new EqualsBuilder().appendSuper(super.equals(obj))
                               .append(type, rhs.type)
-                              .append(location, rhs.location)
+                              .append(sourcePath, rhs.sourcePath)
                               .append(input, rhs.input)
                               .isEquals();
   }
 
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 37).append(type).append(location).append(input).toHashCode();
+    return new HashCodeBuilder(17, 37).append(type).append(sourcePath).append(input).toHashCode();
   }
 
   public boolean isForceCopy() {
@@ -125,8 +158,9 @@ public class SqwFile {
    * 
    * @return the file path after provisioned.
    */
+  @Deprecated
   public String getProvisionedPath() {
-    return "provisionfiles/" + this.uniqueDir + "/" + FilenameUtils.getName(this.getSourcePath());
+    return getOutputPath();
   }
 
   /**
@@ -135,8 +169,9 @@ public class SqwFile {
    * 
    * @return
    */
+  @Deprecated
   public String getUniqueDir() {
-    return this.uniqueDir;
+    throw new UnsupportedOperationException();
   }
 
   /**
