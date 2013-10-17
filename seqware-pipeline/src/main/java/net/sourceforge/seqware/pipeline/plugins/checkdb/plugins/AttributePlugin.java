@@ -16,7 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.checkdb.plugins;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -26,11 +25,14 @@ import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.SelectQueryRunner;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Checks the metadb for issues with attributes
+ * Checks the metadb for issues with attributes.
+ * 
+ * This plugin also acts as a demo for reading external sql files
+ * 
  * @author dyuen
  */
 @ServiceProvider(service = CheckDBPluginInterface.class)
@@ -39,12 +41,10 @@ public class AttributePlugin implements CheckDBPluginInterface {
     @Override
     public void check(SelectQueryRunner qRunner, SortedMap<Level, Set<String>> result) throws SQLException {
         try {
-            String path = AttributePlugin.class.getResource("duplicate_attribute_keys.sql").getPath();
-            String query = FileUtils.readFileToString(new File(path));
+            String query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("duplicate_attribute_keys.sql"));
             List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
             CheckDB.processOutput(result, Level.SEVERE,  "Entities with duplicate attribute keys in non-sample tables: " , executeQuery);
-            path = WorkflowRunConventionsPlugin.class.getResource("duplicate_sample_attribute_keys.sql").getPath();
-            query = FileUtils.readFileToString(new File(path));
+            query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("duplicate_sample_attribute_keys.sql"));
             executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
             CheckDB.processOutput(result, Level.SEVERE,  "Samples with duplicate attribute keys: " , executeQuery);
             

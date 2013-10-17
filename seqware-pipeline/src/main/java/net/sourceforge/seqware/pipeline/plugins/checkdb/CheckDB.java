@@ -141,15 +141,10 @@ public final class CheckDB extends Plugin {
      */
     @Override
     public final String get_description() {
-        return ("An database validation tool for your SeqWare metadb.");
-    }
+        return ("A database validation tool for your SeqWare metadb.");
+    }   
 
-
-
-
-    
-
-    public final static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args) throws IOException, URISyntaxException {
         CheckDB mp = new CheckDB();
         mp.init();
         List<String> arr = new ArrayList<String>();
