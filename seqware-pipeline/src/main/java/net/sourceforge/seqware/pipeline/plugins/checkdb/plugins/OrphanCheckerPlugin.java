@@ -27,7 +27,10 @@ import org.apache.commons.dbutils.handlers.ColumnListHandler;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Checks the metadb for orphans that are not connected to any other entities
+ * Checks the metadb for orphans that are not connected to any other entities.
+ * 
+ * This plugin also demonstrates inlined SQL queries run through the query runner
+ * 
  * @author dyuen
  */
 @ServiceProvider(service=CheckDBPluginInterface.class)

@@ -27,7 +27,7 @@ import org.apache.commons.dbutils.handlers.ColumnListHandler;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Checks the metadb for issues specifically with the sample hierarchy
+ * Checks the metadb for issues specifically with the sample hierarchy.
  * @author dyuen
  */
 @ServiceProvider(service = CheckDBPluginInterface.class)

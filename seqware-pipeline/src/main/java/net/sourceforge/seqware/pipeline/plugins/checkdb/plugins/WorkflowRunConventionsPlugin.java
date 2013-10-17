@@ -16,12 +16,9 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.checkdb.plugins;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -34,11 +31,14 @@ import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.SelectQueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.ColumnListHandler;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Checks the metadb for orphans that are not connected to any other entities
+ * Checks the metadb for orphans that are not connected to any other entities.
+ * 
+ * This plugin demonstrates queries that use common table expressions and recursion.
+ * 
  * @author dyuen
  */
 @ServiceProvider(service=CheckDBPluginInterface.class)
@@ -53,8 +53,7 @@ public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
             * CheckDB.processOutput(result, Level.TRIVIAL,  "Workflow runs not connected to an IUS via ius_workflow_runs: " , executeQuery);
             **/
             // workflow runs not connected to a study
-            String path = WorkflowRunConventionsPlugin.class.getResource("workflow_runs_not_connected_to_study.sql").getPath();
-            String query = FileUtils.readFileToString(new File(path));
+            String query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("workflow_runs_not_connected_to_study.sql"));
             List<Object[]> workflow_run_study_pairs = qRunner.executeQuery(query, new ArrayListHandler());
             
             List<Integer> unreachableByStudy = new ArrayList<Integer>();
@@ -83,19 +82,15 @@ public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
                     CheckDB.processOutput(result, Level.WARNING,  "'Completed' Workflow runs reachable by "+e.getKey()+" studies: " , new ArrayList<Integer>(e.getValue()));
                 }
             }
-            
-            path = WorkflowRunConventionsPlugin.class.getResource("workflow_runs_not_connected_in_hierarchy.sql").getPath();
-            query = FileUtils.readFileToString(new File(path));
+            query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("workflow_runs_not_connected_in_hierarchy.sql"));
             List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
             CheckDB.processOutput(result, Level.SEVERE, "'Completed' Workflow runs reachable by ius_workflow_runs but not via the processing_hierarchy: " , executeQuery);
-            
-            path = WorkflowRunConventionsPlugin.class.getResource("new_input_files_versus_old.sql").getPath();
-            query = FileUtils.readFileToString(new File(path));
+                     
+            query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("new_input_files_versus_old.sql"));
             executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
             CheckDB.processOutput(result, Level.TRIVIAL, "Workflow runs with input files via workflow_run_input_files but not via the processing hierarchy: " , executeQuery);
             
-            path = WorkflowRunConventionsPlugin.class.getResource("old_input_files_versus_new.sql").getPath();
-            query = FileUtils.readFileToString(new File(path));
+            query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("old_input_files_versus_new.sql"));
             executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
             CheckDB.processOutput(result, Level.TRIVIAL, "Workflow runs with input files via the processing hierarchy but not via workflow_run_input_files: " , executeQuery);            
             
