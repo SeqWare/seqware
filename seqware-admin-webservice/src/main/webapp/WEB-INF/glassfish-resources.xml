@@ -5,9 +5,9 @@
         <property name="serverName" value="localhost"/>
         <property name="portNumber" value="5432"/>
         <property name="databaseName" value="test_seqware_meta_db"/>
-        <property name="User" value="seqware"/>
-        <property name="Password" value="seqware"/>
-        <property name="URL" value="jdbc:postgresql://localhost:5432/test_seqware_meta_db"/>
+        <property name="User" value="${seqware_meta_db_user}"/>
+        <property name="Password" value="${seqware_meta_db_password}"/>
+        <property name="URL" value="jdbc:postgresql://${seqware_meta_db_host}:${seqware_meta_db_port}/${seqware_meta_db_name}"/>
         <property name="driverClass" value="org.postgresql.Driver"/>
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:app/test_seqware_meta_db" object-type="user" pool-name="post-gre-sql_test_seqware_meta_db_seqwarePool"/>
