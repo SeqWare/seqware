@@ -70,6 +70,21 @@ public class MapToolsTest {
     public void tearDown() {
     }
 
+    @Test
+    public void testExpandVariables() {
+      Map<String, String> provided = new HashMap<String, String>();
+      provided.put("workflow_bundle_dir", "/u/seqware/provisioned-bundles");
+      String path = getClass().getResource("vars.ini").getPath();
+      Map<String, String> raw = new HashMap<String, String>();
+      MapTools.ini2Map(path, raw);
+      Map<String, String> exp = MapTools.expandVariables(raw, provided);
+      assertEquals(raw.size(), exp.size());
+      assertEquals("prov", exp.get("foo"));
+      assertEquals("oned", exp.get("bar"));
+      assertEquals("./provisioned/", exp.get("output_prefix"));
+      assertEquals("/u/seqware/provisioned-bundles/Workflow_Bundle_helloWorld/1.0-SNAPSHOT/data/input.txt", exp.get("input_file"));
+      Integer.parseInt(exp.get("baz"));
+    }
 
     @Test
     public void testNormalRichIni() throws Exception {
