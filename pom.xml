@@ -13,6 +13,13 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- use for filtering of web service context files and related -->
+        <seqware_meta_db_name>test_seqware_meta_db</seqware_meta_db_name>
+        <seqware_meta_db_port>5432</seqware_meta_db_port>
+        <seqware_meta_db_password>seqware</seqware_meta_db_password>
+        <seqware_meta_db_user>seqware</seqware_meta_db_user>
+	<seqware_meta_db_host>localhost</seqware_meta_db_host>
+        
         <!-- while merging com.amazonaws.services.s3.transfer.MultipleFileUpload , I couldn't compile without setting a version here -->
         <aws-java-sdk.version>1.3.27</aws-java-sdk.version>
         <jackson.version>1.9.4</jackson.version>
@@ -560,7 +567,7 @@
                             <phase>pre-integration-test</phase>
                             <configuration>
                                 <fork>true</fork>
-                            <!--    <skip>${skipITs}</skip> -->
+                                <skip>${skipITs}</skip>
                             </configuration>
                         </execution>
                         <execution>
@@ -569,7 +576,7 @@
                                 <goal>shutdown</goal>
                             </goals>
                             <configuration>
-                          <!--      <skip>${skipITs}</skip>  -->
+                                <skip>${skipITs}</skip>  
                             </configuration>
                             <phase>post-integration-test</phase>
                         </execution>

@@ -21,6 +21,8 @@ import com.sun.jersey.api.client.GenericType;
 import java.util.List;
 import org.junit.Assert;
 import io.seqware.webservice.model.*;
+import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -28,6 +30,11 @@ import org.junit.Test;
  * @author dyuen
  */
 public class ConnectivityIT {
+    
+    @BeforeClass
+    public static void resetDatabase() {
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
+    }
     
     @Test
     public void testOrganismConnectivity(){
@@ -38,7 +45,7 @@ public class ConnectivityIT {
       GenericType<List<Organism>> genericType = new GenericType<List<Organism>>() {
       };
       List<Organism> data = response.getEntity(genericType);
-      //Assert.assertTrue("no organisms found", data.size() > 0);
+      Assert.assertTrue("no organisms found", data.size() > 0);
 
    }
 }
