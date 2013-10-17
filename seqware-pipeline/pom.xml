@@ -68,6 +68,13 @@
             <artifactId>seqware-common</artifactId>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>seqware-admin-webservice</artifactId>
+            <classifier>classes</classifier>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
         </dependency>
@@ -218,6 +225,12 @@
         <groupId>org.rendersnake</groupId>
         <artifactId>rendersnake</artifactId>
         <version>1.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+            <type>jar</type>
         </dependency>
     </dependencies>
     <build>
