@@ -567,7 +567,7 @@ TestSupport.prototype = {
                 }
             }
         }
-        if(mName == 'PUT' || mName == 'POST') {   
+        if(mName == 'PUT' || mName == 'POST' || mName == 'DELETE') {   
             str += '<tr><td valign="top"><span id="j_id14"><label for="blobParam" class="LblLev2Txt_sun4">'+
                 '<span>Content: </span></label></span></td>'+
                 '<td><span id="j_id14"><textarea class="TxtAra_sun4 TxtAraVld_sun4" id=blobParam name=params rows=6 cols=65>Insert content here.</textarea></span></td></tr>';
@@ -646,7 +646,7 @@ TestSupport.prototype = {
         
         var params = null;
         var paramLength = 0;
-        if(method == 'POST' || method == 'PUT'){
+        if(method == 'POST' || method == 'PUT' || method == 'DELETE'){
             var blobParam = document.getElementById('blobParam').value;
             if(blobParam != null && blobParam != undefined){
                 params = blobParam;
@@ -718,7 +718,7 @@ TestSupport.prototype = {
         } else if(method == 'GET') {
             c = this.xhr.get(req, mimetype);
         } else if(method == 'DELETE') {
-            c = this.xhr.delete_(req);
+            c = this.xhr.delete_(req, mimetype, params);
         }
         ts.updateContent(c);
     },
@@ -1678,7 +1678,7 @@ WADLParser.prototype = {
     
     getMethodNameForDisplay : function (mName, mediaType) {
         var m = mName;
-        if(mediaType == null && (mName == 'PUT' || mName == 'POST'))
+        if(mediaType == null && (mName == 'PUT' || mName == 'POST' || mName == 'DELETE'))
             mediaType = getDefaultMime();
         if(mediaType != null)
             m += '(' + mediaType + ')';    
@@ -1921,7 +1921,7 @@ XHR.prototype = {
             if(method == 'GET' || method == 'OPTIONS') {
                 //ts.debug("setting GET accept: "+mimeType);
                 xmlHttpReq.setRequestHeader('Accept', mimeType);
-            } else if(method == 'POST' || method == 'PUT'){
+            } else if(method == 'POST' || method == 'PUT' || method == 'DELETE'){
                 //ts.debug("setting content-type: "+mimeType);
                 //Send the proper header information along with the request
                 xmlHttpReq.setRequestHeader("Content-Type", mimeType);
@@ -1948,7 +1948,7 @@ XHR.prototype = {
             xmlHttpReq.send(content);
             if (this.isResponseReady(method, xmlHttpReq, content, monitor)) {
               var rtext = xmlHttpReq.responseText;
-              if ( (rtext== undefined || rtext == '' ) && (method=='POST' || method=='PUT' )){
+              if ( (rtext== undefined || rtext == '' ) && (method=='POST' || method=='PUT' || method =='DELETE')){
                   return 'MSG_TEST_RESBEANS_NoContent';
               }
               if(rtext == undefined || rtext == '' || rtext.indexOf('HTTP Status') != -1) {
@@ -1982,8 +1982,8 @@ XHR.prototype = {
         return this.httpRequest('PUT', url, mime, content, true);
     },
 
-    delete_ : function(url) {
-        return this.httpRequest('DELETE', url, 'application/xml', true);
+    delete_ : function(url, mime, content) {
+        return this.httpRequest('DELETE', url, mime, content, true);
     },
     
     loadXml : function(xmlStr) {
