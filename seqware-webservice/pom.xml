@@ -205,6 +205,10 @@
                     <artifactId>seqware-common</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>com.github.seqware</groupId>
+                    <artifactId>seqware-admin-webservice</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>org.springframework</groupId>
                     <artifactId>spring</artifactId>
                 </exclusion>
