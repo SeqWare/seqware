@@ -170,7 +170,7 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
                     // if the child processing is connected to a workflow run that is not this one, recursive
                     WorkflowRun childRun = childp.getAncestorWorkflowRunId();
                     if (childRun == null){ childRun = childp.getWorkflowRunId(); }
-                    if (!childRun.equals(data)){
+                    if (childRun != null && !childRun.equals(data)){
                         Set<ModelAccessionIDTuple> recursiveSet = this.deleteWorkflowRunRecursive(childRun.getWorkflowRunId(), delete, matchSet);
                         if (recursiveSet != null) {
                             results.addAll(recursiveSet);
