@@ -174,7 +174,7 @@ public class SeqWareWebserviceClient {
    }
    
    public void remove_rdelete(Class targetType, String id, Set<ModelAccessionIDTuple> matchSet) throws UniformInterfaceException {
-       webResource.path(java.text.MessageFormat.format("{0}/rdelete/{1}",id, targetType.getSimpleName())).type(javax.ws.rs.core.MediaType.APPLICATION_JSON).delete(matchSet);
+       webResource.path(java.text.MessageFormat.format("{0}/rdelete/{1}",id, targetType.getSimpleName())).type(javax.ws.rs.core.MediaType.APPLICATION_JSON).header("X-HTTP-Method-Override", "DELETE").post(matchSet);
    }
 
    public void close() {
