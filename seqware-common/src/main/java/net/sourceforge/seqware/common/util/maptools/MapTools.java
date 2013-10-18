@@ -221,6 +221,8 @@ public class MapTools {
     public static final String LEGACY_VAR_RANDOM = "random";
     public static final String LEGACY_VAR_DATE = "date";
     public static final String LEGACY_VAR_BUNDLE_DIR = "workflow_bundle_dir";
+    public static final String VAR_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String VAR_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     
     public static void provideBundleDir(Map<String, String> m, String bundleDir){
       m.put(VAR_BUNDLE_DIR, bundleDir);
@@ -235,23 +237,23 @@ public class MapTools {
     
     public static String generatedValue(String key){
       if (key.equals(VAR_RANDOM))
-        return new Random().nextInt(Integer.MAX_VALUE)+"";
+        return String.valueOf(new Random().nextInt(Integer.MAX_VALUE));
       if (key.equals(VAR_DATE))
-        return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        return new SimpleDateFormat(VAR_DATE_FORMAT).format(new Date());
       if (key.equals(VAR_DATETIME))
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(new Date());
+        return new SimpleDateFormat(VAR_DATETIME_FORMAT).format(new Date());
       if (key.equals(VAR_TIMESTAMP))
-        return ""+System.currentTimeMillis();
+        return String.valueOf(System.currentTimeMillis());
       if (key.equals(VAR_UUID))
         return UUID.randomUUID().toString();
       
       if (key.equals(LEGACY_VAR_RANDOM)) {
         Log.warn(String.format("Variable '%s' is deprecated. Please use '%s' instead.", LEGACY_VAR_RANDOM, VAR_RANDOM));
-        return ""+new Random().nextInt(Integer.MAX_VALUE);
+        return String.valueOf(new Random().nextInt(Integer.MAX_VALUE));
       }
       if (key.equals(LEGACY_VAR_DATE)) {
         Log.warn(String.format("Variable '%s' is deprecated. Please use '%s' instead.", LEGACY_VAR_DATE, VAR_DATE));
-        return new Date().toString();
+        return new SimpleDateFormat(VAR_DATE_FORMAT).format(new Date());
       }
       
      return null;
