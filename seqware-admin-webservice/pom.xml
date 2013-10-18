@@ -199,12 +199,12 @@
                     </webResources>
                         
                     <packagingExcludes>**/servlet*.jar,META-INF/context.xml</packagingExcludes>
-                    <archive>
+                    <!--<archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
-                    </archive>
+                    </archive> -->
                 </configuration>
             </plugin>
             <plugin>
