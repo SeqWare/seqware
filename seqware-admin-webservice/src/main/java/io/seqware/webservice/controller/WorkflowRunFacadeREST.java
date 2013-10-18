@@ -121,9 +121,9 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
    */
   @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
   @DELETE
-  @Path("{id}/rdelete")
+  @Path("{id}/rdelete/{targetClass}")
   @Consumes({"application/json"})
-  public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims, @QueryParam("targetClass") String targetClass) throws NamingException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException, ClassNotFoundException {
+  public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims, @PathParam("targetClass") String targetClass) throws NamingException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException, ClassNotFoundException {
         handleTargetting(targetClass, id, true, victims);
   }
 
@@ -134,10 +134,10 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
    * @return 
    */
     @GET
-    @Path("{id}/rdelete")
+    @Path("{id}/rdelete/{targetClass}")
     @Produces({"application/json"})
-    public Set<ModelAccessionIDTuple> findRecursive(@PathParam("id") Integer id, @QueryParam("targetClass") String targetClass) {
-      return handleTargetting(targetClass, id, false, null);
+    public Set<ModelAccessionIDTuple> findRecursive(@PathParam("id") Integer id, @PathParam("targetClass") String targetClass) {
+        return handleTargetting(targetClass, id, false, null);
     }
     
     /**
@@ -149,6 +149,9 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
      */
     private Set<ModelAccessionIDTuple> deleteSequencerRunRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet) {
         SequencerRun data = getEntityManager().find(SequencerRun.class, id);
+        if (data == null){
+            return null;
+        }
         Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
         if (data.getLaneCollection() != null) {
             for (Lane l : data.getLaneCollection()) {
@@ -170,6 +173,9 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
      */
     private Set<ModelAccessionIDTuple> deleteLaneRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet) {
         Lane data = getEntityManager().find(Lane.class, id);
+        if (data == null){
+            return null;
+        }
         Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
         if (data.getIusCollection() != null) {
             for (Ius i : data.getIusCollection()) {
@@ -191,6 +197,9 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
      */
     private Set<ModelAccessionIDTuple> deleteIUSRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet){
         Ius data = getEntityManager().find(Ius.class, id);
+        if (data == null){
+            return null;
+        }
         Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
         if (data.getIusWorkflowRunsCollection() != null){
             for(IusWorkflowRuns iwr : data.getIusWorkflowRunsCollection()){
@@ -298,6 +307,9 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
     }
 
     private Set<ModelAccessionIDTuple> handleTargetting(String targetClass, Integer id, boolean delete, Set<ModelAccessionIDTuple> victims) {
+        if (targetClass == null) {
+            throw new RuntimeException("No targetClass specified");
+        }
         if (targetClass.equals(WorkflowRun.class.getSimpleName())) {
             return deleteWorkflowRunRecursive(id, delete, victims);
         } else if (targetClass.equals(Ius.class.getSimpleName())) {
