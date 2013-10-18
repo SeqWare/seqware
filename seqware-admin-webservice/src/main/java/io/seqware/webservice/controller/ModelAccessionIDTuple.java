@@ -16,6 +16,8 @@
  */
 package io.seqware.webservice.controller;
 
+import com.google.common.base.Objects;
+
 /**
  * Holds information for the recursive deletion tool
  * @author dyuen
@@ -76,4 +78,20 @@ public class ModelAccessionIDTuple {
         this.adminModelClass = adminModelClass;
     }
     
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(accession, id, adminModelClass);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof ModelAccessionIDTuple) {
+            final ModelAccessionIDTuple other = (ModelAccessionIDTuple) obj;
+            return Objects.equal(accession, other.accession)
+                    && id == other.id // special handling for primitives
+                    && Objects.equal(adminModelClass, other.adminModelClass);
+        } else {
+            return false;
+        }
+    }
 }
