@@ -14,6 +14,9 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
+import io.seqware.webservice.controller.ModelAccessionIDTuple;
+import java.util.Set;
 
 /**
  * Jersey REST client generated for REST resource:OrganismFacadeREST
@@ -94,6 +97,8 @@ public class SeqWareWebserviceClient {
     */
    public SeqWareWebserviceClient(String modelName, String baseUri) {
       ClientConfig config = new DefaultClientConfig();
+      config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+      config.getClasses().add(ModelAccessionIDTuple.class);
       client = Client.create(config);
       webResource = client.resource(baseUri).path("io.seqware.webservice.model." + modelName);
    }
@@ -156,6 +161,20 @@ public class SeqWareWebserviceClient {
       WebResource resource = webResource;
       resource = resource.path(java.text.MessageFormat.format("{0}", new Object[] { id }));
       return resource.accept(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(responseType);
+   }
+   
+   /**
+   *    Code that follows was not automatically generated and will need to be merged in if this is re-generated
+   */
+   
+   public Set<ModelAccessionIDTuple> find_JSON_rdelete(Class targetType, String id) throws UniformInterfaceException {
+      WebResource resource = webResource;
+      resource = resource.path(java.text.MessageFormat.format("{0}/rdelete/{1}",  id, targetType.getSimpleName()));
+      return resource.accept(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(new GenericType<Set<ModelAccessionIDTuple>>(){});
+   }
+   
+   public void remove_rdelete(Class targetType, String id, Set<ModelAccessionIDTuple> matchSet) throws UniformInterfaceException {
+       webResource.path(java.text.MessageFormat.format("{0}/rdelete/{1}",id, targetType.getSimpleName())).type(javax.ws.rs.core.MediaType.APPLICATION_JSON).delete(matchSet);
    }
 
    public void close() {

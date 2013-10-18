@@ -17,12 +17,14 @@
 package io.seqware.webservice.controller;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ComparisonChain;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Holds information for the recursive deletion tool
  * @author dyuen
  */
-public class ModelAccessionIDTuple {
+public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple>{
     private int accession;
     private int id;
     private String adminModelClass;
@@ -93,5 +95,14 @@ public class ModelAccessionIDTuple {
         } else {
             return false;
         }
+    }
+    
+    @Override
+    public int compareTo(ModelAccessionIDTuple that) {
+        return ComparisonChain.start()
+                .compare(this.id, that.id)
+                .compare(this.adminModelClass, that.adminModelClass)
+                .compare(this.accession, that.accession)
+                .result();
     }
 }

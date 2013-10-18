@@ -37,7 +37,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 
 /**
  *
@@ -106,6 +105,10 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
   protected EntityManager getEntityManager() {
     return em;
   }
+  
+  /**
+   *    Code that follows was not automatically generated and will need to be merged in if this is re-generated
+   */
   
   /**
    * The actual delete method, container managed JTA transactions should handle rollback and atomic operations
@@ -301,7 +304,7 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
         // add the actual relationships themselves to the results
         if (col != null){
             for(ProcessingRelationship pr : col){
-                results.add(new ModelAccessionIDTuple(-1, pr.getProcessingRelationshipId(), pr.getClass().getName()));
+                results.add(new ModelAccessionIDTuple(Integer.MAX_VALUE, pr.getProcessingRelationshipId(), pr.getClass().getName()));
             }
         }
     }
