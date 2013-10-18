@@ -5,11 +5,15 @@
 package io.seqware.webservice.controller;
 
 import io.seqware.webservice.model.File;
+import io.seqware.webservice.model.Ius;
+import io.seqware.webservice.model.IusWorkflowRuns;
+import io.seqware.webservice.model.Lane;
 import io.seqware.webservice.model.Processing;
 import io.seqware.webservice.model.ProcessingFiles;
+import io.seqware.webservice.model.ProcessingIus;
 import io.seqware.webservice.model.ProcessingRelationship;
+import io.seqware.webservice.model.SequencerRun;
 import io.seqware.webservice.model.WorkflowRun;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +37,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 /**
  *
@@ -118,8 +123,8 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
   @DELETE
   @Path("{id}/rdelete")
   @Consumes({"application/json"})
-  public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims) throws NamingException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException, ClassNotFoundException {
-      deleteWorkflowRunRecursive(id, true, victims);
+  public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims, @QueryParam("targetClass") String targetClass) throws NamingException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException, ClassNotFoundException {
+        handleTargetting(targetClass, id, true, victims);
   }
 
   
@@ -131,8 +136,78 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
     @GET
     @Path("{id}/rdelete")
     @Produces({"application/json"})
-    public Set<ModelAccessionIDTuple> findRecursive(@PathParam("id") Integer id) {
-        return deleteWorkflowRunRecursive(id, false, null);
+    public Set<ModelAccessionIDTuple> findRecursive(@PathParam("id") Integer id, @QueryParam("targetClass") String targetClass) {
+      return handleTargetting(targetClass, id, false, null);
+    }
+    
+    /**
+     * Method that starts from a SequencerRun, either deleting appropriate workflow runs or reporting on what would have been deleted
+     * @param id
+     * @param delete
+     * @param matchSet
+     * @return 
+     */
+    private Set<ModelAccessionIDTuple> deleteSequencerRunRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet) {
+        SequencerRun data = getEntityManager().find(SequencerRun.class, id);
+        Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
+        if (data.getLaneCollection() != null) {
+            for (Lane l : data.getLaneCollection()) {
+                Set<ModelAccessionIDTuple> recursiveSet = this.deleteLaneRecursive(l.getLaneId(), delete, matchSet);
+                if (recursiveSet != null) {
+                    results.addAll(recursiveSet);
+                }
+            }
+        }
+        return results;
+    }
+    
+    /**
+     * Method that starts from a lane, either deleting appropriate workflow runs or reporting on what would have been deleted
+     * @param id
+     * @param delete
+     * @param matchSet
+     * @return 
+     */
+    private Set<ModelAccessionIDTuple> deleteLaneRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet) {
+        Lane data = getEntityManager().find(Lane.class, id);
+        Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
+        if (data.getIusCollection() != null) {
+            for (Ius i : data.getIusCollection()) {
+                Set<ModelAccessionIDTuple> recursiveSet = this.deleteIUSRecursive(i.getIusId(), delete, matchSet);
+                if (recursiveSet != null) {
+                    results.addAll(recursiveSet);
+                }
+            }
+        }
+        return results;
+    }
+    
+    /**
+     * Method that starts from an ius, either deleting appropriate workflow runs or reporting on what would have been deleted
+     * @param id
+     * @param delete
+     * @param matchSet
+     * @return 
+     */
+    private Set<ModelAccessionIDTuple> deleteIUSRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet){
+        Ius data = getEntityManager().find(Ius.class, id);
+        Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
+        if (data.getIusWorkflowRunsCollection() != null){
+            for(IusWorkflowRuns iwr : data.getIusWorkflowRunsCollection()){
+                WorkflowRun workflowRun = iwr.getWorkflowRunId();
+                Set<ModelAccessionIDTuple> recursiveSet = this.deleteWorkflowRunRecursive(workflowRun.getWorkflowRunId(), delete, matchSet);
+                if (recursiveSet != null) {
+                    results.addAll(recursiveSet);
+                }
+            }
+        }
+        if (data.getProcessingIusCollection() != null){
+            for(ProcessingIus pi : data.getProcessingIusCollection()){
+                Processing childp = pi.getProcessingId();
+                handleWorkflowRunGivenProcessing(childp, null, delete, matchSet, results);
+            }
+        }
+        return results;
     }
 
     /**
@@ -145,7 +220,7 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
      * superset of what we find
      * @return
      */
-    protected Set<ModelAccessionIDTuple> deleteWorkflowRunRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet) {
+    private Set<ModelAccessionIDTuple> deleteWorkflowRunRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet) {
         EntityManager entityManager = getEntityManager();
         Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
         WorkflowRun data = entityManager.find(WorkflowRun.class, id);
@@ -167,15 +242,7 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
             if (p.getProcessingRelationshipCollection() != null){
                 for(ProcessingRelationship childpr : p.getProcessingRelationshipCollection()){
                     Processing childp = childpr.getChildId();
-                    // if the child processing is connected to a workflow run that is not this one, recursive
-                    WorkflowRun childRun = childp.getAncestorWorkflowRunId();
-                    if (childRun == null){ childRun = childp.getWorkflowRunId(); }
-                    if (childRun != null && !childRun.equals(data)){
-                        Set<ModelAccessionIDTuple> recursiveSet = this.deleteWorkflowRunRecursive(childRun.getWorkflowRunId(), delete, matchSet);
-                        if (recursiveSet != null) {
-                            results.addAll(recursiveSet);
-                        }
-                    }
+                    handleWorkflowRunGivenProcessing(childp, data, delete, matchSet, results);
                 }
                 handleProcessingRelationshipCollection(p.getProcessingRelationshipCollection(), results); 
                 handleProcessingRelationshipCollection(p.getProcessingRelationshipCollection1(), results);          
@@ -226,6 +293,32 @@ public class WorkflowRunFacadeREST extends AbstractFacade<WorkflowRun> {
         if (col != null){
             for(ProcessingRelationship pr : col){
                 results.add(new ModelAccessionIDTuple(-1, pr.getProcessingRelationshipId(), pr.getClass().getName()));
+            }
+        }
+    }
+
+    private Set<ModelAccessionIDTuple> handleTargetting(String targetClass, Integer id, boolean delete, Set<ModelAccessionIDTuple> victims) {
+        if (targetClass.equals(WorkflowRun.class.getSimpleName())) {
+            return deleteWorkflowRunRecursive(id, delete, victims);
+        } else if (targetClass.equals(Ius.class.getSimpleName())) {
+            return deleteIUSRecursive(id, delete, victims);
+        } else if (targetClass.equals(SequencerRun.class.getSimpleName())) {
+            return deleteSequencerRunRecursive(id, delete, victims);
+        } else if (targetClass.equals(Lane.class.getSimpleName())) {
+            return deleteLaneRecursive(id, delete, victims);
+        } else {
+            throw new RuntimeException("Unknown target class");
+        }
+    }
+
+    private void handleWorkflowRunGivenProcessing(Processing childp, WorkflowRun data, boolean delete, Set<ModelAccessionIDTuple> matchSet, Set<ModelAccessionIDTuple> results) {
+        // if the child processing is connected to a workflow run that is not this one, recursive
+        WorkflowRun childRun = childp.getAncestorWorkflowRunId();
+        if (childRun == null){ childRun = childp.getWorkflowRunId(); }
+        if (childRun != null && !childRun.equals(data)){
+            Set<ModelAccessionIDTuple> recursiveSet = this.deleteWorkflowRunRecursive(childRun.getWorkflowRunId(), delete, matchSet);
+            if (recursiveSet != null) {
+                results.addAll(recursiveSet);
             }
         }
     }
