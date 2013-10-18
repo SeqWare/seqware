@@ -96,7 +96,7 @@ public class MapToolsTest {
       Integer.parseInt(exp.get("test-legacy-random"));
       
       new SimpleDateFormat(MapTools.VAR_DATE_FORMAT).parse(exp.get("test-date"));
-      new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(exp.get("test-legacy-date"));
+      new SimpleDateFormat(MapTools.VAR_DATE_FORMAT).parse(exp.get("test-legacy-date"));
       
       new SimpleDateFormat(MapTools.VAR_DATETIME_FORMAT).parse(exp.get("test-datetime"));
 
