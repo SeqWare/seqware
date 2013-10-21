@@ -17,15 +17,20 @@
 
 package net.sourceforge.seqware.common.util.maptools;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 import net.sourceforge.seqware.common.util.*;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -70,6 +75,35 @@ public class MapToolsTest {
     public void tearDown() {
     }
 
+    @Test
+    public void testExpandVariables() throws Exception {
+      String path = getClass().getResource("vars.ini").getPath();
+      Map<String, String> raw = new HashMap<String, String>();
+      MapTools.ini2Map(path, raw);
+      Map<String, String> provided = MapTools.providedMap("/u/seqware/provisioned-bundles");
+      Map<String, String> exp = MapTools.expandVariables(raw, provided);
+      
+      assertEquals(raw.size(), exp.size());
+      
+      assertEquals("b", exp.get("foo"));
+      assertEquals("d", exp.get("bar"));
+      assertEquals("abcde", exp.get("test-multi"));
+      
+      assertEquals("/u/seqware/provisioned-bundles", exp.get("test-bundle-dir"));
+      assertEquals("/u/seqware/provisioned-bundles", exp.get("test-legacy-bundle-dir"));
+      
+      Integer.parseInt(exp.get("test-random"));
+      Integer.parseInt(exp.get("test-legacy-random"));
+      
+      new SimpleDateFormat(MapTools.VAR_DATE_FORMAT).parse(exp.get("test-date"));
+      new SimpleDateFormat(MapTools.VAR_DATE_FORMAT).parse(exp.get("test-legacy-date"));
+      
+      new SimpleDateFormat(MapTools.VAR_DATETIME_FORMAT).parse(exp.get("test-datetime"));
+
+      Long.parseLong(exp.get("test-timestamp"));
+      
+      UUID.fromString(exp.get("test-uuid"));
+    }
 
     @Test
     public void testNormalRichIni() throws Exception {
