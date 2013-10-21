@@ -14,23 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.seqware.webservice.controller;
+package io.seqware.webservice.generated.controller;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Holds information for the recursive deletion tool
- *
  * @author dyuen
  */
-public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple> {
-
+public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple>{
     private int accession;
     private int id;
     private String adminModelClass;
-
-    public ModelAccessionIDTuple() {
+    
+     public ModelAccessionIDTuple() {
     }
 
     public ModelAccessionIDTuple(int accession, int id, String adminModelClass) {
@@ -80,7 +79,7 @@ public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple> 
     public void setAdminModelClass(String adminModelClass) {
         this.adminModelClass = adminModelClass;
     }
-
+    
     @Override
     public int hashCode() {
         return Objects.hashCode(accession, id, adminModelClass);
@@ -97,7 +96,7 @@ public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple> 
             return false;
         }
     }
-
+    
     @Override
     public int compareTo(ModelAccessionIDTuple that) {
         return ComparisonChain.start()
