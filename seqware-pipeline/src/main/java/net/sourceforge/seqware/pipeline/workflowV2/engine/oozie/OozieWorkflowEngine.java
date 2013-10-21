@@ -77,6 +77,24 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
         Log.stdout("Terminating this program will NOT affect the running workflow.");
         Thread.sleep(2 * 1000);
         
+        // Ensure that we can pull the job info from oozie
+        int maxwait = 5;
+        while (maxwait-- > 0){
+          try{
+            wc.getJobInfo(jobId);
+            // job info available
+            break;
+          } catch (Exception e){
+            if (maxwait == 0){
+              Log.stdout("\nTimed out waiting for workflow job to be available.");
+              rethrow(e);
+            } else {
+              Log.stdout("\nWorkflow job pending ...");
+              Thread.sleep(5 * 1000);
+            }
+          }
+        }
+
         while (wc.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) {
           Log.stdout("\nWorkflow job running ...");
           printWorkflowInfo(wc.getJobInfo(jobId));
