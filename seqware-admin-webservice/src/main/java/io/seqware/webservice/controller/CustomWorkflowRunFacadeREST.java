@@ -74,7 +74,21 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
     @Path("{id}/rdelete/{targetClass}")
     @Consumes({"application/json"})
     public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims, @PathParam("targetClass") String targetClass) throws NamingException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException, ClassNotFoundException {
-        handleTargetting(targetClass, id, true, victims);
+        Set<ModelAccessionIDTuple> victimsFound = handleTargetting(targetClass, id, true, victims);
+
+        if (victims.equals(victimsFound)) {
+            try {
+                // check that the results are a subset of the matchset
+                for (ModelAccessionIDTuple t : victimsFound) {
+                    Object found = getEntityManager().find(Class.forName(t.getAdminModelClass()), t.getId());
+                    getEntityManager().remove(found);
+                }
+            } catch (ClassNotFoundException ex) {
+                throw new RuntimeException("ClassNotFound", ex);
+            }
+        } else {
+            throw new SystemException("keyFile of size " + victims.size() + " does not match " + victimsFound.size() + " found elements were not found, rolling back");
+        }
     }
 
     /**
@@ -230,26 +244,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         }
         // handle the workflow run itself
         results.add(new ModelAccessionIDTuple(data.getSwAccession(), data.getWorkflowRunId(), data.getClass().getName()));
-        // if we are doing deletion, check that everything is ok
-        try {
-            if (delete) {
-                // check that the results are a subset of the matchset
-                if (matchSet.containsAll(results)) {
-                    for (ModelAccessionIDTuple t : results) {
-                        Object found = entityManager.find(Class.forName(t.getAdminModelClass()), t.getId());
-                        // entity may already have been removed by recursive call
-                        if (found != null) {
-                            entityManager.remove(found);
-                        }
-                    }
-                } else {
-                    results.removeAll(matchSet);
-                    throw new RuntimeException("Found " + results.size() + " elements that were not in the match set");
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            throw new RuntimeException("ClassNotFound", ex);
-        }
+       
         return results;
     }
 
