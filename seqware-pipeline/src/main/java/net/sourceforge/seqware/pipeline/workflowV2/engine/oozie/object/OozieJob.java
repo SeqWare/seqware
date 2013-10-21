@@ -183,6 +183,12 @@ public abstract class OozieJob {
     args.add("-N");
     args.add(name);
 
+    if (jobObj.getQsubOptions() != null) {
+      args.add(jobObj.getQsubOptions());
+      write(concat(" ", args), file);
+      return file;
+    }
+
     if (StringUtils.isNotBlank(jobObj.getQueue())) {
       args.add("-q");
       args.add(jobObj.getQueue());
