@@ -1,7 +1,6 @@
 package io.seqware.webservice.adapter;
 
 import java.util.Date;
-import javax.servlet.Servlet;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
