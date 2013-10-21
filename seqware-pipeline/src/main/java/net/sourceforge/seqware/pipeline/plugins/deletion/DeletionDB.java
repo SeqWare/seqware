@@ -3,9 +3,6 @@ package net.sourceforge.seqware.pipeline.plugins.deletion;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.seqware.webservice.client.SeqWareWebServiceClient;
 import io.seqware.webservice.controller.ModelAccessionIDTuple;
-import io.seqware.webservice.generated.model.Lane;
-import io.seqware.webservice.generated.model.SequencerRun;
-import io.seqware.webservice.generated.model.WorkflowRun;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,9 +13,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import joptsimple.OptionSpec;
-import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -137,7 +132,6 @@ public final class DeletionDB extends Plugin {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         DeletionDB mp = new DeletionDB();
-        mp.setMetadata(MetadataFactory.getWS(ConfigTools.getSettings()));
         mp.init();
         List<String> arr = new ArrayList<String>();
         mp.setParams(arr);
@@ -151,40 +145,12 @@ public final class DeletionDB extends Plugin {
     }
 
     private ModelAccessionIDTuple translateToID(int targetAccession) {
-        ModelAccessionIDTuple tuple = new ModelAccessionIDTuple();
-        tuple.setAccession(targetAccession);
-        try {
-            if (metadata.getWorkflowRun(targetAccession) != null) {
-                tuple.setId(metadata.getWorkflowRun(targetAccession).getWorkflowRunId());
-                tuple.setAdminModelClass(WorkflowRun.class.getName());
-                return tuple;
-            }
-        } catch (Exception ex) {
-            /**at net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB.translateToID(DeletionDB.java:157)
-             * ignore and move on
-             */
-        }
-        try {
-            if (metadata.getSequencerRun(targetAccession) != null) {
-                tuple.setId(metadata.getSequencerRun(targetAccession).getSequencerRunId());
-                tuple.setAdminModelClass(SequencerRun.class.getName());
-                return tuple;
-            }
-        } catch (Exception ex) {
-            /**
-             * ignore and move on
-             */
-        }
-        try {
-            if (metadata.getLane(targetAccession) != null) {
-                tuple.setId(metadata.getLane(targetAccession).getLaneId());
-                tuple.setAdminModelClass(Lane.class.getName());
-                return tuple;
-            }
-        } catch (Exception ex) {
-            /**
-             * ignore and move on
-             */
+        //TODO - hook this up to .seqware/settings
+        String url = "http://localhost:38080/seqware-admin-webservice/webresources";
+        SeqWareWebServiceClient client = new SeqWareWebServiceClient("workflowrun", url);
+        ModelAccessionIDTuple tuple = client.findTupleByAccession(String.valueOf(targetAccession));
+        if (tuple != null){
+            return tuple;
         }
         throw new RuntimeException("Could not locate target, please double-check your SWID");
     }
