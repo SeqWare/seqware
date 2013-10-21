@@ -19,6 +19,7 @@ package net.sourceforge.seqware.pipeline.cli_tutorial;
 import net.sourceforge.seqware.pipeline.tutorial.*;
 import java.io.IOException;
 import net.sourceforge.seqware.pipeline.plugins.GenericMetadataSaverET;
+import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.plugins.ProvisionFilesET;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class CLIUserPhase4 extends UserPhase4{
     public void testExistingFileInAndAssociateWithSample() throws IOException {
         GenericMetadataSaverET it = new GenericMetadataSaverET();
         String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE), true);
-        String sw_accession = OldUserTutorialSuiteET.getAndCheckSwid(output);
+        String sw_accession = String.valueOf(ITUtility.extractSwid(output));
         AccessionMap.accessionMap.put(UserPhase4.FILE, sw_accession);
     }
    
