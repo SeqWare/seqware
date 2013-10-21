@@ -67,7 +67,7 @@ for this file using the following:
 You can use <tt>s3://bucketname/</tt> or a local path as the prefix.
 
 
-<p class="warning"><strong>Note:</strong> While the above entries are required, it is STRONGLY suggested that workflow developers no longer rely on them to decide the output path of a provisioned file.  Instead we recommend explicitly providing in the ini file whatever paths you may require, possibly using the variables described below, and then assigning that path to the output file via `SqwFile.setOutputPath(String path)`.</p>
+<p class="warning"><strong>Note:</strong> While the above entries are required, it is STRONGLY suggested that workflow developers no longer rely on them to decide the output path of a provisioned file.  Instead we recommend explicitly providing in the ini file whatever paths you may require, possibly using the variables described below, and then assigning that path to the output file via <code>SqwFile.setOutputPath(String path)</code>.</p>
 
 
 ### INI Variables
