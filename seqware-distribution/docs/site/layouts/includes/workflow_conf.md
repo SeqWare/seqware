@@ -75,8 +75,8 @@ You can use <tt>s3://bucketname/</tt> or a local path as the prefix.
 The ini files support variables, in the format `$(variable-name}`, that will be replaced when the workflow run is launched. The variable name can refer to another entry in the ini file, or can refer to the following SeqWare generated values:
 
 * `sqw.bundle-dir`: the path to the directory of this workflow's bundle. Support for the legacy version of this variable, `workflow_bundle_dir`, may be removed in a future version.
-* `sqw.date`: the current date in ISO 8601 format, e.g., 2013-10-31.
-* `sqw.datetime`: the current datetime in ISO 8601 format, e.g., 2013-10-31T16:45:30.  Support for the legacy version of this variable, `date`, may be removed in a future version.
+* `sqw.date`: the current date in ISO 8601 format, e.g., 2013-10-31.  Support for the legacy version of this variable, `date`, may be removed in a future version.
+* `sqw.datetime`: the current datetime in ISO 8601 format, e.g., 2013-10-31T16:45:30.
 * `sqw.random`: a randomly generated integer from 0 to 2147483647.  Support for the legacy version of this variable, `random`, may be removed in a future version.
 * `sqw.timestamp`: the current number of milliseconds since January 1, 1970.
 * `sqw.uuid`: a randomly generated <a href="http://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29">universally unique identifier</a>.
