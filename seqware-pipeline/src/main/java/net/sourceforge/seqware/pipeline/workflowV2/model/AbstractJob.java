@@ -23,6 +23,7 @@ public class AbstractJob implements Job {
 	protected boolean hasMetadataWriteback;
 	private List<String> parentAccessions;
 	private boolean runLocal;
+  private String qsubOptions;
 	
 	/**
 	 * for bash Job
@@ -246,4 +247,11 @@ public class AbstractJob implements Job {
 	public void setLocal(boolean runLocal){
 	  this.runLocal = runLocal;
 	}
+  public String getQsubOptions() {
+    return qsubOptions;
+  }
+
+  public void setQsubOptions(String qsubOptions) {
+    this.qsubOptions = qsubOptions;
+  }
 }
