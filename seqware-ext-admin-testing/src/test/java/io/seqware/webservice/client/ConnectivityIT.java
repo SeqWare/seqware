@@ -18,9 +18,10 @@ package io.seqware.webservice.client;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
+import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
+import io.seqware.webservice.generated.model.Organism;
 import java.util.List;
 import org.junit.Assert;
-import io.seqware.webservice.model.*;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import org.junit.BeforeClass;
 import org.junit.Test;

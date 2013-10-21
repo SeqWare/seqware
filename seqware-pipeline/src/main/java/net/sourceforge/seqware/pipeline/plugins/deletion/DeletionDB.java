@@ -1,11 +1,11 @@
 package net.sourceforge.seqware.pipeline.plugins.deletion;
 
 import com.sun.jersey.api.client.UniformInterfaceException;
+import io.seqware.webservice.client.SeqWareWebServiceClient;
 import io.seqware.webservice.controller.ModelAccessionIDTuple;
-import io.seqware.webservice.custom.CustomSeqWareWebServiceClient;
-import io.seqware.webservice.model.Lane;
-import io.seqware.webservice.model.SequencerRun;
-import io.seqware.webservice.model.WorkflowRun;
+import io.seqware.webservice.generated.model.Lane;
+import io.seqware.webservice.generated.model.SequencerRun;
+import io.seqware.webservice.generated.model.WorkflowRun;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -96,7 +96,7 @@ public final class DeletionDB extends Plugin {
 
             //TODO - hook this up to .seqware/settings
             String url = "http://localhost:38080/seqware-admin-webservice/webresources";
-            CustomSeqWareWebServiceClient client = new CustomSeqWareWebServiceClient("workflowrun", url);
+            SeqWareWebServiceClient client = new SeqWareWebServiceClient("workflowrun", url);
             if (keyFile == null) {
                 Set<ModelAccessionIDTuple> find_JSON_rdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()), String.valueOf(tuple.getId()));
                 // add to a sorted set for easy viewing
