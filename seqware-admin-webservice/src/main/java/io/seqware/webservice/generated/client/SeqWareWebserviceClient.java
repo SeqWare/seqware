@@ -15,8 +15,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
-import io.seqware.webservice.generated.controller.ModelAccessionIDTuple;
-import java.util.Set;
+import io.seqware.webservice.controller.ModelAccessionIDTuple;
 
 /**
  * Jersey REST client generated for REST resource:OrganismFacadeREST

@@ -19,8 +19,8 @@ package io.seqware.webservice.client;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
+import io.seqware.webservice.controller.ModelAccessionIDTuple;
 import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
-import io.seqware.webservice.generated.controller.ModelAccessionIDTuple;
 import java.util.Set;
 
 /**

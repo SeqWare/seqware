@@ -16,7 +16,6 @@
  */
 package io.seqware.webservice.controller;
 
-import io.seqware.webservice.generated.controller.ModelAccessionIDTuple;
 import io.seqware.webservice.generated.controller.WorkflowRunFacadeREST;
 import io.seqware.webservice.generated.model.File;
 import io.seqware.webservice.generated.model.Ius;
