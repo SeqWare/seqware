@@ -31,19 +31,19 @@ To achieve this overloaded role for ini files you need to include hints to
 ensure the BundleManager that installs workflow bundles has enough information.
 Here is what the annotation syntax looks like:
 
-        # key=<name>:type=[integer|float|text|pulldown|file]:display=[T|F][:display_name=<name_to_display>][:file_meta_type=<mime_meta_type>][:pulldown_items=<key1>|<value1>;<key2>|<value2>]
-        key=default_value
+    # key=<name>:type=[integer|float|text|pulldown|file]:display=[T|F][:display_name=<name_to_display>][:file_meta_type=<mime_meta_type>][:pulldown_items=<key1>|<value1>;<key2>|<value2>]
+    key=default_value
 
 The file_meta_type is only used for type=file.
 
 The pulldown type means that the pulldown_items should be defined as well. This looks like:
 
-        pulldown_items=<key1>|<value1>;<key2>|<value2>
+    pulldown_items=<key1>|<value1>;<key2>|<value2>
 
 The default value for this will refer to either value1 or value2 above.
 If you fail to include a metadata line for a particular key/value then it is assumed to be:
 
-        key=<name>:type=text:display=F
+    key=<name>:type=text:display=F
 
 This is convenient since many of the values in an INI file should not be displayed to the end user.
 
