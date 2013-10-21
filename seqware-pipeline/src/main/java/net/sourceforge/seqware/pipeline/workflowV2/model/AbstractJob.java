@@ -251,6 +251,9 @@ public class AbstractJob implements Job {
     return qsubOptions;
   }
 
+  /**
+   * Allows specifying options to qsub.  When provided, options using queue, maxMem, and threads will not be generated. 
+   */
   public void setQsubOptions(String qsubOptions) {
     this.qsubOptions = qsubOptions;
   }
