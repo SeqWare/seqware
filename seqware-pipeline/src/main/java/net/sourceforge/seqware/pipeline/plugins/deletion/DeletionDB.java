@@ -8,12 +8,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import joptsimple.OptionSpec;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -34,6 +36,7 @@ public final class DeletionDB extends Plugin {
     private OptionSpec<String> keyFileSpec;
     private Integer workflow_run_target = null;
     private File keyFile = null;
+    private String adminUrl = null;
 
     /**
      * <p>Constructor for HelloWorld.</p>
@@ -57,6 +60,15 @@ public final class DeletionDB extends Plugin {
      */
     @Override
     public final ReturnValue init() {
+         try {
+          HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
+          this.adminUrl = settings.get("SW_ADMIN_REST_URL");
+        } catch (Exception e) {
+            ReturnValue ret = new ReturnValue();
+          ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
+          ret.setProcessExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
+          return (ret);
+        }
         return new ReturnValue();
     }
 
@@ -88,10 +100,7 @@ public final class DeletionDB extends Plugin {
         try {
             ReturnValue ret = new ReturnValue();
             ModelAccessionIDTuple tuple = translateToID(workflow_run_target);
-
-            //TODO - hook this up to .seqware/settings
-            String url = "http://localhost:38080/seqware-admin-webservice/webresources";
-            SeqWareWebServiceClient client = new SeqWareWebServiceClient("workflowrun", url);
+            SeqWareWebServiceClient client = new SeqWareWebServiceClient("workflowrun", adminUrl + "/webresources");
             if (keyFile == null) {
                 Set<ModelAccessionIDTuple> find_JSON_rdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()), String.valueOf(tuple.getId()));
                 // add to a sorted set for easy viewing
@@ -145,9 +154,7 @@ public final class DeletionDB extends Plugin {
     }
 
     private ModelAccessionIDTuple translateToID(int targetAccession) {
-        //TODO - hook this up to .seqware/settings
-        String url = "http://localhost:38080/seqware-admin-webservice/webresources";
-        SeqWareWebServiceClient client = new SeqWareWebServiceClient("workflowrun", url);
+        SeqWareWebServiceClient client = new SeqWareWebServiceClient("workflowrun", adminUrl + "/webresources");
         ModelAccessionIDTuple tuple = client.findTupleByAccession(String.valueOf(targetAccession));
         if (tuple != null){
             return tuple;
