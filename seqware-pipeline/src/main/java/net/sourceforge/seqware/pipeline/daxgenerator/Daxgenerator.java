@@ -2,6 +2,7 @@ package net.sourceforge.seqware.pipeline.daxgenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -94,18 +95,10 @@ public class Daxgenerator {
         }
 
         // Expand variables in the map
-        MapTools.mapExpandVariables(map);
+        MapTools.expandVariables(map, null, true);
 
         // Change all integers from strings to int's
         Map<String, Object> newMap = MapTools.mapString2Int(map);
-
-        // magic variables always set
-        Date date = new Date();
-        newMap.put("date", date.toString());
-
-        Random rand = new Random(System.currentTimeMillis());
-        int randInt = rand.nextInt(100000000);
-        newMap.put("random", (new Integer(randInt)).toString());
 
         // Freemarker merge
         try {
