@@ -53,6 +53,9 @@ project's documentation to give you an idea of where to begin (the "Getting
 Started" guide here provides a walk-through of using this VM).
 
 <p class="warning"><strong>Note:</strong>
+When you import the VM ensure that "Reinitialize the MAC address of all network cards" is NOT checked. (<a href="https://forums.virtualbox.org/viewtopic.php?f=7&t=43090">Why?</a>) </p>
+
+<p class="warning"><strong>Note:</strong>
 When you import the VM you need to set your memory and CPU correctly.  Do not
 over-commit resources (especially memory) since that will cause the machine to
 "swap" memory to disk and slow your computer to a crawl. This VM is intended
