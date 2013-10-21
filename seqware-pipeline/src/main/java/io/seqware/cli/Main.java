@@ -1216,10 +1216,11 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --out <file>        The name of the file to write the stderr");
+      out("                      Defaults to <swid>.err");
       out("");
     } else {
       String swid = reqVal(args, "--accession");
-      String out = optVal(args, "--out", null);
+      String out = optVal(args, "--out", swid+".err");
 
       extras(args, "workflow-run stderr");
 
@@ -1229,12 +1230,11 @@ public class Main {
       runnerArgs.add("--");
       runnerArgs.add("--workflow-run-accession");
       runnerArgs.add(swid);
-      if (out != null) {
-        runnerArgs.add("--output-filename");
-        runnerArgs.add(out);
-      }
+      runnerArgs.add("--output-filename");
+      runnerArgs.add(out);
       runnerArgs.add("--wr-stderr");
       run(runnerArgs);
+      out("Created file "+out);
     }
   }
 
@@ -1252,10 +1252,11 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --out <file>        The name of the file to write the stdout");
+      out("                      Defaults to <swid>.out");
       out("");
     } else {
       String swid = reqVal(args, "--accession");
-      String out = optVal(args, "--out", null);
+      String out = optVal(args, "--out", swid+".out");
 
       extras(args, "workflow-run stdout");
 
@@ -1265,12 +1266,11 @@ public class Main {
       runnerArgs.add("--");
       runnerArgs.add("--workflow-run-accession");
       runnerArgs.add(swid);
-      if (out != null) {
-        runnerArgs.add("--output-filename");
-        runnerArgs.add(out);
-      }
+      runnerArgs.add("--output-filename");
+      runnerArgs.add(out);
       runnerArgs.add("--wr-stdout");
       run(runnerArgs);
+      out("Created file "+out);
     }
   }
 
