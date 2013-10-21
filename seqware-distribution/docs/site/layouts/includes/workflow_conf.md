@@ -4,7 +4,7 @@ their types, and default values.  For example:
 
 <pre><code>#!ini
 # key=input_file:type=file:display=F:file_meta_type=text/plain
-input_file=${workflow_bundle_dir}/Workflow_Bundle_${workflow-directory-name}/${version}/data/input.txt
+input_file=${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/data/input.txt
 # key=greeting:type=text:display=T:display_name=Greeting
 greeting=Testing
 # this is just a comment, the output directory is a conventions and used in many workflows to specify a relative output path
