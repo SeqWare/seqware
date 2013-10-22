@@ -81,7 +81,7 @@ public class OozieProvisionFileJob extends OozieJob {
      * 
      * Based on code from pegasus.object.ProvisionFilesJob.buildCommandString()
      */
-    if (file.getOutputPath() == null) {
+    if (file.isOutput() && file.getOutputPath() == null) {
       args.add("--metadata-output-file-prefix");
       args.add(this.metadataOutputPrefix + "/" + this.outputDir);
     }
