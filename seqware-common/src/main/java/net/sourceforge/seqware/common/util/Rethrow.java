@@ -20,7 +20,7 @@ public class Rethrow {
    * 
    * @param t
    */
-  public static void rethrow(Throwable t) {
+  public static RuntimeException rethrow(Throwable t) {
     if (t instanceof RuntimeException)
       throw (RuntimeException) t;
     if (t instanceof Error)
