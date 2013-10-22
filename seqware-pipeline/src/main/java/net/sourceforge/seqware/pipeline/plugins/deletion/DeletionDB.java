@@ -1,8 +1,11 @@
 package net.sourceforge.seqware.pipeline.plugins.deletion;
 
+import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.seqware.webservice.client.SeqWareWebServiceClient;
 import io.seqware.webservice.controller.ModelAccessionIDTuple;
+import io.seqware.webservice.generated.model.FileType;
+import io.seqware.webservice.generated.model.WorkflowRun;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -10,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -96,36 +101,99 @@ public final class DeletionDB extends Plugin {
         if (options.has(keyFileSpec)) {
             keyFile = new File(options.valueOf(keyFileSpec));
         } 
-
+        SeqWareWebServiceClient client = null;
+        SeqWareWebServiceClient fileClient = null;
         try {
             ReturnValue ret = new ReturnValue();
             ModelAccessionIDTuple tuple = translateToID(workflow_run_target);
-            SeqWareWebServiceClient client = new SeqWareWebServiceClient("workflowrun", adminUrl + "/webresources");
-            if (keyFile == null) {
+            client = new SeqWareWebServiceClient("workflowrun", adminUrl + "/webresources");
+            fileClient = new SeqWareWebServiceClient("file", adminUrl + "/webresources");
+            if (keyFile == null || !keyFile.exists()) {
                 Set<ModelAccessionIDTuple> find_JSON_rdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()), String.valueOf(tuple.getId()));
                 // add to a sorted set for easy viewing
                 SortedSet<ModelAccessionIDTuple> sortedSet = new TreeSet<ModelAccessionIDTuple>();
                 sortedSet.addAll(find_JSON_rdelete);
+                
+                // we can output some friendly summary statistics here
+                int workflowRunCount = 0;
+                Map<String, Integer> fileTypeCounts = new HashMap<String, Integer>();
+                for(ModelAccessionIDTuple  t : sortedSet){
+                    if (t.getAdminModelClass().equals(WorkflowRun.class.getName())){
+                        workflowRunCount++;
+                    } else if (t.getAdminModelClass().equals(io.seqware.webservice.generated.model.File.class.getName())){
+                        io.seqware.webservice.generated.model.File file = fileClient.find_JSON(io.seqware.webservice.generated.model.File.class , String.valueOf(t.getId()));
+                        String metaType = file.getMetaType();
+                        if (!fileTypeCounts.containsKey(metaType)){
+                            fileTypeCounts.put(metaType, 0);
+                        }
+                        fileTypeCounts.put(metaType, fileTypeCounts.get(metaType) + 1);
+                    }
+                }
+                System.out.println("Key file contains " + workflowRunCount + " workflow runs");
+                for(Entry<String, Integer> e : fileTypeCounts.entrySet()){
+                    System.out.println(" \t" + e.getValue() + " file" + (e.getValue() > 1 ? "s":"") + " of type " + e.getKey());
+                }
+                
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-                keyFile = File.createTempFile("deletion",".keyFile");
+                if (keyFile == null){
+                    keyFile = File.createTempFile("deletion",".keyFile");
+                } else{
+                    boolean createOutput = keyFile.createNewFile();
+                    if (!createOutput){
+                        ret.setExitStatus(ReturnValue.FILENOTWRITABLE);
+                        return ret;
+                    }
+                }
                 writer.writeValue(keyFile, sortedSet);
                 System.out.println("Key File written to " + keyFile.getAbsolutePath());
             } else {
                 ObjectMapper mapper = new ObjectMapper();
-                Set<ModelAccessionIDTuple> matchSet = mapper.readValue(keyFile, Set.class);
                 try {
+                    Set<ModelAccessionIDTuple> matchSet = mapper.readValue(keyFile, Set.class);
                     client.remove_rdelete(Class.forName(tuple.getAdminModelClass()), String.valueOf(tuple.getId()), matchSet);
                     client.close();
-                } catch (UniformInterfaceException ex) {
-                    ret.setExitStatus(ReturnValue.FAILURE);
+                } catch(IOException ex){
+                    System.out.println("Invalid data in provided key file");
+                    ret.setExitStatus(ReturnValue.INVALIDFILE);
                     return ret;
+                } 
+                catch (UniformInterfaceException ex) {
+                    if (ex.getResponse().getClientResponseStatus().equals(Status.NOT_FOUND)) {
+                        System.out.println("Accession not found");
+                        ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                        return ret;
+                    } else if (ex.getResponse().getClientResponseStatus().equals(Status.CONFLICT)) {
+                        System.out.println("KeyFile does not match current server content, could not delete.");
+                        ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                        return ret;
+                    } else {
+                        System.out.println("ClientResponseStatus: " + ex.getResponse().getClientResponseStatus());
+                        System.out.println("ClientResponse: " + ex.getResponse().toString());
+                        ret.setExitStatus(ReturnValue.FAILURE);
+                        return ret;
+                    }
                 }
             }
-            client.close();
             return ret;
+        } catch (UniformInterfaceException ex) {
+            if (ex.getResponse().getClientResponseStatus().equals(Status.NOT_FOUND)) {
+                System.out.println("Accession not found");
+                ReturnValue ret = new ReturnValue();
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return ret;
+            } else {
+                System.out.println("ClientResponseStatus: " + ex.getResponse().getClientResponseStatus());
+                System.out.println("ClientResponse: " + ex.getResponse().toString());
+                ReturnValue ret = new ReturnValue();
+                ret.setExitStatus(ReturnValue.FAILURE);
+                return ret;
+            }
         } catch (Exception ex) {
             throw new RuntimeException("Client malfunction", ex);
+        } finally{
+            if (client != null) client.close();
+            if (fileClient != null) fileClient.close();
         }
     }
 
