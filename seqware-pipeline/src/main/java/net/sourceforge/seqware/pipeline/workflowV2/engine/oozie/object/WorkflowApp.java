@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.sourceforge.seqware.common.util.Log;
 
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
@@ -19,6 +19,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.PerlJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
+import org.apache.hadoop.fs.Path;
 import org.jdom.Element;
 
 public class WorkflowApp {
@@ -34,10 +35,10 @@ public class WorkflowApp {
   private String threadsSgeParamFormat;
   private String maxMemorySgeParamFormat;
 
-  public WorkflowApp(AbstractWorkflowDataModel wfdm, String dir, boolean useSge, File seqwareJar,
+  public WorkflowApp(AbstractWorkflowDataModel wfdm, String nfsWorkDir, Path hdfsWorkDir, boolean useSge, File seqwareJar,
                      String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
     this.wfdm = wfdm;
-    this.unqiueWorkingDir = dir;
+    this.unqiueWorkingDir = nfsWorkDir;
     this.jobs = new ArrayList<OozieJob>();
     this.fileJobMap = new HashMap<SqwFile, OozieProvisionFileJob>();
     this.useSge = useSge;
@@ -49,39 +50,49 @@ public class WorkflowApp {
 
   // TODO: Emit an end node that cleans up the generated script files.
   public Element serializeXML() {
-    Element element = new Element("workflow-app", NAMESPACE);
-    element.setAttribute("name", wfdm.getName());
+    Element wf = new Element("workflow-app", NAMESPACE);
+    wf.setAttribute("name", wfdm.getName());
 
-    if (this.jobs.isEmpty())
-      return element;
-
+    if (!this.jobs.isEmpty()) {
     OozieJob job0 = this.jobs.get(0);
     Element start = new Element("start", NAMESPACE);
     start.setAttribute("to", job0.getName());
-    element.addContent(start);
+    wf.addContent(start);
     // Set<String> nodes = new HashSet<String>();
     // Set<OozieJob> jobs = new HashSet<OozieJob>();
     List<List<OozieJob>> graph = this.reOrganizeGraph(job0);
-    this.generateWorkflowXml2(element, graph);
+    this.generateWorkflowXml2(wf, graph);
+    }
+
+    if (this.lastJoin != null && !this.lastJoin.isEmpty()) {
+      Element lastJoin = new Element("join", NAMESPACE);
+      lastJoin.setAttribute("name", this.lastJoin);
+      lastJoin.setAttribute("to", "done");
+      wf.addContent(lastJoin);
+    }
+
+    Element done = new Element("action", NAMESPACE).setAttribute("name", "done");
+    Element fs = new Element("fs", NAMESPACE);
+    Element delete = new Element("delete", NAMESPACE).setAttribute("path", wfdm.getEnv().getOOZIE_APP_ROOT() + "/" + new File(unqiueWorkingDir).getName());
+    Element ok = new Element("ok", NAMESPACE).setAttribute("to", "end");
+    Element error = new Element("error", NAMESPACE).setAttribute("to", "fail");
+    wf.addContent(done);
+    done.addContent(fs);
+    fs.addContent(delete);
+    done.addContent(ok);
+    done.addContent(error);
 
     Element kill = new Element("kill", NAMESPACE);
     kill.setAttribute("name", "fail");
     Element message = new Element("message", NAMESPACE);
     message.setText("Java failed, error message[${wf:errorMessage(wf:lastErrorNode())}]");
     kill.addContent(message);
-    element.addContent(kill);
-
-    if (this.lastJoin != null && !this.lastJoin.isEmpty()) {
-      Element lastJoin = new Element("join", NAMESPACE);
-      lastJoin.setAttribute("name", this.lastJoin);
-      lastJoin.setAttribute("to", "end");
-      element.addContent(lastJoin);
-    }
+    wf.addContent(kill);
 
     Element end = new Element("end", NAMESPACE);
     end.setAttribute("name", "end");
-    element.addContent(end);
-    return element;
+    wf.addContent(end);
+    return wf;
   }
 
   private void generateWorkflowXml2(Element rootElement, List<List<OozieJob>> graph) {
@@ -93,9 +104,9 @@ public class WorkflowApp {
     }
     // point the last one to end
     if (currentE.getName().equals("action")) {
-      currentE.getChild("ok", NAMESPACE).setAttribute("to", "end");
+      currentE.getChild("ok", NAMESPACE).setAttribute("to", "done");
     } else {
-      currentE.setAttribute("to", "end");
+      currentE.setAttribute("to", "done");
     }
 
   }
