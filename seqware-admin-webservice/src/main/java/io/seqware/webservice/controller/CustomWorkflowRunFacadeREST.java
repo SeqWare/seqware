@@ -16,6 +16,8 @@
  */
 package io.seqware.webservice.controller;
 
+import com.sun.jersey.api.ConflictException;
+import com.sun.jersey.api.NotFoundException;
 import io.seqware.webservice.generated.controller.WorkflowRunFacadeREST;
 import io.seqware.webservice.generated.model.File;
 import io.seqware.webservice.generated.model.Ius;
@@ -84,10 +86,10 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
                     getEntityManager().remove(found);
                 }
             } catch (ClassNotFoundException ex) {
-                throw new RuntimeException("ClassNotFound", ex);
+                throw new NotFoundException();
             }
         } else {
-            throw new SystemException("keyFile of size " + victims.size() + " does not match " + victimsFound.size() + " found elements were not found, rolling back");
+            throw new ConflictException("keyFile of size " + victims.size() + " does not match " + victimsFound.size() + " found elements were not found, rolling back");
         }
     }
 
@@ -259,7 +261,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
 
     private Set<ModelAccessionIDTuple> handleTargetting(String targetClass, Integer id, boolean delete, Set<ModelAccessionIDTuple> victims) {
         if (targetClass == null) {
-            throw new RuntimeException("No targetClass specified");
+            throw new NotFoundException("No targetClass specified");
         }
         if (targetClass.equals(WorkflowRun.class.getSimpleName())) {
             return deleteWorkflowRunRecursive(id, delete, victims);
@@ -270,7 +272,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         } else if (targetClass.equals(Lane.class.getSimpleName())) {
             return deleteLaneRecursive(id, delete, victims);
         } else {
-            throw new RuntimeException("Unknown target class");
+            throw new NotFoundException();
         }
     }
 

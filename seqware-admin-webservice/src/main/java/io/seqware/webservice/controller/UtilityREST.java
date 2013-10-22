@@ -16,6 +16,8 @@
  */
 package io.seqware.webservice.controller;
 
+import com.sun.jersey.api.NotFoundException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 import io.seqware.webservice.generated.model.Experiment;
 import io.seqware.webservice.generated.model.Ius;
 import io.seqware.webservice.generated.model.Lane;
@@ -26,6 +28,7 @@ import io.seqware.webservice.generated.model.Study;
 import io.seqware.webservice.generated.model.WorkflowRun;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -39,11 +42,13 @@ import javax.ws.rs.Produces;
 @Stateless
 @Path("utility")
 public class UtilityREST {
+
     @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
     private EntityManager em;
-    
+
     /**
-     * Returns a tuple describing the class and accession given only an accession 
+     * Returns a tuple describing the class and accession given only an
+     * accession
      *
      * @param accession
      * @return
@@ -52,40 +57,68 @@ public class UtilityREST {
     @Path("{accession}")
     @Produces({"application/json"})
     public ModelAccessionIDTuple find(@PathParam("accession") Integer accession) {
-        Object target = em.createQuery("select wr from WorkflowRun wr WHERE wr.swAccession = " + accession, WorkflowRun.class).getSingleResult();
-        if (target != null){
-            return new ModelAccessionIDTuple(accession, ((WorkflowRun)target).getWorkflowRunId(), target.getClass().getName());
+        Object target;
+        try {
+            target = em.createQuery("select wr from WorkflowRun wr WHERE wr.swAccession = " + accession, WorkflowRun.class).getSingleResult();
+            if (target != null) {
+                return new ModelAccessionIDTuple(accession, ((WorkflowRun) target).getWorkflowRunId(), target.getClass().getName());
+            }
+        } catch (NoResultException ex) {
+            /**
+             * ignore, does the JPA API really have no way of checking whether a
+             * result is available except by exception?
+             */
         }
-        target = em.createQuery("select e from Experiment e WHERE e.swAccession = " + accession, Experiment.class).getSingleResult();
-        if (target != null){
-            return new ModelAccessionIDTuple(accession, ((Experiment)target).getExperimentId(), target.getClass().getName());
+        try {
+            target = em.createQuery("select e from Experiment e WHERE e.swAccession = " + accession, Experiment.class).getSingleResult();
+            if (target != null) {
+                return new ModelAccessionIDTuple(accession, ((Experiment) target).getExperimentId(), target.getClass().getName());
+            }
+        } catch (NoResultException ex) {
         }
-        target = em.createQuery("select i from Ius i WHERE i.swAccession = " + accession, Ius.class).getSingleResult();
-        if (target != null){
-            return new ModelAccessionIDTuple(accession, ((Ius)target).getIusId(), target.getClass().getName());
+        try {
+            target = em.createQuery("select i from Ius i WHERE i.swAccession = " + accession, Ius.class).getSingleResult();
+            if (target != null) {
+                return new ModelAccessionIDTuple(accession, ((Ius) target).getIusId(), target.getClass().getName());
+            }
+        } catch (NoResultException ex) {
         }
-        target = em.createQuery("select l from Lane l WHERE l.swAccession = " + accession, Lane.class).getSingleResult();
-        if (target != null){
-            return new ModelAccessionIDTuple(accession, ((Lane)target).getLaneId(), target.getClass().getName());
+        try {
+            target = em.createQuery("select l from Lane l WHERE l.swAccession = " + accession, Lane.class).getSingleResult();
+            if (target != null) {
+                return new ModelAccessionIDTuple(accession, ((Lane) target).getLaneId(), target.getClass().getName());
+            }
+        } catch (NoResultException ex) {
         }
-        target = em.createQuery("select p from Processing p WHERE p.swAccession = " + accession, Processing.class).getSingleResult();
-        if (target != null){
-            return new ModelAccessionIDTuple(accession, ((Processing)target).getProcessingId(), target.getClass().getName());
+        try {
+            target = em.createQuery("select p from Processing p WHERE p.swAccession = " + accession, Processing.class).getSingleResult();
+            if (target != null) {
+                return new ModelAccessionIDTuple(accession, ((Processing) target).getProcessingId(), target.getClass().getName());
+            }
+        } catch (NoResultException ex) {
         }
-        target = em.createQuery("select s from Sample s WHERE s.swAccession = " + accession, Sample.class).getSingleResult();
-        if (target != null){
-            return new ModelAccessionIDTuple(accession, ((Sample)target).getSampleId(), target.getClass().getName());
+        try {
+            target = em.createQuery("select s from Sample s WHERE s.swAccession = " + accession, Sample.class).getSingleResult();
+            if (target != null) {
+                return new ModelAccessionIDTuple(accession, ((Sample) target).getSampleId(), target.getClass().getName());
+            }
+        } catch (NoResultException ex) {
         }
-        target = em.createQuery("select sr from SequencerRun sr WHERE sr.swAccession = " + accession, SequencerRun.class).getSingleResult();
-        if (target != null){
-            return new ModelAccessionIDTuple(accession, ((SequencerRun)target).getSequencerRunId(), target.getClass().getName());
+        try {
+            target = em.createQuery("select sr from SequencerRun sr WHERE sr.swAccession = " + accession, SequencerRun.class).getSingleResult();
+            if (target != null) {
+                return new ModelAccessionIDTuple(accession, ((SequencerRun) target).getSequencerRunId(), target.getClass().getName());
+            }
+        } catch (NoResultException ex) {
         }
-        target = em.createQuery("select s from Study s WHERE s.swAccession = " + accession, Study.class).getSingleResult();
-        if (target != null){
-            return new ModelAccessionIDTuple(accession, ((Study)target).getStudyId(), target.getClass().getName());
+        try {
+            target = em.createQuery("select s from Study s WHERE s.swAccession = " + accession, Study.class).getSingleResult();
+            if (target != null) {
+                return new ModelAccessionIDTuple(accession, ((Study) target).getStudyId(), target.getClass().getName());
+            }
+        } catch (NoResultException ex) {
         }
-        
-        
-        throw new RuntimeException("Could not locate");
+
+        throw new NotFoundException();
     }
 }
