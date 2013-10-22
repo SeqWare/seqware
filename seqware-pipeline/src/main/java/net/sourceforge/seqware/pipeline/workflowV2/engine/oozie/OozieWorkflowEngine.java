@@ -157,9 +157,12 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
           + "/job.properties", this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName());
       this.copyFromLocal(fileSystem, this.dataModel.getEnv().getOOZIE_WORK_DIR() + "/" + this.dir.getName()
           + "/workflow.xml", this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName());
+
+      if (!useSge) {
       // copy lib
       this.copyFromLocal(fileSystem, seqwareJarPath(objectModel), this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
           + this.dir.getName() + "/lib");
+      }
 
       Path absDest = fileSystem.getFileStatus(path).getPath();
       System.out.println("Files copied to " + absDest);
