@@ -30,6 +30,7 @@ public class WorkflowApp {
   private String lastJoin;
   private Map<SqwFile, OozieProvisionFileJob> fileJobMap;
   private String unqiueWorkingDir;
+  private Path hdfsWorkDir;
   private boolean useSge;
   private File seqwareJar;
   private String threadsSgeParamFormat;
@@ -39,6 +40,7 @@ public class WorkflowApp {
                      String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
     this.wfdm = wfdm;
     this.unqiueWorkingDir = nfsWorkDir;
+    this.hdfsWorkDir = hdfsWorkDir;
     this.jobs = new ArrayList<OozieJob>();
     this.fileJobMap = new HashMap<SqwFile, OozieProvisionFileJob>();
     this.useSge = useSge;
@@ -73,7 +75,7 @@ public class WorkflowApp {
 
     Element done = new Element("action", NAMESPACE).setAttribute("name", "done");
     Element fs = new Element("fs", NAMESPACE);
-    Element delete = new Element("delete", NAMESPACE).setAttribute("path", wfdm.getEnv().getOOZIE_APP_ROOT() + "/" + new File(unqiueWorkingDir).getName());
+    Element delete = new Element("delete", NAMESPACE).setAttribute("path", hdfsWorkDir.toString());
     Element ok = new Element("ok", NAMESPACE).setAttribute("to", "end");
     Element error = new Element("error", NAMESPACE).setAttribute("to", "fail");
     wf.addContent(done);
