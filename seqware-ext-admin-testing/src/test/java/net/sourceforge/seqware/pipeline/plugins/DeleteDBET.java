@@ -133,6 +133,9 @@ public class DeleteDBET {
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB "
                 + "-- --r 2862 --k " + path  ;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, null);    
+        // double-check that content was not deleted
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT * FROM workflow_run WHERE sw_accession=2862");
+        Assert.assertTrue("workflow runs deleted despite invalid keyfile", runQuery != null);
     }
     
     @Test
@@ -141,6 +144,9 @@ public class DeleteDBET {
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB "
                 + "-- --r 2862 --k " + path  ;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, null); 
+        // double-check that content was not deleted
+         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT * FROM workflow_run WHERE sw_accession=2862");
+        Assert.assertTrue("workflow runs deleted despite invalid keyfile", runQuery != null);
     }
     
     @Test 
