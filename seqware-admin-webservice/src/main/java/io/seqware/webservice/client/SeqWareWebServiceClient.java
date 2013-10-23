@@ -23,6 +23,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
+//import io.seqware.webservice.controller.CustomWorkflowRunFacadeREST.UnsettledWorkflowRunException;
 import io.seqware.webservice.controller.ModelAccessionIDTuple;
 import java.net.URI;
 import java.util.Set;

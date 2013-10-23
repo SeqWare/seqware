@@ -134,7 +134,7 @@ public final class DeletionDB extends Plugin {
                 System.out.println("Key File written to " + keyFile.getAbsolutePath());
             } else {
                 ObjectMapper mapper = new ObjectMapper();
-                Set<ModelAccessionIDTuple> matchSet = null;
+                Set<ModelAccessionIDTuple> matchSet;
                 Set<String> filesToBeDeleted = new HashSet<String>();
                 try {
                     matchSet = mapper.readValue(keyFile, new TypeReference<Set<ModelAccessionIDTuple>>(){});
@@ -185,6 +185,18 @@ public final class DeletionDB extends Plugin {
             } else {
                 System.out.println("ClientResponseStatus: " + ex.getResponse().getClientResponseStatus());
                 System.out.println("ClientResponse: " + ex.getResponse().toString());
+                System.out.println("Exception message: " + ex.getMessage());
+                try {
+                    String entity1 = ex.getResponse().getEntity(String.class);
+                    System.out.println(entity1);
+                    ReturnValue ret = new ReturnValue();
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    return ret;
+                } catch (Exception e) {
+                    /**
+                     * ignore
+                     */
+                }
                 ReturnValue ret = new ReturnValue();
                 ret.setExitStatus(ReturnValue.FAILURE);
                 return ret;
@@ -230,6 +242,12 @@ public final class DeletionDB extends Plugin {
         throw new RuntimeException("Could not locate target, please double-check your SWID");
     }
 
+    /**
+     * Output various convenient statistics and information on files for the end-user
+     * @param sortedSet
+     * @param fileClient
+     * @throws UniformInterfaceException 
+     */
     private void outputSummaryInformation(SortedSet<ModelAccessionIDTuple> sortedSet, SeqWareWebServiceClient fileClient) throws UniformInterfaceException {
         // we can output some friendly summary statistics here
         int workflowRunCount = 0;

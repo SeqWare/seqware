@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
@@ -78,26 +79,58 @@ public class TestDatabaseCreator {
     
     /**
      * Convenient method to run a query against the test database, avoids unclosed connections.
+     *
+     * @param h
+     * @param query
+     * @param update the value of update
+     * @param params
+     * @return
+     */
+    
+    public <T extends Object> T runQuery(ResultSetHandler<T> h, String query, Object... params) {
+        return runQuery(h, query, false, params);
+    }
+    
+    /**
+     * Run an insert, update, or delete
+     * @param query
+     * @param params
+     * @return 
+     */
+    public int runUpdate(String query, Object... params) {
+        return runQuery(new ResultSetHandler<Integer>() {
+            @Override
+            public Integer handle(ResultSet rs) throws SQLException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        }, query, true, params);
+    }
+
+    /**
+     * Convenient method to run a query against the test database, avoids unclosed connections.
      * @param <T>
      * @param h
      * @param query
      * @param params
      * @return
      */
-    public <T extends Object> T runQuery(ResultSetHandler<T> h, String query, Object... params) {
+    public <T extends Object> T runQuery(ResultSetHandler<T> h, String query, boolean update, Object... params) {
         QueryRunner run = new QueryRunner();
         T result = null;
         Connection connectionToSeqware = null;
         try {
             connectionToSeqware = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
-            result = run.query(connectionToSeqware, query, h, params);
-        } catch(Exception e){
-            throw new RuntimeException(e);
-        } finally {
+            if (update){
+                return (T)new Integer(run.update(connectionToSeqware, query, params));
+            } else{
+                result = run.query(connectionToSeqware, query, h, params);
+            }
+        }catch(Exception e){
+           throw new RuntimeException(e);
+       } finally {
             // Use this helper method so we don't have to check for null
             DbUtils.closeQuietly(connectionToSeqware);
         }
-
         return result;
     }
 

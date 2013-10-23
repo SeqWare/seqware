@@ -34,6 +34,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -120,5 +123,9 @@ public class UtilityREST {
         }
 
         throw new NotFoundException();
+    }
+
+    protected static WebApplicationException throwExceptionWithMessage(String message) {
+        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(message).build());
     }
 }

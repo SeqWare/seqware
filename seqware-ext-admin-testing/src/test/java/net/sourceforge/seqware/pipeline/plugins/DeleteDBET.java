@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.io.FileUtils;
@@ -59,6 +60,7 @@ public class DeleteDBET {
 
     @Test
     public void testNormalWorkflowRunDelete() throws IOException{
+        unblockWorkflowRuns();
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB "
                 + "-- --r 6698";
         String output = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
@@ -76,6 +78,7 @@ public class DeleteDBET {
     
     @Test
     public void testNormalLaneTargetWorkflowRunDelete() throws IOException{
+        unblockWorkflowRuns();
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB "
                 + "-- --r 4764";
         String output = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
@@ -93,6 +96,7 @@ public class DeleteDBET {
     
     @Test
     public void testNormalSequencerRunTargetWorkflowRunDelete() throws IOException{
+        unblockWorkflowRuns();
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB "
                 + "-- --r 4715";
         String output = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
@@ -108,6 +112,13 @@ public class DeleteDBET {
         Assert.assertTrue("files not deleted", runQuery == null);
         // reset database when testing successful deletes
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
+    }
+    
+    @Test
+    public void testBlockedWorkflowRunDelete() throws IOException{
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB "
+                + "-- --r 4715";
+        String output = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, null);
     }
     
     @Test 
@@ -173,6 +184,7 @@ public class DeleteDBET {
     
     @Test
     public void testNormalWorkflowRunDeleteWithExplicitFile() throws IOException {
+        unblockWorkflowRuns();
         File createTempFile = File.createTempFile("deletion", "keyFile");
         createTempFile.delete(); // ensure file does not exist
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB "
@@ -199,5 +211,12 @@ public class DeleteDBET {
         Assert.assertFalse("The Filename was empty", swid.trim().isEmpty());
         File file = new File(swid);
         return file;
+    }
+
+    /**
+     * For testing, unblock all workflow runs
+     */
+    private void unblockWorkflowRuns() {
+        dbCreator.runUpdate("update workflow_run set status='" + WorkflowRunStatus.completed.name()+"'");
     }
 }
