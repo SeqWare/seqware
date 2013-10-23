@@ -92,3 +92,58 @@
 (defn write-all-studies-report! [out]
   (binding [*out* out]
     (all-studies-report)))
+
+(defn in [col values]
+  [(str col " in (" (apply str (interpose ", " (repeat (count values) "?"))) ")")
+   values])
+
+(defn like [col values]
+  (let [wc-values (->> values
+                    (map (fn [v]
+                           [(str v ":%") (str "%:" v ":%") (str "%:" v)]))
+                    (apply concat))
+        eq (repeat (count values) (str col " = ?"))
+        wc (repeat (count wc-values) (str col " like ?"))
+        frag (apply str (interpose " or " (concat eq wc)))
+        vals (concat values wc-values)]
+    [(str "(" frag ")") vals]))
+
+(defn clause [[key values]]
+  (case key
+    "study"           (in "study_swa" values)
+    "experiment"      (in "experiment_swa" values)
+    "sample"          (in "sample_swa" values)
+    "sample-ancestor" (like "sample_parent_swas" values)
+    "sequencer-run"   (in "sequencer_run_swa" values)
+    "lane"            (in "lane_swa" values)
+    "ius"             (in "ius_swa" values)
+    "workflow"        (in "workflow_swa" values)
+    "workflow-run"    (in "workflow_run_swa" values)
+    "file"            (in "file_swa" values)
+    "file-meta-type"  (in "file_meta_type" values)
+    "skip"            (in "skip" values)
+    nil))
+
+(defn apply-values [ps values]
+  (loop [i 1
+         values values]
+    (when (seq values)
+      (.setObject ps i (first values))
+      (recur (inc i) (rest values)))))
+
+(defn provenance-report [m]
+  (let [clauses (->> m (map clause) (keep identity))
+        sql (if (empty? clauses)
+              "select * from file_provenance_report"
+              (apply str "select * from file_provenance_report where " (interpose " and " (map first clauses))))
+        vals (apply concat (map second clauses))]
+    (with-open [conn (db/get-connection *db-spec*)
+                ps (.prepareStatement conn sql)]
+      (apply-values ps vals)
+      (with-open [rs (.executeQuery ps)]
+        (print-row headers)
+        (print-results rs)))))
+
+(defn write-file-provenance-report! [m out]
+  (binding [*out* out]
+    (provenance-report m)))
