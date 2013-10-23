@@ -10,6 +10,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.WorkflowApp;
 
+import org.apache.hadoop.fs.Path;
 import org.jdom.Document;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -22,7 +23,7 @@ public class OozieWorkflowXmlGenerator {
    * @param output
    * @return
    */
-  public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String dir, boolean useSge,
+  public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String nfsWorkDir, Path hdfsWorkDir, boolean useSge,
                                          File seqwareJar, String threadsSgeParamFormat,
                                          String maxMemorySgeParamFormat) {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
@@ -32,7 +33,7 @@ public class OozieWorkflowXmlGenerator {
     try {
       OutputStream out = new FileOutputStream(dax);
       XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-      WorkflowApp adag = new WorkflowApp(wfdm, dir, useSge, seqwareJar, threadsSgeParamFormat,
+      WorkflowApp adag = new WorkflowApp(wfdm, nfsWorkDir, hdfsWorkDir, useSge, seqwareJar, threadsSgeParamFormat,
                                          maxMemorySgeParamFormat);
       doc.setRootElement(adag.serializeXML());
       serializer.output(doc, out);

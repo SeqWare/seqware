@@ -26,12 +26,15 @@ import org.apache.oozie.client.WorkflowJob.Status;
 
 public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 
-  private File dir;
   private String jobId;
   private AbstractWorkflowDataModel dataModel;
   private boolean useSge;
   private String threadsSgeParamFormat;
   private String maxMemorySgeParamFormat;
+
+  private File nfsWorkDir;
+  private Configuration conf;
+  private Path hdfsWorkDir;
 
   public OozieWorkflowEngine(AbstractWorkflowDataModel objectModel, boolean useSge,
                              String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
@@ -39,6 +42,55 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     this.useSge = useSge;
     this.threadsSgeParamFormat = threadsSgeParamFormat;
     this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
+
+    this.nfsWorkDir = initNfsWorkDir(objectModel);
+    this.conf = initConf(objectModel);
+    this.hdfsWorkDir = initHdfsWorkDir(objectModel, conf, this.nfsWorkDir);
+  }
+
+  public static File initNfsWorkDir(AbstractWorkflowDataModel model) {
+    try {
+      File nfsWorkDir = FileTools.createDirectoryWithUniqueName(new File(model.getEnv().getOOZIE_WORK_DIR()), "oozie");
+      nfsWorkDir.setWritable(true, false);
+      System.out.println("Using working directory: "+nfsWorkDir.getAbsolutePath());
+      return nfsWorkDir;
+    } catch (IOException e) {
+      throw rethrow(e);
+    }
+  }
+
+  public static Configuration initConf(AbstractWorkflowDataModel model) {
+    Configuration conf = new Configuration();
+    conf.set("hbase.zookeeper.quorum", model.getEnv().getHbase_zookeeper_quorum());
+    conf.set("hbase.zookeeper.property.clientPort", model.getEnv().getHbase_zookeeper_property_clientPort());
+    conf.set("hbase.master", model.getEnv().getHbase_master());
+    conf.set("mapred.job.tracker", model.getEnv().getMapred_job_tracker());
+    if (model.getEnv().getFs_default_name() != null)
+      conf.set("fs.default.name", model.getEnv().getFs_default_name());
+    if (model.getEnv().getFs_defaultFS() != null)
+      conf.set("fs.defaultFS", model.getEnv().getFs_defaultFS());
+    conf.set("fs.hdfs.impl", model.getEnv().getFs_hdfs_impl());
+    return conf;
+  }
+
+  public static Path initHdfsWorkDir(AbstractWorkflowDataModel model, Configuration conf, File nfsWorkDir) {
+    FileSystem fileSystem = null;
+    try {
+      fileSystem = FileSystem.get(conf);
+      Path path = new Path(model.getEnv().getOOZIE_APP_ROOT() + "/" + nfsWorkDir.getName());
+      fileSystem.mkdirs(path);
+      return fileSystem.getFileStatus(path).getPath();
+    } catch (IOException e) {
+      throw rethrow(e);
+    } finally {
+      if (fileSystem != null) {
+        try {
+          fileSystem.close();
+        } catch (IOException e) {
+          // gulp
+        }
+      }
+    }
   }
 
   public static String seqwareJarPath(AbstractWorkflowDataModel objectModel) {
@@ -50,9 +102,9 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
   public void prepareWorkflow(AbstractWorkflowDataModel objectModel) {
     // parse objectmodel
     this.dataModel = objectModel;
-    this.setupEnvironment();
+    this.populateNfsWorkDir();
     this.parseDataModel(objectModel, useSge, new File(seqwareJarPath(objectModel)));
-    this.setupHDFS(objectModel);
+    this.populateHdfsWorkDir(objectModel);
   }
 
   public ReturnValue runWorkflow() {
@@ -61,9 +113,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 
     try {
       Properties conf = wc.createConfiguration();
-      String app_path = this.dataModel.getEnv().getOOZIE_APP_PATH() + this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
-          + this.dir.getName();
-      conf.setProperty(OozieClient.APP_PATH, app_path);
+      conf.setProperty(OozieClient.APP_PATH, hdfsWorkDir.toString());
       conf.setProperty("jobTracker", this.dataModel.getEnv().getOOZIE_JOBTRACKER());
       conf.setProperty("nameNode", this.dataModel.getEnv().getOOZIE_NAMENODE());
       conf.setProperty("queueName", this.dataModel.getEnv().getOOZIE_QUEUENAME());
@@ -77,6 +127,24 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
         Log.stdout("Terminating this program will NOT affect the running workflow.");
         Thread.sleep(2 * 1000);
         
+        // Ensure that we can pull the job info from oozie
+        int maxwait = 5;
+        while (maxwait-- > 0){
+          try{
+            wc.getJobInfo(jobId);
+            // job info available
+            break;
+          } catch (Exception e){
+            if (maxwait == 0){
+              Log.stdout("\nTimed out waiting for workflow job to be available.");
+              rethrow(e);
+            } else {
+              Log.stdout("\nWorkflow job pending ...");
+              Thread.sleep(5 * 1000);
+            }
+          }
+        }
+
         while (wc.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) {
           Log.stdout("\nWorkflow job running ...");
           printWorkflowInfo(wc.getJobInfo(jobId));
@@ -111,46 +179,32 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
   /**
    * copy the local dir to HDFS
    */
-  private void setupHDFS(AbstractWorkflowDataModel objectModel) {
-    Configuration conf = new Configuration();
-    conf.set("hbase.zookeeper.quorum", this.dataModel.getEnv().getHbase_zookeeper_quorum());
-    conf.set("hbase.zookeeper.property.clientPort", this.dataModel.getEnv().getHbase_zookeeper_property_clientPort());
-    conf.set("hbase.master", this.dataModel.getEnv().getHbase_master());
-    conf.set("mapred.job.tracker", this.dataModel.getEnv().getMapred_job_tracker());
-    if (this.dataModel.getEnv().getFs_default_name() != null)
-      conf.set("fs.default.name", this.dataModel.getEnv().getFs_default_name());
-    if (this.dataModel.getEnv().getFs_defaultFS() != null)
-      conf.set("fs.defaultFS", this.dataModel.getEnv().getFs_defaultFS());
-    conf.set("fs.hdfs.impl", this.dataModel.getEnv().getFs_hdfs_impl());
-    // conf.addResource(new Path(this.dataModel.getEnv().getHADOOP_CORE_XML()));
-    // conf.addResource(new
-    // Path(this.dataModel.getEnv().getHADOOP_HDFS_SITE_XML()));
-    // conf.addResource(new
-    // Path(this.dataModel.getEnv().getHADOOP_MAPRED_SITE_XML()));
-
+  private void populateHdfsWorkDir(AbstractWorkflowDataModel objectModel) {
+    FileSystem fileSystem = null;
     try {
-      FileSystem fileSystem = null;
       fileSystem = FileSystem.get(conf);
-      Path path = new Path(this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName());
-      fileSystem.mkdirs(path);
-      Path pathlib = new Path(this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName() + "/lib");
+      Path pathlib = new Path(hdfsWorkDir, "lib");
       fileSystem.mkdirs(pathlib);
-      this.copyFromLocal(fileSystem, this.dataModel.getEnv().getOOZIE_WORK_DIR() + "/" + this.dir.getName()
-          + "/job.properties", this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName());
-      this.copyFromLocal(fileSystem, this.dataModel.getEnv().getOOZIE_WORK_DIR() + "/" + this.dir.getName()
-          + "/workflow.xml", this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/" + this.dir.getName());
-      // copy lib
-      this.copyFromLocal(fileSystem, seqwareJarPath(objectModel), this.dataModel.getEnv().getOOZIE_APP_ROOT() + "/"
-          + this.dir.getName() + "/lib");
+      copyFromLocal(fileSystem, nfsWorkDir + "/job.properties", hdfsWorkDir);
+      copyFromLocal(fileSystem, nfsWorkDir + "/workflow.xml", hdfsWorkDir);
 
-      Path absDest = fileSystem.getFileStatus(path).getPath();
-      System.out.println("Files copied to " + absDest);
-
-      fileSystem.close();
+      if (!useSge) {
+        // copy lib
+        copyFromLocal(fileSystem, seqwareJarPath(objectModel), pathlib);
+      }
+      System.out.println("Files copied to " + nfsWorkDir);
     } catch (RuntimeException e) {
       throw e;
     } catch (Exception e) {
       throw new RuntimeException(e);
+    } finally {
+      if (fileSystem != null) {
+        try {
+          fileSystem.close();
+        } catch (IOException e) {
+          // gulp
+        }
+      }
     }
   }
 
@@ -158,30 +212,27 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
    * @throws IOException
    * 
    */
-  private void setupEnvironment() {
-    // create a working directory in /nfs
-    // hardcode for now
-
+  private void populateNfsWorkDir() {
     try {
-      this.dir = FileTools.createDirectoryWithUniqueName(new File(this.dataModel.getEnv().getOOZIE_WORK_DIR()), "oozie");
-      this.dir.setWritable(true, false);
-      System.out.println("Using working directory: "+dir.getAbsolutePath());
-      // generate job.properties
-      this.generateJobProperties();
-      // create lib dir
-      File lib = new File(this.dir, "lib");
-      lib.mkdir();
-    } catch (RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+      File file = new File(nfsWorkDir, "job.properties");
+      FileWriter fw = new FileWriter(file);
+      fw.write("nameNode=" + this.dataModel.getEnv().getOOZIE_NAMENODE() + "\n");
+      fw.write("jobTracker=" + this.dataModel.getEnv().getOOZIE_JOBTRACKER() + "\n");
+      fw.write("queueName=" + this.dataModel.getEnv().getOOZIE_QUEUENAME() + "\n");
+      fw.write("oozie.wf.application.path=" + this.hdfsWorkDir);
+      fw.close();
 
+      File lib = new File(this.nfsWorkDir, "lib");
+      lib.mkdir();
+
+    } catch (IOException e) {
+      rethrow(e);
+    }
   }
 
   @Override
   public String getWorkingDirectory() {
-    return dir == null ? null : dir.getAbsolutePath();
+    return nfsWorkDir == null ? null : nfsWorkDir.getAbsolutePath();
   }
 
   /**
@@ -191,35 +242,18 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
    * @return
    */
   private File parseDataModel(AbstractWorkflowDataModel objectModel, boolean useSge, File seqwareJar) {
-    File file = new File(this.dir, "workflow.xml");
+    File file = new File(nfsWorkDir, "workflow.xml");
     // generate dax
     OozieWorkflowXmlGenerator daxv2 = new OozieWorkflowXmlGenerator();
-    daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath(), this.dir.getAbsolutePath(), useSge, seqwareJar,
+    daxv2.generateWorkflowXml(objectModel, file.getAbsolutePath(), this.nfsWorkDir.getAbsolutePath(), hdfsWorkDir, useSge, seqwareJar,
                               this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
     return file;
   }
 
-  private void generateJobProperties() {
-    File file = new File(this.dir, "job.properties");
-    try {
-      FileWriter fw = new FileWriter(file);
-      fw.write("nameNode=" + this.dataModel.getEnv().getOOZIE_NAMENODE() + "\n");
-      fw.write("jobTracker=" + this.dataModel.getEnv().getOOZIE_JOBTRACKER() + "\n");
-      fw.write("queueName=" + this.dataModel.getEnv().getOOZIE_QUEUENAME() + "\n");
-      fw.write("oozie.wf.application.path=${nameNode}/user/${user.name}/seqware_workflow/" + this.dir.getName());
-      fw.close();
-    } catch (RuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  public void copyFromLocal(FileSystem fileSystem, String source, String dest) {
+  public static void copyFromLocal(FileSystem fileSystem, String source, Path dstPath) {
     try {
       Path srcPath = new Path(source);
 
-      Path dstPath = new Path(dest);
       // Check if the file already exists
       if (!(fileSystem.exists(dstPath))) {
         System.out.println("No such destination " + dstPath);

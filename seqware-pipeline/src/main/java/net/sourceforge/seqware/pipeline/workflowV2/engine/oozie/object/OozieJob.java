@@ -45,7 +45,7 @@ public abstract class OozieJob {
    */
   public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
 
-  protected String okTo = "end";
+  protected String okTo = "done";
   // private String errorTo; always to fail now
   protected String name;
   protected Collection<String> parentAccessions;
@@ -182,6 +182,12 @@ public abstract class OozieJob {
     args.add(scriptsDir.getAbsolutePath());
     args.add("-N");
     args.add(name);
+
+    if (jobObj.getQsubOptions() != null) {
+      args.add(jobObj.getQsubOptions());
+      write(concat(" ", args), file);
+      return file;
+    }
 
     if (StringUtils.isNotBlank(jobObj.getQueue())) {
       args.add("-q");

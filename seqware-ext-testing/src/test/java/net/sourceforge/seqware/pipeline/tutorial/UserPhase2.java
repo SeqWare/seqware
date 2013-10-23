@@ -32,7 +32,7 @@ public class UserPhase2 {
     @Test
     public void createExperimentAndLinkToStudy() throws IOException{
         String output = runCreateExperimentAndLinkStudy();
-        String sw_accession  = OldUserTutorialSuiteET.getAndCheckSwid(output);
+        String sw_accession  = String.valueOf(ITUtility.extractSwid(output));
         AccessionMap.accessionMap.put(EXPERIMENT, sw_accession);
     }
 
