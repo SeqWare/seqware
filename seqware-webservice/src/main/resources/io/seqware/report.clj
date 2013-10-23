@@ -126,7 +126,7 @@
     "workflow"        (in "workflow_swa" (->ints values))
     "workflow-run"    (in "workflow_run_swa" (->ints values))
     "file"            (in "file_swa" (->ints values))
-    "file-meta-type"  (in "file_meta_type" (->ints values))
+    "file-meta-type"  (in "file_meta_type" values)
     "skip"            (in "skip" (->bools values))
     nil))
 
