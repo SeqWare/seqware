@@ -201,14 +201,29 @@ union all
 )
 
 -- concatenated values from sample parents
-, sample_parent_strs as (
+, sample_parent_swas_names (sample_id, parent_swas, parent_names) as (
     select anc.sample_id
-         , array_to_string(array_agg(name), ':') as parent_names
          , array_to_string(array_agg(sw_accession), ':') as parent_swas
+         , array_to_string(array_agg(s.name), ':') as parent_names
+    from sample_ancestors anc
+    join sample s on s.sample_id = anc.ancestor_id
+    group by anc.sample_id
+)
+
+, sample_parent_attrs (sample_id, parent_attrs) as (
+    select anc.sample_id
          , array_to_string(array_agg('parent_sample.'||tag||'.'||sw_accession||'='||vals), ';') as parent_attrs
     from sample_ancestors anc
     join sample_attrs attr on attr.sample_id = anc.ancestor_id
     join sample s on s.sample_id = anc.ancestor_id
+    group by anc.sample_id
+)
+
+, sample_parent_skip (sample_id, skip) as (
+    select anc.sample_id
+         , (true = any(array_agg(s.skip))) as skip
+    from sample_ancestors anc
+    join sample s on anc.ancestor_id = s.sample_id
     group by anc.sample_id
 )
 
@@ -219,9 +234,9 @@ select p.update_tstmp as last_modified
      , translate(case when e.name is not null and e.name <> '' then e.name else e.title end , ' ', '_') as experiment_name
      , e.sw_accession as experiment_swa
      , ea.attrs as experiment_attrs
-     , translate(sp.parent_names, ' ', '_') as sample_parent_names
-     , sp.parent_swas as sample_parent_swas
-     , sp.parent_attrs as sample_parent_attrs
+     , translate(spn.parent_names, ' ', '_') as sample_parent_names
+     , spn.parent_swas as sample_parent_swas
+     , spa.parent_attrs as sample_parent_attrs
      , translate(case when s.name is not null and s.name <> '' then s.name else s.title end , ' ', '_') as sample_name
      , s.sw_accession as sample_swa
      , sa.attrs as sample_attrs
@@ -248,8 +263,8 @@ select p.update_tstmp as last_modified
      , f.sw_accession as file_swa
      , fa.attrs as file_attrs
      , f.file_path as file_path
-     , (case when (f.skip or sr.skip or l.skip or i.skip or s.skip) = false
-               or (f.skip or sr.skip or l.skip or i.skip or s.skip) is null
+     , (case when (f.skip or sr.skip or l.skip or i.skip or s.skip or sps.skip) = false
+               or (f.skip or sr.skip or l.skip or i.skip or s.skip or sps.skip) is null 
              then false else true end) as skip
 from study_report_ids ids
 join file f on f.file_id = ids.file_id
@@ -260,7 +275,9 @@ join experiment e on e.experiment_id = ids.experiment_id
 left join experiment_attrs_str ea on ea.experiment_id = ids.experiment_id
 join processing p on p.processing_id = ids.processing_id
 left join processing_attrs_str pa on pa.processing_id = ids.processing_id
-left join sample_parent_strs sp on sp.sample_id = ids.sample_id
+left join sample_parent_swas_names spn on spn.sample_id = ids.sample_id
+left join sample_parent_attrs spa on spa.sample_id = ids.sample_id
+left join sample_parent_skip sps on sps.sample_id = ids.sample_id
 left join sample s on s.sample_id = ids.sample_id
 left join sample_attrs_str sa on sa.sample_id = ids.sample_id
 left join lane l on l.lane_id = ids.lane_id
