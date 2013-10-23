@@ -48,7 +48,7 @@ public class UserPhase1 {
     @Test
     public void testStudyCreation() throws IOException {
         String output = runStudyCreation();
-        String sw_accession = OldUserTutorialSuiteET.getAndCheckSwid(output);
+        String sw_accession = String.valueOf(ITUtility.extractSwid(output));
         AccessionMap.accessionMap.put(STUDY, sw_accession);
     }
 
