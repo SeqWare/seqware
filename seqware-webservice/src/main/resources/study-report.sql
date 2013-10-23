@@ -248,6 +248,9 @@ select p.update_tstmp as last_modified
      , f.sw_accession as file_swa
      , fa.attrs as file_attrs
      , f.file_path as file_path
+     , (case when (f.skip or sr.skip or l.skip or i.skip or s.skip) = false
+               or (f.skip or sr.skip or l.skip or i.skip or s.skip) is null
+             then false else true end) as skip
 from study_report_ids ids
 join file f on f.file_id = ids.file_id
 left join file_attrs_str fa on fa.file_id = ids.file_id
