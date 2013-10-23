@@ -9,6 +9,7 @@ import net.sourceforge.seqware.webservice.resources.SeqwareAccessionResource;
 import net.sourceforge.seqware.webservice.resources.filters.ExperimentIDFilter;
 import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunIDsFilter;
 import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunsFilter;
+import net.sourceforge.seqware.webservice.resources.queries.FileProvenanceResource;
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
 import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
 import net.sourceforge.seqware.webservice.resources.queries.SampleHierarchyResource;
@@ -280,6 +281,8 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         /*
          * Reports
          */
+        router.attach("/file-provenance", new FileProvenanceResource(getContext()));
+
         StudyIdFilesResource studyIdSamples = new StudyIdFilesResource(getContext());
         router.attach("/studies/{studyId}/files", studyIdSamples);
         router.attach("/sequencerruns/{sequencerRunId}/files", new SequencerRunIdFilesResource(getContext()));
