@@ -295,5 +295,5 @@ left join workflow wf on wf.workflow_id = wfr.workflow_id
 
 begin;
 drop table if exists file_provenance_report;
-create table file_provenance_report as (select * from file_report_temp);
+create table file_provenance_report as (select * from file_provenance_report_temp);
 commit;
