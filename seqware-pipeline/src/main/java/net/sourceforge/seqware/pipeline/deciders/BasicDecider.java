@@ -1001,7 +1001,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      */
     private List<String> getListOfFiles(int workflowRunAcc) {
         Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
-        String ranOnString = map.get("Input File Meta-Types");
+        String ranOnString = map.get("Immediate Input File Meta-Types");
         List<String> ranOnList = Arrays.asList(ranOnString.split(","));
         List<Integer> indices = new ArrayList<Integer>();
         for (int i=0;i<ranOnList.size(); i++)
@@ -1010,7 +1010,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 indices.add(i);
             }
         }
-        ranOnString = map.get("Input File Paths");
+        ranOnString = map.get("Immediate Input File Paths");
         String[] ranOnArr = ranOnString.split(",");
         ranOnList = new ArrayList<String>();
         for (Integer i:indices) {
