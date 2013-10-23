@@ -232,6 +232,12 @@
             <version>1.0.0.GA</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <artifactId>jersey-json</artifactId>
+            <groupId>com.sun.jersey</groupId>
+            <type>jar</type>
+            <version>1.11.1</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
