@@ -48,6 +48,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 
 /**
  *
@@ -207,6 +208,10 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         WorkflowRun data = entityManager.find(WorkflowRun.class, id);
         if (data == null) {
             return null;
+        }
+        // if the workflow run is not in a settled state, then abort
+        if (!(data.getStatus().equals(WorkflowRunStatus.completed.name()) || data.getStatus().equals(WorkflowRunStatus.failed.name()) || data.getStatus().equals(WorkflowRunStatus.cancelled.name()))) {
+            UtilityREST.throwExceptionWithMessage("Unsettled workflow run blocking deletion: " + data.getSwAccession());   
         }
         Set<Processing> affectedProcessing = new HashSet<Processing>();
         // workflow_run
