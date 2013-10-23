@@ -57,7 +57,8 @@
               "File Meta-Type" 
               "File SWID" 
               "File Attributes"
-              "File Path"])
+              "File Path"
+              "Skip"])
 
 (def ^:dynamic *study-report-sql-resource*
   "study-report.sql")
