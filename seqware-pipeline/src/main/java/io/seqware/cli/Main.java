@@ -42,6 +42,15 @@ public class Main {
     return dl(tokens, ",");
   }
 
+  private static int swid(String swid) {
+    try {
+      return Integer.parseInt(swid);
+    } catch (NumberFormatException e){
+      kill("seqware: invalid seqware accession: '" + swid + "'");
+      return 0; // non-reachable
+    }
+  }
+
   private static void out(String format, Object... args) {
     System.out.println(String.format(format, args));
   }
@@ -1207,10 +1216,11 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --out <file>        The name of the file to write the stderr");
+      out("                      Defaults to <swid>.err");
       out("");
     } else {
       String swid = reqVal(args, "--accession");
-      String out = optVal(args, "--out", null);
+      String out = optVal(args, "--out", swid+".err");
 
       extras(args, "workflow-run stderr");
 
@@ -1220,12 +1230,11 @@ public class Main {
       runnerArgs.add("--");
       runnerArgs.add("--workflow-run-accession");
       runnerArgs.add(swid);
-      if (out != null) {
-        runnerArgs.add("--output-filename");
-        runnerArgs.add(out);
-      }
+      runnerArgs.add("--output-filename");
+      runnerArgs.add(out);
       runnerArgs.add("--wr-stderr");
       run(runnerArgs);
+      out("Created file "+out);
     }
   }
 
@@ -1243,10 +1252,11 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --out <file>        The name of the file to write the stdout");
+      out("                      Defaults to <swid>.out");
       out("");
     } else {
       String swid = reqVal(args, "--accession");
-      String out = optVal(args, "--out", null);
+      String out = optVal(args, "--out", swid+".out");
 
       extras(args, "workflow-run stdout");
 
@@ -1256,12 +1266,11 @@ public class Main {
       runnerArgs.add("--");
       runnerArgs.add("--workflow-run-accession");
       runnerArgs.add(swid);
-      if (out != null) {
-        runnerArgs.add("--output-filename");
-        runnerArgs.add(out);
-      }
+      runnerArgs.add("--output-filename");
+      runnerArgs.add(out);
       runnerArgs.add("--wr-stdout");
       run(runnerArgs);
+      out("Created file "+out);
     }
   }
 
@@ -1278,15 +1287,12 @@ public class Main {
       out("  --accession <swid>  The SWID of the workflow run");
       out("");
     } else {
-      String swid = reqVal(args, "--accession");
+      int swid = swid(reqVal(args, "--accession"));
 
       extras(args, "workflow-run cancel");
 
-      try {
-        WorkflowRuns.submitCancel(Integer.parseInt(swid));
-      } catch (NumberFormatException e) {
-        kill("seqware: invalid seqware accession: '" + swid + "'");
-      }
+      WorkflowRuns.submitCancel(swid);
+      out("Submitted request to cancel workflow run with SWID "+swid);
     }
   }
 
@@ -1303,11 +1309,12 @@ public class Main {
       out("  --accession <swid>  The SWID of the workflow run");
       out("");
     } else {
-      int swid = Integer.parseInt(reqVal(args, "--accession"));
+      int swid = swid(reqVal(args, "--accession"));
 
       extras(args, "workflow-run retry");
 
       WorkflowRuns.submitRetry(swid);
+      out("Submitted request to retry workflow run with SWID "+swid);
     }
   }
 

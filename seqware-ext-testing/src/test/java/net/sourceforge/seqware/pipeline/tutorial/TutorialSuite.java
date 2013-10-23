@@ -26,7 +26,6 @@ import org.junit.Assert;
  */
 public class TutorialSuite {
     protected static Pattern processingPattern = Pattern.compile("MetaDB ProcessingAccession for this run is: ([\\d]+)");
-    protected static Pattern swidPattern = Pattern.compile("SWID: ([\\d]+)");
 
     public static String getAndCheckProcessingAccession(String s) throws NumberFormatException {
         Matcher match = processingPattern.matcher(s);
@@ -36,14 +35,4 @@ public class TutorialSuite {
         Integer.parseInt(swid.trim());
         return swid;
     }
-
-    public static String getAndCheckSwid(String s) throws NumberFormatException {
-        Matcher match = swidPattern.matcher(s);
-        Assert.assertTrue("SWID not found in output.", match.find());
-        String swid = match.group(1);
-        Assert.assertFalse("The SWID was empty", swid.trim().isEmpty());
-        Integer.parseInt(swid.trim());
-        return swid;
-    }
-    
 }

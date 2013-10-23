@@ -9,11 +9,19 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.sourceforge.seqware.common.util.Log;
 
@@ -204,35 +212,115 @@ public class MapTools {
         return (result);
     }
 
-    /*
-     * Iterate through a Map and change all Strings to ints where possible
-     * FIXME: Here we are assuming the variable is the entire value. Instead,
-     * parse the value in case it is embeded. i.e. key=foo${value2}xxx
-     */
-    /**
-     * <p>mapExpandVariables.</p>
-     *
-     * @param map a {@link java.util.Map} object.
-     */
-    public static void mapExpandVariables(Map map) {
-        Iterator iter = map.keySet().iterator();
-        while (iter.hasNext()) {
-            String key = (String) iter.next();
-            String val = (String) map.get(key);
+    public static final String VAR_RANDOM = "sqw.random";
+    public static final String VAR_DATE = "sqw.date";
+    public static final String VAR_DATETIME = "sqw.datetime";
+    public static final String VAR_TIMESTAMP = "sqw.timestamp";
+    public static final String VAR_UUID = "sqw.uuid";
+    public static final String VAR_BUNDLE_DIR = "sqw.bundle-dir";
+    public static final String LEGACY_VAR_RANDOM = "random";
+    public static final String LEGACY_VAR_DATE = "date";
+    public static final String LEGACY_VAR_BUNDLE_DIR = "workflow_bundle_dir";
+    public static final String VAR_DATE_FORMAT = "yyyy-MM-dd";
+    public static final String VAR_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    
+    public static void provideBundleDir(Map<String, String> m, String bundleDir){
+      m.put(VAR_BUNDLE_DIR, bundleDir);
+      m.put(LEGACY_VAR_BUNDLE_DIR, bundleDir);
+    }
+    
+    public static Map<String, String> providedMap(String bundleDir){
+      Map<String, String> m = new HashMap<String, String>();
+      provideBundleDir(m, bundleDir);
+      return m;
+    }
+    
+    public static String generatedValue(String key){
+      if (key.equals(VAR_RANDOM))
+        return String.valueOf(new Random().nextInt(Integer.MAX_VALUE));
+      if (key.equals(VAR_DATE))
+        return new SimpleDateFormat(VAR_DATE_FORMAT).format(new Date());
+      if (key.equals(VAR_DATETIME))
+        return new SimpleDateFormat(VAR_DATETIME_FORMAT).format(new Date());
+      if (key.equals(VAR_TIMESTAMP))
+        return String.valueOf(System.currentTimeMillis());
+      if (key.equals(VAR_UUID))
+        return UUID.randomUUID().toString();
+      
+      if (key.equals(LEGACY_VAR_RANDOM)) {
+        Log.warn(String.format("Variable '%s' is deprecated. Please use '%s' instead.", LEGACY_VAR_RANDOM, VAR_RANDOM));
+        return String.valueOf(new Random().nextInt(Integer.MAX_VALUE));
+      }
+      if (key.equals(LEGACY_VAR_DATE)) {
+        Log.warn(String.format("Variable '%s' is deprecated. Please use '%s' instead.", LEGACY_VAR_DATE, VAR_DATE));
+        return new SimpleDateFormat(VAR_DATE_FORMAT).format(new Date());
+      }
+      
+     return null;
+    }
 
-            while (val != null && val.startsWith("${") && val.endsWith("}")) {
-                String variableKey = val.substring(2, val.length() - 1);
-                val = (String) map.get(variableKey);
-
-                if (val.compareTo("${" + variableKey + "}") == 0) {
-                    Log.stderr("Problem: Variable cannot be resolved: " + val);
-                    System.exit(1);
-                } else {
-                    map.put(key, val);
-                }
-
-            }
+    private static final Pattern VAR = Pattern.compile("\\$\\{([^\\}]*)\\}");
+    public static Map<String, String> expandVariables(Map<String, String> raw) {
+      return expandVariables(raw, null);
+    }
+    public static Map<String, String> expandVariables(Map<String, String> raw, Map<String, String> provided) {
+      return expandVariables(raw, provided, false);
+    }
+    public static Map<String, String> expandVariables(Map<String, String> raw, Map<String, String> provided, boolean allowMissingVars){
+      raw = new HashMap<String, String>(raw); // don't mess with someone else's data structure
+      Map<String, String> exp = new HashMap<String, String>();
+      
+      int prevCount;
+      do {
+        prevCount = raw.size();
+        Iterator<Map.Entry<String, String>> iter = raw.entrySet().iterator();
+        entries: while (iter.hasNext()){
+          Map.Entry<String, String> e = iter.next();
+          Matcher m = VAR.matcher(e.getValue());
+          if (m.find()){
+            // this value has variables
+            StringBuffer sb = new StringBuffer();
+            do {
+              String key = m.group(1);
+              String val = exp.get(key);
+              if (val == null && provided != null)
+                val = provided.get(key);
+              if (val == null)
+                val = generatedValue(key);
+              
+              if (val != null) {
+                // found substitution, replace and then look for more
+                m.appendReplacement(sb, val);
+              } else {
+                // we don't yet have all the substitutions, skip this entry for now
+                continue entries;
+              }
+            } while (m.find());
+            // done substituting the variables
+            m.appendTail(sb);
+            exp.put(e.getKey(), sb.toString());
+            iter.remove();
+          } else {
+            // no variables, move the entry
+            exp.put(e.getKey(), e.getValue());
+            iter.remove();
+          }
         }
+        // exit when nothing left to convert or no incremental improvement
+      } while (0 < raw.size() && raw.size() < prevCount);
+      
+      if (!allowMissingVars && raw.size() > 0){
+        StringBuilder sb = new StringBuilder("Could not satisfy variable substitution:");
+        for (Map.Entry<String, String> e : raw.entrySet()){
+          sb.append("\n");
+          sb.append(e.getKey());
+          sb.append("=");
+          sb.append(e.getValue());
+        }
+        throw new RuntimeException(sb.toString());
+      }
+      
+      return exp;
     }
 
     /**
