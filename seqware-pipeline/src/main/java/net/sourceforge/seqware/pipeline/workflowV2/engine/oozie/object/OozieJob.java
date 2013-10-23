@@ -45,7 +45,7 @@ public abstract class OozieJob {
    */
   public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
 
-  protected String okTo = "end";
+  protected String okTo = "done";
   // private String errorTo; always to fail now
   protected String name;
   protected Collection<String> parentAccessions;
