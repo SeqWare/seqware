@@ -186,11 +186,4 @@ public class SeqWareWebserviceClient {
         this.webResource = webResource;
     }
 
-    /**
-     * @return the webResource
-     */
-    public WebResource getWebResource() {
-        return webResource;
-    }
-
 }
