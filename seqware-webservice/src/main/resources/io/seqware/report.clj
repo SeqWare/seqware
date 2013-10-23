@@ -18,7 +18,7 @@
     (loop []
       (when (.next result-set)
         (->> idxs
-          (map #(.getString result-set %))
+          (map #(str (.getObject result-set %)))
           (print-row))
         (recur)))))
 
@@ -108,20 +108,26 @@
         vals (concat values wc-values)]
     [(str "(" frag ")") vals]))
 
+(defn ->ints [coll]
+  (map #(Integer/parseInt %) coll))
+
+(defn ->bools [coll]
+  (map #(Boolean/parseBoolean %) coll))
+
 (defn clause [[key values]]
   (case key
-    "study"           (in "study_swa" values)
-    "experiment"      (in "experiment_swa" values)
-    "sample"          (in "sample_swa" values)
+    "study"           (in "study_swa" (->ints values))
+    "experiment"      (in "experiment_swa" (->ints values))
+    "sample"          (in "sample_swa" (->ints values))
     "sample-ancestor" (like "sample_parent_swas" values)
-    "sequencer-run"   (in "sequencer_run_swa" values)
-    "lane"            (in "lane_swa" values)
-    "ius"             (in "ius_swa" values)
-    "workflow"        (in "workflow_swa" values)
-    "workflow-run"    (in "workflow_run_swa" values)
-    "file"            (in "file_swa" values)
-    "file-meta-type"  (in "file_meta_type" values)
-    "skip"            (in "skip" values)
+    "sequencer-run"   (in "sequencer_run_swa" (->ints values))
+    "lane"            (in "lane_swa" (->ints values))
+    "ius"             (in "ius_swa" (->ints values))
+    "workflow"        (in "workflow_swa" (->ints values))
+    "workflow-run"    (in "workflow_run_swa" (->ints values))
+    "file"            (in "file_swa" (->ints values))
+    "file-meta-type"  (in "file_meta_type" (->ints values))
+    "skip"            (in "skip" (->bools values))
     nil))
 
 (defn apply-values [ps values]
