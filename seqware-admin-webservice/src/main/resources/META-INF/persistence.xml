@@ -3,6 +3,7 @@
   <persistence-unit name="io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU" transaction-type="JTA">
     <jta-data-source>java:app/test_seqware_meta_db</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
     <properties/>
   </persistence-unit>
 </persistence>
