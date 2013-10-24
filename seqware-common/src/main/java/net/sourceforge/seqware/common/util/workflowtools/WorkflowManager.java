@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.common.util.workflowtools;
 
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 
 import java.sql.SQLException;

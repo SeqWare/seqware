@@ -10,5 +10,5 @@
         <property name="URL" value="jdbc:postgresql://${seqware_meta_db_host}:${seqware_meta_db_port}/${seqware_meta_db_name}"/>
         <property name="driverClass" value="org.postgresql.Driver"/>
     </jdbc-connection-pool>
-    <jdbc-resource enabled="true" jndi-name="java:app/test_seqware_meta_db" object-type="user" pool-name="post-gre-sql_test_seqware_meta_db_seqwarePool"/>
+    <jdbc-resource enabled="true" jndi-name="java:app/seqware_meta_db" object-type="user" pool-name="post-gre-sql_test_seqware_meta_db_seqwarePool"/>
 </resources>
