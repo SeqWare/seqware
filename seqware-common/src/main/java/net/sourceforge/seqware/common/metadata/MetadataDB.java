@@ -27,6 +27,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
@@ -126,6 +127,16 @@ public class MetadataDB implements Metadata {
   }
 
 
+  @Override
+  public void fileProvenanceReport(Map<FileProvenanceParam, List<String>> params, Writer out) {
+    throw new NotImplementedException("This is currently not implemented for a direct DB connection!");
+  }
+  
+  @Override
+  public List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params) {
+    throw new NotImplementedException("This is currently not implemented for a direct DB connection!");
+  }
+  
   @Override
   public void studyReport(String studyTitle, Writer out) {
     throw new NotImplementedException("Please use the SymLinker through the Web service.");

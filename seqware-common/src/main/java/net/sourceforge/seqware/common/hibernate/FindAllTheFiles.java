@@ -93,7 +93,7 @@ public class FindAllTheFiles {
         "Workflow Run Status"), WORKFLOW_NAME("Workflow Name"), WORKFLOW_SWA("Workflow SWID"), WORKFLOW_VERSION(
         "Workflow Version"), FILE_SWA("File SWID"), FILE_TAG_PREFIX("file."), FILE_ATTRIBUTES("File Attributes"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
         "Processing Algorithm"), PROCESSING_TAG_PREFIX("processing."), PROCESSING_ATTRIBUTES("Processing Attributes"),
-        INPUT_FILE_META_TYPES("Input File Meta-Types"), INPUT_FILE_SWIDS("Input File SWIDs"), INPUT_FILE_PATHS("Input File Paths");
+        INPUT_FILE_META_TYPES("Input File Meta-Types"), INPUT_FILE_SWIDS("Input File SWIDs"), INPUT_FILE_PATHS("Input File Paths"),SKIP("Skip");
         ;
     private final String title;
 
