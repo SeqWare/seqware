@@ -456,19 +456,6 @@ public interface Metadata {
   public int getWorkflowAccession(String name, String version);
 
   /**
-   * Retrieves the study report, writing it to the specified output stream.
-   * @param studyTitle
-   * @param out where the content will be written
-   */
-  public void studyReport(String studyTitle, Writer out);
-  
-  /**
-   * Retrieves the all-studies report, writing it to the specified output stream.
-   * @param out where the content will be written
-   */
-  public void allStudiesReport(Writer out);
-  
-  /**
    * Retrieves the file provenance report, writing it to the specified output stream as a TSV.
    * @param params the parameters to filter the results
    * @param out where the TSV content will be written

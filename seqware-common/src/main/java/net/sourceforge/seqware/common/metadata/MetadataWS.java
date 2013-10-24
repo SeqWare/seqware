@@ -1018,26 +1018,6 @@ public class MetadataWS implements Metadata {
     
     
     @Override
-    public void studyReport(String studyTitle, Writer out) {
-      Study study;
-      try {
-        study = ll.findStudy("?title=" + studyTitle);
-      } catch(RuntimeException e){
-        throw e;
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-      ll.writeTo("/reports/studies/" + study.getSwAccession() + "/files.tsv", out);
-    }
-
-
-    
-    @Override
-    public void allStudiesReport(Writer out) {
-      ll.writeTo("/reports/studies/files.tsv", out);
-    }
-
-    @Override
     public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
         ReturnValueList rv = new ReturnValueList();
         try {
