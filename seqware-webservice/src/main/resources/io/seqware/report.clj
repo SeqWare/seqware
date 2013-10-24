@@ -80,7 +80,10 @@
     [(str "(" frag ")") vals]))
 
 (defn ->ints [coll]
-  (map #(Integer/parseInt %) coll))
+  (->> coll
+    (map #(try (Integer/parseInt %)
+            (catch NumberFormatException e nil)))
+    (keep identity)))
 
 (defn ->bools [coll]
   (map #(Boolean/parseBoolean %) coll))
