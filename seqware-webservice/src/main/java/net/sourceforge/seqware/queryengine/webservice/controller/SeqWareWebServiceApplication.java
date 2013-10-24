@@ -282,7 +282,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         /*
          * Reports
          */
-        router.attach("/file-provenance", new FileProvenanceResource(getContext()));
+        router.attach("/reports/file-provenance", new FileProvenanceResource(getContext()));
 
         StudyIdFilesResource studyIdSamples = new StudyIdFilesResource(getContext());
         router.attach("/studies/{studyId}/files", studyIdSamples);

@@ -994,7 +994,7 @@ public class MetadataWS implements Metadata {
 
     @Override
     public void fileProvenanceReport(Map<FileProvenanceParam, List<String>> params, Writer out) {
-      ll.writeTo("/file-provenance", params, out);
+      ll.writeTo("/reports/file-provenance", params, out);
     }
 
     @Override
