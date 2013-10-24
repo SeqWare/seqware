@@ -16,6 +16,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -466,6 +467,20 @@ public interface Metadata {
    * @param out where the content will be written
    */
   public void allStudiesReport(Writer out);
+  
+  /**
+   * Retrieves the file provenance report, writing it to the specified output stream as a TSV.
+   * @param params the parameters to filter the results
+   * @param out where the TSV content will be written
+   */
+  public void fileProvenanceReport(Map<FileProvenanceParam, List<String>> params, Writer out);
+  
+  /**
+   * Retrieves the file provenance report.
+   * @param params the parameters to filter the results
+   * @return the list of each file provenance entry
+   */
+  public List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params);
   
   /**
    * <p>findFilesAssociatedWithAStudy.</p>

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
@@ -49,6 +51,7 @@ import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
 
 /**
@@ -68,6 +71,20 @@ public class MetadataNoConnection implements Metadata {
   private Logger logger = Logger.getLogger(MetadataNoConnection.class);
 
   
+  
+  @Override
+  public void fileProvenanceReport(Map<FileProvenanceParam, List<String>> params, Writer out) {
+    try {
+      out.write("Last Modified\tStudy Title\tStudy SWID\tStudy Attributes\tExperiment Name\tExperiment SWID\tExperiment Attributes\tParent Sample Name\tParent Sample SWID\tParent Sample Attributes\tSample Name\tSample SWID\tSample Attributes\tSequencer Run Name\tSequencer Run SWID\tSequencer Run Attributes\tLane Name\tLane Number\tLane SWID\tLane Attributes\tIUS Tag\tIUS SWID\tIUS Attributes\tWorkflow Name\tWorkflow Version\tWorkflow SWID\tWorkflow Run Name\tWorkflow Run Status\tWorkflow Run SWID\tProcessing Algorithm\tProcessing SWID\tProcessing Attributes\tFile Meta-Type\tFile SWID\tFile Path\tSkip");
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
+  @Override
+  public List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params) {
+    return Collections.emptyList();
+  }
   
   @Override
   public void studyReport(String studyTitle, Writer out) {
