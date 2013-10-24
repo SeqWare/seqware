@@ -137,17 +137,6 @@ public class MetadataDB implements Metadata {
     throw new NotImplementedException("This is currently not implemented for a direct DB connection!");
   }
   
-  @Override
-  public void studyReport(String studyTitle, Writer out) {
-    throw new NotImplementedException("Please use the SymLinker through the Web service.");
-  }
-
-  @Override
-  public void allStudiesReport(Writer out) {
-    throw new NotImplementedException("Please use the SymLinker through the Web service.");
-  }
-
-
   /**
    * {@inheritDoc}
    */
