@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.plugins.deletion;
 
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.seqware.webservice.client.SeqWareWebServiceClient;
@@ -72,10 +73,15 @@ public final class DeletionDB extends Plugin {
           HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
           this.adminUrl = settings.get("SW_ADMIN_REST_URL");
         } catch (Exception e) {
-            ReturnValue ret = new ReturnValue();
+          ReturnValue ret = new ReturnValue();
           ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-          ret.setProcessExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
           return (ret);
+        }
+        if (this.adminUrl == null) {
+            ReturnValue ret = new ReturnValue();
+            System.out.println("This utility requires access to the admin web service. Configure SW_ADMIN_REST_URL in your .seqware/setttings");
+            ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
+            return (ret);
         }
         return new ReturnValue();
     }
@@ -201,7 +207,13 @@ public final class DeletionDB extends Plugin {
                 ret.setExitStatus(ReturnValue.FAILURE);
                 return ret;
             }
-        } catch (Exception ex) {
+        } catch (ClientHandlerException ex){
+            ReturnValue ret = new ReturnValue();
+            System.out.println("Error connecting to admin web service, check that you have access to SW_ADMIN_REST_URL");
+            ret.setExitStatus(ReturnValue.FAILURE);
+            return (ret);
+        } 
+        catch (Exception ex) {
             throw new RuntimeException("Client malfunction", ex);
         } finally{
             if (client != null) client.close();
@@ -264,7 +276,7 @@ public final class DeletionDB extends Plugin {
                 fileTypeCounts.put(metaType, fileTypeCounts.get(metaType) + 1);
             }
         }
-        System.out.println("Key file contains " + workflowRunCount + " workflow runs");
+        System.out.println("Key file contains " + workflowRunCount + " workflow runs.");
         for (Entry<String, Integer> e : fileTypeCounts.entrySet()) {
             System.out.println(" \t" + e.getValue() + " file" + (e.getValue() > 1 ? "s" : "") + " of type " + e.getKey());
         }

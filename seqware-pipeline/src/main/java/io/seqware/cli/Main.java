@@ -20,7 +20,6 @@ import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 
 /*
  * TODO:
- * - apply user-role filtering of available commands
  * - add descriptions to fields of create
  */
 public class Main {
@@ -1076,6 +1075,43 @@ public class Main {
       run(runnerArgs);
     }
   }
+  
+   private static void workflowRunDelete(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware workflow-run delete --help");
+      out("       seqware workflow-run delete <params>");
+      out("");
+      out("Description:");
+      out("  Recursively delete workflow runs based on the SWID of a ancestral sequencer run, lane, or workflow run.");
+      out("");
+      out("Required parameters:");
+      out("  --accession <swid>  The SWID of the desired target");
+      out("");
+      out("Optional parameters:");
+      out("  --key <file>        A key file listing desired entities to be deleted in one transaction.");
+      out("                      If no key file exists at <file>, one will be created.");
+      out("");
+    } else {
+      String swid = reqVal(args, "--accession");
+      String out = optVal(args, "--key", null);
+
+      extras(args, "workflow-run delete");
+
+      List<String> runnerArgs = new ArrayList<String>();
+      runnerArgs.add("--plugin");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB");
+      runnerArgs.add("--");
+      runnerArgs.add("--workflowrun");
+      runnerArgs.add(swid);
+      if (out != null) {
+        runnerArgs.add("--key");
+        runnerArgs.add(out);
+      } 
+
+      run(runnerArgs);
+    }
+  }
 
   private static void workflow(List<String> args) {
     if (isHelp(args, true)) {
@@ -1317,7 +1353,7 @@ public class Main {
       out("Submitted request to retry workflow run with SWID "+swid);
     }
   }
-
+  
   private static void workflowRun(List<String> args) {
     if (isHelp(args, true)) {
       out("");
@@ -1335,6 +1371,7 @@ public class Main {
       out("  stderr              Obtain the stderr output of the run");
       out("  stdout              Obtain the stdout output of the run");
       out("  report              The details of a given workflow-run");
+      out("  delete              Recursively delete workflow-runs");
       out("");
     } else {
       String cmd = args.remove(0);
@@ -1352,9 +1389,31 @@ public class Main {
         workflowRunStdout(args);
       } else if ("report".equals(cmd)) {
         workflowRunReport(args);
+      } else if ("delete".equals(cmd)) {
+        workflowRunDelete(args);
       } else {
         invalid("workflow-run", cmd);
       }
+    }
+  }
+
+  private static void checkdb(List<String> args) {
+    if (isHelp(args, false)) {
+      out("");
+      out("Usage: seqware checkdb --help");
+      out("       seqware checkdb");
+      out("");
+      out("Description:");
+      out("  Using a direct database connection, check whether the meta db contains any content that deviates from recommended conventions.");
+      out("");
+    } else {
+     
+        List<String> runnerArgs = new ArrayList<String>();
+        runnerArgs.add("--plugin");
+        runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB");
+        runnerArgs.add("--");
+
+        run(runnerArgs);
     }
   }
 
@@ -1377,6 +1436,7 @@ public class Main {
       out("  files         Extract information about workflow output files");
       out("  workflow      Interact with workflows");
       out("  workflow-run  Interact with workflow runs");
+      out("  checkdb       Check the seqware database for convention errors");
       out("");
       out("Flags:");
       out("  --help        Print help out");
@@ -1402,6 +1462,8 @@ public class Main {
           workflow(args);
         } else if ("workflow-run".equals(cmd)) {
           workflowRun(args);
+        } else if ("checkdb".equals(cmd)) {
+          checkdb(args);
         } else {
           invalid(cmd);
         }
