@@ -119,6 +119,17 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>seqware-common</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
@@ -202,12 +213,12 @@
                     </webResources>
                         
                     <packagingExcludes>**/servlet*.jar,META-INF/context.xml</packagingExcludes>
-                    <archive>
+                    <!--<archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
-                    </archive>
+                    </archive> -->
                 </configuration>
             </plugin>
             <plugin>
