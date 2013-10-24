@@ -5,7 +5,7 @@ is_dynamic:	true
 title: GET file provenance report
 uri: /reports/file-provenance
 method: GET
-summary: Retrieves the provenance of files. Files returned are a conjunction of the disjunction of values for each name.
+summary: Retrieves the provenance of files, such that each row traces a distinct path from a study to a file. Files returned are a conjunction of the disjunction of values for each name.
 ---
 <%= @item[:summary] %>
 
