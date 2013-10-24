@@ -1,12 +1,12 @@
 (ns io.seqware.report
   (:require [clojure.java.io :as io]
             [clojure.java.jdbc :as db]
-            [clojure.string :as str]))
+            [clojure.string :as s]))
 
 (defn print-row [row]
   (->> row
-    (map #(or % ""))
-    (map #(str/replace % \tab \space))
+    (map str)
+    (map #(s/replace % \tab \space))
     (interpose \tab)
     (map print)
     (dorun))
@@ -18,7 +18,7 @@
     (loop []
       (when (.next result-set)
         (->> idxs
-          (map #(str (.getObject result-set %)))
+          (map #(.getObject result-set %))
           (print-row))
         (recur)))))
 
