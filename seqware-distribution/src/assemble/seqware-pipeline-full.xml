@@ -6,6 +6,14 @@
     <format>jar</format>
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
+  
+  <!-- needed for jersey service files http://stackoverflow.com/questions/1607220/how-can-i-merge-resource-files-in-a-maven-assembly --> 
+  <containerDescriptorHandlers>
+    <containerDescriptorHandler>
+      <handlerName>metaInf-services</handlerName>
+    </containerDescriptorHandler>
+  </containerDescriptorHandlers>
+
   <moduleSets>
     <moduleSet>
     
