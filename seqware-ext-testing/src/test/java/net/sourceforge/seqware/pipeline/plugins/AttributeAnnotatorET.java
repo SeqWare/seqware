@@ -384,41 +384,4 @@ public class AttributeAnnotatorET {
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);    
     }
     
-    
-    @AfterClass
-    public static void testNewStudyReporter() throws IOException{
-        // SEQWARE-1682 - check that the new study reporter can report all annotations including file annotations
-        File createTempFile = File.createTempFile("study_reporter", "out");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.StudyReporter "
-                + "-- --all --out " + createTempFile.getAbsolutePath() ;
-        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
-        List<String> readLines = FileUtils.readLines(createTempFile);
-        // read headers 
-        String[] headers = readLines.get(0).split("\t");
-        Map<String, Boolean> map = new HashMap<String, Boolean>();
-        for(String header : headers){
-            // ignore Parent Sample for now, testing db does not have these with results
-            if (header.contains("Parent Sample Attributes")){
-                continue;
-            }
-            if (header.contains("Attributes")){
-                map.put(header, Boolean.FALSE);
-            }
-        }
-        // scroll down and hunt 
-        for (String line : readLines){
-            String[] splitLine = line.split("\t");
-            for(int i = 0; i < splitLine.length; i++){
-                String part = splitLine[i];
-                if (part.contains("funky_key") && part.contains("groovy_value")){
-                    map.put(headers[i], true);
-                }
-            }
-        }
-        // assert that there are no attribute headers that did not contain attributes
-        Assert.assertTrue("no headers found", map.size() > 0);
-        for(Entry<String, Boolean> e : map.entrySet()){
-                Assert.assertTrue("did not find attribute for header " + e.getKey(), e.getValue());
-        }
-    }
 }
