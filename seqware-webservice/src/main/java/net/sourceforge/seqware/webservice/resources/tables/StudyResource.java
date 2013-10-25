@@ -24,6 +24,7 @@ import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.StudyType;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.lists.StudyList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
@@ -90,7 +91,7 @@ public class StudyResource extends DatabaseResource {
 
             for (Study study : studies) {
                 CollectionPropertyName<Study>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(Study.class, new String[]{"existingType"});
-                Study dto = copier.hibernate2dto(Study.class, study, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
+                Study dto = copier.hibernate2dto(Study.class, study, new Class[]{StudyType.class}, createCollectionPropertyNames);
                 eList.add(dto);
             }
             Document line = XmlTools.marshalToDocument(jaxbTool, eList);
