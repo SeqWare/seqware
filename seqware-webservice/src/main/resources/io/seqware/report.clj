@@ -1,12 +1,12 @@
 (ns io.seqware.report
   (:require [clojure.java.io :as io]
             [clojure.java.jdbc :as db]
-            [clojure.string :as str]))
+            [clojure.string :as s]))
 
 (defn print-row [row]
   (->> row
-    (map #(or % ""))
-    (map #(str/replace % \tab \space))
+    (map str)
+    (map #(s/replace % \tab \space))
     (interpose \tab)
     (map print)
     (dorun))
@@ -18,7 +18,7 @@
     (loop []
       (when (.next result-set)
         (->> idxs
-          (map #(.getString result-set %))
+          (map #(.getObject result-set %))
           (print-row))
         (recur)))))
 
@@ -57,37 +57,73 @@
               "File Meta-Type" 
               "File SWID" 
               "File Attributes"
-              "File Path"])
-
-(def ^:dynamic *study-report-sql-resource*
-  "study-report.sql")
+              "File Path"
+              "Skip"])
 
 (def ^:dynamic *db-spec*
   #_"postgres://seqware:seqware@10.0.11.20:5432/seqware_meta_db_2013_06_10"
   {:name "java:comp/env/jdbc/SeqWareMetaDB"})
 
-(defn study-report [study-id]
-  (let [sql (slurp (io/resource *study-report-sql-resource*))
-        sql (str/replace sql "--studyWhereClause", "where study.sw_accession = ?")]
+(defn in [col values]
+  [(str col " in (" (apply str (interpose ", " (repeat (count values) "?"))) ")")
+   values])
+
+(defn like [col values]
+  (let [wc-values (->> values
+                    (map (fn [v]
+                           [(str v ":%") (str "%:" v ":%") (str "%:" v)]))
+                    (apply concat))
+        eq (repeat (count values) (str col " = ?"))
+        wc (repeat (count wc-values) (str col " like ?"))
+        frag (apply str (interpose " or " (concat eq wc)))
+        vals (concat values wc-values)]
+    [(str "(" frag ")") vals]))
+
+(defn ->ints [coll]
+  (->> coll
+    (map #(try (Integer/parseInt %)
+            (catch NumberFormatException e nil)))
+    (keep identity)))
+
+(defn ->bools [coll]
+  (map #(Boolean/parseBoolean %) coll))
+
+(defn clause [[key values]]
+  (case key
+    "study"           (in "study_swa" (->ints values))
+    "experiment"      (in "experiment_swa" (->ints values))
+    "sample"          (in "sample_swa" (->ints values))
+    "sample-ancestor" (like "sample_parent_swas" values)
+    "sequencer-run"   (in "sequencer_run_swa" (->ints values))
+    "lane"            (in "lane_swa" (->ints values))
+    "ius"             (in "ius_swa" (->ints values))
+    "workflow"        (in "workflow_swa" (->ints values))
+    "workflow-run"    (in "workflow_run_swa" (->ints values))
+    "file"            (in "file_swa" (->ints values))
+    "file-meta-type"  (in "file_meta_type" values)
+    "skip"            (in "skip" (->bools values))
+    nil))
+
+(defn apply-values [ps values]
+  (loop [i 1
+         values values]
+    (when (seq values)
+      (.setObject ps i (first values))
+      (recur (inc i) (rest values)))))
+
+(defn file-provenance-report [m]
+  (let [clauses (->> m (map clause) (keep identity))
+        sql (if (empty? clauses)
+              "select * from file_provenance_report"
+              (apply str "select * from file_provenance_report where " (interpose " and " (map first clauses))))
+        vals (apply concat (map second clauses))]
     (with-open [conn (db/get-connection *db-spec*)
                 ps (.prepareStatement conn sql)]
-      (.setObject ps 1 study-id)
+      (apply-values ps vals)
       (with-open [rs (.executeQuery ps)]
         (print-row headers)
         (print-results rs)))))
 
-(defn write-study-report! [study-id out]
+(defn write-file-provenance-report! [m out]
   (binding [*out* out]
-    (study-report study-id)))
-
-(defn all-studies-report []
-  (let [sql (slurp (io/resource *study-report-sql-resource*))]
-    (with-open [conn (db/get-connection *db-spec*)
-                ps (.prepareStatement conn sql)]
-      (with-open [rs (.executeQuery ps)]
-        (print-row headers)
-        (print-results rs)))))
-
-(defn write-all-studies-report! [out]
-  (binding [*out* out]
-    (all-studies-report)))
+    (file-provenance-report m)))

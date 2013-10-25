@@ -51,6 +51,7 @@ import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
@@ -991,28 +992,31 @@ public class MetadataWS implements Metadata {
         return values;
     }
 
-    
-    
     @Override
-    public void studyReport(String studyTitle, Writer out) {
-      Study study;
-      try {
-        study = ll.findStudy("?title=" + studyTitle);
-      } catch(RuntimeException e){
-        throw e;
-      } catch (Exception e) {
-        throw new RuntimeException(e);
+    public void fileProvenanceReport(Map<FileProvenanceParam, List<String>> params, Writer out) {
+      ll.writeTo("/reports/file-provenance", params, out);
+    }
+
+    @Override
+    public List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params) {
+      String tsv = ll.getString("/file-provenance", params);
+      List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+      String[] lines = tsv.split("\n");
+      if (lines.length > 1) {
+        String[] header = lines[0].split("\t");
+        for (int line = 1; line < lines.length; line++) {
+          Map<String, String> m = new HashMap<String, String>();
+          String[] row = lines[line].split("\t");
+          for (int col = 0; col < row.length; col++) {
+            m.put(header[col], row[col]);
+          }
+          list.add(m);
+        }
       }
-      ll.writeTo("/reports/studies/" + study.getSwAccession() + "/files.tsv", out);
+      return list;
     }
-
-
     
-    @Override
-    public void allStudiesReport(Writer out) {
-      ll.writeTo("/reports/studies/files.tsv", out);
-    }
-
+    
     @Override
     public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
         ReturnValueList rv = new ReturnValueList();
@@ -3042,8 +3046,23 @@ public class MetadataWS implements Metadata {
             return (LibrarySource) findObject("/librarysource", searchString, jaxb, ls);
         }
         
+        public <K, V> void addQueryParams(ClientResource res, Map<?, ? extends List<?>> params) {
+          if (res != null && params != null) {
+            for (Map.Entry<?, ? extends List<?>> e : params.entrySet()) {
+              String name = e.getKey().toString();
+              for (Object v : e.getValue()){
+                res.addQueryParameter(name, v.toString());
+              }
+            }
+          }
+        }
+
         private void writeTo(String url, Writer out){
+          writeTo(url, null, out);
+        }
+        private void writeTo(String url, Map<?, ? extends List<?>> params, Writer out){
           ClientResource cResource = resource.getChild(version + url);
+          addQueryParams(cResource, params);
           Representation result = cResource.get();
           try {
             Reader in = result.getReader();
@@ -3066,9 +3085,13 @@ public class MetadataWS implements Metadata {
         }
 
         private String getString(String uri) {
+          return getString(uri, null);
+        }
+        private String getString(String uri, Map<?, ? extends List<?>> params) {
             String text = null;
             Representation result = null;
             ClientResource cResource = resource.getChild(version + uri);
+            addQueryParams(cResource, params);
 
             try {
                 result = cResource.get();
