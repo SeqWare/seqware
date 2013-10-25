@@ -7,8 +7,12 @@ import net.sourceforge.seqware.queryengine.webservice.view.WorkflowRunStatusReso
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionIDResource;
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionResource;
 import net.sourceforge.seqware.webservice.resources.filters.ExperimentIDFilter;
+import net.sourceforge.seqware.webservice.resources.filters.IUSIDFilter;
+import net.sourceforge.seqware.webservice.resources.filters.LaneIDFilter;
+import net.sourceforge.seqware.webservice.resources.filters.SampleIDFilter;
 import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunIDsFilter;
 import net.sourceforge.seqware.webservice.resources.filters.WorkflowRunsFilter;
+import net.sourceforge.seqware.webservice.resources.queries.FileProvenanceResource;
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
 import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
 import net.sourceforge.seqware.webservice.resources.queries.SampleHierarchyResource;
@@ -17,7 +21,6 @@ import net.sourceforge.seqware.webservice.resources.queries.SequencerRunIdFilesR
 import net.sourceforge.seqware.webservice.resources.queries.SequencerRunReportResource;
 import net.sourceforge.seqware.webservice.resources.queries.StudyIdFilesResource;
 import net.sourceforge.seqware.webservice.resources.queries.StudyIdFilesTSVResource;
-import net.sourceforge.seqware.webservice.resources.queries.StudyIdFilesTSVResource2;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowReportResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunIDProcessingsResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunIDWorkflowResource;
@@ -25,9 +28,13 @@ import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunIdFilesRe
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunReportResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRuntimeResource;
 import net.sourceforge.seqware.webservice.resources.tables.ExperimentIDResource;
+import net.sourceforge.seqware.webservice.resources.tables.ExperimentLibraryDesignResource;
 import net.sourceforge.seqware.webservice.resources.tables.ExperimentResource;
+import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignReadSpecResource;
+import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileAttributeServerResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileAttributesServerResource;
+import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileLinkReportResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileResource;
@@ -40,6 +47,11 @@ import net.sourceforge.seqware.webservice.resources.tables.LaneIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.LaneResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibrariesResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibraryResource;
+import net.sourceforge.seqware.webservice.resources.tables.LibrarySelectionResource;
+import net.sourceforge.seqware.webservice.resources.tables.LibrarySourceResource;
+import net.sourceforge.seqware.webservice.resources.tables.LibraryStrategyResource;
+import net.sourceforge.seqware.webservice.resources.tables.OrganismResource;
+import net.sourceforge.seqware.webservice.resources.tables.PlatformResource;
 import net.sourceforge.seqware.webservice.resources.tables.ProcessIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.ProcessResource;
 import net.sourceforge.seqware.webservice.resources.tables.ProcessingStructureResource;
@@ -50,6 +62,7 @@ import net.sourceforge.seqware.webservice.resources.tables.SequencerRunIDResourc
 import net.sourceforge.seqware.webservice.resources.tables.SequencerRunResource;
 import net.sourceforge.seqware.webservice.resources.tables.StudyIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.StudyResource;
+import net.sourceforge.seqware.webservice.resources.tables.StudyTypeResource;
 import net.sourceforge.seqware.webservice.resources.tables.WorkflowIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.WorkflowParamIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.WorkflowParamResource;
@@ -78,17 +91,6 @@ import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 
 import freemarker.template.Configuration;
-import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
-import net.sourceforge.seqware.webservice.resources.filters.*;
-import net.sourceforge.seqware.webservice.resources.tables.ExperimentLibraryDesignResource;
-import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignReadSpecResource;
-import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignResource;
-import net.sourceforge.seqware.webservice.resources.tables.LibrarySelectionResource;
-import net.sourceforge.seqware.webservice.resources.tables.LibrarySourceResource;
-import net.sourceforge.seqware.webservice.resources.tables.LibraryStrategyResource;
-import net.sourceforge.seqware.webservice.resources.tables.OrganismResource;
-import net.sourceforge.seqware.webservice.resources.tables.PlatformResource;
-import net.sourceforge.seqware.webservice.resources.tables.StudyTypeResource;
 
 /**
  * <p>SeqWareWebServiceApplication class.</p>
@@ -280,6 +282,8 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         /*
          * Reports
          */
+        router.attach("/reports/file-provenance", new FileProvenanceResource(getContext()));
+
         StudyIdFilesResource studyIdSamples = new StudyIdFilesResource(getContext());
         router.attach("/studies/{studyId}/files", studyIdSamples);
         router.attach("/sequencerruns/{sequencerRunId}/files", new SequencerRunIdFilesResource(getContext()));
@@ -288,8 +292,6 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         // the following collides with the non-variable paths.
         //router.attach("/reports/studies/{studyId}", new CycleCheckResource(getContext()));
         router.attach("/reports/studies/{studyId}/files", new StudyIdFilesTSVResource(getContext()));
-        router.attach("/reports/studies/{studyId}/files.tsv", new StudyIdFilesTSVResource2(getContext()));
-        router.attach("/reports/studies/files.tsv", new StudyIdFilesTSVResource2(getContext()));
         router.attach("/reports/studies/files", new StudyIdFilesTSVResource(getContext()));
 		router.attach("/reports/workflows/{workflowId}", new WorkflowReportResource(getContext()));
         router.attach("/reports/sequencerruns", new SequencerRunReportResource(getContext()));
