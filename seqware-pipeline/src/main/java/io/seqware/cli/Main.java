@@ -1,5 +1,6 @@
 package io.seqware.cli;
 
+import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
@@ -856,6 +858,53 @@ public class Main {
     }
   }
 
+  private static void studyList(List<String> args) {
+    if (isHelp(args, false)) {
+      out("");
+      out("Usage: seqware study list --help");
+      out("       seqware study list [params]");
+      out("");
+      out("Description:");
+      out("  List all studies.");
+      out("");
+      out("Optional parameters:");
+      out("  --tsv             Emit a tab-separated values list");
+      out("");
+    } else {
+      boolean tsv = flag(args, "--tsv");
+
+      extras(args, "study list");
+
+      if (tsv) {
+        out(Studies.studiesTsv());
+      } else {
+        out(TabExpansionUtil.expansion(Studies.studiesTsv()));
+      }
+    }
+  }
+
+  private static void study(List<String> args) {
+    if (isHelp(args, true)) {
+      out("");
+      out("Usage: seqware study --help");
+      out("       seqware study <sub-command> [--help]");
+      out("");
+      out("Description:");
+      out("  Extract information about studies.");
+      out("");
+      out("Sub-commands:");
+      out("  list          List all studies");
+      out("");
+    } else {
+      String cmd = args.remove(0);
+      if ("list".equals(cmd)) {
+        studyList(args);
+      } else {
+        invalid("study", cmd);
+      }
+    }
+  }
+
   private static void workflowIni(List<String> args) {
     if (isHelp(args, true)) {
       out("");
@@ -1375,6 +1424,7 @@ public class Main {
       out("  copy          Copy files between local and remote file systems");
       out("  create        Create new seqware objects (e.g., study)");
       out("  files         Extract information about workflow output files");
+      out("  study         Extract information about studies");
       out("  workflow      Interact with workflows");
       out("  workflow-run  Interact with workflow runs");
       out("");
@@ -1398,6 +1448,8 @@ public class Main {
           create(args);
         } else if ("files".equals(cmd)) {
           files(args);
+        } else if ("study".equals(cmd)) {
+          study(args);
         } else if ("workflow".equals(cmd)) {
           workflow(args);
         } else if ("workflow-run".equals(cmd)) {
