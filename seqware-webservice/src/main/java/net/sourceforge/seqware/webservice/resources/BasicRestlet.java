@@ -65,6 +65,16 @@ public class BasicRestlet extends Restlet {
             fields.addAll(Arrays.asList(fieldArr));
         }
     }
+
+    public static Map<String, String[]> queryMap(Request req) {
+      Map<String, String[]> m = new HashMap<String, String[]>();
+      Form f = req.getResourceRef().getQueryAsForm();
+      for (String name : f.getNames()){
+        m.put(name, f.getValuesArray(name));
+      }
+      return m;
+    }
+
     /**
      * <p>authenticate.</p>
      *
