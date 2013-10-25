@@ -18,13 +18,18 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.lists.StudyList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -84,7 +89,8 @@ public class StudyResource extends DatabaseResource {
             eList.setList(new ArrayList());
 
             for (Study study : studies) {
-                Study dto = copier.hibernate2dto(Study.class, study);
+                CollectionPropertyName<Study>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(Study.class, new String[]{"existingType"});
+                Study dto = copier.hibernate2dto(Study.class, study, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
                 eList.add(dto);
             }
             Document line = XmlTools.marshalToDocument(jaxbTool, eList);
