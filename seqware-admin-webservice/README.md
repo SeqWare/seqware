@@ -6,7 +6,8 @@ The seqware-admin-web service is built using:
 
 Integration tests are in a different directory:
 
-    mvn clean install -DskipITs=false -P extITs
+    mvn clean install -DskipITs=false (builds and runs integration tests)
+    mvn clean install -DskipITs=false -P extITs (builds and runs integration tests as well as extended integration tests)
 
 # Running
 
@@ -38,6 +39,30 @@ If you wish to use a different postgres database, edit the seqware_meta_db prope
 ## Running with embedded Glassfish with a maven target
 
 * mvn embedded-glassfish:run
+
+# Development
+
+If the database changes note that re-generation will destroy all modifications in the following directories:
+
+* src/main/java/io/seqware/webservice/generated/client
+* src/main/java/io/seqware/webservice/generated/controller
+* src/main/java/io/seqware/webservice/generated/model
+
+Therefore, we recommend that customization occur in the following directories:
+
+* src/main/java/io/seqware/webservice/adapter
+* src/main/java/io/seqware/webservice/client
+* src/main/java/io/seqware/webservice/controller
+
+
+# Troubleshooting
+
+* If you have issues starting the server, check that you do not have other services blocking the port 38080 (such as apache2 or tomcat)
+* Currently, when deleting a object with foreign key references to it (for example an experiment referenced by samples), deletion should fail with HTTP status 500 (javax.servlet.ServletException: javax.transaction.RollbackException: Transaction marked for rollback.) 
+* A successful delete will return with HTTP status 200 
+* Cascading is controlled by JPA annotations on the actual model objects
+     * for example, in the current io.seqware.webservice.model.Experiment, deletes will cascade to ProcessingExperiments and Experiment attribute due to CascadeType.All
+
 
 # Background and Historical Info
 
@@ -114,12 +139,3 @@ http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/RESTfulWebService
 * So this works... I get a REST web service and it works so long as I use the latest version of Netbeans.  It makes controller, entity, and REST web service classes.
 * generates identical entity classes for both client and server... should be common (just add to same project? Or use a seqware-common as we did before?)
 * not using swagger https://developers.helloreverb.com/swagger/ although it does have a functional interactive web client... just not pretty
-
-# Troubleshooting
-
-* If you have issues starting the server, check that you do not have other services blocking the port 38080 (such as apache2 or tomcat)
-* Currently, when deleting a object with foreign key references to it (for example an experiment referenced by samples), deletion should fail with HTTP status 500 (javax.servlet.ServletException: javax.transaction.RollbackException: Transaction marked for rollback.) 
-* A successful delete will return with HTTP status 200 
-* Cascading is controlled by JPA annotations on the actual model objects
-     * for example, in the current io.seqware.webservice.model.Experiment, deletes will cascade to ProcessingExperiments and Experiment attribute due to CascadeType.All
-
