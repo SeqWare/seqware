@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -22,6 +23,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.bind.DatatypeConverter;
 
 import net.sourceforge.seqware.common.util.Log;
 
@@ -221,8 +224,6 @@ public class MapTools {
     public static final String LEGACY_VAR_RANDOM = "random";
     public static final String LEGACY_VAR_DATE = "date";
     public static final String LEGACY_VAR_BUNDLE_DIR = "workflow_bundle_dir";
-    public static final String VAR_DATE_FORMAT = "yyyy-MM-dd";
-    public static final String VAR_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     
     public static void provideBundleDir(Map<String, String> m, String bundleDir){
       m.put(VAR_BUNDLE_DIR, bundleDir);
@@ -239,9 +240,9 @@ public class MapTools {
       if (key.equals(VAR_RANDOM))
         return String.valueOf(new Random().nextInt(Integer.MAX_VALUE));
       if (key.equals(VAR_DATE))
-        return new SimpleDateFormat(VAR_DATE_FORMAT).format(new Date());
+        return DatatypeConverter.printDate(Calendar.getInstance());
       if (key.equals(VAR_DATETIME))
-        return new SimpleDateFormat(VAR_DATETIME_FORMAT).format(new Date());
+        return DatatypeConverter.printDateTime(Calendar.getInstance());
       if (key.equals(VAR_TIMESTAMP))
         return String.valueOf(System.currentTimeMillis());
       if (key.equals(VAR_UUID))
@@ -253,7 +254,7 @@ public class MapTools {
       }
       if (key.equals(LEGACY_VAR_DATE)) {
         Log.warn(String.format("Variable '%s' is deprecated. Please use '%s' instead.", LEGACY_VAR_DATE, VAR_DATE));
-        return new SimpleDateFormat(VAR_DATE_FORMAT).format(new Date());
+        return DatatypeConverter.printDate(Calendar.getInstance());
       }
       
      return null;
