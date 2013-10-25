@@ -43,7 +43,7 @@ Our tools will abort and refuse to run if this is not set.
 # COMMON: Used by all components
 # INSTALL: Used when installing a workflow bundle
 # SCHEDULE: Used when a user wants to schedule a workflow run
-# LAUNCH: Used when a workflow run is to be launched
+# LAUNCH: Used when a workflow run is to be launched (or dry-run)
 #
 # Remote users need COMMON and SCHEDULE.
 # Workflow developers need COMMON and LAUNCH for testing.
