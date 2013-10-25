@@ -14,7 +14,7 @@ public class Studies {
 
   private static void add(List<String> strs, Object o) {
     if (o == null)
-      strs.add(null);
+      strs.add("");
     else
       strs.add(o.toString());
   }
@@ -46,7 +46,7 @@ public class Studies {
       add(strs, s.getCreateTimestamp());
       add(strs, s.getSwAccession());
       StudyType t = s.getExistingType();
-      add(strs, t == null ? null : t.getName() + " (" + t.getStudyTypeId() + ")");
+      add(strs, t == null ? "" : t.getName() + " (" + t.getStudyTypeId() + ")");
       add(strs, s.getCenterName());
       add(strs, s.getCenterProjectName());
       tsv(sb, strs);
