@@ -1,0 +1,77 @@
+---
+markdown:	advanced
+toc_includes_sections:	true
+is_dynamic:	true
+title: GET file provenance report
+uri: /reports/file-provenance
+method: GET
+summary: Retrieves the provenance of files, such that each row traces a distinct path from a study to a file. Files returned are a conjunction of the disjunction of values for each name.
+---
+<%= @item[:summary] %>
+
+Resource URL
+--------------
+<%= @item[:method] %> <%= server_name %><%= @item[:uri] %>
+
+Parameters
+--------------
+study
+:
+The accession of the study
+
+experiment
+:
+The accession of the experiment
+
+sample
+:
+The accession of the sample
+
+sample-ancestor
+:
+The accession of an ancestor of the sample
+
+sequencer-run
+:
+The accession of the sequencer run
+
+lane
+:
+The accession of the lane
+
+ius
+:
+The accession of the IUS
+
+workflow
+:
+the accession of the workflow
+
+workflow-run
+:
+The accession of the workflow run
+
+file
+:
+The accession of the file
+
+file-meta-type
+:
+The file's meta-type
+
+skip
+:
+When "true", only returns files where something in the provenance path has been skipped. When "false", only returns files where nothing has been skipped.
+
+
+Example Requests
+--------------
+<%= server_name %>/reports/file-provenance?study=90&study=63&file-meta-type=application/bam&skip=false
+
+The above will return files that have a study of 90 OR a study of 63, AND a file meta-type of "application/bam", AND have no skips.
+
+~~~~~
+
+Code Block
+
+~~~~~

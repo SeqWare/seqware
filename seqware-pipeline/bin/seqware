@@ -175,6 +175,7 @@ elif [ "$1" = "init" ]; then
         exit 1
     fi
     
+    mkdir -p "$(dirname "$SEQWARE_SETTINGS")"
     touch $SEQWARE_SETTINGS
     chmod 600 $SEQWARE_SETTINGS
     
