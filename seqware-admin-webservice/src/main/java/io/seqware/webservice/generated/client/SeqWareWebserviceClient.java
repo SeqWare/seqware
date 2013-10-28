@@ -14,6 +14,8 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
+import io.seqware.webservice.controller.ModelAccessionIDTuple;
 
 /**
  * Jersey REST client generated for REST resource:OrganismFacadeREST
@@ -32,7 +34,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 public class SeqWareWebserviceClient {
    private WebResource webResource;
    private Client client;
-   private static final String BASE_URI = "http://localhost:38080/seqware-admin-webservice/webresources";
+   protected static final String BASE_URI = "http://localhost:38080/seqware-admin-webservice/webresources";
 
    public static void main(String args[]) throws UniformInterfaceException {
 
@@ -72,17 +74,11 @@ public class SeqWareWebserviceClient {
 
    }
 
-   /**
-    * Constructs a SeqWare web service client for the given resource with the
-    * default url {@code http://localhost:38080/seqware-admin-webservice/webresources}.
-    * 
-    * @param modelName
-    *           Lowercase resource name. (e.g. study, registration, sample)
-    */
-   public SeqWareWebserviceClient(String modelName) {
-      this(modelName, BASE_URI);
-   }
 
+   public SeqWareWebserviceClient(){
+       /** blank constructor for subclasses */
+   }
+   
    /**
     * Constructs a SeqWare web service client for the given resource and url.
     * 
@@ -92,10 +88,10 @@ public class SeqWareWebserviceClient {
     *           Url for the webservice in the form
     *           {@code http://localhost:38080/seqware-admin-webservice/webresources}.
     */
-   public SeqWareWebserviceClient(String modelName, String baseUri) {
+   public SeqWareWebserviceClient(String modelName) {
       ClientConfig config = new DefaultClientConfig();
       client = Client.create(config);
-      webResource = client.resource(baseUri).path("io.seqware.webservice.model." + modelName);
+      webResource = client.resource(BASE_URI).path("io.seqware.webservice.model." + modelName);
    }
 
    public void remove(String id) throws UniformInterfaceException {
@@ -159,7 +155,7 @@ public class SeqWareWebserviceClient {
    }
 
    public void close() {
-      client.destroy();
+        getClient().destroy();
    }
 
     /**
@@ -167,6 +163,27 @@ public class SeqWareWebserviceClient {
      */
     public WebResource getWebResource() {
         return webResource;
+    }
+
+    /**
+     * @return the client
+     */
+    public Client getClient() {
+        return client;
+    }
+
+    /**
+     * @param client the client to set
+     */
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    /**
+     * @param webResource the webResource to set
+     */
+    public void setWebResource(WebResource webResource) {
+        this.webResource = webResource;
     }
 
 }
