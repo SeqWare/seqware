@@ -103,6 +103,16 @@ A plugin that lets you create, test, and install workflow bundles.
 |--wa, --workflow-accession|Optional: The sw_accession of the workflow. Specify this or the workflow, version, and bundle. Currently used in conjunction with the list-workflow-params for now.|
 
 
+##  CheckDB
+net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB
+A database validation tool for your SeqWare metadb.
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--?, --h, --help|Provides this help message.|
+|--j, --jar|Jar files containing additional checks that will be run|
+
+
 ##  CycleChecker
 net.sourceforge.seqware.pipeline.plugins.CycleChecker
 Checks for cycles in the sample hierarchy and processing hierarchy of a particular study and prints some information about the study
@@ -110,6 +120,17 @@ Checks for cycles in the sample hierarchy and processing hierarchy of a particul
 | Command-line option | Description |
 |--------------------|--------------|
 |--study-accession|The SeqWare accession of the study you want to check|
+
+
+##  DeletionDB
+net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB
+A database deletion tool for your SeqWare metadb.
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--?, --h, --help|Provides this help message.|
+|--k, --key|An existing key file will be used to guide an actual deletion process|
+|--r, --workflowrun|Give a sequencer run, lane, or workflow run SWID in order to determine which workflow runs (processings,files) should be deleted.|
 
 
 ##  FileLinker
