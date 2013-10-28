@@ -16,6 +16,8 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 import java.io.File;
 import java.io.*;
 import java.util.ArrayList;

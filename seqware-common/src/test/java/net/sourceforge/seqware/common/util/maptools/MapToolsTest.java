@@ -18,9 +18,12 @@
 package net.sourceforge.seqware.common.util.maptools;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import javax.xml.bind.DatatypeConverter;
 
 import net.sourceforge.seqware.common.util.*;
 
@@ -95,10 +98,10 @@ public class MapToolsTest {
       Integer.parseInt(exp.get("test-random"));
       Integer.parseInt(exp.get("test-legacy-random"));
       
-      new SimpleDateFormat(MapTools.VAR_DATE_FORMAT).parse(exp.get("test-date"));
-      new SimpleDateFormat(MapTools.VAR_DATE_FORMAT).parse(exp.get("test-legacy-date"));
+      DatatypeConverter.parseDate(exp.get("test-date"));
+      DatatypeConverter.parseDate(exp.get("test-legacy-date"));
       
-      new SimpleDateFormat(MapTools.VAR_DATETIME_FORMAT).parse(exp.get("test-datetime"));
+      DatatypeConverter.parseDateTime(exp.get("test-datetime"));
 
       Long.parseLong(exp.get("test-timestamp"));
       
