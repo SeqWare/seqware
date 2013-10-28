@@ -30,7 +30,6 @@ import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
 import io.seqware.webservice.generated.model.Processing;
 import io.seqware.webservice.generated.model.ProcessingFiles;
 import io.seqware.webservice.generated.model.WorkflowRun;
-import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -80,7 +79,7 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
     }
     
     public ModelAccessionIDTuple findTupleByAccession(String id) throws UniformInterfaceException {
-        WebResource resource = getClient().resource(baseUri).path("utility");
+        WebResource resource = getClient().resource(baseUri).path("utility/translateSWID/{0}");
         resource = resource.path(java.text.MessageFormat.format("{0}", id));
         return resource.accept(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(ModelAccessionIDTuple.class);
     }

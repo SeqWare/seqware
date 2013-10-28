@@ -17,7 +17,6 @@
 package io.seqware.webservice.controller;
 
 import com.sun.jersey.api.NotFoundException;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import io.seqware.webservice.generated.model.Experiment;
 import io.seqware.webservice.generated.model.Ius;
 import io.seqware.webservice.generated.model.Lane;
@@ -57,7 +56,7 @@ public class UtilityREST {
      * @return
      */
     @GET
-    @Path("{accession}")
+    @Path("translateSWID/{accession}")
     @Produces({"application/json"})
     public ModelAccessionIDTuple find(@PathParam("accession") Integer accession) {
         Object target;
