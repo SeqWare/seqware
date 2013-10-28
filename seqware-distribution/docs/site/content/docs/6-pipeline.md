@@ -127,6 +127,8 @@ Other useful tools used for import, export, and annotation of results.
 : Export files that are the outputs from SeqWare workflows.
 * [Attribute Annotator](/docs/12-attribute-annotator/)
 : The underlying SeqWare MetaDB supports the annotation of entities in the system using flexible key/value pairs. This guide shows you how to annotate entities in the underlying data model using this approach.
+* [Database validation](/docs/24-checkdb/)
+: The underlying SeqWare MetaDB relies upon a certain number of conventions. This utility allows you to check that these are properly followed.  
 
 ## Command Line Reference
 
