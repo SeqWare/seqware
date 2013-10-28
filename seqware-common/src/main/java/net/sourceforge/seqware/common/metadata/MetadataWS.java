@@ -1151,7 +1151,7 @@ public class MetadataWS implements Metadata {
         try {
             wr = ll.findWorkflowRun("/" + workflowRunAccession);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.info("Could not find workflow run by accession", e);
         }
         return (wr);
     }
