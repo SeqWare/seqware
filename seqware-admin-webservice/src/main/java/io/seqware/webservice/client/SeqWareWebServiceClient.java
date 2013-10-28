@@ -79,8 +79,8 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
     }
     
     public ModelAccessionIDTuple findTupleByAccession(String id) throws UniformInterfaceException {
-        WebResource resource = getClient().resource(baseUri).path("utility/translateSWID/{0}");
-        resource = resource.path(java.text.MessageFormat.format("{0}", id));
+        WebResource resource = getClient().resource(baseUri);
+        resource = resource.path(java.text.MessageFormat.format("utility/translateSWID/{0}", id));
         return resource.accept(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(ModelAccessionIDTuple.class);
     }
     
