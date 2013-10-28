@@ -20,9 +20,11 @@ import java.util.TreeMap;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface.Level;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.apache.commons.io.FileUtils;
 import org.openide.util.Lookup;
 
@@ -56,6 +58,23 @@ public final class CheckDB extends Plugin {
      */
     @Override
     public final ReturnValue init() {
+         try {
+            HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
+            // do a defensive check to see if we have a direct database connection available
+            if (settings.get("SW_DB_SERVER") == null
+                    || settings.get("SW_DB") == null
+                    || settings.get("SW_DB_USER") == null
+                    || settings.get("SW_DB_PASS") == null) {
+                ReturnValue ret = new ReturnValue();
+                System.out.println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
+                ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
+                return (ret);
+            }
+        } catch (Exception e) {
+            ReturnValue ret = new ReturnValue();
+            ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
+            return (ret);
+        }
         return new ReturnValue();
     }
 
@@ -98,7 +117,7 @@ public final class CheckDB extends Plugin {
                     // defensive check in case plugin author decided to corrupt the map
                     result.put(Level.SEVERE, new HashSet<String>());
                 }
-                resultMap.get(plugin).get(Level.SEVERE).add("Plugin threw an exception:" + e.getMessage());
+                resultMap.get(plugin).get(Level.SEVERE).add("Plugin threw an exception and died");
                 resultMap.put(plugin, result);
             }
         }

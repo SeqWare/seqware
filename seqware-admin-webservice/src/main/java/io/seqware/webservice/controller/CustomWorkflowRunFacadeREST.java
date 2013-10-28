@@ -16,7 +16,8 @@
  */
 package io.seqware.webservice.controller;
 
-import io.seqware.webservice.generated.controller.ModelAccessionIDTuple;
+import com.sun.jersey.api.ConflictException;
+import com.sun.jersey.api.NotFoundException;
 import io.seqware.webservice.generated.controller.WorkflowRunFacadeREST;
 import io.seqware.webservice.generated.model.File;
 import io.seqware.webservice.generated.model.Ius;
@@ -47,6 +48,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 
 /**
  *
@@ -55,7 +57,6 @@ import javax.ws.rs.Produces;
 @Stateless
 @Path("io.seqware.webservice.model.workflowrun")
 public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
-
 
     /**
      * The actual delete method, container managed JTA transactions should
@@ -76,7 +77,21 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
     @Path("{id}/rdelete/{targetClass}")
     @Consumes({"application/json"})
     public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims, @PathParam("targetClass") String targetClass) throws NamingException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException, ClassNotFoundException {
-        handleTargetting(targetClass, id, true, victims);
+        Set<ModelAccessionIDTuple> victimsFound = handleTargetting(targetClass, id, true, victims);
+
+        if (victims.equals(victimsFound)) {
+            try {
+                // check that the results are a subset of the matchset
+                for (ModelAccessionIDTuple t : victimsFound) {
+                    Object found = getEntityManager().find(Class.forName(t.getAdminModelClass()), t.getId());
+                    getEntityManager().remove(found);
+                }
+            } catch (ClassNotFoundException ex) {
+                throw new NotFoundException();
+            }
+        } else {
+            throw new ConflictException("keyFile of size " + victims.size() + " does not match " + victimsFound.size() + " found elements were not found, rolling back");
+        }
     }
 
     /**
@@ -194,6 +209,10 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         if (data == null) {
             return null;
         }
+        // if the workflow run is not in a settled state, then abort
+        if (!(data.getStatus().equals(WorkflowRunStatus.completed.name()) || data.getStatus().equals(WorkflowRunStatus.failed.name()) || data.getStatus().equals(WorkflowRunStatus.cancelled.name()))) {
+            UtilityREST.throwExceptionWithMessage("Unsettled workflow run blocking deletion: " + data.getSwAccession());   
+        }
         Set<Processing> affectedProcessing = new HashSet<Processing>();
         // workflow_run
         if (data.getProcessingCollection() != null) {
@@ -232,26 +251,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         }
         // handle the workflow run itself
         results.add(new ModelAccessionIDTuple(data.getSwAccession(), data.getWorkflowRunId(), data.getClass().getName()));
-        // if we are doing deletion, check that everything is ok
-        try {
-            if (delete) {
-                // check that the results are a subset of the matchset
-                if (matchSet.containsAll(results)) {
-                    for (ModelAccessionIDTuple t : results) {
-                        Object found = entityManager.find(Class.forName(t.getAdminModelClass()), t.getId());
-                        // entity may already have been removed by recursive call
-                        if (found != null) {
-                            entityManager.remove(found);
-                        }
-                    }
-                } else {
-                    results.removeAll(matchSet);
-                    throw new RuntimeException("Found " + results.size() + " elements that were not in the match set");
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            throw new RuntimeException("ClassNotFound", ex);
-        }
+       
         return results;
     }
 
@@ -266,7 +266,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
 
     private Set<ModelAccessionIDTuple> handleTargetting(String targetClass, Integer id, boolean delete, Set<ModelAccessionIDTuple> victims) {
         if (targetClass == null) {
-            throw new RuntimeException("No targetClass specified");
+            throw new NotFoundException("No targetClass specified");
         }
         if (targetClass.equals(WorkflowRun.class.getSimpleName())) {
             return deleteWorkflowRunRecursive(id, delete, victims);
@@ -277,7 +277,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         } else if (targetClass.equals(Lane.class.getSimpleName())) {
             return deleteLaneRecursive(id, delete, victims);
         } else {
-            throw new RuntimeException("Unknown target class");
+            throw new NotFoundException();
         }
     }
 
