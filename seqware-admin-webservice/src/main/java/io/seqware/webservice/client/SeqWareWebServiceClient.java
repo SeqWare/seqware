@@ -64,8 +64,8 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
         ClientConfig config = new DefaultClientConfig();
         config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
         config.getClasses().add(ModelAccessionIDTuple.class);
-        super.setClient(Client.create(config));
-        super.setWebResource(getClient().resource(baseUri).path("io.seqware.webservice.model." + modelName));
+        setClient(Client.create(config));
+        setWebResource(getClient().resource(baseUri).path("io.seqware.webservice.model." + modelName));
     }
 
     public Set<ModelAccessionIDTuple> find_JSON_rdelete(Class targetType, String id) throws UniformInterfaceException {
