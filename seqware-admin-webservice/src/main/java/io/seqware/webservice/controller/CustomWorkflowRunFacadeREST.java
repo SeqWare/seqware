@@ -37,6 +37,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -76,7 +77,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
     @DELETE
     @Path("{id}/rdelete/{targetClass}")
     @Consumes({"application/json"})
-    public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims, @PathParam("targetClass") String targetClass) throws NamingException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException, ClassNotFoundException {
+    public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims, @PathParam("targetClass") String targetClass) {
         Set<ModelAccessionIDTuple> victimsFound = handleTargetting(targetClass, id, true, victims);
 
         if (victims.equals(victimsFound)) {
@@ -205,7 +206,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
     private Set<ModelAccessionIDTuple> deleteWorkflowRunRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet) {
         EntityManager entityManager = getEntityManager();
         Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
-        WorkflowRun data = entityManager.find(WorkflowRun.class, id);
+        WorkflowRun data = entityManager.find(WorkflowRun.class, id, LockModeType.OPTIMISTIC);
         if (data == null) {
             return null;
         }
