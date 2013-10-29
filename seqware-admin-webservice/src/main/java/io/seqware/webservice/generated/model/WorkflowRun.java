@@ -5,6 +5,7 @@
 package io.seqware.webservice.generated.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -24,6 +25,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -112,8 +114,8 @@ public class WorkflowRun implements Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   private Date createTstmp;
   @Column(name = "update_tstmp")
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date updateTstmp;
+  @Version
+  private Timestamp updateTstmp;
   @Column(name = "sw_accession")
   private Integer swAccession;
   @Size(max = 2147483647)
@@ -272,11 +274,11 @@ public class WorkflowRun implements Serializable {
     this.createTstmp = createTstmp;
   }
 
-  public Date getUpdateTstmp() {
+  public Timestamp getUpdateTstmp() {
     return updateTstmp;
   }
 
-  public void setUpdateTstmp(Date updateTstmp) {
+  public void setUpdateTstmp(Timestamp updateTstmp) {
     this.updateTstmp = updateTstmp;
   }
 
