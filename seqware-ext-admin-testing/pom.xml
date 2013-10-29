@@ -95,95 +95,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <!--
-         <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat6-maven-plugin</artifactId>
-                <configuration>
-                    <port>38080</port>
-                    <useNaming>true</useNaming>
-                    <webapps>
-                        <webapp>
-                            <groupId>com.github.seqware</groupId> 
-                            <artifactId>seqware-admin-webservice</artifactId> 
-                            <version>${project.version}</version> 
-                            <type>war</type>                                     
-                            <asWebapp>true</asWebapp>  
-                        </webapp>                           
-                    </webapps>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>tomcat-run</id>
-                        <goals>
-                            <goal>run-war-only</goal>
-                        </goals>
-                        <phase>pre-integration-test</phase>
-                        <configuration>
-                            <fork>true</fork>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>tomcat-shutdown</id>
-                        <goals>
-                            <goal>shutdown</goal>
-                        </goals>
-                        <configuration>
-                        </configuration>
-                        <phase>post-integration-test</phase>
-                    </execution>
-                </executions>
-            </plugin>    
-            -->
-                
-            <plugin>
-                <groupId>org.glassfish.embedded</groupId>
-                <artifactId>maven-embedded-glassfish-plugin</artifactId>
-                <version>3.1.2.2</version>
-                <configuration>
-                    <autoDelete>true</autoDelete>
-                    <app>${project.parent.basedir}/seqware-admin-webservice/target/seqware-admin-webservice-1.0.7-SNAPSHOT.war</app>
-                    <contextRoot>seqware-admin-webservice</contextRoot>
-                    <name>seqware-admin-webservice</name>
-                    <port>38080</port>
-                    <dbVendorName>postgresql</dbVendorName>
-                    <libraries>${project.parent.basedir}/seqware-admin-webservice/target/lib/postgresql-${postgresql.version}.jar</libraries>
-                    <goalPrefix>embedded-glassfish</goalPrefix>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>start-glassfish</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>glassfish-deploy</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                    
-                    <execution>
-                        <id>glassfish-undeploy</id>
-                        <phase>post-integration-test</phase>
-                        <goals>
-                            <goal>undeploy</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>stop-glassfish</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>stop</goal>
-                        </goals>
-                    </execution>
-                    
-                </executions>
-            </plugin>          
+            </plugin>            
         </plugins>
     </build>
 
@@ -206,6 +118,63 @@
                             </includes>
                         </configuration>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>embeddedGlassfish</id>
+            <activation>
+                <property>
+                    <name>!skipTests</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.glassfish.embedded</groupId>
+                        <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                        <version>3.1.2.2</version>
+                        <configuration>
+                            <autoDelete>true</autoDelete>
+                            <app>${project.parent.basedir}/seqware-admin-webservice/target/seqware-admin-webservice-1.0.7-SNAPSHOT.war</app>
+                            <contextRoot>seqware-admin-webservice</contextRoot>
+                            <name>seqware-admin-webservice</name>
+                            <port>38080</port>
+                            <dbVendorName>postgresql</dbVendorName>
+                            <libraries>${project.parent.basedir}/seqware-admin-webservice/target/lib/postgresql-${postgresql.version}.jar</libraries>
+                            <goalPrefix>embedded-glassfish</goalPrefix>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>start-glassfish</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>start</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>glassfish-deploy</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>glassfish-undeploy</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>undeploy</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>stop-glassfish</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>          
                 </plugins>
             </build>
         </profile>

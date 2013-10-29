@@ -6,6 +6,7 @@ package io.seqware.webservice.generated.model;
 
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -23,6 +24,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -116,8 +118,8 @@ public class Experiment implements Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   private Date createTstmp;
   @Column(name = "update_tstmp")
-  @Temporal(TemporalType.TIMESTAMP)
-  private Date updateTstmp;
+  @Version
+  private Timestamp updateTstmp;
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "experimentId")
   private Collection<ExperimentAttribute> experimentAttributeCollection;
   @JoinColumn(name = "study_id", referencedColumnName = "study_id")
@@ -308,11 +310,11 @@ public class Experiment implements Serializable {
     this.createTstmp = createTstmp;
   }
 
-  public Date getUpdateTstmp() {
+  public Timestamp getUpdateTstmp() {
     return updateTstmp;
   }
 
-  public void setUpdateTstmp(Date updateTstmp) {
+  public void setUpdateTstmp(Timestamp updateTstmp) {
     this.updateTstmp = updateTstmp;
   }
 
