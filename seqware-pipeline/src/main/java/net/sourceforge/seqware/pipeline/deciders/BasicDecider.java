@@ -48,8 +48,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
+import static net.sourceforge.seqware.common.hibernate.FindAllTheFiles.FILE_SWA;
+import static net.sourceforge.seqware.common.hibernate.FindAllTheFiles.FILE_TAG_PREFIX;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -336,33 +339,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         String groupBy = header.getTitle();
         Map<String, List<ReturnValue>> mappedFiles;
         List<ReturnValue> vals = createListOfRelevantFilePaths();
-        
-//        if (options.has("all")) {
-//            List<ReturnValue> rv;
-//            List<Study> studies = metadata.getAllStudies();
-//            for (Study study : studies) {
-//                String name = study.getTitle();
-//                Log.stdout("Retrieving study " + name);
-//                rv = metadata.findFilesAssociatedWithAStudy(name, true);
-//                mappedFiles = separateFiles(rv, groupBy);
-//                ret = launchWorkflows(mappedFiles);
-//                if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-//                    break;
-//                }
-//            }
-//            return ret;
-//        } else if (options.has("study-name")) {
-//            String studyName = (String) options.valueOf("study-name");
-//            vals = metadata.findFilesAssociatedWithAStudy(studyName, true);
-//        } else if (options.has("sample-name")) {
-//            String sampleName = (String) options.valueOf("sample-name");
-//            vals = metadata.findFilesAssociatedWithASample(sampleName, true);
-//        } else if (options.has("sequencer-run-name")) {
-//            String runName = (String) options.valueOf("sequencer-run-name");
-//            vals = metadata.findFilesAssociatedWithASequencerRun(runName, true);
-//        } else {
-//            Log.error("Unknown option");
-//        }
 
         mappedFiles = separateFiles(vals, groupBy);
         ret = launchWorkflows(mappedFiles);
@@ -1015,9 +991,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         return command.toString();
     }
 
-    private List<ReturnValue> convertFileProvenanceReport(List<Map<String, String>> fileProvenanceReport) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 
     private List<ReturnValue> createListOfRelevantFilePaths() {
         List<ReturnValue> vals;
@@ -1025,7 +999,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         Map<FileProvenanceParam, List<String>> map = new EnumMap<FileProvenanceParam, List<String>>(FileProvenanceParam.class);
         map.put(FileProvenanceParam.skip, new ImmutableList.Builder<String>().add("false").build());
         if (options.has("all")) {
-            fileProvenanceReport = metadata.fileProvenanceReport(new EnumMap<FileProvenanceParam, List<String>>(FileProvenanceParam.class));
+            /** nothing special */
         } else if (options.has("study-name")) {
             Study studyByName = metadata.getStudyByName((String) options.valueOf("study-name"));
             map.put(FileProvenanceParam.study, new ImmutableList.Builder<String>().add(String.valueOf(studyByName.getSwAccession())).build());
@@ -1041,12 +1015,49 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             map.put(FileProvenanceParam.sequencer_run, new ImmutableList.Builder<String>().add(String.valueOf(sequencerRunByName.getSwAccession())).build());
         } else {
             Log.error("Unknown option");
+            throw new RuntimeException("Unknown decider option");
         }
         fileProvenanceReport = metadata.fileProvenanceReport(map);
         // convert to list of ReturnValues for backwards compatibility
         vals = convertFileProvenanceReport(fileProvenanceReport);
         // consider memory use and GC here
         return vals;
+    }
+
+    private List<ReturnValue> convertFileProvenanceReport(List<Map<String, String>> fileProvenanceReport) {
+        List<ReturnValue> list = new ArrayList<ReturnValue>();
+        for(Map<String, String> map : fileProvenanceReport){
+            ReturnValue row = new ReturnValue();
+            row.setAttributes(map);
+            list.add(row);
+            // mutate additional rows into a nested FileMetadata object
+            FileMetadata fm = new FileMetadata();
+            fm.setFilePath(map.get(Header.FILE_PATH.getTitle()));
+            fm.setMetaType(map.get(Header.FILE_META_TYPE.getTitle()));
+            fm.setDescription(map.get(Header.FILE_DESCRIPTION.getTitle()));
+            row.setFiles(new ArrayList(new ImmutableList.Builder<FileMetadata>().add(fm).build()));
+            handleAttributes(map, row, Header.STUDY_ATTRIBUTES, Header.STUDY_TAG_PREFIX);
+            handleAttributes(map, row, Header.EXPERIMENT_ATTRIBUTES, Header.EXPERIMENT_TAG_PREFIX);
+            handleAttributes(map, row, Header.PARENT_SAMPLE_ATTRIBUTES, Header.PARENT_SAMPLE_TAG_PREFIX);
+            handleAttributes(map, row, Header.SAMPLE_ATTRIBUTES, Header.SAMPLE_TAG_PREFIX);
+            handleAttributes(map, row, Header.IUS_ATTRIBUTES, Header.IUS_TAG_PREFIX);
+            handleAttributes(map, row, Header.LANE_ATTRIBUTES, Header.LANE_TAG_PREFIX);
+            handleAttributes(map, row, Header.SEQUENCER_RUN_ATTRIBUTES, Header.SEQUENCER_RUN_TAG_PREFIX);
+            handleAttributes(map, row, Header.PROCESSING_ATTRIBUTES, Header.PROCESSING_TAG_PREFIX);
+        }
+        return list;
+    }
+
+    private void handleAttributes(Map<String, String> map, ReturnValue row, Header headerType, Header headerPrefix) {
+        // mutate attributes into expected format from FindAllTheFiles
+        String studyAttributes = map.remove(headerType.getTitle());
+        String[] studyAttrArr = studyAttributes.split(";");
+        for(String studyAttr : studyAttrArr){
+            String[] parts = studyAttr.split("=");
+            String key = headerPrefix.getTitle() + parts[0];
+            String value = parts[1];
+            FindAllTheFiles.addAttributeToReturnValue(row , key, value);
+        }
     }
     
     /**
