@@ -1132,7 +1132,7 @@ public class Main {
       out("       seqware workflow-run delete <params>");
       out("");
       out("Description:");
-      out("  Recursively delete workflow runs based on the SWID of a ancestral sequencer run, lane, or workflow run.");
+      out("  Recursively delete workflow runs based on the SWID of an ancestral sequencer run, lane, or workflow run.");
       out("");
       out("Required parameters:");
       out("  --accession <swid>  The SWID of the desired target");
