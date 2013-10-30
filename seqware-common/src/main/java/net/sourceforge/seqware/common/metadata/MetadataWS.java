@@ -999,7 +999,7 @@ public class MetadataWS implements Metadata {
 
     @Override
     public List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params) {
-      String tsv = ll.getString("/file-provenance", params);
+      String tsv = ll.getString("/reports/file-provenance", params);
       List<Map<String, String>> list = new ArrayList<Map<String, String>>();
       String[] lines = tsv.split("\n");
       if (lines.length > 1) {

@@ -48,11 +48,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
-import static net.sourceforge.seqware.common.hibernate.FindAllTheFiles.FILE_SWA;
-import static net.sourceforge.seqware.common.hibernate.FindAllTheFiles.FILE_TAG_PREFIX;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -1051,12 +1048,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private void handleAttributes(Map<String, String> map, ReturnValue row, Header headerType, Header headerPrefix) {
         // mutate attributes into expected format from FindAllTheFiles
         String studyAttributes = map.remove(headerType.getTitle());
-        String[] studyAttrArr = studyAttributes.split(";");
-        for(String studyAttr : studyAttrArr){
-            String[] parts = studyAttr.split("=");
-            String key = headerPrefix.getTitle() + parts[0];
-            String value = parts[1];
-            FindAllTheFiles.addAttributeToReturnValue(row , key, value);
+        if (studyAttributes.contains(";")) {
+            String[] studyAttrArr = studyAttributes.split(";");
+            for (String studyAttr : studyAttrArr) {
+                String[] parts = studyAttr.split("=");
+                String key = headerPrefix.getTitle() + parts[0];
+                String value = parts[1];
+                FindAllTheFiles.addAttributeToReturnValue(row, key, value);
+            }
         }
     }
     
