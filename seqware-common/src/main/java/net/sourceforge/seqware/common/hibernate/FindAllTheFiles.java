@@ -71,7 +71,7 @@ public class FindAllTheFiles {
         this.reportInputFiles = reportInputFiles;
     }
 
-    private void addAttributeToReturnValue(ReturnValue ret, String key, String value) {
+    public static void addAttributeToReturnValue(ReturnValue ret, String key, String value) {
         if (ret.getAttribute(key) != null) {
           ret.setAttribute(key, ret.getAttribute(key) + ";" + value);
         } else {
@@ -91,8 +91,8 @@ public class FindAllTheFiles {
         "Sequencer Run SWID"), SEQUENCER_RUN_TAG_PREFIX("sequencerrun."), SEQUENCER_RUN_ATTRIBUTES(
         "Sequencer Run Attributes"), WORKFLOW_RUN_NAME("Workflow Run Name"), WORKFLOW_RUN_SWA("Workflow Run SWID"), WORKFLOW_RUN_STATUS(
         "Workflow Run Status"), WORKFLOW_NAME("Workflow Name"), WORKFLOW_SWA("Workflow SWID"), WORKFLOW_VERSION(
-        "Workflow Version"), FILE_SWA("File SWID"), FILE_DESCRIPTION("File Description"), FILE_MD5SUM ("File Md5sum"), FILE_SIZE ("File Size"),
-        FILE_TAG_PREFIX("file."), FILE_ATTRIBUTES("File Attributes"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
+        "Workflow Version"), FILE_SWA("File SWID"), FILE_DESCRIPTION("File Description"), FILE_MD5SUM ("File Md5sum"), FILE_SIZE ("File Size"), FILE_PATH("File Path"),
+        FILE_META_TYPE("File Meta-Type"),FILE_TAG_PREFIX("file."), FILE_ATTRIBUTES("File Attributes"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
         "Processing Algorithm"), PROCESSING_TAG_PREFIX("processing."), PROCESSING_ATTRIBUTES("Processing Attributes"),
         INPUT_FILE_META_TYPES("Input File Meta-Types"), INPUT_FILE_SWIDS("Input File SWIDs"), INPUT_FILE_PATHS("Input File Paths"),SKIP("Skip");
     private final String title;
@@ -181,6 +181,11 @@ public class FindAllTheFiles {
   public static String FILE_SWA = Header.FILE_SWA.getTitle();
   public static String FILE_TAG_PREFIX = Header.FILE_TAG_PREFIX.getTitle();
   public static String FILE_ATTRIBUTES = Header.FILE_ATTRIBUTES.getTitle();
+  public static String FILE_DESCRIPTION = Header.FILE_DESCRIPTION.getTitle();
+  public static String FILE_SIZE = Header.FILE_SIZE.getTitle();
+  public static String FILE_MD5SUM = Header.FILE_MD5SUM.getTitle();
+  public static String FILE_PATH = Header.FILE_PATH.getTitle();
+  
   /** Constant <code>PROCESSING_DATE="Header.PROCESSING_DATE.getTitle()"</code> */
   public static String PROCESSING_DATE = Header.PROCESSING_DATE.getTitle();
   /** Constant <code>PROCESSING_SWID="Header.PROCESSING_SWID.getTitle()"</code> */
@@ -194,10 +199,6 @@ public class FindAllTheFiles {
   
   public static String INPUT_FILE_META_TYPES = Header.INPUT_FILE_META_TYPES.getTitle();
   public static String INPUT_FILE_FILE_PATHS = Header.INPUT_FILE_PATHS.getTitle();
-  public static String INPUT_FILE_DESCRIPTION = Header.FILE_DESCRIPTION.getTitle();
-  public static String INPUT_FILE_SIZE = Header.FILE_SIZE.getTitle();
-  public static String INPUT_FILE_MD5SUM = Header.FILE_MD5SUM.getTitle();
-  
   public static String INPUT_FILE_SWIDS = Header.INPUT_FILE_SWIDS.getTitle();
   
   /** Constant <code>FILETYPE_ALL="all"</code> */
