@@ -1566,6 +1566,21 @@ public class MetadataDB implements Metadata {
       return (-1);
     }
   }
+
+    @Override
+    public Study getStudyByName(String name) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public List<Sample> getSampleByName(String name) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public SequencerRun getSequencerRunByName(String name) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
   
   public static class IntByIndex implements ResultSetHandler<Integer>{
     private final int col;

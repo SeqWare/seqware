@@ -91,10 +91,10 @@ public class FindAllTheFiles {
         "Sequencer Run SWID"), SEQUENCER_RUN_TAG_PREFIX("sequencerrun."), SEQUENCER_RUN_ATTRIBUTES(
         "Sequencer Run Attributes"), WORKFLOW_RUN_NAME("Workflow Run Name"), WORKFLOW_RUN_SWA("Workflow Run SWID"), WORKFLOW_RUN_STATUS(
         "Workflow Run Status"), WORKFLOW_NAME("Workflow Name"), WORKFLOW_SWA("Workflow SWID"), WORKFLOW_VERSION(
-        "Workflow Version"), FILE_SWA("File SWID"), FILE_TAG_PREFIX("file."), FILE_ATTRIBUTES("File Attributes"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
+        "Workflow Version"), FILE_SWA("File SWID"), FILE_DESCRIPTION("File Description"), FILE_MD5SUM ("File Md5sum"), FILE_SIZE ("File Size"),
+        FILE_TAG_PREFIX("file."), FILE_ATTRIBUTES("File Attributes"), PROCESSING_DATE("Last Modified"), PROCESSING_SWID("Processing SWID"), PROCESSING_ALGO(
         "Processing Algorithm"), PROCESSING_TAG_PREFIX("processing."), PROCESSING_ATTRIBUTES("Processing Attributes"),
         INPUT_FILE_META_TYPES("Input File Meta-Types"), INPUT_FILE_SWIDS("Input File SWIDs"), INPUT_FILE_PATHS("Input File Paths"),SKIP("Skip");
-        ;
     private final String title;
 
     Header(String title) {
@@ -194,6 +194,10 @@ public class FindAllTheFiles {
   
   public static String INPUT_FILE_META_TYPES = Header.INPUT_FILE_META_TYPES.getTitle();
   public static String INPUT_FILE_FILE_PATHS = Header.INPUT_FILE_PATHS.getTitle();
+  public static String INPUT_FILE_DESCRIPTION = Header.FILE_DESCRIPTION.getTitle();
+  public static String INPUT_FILE_SIZE = Header.FILE_SIZE.getTitle();
+  public static String INPUT_FILE_MD5SUM = Header.FILE_MD5SUM.getTitle();
+  
   public static String INPUT_FILE_SWIDS = Header.INPUT_FILE_SWIDS.getTitle();
   
   /** Constant <code>FILETYPE_ALL="all"</code> */
