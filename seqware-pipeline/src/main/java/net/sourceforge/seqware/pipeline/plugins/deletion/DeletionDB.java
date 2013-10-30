@@ -177,7 +177,7 @@ public final class DeletionDB extends Plugin {
                 // output files as candidates for deletion
                 File fileListing = File.createTempFile("file", ".listing");
                 for(String path : filesToBeDeleted){
-                    FileUtils.write(fileListing, path, true);
+                    FileUtils.write(fileListing, path + '\n', true);
                 }
                 System.out.println("File records deleted for files listed in " + fileListing.getAbsolutePath());
             }
@@ -189,8 +189,6 @@ public final class DeletionDB extends Plugin {
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                 return ret;
             } else {
-                System.out.println("ClientResponseStatus: " + ex.getResponse().getClientResponseStatus());
-                System.out.println("ClientResponse: " + ex.getResponse().toString());
                 System.out.println("Exception message: " + ex.getMessage());
                 try {
                     String entity1 = ex.getResponse().getEntity(String.class);
