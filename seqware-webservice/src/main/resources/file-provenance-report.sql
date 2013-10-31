@@ -265,6 +265,9 @@ select p.update_tstmp as last_modified
      , f.sw_accession as file_swa
      , fa.attrs as file_attrs
      , f.file_path as file_path
+     , f.md5sum as file_md5sum
+     , f.size as file_size
+     , f.description as file_description
      , (case when (f.skip or sr.skip or l.skip or i.skip or s.skip or sps.skip) = true
              then true else false end) as skip
 from study_report_ids ids

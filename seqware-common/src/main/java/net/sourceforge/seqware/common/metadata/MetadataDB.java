@@ -1538,7 +1538,22 @@ public class MetadataDB implements Metadata {
   }
 
     @Override
+    public Study getStudyByName(String name) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
     public void fileProvenanceReportTrigger() {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+  
+    @Override
+    public List<Sample> getSampleByName(String name) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public SequencerRun getSequencerRunByName(String name) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
   
