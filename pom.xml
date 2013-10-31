@@ -71,6 +71,9 @@
         <sonar.jdbc.driver>org.postgresql.Driver</sonar.jdbc.driver>
         <sonar.jdbc.username>sonar</sonar.jdbc.username>
         <sonar.jdbc.password>sonar</sonar.jdbc.password>
+        
+        <!-- Needs to be set for memory issues, but must be overrideable from the command line for Bionimbus for unknown reasons -->
+        <maven.compiler.fork>true</maven.compiler.fork>
     </properties>
 
     <scm>
@@ -661,7 +664,7 @@
                         <target>1.6</target>
                         <showDeprecation>true</showDeprecation>
                         <!-- added forkMode, the full GitHub mvn compile seems to blow up with an OutOfMemoryError -->
-                        <fork>true</fork>
+                        <!-- Moved forkMode setting to Properties section, so it can be overriden on command line -->
                     </configuration>
                     <!--
                     <dependencies>
