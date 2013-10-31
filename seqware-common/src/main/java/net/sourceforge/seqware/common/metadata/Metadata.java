@@ -454,6 +454,12 @@ public interface Metadata {
    * @return a int.
    */
   public int getWorkflowAccession(String name, String version);
+  
+  /**
+   * Triggers the file provenance report,
+   * this is a costly operation so it should be scheduled via a cron or similar
+   */
+  public void fileProvenanceReportTrigger();
 
   /**
    * Retrieves the file provenance report, writing it to the specified output stream as a TSV.
