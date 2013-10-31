@@ -91,6 +91,7 @@ import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 
 import freemarker.template.Configuration;
+import net.sourceforge.seqware.webservice.resources.queries.TriggerFileProvenanceResource;
 
 /**
  * <p>SeqWareWebServiceApplication class.</p>
@@ -283,6 +284,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
          * Reports
          */
         router.attach("/reports/file-provenance", new FileProvenanceResource(getContext()));
+        router.attach("/reports/file-provenance/generate", new TriggerFileProvenanceResource(getContext()));
 
         StudyIdFilesResource studyIdSamples = new StudyIdFilesResource(getContext());
         router.attach("/studies/{studyId}/files", studyIdSamples);
