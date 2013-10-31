@@ -994,7 +994,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         List<ReturnValue> vals;
         List<Map<String, String>> fileProvenanceReport = null;
         Map<FileProvenanceParam, List<String>> map = new EnumMap<FileProvenanceParam, List<String>>(FileProvenanceParam.class);
-        map.put(FileProvenanceParam.skip, new ImmutableList.Builder<String>().add("false").build());
+        if (skipStuff){
+            map.put(FileProvenanceParam.skip, new ImmutableList.Builder<String>().add("false").build());
+        }
+       
         if (options.has("all")) {
             /** nothing special */
         } else if (options.has("study-name")) {
