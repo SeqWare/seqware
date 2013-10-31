@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.deciders;
 
+import io.seqware.Reports;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class BasicDeciderTest extends PluginTest {
     @BeforeClass
     public static void beforeClass(){
         BasicTestDatabaseCreator.resetDatabaseWithUsers();
+        Reports.triggerProvenanceReport();
     }
 
     @Before
@@ -204,14 +206,13 @@ public class BasicDeciderTest extends PluginTest {
     
     @Test
     public void testSEQWARE1297DoNotLaunchFailedWorkflows() {
-        TestingDecider decider = (TestingDecider) instance;
         // trying to find a good test for this, doesn't look like there is one in the testing database?
         // there is one pending workflow_run as revealed by "select * from workflow_run  WHERE status = 'pending';"
         // however, it doesn't appear to be properly linked in 
         // see "select sh.*, s.* FROM sample_hierarchy sh , (select DISTINCT s.sample_id from workflow_run wr, ius_workflow_runs iwr, ius, sample s WHERE status = 'pending' AND wr.workflow_run_id=iwr.workflow_run_id AND iwr.ius_id=ius.ius_id AND ius.sample_id=s.sample_id) sq, sample s WHERE sh.sample_id=sq.sample_id AND s.sample_id=sh.parent_id;"
         String[] params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10", "--test"};
         launchAndCaptureOutput(params);
-        decider = (TestingDecider) instance;
+        TestingDecider decider = (TestingDecider) instance;
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 57);
         
@@ -226,14 +227,14 @@ public class BasicDeciderTest extends PluginTest {
         @Override
         protected ReturnValue doFinalCheck(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
             super.doFinalCheck(commaSeparatedFilePaths, commaSeparatedParentAccessions);
-            ReturnValue ret;
+            ReturnValue localRet;
             if (!haltedOnce){
                 haltedOnce = true;
-                ret = new ReturnValue(ReturnValue.FAILURE);
+                localRet = new ReturnValue(ReturnValue.FAILURE);
             } else{
-                ret = new ReturnValue(ReturnValue.SUCCESS);
+                localRet = new ReturnValue(ReturnValue.SUCCESS);
             }
-            return ret;
+            return localRet;
         }
         
     }
