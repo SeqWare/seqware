@@ -2600,6 +2600,41 @@ public class MetadataWS implements Metadata {
         }
     }
 
+    @Override
+    public Study getStudyByName(String name) {
+        try {
+            Study study = ll.findStudy("?title=" + name);
+            return study;
+        } catch (Exception e) {
+            Log.error("Problem finding studies with this name: " + name, e);
+        }
+        throw new RuntimeException();
+    }
+
+
+
+    @Override
+    public List<Sample> getSampleByName(String sampleName) {
+        try {
+            List<Sample> samples = ll.matchSampleName(sampleName);
+            return samples;
+        } catch (Exception e) {
+            Log.error("Problem finding samples with this name: " + sampleName, e);
+        }
+        throw new RuntimeException();
+    }
+
+    @Override
+    public SequencerRun getSequencerRunByName(String name) {
+        try {
+            SequencerRun run = ll.findSequencerRun("?name=" + name);
+            return run;
+        } catch (Exception e) {
+            Log.error("Problem finding sequencerRuns with this name: " + name, e);
+        }
+        throw new RuntimeException();
+    }
+
     /*
      * public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
      * try { Log.debug("Annotating WorkflowRun " + fileSWID + " with skip=" +

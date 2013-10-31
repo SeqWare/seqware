@@ -58,6 +58,9 @@
               "File SWID" 
               "File Attributes"
               "File Path"
+              "File Md5sum"
+              "File Size"
+              "File Description"
               "Skip"])
 
 (def ^:dynamic *db-spec*
