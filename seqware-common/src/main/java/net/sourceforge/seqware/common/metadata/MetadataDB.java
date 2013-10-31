@@ -23,7 +23,6 @@ import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
-import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
@@ -38,7 +37,6 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
@@ -82,13 +80,13 @@ public class MetadataDB implements Metadata {
   // about the DB it just connected to. I use
   // it to get the DB version to confirm the
   // connection in this example.
-  private final Statement sql;
+  private final Statement instance_sql;
   private final Logger logger = Logger.getLogger(MetadataDB.class);
 
   public MetadataDB(Connection conn) throws SQLException{
     this.db = conn;
     this.dbmd = conn.getMetaData();
-    this.sql = conn.createStatement();
+    this.instance_sql = conn.createStatement();
   }
   
   public MetadataDB(DataSource ds) throws SQLException{
@@ -463,7 +461,7 @@ public class MetadataDB implements Metadata {
     StringBuffer sql = new StringBuffer();
     try {
       // FIXME: Add a new processing entry
-      sql.append("INSERT INTO processing (status, create_tstmp) VALUES( '" + ProcessingStatus.pending.name() + "', now())");
+      sql.append("INSERT INTO processing (status, create_tstmp) VALUES( '").append(ProcessingStatus.pending.name()).append("', now())");
       processingID = InsertAndReturnNewPrimaryKey(sql.toString(), "processing_processing_id_seq");
 
       // Associate the processing entry with the zero or more parents
@@ -476,8 +474,8 @@ public class MetadataDB implements Metadata {
           sql.append("child_id,");
           sql.append("relationship");
           sql.append(") VALUES (");
-          sql.append(parentID + ",");
-          sql.append(processingID + ",");
+          sql.append(parentID).append(",");
+          sql.append(processingID).append(",");
           sql.append("'parent-child'");
           sql.append(")");
 
@@ -507,10 +505,10 @@ public class MetadataDB implements Metadata {
     ReturnValue ret = new ReturnValue();
     ret.setExitStatus(ReturnValue.SUCCESS);
     // Create a SQL statement
-    StringBuffer sql = new StringBuffer();
+    StringBuilder sql = new StringBuilder();
     try {
       // FIXME: Add a new processing entry
-      sql.append("INSERT INTO processing (status, create_tstmp) VALUES( '" + ProcessingStatus.pending.name() + "', now())");
+      sql.append("INSERT INTO processing (status, create_tstmp) VALUES( '").append(ProcessingStatus.pending.name()).append("', now())");
       processingID = InsertAndReturnNewPrimaryKey(sql.toString(), "processing_processing_id_seq");
 
       // Associate the processing entry with the zero or more parents
@@ -567,7 +565,7 @@ public class MetadataDB implements Metadata {
    */
   @Override
   public boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException {
-    StringBuffer sql = new StringBuffer();
+    StringBuilder sql = new StringBuilder();
     if (findAccessionInTable("ius", "ius_id", parentAccession) != 0) {
 
       int parentId = findAccessionInTable("ius", "ius_id", parentAccession);
@@ -575,7 +573,7 @@ public class MetadataDB implements Metadata {
       sql.append("ius_id, ");
       sql.append("workflow_run_id ");
       sql.append(") VALUES (");
-      sql.append(parentId + ",");
+      sql.append(parentId).append(",");
       sql.append(workflowRunId);
       sql.append(")");
 
@@ -588,7 +586,7 @@ public class MetadataDB implements Metadata {
       sql.append("lane_id, ");
       sql.append("workflow_run_id ");
       sql.append(") VALUES (");
-      sql.append(parentId + ",");
+      sql.append(parentId).append(",");
       sql.append(workflowRunId);
       sql.append(")");
 
@@ -609,7 +607,7 @@ public class MetadataDB implements Metadata {
    * @throws java.sql.SQLException if any.
    */
   public boolean linkAccessionAndParent(int accession, int processingID) throws SQLException {
-    StringBuffer sql = new StringBuffer();
+    StringBuilder sql = new StringBuilder();
     Log.debug("Link Accession and Parent accession:" + accession + " processingId:" + processingID);
 
     if (accession == 0) {
@@ -624,7 +622,7 @@ public class MetadataDB implements Metadata {
       sql.append("ius_id, ");
       sql.append("processing_id ");
       sql.append(") VALUES (");
-      sql.append(parentId + ",");
+      sql.append(parentId).append(",");
       sql.append(processingID);
       sql.append(")");
 
@@ -637,7 +635,7 @@ public class MetadataDB implements Metadata {
       sql.append("lane_id, ");
       sql.append("processing_id ");
       sql.append(") VALUES (");
-      sql.append(parentId + ",");
+      sql.append(parentId).append(",");
       sql.append(processingID);
       sql.append(")");
 
@@ -650,7 +648,7 @@ public class MetadataDB implements Metadata {
       sql.append("sequencer_run_id, ");
       sql.append("processing_id ");
       sql.append(") VALUES (");
-      sql.append(parentId + ",");
+      sql.append(parentId).append(",");
       sql.append(processingID);
       sql.append(")");
 
@@ -664,8 +662,8 @@ public class MetadataDB implements Metadata {
       sql.append("child_id, ");
       sql.append("relationship");
       sql.append(") VALUES (");
-      sql.append(parentId + ",");
-      sql.append(processingID + ",");
+      sql.append(parentId).append(",");
+      sql.append(processingID).append(",");
       sql.append("'parent-child'");
       sql.append(")");
 
@@ -678,7 +676,7 @@ public class MetadataDB implements Metadata {
       sql.append("study_id, ");
       sql.append("processing_id ");
       sql.append(") VALUES (");
-      sql.append(parentId + ",");
+      sql.append(parentId).append(",");
       sql.append(processingID);
       sql.append(")");
 
@@ -691,7 +689,7 @@ public class MetadataDB implements Metadata {
       sql.append("experiment_id, ");
       sql.append("processing_id ");
       sql.append(") VALUES (");
-      sql.append(parentId + ",");
+      sql.append(parentId).append(",");
       sql.append(processingID);
       sql.append(")");
 
@@ -704,7 +702,7 @@ public class MetadataDB implements Metadata {
       sql.append("sample_id, ");
       sql.append("processing_id ");
       sql.append(") VALUES (");
-      sql.append(parentId + ",");
+      sql.append(parentId).append(",");
       sql.append(processingID);
       sql.append(")");
 
@@ -730,18 +728,18 @@ public class MetadataDB implements Metadata {
     // Create a SQL statement
     StringBuffer sql = new StringBuffer();
     try {
-      sql.append("UPDATE processing SET task_group = true WHERE processing_id = " + processingID);
+      sql.append("UPDATE processing SET task_group = true WHERE processing_id = ").append(processingID);
       executeUpdate(sql.toString());
 
       if (algorithm != null) {
         sql = new StringBuffer();
-        sql.append("UPDATE processing SET algorithm = '" + algorithm + "' WHERE processing_id = " + processingID);
+        sql.append("UPDATE processing SET algorithm = '").append(algorithm).append("' WHERE processing_id = ").append(processingID);
         executeUpdate(sql.toString());
       }
 
       if (description != null) {
         sql = new StringBuffer();
-        sql.append("UPDATE processing SET description = '" + description + "' WHERE processing_id = " + processingID);
+        sql.append("UPDATE processing SET description = '").append(description).append("' WHERE processing_id = ").append(processingID);
         executeUpdate(sql.toString());
       }
 
@@ -770,13 +768,12 @@ public class MetadataDB implements Metadata {
     // Create a SQL statement
     StringBuffer sql = new StringBuffer();
     try {
-      sql.append("INSERT INTO processing (create_tstmp, task_group, algorithm) VALUES( now(), true, '" + algorithm
-              + "' )");
+      sql.append("INSERT INTO processing (create_tstmp, task_group, algorithm) VALUES( now(), true, '").append(algorithm).append("' )");
       processingID = InsertAndReturnNewPrimaryKey(sql.toString(), "processing_processing_id_seq");
 
       if (description != null) {
         sql = new StringBuffer();
-        sql.append("UPDATE processing SET description = '" + description + "' WHERE processing_id = " + processingID);
+        sql.append("UPDATE processing SET description = '").append(description).append("' WHERE processing_id = ").append(processingID);
         executeUpdate(sql.toString());
       }
 
@@ -818,8 +815,8 @@ public class MetadataDB implements Metadata {
           sql.append("child_id,");
           sql.append("relationship");
           sql.append(") VALUES (");
-          sql.append(parentID + ",");
-          sql.append(processingID + ",");
+          sql.append(parentID).append(",");
+          sql.append(processingID).append(",");
           sql.append("'parent-child'");
           sql.append(")");
 
@@ -837,8 +834,8 @@ public class MetadataDB implements Metadata {
           sql.append("child_id,");
           sql.append("relationship");
           sql.append(") VALUES (");
-          sql.append(processingID + ",");
-          sql.append(childID + ",");
+          sql.append(processingID).append(",");
+          sql.append(childID).append(",");
           sql.append("'parent-child'");
           sql.append(")");
 
@@ -870,12 +867,12 @@ public class MetadataDB implements Metadata {
     }
 
     // Create a SQL statement
-    StringBuffer sql = new StringBuffer();
+    StringBuilder sql = new StringBuilder();
     try {
       sql.append("UPDATE processing SET status = ");
-      sql.append("'" + status.name() + "'");
-      sql.append(", update_tstmp='" + new Timestamp(System.currentTimeMillis()) + "' ");
-      sql.append(" WHERE processing_id = " + processingID);
+      sql.append("'").append(status.name()).append("'");
+      sql.append(", update_tstmp='").append(new Timestamp(System.currentTimeMillis())).append("' ");
+      sql.append(" WHERE processing_id = ").append(processingID);
 
       executeUpdate(sql.toString());
     } catch (SQLException e) {
@@ -898,9 +895,9 @@ public class MetadataDB implements Metadata {
     try {
       workflowId = findAccessionInTable("workflow", "workflow_id", workflowAccession);
 
-      StringBuffer sql = new StringBuffer();
+      StringBuilder sql = new StringBuilder();
       sql.append("insert into workflow_run (workflow_id, create_tstmp, update_tstmp)");
-      sql.append(" values (" + workflowId + ", now(), now())");
+      sql.append(" values (").append(workflowId).append(", now(), now())");
       id = InsertAndReturnNewPrimaryKey(sql.toString(), "workflow_run_workflow_run_id_seq");
 
     } catch (Exception e) {
@@ -985,7 +982,7 @@ public class MetadataDB implements Metadata {
     try {
       workflowRunId = findAccessionInTable("workflow_run", "workflow_run_id", workflowRunAccession);
 
-      StringBuffer sql = new StringBuffer();
+      StringBuilder sql = new StringBuilder();
       sql.append("update processing set ancestor_workflow_run_id = ").append(workflowRunId).append(", update_tstmp='")
               .append(new Timestamp(System.currentTimeMillis())).append("' where processing_id = ").append(processingId);
       executeUpdate(sql.toString());
@@ -1003,14 +1000,14 @@ public class MetadataDB implements Metadata {
 
     // Create a SQL statement
     int workflowRunId = 0;
-    StringBuffer sql = new StringBuffer();
+    StringBuilder sql = new StringBuilder();
     try {
       workflowRunId = findAccessionInTable("workflow_run", "workflow_run_id", workflowRunAccession);
 
       sql.append("UPDATE processing SET workflow_run_id = ");
       sql.append(workflowRunId);
-      sql.append(", update_tstmp='" + new Timestamp(System.currentTimeMillis()) + "' ");
-      sql.append(" WHERE processing_id = " + processingID);
+      sql.append(", update_tstmp='").append(new Timestamp(System.currentTimeMillis())).append("' ");
+      sql.append(" WHERE processing_id = ").append(processingID);
 
       executeUpdate(sql.toString());
     } catch (SQLException e) {
@@ -1079,7 +1076,7 @@ public class MetadataDB implements Metadata {
     sql.append("processing_id,");
     sql.append("file_id");
     sql.append(") VALUES (");
-    sql.append(processingID + ",");
+    sql.append(processingID).append(",");
     sql.append(fileID);
     sql.append(")");
     executeUpdate(sql.toString());
@@ -1119,7 +1116,7 @@ public class MetadataDB implements Metadata {
   @Override
   public ReturnValue update_processing_event(int processingID, ReturnValue retval) {
     // Create a SQL statement
-    StringBuffer sql = new StringBuffer();
+    StringBuilder sql = new StringBuilder();
     ArrayList params = new ArrayList();
     try {
       // FIXME: Update a processing entry from ReturnValue
@@ -1201,7 +1198,7 @@ public class MetadataDB implements Metadata {
 
       // create_tstmp timestamp and update_tstmp
       sql.append("update_tstmp = now()");
-      sql.append(" WHERE processing_id = " + processingID);
+      sql.append(" WHERE processing_id = ").append(processingID);
 
       // Execute above
       PreparedStatement ps = null;
@@ -1256,7 +1253,7 @@ public class MetadataDB implements Metadata {
   public ReturnValue clean_up() {
     Log.debug("clean_up() of MetadataDB occured " + Integer.toHexString(this.hashCode()));
     Log.debug("clean_up() of statement " + Integer.toHexString(this.getSql().hashCode()));
-    DbUtils.closeQuietly(this.sql);
+    DbUtils.closeQuietly(this.instance_sql);
     Log.debug("clean_up() of connection " + Integer.toHexString(this.getDb().hashCode()));
     DbUtils.closeQuietly(this.db);
     return new ReturnValue();
@@ -1289,7 +1286,7 @@ public class MetadataDB implements Metadata {
    * @return a {@link java.sql.Statement} object.
    */
   public Statement getSql() {
-    return sql;
+    return instance_sql;
   }
     
     
@@ -1306,37 +1303,10 @@ public class MetadataDB implements Metadata {
     int workflowId = 0;
 
     // Create a SQL statement
-    StringBuffer sql = new StringBuffer();
+    StringBuilder sql = new StringBuilder();
     try {
 
-      sql.append("INSERT INTO workflow (name, description, version, base_ini_file, cmd, current_working_dir, permanent_bundle_location, workflow_template, create_tstmp, update_tstmp, workflow_engine, workflow_class, workflow_type) "
-              + "VALUES( '"
-              + name
-              + "', '"
-              + description
-              + "', '"
-              + version
-              + "', '"
-              + configFile
-              + "', '"
-              + command
-              + "', '" 
-              + provisionDir 
-              + "', '" 
-              + archiveZip 
-              + "', '" 
-              + templateFile 
-              + "', '" 
-              + "now()"
-              + "', '" 
-              + "now()"
-              + "', '" 
-              + workflowEngine
-              + "', '" 
-              + workflowClass
-              + "', '" 
-              + workflowType
-              + ")");
+      sql.append("INSERT INTO workflow (name, description, version, base_ini_file, cmd, current_working_dir, permanent_bundle_location, workflow_template, create_tstmp, update_tstmp, workflow_engine, workflow_class, workflow_type) " + "VALUES( '").append(name).append("', '").append(description).append("', '").append(version).append("', '").append(configFile).append("', '").append(command).append("', '").append(provisionDir).append("', '").append(archiveZip).append("', '").append(templateFile).append("', '" + "now()" + "', '" + "now()" + "', '").append(workflowEngine).append("', '").append(workflowClass).append("', '").append(workflowType).append(")");
 
       // get back last ID value
       workflowId = InsertAndReturnNewPrimaryKey(sql.toString(), "workflow_workflow_id_seq");
@@ -1527,13 +1497,13 @@ public class MetadataDB implements Metadata {
       return executeQuery(sql, new ResultSetHandler<String>(){
         @Override
         public String handle(ResultSet rs) throws SQLException {
-          StringBuffer sb = new StringBuffer();
+          StringBuilder sb = new StringBuilder();
           while (rs.next()) {
-            sb.append(rs.getString("name") + "\t");
-            sb.append(rs.getString("version") + "\t");
-            sb.append(rs.getString("create_tstmp") + "\t");
-            sb.append(rs.getString("sw_accession") + "\t");
-            sb.append(rs.getString("permanent_bundle_location") + "\n");
+            sb.append(rs.getString("name")).append("\t");
+            sb.append(rs.getString("version")).append("\t");
+            sb.append(rs.getString("create_tstmp")).append("\t");
+            sb.append(rs.getString("sw_accession")).append("\t");
+            sb.append(rs.getString("permanent_bundle_location")).append("\n");
           }
           return sb.toString();
         }
@@ -1566,6 +1536,11 @@ public class MetadataDB implements Metadata {
       return (-1);
     }
   }
+
+    @Override
+    public void fileProvenanceReportTrigger() {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
   
   public static class IntByIndex implements ResultSetHandler<Integer>{
     private final int col;
@@ -1574,6 +1549,7 @@ public class MetadataDB implements Metadata {
       this.col = col;
       this.defaultVal = defaultVal;
     }
+    @Override
     public Integer handle(ResultSet rs) throws SQLException{
       if (rs.next()){
         return rs.getInt(col);
@@ -1589,6 +1565,7 @@ public class MetadataDB implements Metadata {
       this.col = col;
       this.defaultVal = defaultVal;
     }
+    @Override
     public Integer handle(ResultSet rs) throws SQLException{
       if (rs.next()){
         return rs.getInt(col);
