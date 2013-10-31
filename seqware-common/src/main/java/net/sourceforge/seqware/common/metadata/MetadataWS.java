@@ -996,11 +996,19 @@ public class MetadataWS implements Metadata {
     public void fileProvenanceReport(Map<FileProvenanceParam, List<String>> params, Writer out) {
       ll.writeTo("/reports/file-provenance", params, out);
     }
+    
+    @Override
+    public void fileProvenanceReportTrigger() {
+        ll.getString("/reports/file-provenance/generate", new HashMap());
+    }
 
     @Override
     public List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params) {
-      String tsv = ll.getString("/file-provenance", params);
+      String tsv = ll.getString("/reports/file-provenance", params);
       List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+      if (tsv == null){
+          return list;
+      }
       String[] lines = tsv.split("\n");
       if (lines.length > 1) {
         String[] header = lines[0].split("\t");

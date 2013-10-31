@@ -1,5 +1,6 @@
 package io.seqware.cli;
 
+import io.seqware.Reports;
 import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
 
@@ -846,11 +847,14 @@ public class Main {
       out("");
       out("Sub-commands:");
       out("  report          A report of the provenance of output files");
+      out("  refresh         Refresh the static simplified provenance report table");
       out("");
     } else {
       String cmd = args.remove(0);
       if ("report".equals(cmd)) {
         filesReport(args);
+      } else if ("refresh".equals(cmd)){
+        Reports.triggerProvenanceReport();
       } else {
         invalid("files", cmd);
       }
