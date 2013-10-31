@@ -1006,7 +1006,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             for(Sample sample : samplesByName){
                 sampleAccessions.add(String.valueOf(sample.getSwAccession()));
             }
-            map.put(FileProvenanceParam.study, new ImmutableList.Builder<String>().addAll(sampleAccessions).build());
+            map.put(FileProvenanceParam.sample, new ImmutableList.Builder<String>().addAll(sampleAccessions).build());
         } else if (options.has("sequencer-run-name")) {
             SequencerRun sequencerRunByName = metadata.getSequencerRunByName((String) options.valueOf("sequencer-run-name"));
             map.put(FileProvenanceParam.sequencer_run, new ImmutableList.Builder<String>().add(String.valueOf(sequencerRunByName.getSwAccession())).build());
