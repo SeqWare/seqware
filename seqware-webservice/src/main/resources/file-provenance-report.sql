@@ -206,7 +206,7 @@ union all
 , sample_parent_swas_names (sample_id, parent_swas, parent_names) as (
     select anc.sample_id
          , array_to_string(array_agg(sw_accession), ':') as parent_swas
-         , array_to_string(array_agg(s.name), ':') as parent_names
+         , array_to_string(array_agg(coalesce(nullif(s.name,''),s.title)), ':') as parent_names
     from sample_ancestors anc
     join sample s on s.sample_id = anc.ancestor_id
     group by anc.sample_id
