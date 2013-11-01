@@ -18,19 +18,19 @@ package net.sourceforge.seqware.pipeline.deciders;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import io.seqware.Reports;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
@@ -47,6 +47,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.PluginTest;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.*;
 
 /**
@@ -62,7 +63,7 @@ public class BasicDeciderTest extends PluginTest {
      * Write JSON representations of Attributes map so that we can ensure
      * that deciders are given a superset of attributes for backwards compatibility
      */
-    private static final boolean WRITE_JSON_ATTRIBUTES = true;
+    private static final boolean WRITE_JSON_ATTRIBUTES = false;
     
     private final List<String> fastq_gz = new ArrayList<String>();
         
@@ -405,15 +406,28 @@ public class BasicDeciderTest extends PluginTest {
             Assert.assertTrue("processing attribute didn't make it for " + file_swa, attribute.equals("processingValue"));
             attribute = returnValue.getAttribute(Header.FILE_TAG_PREFIX.getTitle() + "fileTag");
             Assert.assertTrue("file attribute didn't make it for " + file_swa, attribute.equals("fileValue"));
-            if (BasicDeciderTest.WRITE_JSON_ATTRIBUTES) {
-                Gson gson = new GsonBuilder().create();
-                String toJson = gson.toJson(returnValue.getAttributes());
-                File file = new File(file_swa + ".json");
-                try {
+            try {
+                if (BasicDeciderTest.WRITE_JSON_ATTRIBUTES) {
+                    Gson gson = new GsonBuilder().create();
+                    String toJson = gson.toJson(returnValue.getAttributes());
+                    File file = new File(file_swa + ".json");
                     FileUtils.writeStringToFile(file, toJson);
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                } else {
+                    //ensure that json check files contain a subset of the decider attributes
+                    String query = FileUtils.readFileToString(new File((BasicDeciderTest.class.getResource(file_swa + ".json").getPath())));
+                    Gson gson = new GsonBuilder().create();
+                    Type fooType = new TypeToken<Map<String,String>>() {}.getType();
+                    Map<String,String> oldAttributes = gson.fromJson(query, fooType);
+                    // remove last modified time from both since time changes when annotating
+                    oldAttributes.remove(Header.PROCESSING_DATE.getTitle());
+                    returnValue.getAttributes().remove(Header.PROCESSING_DATE.getTitle());
+                    boolean contained = returnValue.getAttributes().entrySet().containsAll(oldAttributes.entrySet());
+                    if (!contained){
+                        Assert.assertTrue("old returnvalue is not a subset: " + oldAttributes.toString() + "\n" + returnValue.getAttributes().toString(), false);
+                    }
                 }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
             return false;
         }
