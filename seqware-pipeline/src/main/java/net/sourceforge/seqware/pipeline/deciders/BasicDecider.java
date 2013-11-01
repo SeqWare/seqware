@@ -992,7 +992,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     private List<ReturnValue> createListOfRelevantFilePaths() {
         List<ReturnValue> vals;
-        List<Map<String, String>> fileProvenanceReport = null;
+        List<Map<String, String>> fileProvenanceReport;
         Map<FileProvenanceParam, List<String>> map = new EnumMap<FileProvenanceParam, List<String>>(FileProvenanceParam.class);
         if (skipStuff){
             map.put(FileProvenanceParam.skip, new ImmutableList.Builder<String>().add("false").build());
@@ -1035,6 +1035,13 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             fm.setFilePath(map.get(Header.FILE_PATH.getTitle()));
             fm.setMetaType(map.get(Header.FILE_META_TYPE.getTitle()));
             fm.setDescription(map.get(Header.FILE_DESCRIPTION.getTitle()));
+            fm.setMd5sum(map.get(Header.FILE_MD5SUM.getTitle()));
+            if (map.containsKey(Header.FILE_SIZE.getTitle())){
+                if (!map.get(Header.FILE_SIZE.getTitle()).isEmpty()){
+                    fm.setSize(Long.valueOf(map.get(Header.FILE_SIZE.getTitle())));
+                }
+            }
+            
             row.setFiles(new ArrayList(new ImmutableList.Builder<FileMetadata>().add(fm).build()));
             handleAttributes(map, row, Header.STUDY_ATTRIBUTES, Header.STUDY_TAG_PREFIX);
             handleAttributes(map, row, Header.EXPERIMENT_ATTRIBUTES, Header.EXPERIMENT_TAG_PREFIX);
@@ -1044,6 +1051,17 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             handleAttributes(map, row, Header.LANE_ATTRIBUTES, Header.LANE_TAG_PREFIX);
             handleAttributes(map, row, Header.SEQUENCER_RUN_ATTRIBUTES, Header.SEQUENCER_RUN_TAG_PREFIX);
             handleAttributes(map, row, Header.PROCESSING_ATTRIBUTES, Header.PROCESSING_TAG_PREFIX);
+            handleAttributes(map, row, Header.FILE_ATTRIBUTES, Header.FILE_TAG_PREFIX);
+            
+            // handle additional quirks that don't belong in the files report here FindAllTheFiles
+            // parent sample name and parent sample swid end with ':' for some reason and OicrDecider seems to have code relying on this
+            String parentSampleName = map.get(Header.PARENT_SAMPLE_NAME.getTitle());
+            parentSampleName += ":";
+            map.put(Header.PARENT_SAMPLE_NAME.getTitle(), parentSampleName);
+            String parentSampleSWID = map.get(Header.PARENT_SAMPLE_SWA.getTitle());
+            parentSampleSWID += ":";
+            map.put(Header.PARENT_SAMPLE_SWA.getTitle(), parentSampleSWID);
+            
         }
         return list;
     }
@@ -1051,11 +1069,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private void handleAttributes(Map<String, String> map, ReturnValue row, Header headerType, Header headerPrefix) {
         // mutate attributes into expected format from FindAllTheFiles
         String studyAttributes = map.remove(headerType.getTitle());
-        if (studyAttributes.contains(";")) {
+        if (!studyAttributes.isEmpty()) {
             String[] studyAttrArr = studyAttributes.split(";");
             for (String studyAttr : studyAttrArr) {
                 String[] parts = studyAttr.split("=");
-                String key = headerPrefix.getTitle() + parts[0];
+                String key = parts[0];
                 String value = parts[1];
                 FindAllTheFiles.addAttributeToReturnValue(row, key, value);
             }
