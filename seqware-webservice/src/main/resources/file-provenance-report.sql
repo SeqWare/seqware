@@ -246,7 +246,7 @@ select p.update_tstmp as last_modified
      , sr.sw_accession as sequencer_run_swa
      , sra.attrs as sequencer_run_attrs
      , translate(l.name, ' ', '_') as lane_name
-     , l.lane_index+1 as lane_number
+     , coalesce(l.lane_index,0)+1 as lane_number
      , l.sw_accession as lane_swa
      , la.attrs as lane_attrs
      , i.tag as ius_tag
