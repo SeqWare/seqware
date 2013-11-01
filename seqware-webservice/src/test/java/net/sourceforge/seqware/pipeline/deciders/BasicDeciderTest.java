@@ -16,7 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.deciders;
 
-import io.seqware.Reports;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -48,7 +47,6 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.PluginTest;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.junit.*;
 
 /**
@@ -326,6 +324,8 @@ public class BasicDeciderTest extends PluginTest {
         metadata.annotateFile(4825, fileAttribute, false);
         metadata.annotateFile(4786, fileAttribute, false);
         metadata.annotateFile(4785, fileAttribute, false);
+        // in this version of deciders, we need to refresh the report
+        Reports.triggerProvenanceReport();
         // run decider and check that attributes are pulled back properly
         String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4", "--meta-types", "text/h-tumour,application/vcf-4-gzip,text/annovar-tags,application/zip-report-bundle,txt,chemical/seq-na-fastq-gzip,application/bam,text/vcf-4,chemical/seq-na-fastq", "--test"};
         launchAndCaptureOutput(params);
@@ -351,6 +351,8 @@ public class BasicDeciderTest extends PluginTest {
         dbCreator.runUpdate("update file set md5sum = sw_accession + 42 WHERE sw_accession IN (SELECT file_swa from file_provenance_report WHERE study_swa=120);");
         dbCreator.runUpdate("update file set description = 'funky_description' WHERE sw_accession IN (SELECT file_swa from file_provenance_report WHERE study_swa=120);");
         dbCreator.runUpdate("update file set size = sw_accession + 1701 WHERE sw_accession IN (SELECT file_swa from file_provenance_report WHERE study_swa=120);");
+        // in this version of deciders, we need to refresh the report
+        Reports.triggerProvenanceReport();
         // use a special decider to ensure that filemetadata is populated
         String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4", "--meta-types", "text/h-tumour,application/vcf-4-gzip,text/annovar-tags,application/zip-report-bundle,txt,chemical/seq-na-fastq-gzip,application/bam,text/vcf-4,chemical/seq-na-fastq", "--test"};
         launchAndCaptureOutput(params);
@@ -388,25 +390,28 @@ public class BasicDeciderTest extends PluginTest {
         protected boolean checkFileDetails(ReturnValue returnValue, FileMetadata fm) {
             filesChecked++;
             int file_swa = Integer.valueOf(returnValue.getAttribute(Header.FILE_SWA.getTitle()));
-            System.out.println();
-            String attribute = returnValue.getAttribute(Header.STUDY_TAG_PREFIX.getTitle() + "studyTag");
-            Assert.assertTrue("studyTag attribute didn't make it for " + file_swa, attribute.equals("studyValue"));
-            attribute = returnValue.getAttribute(Header.EXPERIMENT_TAG_PREFIX.getTitle() + "experimentTag");
-            Assert.assertTrue("experimentTag attribute didn't make it for " + file_swa, attribute.equals("experimentValue"));
-            attribute = returnValue.getAttribute(Header.PARENT_SAMPLE_TAG_PREFIX.getTitle() + "parentSampleTag.6158");
-            Assert.assertTrue("parentSampleTag attribute didn't make it for " + file_swa, attribute.equals("parentSampleValue"));
-            attribute = returnValue.getAttribute(Header.SAMPLE_TAG_PREFIX.getTitle() + "sampleTag");
-            Assert.assertTrue("sampleTag attribute didn't make it for " + file_swa, attribute.equals("sampleValue"));
-            attribute = returnValue.getAttribute(Header.SEQUENCER_RUN_TAG_PREFIX.getTitle() + "sequencerRunTag");
-            Assert.assertTrue("sequencerRunTag attribute didn't make it for " + file_swa, attribute.equals("sequencerRunValue"));
-            attribute = returnValue.getAttribute(Header.LANE_TAG_PREFIX.getTitle() + "laneTag");
-            Assert.assertTrue("lane attribute didn't make it for " + file_swa, attribute.equals("laneValue"));
-            attribute = returnValue.getAttribute(Header.IUS_TAG_PREFIX.getTitle() + "iusTag");
-            Assert.assertTrue("ius attribute didn't make it for " + file_swa, attribute.equals("iusValue"));
-            attribute = returnValue.getAttribute(Header.PROCESSING_TAG_PREFIX.getTitle() + "processingTag");
-            Assert.assertTrue("processing attribute didn't make it for " + file_swa, attribute.equals("processingValue"));
-            attribute = returnValue.getAttribute(Header.FILE_TAG_PREFIX.getTitle() + "fileTag");
-            Assert.assertTrue("file attribute didn't make it for " + file_swa, attribute.equals("fileValue"));
+            try {
+                String attribute = returnValue.getAttribute(Header.STUDY_TAG_PREFIX.getTitle() + "studyTag");
+                Assert.assertTrue("studyTag attribute didn't make it for " + file_swa, attribute.equals("studyValue"));
+                attribute = returnValue.getAttribute(Header.EXPERIMENT_TAG_PREFIX.getTitle() + "experimentTag");
+                Assert.assertTrue("experimentTag attribute didn't make it for " + file_swa, attribute.equals("experimentValue"));
+                attribute = returnValue.getAttribute(Header.PARENT_SAMPLE_TAG_PREFIX.getTitle() + "parentSampleTag.6158");
+                Assert.assertTrue("parentSampleTag attribute didn't make it for " + file_swa, attribute.equals("parentSampleValue"));
+                attribute = returnValue.getAttribute(Header.SAMPLE_TAG_PREFIX.getTitle() + "sampleTag");
+                Assert.assertTrue("sampleTag attribute didn't make it for " + file_swa, attribute.equals("sampleValue"));
+                attribute = returnValue.getAttribute(Header.SEQUENCER_RUN_TAG_PREFIX.getTitle() + "sequencerRunTag");
+                Assert.assertTrue("sequencerRunTag attribute didn't make it for " + file_swa, attribute.equals("sequencerRunValue"));
+                attribute = returnValue.getAttribute(Header.LANE_TAG_PREFIX.getTitle() + "laneTag");
+                Assert.assertTrue("lane attribute didn't make it for " + file_swa, attribute.equals("laneValue"));
+                attribute = returnValue.getAttribute(Header.IUS_TAG_PREFIX.getTitle() + "iusTag");
+                Assert.assertTrue("ius attribute didn't make it for " + file_swa, attribute.equals("iusValue"));
+                attribute = returnValue.getAttribute(Header.PROCESSING_TAG_PREFIX.getTitle() + "processingTag");
+                Assert.assertTrue("processing attribute didn't make it for " + file_swa, attribute.equals("processingValue"));
+                attribute = returnValue.getAttribute(Header.FILE_TAG_PREFIX.getTitle() + "fileTag");
+                Assert.assertTrue("file attribute didn't make it for " + file_swa, attribute.equals("fileValue"));
+            } catch (NullPointerException ex) {
+                Assert.assertTrue("returnvalue attributes missing: " + returnValue.getAttributes().toString(), false);
+            }
             try {
                 if (BasicDeciderTest.WRITE_JSON_ATTRIBUTES) {
                     Gson gson = new GsonBuilder().create();
@@ -424,7 +429,11 @@ public class BasicDeciderTest extends PluginTest {
                     returnValue.getAttributes().remove(Header.PROCESSING_DATE.getTitle());
                     boolean contained = returnValue.getAttributes().entrySet().containsAll(oldAttributes.entrySet());
                     if (!contained){
-                        Assert.assertTrue("old returnvalue is not a subset: " + oldAttributes.toString() + "\n" + returnValue.getAttributes().toString(), false);
+                        String oldStr = oldAttributes.toString();
+                        String newStr = returnValue.getAttributes().toString();
+                        oldAttributes.entrySet().removeAll(returnValue.getAttributes().entrySet());
+                        String diff = oldAttributes.toString();
+                        Assert.assertTrue("old returnvalue is not a subset: " + oldStr + "\n" + newStr + "\n" + diff, false);
                     }
                 }
             } catch (IOException ex) {
@@ -442,9 +451,9 @@ public class BasicDeciderTest extends PluginTest {
              int file_swa = Integer.valueOf(returnValue.getAttribute(Header.FILE_SWA.getTitle()));
              Assert.assertTrue("file path is empty " + file_swa, !(fm.getFilePath() == null) && !fm.getFilePath().isEmpty());
              // FindAllTheFiles doesn't actually populate this information, go figure
-             //Assert.assertTrue("file md5sum is wrong for " + file_swa, fm.getMd5sum().equals(Integer.toString(file_swa+42)));
-             //Assert.assertTrue("file size is wrong", fm.getSize().equals((long)file_swa+1701));
-             Assert.assertTrue("file description is empty" + file_swa, !(fm.getDescription()== null) && !fm.getDescription().isEmpty());
+             Assert.assertTrue("file md5sum is wrong for " + file_swa, fm.getMd5sum().equals(Integer.toString(file_swa+42)));
+             Assert.assertTrue("file size is wrong ", fm.getSize().equals((long)file_swa+1701));
+             Assert.assertTrue("file description is empty " + file_swa, !(fm.getDescription()== null) && !fm.getDescription().isEmpty());
              Assert.assertTrue("meta type is empty" + file_swa , !(fm.getMetaType()== null) && !fm.getMetaType().isEmpty());
              return false;
         }

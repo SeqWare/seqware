@@ -249,7 +249,7 @@ select p.update_tstmp as last_modified
      , coalesce(l.lane_index,0)+1 as lane_number
      , l.sw_accession as lane_swa
      , la.attrs as lane_attrs
-     , i.tag as ius_tag
+     , coalesce(i.tag,'NoIndex') as ius_tag
      , i.sw_accession as ius_swa
      , ia.attrs as ius_attrs
      , translate(wf.name, ' ', '_') as workflow_name
