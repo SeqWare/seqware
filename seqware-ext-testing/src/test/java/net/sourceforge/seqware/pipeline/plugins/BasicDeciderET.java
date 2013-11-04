@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import com.google.common.io.Files;
+import io.seqware.Reports;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.Assert;
@@ -37,6 +38,7 @@ public class BasicDeciderET {
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
+        Reports.triggerProvenanceReport();
     }
 
     @Test
