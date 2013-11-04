@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import io.seqware.Reports;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -27,9 +28,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -48,6 +51,11 @@ public class SymLinkFileReporterTest extends PluginTest {
     private String sampleDir = "./-/Exome_ABC015069_Test_2-4783";
     private String[] allDirs = new String[]{"ABC019534_Nimblegen_data-6548", "AbcCo_Tumour_Sequencing-4758", "AbcCo_Exome_Sequencing-120", "MixingExperiment-6144"};
 
+    @BeforeClass
+    public static void beforeClass(){
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
+    }
+    
     @Before
     @Override
     public void setUp() {
