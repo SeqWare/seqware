@@ -188,7 +188,7 @@ public class DeleteDBET {
         File createTempFile = File.createTempFile("deletion", "keyFile");
         createTempFile.delete(); // ensure file does not exist
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB "
-                + "-- --r 6691 -k " + createTempFile;
+                + "-- --r 6691 --out " + createTempFile;
         String output = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         File keyFile = getAndCheckForKeyFile(output);
         Assert.assertTrue("key file is empty or is not the correct size", keyFile.exists());

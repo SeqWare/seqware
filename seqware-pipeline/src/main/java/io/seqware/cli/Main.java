@@ -1142,12 +1142,13 @@ public class Main {
       out("  --accession <swid>  The SWID of the desired target");
       out("");
       out("Optional parameters:");
-      out("  --key <file>        A key file listing desired entities to be deleted in one transaction.");
-      out("                      If no key file exists at <file>, one will be created.");
+      out("  --key <file>        Delete workflow runs given a key file containing records to be deleted in one transaction.");
+      out("  --out <file>        Override the filename for where to write a key file containing records.");
       out("");
     } else {
       String swid = reqVal(args, "--accession");
-      String out = optVal(args, "--key", null);
+      String key = optVal(args, "--key", null);
+      String out = optVal(args, "--out", null);
 
       extras(args, "workflow-run delete");
 
@@ -1157,8 +1158,12 @@ public class Main {
       runnerArgs.add("--");
       runnerArgs.add("--workflowrun");
       runnerArgs.add(swid);
-      if (out != null) {
+      if (key != null) {
         runnerArgs.add("--key");
+        runnerArgs.add(key);
+      } 
+      if (out != null) {
+        runnerArgs.add("--out");
         runnerArgs.add(out);
       } 
 
