@@ -2040,6 +2040,11 @@ public class MetadataDB implements Metadata {
     }
     
     @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions, List<Integer> workflowAccessions) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+    
+    @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }

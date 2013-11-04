@@ -92,6 +92,7 @@ import org.restlet.security.ChallengeAuthenticator;
 
 import freemarker.template.Configuration;
 import net.sourceforge.seqware.webservice.resources.queries.TriggerFileProvenanceResource;
+import net.sourceforge.seqware.webservice.resources.tables.FileChildLimitedWorkflowRunsResource;
 
 /**
  * <p>SeqWareWebServiceApplication class.</p>
@@ -315,6 +316,8 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         // A report giving workflow runs that are relevant for a group of files
         router.attach("/reports/fileworkflowruns", FileChildWorkflowRunsResource.class);
         router.attach("/reports/fileworkflowruns/", slashRedirect);
+        router.attach("/reports/fileworkflowruns/limit", FileChildLimitedWorkflowRunsResource.class);
+        router.attach("/reports/fileworkflowruns/limit/", slashRedirect);
 
         // REPORT RESOURCES
         
