@@ -1080,7 +1080,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             for (String studyAttr : studyAttrArr) {
                 String[] parts = studyAttr.split("=");
                 String key = parts[0];
-                String value = parts[1];
+                String value = parts.length > 1 ? parts[1] : null;
                 FindAllTheFiles.addAttributeToReturnValue(row, key, value);
             }
         }
