@@ -18,14 +18,25 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import net.sourceforge.seqware.common.factory.DBAccess;
+import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.metadata.MetadataFactory;
+import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface.Level;
-import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.openide.util.Lookup;
 
 import org.openide.util.lookup.ServiceProvider;
@@ -134,7 +145,8 @@ public final class CheckDB extends Plugin {
                    html.h3().content(warning.getKey().name());
                    html.ol();
                    for(String entry : warning.getValue()){
-                       html.li().content(entry);
+                       html.li().content(entry, false);
+                       //html.li().content(entry);
                    }
                    html._ol();
                }
@@ -180,19 +192,62 @@ public final class CheckDB extends Plugin {
 
     /**
      * Convenience method for processing output and appending it to the warning map 
-     * @param result
-     * @param level
-     * @param description
-     * @param list 
+     * @param result a sorted map where results can be appended
+     * @param level Level of message to create
+     * @param description A description of the sw_accessions to be reported from list
+     * @param list a list of sw_accessions to report
      */
     public static void processOutput(SortedMap<Level, Set<String>> result, Level level, String description, List<Integer> list){
         if (list.size() > 0){
+            String SW_REST_URL = ConfigTools.getSettings().get("SW_REST_URL");
+            Metadata md = MetadataFactory.get(ConfigTools.getSettings());
             Collections.sort(list);
+            // shorten list if required
+            List<Integer> outputList = new ArrayList<Integer>(list);
             if (list.size() > NUMBER_TO_OUTPUT){
-                result.get(level).add(description + list.subList(0, NUMBER_TO_OUTPUT).toString() + " (Truncated, "+list.size()+" in total)");
-            } else{
-                result.get(level).add(description + list.toString());
+                outputList =  outputList.subList(0, NUMBER_TO_OUTPUT);
             } 
+            StringBuilder warnings = new StringBuilder();
+            warnings.append(description);
+            int[] parentAccessions = ArrayUtils.toPrimitive(outputList.toArray(new Integer[outputList.size()]));
+            List<Object> parentModels = md.getViaAccessions(parentAccessions);
+            // let's try constructing hyperlinks here
+            for(int i = 0; i < parentModels.size(); i++){
+                String url = null;
+                if (parentModels.get(i) instanceof Experiment) {
+                    url = SW_REST_URL + "/experiments/" + parentAccessions[i];
+                } else if (parentModels.get(i) instanceof net.sourceforge.seqware.common.model.File) {
+                    url = SW_REST_URL + "/files/" + parentAccessions[i];
+                } else if (parentModels.get(i) instanceof IUS) {
+                    url = SW_REST_URL + "/ius/" + parentAccessions[i];
+                } else if (parentModels.get(i) instanceof Lane) {
+                    url = SW_REST_URL + "/lanes/" + parentAccessions[i];
+                } else if (parentModels.get(i) instanceof Processing) {
+                    url = SW_REST_URL + "/processes/" + parentAccessions[i];
+                } else if (parentModels.get(i) instanceof Sample) {
+                    url = SW_REST_URL + "/samples/" + parentAccessions[i];
+                } else if (parentModels.get(i) instanceof SequencerRun) {
+                    url = SW_REST_URL + "/sequencerruns/" + parentAccessions[i];
+                } else if (parentModels.get(i) instanceof Study) {
+                    url = SW_REST_URL + "/studies/" + parentAccessions[i];
+                } else if (parentModels.get(i) instanceof WorkflowRun) {
+                    url = SW_REST_URL + "/workflowruns/" + parentAccessions[i];
+                } else if (parentModels.get(i) instanceof Workflow) {
+                    url = SW_REST_URL + "/workflows/" + parentAccessions[i];
+                } 
+                if (url != null) {
+                    warnings.append(" <a href=\"").append(url).append("\">").append(parentAccessions[i]).append("</a> ");
+                } else{
+                    warnings.append(parentAccessions[i]);
+                }
+                if (i != parentModels.size() - 1){
+                    warnings.append(',');
+                }
+            }
+            if (list.size() != outputList.size()){
+                warnings.append(" (Truncated, ").append(list.size()).append(" in total)");
+            }
+            result.get(level).add(warnings.toString());
         }
     }
 }
