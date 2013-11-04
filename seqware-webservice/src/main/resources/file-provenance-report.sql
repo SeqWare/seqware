@@ -206,7 +206,7 @@ union all
 , sample_parent_swas_names (sample_id, parent_swas, parent_names) as (
     select anc.sample_id
          , array_to_string(array_agg(sw_accession), ':') as parent_swas
-         , array_to_string(array_agg(s.name), ':') as parent_names
+         , array_to_string(array_agg(coalesce(nullif(s.name,''),s.title)), ':') as parent_names
     from sample_ancestors anc
     join sample s on s.sample_id = anc.ancestor_id
     group by anc.sample_id
@@ -246,10 +246,10 @@ select p.update_tstmp as last_modified
      , sr.sw_accession as sequencer_run_swa
      , sra.attrs as sequencer_run_attrs
      , translate(l.name, ' ', '_') as lane_name
-     , l.lane_index+1 as lane_number
+     , coalesce(l.lane_index,0)+1 as lane_number
      , l.sw_accession as lane_swa
      , la.attrs as lane_attrs
-     , i.tag as ius_tag
+     , coalesce(i.tag,'NoIndex') as ius_tag
      , i.sw_accession as ius_swa
      , ia.attrs as ius_attrs
      , translate(wf.name, ' ', '_') as workflow_name
