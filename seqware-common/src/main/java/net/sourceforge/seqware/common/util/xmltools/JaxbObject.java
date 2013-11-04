@@ -81,7 +81,7 @@ public class JaxbObject<T> {
                         OrganismList.class, PlatformList.class, ProcessingList.class,
                         ReturnValueList.class, SampleList.class, SequencerRunList.class, StudyList.class,
                         StudyTypeList.class, WorkflowList.class, WorkflowRunList.class, WorkflowRunList2.class,
-                        WorkflowParamList.class, WorkflowParamValueList.class, ArrayList.class);
+                        WorkflowParamList.class, WorkflowParamValueList.class, ArrayList.class, IntegerList.class);
             }
         } catch (JAXBException e) {
             e.printStackTrace();
