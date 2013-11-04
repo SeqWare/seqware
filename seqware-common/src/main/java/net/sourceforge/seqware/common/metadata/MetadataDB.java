@@ -2088,4 +2088,9 @@ public class MetadataDB implements Metadata {
     public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
+    
+    @Override
+    public List<Object> getViaAccessions(int[] accessions) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
 }

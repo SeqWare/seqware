@@ -17,7 +17,6 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.security.KeyManagementException;
@@ -35,8 +34,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -641,6 +638,39 @@ public class MetadataWS implements Metadata {
             results.add(resolveParentAccession);
         }
         return results;
+    }
+    
+    @Override
+    public List<Object> getViaAccessions(int[] potentialAccessions) {
+
+        List<Object> results = new ArrayList<Object>();
+
+        for (int parentAccession : potentialAccessions) {
+            Object resolveParentAccession = this.resolveSWA("/" + String.valueOf(parentAccession));
+            results.add(resolveParentAccession);
+        }
+        return results;
+    }
+    
+    private Object resolveSWA(String searchString){
+      ParentAccessionModel resolveParentAccession = this.resolveParentAccession(searchString);
+      if (resolveParentAccession == null){
+          // check SWA in classes that are not parent accessions
+          WorkflowRun wr;
+          Workflow w;
+          File f;
+           if ((wr = ll.existsWorkflowRun(searchString)) != null) {
+            Log.debug("Adding workflow run " + wr.getSwAccession());
+            return wr;
+        } else if ((f = ll.existsFile(searchString)) != null) {
+            Log.debug("Adding file " + f.getSwAccession());
+            return f;
+        } else if ((w = ll.existsWorkflow(searchString)) != null) {
+            Log.debug("Adding workflow " + w.getSwAccession());
+            return w;
+        }
+      }
+      return resolveParentAccession;
     }
     
     /**
@@ -2733,17 +2763,59 @@ public class MetadataWS implements Metadata {
             Log.debug("root is " + resource);
             Log.debug("Version is " + version);
         }
+        
+        public WorkflowRun existsWorkflowRun(String searchString) {
+            WorkflowRun workflowRun = null;
+            try {
+                workflowRun = findWorkflowRun(searchString);
+            } catch (IOException ex) {
+                Log.debug("WorkflowRun does not exist. Continuing.");
+            } catch (JAXBException ex) {
+                Log.error(ex);
+            } catch (NotFoundException ex) {
+                Log.debug("WorkflowRun does not exist. Continuing.");
+            }
+            return workflowRun;
+        }
+        
+         public Workflow existsWorkflow(String searchString) {
+            Workflow workflow = null;
+            try {
+                workflow = findWorkflow(searchString);
+            } catch (IOException ex) {
+                Log.debug("Workflow does not exist. Continuing.");
+            } catch (JAXBException ex) {
+                Log.error(ex);
+            } catch (NotFoundException ex) {
+                Log.debug("Workflow does not exist. Continuing.");
+            }
+            return workflow;
+        }
+        
+        public File existsFile(String searchString) {
+            File file = null;
+            try {
+                file = findFile(searchString);
+            } catch (IOException ex) {
+                Log.debug("File does not exist. Continuing.");
+            } catch (JAXBException ex) {
+                Log.error(ex);
+            } catch (NotFoundException ex) {
+                Log.debug("File does not exist. Continuing.");
+            }
+            return file;
+        }
 
         public Processing existsProcessing(String searchString) {
             Processing processing = null;
             try {
                 processing = findProcessing(searchString);
             } catch (IOException ex) {
-                Log.debug("Processing does not exist. Continuing.");
+                Log.debug("Workflow does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
             } catch (NotFoundException ex) {
-                Log.debug("Processing does not exist. Continuing.");
+                Log.debug("Workflow does not exist. Continuing.");
             }
             return processing;
         }

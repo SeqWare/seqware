@@ -888,6 +888,13 @@ public interface Metadata {
    */
   public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions);
   
+    /**
+   * Get the models corresponding to potential accessions
+   * @param potentialAccessions
+   * @return a list, with null when accessions are invalid
+   */
+  public List<Object> getViaAccessions(int[] potentialAccessions);
+  
   public Study getStudyByName(String name);
   public List<Sample> getSampleByName(String name);
 
