@@ -785,4 +785,22 @@ public class MetadataNoConnection implements Metadata {
     public void fileProvenanceReportTrigger() {
         logger.info("No metadata connection");
     }
+
+    @Override
+    public Study getStudyByName(String name) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public List<Sample> getSampleByName(String name) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public SequencerRun getSequencerRunByName(String name) {
+        logger.info("No metadata connection");
+        return null;
+    }
 }

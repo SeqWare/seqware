@@ -887,4 +887,9 @@ public interface Metadata {
    * @return a list, with null when parent accessions are invalid
    */
   public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions);
+  
+  public Study getStudyByName(String name);
+  public List<Sample> getSampleByName(String name);
+
+  public SequencerRun getSequencerRunByName(String name);
 }

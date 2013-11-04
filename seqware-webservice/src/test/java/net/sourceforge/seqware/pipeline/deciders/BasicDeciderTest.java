@@ -16,20 +16,38 @@
  */
 package net.sourceforge.seqware.pipeline.deciders;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import io.seqware.Reports;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
+import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.FileAttribute;
+import net.sourceforge.seqware.common.model.IUSAttribute;
+import net.sourceforge.seqware.common.model.LaneAttribute;
+import net.sourceforge.seqware.common.model.ProcessingAttribute;
+import net.sourceforge.seqware.common.model.SampleAttribute;
+import net.sourceforge.seqware.common.model.SequencerRunAttribute;
+import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.PluginTest;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.*;
 
 /**
@@ -41,6 +59,12 @@ import org.junit.*;
  */
 public class BasicDeciderTest extends PluginTest {
     
+    /**
+     * Write JSON representations of Attributes map so that we can ensure
+     * that deciders are given a superset of attributes for backwards compatibility
+     */
+    private static final boolean WRITE_JSON_ATTRIBUTES = false;
+    
     private final List<String> fastq_gz = new ArrayList<String>();
         
     private BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
@@ -48,6 +72,7 @@ public class BasicDeciderTest extends PluginTest {
     @BeforeClass
     public static void beforeClass(){
         BasicTestDatabaseCreator.resetDatabaseWithUsers();
+        Reports.triggerProvenanceReport();
     }
 
     @Before
@@ -204,14 +229,13 @@ public class BasicDeciderTest extends PluginTest {
     
     @Test
     public void testSEQWARE1297DoNotLaunchFailedWorkflows() {
-        TestingDecider decider = (TestingDecider) instance;
         // trying to find a good test for this, doesn't look like there is one in the testing database?
         // there is one pending workflow_run as revealed by "select * from workflow_run  WHERE status = 'pending';"
         // however, it doesn't appear to be properly linked in 
         // see "select sh.*, s.* FROM sample_hierarchy sh , (select DISTINCT s.sample_id from workflow_run wr, ius_workflow_runs iwr, ius, sample s WHERE status = 'pending' AND wr.workflow_run_id=iwr.workflow_run_id AND iwr.ius_id=ius.ius_id AND ius.sample_id=s.sample_id) sq, sample s WHERE sh.sample_id=sq.sample_id AND s.sample_id=sh.parent_id;"
         String[] params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10", "--test"};
         launchAndCaptureOutput(params);
-        decider = (TestingDecider) instance;
+        TestingDecider decider = (TestingDecider) instance;
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 57);
         
@@ -221,21 +245,208 @@ public class BasicDeciderTest extends PluginTest {
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 55);
     }
     
+    @Test 
+    public void testDecidingWithAttributes(){
+         // swap out the decider
+        instance = new AttributeCheckingDecider();
+        //instance = new BasicDecider();
+        instance.setMetadata(metadata);  
+        AttributeCheckingDecider decider = (AttributeCheckingDecider) instance;
+        
+        // create a hierarchy so that we can check for parent samples
+        dbCreator.runUpdate("insert into sample_hierarchy VALUES(11,12);");
+        // create attributes on all relevant columns
+        StudyAttribute studyAttribute = new StudyAttribute();
+        studyAttribute.setTag("studyTag");
+        studyAttribute.setValue("studyValue");
+        metadata.annotateStudy(120, studyAttribute, false);
+        ExperimentAttribute experimentAttribute = new ExperimentAttribute();
+        experimentAttribute.setTag("experimentTag");
+        experimentAttribute.setValue("experimentValue");
+        metadata.annotateExperiment(4782, experimentAttribute, false);
+        SampleAttribute sampleAttribute = new SampleAttribute();
+        sampleAttribute.setTag("sampleTag");
+        sampleAttribute.setValue("sampleValue");
+        metadata.annotateSample(4783, sampleAttribute, false);
+        SampleAttribute parentSampleAttribute = new SampleAttribute();
+        parentSampleAttribute.setTag("parentSampleTag");
+        parentSampleAttribute.setValue("parentSampleValue");
+        metadata.annotateSample(6158, parentSampleAttribute, false);
+        SequencerRunAttribute sequencerRunAttribute = new SequencerRunAttribute();
+        sequencerRunAttribute.setTag("sequencerRunTag");
+        sequencerRunAttribute.setValue("sequencerRunValue");
+        metadata.annotateSequencerRun(4715, sequencerRunAttribute, false);
+        metadata.annotateSequencerRun(47150, sequencerRunAttribute, false);
+        LaneAttribute laneAttribute = new LaneAttribute();
+        laneAttribute.setTag("laneTag");
+        laneAttribute.setValue("laneValue");
+        metadata.annotateLane(6105, laneAttribute, false);
+        metadata.annotateLane(4788, laneAttribute, false);
+        IUSAttribute iusAttribute = new IUSAttribute();
+        iusAttribute.setTag("iusTag");
+        iusAttribute.setValue("iusValue");
+        metadata.annotateIUS(6106, iusAttribute, false);
+        metadata.annotateIUS(4789, iusAttribute, false);
+        ProcessingAttribute processingAttribute = new ProcessingAttribute();
+        processingAttribute.setTag("processingTag");
+        processingAttribute.setValue("processingValue");
+        metadata.annotateProcessing(6104, processingAttribute, false);
+        metadata.annotateProcessing(6063, processingAttribute, false);
+        metadata.annotateProcessing(5988, processingAttribute, false);
+        metadata.annotateProcessing(5981, processingAttribute, false);
+        metadata.annotateProcessing(5978, processingAttribute, false);
+        metadata.annotateProcessing(5876, processingAttribute, false);
+        metadata.annotateProcessing(5873, processingAttribute, false);
+        metadata.annotateProcessing(5868, processingAttribute, false);
+        metadata.annotateProcessing(5166, processingAttribute, false);
+        metadata.annotateProcessing(4821, processingAttribute, false);
+        metadata.annotateProcessing(4787, processingAttribute, false);
+        FileAttribute fileAttribute = new FileAttribute();
+        fileAttribute.setTag("fileTag");
+        fileAttribute.setValue("fileValue");
+        metadata.annotateFile(6103, fileAttribute, false);
+        metadata.annotateFile(6102, fileAttribute, false);
+        metadata.annotateFile(6064, fileAttribute, false);
+        metadata.annotateFile(6065, fileAttribute, false);
+        metadata.annotateFile(6066, fileAttribute, false);
+        metadata.annotateFile(6067, fileAttribute, false);
+        metadata.annotateFile(5989, fileAttribute, false);
+        metadata.annotateFile(5990, fileAttribute, false);
+        metadata.annotateFile(5986, fileAttribute, false);
+        metadata.annotateFile(5979, fileAttribute, false);
+        metadata.annotateFile(5877, fileAttribute, false);
+        metadata.annotateFile(5878, fileAttribute, false);
+        metadata.annotateFile(5874, fileAttribute, false);
+        metadata.annotateFile(5869, fileAttribute, false);
+        metadata.annotateFile(5167, fileAttribute, false);
+        metadata.annotateFile(4822, fileAttribute, false);
+        metadata.annotateFile(4823, fileAttribute, false);
+        metadata.annotateFile(4824, fileAttribute, false);
+        metadata.annotateFile(4825, fileAttribute, false);
+        metadata.annotateFile(4786, fileAttribute, false);
+        metadata.annotateFile(4785, fileAttribute, false);
+        // run decider and check that attributes are pulled back properly
+        String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4", "--meta-types", "text/h-tumour,application/vcf-4-gzip,text/annovar-tags,application/zip-report-bundle,txt,chemical/seq-na-fastq-gzip,application/bam,text/vcf-4,chemical/seq-na-fastq", "--test"};
+        launchAndCaptureOutput(params);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 21);
+        Assert.assertTrue("we didn't check the correct number of files, we checked " + decider.filesChecked, decider.filesChecked == 21);   
+        
+        // swap back the decider
+        instance = new TestingDecider();
+        //instance = new BasicDecider();
+        instance.setMetadata(metadata);
+     
+    }
+    
+    @Test
+    public void testDecidingWithFilemetadata(){
+        // swap out the decider
+        instance = new FileMetadataDecider();
+        //instance = new BasicDecider();
+        instance.setMetadata(metadata);  
+        FileMetadataDecider decider = (FileMetadataDecider) instance;
+        
+        //update the database so targetted files will contain full metadata
+        dbCreator.runUpdate("update file set md5sum = sw_accession + 42 WHERE sw_accession IN (SELECT file_swa from file_provenance_report WHERE study_swa=120);");
+        dbCreator.runUpdate("update file set description = 'funky_description' WHERE sw_accession IN (SELECT file_swa from file_provenance_report WHERE study_swa=120);");
+        dbCreator.runUpdate("update file set size = sw_accession + 1701 WHERE sw_accession IN (SELECT file_swa from file_provenance_report WHERE study_swa=120);");
+        // use a special decider to ensure that filemetadata is populated
+        String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4", "--meta-types", "text/h-tumour,application/vcf-4-gzip,text/annovar-tags,application/zip-report-bundle,txt,chemical/seq-na-fastq-gzip,application/bam,text/vcf-4,chemical/seq-na-fastq", "--test"};
+        launchAndCaptureOutput(params);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 21);
+        Assert.assertTrue("we didn't check the correct number of files, we checked " + decider.filesChecked, decider.filesChecked == 21);
+        
+        // swap back the decider
+        instance = new TestingDecider();
+        //instance = new BasicDecider();
+        instance.setMetadata(metadata);
+    }
+    
     public class HaltingDecider extends TestingDecider{
         boolean haltedOnce = false;
         @Override
         protected ReturnValue doFinalCheck(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
             super.doFinalCheck(commaSeparatedFilePaths, commaSeparatedParentAccessions);
-            ReturnValue ret;
+            ReturnValue localRet;
             if (!haltedOnce){
                 haltedOnce = true;
-                ret = new ReturnValue(ReturnValue.FAILURE);
+                localRet = new ReturnValue(ReturnValue.FAILURE);
             } else{
-                ret = new ReturnValue(ReturnValue.SUCCESS);
+                localRet = new ReturnValue(ReturnValue.SUCCESS);
             }
-            return ret;
+            return localRet;
         }
         
+    }
+    
+    public class AttributeCheckingDecider extends TestingDecider {
+
+        int filesChecked = 0;
+
+        @Override
+        protected boolean checkFileDetails(ReturnValue returnValue, FileMetadata fm) {
+            filesChecked++;
+            int file_swa = Integer.valueOf(returnValue.getAttribute(Header.FILE_SWA.getTitle()));
+            System.out.println();
+            String attribute = returnValue.getAttribute(Header.STUDY_TAG_PREFIX.getTitle() + "studyTag");
+            Assert.assertTrue("studyTag attribute didn't make it for " + file_swa, attribute.equals("studyValue"));
+            attribute = returnValue.getAttribute(Header.EXPERIMENT_TAG_PREFIX.getTitle() + "experimentTag");
+            Assert.assertTrue("experimentTag attribute didn't make it for " + file_swa, attribute.equals("experimentValue"));
+            attribute = returnValue.getAttribute(Header.PARENT_SAMPLE_TAG_PREFIX.getTitle() + "parentSampleTag.6158");
+            Assert.assertTrue("parentSampleTag attribute didn't make it for " + file_swa, attribute.equals("parentSampleValue"));
+            attribute = returnValue.getAttribute(Header.SAMPLE_TAG_PREFIX.getTitle() + "sampleTag");
+            Assert.assertTrue("sampleTag attribute didn't make it for " + file_swa, attribute.equals("sampleValue"));
+            attribute = returnValue.getAttribute(Header.SEQUENCER_RUN_TAG_PREFIX.getTitle() + "sequencerRunTag");
+            Assert.assertTrue("sequencerRunTag attribute didn't make it for " + file_swa, attribute.equals("sequencerRunValue"));
+            attribute = returnValue.getAttribute(Header.LANE_TAG_PREFIX.getTitle() + "laneTag");
+            Assert.assertTrue("lane attribute didn't make it for " + file_swa, attribute.equals("laneValue"));
+            attribute = returnValue.getAttribute(Header.IUS_TAG_PREFIX.getTitle() + "iusTag");
+            Assert.assertTrue("ius attribute didn't make it for " + file_swa, attribute.equals("iusValue"));
+            attribute = returnValue.getAttribute(Header.PROCESSING_TAG_PREFIX.getTitle() + "processingTag");
+            Assert.assertTrue("processing attribute didn't make it for " + file_swa, attribute.equals("processingValue"));
+            attribute = returnValue.getAttribute(Header.FILE_TAG_PREFIX.getTitle() + "fileTag");
+            Assert.assertTrue("file attribute didn't make it for " + file_swa, attribute.equals("fileValue"));
+            try {
+                if (BasicDeciderTest.WRITE_JSON_ATTRIBUTES) {
+                    Gson gson = new GsonBuilder().create();
+                    String toJson = gson.toJson(returnValue.getAttributes());
+                    File file = new File(file_swa + ".json");
+                    FileUtils.writeStringToFile(file, toJson);
+                } else {
+                    //ensure that json check files contain a subset of the decider attributes
+                    String query = FileUtils.readFileToString(new File((BasicDeciderTest.class.getResource(file_swa + ".json").getPath())));
+                    Gson gson = new GsonBuilder().create();
+                    Type fooType = new TypeToken<Map<String,String>>() {}.getType();
+                    Map<String,String> oldAttributes = gson.fromJson(query, fooType);
+                    // remove last modified time from both since time changes when annotating
+                    oldAttributes.remove(Header.PROCESSING_DATE.getTitle());
+                    returnValue.getAttributes().remove(Header.PROCESSING_DATE.getTitle());
+                    boolean contained = returnValue.getAttributes().entrySet().containsAll(oldAttributes.entrySet());
+                    if (!contained){
+                        Assert.assertTrue("old returnvalue is not a subset: " + oldAttributes.toString() + "\n" + returnValue.getAttributes().toString(), false);
+                    }
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            return false;
+        }
+    }
+    
+    public class FileMetadataDecider extends TestingDecider{
+        int filesChecked = 0;
+        @Override
+        protected boolean checkFileDetails(ReturnValue returnValue, FileMetadata fm) {
+             filesChecked++;
+             int file_swa = Integer.valueOf(returnValue.getAttribute(Header.FILE_SWA.getTitle()));
+             Assert.assertTrue("file path is empty " + file_swa, !(fm.getFilePath() == null) && !fm.getFilePath().isEmpty());
+             // FindAllTheFiles doesn't actually populate this information, go figure
+             //Assert.assertTrue("file md5sum is wrong for " + file_swa, fm.getMd5sum().equals(Integer.toString(file_swa+42)));
+             //Assert.assertTrue("file size is wrong", fm.getSize().equals((long)file_swa+1701));
+             Assert.assertTrue("file description is empty" + file_swa, !(fm.getDescription()== null) && !fm.getDescription().isEmpty());
+             Assert.assertTrue("meta type is empty" + file_swa , !(fm.getMetaType()== null) && !fm.getMetaType().isEmpty());
+             return false;
+        }
     }
 
     public class TestingDecider extends BasicDecider {
