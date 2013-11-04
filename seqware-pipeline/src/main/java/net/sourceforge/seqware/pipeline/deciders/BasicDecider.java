@@ -912,8 +912,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
 
     private List<WorkflowRun> produceAccessionListWithFileList(List<Integer> fileSWIDs) {
+        // grab only the workflows in which we are interested
+        List<Integer> relevantWorkflows = new ArrayList<Integer>();
+        relevantWorkflows.add(Integer.valueOf(this.workflowAccession));
+        for(String accession : this.workflowAccessionsToCheck){
+            relevantWorkflows.add(Integer.valueOf(accession));
+        }
         // find relevant workflow runs for this group of files
-        List<WorkflowRun> wrFiles1 = this.metadata.getWorkflowRunsAssociatedWithInputFiles(fileSWIDs);
+        List<WorkflowRun> wrFiles1 = this.metadata.getWorkflowRunsAssociatedWithInputFiles(fileSWIDs, relevantWorkflows);
         Log.debug("Found " + wrFiles1.size() + " workflow runs via direct search");
         return wrFiles1;
     }

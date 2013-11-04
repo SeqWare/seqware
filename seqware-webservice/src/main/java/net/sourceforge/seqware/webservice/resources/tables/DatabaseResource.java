@@ -16,17 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.IOException;
-import net.sourceforge.seqware.common.business.RegistrationService;
-import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
-import org.restlet.data.MediaType;
-import org.restlet.data.Status;
-import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
-import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 
 /**
  * <p>DatabaseResource class.</p>
