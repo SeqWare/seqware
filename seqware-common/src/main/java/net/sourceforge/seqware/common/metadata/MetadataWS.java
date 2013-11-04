@@ -3011,7 +3011,7 @@ public class MetadataWS implements Metadata {
             IntegerList fileInput = new IntegerList();
             fileInput.setList(files);
             String workflowList = StringUtils.join(workflows.iterator(),',');
-            WorkflowRunList2 wrl2 = (WorkflowRunList2)this.addObject("/reports/fileworkflowruns/limit","?workflows=" + workflowList, jaxb, fileInput, new JaxbObject<WorkflowRunList2>(), new WorkflowRunList2());
+            WorkflowRunList2 wrl2 = (WorkflowRunList2)this.addObject("/reports/fileworkflowruns/limit",workflows.size() > 0 ? "?workflows=" + workflowList:"", jaxb, fileInput, new JaxbObject<WorkflowRunList2>(), new WorkflowRunList2());
             return wrl2.getList();
         }
 
