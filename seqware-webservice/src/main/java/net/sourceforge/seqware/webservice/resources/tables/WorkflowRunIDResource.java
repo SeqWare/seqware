@@ -227,7 +227,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         // SEQWARE-1778 - try to properly create parameters in the workflow_run_param table as well
         //convert ini file parameters into expected format
         HashMap<String, String> map = new HashMap<String, String>();
-        if (!wr.getIniFile().isEmpty()){
+        if (wr.getIniFile() != null && !wr.getIniFile().isEmpty()){
             String[] splitByWholeSeparator = StringUtils.splitByWholeSeparator(wr.getIniFile(), "\n");
             for(String line : splitByWholeSeparator){
                 String[] lineSplit = StringUtils.splitByWholeSeparator(line, "=");
