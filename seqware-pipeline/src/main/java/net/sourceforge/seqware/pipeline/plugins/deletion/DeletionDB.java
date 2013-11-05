@@ -41,11 +41,13 @@ import org.openide.util.lookup.ServiceProvider;
 public final class DeletionDB extends Plugin {
 
     private OptionSpec<Integer> workflowRunSpec;
-    private OptionSpec<String> keyFileSpec;
+    private OptionSpec<String> inKeyFileSpec;
+    private OptionSpec<String> outKeyFileSpec;
     
     private Integer workflow_run_target = null;
-    private File keyFile = null;
+    private File inKeyFile = null;
     private String adminUrl = null;
+    private File outKeyFile = null;
 
     /**
      * <p>Constructor for HelloWorld.</p>
@@ -56,9 +58,12 @@ public final class DeletionDB extends Plugin {
         workflowRunSpec = parser.acceptsAll(Arrays.asList("workflowrun", "r"),
                 "Give a sequencer run, lane, or workflow run SWID in order to determine which workflow runs (processings,files) should be deleted.")
                 .withRequiredArg().ofType(Integer.class).required();
-        keyFileSpec = parser.acceptsAll(Arrays.asList("key", "k"),
+        inKeyFileSpec = parser.acceptsAll(Arrays.asList("key", "k"),
                 "An existing key file will be used to guide an actual deletion process")
-                .withRequiredArg().ofType(String.class);             
+                .withRequiredArg().ofType(String.class);  
+        outKeyFileSpec = parser.acceptsAll(Arrays.asList("out", "o"),
+                "The filename of the output key file")
+                .withRequiredArg().ofType(String.class);
     }
 
     /* (non-Javadoc)
@@ -107,9 +112,12 @@ public final class DeletionDB extends Plugin {
     @Override
     public final ReturnValue do_run() {
         workflow_run_target = options.valueOf(workflowRunSpec);
-        if (options.has(keyFileSpec)) {
-            keyFile = new File(options.valueOf(keyFileSpec));
-        }         
+        if (options.has(inKeyFileSpec)) {
+            inKeyFile = new File(options.valueOf(inKeyFileSpec));
+        } 
+        if (options.has(outKeyFileSpec)) {
+           outKeyFile = new File(options.valueOf(outKeyFileSpec));
+        } 
         SeqWareWebServiceClient client = null;
         SeqWareWebServiceClient fileClient = null;
         try {
@@ -117,7 +125,8 @@ public final class DeletionDB extends Plugin {
             ModelAccessionIDTuple tuple = translateToID(workflow_run_target);
             client = new SeqWareWebServiceClient("workflowrun", adminUrl + "/webresources");
             fileClient = new SeqWareWebServiceClient("file", adminUrl + "/webresources");
-            if (keyFile == null || !keyFile.exists()) {
+            if (inKeyFile == null) {
+                // create a key file
                 Set<ModelAccessionIDTuple> find_JSON_rdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()), String.valueOf(tuple.getId()));
                 // add to a sorted set for easy viewing
                 SortedSet<ModelAccessionIDTuple> sortedSet = new TreeSet<ModelAccessionIDTuple>();
@@ -127,23 +136,23 @@ public final class DeletionDB extends Plugin {
                 
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-                if (keyFile == null){
-                    keyFile = File.createTempFile("deletion",".keyFile");
+                if (outKeyFile == null){
+                    outKeyFile = File.createTempFile("deletion",".keyFile");
                 } else{
-                    boolean createOutput = keyFile.createNewFile();
+                    boolean createOutput = outKeyFile.createNewFile();
                     if (!createOutput){
                         ret.setExitStatus(ReturnValue.FILENOTWRITABLE);
                         return ret;
                     }
                 }
-                writer.writeValue(keyFile, sortedSet);
-                System.out.println("Key File written to " + keyFile.getAbsolutePath());
+                writer.writeValue(outKeyFile, sortedSet);
+                System.out.println("Key File written to " + outKeyFile.getAbsolutePath());
             } else {
                 ObjectMapper mapper = new ObjectMapper();
                 Set<ModelAccessionIDTuple> matchSet;
                 Set<String> filesToBeDeleted = new HashSet<String>();
                 try {
-                    matchSet = mapper.readValue(keyFile, new TypeReference<Set<ModelAccessionIDTuple>>(){});
+                    matchSet = mapper.readValue(inKeyFile, new TypeReference<Set<ModelAccessionIDTuple>>(){});
                     for (ModelAccessionIDTuple t : matchSet) {
                         if (t.getAdminModelClass().equals(io.seqware.webservice.generated.model.File.class.getName())) {
                             io.seqware.webservice.generated.model.File file = fileClient.find_JSON(io.seqware.webservice.generated.model.File.class, String.valueOf(t.getId()));
@@ -173,7 +182,7 @@ public final class DeletionDB extends Plugin {
                         return ret;
                     }
                 }
-                System.out.println("Successful deletion of entities listed in " + keyFile.getAbsolutePath());
+                System.out.println("Successful deletion of entities listed in " + inKeyFile.getAbsolutePath());
                 // output files as candidates for deletion
                 File fileListing = File.createTempFile("file", ".listing");
                 for(String path : filesToBeDeleted){
