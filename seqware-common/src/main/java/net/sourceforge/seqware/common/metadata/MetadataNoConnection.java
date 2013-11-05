@@ -725,6 +725,11 @@ public class MetadataNoConnection implements Metadata {
     }
     
     @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions, List<Integer> workflowAccessions) {
+        return new ArrayList<WorkflowRun>();
+    }
+    
+    @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         return new ArrayList<WorkflowRun>();
     }

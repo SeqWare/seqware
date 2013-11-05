@@ -83,6 +83,7 @@ import net.sourceforge.seqware.common.model.lists.ExperimentList;
 import net.sourceforge.seqware.common.model.lists.ExperimentSpotDesignList;
 import net.sourceforge.seqware.common.model.lists.ExperimentSpotDesignReadSpecList;
 import net.sourceforge.seqware.common.model.lists.IUSList;
+import net.sourceforge.seqware.common.model.lists.IntegerList;
 import net.sourceforge.seqware.common.model.lists.LaneList;
 import net.sourceforge.seqware.common.model.lists.LibrarySelectionList;
 import net.sourceforge.seqware.common.model.lists.LibrarySourceList;
@@ -2536,9 +2537,14 @@ public class MetadataWS implements Metadata {
     
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions) {
+        return getWorkflowRunsAssociatedWithInputFiles(fileAccessions, new ArrayList<Integer>());
+    }
+    
+    @Override
+    public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions, List<Integer> workflows) {
         try {
             if (fileAccessions.size() > 0){
-                return ll.findWorkflowByFiles(fileAccessions);
+                return ll.findWorkflowRunsByFiles(fileAccessions, workflows);
             } else{
                 return new ArrayList<WorkflowRun>();
             }
@@ -2554,7 +2560,7 @@ public class MetadataWS implements Metadata {
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         try {
-            return ll.findWorkflowByFiles(fileAccessions, search_type);
+            return ll.findWorkflowRunsByFiles(fileAccessions, search_type);
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (JAXBException ex) {
@@ -3072,15 +3078,16 @@ public class MetadataWS implements Metadata {
             return (Workflow) findObject("/workflowruns", "/" + workflowRunAccession + "/workflow", jaxb, w);
         }
         
-        private List<WorkflowRun> findWorkflowByFiles(List<Integer> files) throws IOException, JAXBException {
-            WorkflowRunList2 w = new WorkflowRunList2();
-            JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
-            String fileList = StringUtils.join(files.iterator(),',');
-            WorkflowRunList2 wrl2 = (WorkflowRunList2) findObject("/reports/fileworkflowruns", "?files=" + fileList + "&DIRECT_SEARCH=true", jaxb, w);
+        private List<WorkflowRun> findWorkflowRunsByFiles(List<Integer> files, List<Integer> workflows) throws IOException, JAXBException {
+            JaxbObject<ArrayList> jaxb = new JaxbObject<ArrayList>();
+            IntegerList fileInput = new IntegerList();
+            fileInput.setList(files);
+            String workflowList = StringUtils.join(workflows.iterator(),',');
+            WorkflowRunList2 wrl2 = (WorkflowRunList2)this.addObject("/reports/fileworkflowruns/limit",workflows.size() > 0 ? "?workflows=" + workflowList:"", jaxb, fileInput, new JaxbObject<WorkflowRunList2>(), new WorkflowRunList2());
             return wrl2.getList();
         }
 
-        private List<WorkflowRun> findWorkflowByFiles(List<Integer> files, String search_type) throws IOException, JAXBException {
+        private List<WorkflowRun> findWorkflowRunsByFiles(List<Integer> files, String search_type) throws IOException, JAXBException {
             WorkflowRunList2 w = new WorkflowRunList2();
             JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
             String fileList = StringUtils.join(files.iterator(),',');
@@ -3444,7 +3451,11 @@ public class MetadataWS implements Metadata {
             return (IUS) addObject("/ius", "", jaxb, ius);
         }
 
-        private Object addObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException,
+        private Object addObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException, JAXBException {
+            return this.addObject(uri, searchString, jaxb, parent, jaxb, parent);
+        }
+        
+        private Object addObject(String uri, String searchString, JaxbObject jaxb, Object parent, JaxbObject outJaxb, Object outParent) throws IOException,
                 JAXBException, ResourceException {
             Representation result = null;
             ClientResource cResource = resource.getChild(version + uri + searchString);
@@ -3459,7 +3470,7 @@ public class MetadataWS implements Metadata {
                     } else {
                         try {
                             Log.debug("addObject:" + text);
-                            parent = XmlTools.unMarshal(jaxb, parent, text);
+                            parent = XmlTools.unMarshal(outJaxb, outParent, text);
                         } catch (SAXException ex) {
                             throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY);
                         }

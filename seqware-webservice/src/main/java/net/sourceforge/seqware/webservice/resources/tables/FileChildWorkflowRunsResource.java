@@ -16,12 +16,14 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.ws.rs.Path;
 
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
@@ -40,14 +42,17 @@ import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
 
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.ArrayUtils;
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * This resource will pull back the workflow runs that are generated from a
@@ -73,7 +78,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
     public FileChildWorkflowRunsResource() {
         super("file");
     }
-
+    
     /**
      * <p>getXml.</p>
      */
@@ -251,7 +256,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
      * @return
      * @throws SQLException 
      */
-    private WorkflowRunList2 directRetrieveWorkflowRuns(List<Integer> files) throws SQLException {
+    protected static WorkflowRunList2 directRetrieveWorkflowRuns(List<Integer> files, List<Integer> interestingWorkflows) throws SQLException {
         final Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         final WorkflowRunList2 runs = new WorkflowRunList2();
         runs.setList(new ArrayList());
@@ -262,16 +267,30 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
             try {
                 WorkflowRunService ss = BeanFactory.getWorkflowRunServiceBean();
                 StringBuilder query = new StringBuilder();
-                query.append("select distinct r.sw_accession from workflow_run r, ");
+                query.append("select distinct r.sw_accession from workflow_run r, workflow w, ");
                 query.append("workflow_run_input_files rf, file f WHERE r.workflow_run_id = rf.workflow_run_id "
                         + "AND rf.file_id = f.file_id "
+                        + "AND w.workflow_id = r.workflow_id "
                         + "AND (");
+                // handle file accessions
                 for(int i = 0; i < files.size() - 1; i++){
                     Integer fInt = files.get(i);
                     query.append(" f.sw_accession = ").append(fInt).append(" OR");
                 }
                 Integer fInt = files.get(files.size() -1);
                 query.append(" f.sw_accession = ").append(fInt).append(")");
+                // handle interesting workflow accessions
+                if (interestingWorkflows.size() > 0){
+                    query.append(" AND (");
+                     for (int i = 0; i < interestingWorkflows.size() - 1; i++) {
+                        Integer wInt = interestingWorkflows.get(i);
+                        query.append(" w.sw_accession = ").append(wInt).append(" OR");
+                    }
+                    Integer wInt = interestingWorkflows.get(interestingWorkflows.size() - 1);
+                    query.append(" w.sw_accession = ").append(wInt).append(")");
+                }
+                
+                
                 query.append(" ORDER BY sw_accession");
                 
                 Log.info("Executing query: " + query);
@@ -319,7 +338,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
             }
         }
         Log.debug("Working with " + files.size() + " files");
-        WorkflowRunList2 runs = directRetrieveWorkflowRuns(files);
+        WorkflowRunList2 runs = directRetrieveWorkflowRuns(files, new ArrayList<Integer>());
         // these variables will be used to return information
         jaxbTool = new JaxbObject<WorkflowRunList>();
         Log.debug("JaxbObjects started");
