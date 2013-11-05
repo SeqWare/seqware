@@ -912,8 +912,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
 
     private List<WorkflowRun> produceAccessionListWithFileList(List<Integer> fileSWIDs) {
+        // grab only the workflows in which we are interested
+        List<Integer> relevantWorkflows = new ArrayList<Integer>();
+        relevantWorkflows.add(Integer.valueOf(this.workflowAccession));
+        for(String accession : this.workflowAccessionsToCheck){
+            relevantWorkflows.add(Integer.valueOf(accession));
+        }
         // find relevant workflow runs for this group of files
-        List<WorkflowRun> wrFiles1 = this.metadata.getWorkflowRunsAssociatedWithInputFiles(fileSWIDs);
+        List<WorkflowRun> wrFiles1 = this.metadata.getWorkflowRunsAssociatedWithInputFiles(fileSWIDs, relevantWorkflows);
         Log.debug("Found " + wrFiles1.size() + " workflow runs via direct search");
         return wrFiles1;
     }
@@ -1074,7 +1080,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             for (String studyAttr : studyAttrArr) {
                 String[] parts = studyAttr.split("=");
                 String key = parts[0];
-                String value = parts[1];
+                String value = parts.length > 1 ? parts[1] : null;
                 FindAllTheFiles.addAttributeToReturnValue(row, key, value);
             }
         }
