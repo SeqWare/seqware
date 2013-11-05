@@ -227,19 +227,27 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         // SEQWARE-1778 - try to properly create parameters in the workflow_run_param table as well
         //convert ini file parameters into expected format
         HashMap<String, String> map = new HashMap<String, String>();
-        if (wr.getIniFile() != null && !wr.getIniFile().isEmpty()){
-            String[] splitByWholeSeparator = StringUtils.splitByWholeSeparator(wr.getIniFile(), "\n");
-            for(String line : splitByWholeSeparator){
-                String[] lineSplit = StringUtils.splitByWholeSeparator(line, "=");
-                if (lineSplit.length == 0) {continue;}
-                map.put(lineSplit[0], lineSplit.length > 1 ? lineSplit[1] : "");
+        if (wr.getIniFile() != null && !wr.getIniFile().isEmpty()) {
+            // just skip if previous ini file params detected
+            if (wr.getWorkflowRunParams().size() > 0) {
+                Log.debug("Skipping since params: " + wr.getWorkflowRunParams().size());
+            } else {
+                String[] splitByWholeSeparator = StringUtils.splitByWholeSeparator(wr.getIniFile(), "\n");
+                for (String line : splitByWholeSeparator) {
+                    String[] lineSplit = StringUtils.splitByWholeSeparator(line, "=");
+                    if (lineSplit.length == 0) {
+                        continue;
+                    }
+                    map.put(lineSplit[0], lineSplit.length > 1 ? lineSplit[1] : "");
+                }
+                SortedSet<WorkflowRunParam> createWorkflowRunParameters = WorkflowManager.createWorkflowRunParameters(map);
+                // looks like the WorkflowManager code does not set workflow run
+                for (WorkflowRunParam p : createWorkflowRunParameters) {
+                    p.setWorkflowRun(wr);
+                }
+                Log.debug("Setting params: " + createWorkflowRunParameters.size());
+                wr.getWorkflowRunParams().addAll(createWorkflowRunParameters);
             }
-            SortedSet<WorkflowRunParam> createWorkflowRunParameters = WorkflowManager.createWorkflowRunParameters(map);
-            // looks like the WorkflowManager code does not set workflow run
-            for(WorkflowRunParam p : createWorkflowRunParameters){
-                p.setWorkflowRun(wr);
-            }
-            wr.setWorkflowRunParams(createWorkflowRunParameters);
         }
         wrs.update(registration, wr);
 
