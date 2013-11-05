@@ -56,6 +56,7 @@ public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunPar
      *
      * @return a {@link java.lang.String} object.
      */
+    @Override
     public String toString() {
         return new ToStringBuilder(this).append("swAccession", getWorkflowRunParamId()).toString();
     }
@@ -77,6 +78,7 @@ public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunPar
      *
      * @return a int.
      */
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(getWorkflowRunParamId()).toHashCode();
     }
