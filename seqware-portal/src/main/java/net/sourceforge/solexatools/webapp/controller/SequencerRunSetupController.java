@@ -47,7 +47,7 @@ public class SequencerRunSetupController extends BaseCommandController {
 		boolean isReport = request.getParameter("report") != null;
 
 		if (sequencerRun != null) {
-			if (sequencerRun.getStatus() == SequencerRunStatus.Completed) {
+			if (sequencerRun.getStatus() == SequencerRunStatus.Complete) {
 				sequencerRun.setProcess(true);
 			} else {
 				sequencerRun.setProcess(false);
