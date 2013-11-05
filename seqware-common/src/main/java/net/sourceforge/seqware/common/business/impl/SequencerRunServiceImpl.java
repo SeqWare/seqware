@@ -103,7 +103,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     sequencerRun.setCreateTimestamp(new Date());
 
     if (sequencerRun.getProcess()) {
-      sequencerRun.setStatus(SequencerRunStatus.Completed);
+      sequencerRun.setStatus(SequencerRunStatus.Complete);
     } else {
       sequencerRun.setStatus(null);
     }
@@ -167,7 +167,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
      */
 
     if (sequencerRun.getProcess()) {
-      sequencerRun.setStatus(SequencerRunStatus.Completed);
+      sequencerRun.setStatus(SequencerRunStatus.Complete);
     } else {
       sequencerRun.setStatus(null);
     }
@@ -182,7 +182,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   public void update(SequencerRun sequencerRun) {
 
     if (sequencerRun.getProcess()) {
-      sequencerRun.setStatus(SequencerRunStatus.Completed);
+      sequencerRun.setStatus(SequencerRunStatus.Complete);
     } else {
       sequencerRun.setStatus(null);
     }
