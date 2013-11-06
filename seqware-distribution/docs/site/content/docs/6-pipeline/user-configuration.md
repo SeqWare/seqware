@@ -44,10 +44,11 @@ Our tools will abort and refuse to run if this is not set.
 # INSTALL: Used when installing a workflow bundle
 # SCHEDULE: Used when a user wants to schedule a workflow run
 # LAUNCH: Used when a workflow run is to be launched (or dry-run)
+# DELETION: Used for the admin web service supporting deletion
 #
 # Remote users need COMMON and SCHEDULE.
 # Workflow developers need COMMON and LAUNCH for testing.
-# Administrators need COMMON and INSTALL.
+# Administrators need COMMON, DELETION, and INSTALL.
 # Cronjobs/daemon processes will need COMMON and LAUNCH.
 
 
@@ -61,7 +62,7 @@ SW_REST_URL=http://localhost:8080/SeqWareWebService
 SW_REST_USER=admin@admin.com
 SW_REST_PASS=admin
 
-# SeqWare database settings. Only used if SW_METADATA_METHOD=database
+# SeqWare database settings. Only used if SW_METADATA_METHOD=database and by the database check utility
 SW_DB_USER=seqware
 SW_DB_PASS=seqware
 SW_DB_SERVER=localhost
@@ -119,7 +120,16 @@ SW_CLUSTER=seqwarevm
 SW_DAX_DIR=/home/seqware/SeqWare/pegasus-dax
 ## the directory containing all the Pegasus config files this instance of SeqWare should use
 SW_PEGASUS_CONFIG_DIR=/home/seqware/.seqware/pegasus
+
+#DELETION
+SW_ADMIN_REST_URL=http://localhost:38080/seqware-admin-webservice
 </code></pre>
+
+## Oozie Workflow Engine Configuration
+
+The alternative, Oozie (Hadoop) workflow engine only uses configurations in the
+users ~/.seqware/settings file.  No other configuration is required on the user
+side.
 
 ## Pegasus Workflow Engine Configuration
 
@@ -230,10 +240,3 @@ attempts should be made before job is considered failed in a workflow.  In this
 example "1" means it should be retried once before failing.  There are other
 parameters that might be useful for Pegasus, see the [Pegasus
 documentation](http://pegasus.isi.edu/) for more information.
-
-
-## Oozie Workflow Engine Configuration
-
-The alternative, Oozie (Hadoop) workflow engine only uses configurations in the
-users ~/.seqware/settings file.  No other configuration is required on the user
-side.
