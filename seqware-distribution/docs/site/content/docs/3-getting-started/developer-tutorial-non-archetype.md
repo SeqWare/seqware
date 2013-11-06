@@ -36,7 +36,7 @@ new bundle that you can modify You will also test your bundles from there as
 well. Once you finish with the new bundle you will package and install it via
 the web service (to either the remote cloud VM or local VM). Once
 installed you can use the workflow scheduling tools you have used before to
-trigger workflows (on the cloud or the local VM), monitor them, and get data
+launch workflows (on the cloud or the local VM), monitor them, and get data
 back.
 
 Please note that the parent of this directory also contains a copy of the SeqWare source code retrieved via the procedure in [source code](/docs/13-code/).
@@ -412,7 +412,7 @@ And also notice you now have a zip file for this workflow:
 	total 50M
 	-rw-rw-r-- 1 seqware seqware 50M Aug 15 01:20 Workflow_Bundle_MyHelloWorldWorkflow_1.0_SeqWare_0.12.5.zip
 
-Now that this is installed you can trigger it just like you have done in the [User Tutorial](/docs/3-getting-started/user-tutorial/) using the web service previously.
+Now that this is installed you can launch it just like you have done in the [User Tutorial](/docs/3-getting-started/user-tutorial/) using the web service previously.
 
 ## Next Steps
 
