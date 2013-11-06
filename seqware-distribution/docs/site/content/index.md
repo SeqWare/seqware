@@ -12,7 +12,7 @@ data -- from from raw base calling to analyzed variants ready for
 interpretation by users. See the "<a href="/about/">About SeqWare</a>" and the "<a
 href="/docs/1-introduction/">Introduction to SeqWare</a>" documents for more details.
 The "<a href="/docs/">Documentation</a>" pages show how to install and use
-SeqWare. In particular, we recommend new users beging with the three getting
+SeqWare. In particular, we recommend new users begin with the three getting
 started guide found in the documentation section and linked to below.</p>
 
 <table>
