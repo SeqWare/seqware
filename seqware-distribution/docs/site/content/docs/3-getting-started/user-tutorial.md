@@ -293,7 +293,7 @@ of your ini files making it much easier to see the key-values you are
 interested in. In the example above the minimal ini file is simply the two
 lines for <tt>input_file</tt> and <tt>output_prefix</tt>.</p>
 
-In summary, your should edit the `workflow.ini` changing it from:
+In summary, you should edit the `workflow.ini` changing it from:
 
     #key=input_file:type=file:display=F:display_name=input_file:file_meta_type=text/plain
     input_file=${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/data/input.txt
