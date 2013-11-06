@@ -56,7 +56,7 @@ See [About](/about/) for more information.
 * [User Settings](/docs/6-pipeline/user-configuration/)
 : Information about configuring user settings files.
 * [Monitor Configuration](/docs/6-pipeline/monitor_configuration/)
-: Setting up the SeqWare-associated tools that need to run so workflow triggering and monitoring workflows.
+: Setting up the SeqWare-associated tools that need to run to launch workflows and monitor workflows.
 * [Connecting to a Real Cluster](/docs/6-pipeline/connecting-to-cluster/)
 : Once you are happy with writing, installing, and running workflows on a stand-alone VM you will want to connect to a "real" cluster. This guide walks you through the process of connecting a VM to a cluster (HPC & Hadoop, depending on your workflow engine of choice).
 
