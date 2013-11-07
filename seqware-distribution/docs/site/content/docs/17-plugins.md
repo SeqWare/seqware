@@ -110,7 +110,6 @@ A database validation tool for your SeqWare metadb.
 | Command-line option | Description |
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
-|--j, --jar|Jar files containing additional checks that will be run|
 
 
 ##  CycleChecker
@@ -130,6 +129,7 @@ A database deletion tool for your SeqWare metadb.
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
 |--k, --key|An existing key file will be used to guide an actual deletion process|
+|--o, --out|The filename of the output key file|
 |--r, --workflowrun|Give a sequencer run, lane, or workflow run SWID in order to determine which workflow runs (processings,files) should be deleted.|
 
 
@@ -213,17 +213,6 @@ Prints a tab-delimited file describing the sequencer run, lane, sample, and algo
 | Command-line option | Description |
 |--------------------|--------------|
 |--output, --output-filename|Name of the output tab-delimited file.|
-
-
-##  StudyReporter
-net.sourceforge.seqware.pipeline.plugins.StudyReporter
-Generates a tab-delimited report of all output files (and their relationships and metadata) from a specified study or from all studies.
-
-| Command-line option | Description |
-|--------------------|--------------|
-|--all|Generate a report of all studies. Or use '--title'.|
-|--out|The file into which the report will be written.|
-|--title|The title of the study whose report will be generated. Or use '--all'.|
 
 
 ##  SymLinkFileReporter
