@@ -166,7 +166,7 @@ A plugin that generates markdown documentation for all plugins.
 
 ##  Metadata
 net.sourceforge.seqware.pipeline.plugins.Metadata
-This plugin lets you list, read, and write to a collection of tables in the underlying MetaDB. This makes it easier to automate the creation of entities in the database which can be used as parents for file uploads and triggered workflows.
+This plugin lets you list, read, and write to a collection of tables in the underlying MetaDB. This makes it easier to automate the creation of entities in the database which can be used as parents for file uploads and launched workflows.
 
 | Command-line option | Description |
 |--------------------|--------------|
