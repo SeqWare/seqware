@@ -21,7 +21,7 @@ For the last point we've tried to make modules very clean and generic with littl
 
 ## API Classes
 
-The interface for a decider is [DeciderInterface](http://seqware.github.com/javadoc/git_0.13.4/apidocs/net/sourceforge/seqware/pipeline/decider/DeciderInterface.html). In practice, when creating your own deciders you will probably extend [BasicDecider](http://seqware.github.com/javadoc/git_0.13.4/apidocs/net/sourceforge/seqware/pipeline/deciders/BasicDecider.html)
+The interface for a decider is [DeciderInterface](https://github.com/SeqWare/seqware/blob/develop/seqware-pipeline/src/main/java/net/sourceforge/seqware/pipeline/decider/DeciderInterface.java). In practice, when creating your own deciders you will probably extend [BasicDecider](https://github.com/SeqWare/seqware/blob/develop/seqware-pipeline/src/main/java/net/sourceforge/seqware/pipeline/deciders/BasicDecider.java)
 
 ## BasicDecider
 
@@ -35,9 +35,9 @@ Required parameters of note:
 
 Optional parameters of note:
 
-* check-wf-accessions: Comma-separated accessions of workflows that you may already be satisfied with (for example, satisfactory runs of an older version of a workflow). If all files in a particular group are "contained" within one of the workflow runs in this list, it will not be re-run.  
+* check-wf-accessions: Comma-separated accessions of workflows that you may already be satisfied with (for example, satisfactory runs of an older version of a workflow). If the input files in a previous workflow run in this list match the current workflow run under consideration, it will not be re-run.  
 * rerun-max: The maximum number of times to re-launch a workflowrun if failed. Default: 5.
-* group-by: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA.
+* group-by: Group by one of the headings in FindAllTheFilesHeader. Default: FILE_SWA.
 
 When extending the BasicDecider, you may also place the parent-wf-accessions, check-wf-accessions, and wf-accession into a decider.properties file to permanently set these values. 
 
@@ -45,101 +45,228 @@ When extending the BasicDecider, you may also place the parent-wf-accessions, ch
 
 The BasicDecider performs the following steps:
 
-1. In the init method
-	* Must have one and only one of study-name, sample-name, sequencer-run-name or all
-	* Pulls the parent-workflow-accessions, check-wf-accessions, and workflow-accession out of the decider.properties file (but doesn't fail if the file doesn't exist)
-	* From the command line:
-		* Determines the grouping strategy. This must be one of the header values from the SymLinkFileReporter
-		* Overrides the workflow-accession, parent-workflow-accessions and check-wf-accessions if they exist.
-		* Sets the metatypes (0 or more)
-		* Sets force-run-all
-		* Sets Test
-			* if test is enabled, print the symlinkreporter header
-		* Sets whether or not to use the skip flag (by default skip is respected)
-		* Sets whether or not to use metadata writeback
-		* Sets whether to immediately run or to schedule the workflows
-		* Sets the maximum number of launches
-		* Sets the maximum number of re-runs of failed workflows
-	* Checks to see if one of parent-workflow-accession or meta-type is set, fails otherwise
-2. In the do_run method
-	* If run type is all, iterate through all studies
-		* find all the files for a certain study
-		* [Separate files](#Separate files) based on grouping
-		* [Launch workflows](#Launch workflows) on the separated files
-		* return
-	* If the run type is study-name
-		* find all the files for the study
-	* If the run type is sample-name
-		* find all files for the sample
-	* If the run type is sequencer-run-name
-		* find all the files for the sequencer run
-	* [Separate files](#Separate files) based on the grouping strategy
-	* [Launch workflows](#Launch workflows) on the separated files
-
-### Separate files
-
-* iterate through all of the files given
-* edit the group-by attribute if necessary using the handleGroupByAttribute method (extend for your decider)
-* put into a hash based on the modified group-by attribute
-
-### Launch workflows
-
-1. For each grouping, iterate through the files
-	* save the workflow-accession of the file
-	* check this workflow-accession to see if it is an equivalent run, e.g. the same workflow accession or on the list of check-workflow-accessions. If so, save to a var if no parent accessions were given or if the parent accession is in the list
-		* check for each file if the metatype is correct (if it exists), then [Add file to set](#add_file_to_set)
-		* or just [Add file to set](#add_file_to_set) to be run
-2. If the parent accessions (e.g. Processing event producing input file), files to run and workflow parent accessions to run (e.g. IUS) are not empty
-	* check whether or not to [Rerun workflow run](#rerun_workflow_run)
-	* create the ini file (extend for your decider)
-	* do the final check on your set of files (extend for your decider)
-	* if force-run-all is enabled, negate any earlier flags
-	* if we're in testing mode or we don't want to rerun
-		* print the command line
-	* otherwise if the max launched is less than the amount given
-		* construct a Workflow object and either launch it or schedule it
-	* otherwise
-		* Print an error message and exit
-
-### Add file to set
-
-* Check the file details (extend for your decider, should always 'super' on this method)
-	* checks to see whether the file row contains any trace of the word 'skip', and removes it.
-* If running in test mode, print the file metadata
-* Add to list of files to run and parent accessions
-* Add the IUS to the list of parent-accessions-to-run
-
-### Rerun workflow run
-
-* [Search for Relevant Predecessors](#Search for Relevant Predecessors) using search type 1 
-	* Iterate through previous workflow runs
-		* For each previous run , get the workflow run report and consult the [Decision Table](#Decision Table) in order to determine which course of action to take. 
-	* Iterate through previous workflow runs to check
- 		* Get the workflow run report and if all of the files to run were run using the previous run to check, then we also block a rerun. 
-* If the rerun has not been set to false, repeat using using search type 2 
-* If the rerun has not been set to false, repeat using using search type 3 
+1. Pull down the list of relevant file paths from study down to file (based on a starting point of a specific study, sample, sequencer-run or across all studies)
+2. Group file paths based on the grouping strategy determined by "--group-by". This behaviour can be overridden in custom methods by overriding "handleGroupByAttribute(String)" in the BasicDecider
+3. Files can be omitted from groups in custom deciders by overridding the "checkFileDetails(ReturnValue, FileMetadata)" method
+4. For each grouping determine whether there exists a blocking workflow run in the metadb based on the following decision table 
+5. Create the ini file. This behaviour can be overriden by overriding "modifyIniFile(String, String)" method 
 
 ### Decision Table
 
-A general guide-line here is that we only count failures when they are associated with workflow runs that ran on the same files (and paths) as we are currently attempting to run on. 
+A general guideline here is that we only count failures when they are associated with workflow runs that ran on the same files (in the metadb) as we are currently attempting to run on. 
 
-| Status of previous workflow run | 1 (More files to run than were ran in the past  | 2 (Same files on different paths) | 3 (Same files on same paths) | 4 (More files were ran in the past |
+| Status of previous workflow run | 1 (Input files are disjoint from previous run)  | 2 (Input files partially overlap a previous run) | 3 (Input files match a previous run exactly) | 4 (Past run contains all current input files) |
 |--------------------|--------------|---------------|----------|--------|
-|Failed| rerun | rerun | count as failure, rerun | rerun (with warning message)|
-|Other (pending, running, no status, etc.) | do not rerun | do not rerun | do not rerun | do not rerun |
-|Completed| rerun | rerun | do not rerun | do not rerun |
+|Failed| ignore (allow rerun) | allow re-run | count as failure, re-run if less than max-failures | allow re-run (with warning message)|
+|Other (pending, running, no status, etc.) | ignore (allow re-run) | allow re-run | block re-run | block re-run |
+|Completed| ignore (allow rerun) | allow re-run | block re-run | do not re-run |
 
-In addition, if for a group of files, we also count up more failures than rerun-max, then we also block rerun. 
+In addition, if for a group of files, we also count up more failures than rerun-max, then we also block a re-run. 
 
-### Search for Relevant Predecessors
+### Search for Relevant Workflow Runs 
 
-When looking for previous workflow runs run on these files, we will search under three search patterns.
+In order to determine whether there are existing workflow runs in the database that would block re-running a workflow we use a different method depending on the version of decider.
+
+For 1.0.X deciders, when looking for previous workflow runs, we look in a table, workflow_run_input_files. This new table specifically stores the input files and is populated at schedule time by the workflow launcher.
+
+For 0.13.6.X deciders, when looking for previous workflow runs run on these files, we will search under three search patterns.
 
 1. Look for Workflow Runs which are linked to a File via the File, processing_file, Processing, processing_relationship, Processing, Workflow_Run path. i.e. Are there completed workflow runs (whether previous runs or previous workflows to check) that disallow running on this file?  
 2. Look for Workflow Runs which are linked to a File via the File, processing_file, Processing, Workflow_Run, IUS, Workflow_Run path. In addition, for each of these resulting Workflow Runs, we ensure that they are not connected to Processing. i.e. Are there workflow runs in progress that share the same IUS as one of our files (and thus are not hooked up to the processing hierarchy)? 
 3. The same as 2. except with Lane. i.e. Are there workflow runs in progress that share the same Lane as one of our files (and thus are not hooked up to the processing hierarchy)? 
 
+## Tutorial
 
-<!-- when we have more time, we need to figure out an automatic way of syncing this with https://wiki.oicr.on.ca/display/PIPEDEVAL/Writing+a+decider -->
+We will demonstrate usage of the basic decider by creating a few toy workflows and connecting them up via basic decider calls. 
+
+First, create a sequencer_run, lane, and ius. These structures represent a lane from a sequencer run and an independent unit of sequencing. For this toy example, we will link new files to these starting points. (Note that the created SWIDs will vary depending on how much work you've done) 
 
 
+    $ seqware create sequencer-run --description description --file-path file_path --name name --paired-end paired_end --platform-accession 26  --skip false
+
+    Created sequencer run with SWID: 8
+
+    $ create lane --sequencer-run-accession 8 --study-type-accession 4 --cycle-descriptor cycle_descriptor --description description --lane-number 1 --library-selection-accession 25 --library-source-accession 5 --library-strategy-accession 21 --name name --skip false
+    
+    Created lane with SWID: 9
+
+    $ seqware create ius --barcode barcode --description description --lane-accession 9 --name name --sample-accession 4 --skip false
+
+    Created IUS with SWID: 10 
+
+Next, you need to inject a file that will be used as input for the workflows that you are about to create. When using the decider framework, the starting point for your deciders is a root workflow run. So we create a "root" workflow and create a workflow run that has as its output the input file from the tutorial. 
+
+    $ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --create --table workflow --field name::FileImport --field version::1.0 --field description::description
+
+    Added 'FileImport' (SWID: 11)
+    Created workflow 'FileImport' version 1.0 with SWID: 11
+
+    $ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --create --table workflow_run --field workflow_accession::11 --field status::completed --file imported_file::text/plain::/datastore/input.txt --parent-accession 9 --parent-accession 10
+
+    Created workflow run with SWID: 12
+    
+Next, we create two workflows, one which converts text files to tar format, and a second which converts tar files to tar.gz format. Here, we assume that you have already run through the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/). Use Maven Archetypes to generate two workflows in the workflow-dev directory called TarWorkflow and GZWorkflow. 
+
+You will need to edit two files in each workflow, the workflow Java client and the workflow.ini. 
+
+For TarWorkflow/src/main/java/com/github/seqware/WorkflowClient.java:
+
+	package com.github.seqware;
+
+	import java.util.Map;
+	import java.util.logging.Level;
+	import java.util.logging.Logger;
+	import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
+	import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+	import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
+
+	public class WorkflowClient extends AbstractWorkflowDataModel {
+
+	    @Override
+	    public Map<String, SqwFile> setupFiles() {
+
+		try {
+		    // register an input file from the workflow.ini
+		    SqwFile file0 = this.createFile("file_in_0");
+		    file0.setSourcePath(getProperty("input_files"));
+		    file0.setType("text/plain");
+		    file0.setIsInput(true);
+
+		    // register an output file
+		    SqwFile file1 = this.createFile("file_out");
+		    file1.setSourcePath("input.tar");
+		    file1.setType("application/x-tar");
+		    file1.setIsOutput(true);
+		    file1.setForceCopy(true);
+		    // if output_file is set in the ini then use it to set the destination of this file
+		    if (hasPropertyAndNotNull("output_file")) {
+			file1.setOutputPath(getProperty("output_file"));
+		    }
+		    return this.getFiles();
+
+		} catch (Exception ex) {
+		    Logger.getLogger(WorkflowClient.class.getName()).log(Level.SEVERE, null, ex);
+		    throw new RuntimeException(ex);
+		}
+	    }
+
+	    @Override
+	    public void buildWorkflow() {
+		Job job11 = this.getWorkflow().createBashJob("bash_tar");
+		job11.setCommand("tar -cvf input.tar " + this.getFiles().get("file_in_0").getProvisionedPath());
+	    }
+	}
+
+Note that input_files is automatically populated in the workflow.ini when the decider runs and generates ini files. 
+
+For GZWorkflow/src/main/java/com/github/seqware/WorkflowClient.java
+
+	package com.github.seqware;
+
+	import java.util.Map;
+	import java.util.logging.Level;
+	import java.util.logging.Logger;
+	import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
+	import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+	import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
+
+	public class WorkflowClient extends AbstractWorkflowDataModel {
+	    @Override
+	    public Map<String, SqwFile> setupFiles() {
+	      try {
+		// register an input file
+		SqwFile file0 = this.createFile("file_in_0");
+		file0.setSourcePath(getProperty("input_files"));
+		file0.setType("application/x-tar");
+		file0.setIsInput(true);
+		// register an output file
+		SqwFile file1 = this.createFile("file_out");
+		file1.setSourcePath("input.tar.gz");
+		file1.setType("application/gzip");
+		file1.setIsOutput(true);
+		file1.setForceCopy(true);
+		// if output_file is set in the ini then use it to set the destination of this file
+		if (hasPropertyAndNotNull("output_file")) { file1.setOutputPath(getProperty("output_file")); }
+		return this.getFiles();
+	      } catch (Exception ex) {
+		Logger.getLogger(WorkflowClient.class.getName()).log(Level.SEVERE, null, ex);
+		return(null);
+	      }
+	    }
+
+	    @Override
+	    public void buildWorkflow() {
+		Job job11 = this.getWorkflow().createBashJob("bash_gz");
+		job11.setCommand("tar -zcvf input.tar.gz "+ this.getFiles().get("file_in_0").getProvisionedPath());
+	    }
+	}
+
+For TarWorkflow/workflow/config/workflow.ini and GZWorkflow/workflow/config/workflow.ini:
+
+	output_dir=seqware-results
+	# the output_prefix is a convension and used to specify the root of the absolute output path or an S3 bucket name 
+	# you should pick a path that is available on all custer nodes and can be written by your user
+	output_prefix=/datastore/
+
+Build, package, and install both workflows. Record the accession for both workflows:
+
+	$ cd TarWorkflow/
+	$ mvn clean install 
+	(output snipped)
+	$ cd ..
+	$ cd GZWorkflow/
+	$ mvn clean install 
+	(output snipped)
+	$ cd ..
+	$ seqware bundle package --dir GZWorkflow/target/Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
+	Validating Bundle structure
+	Packaging Bundle
+	Bundle has been packaged to /home/seqware/workflow-dev
+	$ seqware bundle package --dir TarWorkflow/target/Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
+	Validating Bundle structure
+	Packaging Bundle
+	Bundle has been packaged to /home/seqware/workflow-dev
+	$ seqware bundle install --zip Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip 
+	Installing Bundle
+	Bundle: Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	Now transferring /home/seqware/workflow-dev/Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
+	Processing input: /home/seqware/workflow-dev/Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	      output-dir: /home/seqware/released-bundles
+
+	Added 'TarWorkflow' (SWID: 15)
+	Bundle Has Been Installed to the MetaDB and Provisioned to Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
+	$ seqware bundle install --zip Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip 
+	Installing Bundle
+	Bundle: Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	Now transferring /home/seqware/workflow-dev/Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
+	Processing input: /home/seqware/workflow-dev/Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	      output-dir: /home/seqware/released-bundles
+
+	Added 'GZWorkflow' (SWID: 16)
+	Bundle Has Been Installed to the MetaDB and Provisioned to Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
+	
+Next, deciders rely upon an up-to-date files report. Refresh this with the following command (this should probably be in a cron on a production system):
+
+	$ seqware files refresh
+
+Now, you are ready to use the basic decider to configure and schedule your workflows. The following command lets the BasicDecider run across the entire database, looking for plain text files that have been imported, in order to schedule TarWorkflows. 
+
+	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types text/plain --wf-accession 15 --schedule 
+
+	Created workflow run with SWID: 22
+	Launching.
+
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 15 --ini-files /tmp/-12647202434325314875216080169.ini --input-files 14 --parent-accessions 18 --link-workflow-run-to-parents 10 --schedule --host master --
+
+Next, wait for the workflow to run to completion, you can use either the 'seqware workflow-run report' or refresh the files report in order to determine when the workflow is complete, but it should take roughly 2 minutes. 
+
+	$ seqware files refresh
+	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types application/x-tar --wf-accession 16 --schedule
+
+	Created workflow run with SWID: 28
+	Launching.
+
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 16 --ini-files /tmp/10127174104580126102339614094.ini --input-files 27 --parent-accessions 26 --link-workflow-run-to-parents 10 --host master --
+	
+Now, you have a functional chain of two toy workflows and a command to import files that can kick-off the whole process.
+In order to automate this process, you may want to consider placing the refresh command and the deciders commands in your crontab.
