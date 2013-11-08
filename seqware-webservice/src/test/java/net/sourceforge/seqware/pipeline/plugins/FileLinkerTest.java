@@ -17,11 +17,9 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.util.List;
-import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
-import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.lang.StringUtils;
 import org.junit.*;
@@ -103,6 +101,26 @@ public class FileLinkerTest extends ExtendedPluginTest {
         workflowRunReport = metadata.getWorkflowRunReport(secondWorkflowRun);
         Assert.assertTrue("second set of files could not be found using the metadata workflow run report", 
                 workflowRunReport.contains("cabc1.gz") && workflowRunReport.contains("cabc2.gz"));
+    }
+    
+    @Test
+    public void testFileLinkerWithNoLanes() {
+        String path = FileLinkerTest.class.getResource("file_linker_no_lane_test.txt").getPath();
+
+        launchPlugin("--workflow-accession", "4", "--file-list-file", path);
+
+        String s = getOut();
+        int firstWorkflowRun = Integer.valueOf(getAndCheckSwid(s));
+
+        String workflowRunReport = metadata.getWorkflowRunReport(firstWorkflowRun);
+        // look for files using the gross metadata way
+        Assert.assertTrue("files could not be found using the metadata workflow run report", 
+                workflowRunReport.contains("nfunky_file1.gz") && workflowRunReport.contains("nfunky_file2.gz"));
+        s = s.split("\n")[1];
+        int secondWorkflowRun = Integer.valueOf(getAndCheckSwid(s));
+        workflowRunReport = metadata.getWorkflowRunReport(secondWorkflowRun);
+        Assert.assertTrue("second set of files could not be found using the metadata workflow run report", 
+                workflowRunReport.contains("nabc1.gz") && workflowRunReport.contains("nabc2.gz"));
     }
     
     @Test
