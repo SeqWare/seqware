@@ -95,7 +95,8 @@ public class FileLinkerLine {
          try {
             setLane(Integer.parseInt(laneString));
          } catch (NumberFormatException e) {
-            log.error("The lane [{}] is not a valid integer value. {}", laneString, e);
+            //log.error("The lane [{}] is not a valid integer value. {}", laneString, e);
+             // this can be ignored, FileLinker does not require lane
          }
       }
    }
@@ -121,7 +122,7 @@ public class FileLinkerLine {
    }
 
    public boolean hasRequiredValues() {
-      return lane != null && seqwareAccession != null && !StringUtils.isBlank(mimeType) && !StringUtils.isBlank(filename);
+      return seqwareAccession != null && !StringUtils.isBlank(mimeType) && !StringUtils.isBlank(filename);
    }
 
    @Override
