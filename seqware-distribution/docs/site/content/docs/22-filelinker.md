@@ -3,6 +3,7 @@
 title:                 "File Linker"
 toc_includes_sections: true
 markdown:              advanced 
+is_dynamic: 		true
 
 ---
 
