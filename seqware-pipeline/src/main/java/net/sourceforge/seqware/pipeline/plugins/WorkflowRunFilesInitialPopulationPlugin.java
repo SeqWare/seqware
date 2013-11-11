@@ -229,6 +229,9 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
             return ranOnList;
         }
         String ranOnString = map.get("Immediate Input File SWIDs");
+        if (ranOnString == null){
+            return ranOnList;
+        }
         String[] ranOnArr = ranOnString.split(",");
         if (ranOnString.isEmpty()) {
             return ranOnList;
@@ -259,7 +262,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         String[] lines = report.split("\n");
         String[] reportHeader = lines[0].split("\t");
         String[] data = lines[1].split("\t");
-        for (int i = 0; i < reportHeader.length; i++) {
+        for (int i = 0; i < reportHeader.length && i < data.length; i++) {
             map.put(reportHeader[i].trim(), data[i].trim());
         }
         return map;
