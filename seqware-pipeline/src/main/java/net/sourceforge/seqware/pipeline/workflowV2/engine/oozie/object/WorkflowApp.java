@@ -287,20 +287,21 @@ public class WorkflowApp {
       }
     }
 
-    if (!hasProvisionOut.isEmpty()) {
-      for (Map.Entry<OozieJob, OozieJob> entry : hasProvisionOut.entrySet()) {
-        // get all children
-        Collection<OozieJob> children = entry.getKey().getChildren();
-        if (children.size() <= 1)
-          continue;
-        // and set other's parent as the value
-        for (OozieJob child : children) {
-          if (child == entry.getValue())
-            continue;
-          child.addParent(entry.getValue());
-        }
-      }
-    }
+        // what is this for? Theory is that setting up dependencies between jobs may have been used as a rate-limiting mechanism
+//        if(!hasProvisionOut.isEmpty()) {
+//            for(Map.Entry<OozieJob, OozieJob> entry: hasProvisionOut.entrySet()) {
+//                //get all children
+//                Collection<OozieJob> children = entry.getKey().getChildren();
+//                if(children.size()<=1)
+//                    continue;
+//                // and set other's parent as the value
+//                for(OozieJob child: children ) {
+//                    if(child == entry.getValue())
+//                        continue;
+//                    child.addParent(entry.getValue());
+//                }
+//            }
+//        }
 
     // add all provision out job
     // get all the leaf job
