@@ -151,38 +151,7 @@ public class WorkflowManager {
       run.setTemplate(wi.getTemplatePath());
       run.setStatus(WorkflowRunStatus.submitted);
       run.setOwner(owner);
-      
-      // FIXME: Deal with workflow Run Params. I am not handling parent files
-      // correctly at the moment
-      SortedSet<WorkflowRunParam> runParams = new TreeSet<WorkflowRunParam>();
-      for (String str : map.keySet()) {
-
-        if (map.get(str) != null) {
-          Log.info(str + " " + map.get(str));
-          if (str.equals("parent_accessions") || str.equals("parent_accession") || str.equals("parent-accessions")) {
-            String[] pAcc = map.get(str).split(",");
-            for (String parent : pAcc) {
-              WorkflowRunParam wrp = new WorkflowRunParam();
-              wrp.setKey(str);
-              wrp.setValue(parent);
-              wrp.setParentProcessingAccession(Integer.parseInt(parent));
-              wrp.setType("text");
-              runParams.add(wrp);
-            }
-          } else {
-
-            if (str.trim().isEmpty() && map.get(str).trim().isEmpty())
-              continue;
-            WorkflowRunParam wrp = new WorkflowRunParam();
-            wrp.setKey(str);
-            wrp.setValue(map.get(str));
-            wrp.setType("text");
-            runParams.add(wrp);
-          }
-        } else {
-          Log.info("Null: " + str + " " + map.get(str));
-        }
-      }
+      SortedSet<WorkflowRunParam> runParams = createWorkflowRunParameters(map);
 
       Map<String, List<File>> files = new HashMap<String, List<File>>();
 
@@ -267,4 +236,39 @@ public class WorkflowManager {
 
     return (true);
   }
+
+    public static SortedSet<WorkflowRunParam> createWorkflowRunParameters(HashMap<String, String> map) throws NumberFormatException {
+        // FIXME: Deal with workflow Run Params. I am not handling parent files
+        // correctly at the moment
+        SortedSet<WorkflowRunParam> runParams = new TreeSet<WorkflowRunParam>();
+        for (String str : map.keySet()) {
+
+          if (map.get(str) != null) {
+            Log.info(str + " " + map.get(str));
+            if (str.equals("parent_accessions") || str.equals("parent_accession") || str.equals("parent-accessions")) {
+              String[] pAcc = map.get(str).split(",");
+              for (String parent : pAcc) {
+                WorkflowRunParam wrp = new WorkflowRunParam();
+                wrp.setKey(str);
+                wrp.setValue(parent);
+                wrp.setParentProcessingAccession(Integer.parseInt(parent));
+                wrp.setType("text");
+                runParams.add(wrp);
+              }
+            } else {
+
+              if (str.trim().isEmpty() && map.get(str).trim().isEmpty())
+                continue;
+              WorkflowRunParam wrp = new WorkflowRunParam();
+              wrp.setKey(str);
+              wrp.setValue(map.get(str));
+              wrp.setType("text");
+              runParams.add(wrp);
+            }
+          } else {
+            Log.info("Null: " + str + " " + map.get(str));
+          }
+        }
+        return runParams;
+    }
 }
