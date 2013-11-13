@@ -44,10 +44,8 @@ public class CustomStudyAttributeFacadeREST extends StudyAttributeFacadeREST {
    @Path("withstudy")
    @Consumes({ "application/json", "application/xml" })
    public void createWithStudy(StudyAttribute entity) {
-      System.out.println("Study id should be null " + entity.getStudyId().getStudyId());
       studyFacadeRest.create(entity.getStudyId());
       em.flush();
-      System.out.println("Study id should have value " + entity.getStudyId().getStudyId());
       super.create(entity);
    }
 }
