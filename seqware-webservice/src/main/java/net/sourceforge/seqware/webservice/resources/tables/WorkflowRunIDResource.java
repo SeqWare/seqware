@@ -29,9 +29,11 @@ import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowManager;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -228,6 +230,31 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         
         if (newWR.getWorkflowRunAttributes() != null) {
             this.mergeAttributes(wr.getWorkflowRunAttributes(), newWR.getWorkflowRunAttributes(), wr);
+        }
+        // SEQWARE-1778 - try to properly create parameters in the workflow_run_param table as well
+        //convert ini file parameters into expected format
+        HashMap<String, String> map = new HashMap<String, String>();
+        if (wr.getIniFile() != null && !wr.getIniFile().isEmpty()) {
+            // just skip if previous ini file params detected
+            if (wr.getWorkflowRunParams().size() > 0) {
+                Log.debug("Skipping since params: " + wr.getWorkflowRunParams().size());
+            } else {
+                String[] splitByWholeSeparator = StringUtils.splitByWholeSeparator(wr.getIniFile(), "\n");
+                for (String line : splitByWholeSeparator) {
+                    String[] lineSplit = StringUtils.splitByWholeSeparator(line, "=");
+                    if (lineSplit.length == 0) {
+                        continue;
+                    }
+                    map.put(lineSplit[0], lineSplit.length > 1 ? lineSplit[1] : "");
+                }
+                SortedSet<WorkflowRunParam> createWorkflowRunParameters = WorkflowManager.createWorkflowRunParameters(map);
+                // looks like the WorkflowManager code does not set workflow run
+                for (WorkflowRunParam p : createWorkflowRunParameters) {
+                    p.setWorkflowRun(wr);
+                }
+                Log.debug("Setting params: " + createWorkflowRunParameters.size());
+                wr.getWorkflowRunParams().addAll(createWorkflowRunParameters);
+            }
         }
         wrs.update(registration, wr);
 
