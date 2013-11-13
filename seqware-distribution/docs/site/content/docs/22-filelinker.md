@@ -2,20 +2,18 @@
 
 title:                 "File Linker"
 toc_includes_sections: true
-markdown:              basic
+markdown:              advanced 
+is_dynamic: 		true
 
 ---
 
-The FileLinker plugin was designed to import files from the LIMS into the SeqWare MetaDB for processing, but can be used to attach any file paths to any IUS or Lane. **This tool is only available over a direct database connection as of SeqWare version 0.12.2 (June 2012), not over the Web service.** 
+The FileLinker plugin was designed to import files from the LIMS into the SeqWare MetaDB for processing, but can be used to attach any file paths to any IUS or Lane.
  
 ## Add the Workflow 
 
 The "FileImport" workflow is already added into the MetadataDB, but this method can be used to create new workflows to link to. 
 
-	INSERT INTO workflow (name, description, version, seqware_version, create_tstmp) VALUES ('FileImport', 'Imports files into the database, \
-	     links them to IUSs or Lanes and creates intermediate Processings. Initially used to import files from the LIMS and attach them to IUSes.', \
-	     '0.1.1', '0.13.6', '2012-12-07 15:30:00');
-
+    java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqwe.pipeline.plugins.Metadata -- --create --table workflow --field name::FileImport --field version::1.0 --field description::'Imports files into the database, links them to IUSs or Lanes and creates intermediate Processings. Initially used to import files from the LIMS and attach them to IUSes'
 
 ## Command line parameters
 
