@@ -44,10 +44,8 @@ public class CustomLaneAttributeFacadeREST extends LaneAttributeFacadeREST {
    @Path("withlane")
    @Consumes({ "application/json", "application/xml" })
    public void createWithSample(LaneAttribute entity) {
-      System.out.println("Study id should be null " + entity.getLaneId().getLaneId());
       laneFacadeRest.create(entity.getLaneId());
       em.flush();
-      System.out.println("Study id should have value " + entity.getLaneId().getLaneId());
       super.create(entity);
    }
 }
