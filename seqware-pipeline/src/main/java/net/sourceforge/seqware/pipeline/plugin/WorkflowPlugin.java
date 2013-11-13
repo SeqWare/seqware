@@ -589,8 +589,8 @@ public class WorkflowPlugin extends Plugin {
             // then something went wrong trying to call pegasus
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                     dataModel.getTags().get("workflow_template"), "failed", statusCmd,
-                    dataModel.getWorkflowBundleDir(), "",
-                    "", wr.getHost(), 0, 0,
+                    dataModel.getWorkflowBundleDir(), wr.getDax(),
+                    wr.getIniFile(), wr.getHost(), 0, 0,
                     retPegasus.getStderr(), retPegasus.getStdout(), engine.getClass().getSimpleName());
 
             return retPegasus;
@@ -599,7 +599,7 @@ public class WorkflowPlugin extends Plugin {
             String status = dataModel.isWait() ? "completed" : "pending";
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                     dataModel.getTags().get("workflow_template"), status,
-                    statusCmd, dataModel.getWorkflowBundleDir(), "", "", wr
+                    statusCmd, dataModel.getWorkflowBundleDir(), wr.getDax(), wr.getIniFile(), wr
                     .getHost(), 0, 0,
                     retPegasus.getStderr(), retPegasus.getStdout(), engine.getClass().getSimpleName());
             return ret;
