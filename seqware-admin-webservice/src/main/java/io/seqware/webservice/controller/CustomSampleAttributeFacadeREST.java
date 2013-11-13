@@ -44,10 +44,8 @@ public class CustomSampleAttributeFacadeREST extends SampleAttributeFacadeREST {
    @Path("withsample")
    @Consumes({ "application/json", "application/xml" })
    public void createWithSample(SampleAttribute entity) {
-      System.out.println("Study id should be null " + entity.getSampleId().getSampleId());
       sampleFacadeRest.create(entity.getSampleId());
       em.flush();
-      System.out.println("Study id should have value " + entity.getSampleId().getSampleId());
       super.create(entity);
    }
 }

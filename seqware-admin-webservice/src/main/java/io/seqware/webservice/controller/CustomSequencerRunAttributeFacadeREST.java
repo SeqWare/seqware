@@ -44,10 +44,8 @@ public class CustomSequencerRunAttributeFacadeREST extends SequencerRunAttribute
    @Path("withsequencerrun")
    @Consumes({ "application/json", "application/xml" })
    public void createWithSample(SequencerRunAttribute entity) {
-      System.out.println("Study id should be null " + entity.getSampleId().getSequencerRunId());
       sequencerRunFacadeRest.create(entity.getSampleId());
       em.flush();
-      System.out.println("Study id should have value " + entity.getSampleId().getSequencerRunId());
       super.create(entity);
    }
 }
