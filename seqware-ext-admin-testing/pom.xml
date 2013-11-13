@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent> 
-        <version>1.0.7-SNAPSHOT</version> 
+        <version>1.0.8-SNAPSHOT</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
@@ -136,7 +136,7 @@
                         <version>3.1.2.2</version>
                         <configuration>
                             <autoDelete>true</autoDelete>
-                            <app>${project.parent.basedir}/seqware-admin-webservice/target/seqware-admin-webservice-1.0.7-SNAPSHOT.war</app>
+                            <app>${project.parent.basedir}/seqware-admin-webservice/target/seqware-admin-webservice-${project.version}.war</app>
                             <contextRoot>seqware-admin-webservice</contextRoot>
                             <name>seqware-admin-webservice</name>
                             <port>38080</port>
