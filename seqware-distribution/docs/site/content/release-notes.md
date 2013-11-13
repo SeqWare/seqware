@@ -9,6 +9,43 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.0.7 (2013-11-13)
+
+### Defect
+* [SEQWARE-1707] - Workflow runs can be scheduled using invalid INI files
+* [SEQWARE-1764] - Memory leak in JAXB Unmarshalling
+* [SEQWARE-1782] - Convert filechild query params to json, also limit results by relevant workflow runs 
+
+
+### Story
+* [SEQWARE-1539] - Tool to skip file entry and delete file on disk
+* [SEQWARE-1681] - As developers we need to be able to create VMs (VirtualBox, OpenStack, and Amazon) on demand using Vagrant
+
+### Task
+* [SEQWARE-1346] - Fully implement "delete" attribute (formerly: add skip column to file table)
+* [SEQWARE-1515] - workflow_run fail and file deletion
+* [SEQWARE-1746] - Deployment - Setup sqwuser2.hpc for PDE to develop 1.0.x workflows on
+* [SEQWARE-1747] - Documentation - make sure our internal and external docs are 1.0.x compatible
+* [SEQWARE-1778] - WorkflowLauncher does not record workflow parameters
+* [SEQWARE-1780] - Safety measure, deletion key
+* [SEQWARE-1781] - CheckDB - link back to web resources
+* [SEQWARE-1784] - FileLinker should not require Lane
+
+### Technical task
+* [SEQWARE-1542] - Standalone deletion infrastructure
+* [SEQWARE-1589] - Design File Provisioning and Reserved Variables in SeqWare Pipeline
+* [SEQWARE-1689] - output_prefix and output_dir are not handled correctly according to our docs
+* [SEQWARE-1715] - Figure out when "Magic" variables are used and available
+* [SEQWARE-1729] - Vagrant cluster launching on OS, AWS, and VirtualBox
+* [SEQWARE-1732] - Allow users to determine lock file for WorkflowStatusChecker
+* [SEQWARE-1749] - Release a 1.0.x VirtualBox VM and AMI
+* [SEQWARE-1386] - Refactor REST interface into separate project and war
+
+## 0.13.6.13 (2013-11-13)
+
+* [SEQWARE-1773] - Study-wide MetadataWS searches fail if there are 1000+ entries
+* [SEQWARE-1750] - Workflow run relaunches indefinently
+
 ## 1.0.5 (2013-10-01)
 
 ### Improvement
