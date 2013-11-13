@@ -397,8 +397,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     final String parentAccessionString = commaSeparateMy(parentAccessionsToRun);
                     final String fileString = commaSeparateMy(filesToRun);
                     Log.debug("FileString: " + fileString);
-                    boolean rerun = rerunWorkflowRun(filesToRun, fileSWIDsToRun);
-
+                    // SEQWARE-1773 short-circuit this with forceRunAll to ensure that sample fingerprinting workflow launches
+                    boolean rerun = forceRunAll || rerunWorkflowRun(filesToRun, fileSWIDsToRun);
+ 
                     // SEQWARE-1728 - move creation of ini to launches (and test launches) to conserve disk space 
                     iniFiles = new ArrayList<String>();
 
