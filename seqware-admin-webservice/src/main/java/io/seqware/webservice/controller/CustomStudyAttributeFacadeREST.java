@@ -41,9 +41,9 @@ public class CustomStudyAttributeFacadeREST extends StudyAttributeFacadeREST {
     */
    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
    @POST
-   @Path("withstudy")
+   @Path("withbaseentity")
    @Consumes({ "application/json", "application/xml" })
-   public void createWithStudy(StudyAttribute entity) {
+   public void createWithBaseEntity(StudyAttribute entity) {
       studyFacadeRest.create(entity.getStudyId());
       em.flush();
       super.create(entity);

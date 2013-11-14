@@ -41,9 +41,9 @@ public class CustomSampleAttributeFacadeREST extends SampleAttributeFacadeREST {
     */
    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
    @POST
-   @Path("withsample")
+   @Path("withbaseentity")
    @Consumes({ "application/json", "application/xml" })
-   public void createWithSample(SampleAttribute entity) {
+   public void createWithBaseEntity(SampleAttribute entity) {
       sampleFacadeRest.create(entity.getSampleId());
       em.flush();
       super.create(entity);
