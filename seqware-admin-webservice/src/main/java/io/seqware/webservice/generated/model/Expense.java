@@ -74,7 +74,7 @@ public class Expense implements Serializable {
   private BigInteger totalPrice;
   @Column(name = "added_surcharge")
   private BigInteger addedSurcharge;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @Column(name = "expense_finished_tstmp")
   @Temporal(TemporalType.TIMESTAMP)

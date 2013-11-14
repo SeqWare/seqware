@@ -46,7 +46,7 @@ public class ShareStudy implements Serializable {
   private Integer shareStudyId;
   @Column(name = "active")
   private Boolean active;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @Basic(optional = false)
   @NotNull

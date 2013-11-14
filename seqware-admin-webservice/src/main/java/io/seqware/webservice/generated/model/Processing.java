@@ -99,7 +99,7 @@ public class Processing implements Serializable {
   private Integer processExitStatus;
   @Column(name = "task_group")
   private Boolean taskGroup;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @Column(name = "run_start_tstmp")
   @Temporal(TemporalType.TIMESTAMP)

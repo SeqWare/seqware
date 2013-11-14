@@ -84,7 +84,7 @@ public class File implements Serializable {
   @Size(max = 2147483647)
   @Column(name = "description")
   private String description;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @Column(name = "size")
   private BigInteger size;
