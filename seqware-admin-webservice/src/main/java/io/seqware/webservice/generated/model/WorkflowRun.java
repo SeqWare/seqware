@@ -31,6 +31,8 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 /**
  *
@@ -121,9 +123,11 @@ public class WorkflowRun implements Serializable {
   @Size(max = 2147483647)
   @Column(name = "workflow_engine")
   private String workflowEngine;
-  @OneToMany(mappedBy = "workflowRunId", fetch = FetchType.EAGER)
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @OneToMany(mappedBy = "workflowRunId")
   private Collection<Processing> processingCollection;
-  @OneToMany(mappedBy = "ancestorWorkflowRunId", fetch = FetchType.EAGER)
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @OneToMany(mappedBy = "ancestorWorkflowRunId")
   private Collection<Processing> processingCollection1;
   @JoinColumn(name = "workflow_id", referencedColumnName = "workflow_id")
   @ManyToOne(optional = false)

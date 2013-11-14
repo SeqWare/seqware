@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,6 +30,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -52,8 +54,7 @@ import javax.xml.bind.annotation.XmlTransient;
   @NamedQuery(name = "Study.findByProjectId", query = "SELECT s FROM Study s WHERE s.projectId = :projectId"),
   @NamedQuery(name = "Study.findByStatus", query = "SELECT s FROM Study s WHERE s.status = :status"),
   @NamedQuery(name = "Study.findBySwAccession", query = "SELECT s FROM Study s WHERE s.swAccession = :swAccession"),
-  @NamedQuery(name = "Study.findByCreateTstmp", query = "SELECT s FROM Study s WHERE s.createTstmp = :createTstmp"),
-  @NamedQuery(name = "Study.findByUpdateTstmp", query = "SELECT s FROM Study s WHERE s.updateTstmp = :updateTstmp")})
+  @NamedQuery(name = "Study.findByCreateTstmp", query = "SELECT s FROM Study s WHERE s.createTstmp = :createTstmp")})
 public class Study implements Serializable {
   private static final long serialVersionUID = 1L;
   @Id
@@ -112,7 +113,7 @@ public class Study implements Serializable {
   @ManyToOne(optional = false)
   private StudyType existingType;
   @JoinColumn(name = "owner_id", referencedColumnName = "registration_id")
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   private Registration ownerId;
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "studyId")
   private Collection<Experiment> experimentCollection;
@@ -177,6 +178,7 @@ public class Study implements Serializable {
     return accession;
   }
 
+  @JsonIgnore
   public void setAccession(String accession) {
     this.accession = accession;
   }
