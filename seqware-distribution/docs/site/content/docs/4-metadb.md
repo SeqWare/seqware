@@ -67,3 +67,29 @@ find all of the processing events linked with a Study is to traverse through
 the IUS to the root Processing through processing_ius, not through
 ius_workflow_runs.
 
+
+## Upgrading From 0.13.6.X to 1.0.X
+
+First, let's review which tools depend on what. 
+
+![Required Infrastructure](/assets/images/metadb/database_paths.png)
+
+All currently supported command-line utilities from 0.13.6.X use the SeqWare web service and in their 1.0.X incarnation, will rely upon a 1.0.X web service. The new deletion utility relies upon the 1.0.X admin web service (to be documented). The checkDB and migration plugin (used to copy input file paths from the old workflow run reports) rely upon a direct database connection as well. Please refer to 
+[User Configuration](/docs/github_readme/6-pipeline/user-configuration) for additional information on setting these up. 
+
+You will need both your SeqWare webservice and SeqWare database settings configured before attempting to update your database. The procedure is as follows:
+
+First, run the various update scripts:
+
+    psql -U seqware seqware_meta_db < 0.13.6.x_to_1.0.1.sql
+    psql -U seqware seqware_meta_db < 1.0.1_to_1.0.3.sql
+    psql -U seqware seqware_meta_db < 1.0.2_to_1.0.3.sql
+    psql -U seqware seqware_meta_db < 1.0.4_to_1.0.5.sql
+
+Second, run the migration plugin:
+
+    java -jar seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunFilesInitialPopulationPlugin
+    
+Third, you'll probably want to create the initial file-provenance-report (note, you'll probably want this to run on a schedule for updates)
+
+    seqware files refresh
