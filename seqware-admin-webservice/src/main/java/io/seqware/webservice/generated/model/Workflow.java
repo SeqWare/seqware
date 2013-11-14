@@ -106,7 +106,7 @@ public class Workflow implements Serializable {
   @Column(name = "update_tstmp")
   @Version
   private Timestamp updateTstmp;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @Size(max = 2147483647)
   @Column(name = "permanent_bundle_location")
