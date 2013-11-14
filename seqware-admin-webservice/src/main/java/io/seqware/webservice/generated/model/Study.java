@@ -98,7 +98,7 @@ public class Study implements Serializable {
   @Size(max = 2147483647)
   @Column(name = "status")
   private String status;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @Basic(optional = false)
   @NotNull
