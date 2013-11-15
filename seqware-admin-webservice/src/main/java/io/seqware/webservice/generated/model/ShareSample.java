@@ -39,7 +39,7 @@ public class ShareSample implements Serializable {
   private static final long serialVersionUID = 1L;
   @Column(name = "active")
   private Boolean active;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @Basic(optional = false)
   @NotNull

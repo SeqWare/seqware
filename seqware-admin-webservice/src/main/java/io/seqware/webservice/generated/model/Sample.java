@@ -118,7 +118,7 @@ public class Sample implements Serializable {
   private Boolean skip;
   @Column(name = "is_public")
   private Boolean isPublic;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @Basic(optional = false)
   @NotNull
