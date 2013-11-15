@@ -41,9 +41,9 @@ public class CustomLaneAttributeFacadeREST extends LaneAttributeFacadeREST {
     */
    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
    @POST
-   @Path("withlane")
+   @Path("withbaseentity")
    @Consumes({ "application/json", "application/xml" })
-   public void createWithSample(LaneAttribute entity) {
+   public void createWithBaseEntity(LaneAttribute entity) {
       laneFacadeRest.create(entity.getLaneId());
       em.flush();
       super.create(entity);

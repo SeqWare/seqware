@@ -41,9 +41,9 @@ public class CustomSequencerRunAttributeFacadeREST extends SequencerRunAttribute
     */
    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
    @POST
-   @Path("withsequencerrun")
+   @Path("withbaseentity")
    @Consumes({ "application/json", "application/xml" })
-   public void createWithSample(SequencerRunAttribute entity) {
+   public void createWithBaseEntity(SequencerRunAttribute entity) {
       sequencerRunFacadeRest.create(entity.getSampleId());
       em.flush();
       super.create(entity);
