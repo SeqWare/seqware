@@ -50,7 +50,7 @@ public class ProcessingSequencerRuns implements Serializable {
   @Size(max = 2147483647)
   @Column(name = "url")
   private String url;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @JoinColumn(name = "sequencer_run_id", referencedColumnName = "sequencer_run_id")
   @ManyToOne(optional = false)
