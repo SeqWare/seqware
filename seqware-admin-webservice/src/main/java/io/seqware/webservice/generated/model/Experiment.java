@@ -110,7 +110,7 @@ public class Experiment implements Serializable {
   private BigInteger expectedNumberSpots;
   @Column(name = "expected_number_reads")
   private BigInteger expectedNumberReads;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @Basic(optional = false)
   @NotNull

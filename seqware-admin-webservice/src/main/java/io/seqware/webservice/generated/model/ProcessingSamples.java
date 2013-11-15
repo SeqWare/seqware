@@ -50,7 +50,7 @@ public class ProcessingSamples implements Serializable {
   @Size(max = 2147483647)
   @Column(name = "url")
   private String url;
-  @Column(name = "sw_accession")
+  @Column(name = "sw_accession", insertable=false,updatable=false)
   private Integer swAccession;
   @JoinColumn(name = "sample_id", referencedColumnName = "sample_id")
   @ManyToOne(optional = false)
