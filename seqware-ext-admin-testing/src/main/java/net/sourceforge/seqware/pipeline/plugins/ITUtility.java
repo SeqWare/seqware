@@ -104,6 +104,9 @@ public class ITUtility {
      */
     private static File searchForFullJar(File seqTargetDir) {
         File targetFullJar = null;
+        if (!seqTargetDir.exists()){
+            throw new RuntimeException(seqTargetDir.getAbsolutePath() + " does not exist!");
+        }
         for (File files : seqTargetDir.listFiles()) {
             if (files.getName().contains("full") && !files.getName().contains("-qe-")) {
                 targetFullJar = files;
