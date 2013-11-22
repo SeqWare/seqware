@@ -165,6 +165,7 @@
         <module>seqware-archetypes/seqware-archetype-module</module>
         <module>seqware-distribution</module>
         <module>seqware-ext-testing</module>
+        <module>seqware-sanity-check</module>
     </modules>
 
 
