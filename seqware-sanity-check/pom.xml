@@ -9,9 +9,9 @@
         <relativePath>../pom.xml</relativePath> 
     </parent>
 
-    <artifactId>seqware-ext-testing</artifactId>
+    <artifactId>seqware-sanity-check</artifactId>
 
-    <name>seqware-ext-testing</name>
+    <name>seqware-sanity-check</name>
     <url>https://github.com/SeqWare/seqware</url>
 
     <dependencies>
@@ -38,10 +38,25 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.seqware</groupId>
+            <artifactId>seqware-pipeline</artifactId>
+            <type>jar</type>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>seqware-ext-admin-testing</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
+            <scope>compile</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>seqware-ext-testing</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+            <type>test-jar</type>
         </dependency>
     </dependencies>
     <properties>
@@ -56,17 +71,6 @@
             </resource>
         </resources>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
              <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
