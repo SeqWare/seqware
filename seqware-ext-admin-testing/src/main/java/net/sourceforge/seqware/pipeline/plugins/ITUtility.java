@@ -221,6 +221,14 @@ public class ITUtility {
      */
     private static File retrieveCompiledSeqwareScript() {
         String property = System.getProperty("cliPath");
+        if (property == null){
+            // try PATH
+            File p = new File(System.getProperty("user.home")+ "/bin", "seqware");
+            if (p.exists()){
+                return p;
+            }
+            throw new RuntimeException("Could not locate seqware script");
+        }
         File seqwareScript = new File(property);
         return seqwareScript;
     }
