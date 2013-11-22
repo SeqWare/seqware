@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import net.sourceforge.seqware.common.factory.DBAccess;
+import net.sourceforge.seqware.common.metadata.MetadataDB;
+import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
@@ -88,15 +90,28 @@ public final class SanityCheck extends Plugin {
     public final ReturnValue do_run() {
         ReturnValue ret = new ReturnValue();
         Collection<SanityCheckPluginInterface> plugins = (Collection<SanityCheckPluginInterface>) Lookup.getDefault().lookupAll(SanityCheckPluginInterface.class);
+        MetadataDB metadataDB = null;
+        try{
+             metadataDB = DBAccess.get();
+        } catch(RuntimeException e){
+            if (e.getMessage().equals(MetadataFactory.NO_DATABASE_CONFIG)){
+                System.err.println("Warning: No or invalid SeqWare metadb settings");
+            } else{
+                throw e;
+            }
+        }
+        
         for(SanityCheckPluginInterface plugin : plugins){
             Log.info("Running " + plugin.getClass().getSimpleName());
-            try{     
-                boolean check = plugin.check(new QueryRunner(DBAccess.get()), metadata);
+            try{        
+                boolean check = plugin.check(metadataDB == null? null : new QueryRunner(metadataDB), metadata);
                 if (!check){
                     System.err.println("Failed check: " + plugin.getClass().getSimpleName());
+                    ret.setExitStatus(ReturnValue.FAILURE);
+                    return ret;
+                } else{
+                    System.err.println("Passed check: " + plugin.getClass().getSimpleName());
                 }
-                ret.setExitStatus(ReturnValue.FAILURE);
-                return ret;
             } catch (Exception e){
                 Log.fatal("Plugin " + plugin.getClass().getSimpleName() + " died", e);
                 System.err.println("Crashed and failed check: " + plugin.getClass().getSimpleName());
@@ -121,6 +136,7 @@ public final class SanityCheck extends Plugin {
     public static void main(String[] args) throws IOException, URISyntaxException {
         SanityCheck mp = new SanityCheck();
         mp.init();
+        mp.setMetadata(MetadataFactory.getWS(ConfigTools.getSettings()));
         List<String> arr = new ArrayList<String>();
         mp.setParams(arr);
         mp.parse_parameters();
