@@ -4,17 +4,19 @@ This README is just a quick overview of building SeqWare. See our
 [project homepage](http://seqware.github.com) for much more documentation.
 
 This is top level of the [SeqWare Project](http://seqware.github.com).
-This contains the 5 major components of the SeqWare project along with
-documentation:
+This contains the 6 major components of the SeqWare project along with
+documentation and testing:
 
 * seqware-meta-db
 * seqware-webservice
+* seqware-admin-webservice
 * seqware-portal
 * seqware-pipeline
 * seqware-queryengine
 * seqware-common
 * the http://seqware.github.com website and manual
 * seqware-ext-testing
+* seqware-ext-admin-testing
 
 The seqware-common sub-project provides a location for common code
 and most of the other sub-projects have this as a dependency.
