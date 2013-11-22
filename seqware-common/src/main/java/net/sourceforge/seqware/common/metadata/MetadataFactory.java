@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 public final class MetadataFactory {
+    public static final String NO_DATABASE_CONFIG = "Missing some of the following required settings: SW_DB_SERVER, SW_DB, SW_DB_USER, SW_DB_PASS";
 
   public static Metadata get(Map<String, String> settings) {
     String method = settings.get("SW_METADATA_METHOD");
@@ -38,7 +39,7 @@ public final class MetadataFactory {
     String pass = settings.get("SW_DB_PASS");
 
     if (server == null || dbName == null || user == null || pass == null) {
-      throw new RuntimeException("Missing some of the following required settings: SW_DB_SERVER, SW_DB, SW_DB_USER, SW_DB_PASS");
+      throw new RuntimeException(NO_DATABASE_CONFIG);
     }
     
     String url = "jdbc:postgresql://" + settings.get("SW_DB_SERVER") + "/" + settings.get("SW_DB");
