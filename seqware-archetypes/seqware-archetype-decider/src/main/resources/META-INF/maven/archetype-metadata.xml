@@ -4,10 +4,10 @@
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <requiredProperties>
         <requiredProperty key="package">
-            <defaultValue>com.github.seqware</defaultValue>
+            <defaultValue>${groupId}</defaultValue>
         </requiredProperty>
-        <requiredProperty key="groupId">
-            <defaultValue>com.github.seqware</defaultValue>
+        <requiredProperty key="decider-class-name">
+            <defaultValue>${artifactId}Decider</defaultValue>
         </requiredProperty>
     </requiredProperties>
     <fileSets>
@@ -15,12 +15,6 @@
             <directory>src/main/java</directory>
             <includes>
                 <include>**/*</include>
-            </includes>
-        </fileSet>
-        <fileSet filtered="true" encoding="UTF-8">
-            <directory></directory>
-            <includes>
-                <include>*.properties</include>
             </includes>
         </fileSet>
         <fileSet filtered="false" packaged="false" encoding="UTF-8">
