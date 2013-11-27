@@ -55,8 +55,8 @@ public class BasicDeciderET {
         // generate , build and install the decider archetype
         String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware "
                 + "-DarchetypeArtifactId=seqware-archetype-decider -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware "
-                + "-DartifactId=seqware-archetype-decider -DworkflowDirectoryName=seqware-archetype-decider "
-                + "-DworkflowName=seqware-archetype-decider -DworkflowVersion=1.0-SNAPSHOT -B -Dgoals=install";
+                + "-DartifactId=decider-HelloWorld -Dworkflow-name=HelloWorld "
+                + "-B -Dgoals=install";
         String genOutput = ITUtility.runArbitraryCommand(command, 0, createTempDir);
         Log.info(genOutput);
         // run the decider
