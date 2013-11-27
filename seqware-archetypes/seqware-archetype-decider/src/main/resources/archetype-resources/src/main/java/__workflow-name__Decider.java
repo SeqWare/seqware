@@ -24,12 +24,12 @@ import net.sourceforge.seqware.pipeline.deciders.BasicDecider;
  *
  * @author mtaschuk@oicr.on.ca
  */
-public class HelloWorldDecider extends BasicDecider {
+public class ${workflow-name}Decider extends BasicDecider {
     //If you need access to the information stored in the ReturnValue for each file, uncomment
     //the next line and the line in {@link #checkFileDetails(ReturnValue, FileMetadata)}.
     //private Map<String, ReturnValue> pathToAttributes = new HashMap<String, ReturnValue>();
 
-    public HelloWorldDecider() {
+    public ${workflow-name}Decider() {
         super();
     }
 
@@ -79,13 +79,13 @@ public class HelloWorldDecider extends BasicDecider {
 
     /**
      * Allows a shortened command line. :
-     * <code>java -jar Decider_${project.version}_${project.artifactId}_${workflow-version}_SeqWare_${seqware-version}-jar-with-dependencies.jar --wf-accession 000000 --study Test --test</code> 
+     * <code>java -jar Decider_${project.version}_${project.workflow-name}_${workflow-version}_SeqWare_${seqware-version}-jar-with-dependencies.jar --wf-accession 000000 --study Test --test</code> 
      */
     public static void main(String args[]){
   
         List<String> params = new ArrayList<String>();
         params.add("--plugin");
-        params.add(${decider-class-name}.class.getCanonicalName());
+        params.add(${workflow-name}Decider.class.getCanonicalName());
         params.add("--");
         params.addAll(Arrays.asList(args));
         System.out.println("Parameters: " + Arrays.deepToString(params.toArray()));
