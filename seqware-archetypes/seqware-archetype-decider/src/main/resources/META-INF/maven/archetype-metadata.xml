@@ -4,10 +4,14 @@
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <requiredProperties>
         <requiredProperty key="package">
-            <defaultValue>${groupId}</defaultValue>
         </requiredProperty>
-        <requiredProperty key="decider-class-name">
-            <defaultValue>${artifactId}Decider</defaultValue>
+        <requiredProperty key="groupId">
+            <defaultValue>${package}</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="workflow-name">
+        </requiredProperty>
+        <requiredProperty key="artifactId">
+            <defaultValue>decider-${workflow-name}</defaultValue>
         </requiredProperty>
     </requiredProperties>
     <fileSets>
