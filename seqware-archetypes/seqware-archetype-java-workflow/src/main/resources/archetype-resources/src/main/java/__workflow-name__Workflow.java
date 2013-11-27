@@ -8,7 +8,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
-public class WorkflowClient extends AbstractWorkflowDataModel {
+public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
 
     @Override
     public Map<String, SqwFile> setupFiles() {
@@ -32,7 +32,7 @@ public class WorkflowClient extends AbstractWorkflowDataModel {
         return this.getFiles();
 
       } catch (Exception ex) {
-        Logger.getLogger(WorkflowClient.class.getName()).log(Level.SEVERE, null, ex);
+        ex.printStackTrace();
         return(null);
       }
     }
