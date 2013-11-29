@@ -7,6 +7,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import net.sourceforge.seqware.common.factory.DBAccess;
@@ -18,7 +20,6 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.Lookup;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -101,12 +102,25 @@ public final class SanityCheck extends Plugin {
             }
         }
         
-        for(SanityCheckPluginInterface plugin : plugins){
-            Log.info("Running " + plugin.getClass().getSimpleName());
+        List<SanityCheckPluginInterface> pluginList = new ArrayList<SanityCheckPluginInterface>();
+        pluginList.addAll(plugins);
+        Comparator<SanityCheckPluginInterface> comp =  new Comparator<SanityCheckPluginInterface>(){
+            @Override
+            public int compare(SanityCheckPluginInterface o1, SanityCheckPluginInterface o2) {
+                Integer n1 = new Integer(o1.getPriority());
+                Integer n2 = new Integer(o2.getPriority());
+                return n1.compareTo(n2);
+            }
+        };
+        Collections.sort(pluginList, comp);
+        
+        for(SanityCheckPluginInterface plugin : pluginList){
+            System.err.println("Running " + plugin.getClass().getSimpleName());
             try{        
                 boolean check = plugin.check(metadataDB == null? null : new QueryRunner(metadataDB), metadata);
                 if (!check){
                     System.err.println("Failed check: " + plugin.getClass().getSimpleName());
+                    System.err.println(plugin.getDescription());
                     ret.setExitStatus(ReturnValue.FAILURE);
                     return ret;
                 } else{
@@ -115,6 +129,7 @@ public final class SanityCheck extends Plugin {
             } catch (Exception e){
                 Log.fatal("Plugin " + plugin.getClass().getSimpleName() + " died", e);
                 System.err.println("Crashed and failed check: " + plugin.getClass().getSimpleName());
+                System.err.println(plugin.getDescription());
                 ret.setExitStatus(ReturnValue.FAILURE);
                 return ret;
             }
