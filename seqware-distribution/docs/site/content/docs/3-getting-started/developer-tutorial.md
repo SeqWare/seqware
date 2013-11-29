@@ -8,7 +8,7 @@ toc_includes_sections: true
 ---
 
 <!-- TODO 
-* really, should be a tutorial for MyHelloWorld so it doesn't conflict with the workflow already installed
+* really, should be a tutorial for HelloWorld so it doesn't conflict with the workflow already installed
 * the adding new job step below should show how to call a user-created script! A one-step workflow!
 -->
 
@@ -140,7 +140,7 @@ In this section we will examine the internals of the Workflow Bundle that was ju
 The first thing you should do is take a look at the workflow manifest showing which workflows
 are present in this bundle (a single Workflow Bundle can contain many workflows).
 
-    $ cd MyHelloWorld
+    $ cd workflow-HelloWorld
     $ mvn install
     ...
     $ seqware bundle list --dir target/Workflow*
@@ -148,11 +148,11 @@ are present in this bundle (a single Workflow Bundle can contain many workflows)
     List Workflows:
 
      Workflow:
-      Name: MyHelloWorld
-      Version: 1.0-SNAPSHOT
+      Name: HelloWorld
+      Version: 1.0
       Description: Add a description of the workflow here.
-      Workflow Class: ${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/classes/com/github/seqware/WorkflowClient.java
-      Config Path: ${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/config/workflow.ini
+      Workflow Class: ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0/classes/com/github/seqware/HelloWorldWorkflow.java
+      Config Path: ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0/config/HelloWorldWorkflow.ini
       Requirements Compute: single Memory: 20M Network: local
 
 This shows the one workflow in the generated workflow bundle.
@@ -173,52 +173,35 @@ This shows the one workflow in the generated workflow bundle.
 
 <%= render '/includes/java_workflows/java_workflow_files/' %>
 
-This method sets up files that are inputs and/or outputs for this workflow.  In
+This method sets up files that are inputs for this workflow.  In
 this example the input <tt>data/input.txt</tt> comes from the workflow bundle
-itself. The ultimate location of the output file is determined by two
+itself. Here we pull in the information from the INI file using getProperty.
+
+Output files are defined differently.
+
+<%= render '/includes/java_workflows/java_workflow_outputfiles/' %>
+
+The ultimate location of the output file is determined by two
 parameters passed into the WorkflowLauncher which actually runs the workflow:
 <tt>--metadata-output-file-prefix</tt> (our <tt>output_prefix</tt> in the ini
 file) and <tt>--metadata-output-dir</tt> (or <tt>output_dir</tt> in the ini
 file). Alternatively, you can actually override the output location for a file
-as is the case with the above "output_file".  When this parameter is available
+as is the case with the above "manual_output".  When this parameter is available
 in the ini file the automatic location of the output file
-("output_prefix"+/+"output_dir"+/+"output") is overridden for the value of
-"output_file".
+("output_prefix"+/+"output_dir"+/+"output") is overridden to ensure the final output
+path is unique.
+
+The job that produces the output file is linked to that file by using job.addFile(SqwFile).
 
 #### Directories
 
-<pre>
-<code>#!java
-    @Override
-    public void setupDirectory() {
-        this.addDirectory("dir1");
-    }
-</code>
-</pre>
+<%= render '/includes/java_workflows/java_workflow_dirs' %>
 
 This method sets up directories in the working directory that the workflow run in. In this case the workflow creates a directory called "dir1".
 
 #### Workflow Steps
 
-<pre>
-<code>#!java
-    @Override
-    public void buildWorkflow() {
-        Job job00 = this.getWorkflow().createBashJob("bash_mkdir");
-        job00.getCommand().addArgument("mkdir test1");
-
-        Job job10 = this.getWorkflow().createBashJob("bash_cp");
-        job10.setCommand("cp " + this.getFiles().get("file_in_0").getProvisionedPath() + " test1");
-        job10.addParent(job00);
-
-        Job job11 = this.getWorkflow().createBashJob("bash_cp");
-        job11.setCommand("cp " + this.getFiles().get("file_in_0").getProvisionedPath() + " dir1/output");
-        job11.addParent(job00);
-
-
-    }
-</code>
-</pre>
+<%= render '/includes/java_workflows/java_workflow_jobs' %>
 
 In this buildWorkflow() method three jobs are created.  You can see that the
 <tt>createBashJob</tt> can be used to run any arbitrary command. In the future
@@ -249,28 +232,42 @@ You can use this as your temporary directory to process intermediate files.
 
 ## Modifying the Workflow
 
-At this point, one would normally want to edit the workflow by modifying the WorkflowClient.java file as is appropriate for the workflow.
-In the example below I just added an extra job that does a simple shell operation (job12).
+At this point, one would normally want to edit the workflow by modifying the HelloWorldWorkflow.java file as is appropriate for the workflow.
+In the example below I just added an extra job that does a simple shell operation (dateJob). I also moved the addFile method appropriately since
+dateJob is now the final job that manipulates the dir1/output file.
 
 <pre>
 <code>#!java
     @Override
     public void buildWorkflow() {
-        Job job00 = this.getWorkflow().createBashJob("bash_mkdir");
-        job00.getCommand().addArgument("mkdir test1");
 
-        Job job10 = this.getWorkflow().createBashJob("bash_cp");
-        job10.setCommand("cp " + this.getFiles().get("file_in_0").getProvisionedPath() + " test1");
-        job10.addParent(job00);
+        // a simple bash job to call mkdir
+        // note that this job uses the system's mkdir (which depends on the system being *nix)
+        Job mkdirJob = this.getWorkflow().createBashJob("bash_mkdir");
+        mkdirJob.getCommand().addArgument("mkdir test1");
 
-        Job job11 = this.getWorkflow().createBashJob("bash_cp");
-        job11.setCommand("cp " + this.getFiles().get("file_in_0").getProvisionedPath() + " dir1/output");
-        job11.addParent(job00);
+        String inputFilePath = this.getFiles().get("file_in_0").getProvisionedPath();
 
-        Job job12 = this.getWorkflow().createBashJob("bash_date");
-        job12.setCommand("date > dir1/time");
-        job12.addParent(job11);
+        // a simple bash job to cat a file into a test file
+        // the file is not saved to the metadata database
+        Job copyJob1 = this.getWorkflow().createBashJob("bash_cp");
+        copyJob1.setCommand(catPath + " " + inputFilePath + "> test1");
+        copyJob1.addParent(mkdirJob);
+
+        // a simple bash job to echo to an output file and concat an input file
+        // the file IS saved to the metadata database
+        Job copyJob2 = this.getWorkflow().createBashJob("bash_cp");
+        copyJob2.getCommand().addArgument(echoPath).addArgument(greeting).addArgument(" > ").addArgument("dir1/output");
+        copyJob2.getCommand().addArgument(";");
+        copyJob2.getCommand().addArgument(catPath + " " +inputFilePath+ " >> dir1/output");
+        copyJob2.addParent(mkdirJob);
+
+	Job dateJob = this.getWorkflow().createBashJob("date");
+	dateJob.setCommand("date >> dir1/output");
+	dateJob.addParent(copyJob2);
+        dateJob.addFile(createOutputFile("dir1/output", "txt/plain", manualOutput));
     }
+
 </code>
 </pre>
 
@@ -295,7 +292,7 @@ When using the Oozie-SGE engine, some additional files are included:
 Prior to testing your bundle, it will be worthwhile to ensure that the files generated are what you expect.  You can accomplish this with the `dry-run` command:
 
     $ seqware bundle dry-run --dir target/Workflow_Bundle_*
-    Performing dry-run of workflow 'MyHelloWorld' version '1.0-SNAPSHOT'
+    Performing dry-run of workflow 'HelloWorld' version '1.0'
     Using working directory: /usr/tmp/seqware-oozie/oozie-3d971491-ca43-48fb-a5d8-a73e18e7db44
     Files copied to hdfs://master:8020/user/seqware/seqware_workflow/oozie-3d971491-ca43-48fb-a5d8-a73e18e7db44
 
@@ -309,7 +306,7 @@ At this point, the individual scripts can be executed to ensure they do what you
 The next step after authoring your workflows in the Java workflow language, and verifying the generated scripts, is to run them:
 
     $ seqware bundle launch --dir target/Workflow_Bundle_*
-    Performing launch of workflow 'MyHelloWorld' version '1.0-SNAPSHOT'
+    Performing launch of workflow 'HelloWorld' version '1.0'
     Using working directory: /usr/tmp/seqware-oozie/oozie-eccfb3b6-cda5-46c3-89ce-7839d4210531
     Files copied to hdfs://master:8020/user/seqware/seqware_workflow/oozie-eccfb3b6-cda5-46c3-89ce-7839d4210531
     Submitted Oozie job: 0000001-130930203123321-oozie-oozi-W
@@ -319,7 +316,7 @@ The next step after authoring your workflows in the Java workflow language, and 
 
     Workflow job running ...
     Application Path   : hdfs://master:8020/user/seqware/seqware_workflow/oozie-eccfb3b6-cda5-46c3-89ce-7839d4210531
-    Application Name   : MyHelloWorld
+    Application Name   : HelloWorld
     Application Status : RUNNING
     Application Actions:
        Name: :start: Type: :START: Status: OK
@@ -350,7 +347,7 @@ run on a traditional Sun Grid Engine (SGE) cluster.  For workflows that execute 
 
 In this following example the same workflow as above is executed with the oozie-sge engine:
 
-    $ cd /home/seqware/workflow-dev/MyHelloWorld
+    $ cd /home/seqware/workflow-dev/HelloWorld
     $ seqware bundle launch --dir target/Workflow_Bundle_* --engine oozie-sge
 
 This will cause the workflow to run and not exit until it finishes.  You can also monitor the workflow using the Hue web
@@ -369,7 +366,7 @@ Assuming the workflow above worked fine the next step is to package it.
     Packaging Bundle
     Bundle has been packaged to /home/seqware/packaged-bundles
 
-What happens here is the <code>Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your output directory (`~/packaged-bundles`) and that can be provided to an admin for installation.
+What happens here is the <code>Workflow_Bundle_HelloWorld_1.0_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your output directory (`~/packaged-bundles`) and that can be provided to an admin for installation.
 
 ## Next Steps
 
