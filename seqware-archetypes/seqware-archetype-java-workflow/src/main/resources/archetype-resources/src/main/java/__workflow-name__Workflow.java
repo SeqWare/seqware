@@ -7,7 +7,21 @@ import java.util.logging.Logger;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
-
+/**
+ * <p>For more information on developing workflows, see the documentation at
+ * <a href="http://seqware.github.io/docs/6-pipeline/java-workflows/">SeqWare Java Workflows</a>.</p>
+ * 
+ * Quick reference for the order of methods called:
+ * 1. setupDirectory
+ * 2. setupFiles
+ * 3. setupWorkflow
+ * 4. setupEnvironment
+ * 5. buildWorkflow
+ * 
+ * See the SeqWare API for 
+ * <a href="http://seqware.github.io/javadoc/stable/apidocs/net/sourceforge/seqware/pipeline/workflowV2/AbstractWorkflowDataModel.html#setupDirectory%28%29">AbstractWorkflowDataModel</a> 
+ * for more information.
+ */
 public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
 
     private boolean manualOutput=false;
@@ -86,7 +100,7 @@ public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
 
     }
 
-    public SqwFile createOutputFile(String workingPath, String metatype, boolean manualOutput) {
+    private SqwFile createOutputFile(String workingPath, String metatype, boolean manualOutput) {
     // register an output file
         SqwFile file1 = new SqwFile(); 
         file1.setSourcePath(workingPath);
