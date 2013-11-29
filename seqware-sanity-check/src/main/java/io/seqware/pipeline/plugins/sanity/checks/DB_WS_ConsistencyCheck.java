@@ -59,4 +59,14 @@ public class DB_WS_ConsistencyCheck implements SanityCheckPluginInterface {
         }
         return true;
     }
+    
+    @Override
+    public String getDescription(){
+        return ".seqware database settings are present and are inconsistent with the provided web service settings";
+    }
+    
+    @Override
+    public int getPriority(){
+        return 10;
+    }
 }

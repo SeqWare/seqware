@@ -45,4 +45,14 @@ public class TutorialCheck implements SanityCheckPluginInterface {
         System.out.println("Test fail count: " + run.getFailureCount());
         return run.wasSuccessful();
     }
+    
+    @Override
+    public String getDescription(){
+        return "Could not run through the old pre-CLI \"Getting Started\" tutorials";
+    }
+    
+    @Override
+    public int getPriority(){
+        return 100;
+    }
 }
