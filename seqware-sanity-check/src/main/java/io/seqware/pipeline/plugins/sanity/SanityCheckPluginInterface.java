@@ -32,4 +32,16 @@ public interface SanityCheckPluginInterface {
      * @throws SQLException 
      */
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException;
+    
+    /**
+     * Describes the check and indicates what may be wrong
+     * @return 
+     */
+    public String getDescription();
+    
+    /**
+     * Indicate the priority of the check, higher is later
+     * @return 
+     */
+    public int getPriority();
 }

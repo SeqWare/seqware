@@ -20,39 +20,33 @@ import io.seqware.pipeline.plugins.sanity.QueryRunner;
 import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.sql.SQLException;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase1;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase2;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase3;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase4;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase5;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase6;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Runs through our CLI tutorial
+ * Checks that the database you're pointing to (if there is one) is consistent with the web service you're pointing to 
  * @author dyuen
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
-public class CLICheck implements SanityCheckPluginInterface { 
+public class DB_Check implements SanityCheckPluginInterface { 
 
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
-        JUnitCore core = new JUnitCore();
-        Result run = core.run(CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class , CLIUserPhase4.class , CLIUserPhase5.class, CLIUserPhase6.class);
-        System.out.println("Test run count: " + run.getRunCount());
-        System.out.println("Test fail count: " + run.getFailureCount());
-        return run.wasSuccessful();
+        if (qRunner == null){
+             System.err.println("Warning: No or invalid SeqWare metadb settings");
+             return true;
+        }
+        Object executeQuery = qRunner.executeQuery("select count(*) from processing;", new ScalarHandler());
+        return true;
     }
     
     @Override
     public String getDescription(){
-        return "Could not run through the CLI \"Getting Started\" tutorials";
+        return ".seqware database settings are present and are inconsistent with the provided web service settings";
     }
     
     @Override
     public int getPriority(){
-        return 110;
+        return 10;
     }
 }
