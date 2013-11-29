@@ -3,7 +3,7 @@
   <workflow name="${workflow-name}" version="${workflow-version}" seqware_version="${seqware-version}"
   basedir="${workflow_bundle_dir}/Workflow_Bundle_${workflow-name}/${workflow-version}">
     <description>${workflow-description}</description>
-    <workflow_class path="${workflow_bundle_dir}/Workflow_Bundle_${workflow-name}/${workflow-version}/classes/${package}/${workflow-name}Workflow.java"/>
+    <workflow_class path="${workflow_bundle_dir}/Workflow_Bundle_${workflow-name}/${workflow-version}/classes/${packageInPathFormat}/${workflow-name}Workflow.java"/>
     <config path="${workflow_bundle_dir}/Workflow_Bundle_${workflow-name}/${workflow-version}/config/${workflow-name}Workflow.ini"/>
     <requirements compute="single" memory="20M" network="local"  workflow_engine="Pegasus,Oozie" workflow_type="java"/>
   </workflow>
