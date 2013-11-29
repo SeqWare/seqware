@@ -120,7 +120,7 @@ public class PluginRunnerET {
         for (String archetype : archetypes) {
             String workflow = "seqware-archetype-" + archetype;
             // generate and install archetypes to local maven repo
-            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow + " -DworkflowDirectoryName=" + workflow + " -DworkflowName=" + workflow + " -DworkflowVersion=1.0-SNAPSHOT -B -Dgoals=install";
+            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow +" -Dworkflow-name="+workflow+" -B -Dgoals=install";
             String genOutput = ITUtility.runArbitraryCommand(command, 0, tempDir);
             Log.info(genOutput);
             // install the workflows to the database and record their information 
