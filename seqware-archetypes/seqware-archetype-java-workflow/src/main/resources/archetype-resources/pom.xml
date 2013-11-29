@@ -147,7 +147,7 @@
                                     <directory>workflow</directory>
                                     <includes>
                                         <include>metadata.xml</include>
-                                        <include>config/workflow.ini</include>
+                                        <include>config/*.ini</include>
                                         <include>workflows/workflow.ftl</include>
                                     </includes>
                                     <filtering>true</filtering>
@@ -156,7 +156,7 @@
                                     <directory>workflow</directory>
                                     <excludes>
                                         <exclude>metadata.xml</exclude>
-                                        <exclude>config/workflow.ini</exclude>
+                                        <exclude>config/*.ini</exclude>
                                         <exclude>workflows/workflow.ftl</exclude>
                                     </excludes>
                                     <filtering>false</filtering>
