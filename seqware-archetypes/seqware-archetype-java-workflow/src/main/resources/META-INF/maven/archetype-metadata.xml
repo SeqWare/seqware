@@ -28,18 +28,12 @@
             </includes>
         </fileSet>
         <fileSet filtered="true" encoding="UTF-8">
-            <directory>workflow/data</directory>
-            <includes>
-                <include>**/*.txt</include>
-            </includes>
-        </fileSet>
-        <fileSet filtered="false" encoding="UTF-8">
             <directory>workflow</directory>
             <includes>
                 <include>**/*.xml</include>
             </includes>
         </fileSet>
-        <fileSet encoding="UTF-8">
+        <fileSet filtered="true" encoding="UTF-8">
             <directory>workflow/config</directory>
             <includes>
                 <include>**/*.ini</include>
