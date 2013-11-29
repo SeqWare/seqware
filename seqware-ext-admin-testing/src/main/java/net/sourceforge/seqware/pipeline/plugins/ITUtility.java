@@ -219,7 +219,7 @@ public class ITUtility {
      * 
      * @return script file
      */
-    private static File retrieveCompiledSeqwareScript() {
+    public static File retrieveCompiledSeqwareScript() {
         String property = System.getProperty("cliPath");
         if (property == null){
             // try PATH
