@@ -49,16 +49,16 @@ See the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) for
 how to make the zipped workflow bundle. After the zip bundle is created, the
 bundle can be provided to the admin for install as below.
 
-	$ seqware bundle install --zip ~/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip 
-	Now transferring /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
-Processing input: /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	$ seqware bundle install --zip ~/packaged-bundles/Workflow_Bundle_HelloWorld_1.0_SeqWare_<%= seqware_release_version %>.zip 
+	Now transferring /home/seqware/packaged-bundles/Workflow_Bundle_HelloWorld_1.0_SeqWare_<%= seqware_release_version %>.zip to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
+Processing input: /home/seqware/packaged-bundles/Workflow_Bundle_HelloWorld_1.0_SeqWare_<%= seqware_release_version %>.zip
       output-dir: /home/seqware/released-bundles
 	
 	WORKFLOW_ACCESSION: 16
-	Bundle Has Been Installed to the MetaDB and Provisioned to /home/seqware/packaged-bundles/Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
+	Bundle Has Been Installed to the MetaDB and Provisioned to /home/seqware/packaged-bundles/Workflow_Bundle_HelloWorld_1.0_SeqWare_<%= seqware_release_version %>.zip!
 
 
-What happens here is the <code>Workflow_Bundle_MyHelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip</code> copied to your released-bundles directory and unzip'd into your provisioned-bundles directory. The metadata about the workflow is then saved to the database.
+What happens here is the <code>Workflow_Bundle_HelloWorld_1.0_SeqWare_<%= seqware_release_version %>.zip</code> copied to your released-bundles directory and unzip'd into your provisioned-bundles directory. The metadata about the workflow is then saved to the database.
 
 <%= render '/includes/monitor_workflows/' %>
 

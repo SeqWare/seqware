@@ -4,14 +4,23 @@ their types, and default values.  For example:
 
 <pre><code>#!ini
 # key=input_file:type=file:display=F:file_meta_type=text/plain
-input_file=${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0-SNAPSHOT/data/input.txt
+input_file=${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/${workflow-version}/data/input.txt
 # key=greeting:type=text:display=T:display_name=Greeting
 greeting=Testing
-# this is just a comment, the output directory is a conventions and used in many workflows to specify a relative output path
+
+cat=${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/${workflow-version}/bin/gnu-coreutils-5.67/cat
+echo=${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/${workflow-version}/bin/gnu-coreutils-5.67/echo
+
+# the output directory is a convention used in many workflows to specify a relative output path
 output_dir=seqware-results
-# the output_prefix is a convention and used to specify the root of the absolute output path or an S3 bucket name
+# the output_prefix is a convention used to specify the root of the absolute output path or an S3 bucket name 
 # you should pick a path that is available on all cluster nodes and can be written by your user
 output_prefix=./
+# manual output determines whether or not SeqWare should enforce the uniqueness of the final directory or not. 
+# If false, SeqWare places files in a directory specified by output_prefix/output_dir/workflowname_version/RANDOM/<files>
+# where RANDOM is an integer. If true, SeqWare places the files at output_prefix/output_dir and may overwrite existing
+# files
+manual_output=false
 </code></pre>
 
 You access these variables in the Java workflow using the
