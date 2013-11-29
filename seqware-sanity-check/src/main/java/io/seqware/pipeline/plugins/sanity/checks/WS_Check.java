@@ -19,40 +19,32 @@ package io.seqware.pipeline.plugins.sanity.checks;
 import io.seqware.pipeline.plugins.sanity.QueryRunner;
 import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.UUID;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase1;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase2;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase3;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase4;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase5;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase6;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
+import net.sourceforge.seqware.common.model.Organism;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Runs through our CLI tutorial
+ * Checks that the database you're pointing to (if there is one) is consistent with the web service you're pointing to 
  * @author dyuen
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
-public class CLICheck implements SanityCheckPluginInterface { 
+public class WS_Check implements SanityCheckPluginInterface { 
 
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
-        JUnitCore core = new JUnitCore();
-        Result run = core.run(CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class , CLIUserPhase4.class , CLIUserPhase5.class, CLIUserPhase6.class);
-        System.out.println("Test run count: " + run.getRunCount());
-        System.out.println("Test fail count: " + run.getFailureCount());
-        return run.wasSuccessful();
+        metadataWS.getOrganisms();
+        return true;
     }
     
     @Override
     public String getDescription(){
-        return "Could not run through the CLI \"Getting Started\" tutorials";
+        return ".seqware web service settings do not point to a working web service";
     }
     
     @Override
     public int getPriority(){
-        return 110;
+        return 5;
     }
 }
