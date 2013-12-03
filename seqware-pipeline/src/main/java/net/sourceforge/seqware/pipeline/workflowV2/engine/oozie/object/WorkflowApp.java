@@ -231,6 +231,11 @@ public class WorkflowApp {
       if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
         pjob.setWorkflowRunAccession(workflowRunAccession);
       }
+      // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+        if (!job.getParentAccessions().isEmpty()) {
+            pjob.setParentAccessions(job.getParentAccessions());
+        }
+      
       this.jobs.add(pjob);
       for (Job parent : job.getParents()) {
         pjob.addParent(this.getOozieJobObject((AbstractJob) parent));
