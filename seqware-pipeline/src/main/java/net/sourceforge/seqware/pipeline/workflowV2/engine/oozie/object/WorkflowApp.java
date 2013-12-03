@@ -198,6 +198,10 @@ public class WorkflowApp {
         if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
           ojob.setWorkflowRunAccession(workflowRunAccession);
         }
+          // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+          if (!entry.getValue().getParentAccessions().isEmpty()) {
+              ojob.setParentAccessions(entry.getValue().getParentAccessions());
+          }
         this.jobs.add(ojob);
         this.fileJobMap.put(entry.getValue(), ojob);
 
@@ -259,6 +263,10 @@ public class WorkflowApp {
             if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
               parentPfjob.setWorkflowRunAccession(workflowRunAccession);
             }
+            // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+              if (!file.getParentAccessions().isEmpty()) {
+                  parentPfjob.setParentAccessions(file.getParentAccessions());
+              }
             this.jobs.add(parentPfjob);
             parentPfjob.setOutputDir("provisionfiles/" + file.getUniqueDir());
             pjob.addParent(parentPfjob);
@@ -278,6 +286,10 @@ public class WorkflowApp {
             if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
               parentPfjob.setWorkflowRunAccession(workflowRunAccession);
             }
+            // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+              if (!file.getParentAccessions().isEmpty()) {
+                  parentPfjob.setParentAccessions(file.getParentAccessions());
+              }
             this.jobs.add(parentPfjob);
             hasProvisionOut.put(pjob, parentPfjob);
           }
