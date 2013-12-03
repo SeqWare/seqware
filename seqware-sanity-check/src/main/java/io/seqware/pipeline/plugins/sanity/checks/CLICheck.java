@@ -16,6 +16,7 @@
  */
 package io.seqware.pipeline.plugins.sanity.checks;
 
+import io.seqware.pipeline.plugins.sanity.ProvidedBundleCLIUserPhase5;
 import io.seqware.pipeline.plugins.sanity.QueryRunner;
 import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.sql.SQLException;
@@ -24,7 +25,6 @@ import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase1;
 import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase2;
 import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase3;
 import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase4;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase5;
 import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase6;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -40,7 +40,7 @@ public class CLICheck implements SanityCheckPluginInterface {
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
         JUnitCore core = new JUnitCore();
-        Result run = core.run(CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class , CLIUserPhase4.class , CLIUserPhase5.class, CLIUserPhase6.class);
+        Result run = core.run(CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class , CLIUserPhase4.class , ProvidedBundleCLIUserPhase5.class, CLIUserPhase6.class);
         System.out.println("Test run count: " + run.getRunCount());
         System.out.println("Test fail count: " + run.getFailureCount());
         return run.wasSuccessful();
