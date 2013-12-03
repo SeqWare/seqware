@@ -16,6 +16,7 @@
  */
 package io.seqware.pipeline.plugins.sanity.checks;
 
+import io.seqware.pipeline.plugins.sanity.ProvidedBundleUserPhase5;
 import io.seqware.pipeline.plugins.sanity.QueryRunner;
 import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.sql.SQLException;
@@ -28,6 +29,7 @@ import net.sourceforge.seqware.pipeline.tutorial.UserPhase5;
 import net.sourceforge.seqware.pipeline.tutorial.UserPhase6;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -40,9 +42,13 @@ public class TutorialCheck implements SanityCheckPluginInterface {
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
         JUnitCore core = new JUnitCore();
-        Result run = core.run(UserPhase1.class, UserPhase2.class, UserPhase3.class , UserPhase4.class , UserPhase5.class, UserPhase6.class);
+        Result run = core.run(UserPhase1.class, UserPhase2.class, UserPhase3.class , UserPhase4.class , ProvidedBundleUserPhase5.class, UserPhase6.class);
         System.out.println("Test run count: " + run.getRunCount());
         System.out.println("Test fail count: " + run.getFailureCount());
+        for(Failure f : run.getFailures()){
+            System.out.println(f.getTestHeader());
+            System.out.println(f.getMessage());
+        }
         return run.wasSuccessful();
     }
     
