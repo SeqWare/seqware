@@ -63,7 +63,7 @@ public class DeveloperPhase1 {
         AccessionMap.accessionMap.put(WORKFLOW, accessions.get(0).toString()); 
         
         // ensure that a couple of the files we talk about in the tutorial exist
-        File bundleDir = PluginRunnerET.getBundleLocations().get("seqwarearchetypejavaworkflow").getParentFile().getParentFile();
+        File bundleDir = PluginRunnerET.getBundleLocations().get("seqware-archetype-java-workflow").getParentFile().getParentFile();
         Log.info("Looking for files in the bundle dir at " + bundleDir.getAbsolutePath());
         File pomXML = new File(bundleDir, "pom.xml");
         Assert.assertTrue("pom.xml does not exist", pomXML.exists());
