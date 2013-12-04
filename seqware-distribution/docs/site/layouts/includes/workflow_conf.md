@@ -4,12 +4,12 @@ their types, and default values.  For example:
 
 <pre><code>#!ini
 # key=input_file:type=file:display=F:file_meta_type=text/plain
-input_file=${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/${workflow-version}/data/input.txt
+input_file=${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/${workflow-version}/data/input.txt
 # key=greeting:type=text:display=T:display_name=Greeting
 greeting=Testing
 
-cat=${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/${workflow-version}/bin/gnu-coreutils-5.67/cat
-echo=${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/${workflow-version}/bin/gnu-coreutils-5.67/echo
+cat=${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/${workflow-version}/bin/gnu-coreutils-5.67/cat
+echo=${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/${workflow-version}/bin/gnu-coreutils-5.67/echo
 
 # the output directory is a convention used in many workflows to specify a relative output path
 output_dir=seqware-results
