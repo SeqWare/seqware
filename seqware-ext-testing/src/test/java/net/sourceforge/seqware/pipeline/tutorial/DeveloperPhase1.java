@@ -63,7 +63,7 @@ public class DeveloperPhase1 {
         AccessionMap.accessionMap.put(WORKFLOW, accessions.get(0).toString()); 
         
         // ensure that a couple of the files we talk about in the tutorial exist
-        File bundleDir = PluginRunnerET.getBundleLocations().get("seqware-archetype-java-workflow").getParentFile().getParentFile();
+        File bundleDir = PluginRunnerET.getBundleLocations().get("seqwarearchetypejavaworkflow").getParentFile().getParentFile();
         Log.info("Looking for files in the bundle dir at " + bundleDir.getAbsolutePath());
         File pomXML = new File(bundleDir, "pom.xml");
         Assert.assertTrue("pom.xml does not exist", pomXML.exists());
@@ -72,7 +72,7 @@ public class DeveloperPhase1 {
         File metadata = new File(bundleDir.getAbsolutePath() + File.separatorChar + "workflow", "metadata.xml");
         Assert.assertTrue("metadata.xml does not exist at " + metadata.getAbsolutePath(), metadata.exists());  
         File workflowClientJava = new File(bundleDir.getAbsolutePath()  + File.separatorChar + "src" + File.separatorChar + "main" + File.separatorChar + "java" 
-            + File.separatorChar + "com" + File.separatorChar + "seqware" + File.separatorChar + "github" + File.separatorChar , "seqware-archetype-java-workflowWorkflow.java");
+            + File.separatorChar + "com" + File.separatorChar + "seqware" + File.separatorChar + "github" + File.separatorChar , "seqwarearchetypejavaworkflowWorkflow.java");
         Assert.assertTrue("java client does not exist at " + workflowClientJava.getAbsolutePath(), workflowClientJava.exists());  
         
         // allocate needed items for future tests
