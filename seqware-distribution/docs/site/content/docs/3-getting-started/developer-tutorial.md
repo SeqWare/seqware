@@ -8,7 +8,7 @@ toc_includes_sections: true
 ---
 
 <!-- TODO 
-* really, should be a tutorial for HelloWorld so it doesn't conflict with the workflow already installed
+* really, should be a tutorial for MyHelloWorld so it doesn't conflict with the workflow already installed
 * the adding new job step below should show how to call a user-created script! A one-step workflow!
 -->
 
@@ -140,7 +140,7 @@ In this section we will examine the internals of the Workflow Bundle that was ju
 The first thing you should do is take a look at the workflow manifest showing which workflows
 are present in this bundle (a single Workflow Bundle can contain many workflows).
 
-    $ cd workflow-HelloWorld
+    $ cd workflow-MyHelloWorld
     $ mvn install
     ...
     $ seqware bundle list --dir target/Workflow*
@@ -148,11 +148,11 @@ are present in this bundle (a single Workflow Bundle can contain many workflows)
     List Workflows:
 
      Workflow:
-      Name: HelloWorld
+      Name: MyHelloWorld
       Version: 1.0
       Description: Add a description of the workflow here.
-      Workflow Class: ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0/classes/com/github/seqware/HelloWorldWorkflow.java
-      Config Path: ${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0/config/HelloWorldWorkflow.ini
+      Workflow Class: ${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0/classes/com/github/seqware/MyHelloWorldWorkflow.java
+      Config Path: ${workflow_bundle_dir}/Workflow_Bundle_MyHelloWorld/1.0/config/MyHelloWorldWorkflow.ini
       Requirements Compute: single Memory: 20M Network: local
 
 This shows the one workflow in the generated workflow bundle.
@@ -232,7 +232,7 @@ You can use this as your temporary directory to process intermediate files.
 
 ## Modifying the Workflow
 
-At this point, one would normally want to edit the workflow by modifying the HelloWorldWorkflow.java file as is appropriate for the workflow.
+At this point, one would normally want to edit the workflow by modifying the MyHelloWorldWorkflow.java file as is appropriate for the workflow.
 In the example below I just added an extra job that does a simple shell operation (dateJob). I also moved the addFile method appropriately since
 dateJob is now the final job that manipulates the dir1/output file.
 
@@ -292,7 +292,7 @@ When using the Oozie-SGE engine, some additional files are included:
 Prior to testing your bundle, it will be worthwhile to ensure that the files generated are what you expect.  You can accomplish this with the `dry-run` command:
 
     $ seqware bundle dry-run --dir target/Workflow_Bundle_*
-    Performing dry-run of workflow 'HelloWorld' version '1.0'
+    Performing dry-run of workflow 'MyHelloWorld' version '1.0'
     Using working directory: /usr/tmp/seqware-oozie/oozie-3d971491-ca43-48fb-a5d8-a73e18e7db44
     Files copied to hdfs://master:8020/user/seqware/seqware_workflow/oozie-3d971491-ca43-48fb-a5d8-a73e18e7db44
 
@@ -306,7 +306,7 @@ At this point, the individual scripts can be executed to ensure they do what you
 The next step after authoring your workflows in the Java workflow language, and verifying the generated scripts, is to run them:
 
     $ seqware bundle launch --dir target/Workflow_Bundle_*
-    Performing launch of workflow 'HelloWorld' version '1.0'
+    Performing launch of workflow 'MyHelloWorld' version '1.0'
     Using working directory: /usr/tmp/seqware-oozie/oozie-eccfb3b6-cda5-46c3-89ce-7839d4210531
     Files copied to hdfs://master:8020/user/seqware/seqware_workflow/oozie-eccfb3b6-cda5-46c3-89ce-7839d4210531
     Submitted Oozie job: 0000001-130930203123321-oozie-oozi-W
@@ -316,7 +316,7 @@ The next step after authoring your workflows in the Java workflow language, and 
 
     Workflow job running ...
     Application Path   : hdfs://master:8020/user/seqware/seqware_workflow/oozie-eccfb3b6-cda5-46c3-89ce-7839d4210531
-    Application Name   : HelloWorld
+    Application Name   : MyHelloWorld
     Application Status : RUNNING
     Application Actions:
        Name: :start: Type: :START: Status: OK
@@ -347,7 +347,7 @@ run on a traditional Sun Grid Engine (SGE) cluster.  For workflows that execute 
 
 In this following example the same workflow as above is executed with the oozie-sge engine:
 
-    $ cd /home/seqware/workflow-dev/HelloWorld
+    $ cd /home/seqware/workflow-dev/workflow-MyHelloWorld
     $ seqware bundle launch --dir target/Workflow_Bundle_* --engine oozie-sge
 
 This will cause the workflow to run and not exit until it finishes.  You can also monitor the workflow using the Hue web
@@ -366,7 +366,7 @@ Assuming the workflow above worked fine the next step is to package it.
     Packaging Bundle
     Bundle has been packaged to /home/seqware/packaged-bundles
 
-What happens here is the <code>Workflow_Bundle_HelloWorld_1.0_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your output directory (`~/packaged-bundles`) and that can be provided to an admin for installation.
+What happens here is the <code>Workflow_Bundle_MyHelloWorld_1.0_SeqWare_<%= seqware_release_version %></code> directory is zip'd up to your output directory (`~/packaged-bundles`) and that can be provided to an admin for installation.
 
 ## Next Steps
 

@@ -16,15 +16,15 @@ Assuming one uses the Java workflow, use the following options after mvn archety
         Choose a number or apply filter (format: [groupId:]artifactId, case sensitive contains): 16: 62
 	Define value for property 'package': : net.sf.seqware
 	Define value for property 'groupId':  net.sf.seqware: : 
-	Define value for property 'workflow-name': : helloworld
-	Define value for property 'artifactId':  workflow-helloworld: : 
+	Define value for property 'workflow-name': : MyHelloWorld
+	Define value for property 'artifactId':  workflow-MyHelloWorld: : 
 	Define value for property 'version':  1.0-SNAPSHOT: : 1.0
 	[INFO] Using property: package = net.sf.seqware
 	Confirm properties configuration:
 	package: net.sf.seqware
 	groupId: net.sf.seqware
-	workflow-name: helloworld
-	artifactId: workflow-helloworld
+	workflow-name: MyHelloWorld
+	artifactId: workflow-MyHelloWorld
 	version: 1.0
 	package: net.sf.seqware
 	 Y: : Y
@@ -32,16 +32,16 @@ Assuming one uses the Java workflow, use the following options after mvn archety
 	[INFO] Using following parameters for creating project from Archetype: seqware-archetype-java-workflow:1.0.8-SNAPSHOT
 	[INFO] ----------------------------------------------------------------------------
 	[INFO] Parameter: groupId, Value: net.sf.seqware
-	[INFO] Parameter: artifactId, Value: workflow-helloworld
+	[INFO] Parameter: artifactId, Value: workflow-MyHelloWorld
 	[INFO] Parameter: version, Value: 1.0
 	[INFO] Parameter: package, Value: net.sf.seqware
 	[INFO] Parameter: packageInPathFormat, Value: net/sf/seqware
 	[INFO] Parameter: version, Value: 1.0
 	[INFO] Parameter: package, Value: net.sf.seqware
 	[INFO] Parameter: groupId, Value: net.sf.seqware
-	[INFO] Parameter: workflow-name, Value: helloworld
-	[INFO] Parameter: artifactId, Value: workflow-helloworld
-        [INFO] project created from Archetype in dir: /home/seqware/SeqWare/maven-bundles/workflow-helloworld
+	[INFO] Parameter: workflow-name, Value: MyHelloWorld
+	[INFO] Parameter: artifactId, Value: workflow-MyHelloWorld
+        [INFO] project created from Archetype in dir: /home/seqware/SeqWare/maven-bundles/workflow-MyHelloWorld
         [INFO] ------------------------------------------------------------------------
         [INFO] BUILD SUCCESSFUL
         [INFO] ------------------------------------------------------------------------
@@ -69,7 +69,7 @@ Note the following conventions:
 <!-- this explicit pre tag should be avoided, but the automatic nanoc formatting does not 
 seem to work here -->
 <pre>
-        $ cd workflow-helloworld-example
+        $ cd workflow-MyHelloWorld
         $ ls
         pom.xml src workflow  workflow.properties
 </pre>
