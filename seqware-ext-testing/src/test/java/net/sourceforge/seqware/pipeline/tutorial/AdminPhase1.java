@@ -53,14 +53,15 @@ public class AdminPhase1 {
         String[] archetypes = {"java-workflow"/*, "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow"*/};
         for (String archetype : archetypes) {
             String workflow = "seqware-archetype-" + archetype;
+	    String workflowName = workflow.replace("-","");
             // generate and install archetypes to local maven repo
-            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow + " -Dworkflow-name="+workflow.replace("-","")+" -B -Dgoals=install";
+            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow + " -Dworkflow-name="+workflowName+" -B -Dgoals=install";
             String genOutput = ITUtility.runArbitraryCommand(command, 0, separateTempDir);
             Log.info(genOutput);
             // install the workflows to the database and record their information 
             File workflowDir = new File(separateTempDir, workflow);
             File targetDir = new File(workflowDir, "target");
-            File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflow + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
+            File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflowName + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
 
             String packageCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + packageDir + " -p " + bundleDir.getAbsolutePath();
             String packageOutput = ITUtility.runSeqWareJar(packageCommand, ReturnValue.SUCCESS, null);

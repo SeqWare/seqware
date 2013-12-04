@@ -59,6 +59,9 @@ public class PluginRunnerET {
         return installedWorkflows;
     }
 
+    /**
+     * Returns a map of workflow artifactIds to their bundle path.
+     */
     public static Map<String, File> getBundleLocations() {
         return bundleLocations;
     }
@@ -119,14 +122,15 @@ public class PluginRunnerET {
     public static void buildAndInstallArchetypes(String[] archetypes, String SEQWARE_VERSION, boolean testListing, boolean deleteBundles) throws IOException, NumberFormatException {
         for (String archetype : archetypes) {
             String workflow = "seqware-archetype-" + archetype;
+	    String workflowName = workflow.replace("-","");
             // generate and install archetypes to local maven repo
-            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow +" -Dworkflow-name="+workflow.replace("-","")+" -B -Dgoals=install";
+            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow +" -Dworkflow-name="+workflowName+" -B -Dgoals=install";
             String genOutput = ITUtility.runArbitraryCommand(command, 0, tempDir);
             Log.info(genOutput);
             // install the workflows to the database and record their information 
             File workflowDir = new File(tempDir, workflow);
             File targetDir = new File(workflowDir, "target");
-            File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflow + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
+            File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflowName + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
             
             bundleLocations.put(workflow, bundleDir);
 
