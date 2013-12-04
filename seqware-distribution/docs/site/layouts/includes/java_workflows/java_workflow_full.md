@@ -22,7 +22,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
  * <a href="http://seqware.github.io/javadoc/stable/apidocs/net/sourceforge/seqware/pipeline/workflowV2/AbstractWorkflowDataModel.html#setupDirectory%28%29">AbstractWorkflowDataModel</a> 
  * for more information.
  */
-public class HelloWorldWorkflow extends AbstractWorkflowDataModel {
+public class MyHelloWorldWorkflow extends AbstractWorkflowDataModel {
 
     private boolean manualOutput=false;
     private String catPath, echoPath;

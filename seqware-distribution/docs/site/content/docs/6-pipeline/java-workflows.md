@@ -31,7 +31,7 @@ Hadoop is only present for the Oozie Workflow Engine).
 ## Creating a Java Workflow Bundle
 
 In the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) you
-saw how to create a HelloWorld Java workflow using archetype.
+saw how to create a MyHelloWorld Java workflow using archetype.
 
 <%= render '/includes/java_archetype/' %>
 
@@ -49,7 +49,7 @@ which contains your assembled workflow.
 
 <%= render '/includes/java_workflows/java_workflow/' %>
 
-The full contents of the <tt>HelloWorldWorkflow.java</tt> are included below. We will 
+The full contents of the <tt>MyHelloWorldWorkflow.java</tt> are included below. We will 
 describe each section in more detail next:
 
 <%= render '/includes/java_workflows/java_workflow_full/' %>
@@ -125,7 +125,7 @@ install. The SeqWare archeype for Java workflow symlinks the entire 'links' fold
 
 First, create the link:
 
-    [seqware@seqwarevm HelloWorld]$ cd links
+    [seqware@seqwarevm workflow-MyHelloWorld]$ cd links
     [seqware@seqwarevm links]$ rm -Rf *
     [seqware@seqwarevm links]$ ln -s ../workflow/data/
     [seqware@seqwarevm links]$ ls -alhtr
