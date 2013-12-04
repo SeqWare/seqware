@@ -100,8 +100,9 @@ public class DeveloperPhase1 {
         boolean linesAdded = false;
         for(int i = 0; i < readLines.size(); i++){
             if(readLines.get(i).contains("copyJob2.addFile(createOutputFile(\"dir1/output\", \"txt/plain\", manualOutput));")){
+		readLines.remove(i);
                 readLines.add(i, "\nJob dateJob = this.getWorkflow().createBashJob(\"bash_date\");\ndateJob.setCommand(\"date >> dir1/output\");"+
-				"\ndateJob.addParent(copyJob2);\ncopyJob2.addFile(createOutputFile(\"dir1/output\", \"txt/plain\", manualOutput)); ");
+				"\ndateJob.addParent(copyJob2);\ndateJob.addFile(createOutputFile(\"dir1/output\", \"txt/plain\", manualOutput)); ");
                 linesAdded = true;
             }
         }
