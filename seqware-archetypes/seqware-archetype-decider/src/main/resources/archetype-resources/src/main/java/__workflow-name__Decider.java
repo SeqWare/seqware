@@ -31,6 +31,7 @@ public class ${workflow-name}Decider extends BasicDecider {
 
     public ${workflow-name}Decider() {
         super();
+	parser.accepts("verbose", "Optional: prints debug and logging information during execution");
     }
 
     @Override
@@ -86,6 +87,8 @@ public class ${workflow-name}Decider extends BasicDecider {
         List<String> params = new ArrayList<String>();
         params.add("--plugin");
         params.add(${workflow-name}Decider.class.getCanonicalName());
+	if (options.contains("verbose"))
+	    params.add("--verbose");
         params.add("--");
         params.addAll(Arrays.asList(args));
         System.out.println("Parameters: " + Arrays.deepToString(params.toArray()));
