@@ -49,7 +49,7 @@ public class CLIUserPhase6 extends UserPhase6{
 
     @Override
     protected void exportStudyResults() throws IOException {
-        ITUtility.runSeqwareCLI(" files report --study 'New Test Study'", ReturnValue.SUCCESS, null);
+        ITUtility.runSeqwareCLI(" files report --study-name 'New Test Study'", ReturnValue.SUCCESS, null);
     }
 
 }
