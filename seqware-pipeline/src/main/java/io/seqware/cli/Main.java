@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -822,7 +823,7 @@ public class Main {
       List<String> sequencerRuns = optVals(args, "--sequencer-run-name");
       List<String> iusSWIDs = optVals(args, "--ius-SWID");
       List<String> laneSWIDs = optVals(args, "--lane-SWID");
-      String file = optVal(args, "--out", null);
+      String file = optVal(args, "--out", (new Date() + ".tsv").replace(" ", "_"));
 
       extras(args, "files report");
 
@@ -862,6 +863,7 @@ public class Main {
         }
 
       run(runnerArgs);
+      out("Created file "+file);
     }
   }
 
