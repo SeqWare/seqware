@@ -5,6 +5,7 @@ import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.deciders.BasicDecider;
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Launches a workflow with an input BAM file.
@@ -85,10 +86,11 @@ public class ${workflow-name}Decider extends BasicDecider {
     public static void main(String args[]){
   
         List<String> params = new ArrayList<String>();
+	if (ArrayUtils.contains(args,"--verbose")){
+	    params.add("--verbose");
+	}
         params.add("--plugin");
         params.add(${workflow-name}Decider.class.getCanonicalName());
-	if (options.contains("verbose"))
-	    params.add("--verbose");
         params.add("--");
         params.addAll(Arrays.asList(args));
         System.out.println("Parameters: " + Arrays.deepToString(params.toArray()));
