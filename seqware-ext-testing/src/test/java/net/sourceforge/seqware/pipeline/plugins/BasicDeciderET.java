@@ -53,7 +53,7 @@ public class BasicDeciderET {
     public void createDeciderFromArchetype() throws IOException {
         File createTempDir = Files.createTempDir();
         // generate , build and install the decider archetype
-        String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware "
+        String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.github.seqware -DgroupId=com.github.seqware "
                 + "-DarchetypeArtifactId=seqware-archetype-decider -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware "
                 + "-DartifactId=decider-HelloWorld -Dworkflow-name=HelloWorld "
                 + "-B -Dgoals=install";
@@ -64,7 +64,7 @@ public class BasicDeciderET {
         String SEQWARE_VERSION = new ReturnValue().getClass().getPackage().getImplementationVersion();
         command = "java -cp "+createTempDir.getAbsolutePath()+"/decider-HelloWorld/target/Decider_1.0-SNAPSHOT_HelloWorld_1.0_SeqWare_"+SEQWARE_VERSION+".jar:"
                 + seqwareJar.getAbsolutePath() 
-                + " net.sourceforge.seqware.pipeline.runner.PluginRunner -p com.seqware.github.HelloWorldDecider -- --all --wf-accession 6685 --parent-wf-accessions 4767 --test";
+                + " net.sourceforge.seqware.pipeline.runner.PluginRunner -p com.github.seqware.HelloWorldDecider -- --all --wf-accession 6685 --parent-wf-accessions 4767 --test";
         genOutput = ITUtility.runArbitraryCommand(command, 0, createTempDir);
         Log.info(genOutput);
         Assert.assertTrue("expected to see 1 launches, found " + StringUtils.countOccurrencesOf(genOutput, "java -jar") , StringUtils.countOccurrencesOf(genOutput, "java -jar") == 1);
