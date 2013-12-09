@@ -43,7 +43,7 @@ public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
 	    echoPath = getProperty("echo");
 	} catch (Exception e) {
 	    e.printStackTrace();
-	    System.exit(1);
+	    throw new RuntimeException(e);
 	}
     }
 
@@ -67,7 +67,7 @@ public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
       
       } catch (Exception ex) {
         ex.printStackTrace();
-	System.exit(1);
+	throw new RuntimeException(e);
       }
       return this.getFiles();
     }
