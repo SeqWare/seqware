@@ -67,7 +67,7 @@ public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
       
       } catch (Exception ex) {
         ex.printStackTrace();
-	throw new RuntimeException(e);
+	throw new RuntimeException(ex);
       }
       return this.getFiles();
     }
