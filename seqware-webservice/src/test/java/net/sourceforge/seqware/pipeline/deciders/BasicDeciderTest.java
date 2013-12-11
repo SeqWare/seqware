@@ -113,7 +113,7 @@ public class BasicDeciderTest extends PluginTest {
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 21);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 17);
     }
 
     @Test
@@ -122,7 +122,7 @@ public class BasicDeciderTest extends PluginTest {
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 21);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 17);
     }
 
     @Test
@@ -157,7 +157,7 @@ public class BasicDeciderTest extends PluginTest {
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
         // we expect to launch 3 times 
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getFinalChecks(), decider.getFinalChecks() == 133);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getFinalChecks(), decider.getFinalChecks() == 80);
     }
     
     @Test
@@ -213,7 +213,7 @@ public class BasicDeciderTest extends PluginTest {
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 96);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 61);
     }
     
     @Test
@@ -222,7 +222,7 @@ public class BasicDeciderTest extends PluginTest {
         launchAndCaptureOutput(params);
         TestingDecider decider = (TestingDecider) instance;
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 39);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 20);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 12);
     }
     
     
@@ -235,13 +235,13 @@ public class BasicDeciderTest extends PluginTest {
         String[] params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10", "--test"};
         launchAndCaptureOutput(params);
         TestingDecider decider = (TestingDecider) instance;
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 57);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 47);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 36);
         
         params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "1", "--test"};
         launchAndCaptureOutput(params);
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 55);
+        Assert.assertTrue("output 2 does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 47);
+        Assert.assertTrue("output 2 does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 34);
     }
     
     @Test 
