@@ -742,11 +742,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
         //group files according to the designated header (e.g. sample SWID)
         for (ReturnValue r : vals) {
-            // SEQWARE-1809 ensure that deciders only use input from completed workflow runs
-            String status = r.getAttribute(FindAllTheFiles.WORKFLOW_RUN_STATUS);
-            if (status == null || !status.equals("completed")){
-                continue;
-            }
             
             String currVal = r.getAttributes().get(groupBy);
             
