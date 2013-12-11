@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,15 +45,12 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import joptsimple.ArgumentAcceptingOptionSpec;
+import joptsimple.OptionSpec;
 
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
-import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.model.SequencerRun;
-import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
@@ -67,6 +63,7 @@ import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher;
+import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import net.sourceforge.seqware.pipeline.tools.SetOperations;
 
@@ -102,21 +99,16 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private int rerunMax = 5;
     private String host = null;
     
-    private static final String AT_LEAST_ONE_OF = "At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. ";
-    private ArgumentAcceptingOptionSpec<Integer> laneSwaSpec;
-    private ArgumentAcceptingOptionSpec<Integer> iusSwaSpec;
+    private Map<String, OptionSpec> configureFileProvenanceParams;
+    
 
     public BasicDecider() {
         super();
         parser.acceptsAll(Arrays.asList("wf-accession"), "The workflow accession of the workflow").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("study-name"), "Full study name. "+AT_LEAST_ONE_OF+"Specify multiple names by repeating --study-name").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("sample-name"), "Full sample name. "+AT_LEAST_ONE_OF+" Specify multiple names by repeating --sample-name").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("sequencer-run-name"), "Full sequencer run name. "+AT_LEAST_ONE_OF+" Specify multiple names by repeating --sequencer-run-name").withRequiredArg();
-        // adding lane and ius
-        laneSwaSpec = parser.acceptsAll(Arrays.asList("lane-swa"), "Lane sw_accession. "+AT_LEAST_ONE_OF+" Specify multiple swas by repeating --lane-swa").withRequiredArg().ofType(Integer.class);
-        iusSwaSpec = parser.acceptsAll(Arrays.asList("ius-swa"), "IUS sw_accession. "+AT_LEAST_ONE_OF+" Specify multiple swas by repeating --ius-swa").withRequiredArg().ofType(Integer.class);
         
-        parser.accepts("all", "Run everything. "+AT_LEAST_ONE_OF);
+        // configure parameters used to parse provenance report
+        configureFileProvenanceParams = ProvenanceUtility.configureFileProvenanceParams(parser);
+        
         parser.acceptsAll(Arrays.asList("group-by"), "Optional: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA. One of LANE_SWA or IUS_SWA.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("parent-wf-accessions"), "The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("meta-types"), "The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.").withRequiredArg();
@@ -1012,59 +1004,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private List<ReturnValue> createListOfRelevantFilePaths() {
         List<ReturnValue> vals;
         List<Map<String, String>> fileProvenanceReport;
-        Map<FileProvenanceParam, List<String>> map = new EnumMap<FileProvenanceParam, List<String>>(FileProvenanceParam.class);
+        Map<FileProvenanceParam, List<String>> map = ProvenanceUtility.convertOptionsToMap(options, metadata);
         if (skipStuff) {
             map.put(FileProvenanceParam.skip, new ImmutableList.Builder<String>().add("false").build());
         }
-
-        if (options.has("all")) {
-            /**
-             * nothing special
-             */
-        } else {
-            if (options.has("study-name")) {
-                List<String> studyNames = (List<String>) options.valuesOf("study-name");
-                List<String> studySWAs = new ArrayList<String>();
-                for (String studyName : studyNames) {
-                    Study studyByName = metadata.getStudyByName(studyName);
-                    studySWAs.add(String.valueOf(studyByName.getSwAccession()));
-                }
-                map.put(FileProvenanceParam.study, new ImmutableList.Builder<String>().addAll(studySWAs).build());
-            }
-            if (options.has("sample-name")) {
-                List<String> sampleNames = (List<String>) options.valuesOf("sample-name");
-                List<String> sampleSWAs = new ArrayList<String>();
-                
-                for(String sampleName : sampleNames){
-                    List<Sample> samplesByName = metadata.getSampleByName(sampleName);
-                    for (Sample sample : samplesByName) {
-                        sampleSWAs.add(String.valueOf(sample.getSwAccession()));
-                    }
-                }
-                map.put(FileProvenanceParam.sample, new ImmutableList.Builder<String>().addAll(sampleSWAs).build());
-            }
-            if (options.has("sequencer-run-name")) {
-                List<String> sequencerRunNames = (List<String>) options.valuesOf("sequencer-run-name");
-                List<String> sequencerRunSWAs = new ArrayList<String>();
-                for (String sequencerRunName : sequencerRunNames) {
-                    SequencerRun run = metadata.getSequencerRunByName(sequencerRunName);
-                    sequencerRunSWAs.add(String.valueOf(run.getSwAccession()));
-                }
-                map.put(FileProvenanceParam.sequencer_run, new ImmutableList.Builder<String>().addAll(sequencerRunSWAs).build());
-            }
-            if (options.has(iusSwaSpec)){
-                List<Integer> swa_values = options.valuesOf(iusSwaSpec);
-                List<String> swa_strings = new ArrayList<String>();
-                for(Integer swa :swa_values){swa_strings.add(String.valueOf(swa));}
-                map.put(FileProvenanceParam.ius, new ImmutableList.Builder<String>().addAll(swa_strings).build());
-            }
-            if (options.has(laneSwaSpec)){
-                List<Integer> swa_values = options.valuesOf(laneSwaSpec);
-                List<String> swa_strings = new ArrayList<String>();
-                for(Integer swa :swa_values){swa_strings.add(String.valueOf(swa));}
-                map.put(FileProvenanceParam.lane, new ImmutableList.Builder<String>().addAll(swa_strings).build());
-            }
-        }
+        
         fileProvenanceReport = metadata.fileProvenanceReport(map);
         // convert to list of ReturnValues for backwards compatibility
         vals = convertFileProvenanceReport(fileProvenanceReport);
