@@ -30,8 +30,6 @@ public class OozieProvisionFileJob extends OozieJob {
     File optionsFile = emitOptionsFile();
 
     Element sge = new Element("sge", SGE_XMLNS);
-    sge.setAttribute("retry-max", ConfigTools.getSettings().containsKey(OOZIE_RETRY_MAX)?ConfigTools.getSettings().get(OOZIE_RETRY_MAX):"1");
-    sge.setAttribute("retry-interval", ConfigTools.getSettings().containsKey(OOZIE_RETRY_INTERVAL)?ConfigTools.getSettings().get(OOZIE_RETRY_INTERVAL):"1");
     add(sge, "script", runnerScript.getAbsolutePath());
     add(sge, "options-file", optionsFile.getAbsolutePath());
 
