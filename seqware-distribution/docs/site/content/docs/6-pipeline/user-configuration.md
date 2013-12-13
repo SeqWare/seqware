@@ -101,7 +101,7 @@ OOZIE_JOBTRACKER=localhost:8021
 OOZIE_NAMENODE=hdfs://localhost:8020
 OOZIE_QUEUENAME=default
 OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
-# Used by 'oozie-sge' engine to control user-level retry mechanism
+
 OOZIE_RETRY_MAX=5
 OOZIE_RETRY_INTERVAL=5
 
