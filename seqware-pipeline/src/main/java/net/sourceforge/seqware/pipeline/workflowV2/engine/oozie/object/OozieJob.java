@@ -38,7 +38,7 @@ public abstract class OozieJob {
   /**
    * Namespace of the Oozie workflow xml nodes.
    */
-  public static final Namespace WF_XMLNS = Namespace.getNamespace("uri:oozie:workflow:0.2");
+  public static final Namespace WF_XMLNS = Namespace.getNamespace(WorkflowApp.URIOOZIEWORKFLOW);
 
   /**
    * Namespace of the Oozie SGE action xml node.

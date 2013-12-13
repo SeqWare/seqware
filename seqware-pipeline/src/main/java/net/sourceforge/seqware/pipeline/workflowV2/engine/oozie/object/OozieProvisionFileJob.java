@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_INTERVAL;
+import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_MAX;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
@@ -22,17 +24,21 @@ public class OozieProvisionFileJob extends OozieJob {
     this.file = file;
   }
 
+  @Override
   protected Element createSgeElement() {
     File runnerScript = emitRunnerScript();
     File optionsFile = emitOptionsFile();
 
     Element sge = new Element("sge", SGE_XMLNS);
+    sge.setAttribute("retry-max", ConfigTools.getSettings().containsKey(OOZIE_RETRY_MAX)?ConfigTools.getSettings().get(OOZIE_RETRY_MAX):"1");
+    sge.setAttribute("retry-interval", ConfigTools.getSettings().containsKey(OOZIE_RETRY_INTERVAL)?ConfigTools.getSettings().get(OOZIE_RETRY_INTERVAL):"1");
     add(sge, "script", runnerScript.getAbsolutePath());
     add(sge, "options-file", optionsFile.getAbsolutePath());
 
     return sge;
   }
 
+  @Override
   protected Element createJavaElement() {
     Element java = new Element("java", WF_XMLNS);
     add(java, "job-tracker", "${jobTracker}");
