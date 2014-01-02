@@ -13,17 +13,15 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
-import net.sourceforge.seqware.pipeline.workflowV2.model.JavaJob;
-import net.sourceforge.seqware.pipeline.workflowV2.model.JavaSeqwareModuleJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
-import net.sourceforge.seqware.pipeline.workflowV2.model.PerlJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
 import org.apache.hadoop.fs.Path;
 import org.jdom.Element;
 
 public class WorkflowApp {
-  public static org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace("uri:oozie:workflow:0.2");
+  public static final String URIOOZIEWORKFLOW = "uri:oozie:workflow:0.4";
+  public static org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace(URIOOZIEWORKFLOW);
 
   private AbstractWorkflowDataModel wfdm;
   private List<OozieJob> jobs;
@@ -67,10 +65,10 @@ public class WorkflowApp {
     }
 
     if (this.lastJoin != null && !this.lastJoin.isEmpty()) {
-      Element lastJoin = new Element("join", NAMESPACE);
-      lastJoin.setAttribute("name", this.lastJoin);
-      lastJoin.setAttribute("to", "done");
-      wf.addContent(lastJoin);
+      Element lastJoinLocal = new Element("join", NAMESPACE);
+      lastJoinLocal.setAttribute("name", this.lastJoin);
+      lastJoinLocal.setAttribute("to", "done");
+      wf.addContent(lastJoinLocal);
     }
 
     Element done = new Element("action", NAMESPACE).setAttribute("name", "done");
@@ -114,7 +112,7 @@ public class WorkflowApp {
   }
 
   private Element generateNextLevelXml(Element rootElement, List<OozieJob> joblist, Element currentElement, int count) {
-    Element ret = null;
+    Element ret;
     // currentElement could be action or join
     // need to set the next to, action: ok element, join: currentElement
     Element setNext = currentElement;
@@ -198,6 +196,10 @@ public class WorkflowApp {
         if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
           ojob.setWorkflowRunAccession(workflowRunAccession);
         }
+          // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+          if (!entry.getValue().getParentAccessions().isEmpty()) {
+              ojob.setParentAccessions(entry.getValue().getParentAccessions());
+          }
         this.jobs.add(ojob);
         this.fileJobMap.put(entry.getValue(), ojob);
 
@@ -231,6 +233,11 @@ public class WorkflowApp {
       if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
         pjob.setWorkflowRunAccession(workflowRunAccession);
       }
+      // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+        if (!job.getParentAccessions().isEmpty()) {
+            pjob.setParentAccessions(job.getParentAccessions());
+        }
+      
       this.jobs.add(pjob);
       for (Job parent : job.getParents()) {
         pjob.addParent(this.getOozieJobObject((AbstractJob) parent));
@@ -254,6 +261,10 @@ public class WorkflowApp {
             if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
               parentPfjob.setWorkflowRunAccession(workflowRunAccession);
             }
+            // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+              if (!file.getParentAccessions().isEmpty()) {
+                  parentPfjob.setParentAccessions(file.getParentAccessions());
+              }
             this.jobs.add(parentPfjob);
             parentPfjob.setOutputDir("provisionfiles/" + file.getUniqueDir());
             pjob.addParent(parentPfjob);
@@ -273,6 +284,10 @@ public class WorkflowApp {
             if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
               parentPfjob.setWorkflowRunAccession(workflowRunAccession);
             }
+            // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+              if (!file.getParentAccessions().isEmpty()) {
+                  parentPfjob.setParentAccessions(file.getParentAccessions());
+              }
             this.jobs.add(parentPfjob);
             hasProvisionOut.put(pjob, parentPfjob);
           }
@@ -334,7 +349,7 @@ public class WorkflowApp {
       // set a unique name for the join action in case of name conflict
       this.lastJoin = "join_" + Long.toString(System.nanoTime());
       for (OozieJob job : this.jobs) {
-        if (job.getChildren().size() == 0) {
+        if (job.getChildren().isEmpty()) {
           job.setOkTo(this.lastJoin);
         }
       }
@@ -344,7 +359,7 @@ public class WorkflowApp {
   private boolean needLastJoin() {
     int leafCount = 0;
     for (OozieJob job : this.jobs) {
-      if (job.getChildren().size() == 0)
+      if (job.getChildren().isEmpty())
         leafCount++;
     }
     return leafCount > 1;
