@@ -130,11 +130,17 @@ public class PluginRunnerET {
             // install the workflows to the database and record their information 
             File workflowDir = new File(tempDir, workflow);
             File targetDir = new File(workflowDir, "target");
-            File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflowName + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
+            final String workflow_name = "Workflow_Bundle_" + workflowName + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION;
+            File bundleDir = new File(targetDir, workflow_name);
             
             bundleLocations.put(workflow, bundleDir);
-
-            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b " + bundleDir.getAbsolutePath();
+            
+            // zip up the bundles first if we want the bundle locations to survive 
+            String zipCommand = "--plugin net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- --path-to-package "+bundleDir.getAbsolutePath()+" --bundle "+tempDir.getAbsolutePath();
+            String zipOutput = ITUtility.runSeqWareJar(zipCommand, ReturnValue.SUCCESS, null);
+            Log.info(zipOutput);     
+            
+            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b " + tempDir.getAbsolutePath() +File.separatorChar+ workflow_name + ".zip";
             String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS, null);
             Log.info(installOutput);     
             
