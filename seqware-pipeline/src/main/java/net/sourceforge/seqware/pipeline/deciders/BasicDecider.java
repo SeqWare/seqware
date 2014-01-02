@@ -30,7 +30,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,14 +45,12 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import joptsimple.OptionSpec;
 
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
-import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.model.SequencerRun;
-import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
@@ -66,6 +63,7 @@ import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher;
+import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import net.sourceforge.seqware.pipeline.tools.SetOperations;
 
@@ -100,14 +98,17 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private int launchMax = Integer.MAX_VALUE, launched = 0;
     private int rerunMax = 5;
     private String host = null;
+    
+    private Map<String, OptionSpec> configureFileProvenanceParams;
+    
 
     public BasicDecider() {
         super();
         parser.acceptsAll(Arrays.asList("wf-accession"), "The workflow accession of the workflow").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("study-name"), "Full study name. One of sample-name, study-name, sequencer-run-name or all is required.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("sample-name"), "Full sample name. One of sample-name, study-name, sequencer-run-name or all is required.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("sequencer-run-name"), "Full sequencer run name. One of sample-name, study-name, sequencer-run-name or all is required.").withRequiredArg();
-        parser.accepts("all", "Run everything. One of sample-name, study-name, sequencer-run-name or all is required.");
+        
+        // configure parameters used to parse provenance report
+        configureFileProvenanceParams = ProvenanceUtility.configureFileProvenanceParams(parser);
+        
         parser.acceptsAll(Arrays.asList("group-by"), "Optional: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA. One of LANE_SWA or IUS_SWA.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("parent-wf-accessions"), "The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("meta-types"), "The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.").withRequiredArg();
@@ -146,9 +147,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      */
     public ReturnValue init() {
 
-        if (!(options.has("study-name")
-                ^ options.has("sample-name")
-                ^ options.has("sequencer-run-name")
+        if (!((options.has("study-name")
+                || options.has("sample-name")
+                || options.has("sequencer-run-name")
+                || options.has("ius-swa")
+                || options.has("lane-swa")
+                )
                 ^ options.has("all"))) {
             Log.stdout(this.get_syntax());
             Log.error("Please provide one of sample-name, study-name, sequencer-run-name or all");
@@ -738,6 +742,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
         //group files according to the designated header (e.g. sample SWID)
         for (ReturnValue r : vals) {
+            
             String currVal = r.getAttributes().get(groupBy);
             
             if (currVal != null){
@@ -1000,30 +1005,12 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private List<ReturnValue> createListOfRelevantFilePaths() {
         List<ReturnValue> vals;
         List<Map<String, String>> fileProvenanceReport;
-        Map<FileProvenanceParam, List<String>> map = new EnumMap<FileProvenanceParam, List<String>>(FileProvenanceParam.class);
-        if (skipStuff){
+        Map<FileProvenanceParam, List<String>> map = ProvenanceUtility.convertOptionsToMap(options, metadata);
+        if (skipStuff) {
             map.put(FileProvenanceParam.skip, new ImmutableList.Builder<String>().add("false").build());
         }
-       
-        if (options.has("all")) {
-            /** nothing special */
-        } else if (options.has("study-name")) {
-            Study studyByName = metadata.getStudyByName((String) options.valueOf("study-name"));
-            map.put(FileProvenanceParam.study, new ImmutableList.Builder<String>().add(String.valueOf(studyByName.getSwAccession())).build());
-        } else if (options.has("sample-name")) {
-            List<Sample> samplesByName = metadata.getSampleByName((String) options.valueOf("sample-name"));
-            List<String> sampleAccessions = new ArrayList<String>();
-            for(Sample sample : samplesByName){
-                sampleAccessions.add(String.valueOf(sample.getSwAccession()));
-            }
-            map.put(FileProvenanceParam.sample, new ImmutableList.Builder<String>().addAll(sampleAccessions).build());
-        } else if (options.has("sequencer-run-name")) {
-            SequencerRun sequencerRunByName = metadata.getSequencerRunByName((String) options.valueOf("sequencer-run-name"));
-            map.put(FileProvenanceParam.sequencer_run, new ImmutableList.Builder<String>().add(String.valueOf(sequencerRunByName.getSwAccession())).build());
-        } else {
-            Log.error("Unknown option");
-            throw new RuntimeException("Unknown decider option");
-        }
+        map.put(FileProvenanceParam.workflow_run_status, new ImmutableList.Builder<String>().add(WorkflowRunStatus.completed.toString()).build());
+        
         fileProvenanceReport = metadata.fileProvenanceReport(map);
         // convert to list of ReturnValues for backwards compatibility
         vals = convertFileProvenanceReport(fileProvenanceReport);
