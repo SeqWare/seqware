@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 import javax.xml.bind.DatatypeConverter;
 
 import net.sourceforge.seqware.common.util.Log;
+import org.apache.commons.io.IOUtils;
 
 /**
  * <p>MapTools class.</p>
@@ -118,10 +119,14 @@ public class MapTools {
      */
     public static void ini2Map(String iniFile, Map<String, String> hm, boolean keyToUpper) {
         // Load config ini from disk
+        FileInputStream iStream = null;
         try {
-            ini2Map(new FileInputStream(iniFile), hm, keyToUpper);
+            iStream = new FileInputStream(iniFile);
+            ini2Map(iStream, hm, keyToUpper);
         } catch (Exception e) {
             rethrow(e);
+        } finally{
+            IOUtils.closeQuietly(iStream);
         }
     }
 
