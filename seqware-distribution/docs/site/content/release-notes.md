@@ -9,6 +9,34 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.0.8 (2013-12-12)
+### Defect
+* [SEQWARE-1783] - SeqWare Admin WS does not create SeqWare Accessions
+* [SEQWARE-1804] - SqwFile parent accessions do not get passed to Command Runner
+
+### Task
+* [SEQWARE-1766] - CLI: State where stdout and stderr are saved to
+* [SEQWARE-1788] - SymlinkReporter does not report correct infomation for files provisioned out with setParentAccessions
+* [SEQWARE-1790] - Migrate the Oozie-SGE code to SeqWare
+* [SEQWARE-1791] - Get vagrant provisioning of multiple SGE nodes working
+* [SEQWARE-1793] - Implement a replacement for the symlinkreporter based on the file-provenance-report
+* [SEQWARE-1802] - File records missing in file provenance report
+* [SEQWARE-1805] - BasicDecider adding support for filtering by barcode (IUS) and lane
+* [SEQWARE-1808] - Ensure that BasicDecider only uses input from completed workflow runs
+
+### Technical task
+* [SEQWARE-1670] - SymLinker doesn't report all connections to GATK runs
+* [SEQWARE-1704] - seqware pipeline: symlinkreporter should error out if any ws requests fail in dump all mode
+* [SEQWARE-1762] - skipped sequencer runs are still shown in the symlink reporter
+* [SEQWARE-1763] - missing links between workflow run and IUS for GATKAnnotateAndSort and SomaticClassifier workflow
+* [SEQWARE-1779] - Missing CLI functionality in seqware files report
+* [SEQWARE-1795] - Plugin to run through CLI and pre-CLI tutorials
+* [SEQWARE-1796] - Create tool to verify that db settings (if present) match web service
+
+## 0.13.6.14 (2013-12-12)
+* BasicDecider now uses only input files from completed workflow runs
+* Disabled linking behaviour between provision out steps which caused large numbers of provision out steps to operate in series rather than in parallel 
+
 ## 1.0.7 (2013-11-13)
 
 ### Defect

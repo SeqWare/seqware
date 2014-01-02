@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -799,7 +800,7 @@ public class Main {
   }
 
   private static void filesReport(List<String> args) {
-    if (isHelp(args, false)) {
+    if (isHelp(args, true)) {
       out("");
       out("Usage: seqware files report --help");
       out("       seqware files report <params>");
@@ -808,31 +809,61 @@ public class Main {
       out("  A report of the provenance of output files.");
       out("");
       out("Optional parameters:");
-      out("  --out <file>        The name of the output file");
-      out("  --study <title>     Limit files to the specified study title");
+      out("  --out <file>                   The name of the output file");
+      out("  --study-name <name>            Limit files to the specified study name. Can occur multiple times.");
+      out("  --sample-name <name>           Limit files to the specified sample name. Can occur multiple times.");
+      out("  --sequencer-run-name <name>    Limit files to the specified sequencer run name. Can occur multiple times.");
+      out("  --ius-SWID <swid>              Limit files to the specified ius SWID. Can occur multiple times.");
+      out("  --lane-SWID <swid>             Limit files to the specified lane SWID. Can occur multiple times.");
       out("");
     } else {
-      String study = optVal(args, "--study", null);
-      String file = optVal(args, "--out", null);
+                
+      List<String> studies = optVals(args, "--study-name");
+      List<String> samples = optVals(args, "--sample-name");
+      List<String> sequencerRuns = optVals(args, "--sequencer-run-name");
+      List<String> iusSWIDs = optVals(args, "--ius-SWID");
+      List<String> laneSWIDs = optVals(args, "--lane-SWID");
+      String file = optVal(args, "--out", (new Date() + ".tsv").replace(" ", "_"));
 
       extras(args, "files report");
 
       List<String> runnerArgs = new ArrayList<String>();
       runnerArgs.add("--plugin");
-      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.fileprovenance.FileProvenanceReporter");
       runnerArgs.add("--");
-      runnerArgs.add("--no-links");
 
-      if (study != null) {
-        runnerArgs.add("--study");
-        runnerArgs.add(study);
-      }
-      if (file != null) {
-        runnerArgs.add("--output-filename");
-        runnerArgs.add(file);
-      }
+        if (studies.isEmpty() && samples.isEmpty() && sequencerRuns.isEmpty() && iusSWIDs.isEmpty() && laneSWIDs.isEmpty()) {
+            runnerArgs.add("-all");
+        } else {
+
+            for (String study : studies) {
+                runnerArgs.add("--study-name");
+                runnerArgs.add(study);
+            }
+            for (String sample : samples) {
+                runnerArgs.add("--sample-name");
+                runnerArgs.add(sample);
+            }
+            for (String sequencerRun : sequencerRuns) {
+                runnerArgs.add("--sequencer-run-name");
+                runnerArgs.add(sequencerRun);
+            }
+            for (String iusSWID : iusSWIDs) {
+                runnerArgs.add("--ius-SWID");
+                runnerArgs.add(iusSWID);
+            }
+            for (String laneSWID : laneSWIDs) {
+                runnerArgs.add("--lane-SWID");
+                runnerArgs.add(laneSWID);
+            }
+        }
+        if (file != null) {
+            runnerArgs.add("--out");
+            runnerArgs.add(file);
+        }
 
       run(runnerArgs);
+      out("Created file "+file);
     }
   }
 
