@@ -11,12 +11,15 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 
 public class OozieBashJob extends OozieJob {
+    public static final String OOZIE_RETRY_MAX = "OOZIE_RETRY_MAX";
+    public static final String OOZIE_RETRY_INTERVAL = "OOZIE_RETRY_INTERVAL";
 
   public OozieBashJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
                       String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
     super(job, name, oozie_working_dir, useSge, seqwareJar, threadsSgeParamFormat, maxMemorySgeParamFormat);
   }
 
+  @Override
   protected Element createSgeElement() {
 
     File jobScript = emitJobScript();
@@ -30,6 +33,7 @@ public class OozieBashJob extends OozieJob {
     return sge;
   }
 
+  @Override
   protected Element createJavaElement() {
     File jobScript = emitJobScript();
 
