@@ -86,7 +86,7 @@ public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
         // a simple bash job to cat a file into a test file
 	// the file is not saved to the metadata database
         Job copyJob1 = this.getWorkflow().createBashJob("bash_cp");
-        copyJob1.setCommand(catPath + " " + inputFilePath + "> test1");
+        copyJob1.setCommand(catPath + " " + inputFilePath + "> test1/test.out");
         copyJob1.addParent(mkdirJob);
         
         // a simple bash job to echo to an output file and concat an input file
