@@ -10,30 +10,9 @@ Install nanoc (on Ubuntu 12.04):
 For a basic version of nanoc just follow the directions on their site. This is
 what I had to do to get their very nice sample website to compile:
 
-sudo apt-get install ruby1.9.1 ruby-rvm ruby-rdiscount ruby-nokogiri
+sudo apt-get install ruby1.9.3 ruby-rvm ruby-rdiscount ruby-nokogiri
 
-sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress
-
-Additional setup for Linux Mint 13:
-First, the ruby-rvm package did not install correctly
-* sudo apt-get remove ruby-rvm 
-* sudo apt-get install ruby1.9.1-dev
-* sudo gem install yajl-ruby pygments.rb 
-
-Hack on Linux Mint 13:
-
-I had problems compiling the site until I commented out the following on line 23 of /var/lib/gems/1.9.1/gems/sass-3.2.3/lib/sass/importers/filesystem.rb
-
-      # @see Base#find_relative
-      def find_relative(name, base, options)
-        #_find(File.dirname(base), name, options)
-      end
-
-Be careful with this, I have no idea if I broke anything by doing this.
-
-Also, I originally installed this but I had to disable this in the code, didn't seem to work for me
-
-sudo gem install fast-aleck 
+sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress yajl-ruby pygments.rb 
 
 Source code is here:
 seqware/seqware-distribution/docs/site
@@ -84,5 +63,30 @@ If doing this in succession, you will see a git checkout error.  Until we fix th
 Then you would look at the site at: http://seqware.github.io/unstable.seqware.github.com/
 
 
+
+
+TROUBLESHOOTING
+I did not need to perform any of the steps below, but you may need to on your install
+
+Additional setup for Linux Mint 13:
+First, the ruby-rvm package did not install correctly
+* sudo apt-get remove ruby-rvm 
+* sudo apt-get install ruby1.9.1-dev
+* sudo gem install yajl-ruby pygments.rb 
+
+Hack on Linux Mint 13:
+
+I had problems compiling the site until I commented out the following on line 23 of /var/lib/gems/1.9.1/gems/sass-3.2.3/lib/sass/importers/filesystem.rb
+
+      # @see Base#find_relative
+      def find_relative(name, base, options)
+        #_find(File.dirname(base), name, options)
+      end
+
+Be careful with this, I have no idea if I broke anything by doing this.
+
+Also, I originally installed this but I had to disable this in the code, didn't seem to work for me
+
+sudo gem install fast-aleck 
 
 
