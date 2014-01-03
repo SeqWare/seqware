@@ -659,7 +659,8 @@ public class FileTools {
           // since mostly binaries
           // and ZIP file doesn't preserve this
           File finalFile = new File(outputDir.getAbsolutePath() + File.separator + entry.getName());
-          finalFile.setExecutable(true);
+          // allow executable for others like mapred and oozie
+          finalFile.setExecutable(true,false);
           finalFile.setWritable(true);
           finalFile.setReadable(true);
         }
