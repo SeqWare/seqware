@@ -16,11 +16,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <seqware-version>1.0.9-SNAPSHOT</seqware-version>
-	<workflow-version>1.0</workflow-version>
+        <workflow-version>1.0</workflow-version>
+        <workflow-name>${workflow-name}</workflow-name>
     </properties>
     
     <build>
-	<finalName>Decider_${version}_${artifactId}_${workflow-version}_SeqWare_${seqware-version}</finalName>
+        <finalName>Decider_${version}_${workflow-name}_${workflow-version}_SeqWare_${seqware-version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -47,6 +48,32 @@
                     </filesets>
                 </configuration>
             </plugin> 
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${groupId}.${workflow-name}Decider</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Implementation-Version>${seqware-version}</Implementation-Version>
+                        </manifestEntries>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -73,15 +100,12 @@
             </snapshots>
         </repository>
         <repository>
-            <id>snapshot.com.github.seqware</id>
-            <name>SeqWare Snapshot Maven Repository</name>
-            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-snapshot</url>
+            <id>dependencies.com.github.seqware</id>
+            <name>SeqWare Dependencies Maven Repository</name>
+            <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-dependencies</url>
             <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
                 <enabled>true</enabled>
-            </snapshots>
+            </releases>
         </repository>
     </repositories>
 </project>
