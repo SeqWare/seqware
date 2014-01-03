@@ -18,6 +18,7 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
@@ -247,15 +248,20 @@ public class WorkflowDataModelFactory {
                 m = clazz.getMethod("buildWorkflow");
                 m.invoke(dataModel);
             } catch (SecurityException e) {
-                Log.error(e);
+                Log.error("SecurityException",e);
+                Rethrow.rethrow(e);
             } catch (NoSuchMethodException e) {
-                Log.error(e);
+                Log.error("NoSuchMethodException",e);
+                Rethrow.rethrow(e);
             } catch (IllegalArgumentException e) {
-                Log.error(e);
+                Log.error("IllegalArgumentException",e);
+                Rethrow.rethrow(e);
             } catch (IllegalAccessException e) {
-                Log.error(e);
+                Log.error("IllegalAccessException",e);
+                Rethrow.rethrow(e);
             } catch (InvocationTargetException e) {
-                Log.error(e);
+                Log.error("InvocationTargetException",e);
+                Rethrow.rethrow(e);
             }
         } else {
             WorkflowXmlParser xmlParser = new WorkflowXmlParser();
