@@ -3,6 +3,6 @@ module Variables
     "http://localhost:8888/seqware-webservice"                                                                      
   end                                                                                                               
   def seqware_release_version
-    "1.0.6"
+    "1.0.9"
   end
 end 
