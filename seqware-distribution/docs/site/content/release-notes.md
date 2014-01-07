@@ -9,6 +9,24 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.0.9
+
+### Defect
+* [SEQWARE-1807] - Oozie workflow jobs/actions do not relaunch - workflow fails
+
+### Improvement
+* [SEQWARE-1743] - Uninformative exceptions in Java workflow building
+
+### Story
+* [SEQWARE-1770] - Installed workflows have incorrect permissions on exectuables
+
+### Task
+* [SEQWARE-1817] - oozie development environments should use postgres
+* [SEQWARE-1819] - .seqware/settings opened too many times on workflow launch with large workflows
+
+## 0.13.6.15 (2014-01-07)
+* BasicDecider includes a compatibility mode to run against legacy 0.13.6.5 web services
+
 ## 1.0.8 (2013-12-12)
 ### Defect
 * [SEQWARE-1783] - SeqWare Admin WS does not create SeqWare Accessions
