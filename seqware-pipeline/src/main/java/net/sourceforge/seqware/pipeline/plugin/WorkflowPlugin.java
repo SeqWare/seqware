@@ -11,6 +11,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugin;
 
+import io.seqware.WorkflowRuns;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -521,7 +522,10 @@ public class WorkflowPlugin extends Plugin {
         workflowEngine = dataModel.getWorkflow_engine();
       }
     } catch (Exception e) {
-      Log.fatal(e, e);
+      if (workflowRunAccession != null){
+        Log.fatal("Exception constructing data model, failing workflow " + workflowRunAccession, e);
+        WorkflowRuns.failWorkflow(workflowRunAccession);
+      }
       ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
       return ret;
     }
