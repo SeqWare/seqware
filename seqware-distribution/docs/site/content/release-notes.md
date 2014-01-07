@@ -9,7 +9,7 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
-## 1.0.9
+## 1.0.9 (2013-01-07)
 
 ### Defect
 * [SEQWARE-1807] - Oozie workflow jobs/actions do not relaunch - workflow fails
