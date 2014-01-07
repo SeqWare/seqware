@@ -277,7 +277,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         if (metadataWriteback == null) {
             metadataWriteback = !(options.has("no-metadata") || options.has("no-meta-db"));
         }
-
+        
 
         if (runNow == null) {
             if (options.has("schedule")) {
