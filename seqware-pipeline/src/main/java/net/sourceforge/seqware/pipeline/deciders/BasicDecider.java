@@ -70,6 +70,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private int launchMax = Integer.MAX_VALUE, launched = 0;
     private int rerunMax = 5;
     private String host = null;
+    private boolean legacy_0_13_6_5 = false;
 
     public BasicDecider() {
         super();
@@ -96,6 +97,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("launch-max"), "The maximum number of jobs to launch at once. Default: infinite.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("rerun-max"), "The maximum number of times to re-launch a workflowrun if failed. Default: 5.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("host", "ho"), "Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("legacy-0-13-6-5"),"Legacy mode, used to communicate with 0.13.6.5-era web services. WARNING: This will disable the ability to disable re-launch based on previous failed runs.");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
     
@@ -241,7 +243,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         if (metadataWriteback == null) {
             metadataWriteback = !(options.has("no-metadata") || options.has("no-meta-db"));
         }
-
+        
+        if (options.has("legacy-0-13-6-5")){
+            legacy_0_13_6_5 = true;
+        }
 
         if (runNow == null) {
             if (options.has("schedule")) {
@@ -1009,6 +1014,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private List<String> getListOfFiles(int workflowRunAcc) {
         Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
         String ranOnString = map.get("Immediate Input File Meta-Types");
+        if (legacy_0_13_6_5){
+            ranOnString = map.get("Input File Meta-Types");
+        }
         List<String> ranOnList = Arrays.asList(ranOnString.split(","));
         List<Integer> indices = new ArrayList<Integer>();
         for (int i=0;i<ranOnList.size(); i++)
@@ -1018,6 +1026,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             }
         }
         ranOnString = map.get("Immediate Input File Paths");
+        if (legacy_0_13_6_5){
+            ranOnString = map.get("Input File Paths");
+        }
         String[] ranOnArr = ranOnString.split(",");
         ranOnList = new ArrayList<String>();
         for (Integer i:indices) {
