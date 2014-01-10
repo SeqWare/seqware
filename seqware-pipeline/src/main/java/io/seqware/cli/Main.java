@@ -21,6 +21,7 @@ import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import org.apache.commons.lang3.ArrayUtils;
 
 /*
  * TODO:
@@ -61,6 +62,20 @@ public class Main {
   private static void err(String format, Object... args) {
     System.err.println(String.format(format, args));
   }
+
+    private static List<String> processOverrideParams(List<String> override) {
+        List<String> overrideParams = new ArrayList<String>();
+        if (!override.isEmpty()){
+            overrideParams.add("--");
+            for(String entry : override){
+                String key = entry.substring(0, entry.indexOf("="));
+                String value = entry.substring(entry.indexOf("=") + 1);
+                overrideParams.add("--"+key);
+                overrideParams.add(value);
+            }
+        }
+        return overrideParams;
+    }
 
   private static class Kill extends RuntimeException {
   }
@@ -334,15 +349,16 @@ public class Main {
       out("  --dir <bundle-dir>  The root directory of the bundle");
       out("");
       out("Optional parameters:");
-      out("  --engine <type>     The engine that will process the workflow run.");
-      out("                      May be one of: " + WorkflowPlugin.ENGINES_LIST);
-      out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-      out("                      or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
-      out("  --ini <ini-file>    An ini file to configure the workflow run.");
-      out("                      Repeat this parameter to provide multiple files.");
-      out("                      Defaults to the value of the 'config' node in metadata.xml.");
-      out("  --name <wf-name>    The name of the workflow in the bundle.");
-      out("  --version <ver>     The version of the workflow in the bundle.");
+      out("  --engine <type>            The engine that will process the workflow run.");
+      out("                             May be one of: " + WorkflowPlugin.ENGINES_LIST);
+      out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+      out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
+      out("  --ini <ini-file>           An ini file to configure the workflow run.");
+      out("                             Repeat this parameter to provide multiple files.");
+      out("                             Defaults to the value of the 'config' node in metadata.xml.");
+      out("  --name <wf-name>           The name of the workflow in the bundle.");
+      out("  --version <ver>            The version of the workflow in the bundle.");
+      out("  --override <key=value>     Override specific parameters from the workflow.ini");
       out("");
     } else {
       String dir = reqVal(args, "--dir");
@@ -350,6 +366,7 @@ public class Main {
       String name = optVal(args, "--name", null);
       String version = optVal(args, "--version", null);
       String engine = optVal(args, "--engine", null);
+      List<String> override = optVals(args, "--override");
 
       extras(args, "bundle launch");
 
@@ -361,17 +378,20 @@ public class Main {
         inis.add(wi.getConfigPath());
       }
       inis = resolveFiles(bundleDir, inis);
-
+      List<String> overrideParams = processOverrideParams(override);
+      
       out("Performing launch of workflow '" + name + "' version '" + version + "'");
-
+      
+      String[] runParams;
       if (engine == null) {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
-            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata");
+        runParams = new String[]{"--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata"};
       } else {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
-            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--workflow-engine",
-            engine);
+        runParams = new String[]{"--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--workflow-engine",engine};
       }
+      String[] addAll = ArrayUtils.addAll(runParams, overrideParams.toArray(new String[overrideParams.size()]));
+      run(addAll);
     }
   }
 
@@ -1079,6 +1099,7 @@ public class Main {
       out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
       out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
       out("                             Repeat this parameter to provide multiple parents");
+      out("  --override <key=value>     Override specific parameters from the workflow.ini");
       out("");
     } else {
       String wfId = reqVal(args, "--accession");
@@ -1086,6 +1107,8 @@ public class Main {
       List<String> iniFiles = reqVals(args, "--ini");
       String engine = optVal(args, "--engine", null);
       List<String> parentIds = optVals(args, "--parent-accession");
+      List<String> override = optVals(args, "--override");
+
 
       extras(args, "workflow schedule");
 
@@ -1112,8 +1135,11 @@ public class Main {
         runnerArgs.add("--host");
         runnerArgs.add(host);
       }
+      
+      List<String> overrideParams = processOverrideParams(override);
 
-      run(runnerArgs);
+      String[] totalArgs = ArrayUtils.addAll(runnerArgs.toArray(new String[runnerArgs.size()]), overrideParams.toArray(new String[overrideParams.size()]));
+      run(totalArgs);
     }
   }
 
