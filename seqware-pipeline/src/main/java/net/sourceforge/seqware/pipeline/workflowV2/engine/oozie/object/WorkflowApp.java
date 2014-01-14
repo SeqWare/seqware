@@ -425,16 +425,26 @@ public class WorkflowApp {
     }
   }
 
-  private void setAccessionFileRelations(OozieJob parent) {
-    Log.debug("SETTING ACCESSIONS FOR CHILDREN FOR PARENT JOB " + parent.getName());
+  private void setAccessionFileRelations(OozieJob parent){
+      this.setAccessionFileRelations(parent, 0);
+  }
+  
+  private void setAccessionFileRelations(OozieJob parent, int level) {
+    Log.debug(level + ": SETTING ACCESSIONS FOR CHILDREN FOR PARENT JOB " + parent.getName());
     for (OozieJob pjob : parent.getChildren()) {
-      pjob.addParentAccessionFile(parent.getAccessionFile());
-      Log.debug("RECURSIVE SETTING ACCESSIONS FOR CHILDOB " + pjob.getName());
+      Log.debug(level + ": RECURSIVE SETTING ACCESSIONS FOR CHILDOB " + pjob.getName());
+      boolean added = pjob.addParentAccessionFile(parent.getAccessionFile());
+      Log.debug(level + ": Added success: " + added);
+      if (!added){
+          continue;
+      }
       // FIXME: there is some (potentially very serious) bug here were loops
       // exist in the processing output provision parent/child relationships!
       // if (!pjob.getChildren().contains(parent)) {
       // setAccessionFileRelations(pjob); }
-      setAccessionFileRelations(pjob);
+      
+      // don't bother calling this when it has already been called 
+      setAccessionFileRelations(pjob, level + 1);
     }
   }
 }
