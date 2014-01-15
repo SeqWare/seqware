@@ -436,6 +436,9 @@ public class WorkflowApp {
       boolean added = pjob.addParentAccessionFile(parent.getAccessionFile());
       Log.debug(level + ": Added success: " + added);
       if (!added){
+          // if no parent accession file was added, then recursive calls beyond this level 
+          // of recursion should be unnecessary and can be ignored
+          // this takes a substantial amount of time beyond five large forks in the workflow 
           continue;
       }
       // FIXME: there is some (potentially very serious) bug here were loops
