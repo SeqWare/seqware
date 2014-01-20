@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import net.sourceforge.seqware.common.util.Log;
 
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_INTERVAL;
@@ -387,9 +388,18 @@ public abstract class OozieJob {
     return this.name;
   }
 
-  public void addParentAccessionFile(String paf) {
-    if (!this.parentAccessionFiles.contains(paf))
+  /** 
+   * Return true only when an accession file is added successfully
+   * @param paf
+   * @return 
+   */
+  public boolean addParentAccessionFile(String paf) {
+    if (!this.parentAccessionFiles.contains(paf)){
       this.parentAccessionFiles.add(paf);
+      Log.debug("Added  " + paf +" to " + this.parentAccessionFiles.size() + " existing parent accession files");
+      return true;
+    }
+    return false;
   }
 
   public String getAccessionFile() {
