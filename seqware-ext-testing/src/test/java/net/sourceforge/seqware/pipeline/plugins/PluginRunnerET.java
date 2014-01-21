@@ -192,7 +192,7 @@ public class PluginRunnerET {
         // need to create in a shared location for seqware installs with multiple nodes
         //tempDir = Files.createTempDir();
         String parentDir = ConfigTools.getSettings().get("OOZIE_WORK_DIR");
-        tempDir = new File(parentDir, String.valueOf(new Random().nextInt()));
+        tempDir = new File(parentDir, String.valueOf(Math.abs(new Random().nextInt())));
         tempDir.mkdir();
     }
     
