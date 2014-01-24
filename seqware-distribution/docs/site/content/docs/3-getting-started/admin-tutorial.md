@@ -7,6 +7,14 @@ is_dynamic:            true
 
 ---
 
+<p class="warning"><strong>Note:</strong>This guide assumes you have installed
+SeqWare already. If you have not, please install SeqWare by either downloading
+the VirtualBox VM or launching the AMI on the Amazon cloud.  See <a
+href="/docs/2-installation/">Installation</a> for directions. We also recommend
+you follow the [User Tutorial](/docs/3-getting-started/user-tutorial/) and
+[Developer Tutorial](/docs/3-getting-started/developer-tutorial/) before this
+guide.</p>
+
 This guide is intended for a SeqWare administrator. Currently, it covers the
 tools required to install workflows, monitor workflows globally, and launch
 scheduled jobs. We also cover tools that are required for cancelling workflows

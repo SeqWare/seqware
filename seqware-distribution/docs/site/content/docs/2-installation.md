@@ -21,7 +21,28 @@ To learn about Linux, the Bash shell, and Java we recommend the O'Reilly series 
 * [Learning the bash Shell](http://amzn.com/B0043GXMSY)
 * [Learning Java](http://amzn.com/B0043EWVDI)
 
-## Option 1 - Installing with a Local VM
+## Option 1 - Client Only
+
+This is the option for you if your environment already has a SeqWare
+installation and you just want to download the client tool for interacting with
+the system.  It lets you generate reports, write new workflows, install those
+workflows on the remote SeqWare system, schedule workflows remotely, etc.  Keep
+in mind most sites do not have SeqWare already configured and you will typically
+always want to use Options 1 or 2 below instead.
+
+To install the client only, first download the command line SeqWare tool to a
+location in your path (make sure you mark it as executable).  Next, copy the
+archetype-catalog.xml file to you ~/.m2 directory.  This assumes you have Maven
+3.x installed and are running in a Linux environment.  The SeqWare command line
+will automatically download the latest SeqWare release and create a basic
+~/.seqware/settings file when you first run it.  Keep in mind you will need to
+get various settings for your ~/.seqware/settings file from the person who set
+it up your SeqWare install.
+
+You can find the SeqWare command line tool and the archetype-catalog.xml on our
+[releases](https://github.com/SeqWare/seqware/releases) GitHub page.
+
+## Option 2 - Installing with a Local VM
 
 We have created a VirtualBox VM with all SeqWare projects pre-installed along
 with some sample data.  This is the easiest way to get started with SeqWare
@@ -94,7 +115,7 @@ can submit workflow jobs to our physical cluster. You can find more information
 on this in the "SeqWare Pipeline" section of our documentation.
 
 
-## Option 2 -Installing with a Cloud VM
+## Option 3 -Installing with a Cloud VM
 
 We currently support running SeqWare on the Amazon cloud on HPC nodes. These
 are high-performance, cluster-compute nodes well suited for research, for specs
@@ -104,17 +125,39 @@ Instance](http://aws.amazon.com/ec2/instance-types/). These machines provide
 sufficient for analyzing a human exome within about 4 hours depending on the
 specifics of your workflows.
 
-For development purposes, we have also have had success with m1.xlarge instances. For noninteractive build and integration tests, we have also had success with the m1.medium instance type. However, note that these instance types are not recommended for production use. 
+For development purposes, we have also have had success with m1.xlarge
+instances. For noninteractive build and integration tests, we have also had
+success with the m1.medium instance type. However, note that these instance
+types are not recommended for production use. 
+
+If you are interested in building complete clusters on the Amazon cloud please
+see Option 4 below. Even for single-node SeqWare deployments Option 4 provides
+more control and a greater diversity of instance types for running.  However,
+just launching an AMI as described in this option is extremely fast and easy,
+it is really the best way to explore SeqWare with the least amount of work. 
 
 ### Getting an Amazon Cloud Account
 
-To use Amazon's cloud (also know as Amazon Web Services or AWS) you need to sign up for an account and that requires a credit card.  Also, while launching these instances is simply point and click using Amazon's very nice AWS console, actually using these machines requires the same level of experience as using the local VM above.  If you are looking for a completely graphical, web-based service you should consider using one of the cloud-based providers like Nimbus Informatics or DNAnexus.
+To use Amazon's cloud (also know as Amazon Web Services or AWS) you need to
+sign up for an account and that requires a credit card.  Also, while launching
+these instances is simply point and click using Amazon's very nice AWS console,
+actually using these machines requires the same level of experience as using
+the local VM above.  If you are looking for a completely graphical, web-based
+service you should consider using one of the cloud-based providers like Nimbus
+Informatics or DNAnexus.
 
 Signup for the Amazon cloud [here](http://aws.amazon.com/)
 
 ### Running the VM
 
-What makes Amazon's cloud so amazingly awesome is its excellent support for both graphical UIs and programmatic APIs for controlling the cloud.  It is your choice on how you want to launch the VM, either through the console or via one of the many command line and programmatic tools available. The details are subject to change so we refer to Amazon's thorough [documentation](https://aws.amazon.com/documentation/). Specifically [this](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html) guide should be very helpful in learning how to use Linux VMs on Amazon's cloud.
+What makes Amazon's cloud so amazingly awesome is its excellent support for
+both graphical UIs and programmatic APIs for controlling the cloud.  It is your
+choice on how you want to launch the VM, either through the console or via one
+of the many command line and programmatic tools available. The details are
+subject to change so we refer to Amazon's thorough
+[documentation](https://aws.amazon.com/documentation/). Specifically
+[this](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html) guide
+should be very helpful in learning how to use Linux VMs on Amazon's cloud.
 
 #### Stable Public AMI(s):
 
@@ -131,9 +174,11 @@ An example of the launching wizard in the Amazon AWS console can be seen below:
 
 ### Logging In
 
-Unlike the local VM there is no graphical desktop to log into.  Instead you will need to follow the directions on the Amazon site for using <kbd>ssh</kbd> to log into your running VM.  There you will have a command line interface to interact with the SeqWare tools. You can also view the SeqWare Portal and SeqWare Web Service remotely in your browser if you have previously opened the ports 22, 8080, and 80.
+There is no graphical desktop to log into.  Instead you will need to follow the directions on the Amazon site for using <kbd>ssh</kbd> to log into your running VM.  There you will have a command line interface to interact with the SeqWare tools. You can also view the SeqWare Portal and SeqWare Web Service remotely in your browser if you have previously opened the ports 22, 8080, and 80.
 
 Specifically, follow [this](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html) Amazon guide for logging into your SeqWare instance using ssh.
+
+You will want to login as the "ubuntu" user and then use "sudo su - seqware" to become the SeqWare user and walk through the steps of the tutorials.
 
 
 ### What Can You Do With It?
@@ -152,16 +197,14 @@ human genomes. In the mean time we recommend investigating the excellent
 <p class="warning"><strong>Note:</strong>Keep in mind Amazon charges approximately $1.30 USD per hour to run these instances, it is your responsibility to monitor your cloud usage and turn your VMs off when not in use!  You will be billed for each hour (rounded up).</p>
 
 
-## Option 3 - Installing from Scratch
+## Option 4 - Installing from Scratch
 
-<p class="warning"><strong>Note:</strong> This is not for the faint of heart.  We do not recommend you attempt to do this
-unless you a very familiar with Linux and comfortable with complex software
-configuration. We really recommend using the local VM in production and
-configure it to submit jobs to a real cluster since the
-Pegasus/Condor/Globus/SGE stack are difficult to setup correctly.</p>
+<p class="warning"><strong>Note:</strong>We do not recommend you attempt to do
+this unless you a familiar with Linux and a cloud/virtualization
+technology such as VirtualBox, OpenStack, Google Compute Engine, or Amazon Web
+Services.</p>
 
-This guide will be ported to this manual but for now the best instructions for
-setting up SeqWare from scratch can be found on our [Installing from Scratch guide](/docs/2a-installation-from-scratch/).
+This option leverages the excellent [Vagrant](http://www.vagrantup.com/)
 
 ## Next Steps
 
