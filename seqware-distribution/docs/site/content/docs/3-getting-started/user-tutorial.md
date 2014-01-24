@@ -93,7 +93,7 @@ For more information about the command line tools see `seqware --help`.
 ## The SeqWare Settings File
 
 SeqWare uses a simple configuration file that has been set up for
-you already on the VM. By default the location is `~/.seqware/settings`.
+you already on the VM. By default the location is `/home/seqware/.seqware/settings`.
 
 This file contains the web address of the SeqWare Web Service, your username
 and password, Amazon public and private keys that will allow you to
