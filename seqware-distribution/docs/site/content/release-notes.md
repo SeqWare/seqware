@@ -9,6 +9,11 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.0.10 (2014-01-27)
+
+## Improvement
+* [SEQWARE-1803] - SeqWare 1.0 support for specifying workflow parameters from command line
+
 ## 1.0.9 (2014-01-07)
 
 ### Defect
