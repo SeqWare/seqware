@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
@@ -19,6 +20,7 @@ import java.util.concurrent.Executors;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -48,7 +50,8 @@ import org.springframework.util.SerializationUtils;
  */
 public class PluginRunnerET {
 
-    private static File tempDir = Files.createTempDir();
+    private static File tempDir = null;
+    
     private static Map<String, Integer> installedWorkflows = new HashMap<String, Integer>();
     private static Map<String, File> bundleLocations = new HashMap<String, File>();
     private static List<Integer> launchedWorkflowRuns = new ArrayList<Integer>();
@@ -86,8 +89,8 @@ public class PluginRunnerET {
                 return;
             }
         }
+        createSharedTempDir();
         
-        tempDir = Files.createTempDir();
         Log.info("Trying to build and test archetypes at: " + tempDir.getAbsolutePath());
         PluginRunner it = new PluginRunner();
         String SEQWARE_VERSION = it.getClass().getPackage().getImplementationVersion();
@@ -166,7 +169,7 @@ public class PluginRunnerET {
         installedWorkflows.clear();
         bundleLocations.clear();
         launchedWorkflowRuns.clear();
-        tempDir = Files.createTempDir();
+        createSharedTempDir();
     }
 
     public static void monitorAndClean(boolean monitor) throws IOException {
@@ -183,6 +186,14 @@ public class PluginRunnerET {
         }
         
         clearStaticVariables();
+    }
+
+    private static void createSharedTempDir() {
+        // need to create in a shared location for seqware installs with multiple nodes
+        //tempDir = Files.createTempDir();
+        String parentDir = ConfigTools.getSettings().get("OOZIE_WORK_DIR");
+        tempDir = new File(parentDir, String.valueOf(Math.abs(new Random().nextInt())));
+        tempDir.mkdir();
     }
     
     @Test 
