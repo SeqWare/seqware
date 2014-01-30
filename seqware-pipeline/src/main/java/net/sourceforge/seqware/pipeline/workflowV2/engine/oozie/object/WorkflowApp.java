@@ -195,47 +195,10 @@ public class WorkflowApp {
     }
     this.jobs.add(oozieRootJob);
     parents.add(oozieRootJob);
-    // provisionFiles job
-    // sqwfiles
-    if (!wfdm.getFiles().isEmpty()) {
-      Collection<OozieJob> newParents = new ArrayList<OozieJob>();
-      for (Map.Entry<String, SqwFile> entry : wfdm.getFiles().entrySet()) {
-        AbstractJob abstractProvisionXJob = new BashJob("provisionFile_" + entry.getKey().replaceAll("\\.", "_"));
-        abstractProvisionXJob.addFile(entry.getValue());
-        OozieProvisionFileJob oozieProvisionXJob = new OozieProvisionFileJob(abstractProvisionXJob, entry.getValue(), abstractProvisionXJob.getAlgo() + this.jobs.size(),
-                                                               this.uniqueWorkingDir, this.useSge, this.seqwareJar,
-                                                               this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
-        oozieProvisionXJob.setMetadataWriteback(metadatawriteback);
-        if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
-          oozieProvisionXJob.setWorkflowRunAccession(workflowRunAccession);
-        }
-          // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
-          if (!entry.getValue().getParentAccessions().isEmpty()) {
-              oozieProvisionXJob.setParentAccessions(entry.getValue().getParentAccessions());
-          }
-        this.jobs.add(oozieProvisionXJob);
-        this.fileJobMap.put(entry.getValue(), oozieProvisionXJob);
-
-        // handle in
-        if (entry.getValue().isInput()) {
-          newParents.add(oozieProvisionXJob);
-          for (OozieJob parent : parents) {
-            oozieProvisionXJob.addParent(parent);
-          }
-          // add mkdir to the first job, then set the file path
-          String outputDir = this.uniqueWorkingDir + "/provisionfiles/" + entry.getValue().getUniqueDir();
-          abstractRootJob.getCommand().addArgument("mkdir -p " + outputDir + "; ");
-          oozieProvisionXJob.setOutputDir(outputDir);
-        } else {
-          oozieProvisionXJob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
-          oozieProvisionXJob.setOutputDir(wfdm.getMetadata_output_dir());
-          // set the filepath
-        }
-      }
-      // reset parents
-      parents.clear();
-      parents.addAll(newParents);
-    }
+    
+    // handles all provision file events not attached to jobs
+    // mutates parents to store all provision in jobs
+    handleUnattachedProvisionFileEvents(wfdm, metadatawriteback, workflowRunAccession, parents, abstractRootJob);
 
     // need to remember the provisionOut and reset the job's children to
     // provisionout's children
@@ -254,59 +217,13 @@ public class WorkflowApp {
       for (Job parent : job.getParents()) {
         oozieActualJob.addParent(this.getOozieJobObject((AbstractJob) parent));
       }
+      
+      /**
+       * handle the provision file events that are associated with a specific job
+       */
+      handleAttachedProvisionFileEventsForJob(job, oozieRootJob, metadatawriteback, workflowRunAccession, oozieActualJob, abstractRootJob, wfdm);
 
-      // has provisionfiles dependency?
-      // this based on the assumption that the provisionFiles job is always in
-      // the beginning or the end.
-      if (job.getFiles().isEmpty() == false) {
-        for (SqwFile file : job.getFiles()) {
-          // create a provisionfile job\
-          if (file.isInput()) {
-            // create a provisionFileJob;
-            AbstractJob abstractProvisionInJob = new BashJob("provisionFile_in");
-            abstractProvisionInJob.addFile(file);
-            OozieProvisionFileJob oozieProvisionInJob = new OozieProvisionFileJob(abstractProvisionInJob, file, abstractProvisionInJob.getAlgo() + "_"
-                + jobs.size(), this.uniqueWorkingDir, this.useSge, this.seqwareJar, this.threadsSgeParamFormat,
-                                                                          this.maxMemorySgeParamFormat);
-            oozieProvisionInJob.addParent(oozieRootJob);
-            oozieProvisionInJob.setMetadataWriteback(metadatawriteback);
-            if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
-              oozieProvisionInJob.setWorkflowRunAccession(workflowRunAccession);
-            }
-            // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
-              if (!file.getParentAccessions().isEmpty()) {
-                  oozieProvisionInJob.setParentAccessions(file.getParentAccessions());
-              }
-            this.jobs.add(oozieProvisionInJob);
-            oozieProvisionInJob.setOutputDir("provisionfiles/" + file.getUniqueDir());
-            // perform the work after the provision in finishes
-            oozieActualJob.addParent(oozieProvisionInJob);
-            // add mkdir to the first job, then set the file path
-            abstractRootJob.getCommand().addArgument("mkdir -p " + "provisionfiles/" + file.getUniqueDir() + "; ");
-          } else {
-            // create a provisionFileJob;
-            AbstractJob abstractProvisionOutJob = new BashJob("provisionFile_out");
-            abstractProvisionOutJob.addFile(file);
-            OozieProvisionFileJob oozieProvisionOutJob = new OozieProvisionFileJob(abstractProvisionOutJob, file, abstractProvisionOutJob.getAlgo() + "_"
-                + jobs.size(), this.uniqueWorkingDir, this.useSge, this.seqwareJar, this.threadsSgeParamFormat,
-                                                                          this.maxMemorySgeParamFormat);
-            oozieProvisionOutJob.addParent(oozieActualJob);
-            oozieProvisionOutJob.setMetadataWriteback(metadatawriteback);
-            oozieProvisionOutJob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
-            oozieProvisionOutJob.setOutputDir(wfdm.getMetadata_output_dir());
-            if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
-              oozieProvisionOutJob.setWorkflowRunAccession(workflowRunAccession);
-            }
-            // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
-              if (!file.getParentAccessions().isEmpty()) {
-                  oozieProvisionOutJob.setParentAccessions(file.getParentAccessions());
-              }
-            this.jobs.add(oozieProvisionOutJob);
-          }
-        }
-      }
-
-      // if no parent, assume that the last provisionfiles that we saw are the parents
+      // if this job has no parents, assume that the provision in events that we saw are the parents
       if (oozieActualJob.getParents().isEmpty()) {
         for (OozieJob parent : parents) {
           oozieActualJob.addParent(parent);
@@ -471,6 +388,121 @@ public class WorkflowApp {
                     entry.getValue().addParent(leaf);
                 }
             }
+        }
+    }
+
+    /**
+     * Handles provision file events that are not attached to individual jobs
+     * @param wfdm
+     * @param metadatawriteback
+     * @param workflowRunAccession
+     * @param parents a list of all provision in jobs
+     * @param abstractRootJob 
+     */
+    private void handleUnattachedProvisionFileEvents(final AbstractWorkflowDataModel wfdm, final boolean metadatawriteback, final String workflowRunAccession, List<OozieJob> parents, final AbstractJob abstractRootJob) {
+        // this section handles all provision files events that are not attached to specific jobs
+        if (!wfdm.getFiles().isEmpty()) {
+          Collection<OozieJob> newParents = new ArrayList<OozieJob>();
+          for (Map.Entry<String, SqwFile> entry : wfdm.getFiles().entrySet()) {
+            AbstractJob abstractProvisionXJob = new BashJob("provisionFile_" + entry.getKey().replaceAll("\\.", "_"));
+            abstractProvisionXJob.addFile(entry.getValue());
+            OozieProvisionFileJob oozieProvisionXJob = new OozieProvisionFileJob(abstractProvisionXJob, entry.getValue(), abstractProvisionXJob.getAlgo() + this.jobs.size(),
+                                                                   this.uniqueWorkingDir, this.useSge, this.seqwareJar,
+                                                                   this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
+            oozieProvisionXJob.setMetadataWriteback(metadatawriteback);
+            if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
+              oozieProvisionXJob.setWorkflowRunAccession(workflowRunAccession);
+            }
+              // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+              if (!entry.getValue().getParentAccessions().isEmpty()) {
+                  oozieProvisionXJob.setParentAccessions(entry.getValue().getParentAccessions());
+              }
+            this.jobs.add(oozieProvisionXJob);
+            this.fileJobMap.put(entry.getValue(), oozieProvisionXJob);
+
+            // handle in
+            if (entry.getValue().isInput()) {
+              newParents.add(oozieProvisionXJob);
+              for (OozieJob parent : parents) {
+                oozieProvisionXJob.addParent(parent);
+              }
+              // add mkdir to the first job, then set the file path
+              String outputDir = this.uniqueWorkingDir + "/provisionfiles/" + entry.getValue().getUniqueDir();
+              abstractRootJob.getCommand().addArgument("mkdir -p " + outputDir + "; ");
+              oozieProvisionXJob.setOutputDir(outputDir);
+            } else {
+              oozieProvisionXJob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
+              oozieProvisionXJob.setOutputDir(wfdm.getMetadata_output_dir());
+              // set the filepath
+            }
+          }
+          // reset parents
+          parents.clear();
+          parents.addAll(newParents);
+        }
+    }
+
+    /**
+     * Handles the creation of provision file events for a specific job
+     * @param job
+     * @param oozieRootJob
+     * @param metadatawriteback
+     * @param workflowRunAccession
+     * @param oozieActualJob
+     * @param abstractRootJob
+     * @param wfdm 
+     */
+    private void handleAttachedProvisionFileEventsForJob(final AbstractJob job, final OozieJob oozieRootJob, final boolean metadatawriteback, 
+            final String workflowRunAccession, OozieJob oozieActualJob, AbstractJob abstractRootJob, final AbstractWorkflowDataModel wfdm) {
+        // has provisionfiles dependency?
+        // this based on the assumption that the provisionFiles job is always in
+        // the before or after the actual job
+        if (job.getFiles().isEmpty() == false) {
+          for (SqwFile file : job.getFiles()) {
+            // create a provisionfile job\
+            if (file.isInput()) {
+              // create a provisionFileJob;
+              AbstractJob abstractProvisionInJob = new BashJob("provisionFile_in");
+              abstractProvisionInJob.addFile(file);
+              OozieProvisionFileJob oozieProvisionInJob = new OozieProvisionFileJob(abstractProvisionInJob, file, abstractProvisionInJob.getAlgo() + "_"
+                  + jobs.size(), this.uniqueWorkingDir, this.useSge, this.seqwareJar, this.threadsSgeParamFormat,
+                                                                            this.maxMemorySgeParamFormat);
+              oozieProvisionInJob.addParent(oozieRootJob);
+              oozieProvisionInJob.setMetadataWriteback(metadatawriteback);
+              if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
+                oozieProvisionInJob.setWorkflowRunAccession(workflowRunAccession);
+              }
+              // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+                if (!file.getParentAccessions().isEmpty()) {
+                    oozieProvisionInJob.setParentAccessions(file.getParentAccessions());
+                }
+              this.jobs.add(oozieProvisionInJob);
+              oozieProvisionInJob.setOutputDir("provisionfiles/" + file.getUniqueDir());
+              // perform the work after the provision in finishes
+              oozieActualJob.addParent(oozieProvisionInJob);
+              // add mkdir to the first job, then set the file path
+              abstractRootJob.getCommand().addArgument("mkdir -p " + "provisionfiles/" + file.getUniqueDir() + "; ");
+            } else {
+              // create a provisionFileJob;
+              AbstractJob abstractProvisionOutJob = new BashJob("provisionFile_out");
+              abstractProvisionOutJob.addFile(file);
+              OozieProvisionFileJob oozieProvisionOutJob = new OozieProvisionFileJob(abstractProvisionOutJob, file, abstractProvisionOutJob.getAlgo() + "_"
+                  + jobs.size(), this.uniqueWorkingDir, this.useSge, this.seqwareJar, this.threadsSgeParamFormat,
+                                                                            this.maxMemorySgeParamFormat);
+              oozieProvisionOutJob.addParent(oozieActualJob);
+              oozieProvisionOutJob.setMetadataWriteback(metadatawriteback);
+              oozieProvisionOutJob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
+              oozieProvisionOutJob.setOutputDir(wfdm.getMetadata_output_dir());
+              if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
+                oozieProvisionOutJob.setWorkflowRunAccession(workflowRunAccession);
+              }
+              // SEQWARE-1804 transfer setParentAccessions information ala Pegasus version in net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object.Adag 
+                if (!file.getParentAccessions().isEmpty()) {
+                    oozieProvisionOutJob.setParentAccessions(file.getParentAccessions());
+                }
+              this.jobs.add(oozieProvisionOutJob);
+            }
+          }
         }
     }
 }
