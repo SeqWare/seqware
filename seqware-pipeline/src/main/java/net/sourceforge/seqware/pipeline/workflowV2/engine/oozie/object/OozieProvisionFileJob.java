@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
-import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_INTERVAL;
-import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_MAX;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
@@ -60,7 +58,7 @@ public class OozieProvisionFileJob extends OozieJob {
   }
 
   private File emitRunnerScript() {
-    File file = file(scriptsDir, runnerFileName(name), true);
+    File localFile = file(scriptsDir, runnerFileName(name), true);
 
     ArrayList<String> args = new ArrayList<String>();
     args.add("java");
@@ -70,8 +68,8 @@ public class OozieProvisionFileJob extends OozieJob {
     args.add("net.sourceforge.seqware.pipeline.runner.Runner");
     args.addAll(runnerArgs());
 
-    writeScript(concat(" ", args), file);
-    return file;
+    writeScript(concat(" ", args), localFile);
+    return localFile;
   }
 
   private List<String> runnerArgs() {
