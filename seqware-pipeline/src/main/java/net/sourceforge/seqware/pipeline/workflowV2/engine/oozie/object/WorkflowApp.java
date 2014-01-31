@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
@@ -26,6 +28,10 @@ import org.jdom.Element;
 public class WorkflowApp {
   public static final String URIOOZIEWORKFLOW = "uri:oozie:workflow:0.4";
   public static org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace(URIOOZIEWORKFLOW);
+  public static final int BUCKET_SIZE = Integer.valueOf(ConfigTools.getSettings().containsKey(BatchedProvisionFileJob.OOZIE_BATCH_SIZE)
+                                ? ConfigTools.getSettings().get(BatchedProvisionFileJob.OOZIE_BATCH_SIZE) : "100");
+  public static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings().containsKey(BatchedProvisionFileJob.OOZIE_BATCH_THRESHOLD)
+                                ? ConfigTools.getSettings().get(BatchedProvisionFileJob.OOZIE_BATCH_THRESHOLD):"5");
 
   private AbstractWorkflowDataModel wfdm;
   /**
@@ -38,8 +44,9 @@ public class WorkflowApp {
   private String lastJoin;
   /**
    * map of files that are attached directly to the workflow instead of to a specific job
+   * used for constructing the graph
    */
-  private Map<SqwFile, OozieProvisionFileJob> fileJobMap;
+  private Map<SqwFile, OozieJob> fileJobMap;
   private String uniqueWorkingDir;
   private Path hdfsWorkDir;
   private boolean useSge;
@@ -53,7 +60,7 @@ public class WorkflowApp {
     this.uniqueWorkingDir = nfsWorkDir;
     this.hdfsWorkDir = hdfsWorkDir;
     this.jobs = new ArrayList<OozieJob>();
-    this.fileJobMap = new HashMap<SqwFile, OozieProvisionFileJob>();
+    this.fileJobMap = new HashMap<SqwFile, OozieJob>();
     this.useSge = useSge;
     this.seqwareJar = seqwareJar;
     this.threadsSgeParamFormat = threadsSgeParamFormat;
@@ -168,7 +175,7 @@ public class WorkflowApp {
 
   private void parseDataModel(AbstractWorkflowDataModel wfdm) {
     boolean metadatawriteback = wfdm.isMetadataWriteBack();
-    List<OozieJob> parents = new ArrayList<OozieJob>();
+    Set<OozieJob> parents = new LinkedHashSet<OozieJob>();
     // first job create dirs
     // mkdir data job
     AbstractJob abstractRootJob = new BashJob("createdirs");
@@ -381,7 +388,7 @@ public class WorkflowApp {
                 leaves.add(_job);
             }
         }
-        for (Map.Entry<SqwFile, OozieProvisionFileJob> entry : fileJobMap.entrySet()) {
+        for (Map.Entry<SqwFile, OozieJob> entry : fileJobMap.entrySet()) {
             if (entry.getKey().isOutput()) {
                 // set parents to all leaf jobs
                 for (OozieJob leaf : leaves) {
@@ -389,6 +396,29 @@ public class WorkflowApp {
                 }
             }
         }
+    }
+    
+    /**
+     * Create a bucket generator if we require buckets
+     * @return 
+     */
+    private BucketGenerator isRequireBuckets(Collection<SqwFile> files, boolean input){
+        // only use buckets for SGE for now
+        if (!this.useSge){
+            return null;
+        }
+        
+        int numFiles = countInputFiles(files);
+        if (!input){
+            numFiles = files.size() - numFiles;
+        }
+        Log.debug(numFiles + " counted as unattached input files");
+        BucketGenerator inputBucketGenerator = null;
+        if (numFiles > THRESHOLD) {
+            Log.debug(numFiles + " above threshold of "+THRESHOLD+"using batching");
+            inputBucketGenerator = new BucketGenerator(input);
+        }
+        return inputBucketGenerator;
     }
 
     /**
@@ -399,10 +429,15 @@ public class WorkflowApp {
      * @param parents a list of all provision in jobs
      * @param abstractRootJob 
      */
-    private void handleUnattachedProvisionFileEvents(final AbstractWorkflowDataModel wfdm, final boolean metadatawriteback, final String workflowRunAccession, List<OozieJob> parents, final AbstractJob abstractRootJob) {
+    private void handleUnattachedProvisionFileEvents(final AbstractWorkflowDataModel wfdm, final boolean metadatawriteback, final String workflowRunAccession, Set<OozieJob> parents, final AbstractJob abstractRootJob) {
+        BucketGenerator inputBucketGenerator = isRequireBuckets(wfdm.getFiles().values(), true);
+        boolean useInputBatches = inputBucketGenerator != null;
+        BucketGenerator outputBucketGenerator = isRequireBuckets(wfdm.getFiles().values(), false);
+        boolean useOutputBatches = outputBucketGenerator != null;
+        
         // this section handles all provision files events that are not attached to specific jobs
         if (!wfdm.getFiles().isEmpty()) {
-          Collection<OozieJob> newParents = new ArrayList<OozieJob>();
+          Set<OozieJob> newParents = new LinkedHashSet<OozieJob>();
           for (Map.Entry<String, SqwFile> entry : wfdm.getFiles().entrySet()) {
             AbstractJob abstractProvisionXJob = new BashJob("provisionFile_" + entry.getKey().replaceAll("\\.", "_"));
             abstractProvisionXJob.addFile(entry.getValue());
@@ -417,15 +452,42 @@ public class WorkflowApp {
               if (!entry.getValue().getParentAccessions().isEmpty()) {
                   oozieProvisionXJob.setParentAccessions(entry.getValue().getParentAccessions());
               }
-            this.jobs.add(oozieProvisionXJob);
-            this.fileJobMap.put(entry.getValue(), oozieProvisionXJob);
+              if (!useInputBatches && entry.getValue().isInput() || !useOutputBatches && entry.getValue().isOutput()) {
+                  this.jobs.add(oozieProvisionXJob);
+                  this.fileJobMap.put(entry.getValue(), oozieProvisionXJob);
+              } else if (useInputBatches || useOutputBatches){
+                  if (entry.getValue().isInput()){
+                    assert(inputBucketGenerator != null);
+                    BatchedProvisionFileJob currentInBucket = inputBucketGenerator.attachAndIterateBuckets(oozieProvisionXJob);
+                    if (!this.jobs.contains(currentInBucket)){
+                        this.jobs.add(currentInBucket);
+                    }
+                    this.fileJobMap.put(entry.getValue(), currentInBucket);
+                  } else{
+                    assert(outputBucketGenerator != null);
+                    BatchedProvisionFileJob currentOutBucket = outputBucketGenerator.attachAndIterateBuckets(oozieProvisionXJob);
+                    if (!this.jobs.contains(currentOutBucket)){
+                        this.jobs.add(currentOutBucket);
+                    }
+                    this.fileJobMap.put(entry.getValue(), currentOutBucket);
+                  }
+              } else{
+                  throw new RuntimeException("Invalid state for unattached bucket generation");
+              }
 
             // handle in
             if (entry.getValue().isInput()) {
-              newParents.add(oozieProvisionXJob);
-              for (OozieJob parent : parents) {
-                oozieProvisionXJob.addParent(parent);
-              }
+                OozieJob target;
+                if (useInputBatches){
+                    assert(inputBucketGenerator != null);
+                    target = inputBucketGenerator.getCurrentBucket() ;
+                } else{
+                    target = oozieProvisionXJob;
+                }
+                newParents.add(target);
+                for (OozieJob parent : parents) {
+                    target.addParent(parent);
+                }
               // add mkdir to the first job, then set the file path
               String outputDir = this.uniqueWorkingDir + "/provisionfiles/" + entry.getValue().getUniqueDir();
               abstractRootJob.getCommand().addArgument("mkdir -p " + outputDir + "; ");
@@ -436,9 +498,9 @@ public class WorkflowApp {
               // set the filepath
             }
           }
-          // reset parents
-          parents.clear();
-          parents.addAll(newParents);
+            // reset parents
+            parents.clear();
+            parents.addAll(newParents);
         }
     }
 
@@ -458,8 +520,14 @@ public class WorkflowApp {
         // this based on the assumption that the provisionFiles job is always in
         // the before or after the actual job
         if (job.getFiles().isEmpty() == false) {
+          
+          BucketGenerator inputBucketGenerator = isRequireBuckets(job.getFiles(), true);
+          boolean useInputBatches = inputBucketGenerator != null;
+          BucketGenerator outputBucketGenerator = isRequireBuckets(job.getFiles(), false);
+          boolean useOutputBatches = outputBucketGenerator != null;
+            
           for (SqwFile file : job.getFiles()) {
-            // create a provisionfile job\
+            // create a provisionfile job
             if (file.isInput()) {
               // create a provisionFileJob;
               AbstractJob abstractProvisionInJob = new BashJob("provisionFile_in");
@@ -467,7 +535,6 @@ public class WorkflowApp {
               OozieProvisionFileJob oozieProvisionInJob = new OozieProvisionFileJob(abstractProvisionInJob, file, abstractProvisionInJob.getAlgo() + "_"
                   + jobs.size(), this.uniqueWorkingDir, this.useSge, this.seqwareJar, this.threadsSgeParamFormat,
                                                                             this.maxMemorySgeParamFormat);
-              oozieProvisionInJob.addParent(oozieRootJob);
               oozieProvisionInJob.setMetadataWriteback(metadatawriteback);
               if (workflowRunAccession != null && !workflowRunAccession.isEmpty()) {
                 oozieProvisionInJob.setWorkflowRunAccession(workflowRunAccession);
@@ -476,12 +543,23 @@ public class WorkflowApp {
                 if (!file.getParentAccessions().isEmpty()) {
                     oozieProvisionInJob.setParentAccessions(file.getParentAccessions());
                 }
-              this.jobs.add(oozieProvisionInJob);
               oozieProvisionInJob.setOutputDir("provisionfiles/" + file.getUniqueDir());
-              // perform the work after the provision in finishes
-              oozieActualJob.addParent(oozieProvisionInJob);
               // add mkdir to the first job, then set the file path
               abstractRootJob.getCommand().addArgument("mkdir -p " + "provisionfiles/" + file.getUniqueDir() + "; ");
+              
+              if (!useInputBatches){
+                // hook up the graph 
+                oozieProvisionInJob.addParent(oozieRootJob);
+                this.jobs.add(oozieProvisionInJob);
+                // perform the work after the provision in finishes
+                oozieActualJob.addParent(oozieProvisionInJob);
+              } else{
+                  assert (inputBucketGenerator != null);
+                  BatchedProvisionFileJob currentInBucket = inputBucketGenerator.attachAndIterateBuckets(oozieProvisionInJob);
+                  if (!this.jobs.contains(currentInBucket)) {
+                      this.jobs.add(currentInBucket);
+                  }
+              }
             } else {
               // create a provisionFileJob;
               AbstractJob abstractProvisionOutJob = new BashJob("provisionFile_out");
@@ -489,7 +567,6 @@ public class WorkflowApp {
               OozieProvisionFileJob oozieProvisionOutJob = new OozieProvisionFileJob(abstractProvisionOutJob, file, abstractProvisionOutJob.getAlgo() + "_"
                   + jobs.size(), this.uniqueWorkingDir, this.useSge, this.seqwareJar, this.threadsSgeParamFormat,
                                                                             this.maxMemorySgeParamFormat);
-              oozieProvisionOutJob.addParent(oozieActualJob);
               oozieProvisionOutJob.setMetadataWriteback(metadatawriteback);
               oozieProvisionOutJob.setMetadataOutputPrefix(wfdm.getMetadata_output_file_prefix());
               oozieProvisionOutJob.setOutputDir(wfdm.getMetadata_output_dir());
@@ -500,9 +577,77 @@ public class WorkflowApp {
                 if (!file.getParentAccessions().isEmpty()) {
                     oozieProvisionOutJob.setParentAccessions(file.getParentAccessions());
                 }
-              this.jobs.add(oozieProvisionOutJob);
+              
+              if (!useOutputBatches){
+                // hook up the graph
+                oozieProvisionOutJob.addParent(oozieActualJob);
+                this.jobs.add(oozieProvisionOutJob);
+              } else{
+                  assert (outputBucketGenerator != null);
+                  BatchedProvisionFileJob currentOutBucket = outputBucketGenerator.attachAndIterateBuckets(oozieProvisionOutJob);
+                  if (!this.jobs.contains(currentOutBucket)) {
+                      this.jobs.add(currentOutBucket);
+                  }
+              }
             }
           }
+        }
+    }
+
+    private static int countInputFiles(Collection<SqwFile> files) {
+        int count = 0;
+        for(SqwFile file : files){
+            if (file.isInput()){
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    /**
+     * Encapsulates logic for the generation and iteration of buckets
+     */
+    public class BucketGenerator{
+        public int currentBucketCount = 0;
+        private BatchedProvisionFileJob currentBucket = createBucket();
+        private final boolean input;
+        
+        public BucketGenerator(boolean input){
+            this.input = input;
+        }
+        
+        /**
+         * Creates a bucket and adds it to the list of jobs
+         * @return 
+         */
+        private BatchedProvisionFileJob createBucket() {
+            String name = "provisionFile_" + (input ? "In" : "Out") + "_Batch_" + currentBucketCount;
+            AbstractJob abstractBucketJob = new BashJob(name);
+            currentBucket = new BatchedProvisionFileJob(abstractBucketJob, name,
+                    WorkflowApp.this.uniqueWorkingDir, WorkflowApp.this.useSge, WorkflowApp.this.seqwareJar,
+                    WorkflowApp.this.threadsSgeParamFormat, WorkflowApp.this.maxMemorySgeParamFormat);
+            return getCurrentBucket();
+        }
+        
+        /**
+         * Creates new buckets as needed when provisionjobs are added
+         * @param provisionJob
+         * @return 
+         */
+        public BatchedProvisionFileJob attachAndIterateBuckets(OozieProvisionFileJob provisionJob) {
+            if (getCurrentBucket().getBatchSize() == BUCKET_SIZE) {
+                currentBucket = createBucket();
+                currentBucketCount += BUCKET_SIZE;
+            }
+            getCurrentBucket().attachProvisionFileJob(provisionJob);
+            return getCurrentBucket();
+        }
+
+        /**
+         * @return the currentBucket
+         */
+        public BatchedProvisionFileJob getCurrentBucket() {
+            return currentBucket;
         }
     }
 }
