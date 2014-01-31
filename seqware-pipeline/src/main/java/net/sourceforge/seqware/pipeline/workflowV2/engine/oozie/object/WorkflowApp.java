@@ -28,10 +28,10 @@ import org.jdom.Element;
 public class WorkflowApp {
   public static final String URIOOZIEWORKFLOW = "uri:oozie:workflow:0.4";
   public static org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace(URIOOZIEWORKFLOW);
-  public static final int BUCKET_SIZE = Integer.valueOf(ConfigTools.getSettings().containsKey(BatchedProvisionFileJob.OOZIE_BATCH_SIZE)
-                                ? ConfigTools.getSettings().get(BatchedProvisionFileJob.OOZIE_BATCH_SIZE) : "100");
-  public static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings().containsKey(BatchedProvisionFileJob.OOZIE_BATCH_THRESHOLD)
-                                ? ConfigTools.getSettings().get(BatchedProvisionFileJob.OOZIE_BATCH_THRESHOLD):"5");
+  public static final int BUCKET_SIZE = Integer.valueOf(ConfigTools.getSettings().containsKey(BatchedOozieProvisionFileJob.OOZIE_BATCH_SIZE)
+                                ? ConfigTools.getSettings().get(BatchedOozieProvisionFileJob.OOZIE_BATCH_SIZE) : "100");
+  public static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings().containsKey(BatchedOozieProvisionFileJob.OOZIE_BATCH_THRESHOLD)
+                                ? ConfigTools.getSettings().get(BatchedOozieProvisionFileJob.OOZIE_BATCH_THRESHOLD):"5");
 
   private AbstractWorkflowDataModel wfdm;
   /**
@@ -383,8 +383,7 @@ public class WorkflowApp {
         for (OozieJob _job : this.jobs) {
             // Note: the leaves accumulated are to be parents of output provisions,
             //       thus the leaves themselves should not be file provisions
-            if ((_job instanceof OozieProvisionFileJob == false)
-                    && _job.getChildren().isEmpty()) {
+            if ((_job instanceof OozieProvisionFileJob == false && _job instanceof BatchedOozieProvisionFileJob == false) && _job.getChildren().isEmpty()) {
                 leaves.add(_job);
             }
         }
@@ -458,14 +457,14 @@ public class WorkflowApp {
               } else if (useInputBatches || useOutputBatches){
                   if (entry.getValue().isInput()){
                     assert(inputBucketGenerator != null);
-                    BatchedProvisionFileJob currentInBucket = inputBucketGenerator.attachAndIterateBuckets(oozieProvisionXJob);
+                    BatchedOozieProvisionFileJob currentInBucket = inputBucketGenerator.attachAndIterateBuckets(oozieProvisionXJob);
                     if (!this.jobs.contains(currentInBucket)){
                         this.jobs.add(currentInBucket);
                     }
                     this.fileJobMap.put(entry.getValue(), currentInBucket);
                   } else{
                     assert(outputBucketGenerator != null);
-                    BatchedProvisionFileJob currentOutBucket = outputBucketGenerator.attachAndIterateBuckets(oozieProvisionXJob);
+                    BatchedOozieProvisionFileJob currentOutBucket = outputBucketGenerator.attachAndIterateBuckets(oozieProvisionXJob);
                     if (!this.jobs.contains(currentOutBucket)){
                         this.jobs.add(currentOutBucket);
                     }
@@ -554,7 +553,7 @@ public class WorkflowApp {
                 oozieActualJob.addParent(oozieProvisionInJob);
               } else{
                   assert (inputBucketGenerator != null);
-                  BatchedProvisionFileJob currentInBucket = inputBucketGenerator.attachAndIterateBuckets(oozieProvisionInJob);
+                  BatchedOozieProvisionFileJob currentInBucket = inputBucketGenerator.attachAndIterateBuckets(oozieProvisionInJob);
                   if (!this.jobs.contains(currentInBucket)) {
                       this.jobs.add(currentInBucket);
                   }
@@ -583,7 +582,7 @@ public class WorkflowApp {
                 this.jobs.add(oozieProvisionOutJob);
               } else{
                   assert (outputBucketGenerator != null);
-                  BatchedProvisionFileJob currentOutBucket = outputBucketGenerator.attachAndIterateBuckets(oozieProvisionOutJob);
+                  BatchedOozieProvisionFileJob currentOutBucket = outputBucketGenerator.attachAndIterateBuckets(oozieProvisionOutJob);
                   currentOutBucket.addParent(oozieActualJob);
                   if (!this.jobs.contains(currentOutBucket)) {
                       this.jobs.add(currentOutBucket);
@@ -609,7 +608,7 @@ public class WorkflowApp {
      */
     public class BucketGenerator{
         public int currentBucketCount = 0;
-        private BatchedProvisionFileJob currentBucket;
+        private BatchedOozieProvisionFileJob currentBucket;
         private final boolean input;
         private final String uniqueName;
         
@@ -623,11 +622,11 @@ public class WorkflowApp {
          * Creates a bucket and adds it to the list of jobs
          * @return 
          */
-        private BatchedProvisionFileJob createBucket() {
+        private BatchedOozieProvisionFileJob createBucket() {
             String name = "provisionFile_" + (input ? "In" : "Out")+"_"+ uniqueName + "_Batch_" + currentBucketCount;
             currentBucketCount += BUCKET_SIZE;
             AbstractJob abstractBucketJob = new BashJob(name);
-            currentBucket = new BatchedProvisionFileJob(abstractBucketJob, name,
+            currentBucket = new BatchedOozieProvisionFileJob(abstractBucketJob, name,
                     WorkflowApp.this.uniqueWorkingDir, WorkflowApp.this.useSge, WorkflowApp.this.seqwareJar,
                     WorkflowApp.this.threadsSgeParamFormat, WorkflowApp.this.maxMemorySgeParamFormat);
             return getCurrentBucket();
@@ -638,7 +637,7 @@ public class WorkflowApp {
          * @param provisionJob
          * @return 
          */
-        public BatchedProvisionFileJob attachAndIterateBuckets(OozieProvisionFileJob provisionJob) {
+        public BatchedOozieProvisionFileJob attachAndIterateBuckets(OozieProvisionFileJob provisionJob) {
             if (getCurrentBucket().getBatchSize() == BUCKET_SIZE) {
                 currentBucket = createBucket();
             }
@@ -649,7 +648,7 @@ public class WorkflowApp {
         /**
          * @return the currentBucket
          */
-        public BatchedProvisionFileJob getCurrentBucket() {
+        public BatchedOozieProvisionFileJob getCurrentBucket() {
             return currentBucket;
         }
     }

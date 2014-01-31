@@ -13,7 +13,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
  * Container for batching up provision file jobs
  * @author dyuen
  */
-public class BatchedProvisionFileJob extends OozieJob {
+public class BatchedOozieProvisionFileJob extends OozieJob {
     /**
      * When the number of provision file events rooted at a job or in the workflow as a whole
      * is above this threshold, start to use buckets
@@ -27,7 +27,7 @@ public class BatchedProvisionFileJob extends OozieJob {
     private List<OozieProvisionFileJob> provisionJobs = new ArrayList<OozieProvisionFileJob>();
 
 
-  public BatchedProvisionFileJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
+  public BatchedOozieProvisionFileJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
                       String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
     super(job, name, oozie_working_dir, useSge, seqwareJar, threadsSgeParamFormat, maxMemorySgeParamFormat);
   }
