@@ -402,7 +402,7 @@ public class WorkflowApp {
      * Create a bucket generator if we require buckets
      * @return 
      */
-    private BucketGenerator isRequireBuckets(Collection<SqwFile> files, boolean input){
+    private BucketGenerator isRequireBuckets(final Collection<SqwFile> files, final boolean input, final String uniqueName){
         // only use buckets for SGE for now
         if (!this.useSge){
             return null;
@@ -416,7 +416,7 @@ public class WorkflowApp {
         BucketGenerator inputBucketGenerator = null;
         if (numFiles > THRESHOLD) {
             Log.debug(numFiles + " above threshold of "+THRESHOLD+"using batching");
-            inputBucketGenerator = new BucketGenerator(input);
+            inputBucketGenerator = new BucketGenerator(input, uniqueName);
         }
         return inputBucketGenerator;
     }
@@ -430,9 +430,9 @@ public class WorkflowApp {
      * @param abstractRootJob 
      */
     private void handleUnattachedProvisionFileEvents(final AbstractWorkflowDataModel wfdm, final boolean metadatawriteback, final String workflowRunAccession, Set<OozieJob> parents, final AbstractJob abstractRootJob) {
-        BucketGenerator inputBucketGenerator = isRequireBuckets(wfdm.getFiles().values(), true);
+        BucketGenerator inputBucketGenerator = isRequireBuckets(wfdm.getFiles().values(), true, "unattached");
         boolean useInputBatches = inputBucketGenerator != null;
-        BucketGenerator outputBucketGenerator = isRequireBuckets(wfdm.getFiles().values(), false);
+        BucketGenerator outputBucketGenerator = isRequireBuckets(wfdm.getFiles().values(), false, "unattached");
         boolean useOutputBatches = outputBucketGenerator != null;
         
         // this section handles all provision files events that are not attached to specific jobs
@@ -520,10 +520,9 @@ public class WorkflowApp {
         // this based on the assumption that the provisionFiles job is always in
         // the before or after the actual job
         if (job.getFiles().isEmpty() == false) {
-          
-          BucketGenerator inputBucketGenerator = isRequireBuckets(job.getFiles(), true);
+          BucketGenerator inputBucketGenerator = isRequireBuckets(job.getFiles(), true, job.getAlgo()+ "_" + jobs.size());
           boolean useInputBatches = inputBucketGenerator != null;
-          BucketGenerator outputBucketGenerator = isRequireBuckets(job.getFiles(), false);
+          BucketGenerator outputBucketGenerator = isRequireBuckets(job.getFiles(), false, job.getAlgo()+ "_" + jobs.size());
           boolean useOutputBatches = outputBucketGenerator != null;
             
           for (SqwFile file : job.getFiles()) {
@@ -585,6 +584,7 @@ public class WorkflowApp {
               } else{
                   assert (outputBucketGenerator != null);
                   BatchedProvisionFileJob currentOutBucket = outputBucketGenerator.attachAndIterateBuckets(oozieProvisionOutJob);
+                  currentOutBucket.addParent(oozieActualJob);
                   if (!this.jobs.contains(currentOutBucket)) {
                       this.jobs.add(currentOutBucket);
                   }
@@ -609,11 +609,14 @@ public class WorkflowApp {
      */
     public class BucketGenerator{
         public int currentBucketCount = 0;
-        private BatchedProvisionFileJob currentBucket = createBucket();
+        private BatchedProvisionFileJob currentBucket;
         private final boolean input;
+        private final String uniqueName;
         
-        public BucketGenerator(boolean input){
+        public BucketGenerator(boolean input, String uniqueName){
             this.input = input;
+            this.uniqueName = uniqueName;
+            currentBucket = createBucket();
         }
         
         /**
@@ -621,7 +624,8 @@ public class WorkflowApp {
          * @return 
          */
         private BatchedProvisionFileJob createBucket() {
-            String name = "provisionFile_" + (input ? "In" : "Out") + "_Batch_" + currentBucketCount;
+            String name = "provisionFile_" + (input ? "In" : "Out")+"_"+ uniqueName + "_Batch_" + currentBucketCount;
+            currentBucketCount += BUCKET_SIZE;
             AbstractJob abstractBucketJob = new BashJob(name);
             currentBucket = new BatchedProvisionFileJob(abstractBucketJob, name,
                     WorkflowApp.this.uniqueWorkingDir, WorkflowApp.this.useSge, WorkflowApp.this.seqwareJar,
@@ -637,7 +641,6 @@ public class WorkflowApp {
         public BatchedProvisionFileJob attachAndIterateBuckets(OozieProvisionFileJob provisionJob) {
             if (getCurrentBucket().getBatchSize() == BUCKET_SIZE) {
                 currentBucket = createBucket();
-                currentBucketCount += BUCKET_SIZE;
             }
             getCurrentBucket().attachProvisionFileJob(provisionJob);
             return getCurrentBucket();
