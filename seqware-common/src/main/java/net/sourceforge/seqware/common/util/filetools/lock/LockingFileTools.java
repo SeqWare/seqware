@@ -19,6 +19,10 @@ public class LockingFileTools {
   
   private final static int RETRIES = 100;
 
+  public static boolean lockAndAppend(File file, String output) {
+      return lockAndWrite(file, output, true);
+  }
+  
   /**
    * Try to acquire lock. If we can, write the String to file and then release
    * the lock
@@ -27,10 +31,10 @@ public class LockingFileTools {
    * @param output a {@link java.lang.String} object.
    * @return a boolean.
    */
-  public static boolean lockAndAppend(File file, String output) {
+  public static boolean lockAndWrite(File file, String output, boolean append) {
     for (int i=0; i<RETRIES; i++) {
       try {
-        FileOutputStream fos = new FileOutputStream(file, true);
+        FileOutputStream fos = new FileOutputStream(file, append);
         FileLock fl = fos.getChannel().tryLock();
         if (fl != null) {
           OutputStreamWriter fw = new OutputStreamWriter(fos);          

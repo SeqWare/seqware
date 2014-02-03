@@ -65,6 +65,7 @@ public abstract class OozieJob {
   protected final String threadsSgeParamFormat;
   protected final String maxMemorySgeParamFormat;
   protected final File scriptsDir;
+  private boolean useCheckFile = false;
 
   public OozieJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
                   String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
@@ -159,6 +160,11 @@ public abstract class OozieJob {
 
     args.add("--metadata-processing-accession-file");
     args.add(getAccessionFile());
+    
+    if (this.isUseCheckFile()){
+        args.add("--metadata-processing-accession-file-lock");
+        args.add(getAccessionFile()+".lock");
+    }
 
     return args;
   }
@@ -405,5 +411,19 @@ public abstract class OozieJob {
   public String getAccessionFile() {
     return this.oozie_working_dir + "/" + this.getName() + "_accession";
   }
+
+    /**
+     * @return the useCheckFile
+     */
+    public boolean isUseCheckFile() {
+        return useCheckFile;
+    }
+
+    /**
+     * @param useCheckFile the useCheckFile to set
+     */
+    public void setUseCheckFile(boolean useCheckFile) {
+        this.useCheckFile = useCheckFile;
+    }
 
 }
