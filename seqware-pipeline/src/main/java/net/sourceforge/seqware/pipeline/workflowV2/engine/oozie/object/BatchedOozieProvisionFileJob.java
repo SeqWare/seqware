@@ -72,4 +72,13 @@ public class BatchedOozieProvisionFileJob extends OozieJob {
     return localFile;
   }
 
+  @Override
+  public List<String> getAccessionFile() {
+    List<String> list = new ArrayList<String>();
+    for(OozieProvisionFileJob job : this.provisionJobs){
+        List<String> accessionFile = job.getAccessionFile();
+        list.addAll(accessionFile);
+    }
+    return list;
+  }
 }

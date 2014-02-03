@@ -355,7 +355,7 @@ public class WorkflowApp {
     Log.debug(level + ": SETTING ACCESSIONS FOR CHILDREN FOR PARENT JOB " + parent.getName());
     for (OozieJob pjob : parent.getChildren()) {
       Log.debug(level + ": RECURSIVE SETTING ACCESSIONS FOR CHILDOB " + pjob.getName());
-      boolean added = pjob.addParentAccessionFile(parent.getAccessionFile());
+      boolean added = pjob.addParentAccessionFile(parent.getAccessionFile().toArray(new String[parent.getAccessionFile().size()]));
       Log.debug(level + ": Added success: " + added);
       if (!added){
           // if no parent accession file was added, then recursive calls beyond this level 
@@ -440,7 +440,7 @@ public class WorkflowApp {
           for (Map.Entry<String, SqwFile> entry : wfdm.getFiles().entrySet()) {
             AbstractJob abstractProvisionXJob = new BashJob("provisionFile_" + entry.getKey().replaceAll("\\.", "_"));
             abstractProvisionXJob.addFile(entry.getValue());
-            OozieProvisionFileJob oozieProvisionXJob = new OozieProvisionFileJob(abstractProvisionXJob, entry.getValue(), abstractProvisionXJob.getAlgo() + this.jobs.size(),
+            OozieProvisionFileJob oozieProvisionXJob = new OozieProvisionFileJob(abstractProvisionXJob, entry.getValue(), abstractProvisionXJob.getAlgo() +"_" + this.jobs.size(),
                                                                    this.uniqueWorkingDir, this.useSge, this.seqwareJar,
                                                                    this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
             oozieProvisionXJob.setMetadataWriteback(metadatawriteback);
