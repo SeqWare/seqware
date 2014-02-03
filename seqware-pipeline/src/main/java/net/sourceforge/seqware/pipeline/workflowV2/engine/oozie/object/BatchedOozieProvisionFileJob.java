@@ -50,6 +50,8 @@ public class BatchedOozieProvisionFileJob extends OozieJob {
   }
 
   public void attachProvisionFileJob(OozieProvisionFileJob job){
+      // mutate name in order to avoid repeats 
+      job.name = job.name + "_" + provisionJobs.size();
       provisionJobs.add(job);
   }
   
