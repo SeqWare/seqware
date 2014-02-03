@@ -623,7 +623,7 @@ public class WorkflowApp {
          * @return 
          */
         private BatchedOozieProvisionFileJob createBucket() {
-            String name = "provisionFile_" + (input ? "In" : "Out")+"_"+ uniqueName + "_Batch_" + currentBucketCount;
+            String name = "provisionFile_" + (input ? "In" : "Out")+"_"+ uniqueName + "_Batch_" + currentBucketCount + "_" + currentBucket.getBatchSize();
             currentBucketCount += BUCKET_SIZE;
             AbstractJob abstractBucketJob = new BashJob(name);
             currentBucket = new BatchedOozieProvisionFileJob(abstractBucketJob, name,
@@ -650,6 +650,10 @@ public class WorkflowApp {
          */
         public BatchedOozieProvisionFileJob getCurrentBucket() {
             return currentBucket;
+        }
+        
+        public int getBatchedJobsCount(){
+            return currentBucketCount + currentBucket.getBatchSize();
         }
     }
 }
