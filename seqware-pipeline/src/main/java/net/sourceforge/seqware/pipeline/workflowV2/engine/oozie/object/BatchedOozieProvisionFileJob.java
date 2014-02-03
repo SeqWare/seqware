@@ -62,6 +62,7 @@ public class BatchedOozieProvisionFileJob extends OozieJob {
 
     ArrayList<String> args = new ArrayList<String>();
     for(OozieProvisionFileJob batchedJob : provisionJobs){
+        batchedJob.setUseCheckFile(true);
         args.add(concat(" ",batchedJob.generateRunnerLine()));
     }
 

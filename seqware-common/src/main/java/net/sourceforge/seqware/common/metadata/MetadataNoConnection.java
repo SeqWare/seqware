@@ -30,6 +30,7 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
@@ -811,6 +812,12 @@ public class MetadataNoConnection implements Metadata {
 
     @Override
     public SequencerRun getSequencerRunByName(String name) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public Processing getProcessing(int processingAccession) {
         logger.info("No metadata connection");
         return null;
     }

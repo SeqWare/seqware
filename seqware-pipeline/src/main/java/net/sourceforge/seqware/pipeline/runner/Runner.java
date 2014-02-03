@@ -23,10 +23,11 @@ import java.util.zip.ZipFile;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
-import net.sourceforge.seqware.common.metadata.MetadataWS;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -39,6 +40,7 @@ import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleMethod;
 import net.sourceforge.seqware.pipeline.module.StderrRedirect;
 import net.sourceforge.seqware.pipeline.module.StdoutRedirect;
+import org.apache.commons.io.FileUtils;
 
 // FIXME: auto-adding to rc.data, support "," delimited
 // FIXME: When adding STDOUT/STDERR to metadb, we should add a timestamp or something else to make it easier to merge. Right now, it is hard to tell which stdout message corresponds to which step in stderr 
@@ -62,6 +64,7 @@ public class Runner {
   private int processingID = 0;
   private ArrayList<File> processingIDFiles;
   private ArrayList<File> processingAccessionFiles;
+  private File processingAccessionFileCheck = null;
   private int processingAccession = 0;
 
   public static interface Keys {
@@ -169,12 +172,18 @@ public class Runner {
         .describedAs("Path for where we should create a new file with our processing ID");
     parser
         .accepts(
+            "metadata-processing-accession-file-lock",
+            "Optional: Specifies the path to a file, which we will write/check our processing accession, for use to prevent repeated runs.")
+        .withRequiredArg().ofType(String.class)
+        .describedAs("Path for where we should create a new file with our processing ID");
+    parser
+        .accepts(
             "metadata-tries-number",
             "Optional: After a failure, how many times we should try metadata write back operations, such as obtaining a lock, writing to DB, etc.")
         .withRequiredArg().ofType(Integer.class).defaultsTo(60).describedAs("Number of tries (Default: 60)");
     parser
         .accepts("metadata-tries-delay",
-            "Optional: After a failure, how long we should wait before trying again (in accordance with metadata-tires-number)")
+            "Optional: After a failure, how long we should wait before trying again (in accordance with metadata-tries-number)")
         .withRequiredArg().ofType(Integer.class).defaultsTo(5)
         .describedAs("Number of seconds between tries (Default: 5)");
     parser
@@ -245,6 +254,27 @@ public class Runner {
     }
     System.exit(-1);
   }
+  
+      private void writeProcessingAccessionToFile(File file, boolean append) {
+        int maxTries = (Integer) options.valueOf("metadata-tries-number");
+        for (int i = 0; i < maxTries; i++) {
+            // Break on success
+            if (LockingFileTools.lockAndWrite(file, processingAccession + System.getProperty("line.separator"), append)) {
+                break;
+            } // Sleep if going to try again
+            else if (i < maxTries) {
+                ProcessTools.sleep((Integer) options.valueOf("metadata-tries-delay"));
+            } // Return error if failed on last try
+            else {
+                ReturnValue retval = new ReturnValue();
+                retval.printAndAppendtoStderr("Could not write to processingAccession File for metadata");
+                retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
+                meta.update_processing_event(processingID, retval);
+                meta.update_processing_status(processingID, ProcessingStatus.failed);
+                System.exit(retval.getExitStatus());
+            }
+        }
+    }
 
   /**
    * <p>printAndAppendtoStderr.</p>
@@ -590,6 +620,46 @@ public class Runner {
     ArrayList<Integer> parentAccessions = new ArrayList<Integer>();
     processingAccessionFiles = new ArrayList<File>();
     int ancestorWorkflowRunAccession = 0;
+    
+    // Abort run if lock file is valid and points to valid processing event
+    if (options.has("metadata-processing-accession-file-lock")){
+        String outputFile = (String)options.valueOf("metadata-processing-accession-file-lock");
+        File file = new File(outputFile);
+        try {
+            // if the file exists, check to see if it has a valid processing accession first
+            if(file.exists() && file.canRead()){
+                String readFileToString = FileUtils.readFileToString(file).trim();
+                try {
+                    int processingAccessionFromFile = Integer.valueOf(readFileToString);
+                    Processing proc = meta.getProcessing(processingAccessionFromFile);
+                    if (proc != null) {
+                        if(proc.getStatus().equals(ProcessingStatus.success)){
+                            // if a previous run was successful, simply abort
+                            Log.error("Lock file exists with a previous success, skipping");
+                            System.exit(ReturnValue.SUCCESS);
+                        }
+                    }
+                } catch(NumberFormatException ne){
+                    // means that the file doesn't contain a valid processing sw_accession, proceed
+                    Log.error("Lock file exists with an invalid processing accession, continuing");
+                } catch(NotFoundException nfe){
+                    // metadatawriteback on a previous run was not successful, continue
+                    Log.error("Lock file exists with an invalid processing accession, continuing");
+                }
+                Log.error("Lock file exists with a non-success, continuing");
+            }
+            
+            if ((file.exists() || file.createNewFile()) && file.canWrite()) {
+                processingAccessionFileCheck = file;
+            } else {
+                Log.error("Could not create processingAccession check File for metadata");
+                System.exit(ReturnValue.METADATAINVALIDIDCHAIN);
+            }
+        } catch (IOException e) {
+            Log.error("Could not create processingAccession check File for metadata: " + e.getMessage());
+            System.exit(ReturnValue.METADATAINVALIDIDCHAIN);
+        }
+    }
 
     // create a workflow_run row and link it back to the correct workflow ID
     // we have checked earlier that metadata-workflow-accession cannot have more
@@ -865,24 +935,10 @@ public class Runner {
 
       // Try to write to each processingAccessionFile until success or timeout
       for (File file : processingAccessionFiles) {
-        int maxTries = (Integer) options.valueOf("metadata-tries-number");
-        for (int i = 0; i < maxTries; i++) {
-          // Break on success
-          if (LockingFileTools.lockAndAppend(file, processingAccession + System.getProperty("line.separator"))) {
-            break;
-          } // Sleep if going to try again
-          else if (i < maxTries) {
-            ProcessTools.sleep((Integer) options.valueOf("metadata-tries-delay"));
-          } // Return error if failed on last try
-          else {
-            ReturnValue retval = new ReturnValue();
-            retval.printAndAppendtoStderr("Could not write to processingAccession File for metadata");
-            retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
-            meta.update_processing_event(processingID, retval);
-            meta.update_processing_status(processingID, ProcessingStatus.failed);
-            System.exit(retval.getExitStatus());
-          }
-        }
+        writeProcessingAccessionToFile(file, true);
+      } 
+      if (processingAccessionFileCheck != null){
+        writeProcessingAccessionToFile(processingAccessionFileCheck, false);
       }
 
       meta.update_processing_status(processingID, ProcessingStatus.success);
