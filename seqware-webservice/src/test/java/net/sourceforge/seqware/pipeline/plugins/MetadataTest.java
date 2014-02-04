@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import io.seqware.Reports;
 import java.util.*;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Lane;
@@ -30,7 +31,6 @@ import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
-import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.*;
 
 /**
@@ -40,6 +40,12 @@ import org.junit.*;
  * @author mtaschuk
  */
 public class MetadataTest extends ExtendedPluginTest {
+    
+    @BeforeClass
+    public static void beforeClass(){
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
+        Reports.triggerProvenanceReport();
+    }
     
     @Before
     @Override
