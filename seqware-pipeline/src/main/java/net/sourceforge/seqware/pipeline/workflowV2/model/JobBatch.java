@@ -29,16 +29,6 @@ public class JobBatch extends AbstractJob {
     }
 
     @Override
-    public AbstractJob setMaxMemory(String mem) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String getMaxMemory() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public AbstractJob setThreads(int count) {
         throw new UnsupportedOperationException();
     }
