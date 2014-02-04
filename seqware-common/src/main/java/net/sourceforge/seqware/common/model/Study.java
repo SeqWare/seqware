@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Study implements Serializable, PermissionsAware, ParentAccessionModel {
+public class Study implements Serializable, PermissionsAware, ParentAccessionModel, Comparable<Study> {
 
   private static final long serialVersionUID = 2L;
   private Integer studyId;
@@ -66,6 +66,7 @@ public class Study implements Serializable, PermissionsAware, ParentAccessionMod
    * @param that a {@link net.sourceforge.seqware.common.model.Study} object.
    * @return a int.
    */
+  @Override
   public int compareTo(Study that) {
     if (that == null) {
       return -1;

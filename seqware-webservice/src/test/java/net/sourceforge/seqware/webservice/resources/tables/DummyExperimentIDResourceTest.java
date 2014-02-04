@@ -82,6 +82,17 @@ public class DummyExperimentIDResourceTest extends DatabaseResourceIDTest {
 
          }*/
     }
+    
+    @Override
+    public void testPost() {
+        Representation rep = null;
+        try {
+            rep = resource.post(null);
+            rep.exhaust();
+            rep.release();
+        } catch (Exception e) {
+        }
+    }
 
     @Override
     protected int testObject(Object o) {
@@ -95,8 +106,20 @@ public class DummyExperimentIDResourceTest extends DatabaseResourceIDTest {
 
         } else {
             System.err.println("Object is not an instance of Experiment");
-            return ReturnValue.FILENOTREADABLE;
         }
         return ReturnValue.SUCCESS;
+    }
+    
+    @Override
+    public void testDelete() {
+        Representation rep = null;
+        try {
+            rep = resource.delete();
+            String result = rep.getText();
+            rep.exhaust();
+            rep.release();
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
     }
 }
