@@ -16,6 +16,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.JobBatch;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
 import org.apache.hadoop.fs.Path;
@@ -276,14 +277,28 @@ public class WorkflowApp {
     return leafCount > 1;
   }
 
-  private OozieJob createOozieJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
-    if (job instanceof BashJob) {
-      return new OozieBashJob(job, job.getAlgo() + "_" + this.jobs.size(), this.uniqueWorkingDir, this.useSge,
-                         this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
-    } else {
-      throw new UnsupportedOperationException("No oozie support for job type "+job.getClass());
+    private OozieJob createOozieJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
+        if (job instanceof BashJob) {
+            return new OozieBashJob(job, job.getAlgo() + "_" + this.jobs.size(), this.uniqueWorkingDir, this.useSge,
+                    this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
+        } else if (job instanceof JobBatch) {
+            BatchedOozieBashJob batchJob = new BatchedOozieBashJob(job, job.getAlgo() + "_" + this.jobs.size(), this.uniqueWorkingDir, this.useSge,
+                    this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
+            for (Job bJob : ((JobBatch) job).getJobList()) {
+                if (bJob instanceof BashJob) {
+                    BashJob nobJob = (BashJob) bJob;
+                    OozieBashJob obJob = new OozieBashJob(nobJob, nobJob.getAlgo(), this.uniqueWorkingDir, this.useSge,
+                            this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
+                    batchJob.attachJob(obJob);
+                } else {
+                    throw new UnsupportedOperationException();
+                }
+            }
+            return batchJob;
+        } else {
+            throw new UnsupportedOperationException("No oozie support for job type " + job.getClass());
+        }
     }
-  }
 
   private OozieJob getOozieJobObject(AbstractJob job) {
     for (OozieJob pjob : this.jobs) {
