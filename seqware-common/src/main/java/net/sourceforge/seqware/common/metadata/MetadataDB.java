@@ -37,6 +37,7 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
@@ -1556,6 +1557,11 @@ public class MetadataDB implements Metadata {
     public SequencerRun getSequencerRunByName(String name) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
+
+    @Override
+    public Processing getProcessing(int processingAccession) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
   
   public static class IntByIndex implements ResultSetHandler<Integer>{
     private final int col;
@@ -2098,4 +2104,6 @@ public class MetadataDB implements Metadata {
     public List<Object> getViaAccessions(int[] accessions) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
+    
+    
 }
