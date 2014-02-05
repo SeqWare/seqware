@@ -71,6 +71,7 @@ public class AbstractJob implements Job {
 	 * 
 	 * @return a job command object
 	 */
+        @Override
 	public Command getCommand() {
 		return command;
 	}
@@ -86,13 +87,18 @@ public class AbstractJob implements Job {
 	/**
 	 * add a job specific file for provision
 	 */
+        @Override
 	public void addFile(SqwFile file) {
+                if (file.isAttached()){
+                    throw new RuntimeException("cannot add file, file is already attached to a job");
+                }
 		this.files.add(file);
 	}
 	/**
 	 * add all parent jobs
 	 * @return
 	 */
+        @Override
 	public Collection<Job> getParents() {
 		return parents;
 	}
@@ -135,19 +141,23 @@ public class AbstractJob implements Job {
 		this.requirements = requirements;
 	}
 	
+        @Override
 	public int getThreads() {
 		return Integer.parseInt(this.getRequirementByType(Type.COUNT).getValue());
 	}
 	
+        @Override
 	public AbstractJob setThreads(int count) {
 		this.getRequirementByType(Type.COUNT).setValue(""+count);
 		return this;
 	}
 	
+        @Override
 	public String getMaxMemory() {
 		return this.getRequirementByType(Type.MAXMEMORY).getValue();
 	}
 	
+        @Override
 	public AbstractJob setMaxMemory(String mem) {
 		this.getRequirementByType(Type.MAXMEMORY).setValue(mem);
 		return this;
@@ -205,6 +215,7 @@ public class AbstractJob implements Job {
     return this;
 	}
 	
+        @Override
 	public String getQueue() {
 	  Requirement req = this.getRequirementByType(Type.QUEUE);
 	  if (req != null){
@@ -238,12 +249,15 @@ public class AbstractJob implements Job {
 		return this.parentAccessions;
 	}
 
+        @Override
 	public boolean isLocal(){
 	  return runLocal;
 	}
+        @Override
 	public void setLocal(){
 	  setLocal(true);
 	}
+        @Override
 	public void setLocal(boolean runLocal){
 	  this.runLocal = runLocal;
 	}
