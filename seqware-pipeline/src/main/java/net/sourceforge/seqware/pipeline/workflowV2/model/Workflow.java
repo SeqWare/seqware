@@ -67,6 +67,12 @@ public class Workflow {
 		this.jobs.add(job);
 		return job;
 	}
+        
+        public JobBatch createJobBatch(String algo){
+            JobBatch job = new JobBatch(algo);
+            this.jobs.add(job);
+            return job;
+        }
 	
 	public Job createPerlJob(String algo, String script) {
 		AbstractJob job = new PerlJob(algo, "", script);
