@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
+import com.google.common.collect.Lists;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_INTERVAL;
 import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_MAX;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
+import org.apache.commons.io.IOUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -65,6 +67,7 @@ public abstract class OozieJob {
   protected final String threadsSgeParamFormat;
   protected final String maxMemorySgeParamFormat;
   protected final File scriptsDir;
+  private boolean useCheckFile = false;
 
   public OozieJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
                   String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
@@ -157,8 +160,15 @@ public abstract class OozieJob {
       args.add(wfrAccession);
     }
 
-    args.add("--metadata-processing-accession-file");
-    args.add(getAccessionFile());
+    for(String mpaf : getAccessionFile()){
+        args.add("--metadata-processing-accession-file");
+        args.add(mpaf);
+    }
+    
+    if (this.isUseCheckFile()){
+        args.add("--metadata-processing-accession-file-lock");
+        args.add(getAccessionFile()+".lock");
+    }
 
     return args;
   }
@@ -271,7 +281,7 @@ public abstract class OozieJob {
       throw new RuntimeException(e);
     } finally {
       try {
-        writer.close();
+        IOUtils.closeQuietly(writer);
       } catch (Exception e) {
         // gulp
       }
@@ -393,17 +403,34 @@ public abstract class OozieJob {
    * @param paf
    * @return 
    */
-  public boolean addParentAccessionFile(String paf) {
-    if (!this.parentAccessionFiles.contains(paf)){
-      this.parentAccessionFiles.add(paf);
-      Log.debug("Added  " + paf +" to " + this.parentAccessionFiles.size() + " existing parent accession files");
-      return true;
+  public boolean addParentAccessionFile(String ... pafs) {
+    boolean added = false;
+    for(String paf : pafs){
+        if (!this.parentAccessionFiles.contains(paf)){
+            this.parentAccessionFiles.add(paf);
+            Log.debug("Added  " + paf +" to " + this.parentAccessionFiles.size() + " existing parent accession files");
+            added = true;
+        }
     }
-    return false;
+    return added;
   }
 
-  public String getAccessionFile() {
-    return this.oozie_working_dir + "/" + this.getName() + "_accession";
+  public List<String> getAccessionFile() {
+      return Lists.newArrayList(this.oozie_working_dir + "/" + this.getName() + "_accession");
   }
+
+    /**
+     * @return the useCheckFile
+     */
+    public boolean isUseCheckFile() {
+        return useCheckFile;
+    }
+
+    /**
+     * @param useCheckFile the useCheckFile to set
+     */
+    public void setUseCheckFile(boolean useCheckFile) {
+        this.useCheckFile = useCheckFile;
+    }
 
 }

@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  *
  */
 public class SqwFile {
+        private boolean attached = false;
 	private String type;
 	private String location;
         private String outputLocation;
@@ -135,4 +135,18 @@ public class SqwFile {
 	public Collection<String> getParentAccessions() {
 		return this.parentAccessions;
 	}
+
+    /**
+     * @return the attached
+     */
+    public boolean isAttached() {
+        return attached;
+    }
+
+    /**
+     * @param attached the attached to set
+     */
+    public void setAttached(boolean attached) {
+        this.attached = attached;
+    }
 }

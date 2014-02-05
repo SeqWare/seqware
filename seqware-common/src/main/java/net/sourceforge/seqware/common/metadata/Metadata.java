@@ -835,7 +835,16 @@ public interface Metadata {
    * @param laneAccession a int.
    * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
    */
-  public Lane getLane(int laneAccession);  
+  public Lane getLane(int laneAccession);
+  
+  /**
+   * <p>getProcessing.</p>
+   *
+   * @param processingAccession a int.
+   * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
+   */
+  public Processing getProcessing(int processingAccession);
+  
     /**
    * <p>getSequencerRun.</p>
    *
