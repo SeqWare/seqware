@@ -167,7 +167,8 @@ public abstract class OozieJob {
     
     if (this.isUseCheckFile()){
         args.add("--metadata-processing-accession-file-lock");
-        args.add(getAccessionFile()+".lock");
+        //arbitrarily choose the first accession file to mutate for use as the name of the lock file
+        args.add(getAccessionFile().get(0)+".lock");
     }
 
     return args;
