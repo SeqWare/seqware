@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.webservice.resources.BasicResource;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.apache.commons.dbutils.ResultSetHandler;
@@ -42,17 +42,7 @@ import org.restlet.data.Status;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowRuntimeResource
-        extends BasicRestlet {
-
-    // processing IDs
-    HashMap<Integer, Boolean> seen = new HashMap<Integer, Boolean>();
-    // main data structure
-    HashMap<String, HashMap<String, HashMap<String, HashMap<String, Integer>>>> d = new HashMap<String, HashMap<String, HashMap<String, HashMap<String, Integer>>>>();
-    // algos
-    HashMap<String, Boolean> algos = new HashMap<String, Boolean>();
-    // workflow run IDs
-    HashMap<Integer, Boolean> wrIds = new HashMap<Integer, Boolean>();
+public class WorkflowRuntimeResource extends BasicRestlet {
 
     /**
      * <p>Constructor for WorkflowRuntimeResource.</p>
@@ -67,18 +57,24 @@ public class WorkflowRuntimeResource
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
+        init(request);
         if (request.getMethod().compareTo(Method.GET) == 0) {
+            // processing IDs
+            HashMap<Integer, Boolean> seen = new HashMap<Integer, Boolean>();
+            // main data structure
+            HashMap<String, HashMap<String, HashMap<String, HashMap<String, Integer>>>> d = new HashMap<String, HashMap<String, HashMap<String, HashMap<String, Integer>>>>();
+            // algos
+            HashMap<String, Boolean> algos = new HashMap<String, Boolean>();
+            // workflow run IDs
+            HashMap<Integer, Boolean> wrIds = new HashMap<Integer, Boolean>();
 
             String workflowAccession = null;
-            String format = "text";
-            if (request != null && request.getAttributes() != null) {
-                String localWorkflowAccession = (String) request.getAttributes().get("workflowId");
+            final String workflowId = "workflowId";
+            if (queryValues.containsKey(workflowId)) {
+                Log.debug("Processing attributes for: " + request.getEntityAsText());
+                String localWorkflowAccession = queryValues.get(workflowId);
                 if (localWorkflowAccession != null) {
                     workflowAccession = localWorkflowAccession;
-                }
-                String localFormat = (String) request.getAttributes().get("workflowId");
-                if (localFormat != null) {
-                    format = localFormat;
                 }
             }
 
@@ -106,6 +102,7 @@ public class WorkflowRuntimeResource
                 if (workflowAccession != null) {
                     query = query + " and w.sw_accession = " + workflowAccession;
                 }
+                Log.debug("Running query: " + query);
 
                 query = query + " order by p.create_tstmp";
 
@@ -135,7 +132,7 @@ public class WorkflowRuntimeResource
                     String procId = currentProcIds.get(currentProcId).get("procId");
                     String workflowRunId = currentProcIds.get(currentProcId).get("workflowRunId");
                     String workflowName = currentProcIds.get(currentProcId).get("workflowName");
-                    recursiveFindProcessings(currentProcId, parseClientInt(workflowRunId), workflowName);
+                    recursiveFindProcessings(currentProcId, parseClientInt(workflowRunId), workflowName, seen, d, algos, wrIds);
                 }
 
                 // at this point the whole hash should be populated
@@ -162,22 +159,25 @@ public class WorkflowRuntimeResource
                         m.append(totalWRuntime).append("\n");
                     }
                 }
-
+                
 
             } catch (Exception e) {
                 System.err.print(e.getMessage());
-                e.printStackTrace();
+                throw new RuntimeException(e);
             } finally {
                 DBAccess.close();
             }
-
+            if (m.toString().isEmpty()){
+                response.setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            }
             response.setEntity(m.toString(), MediaType.TEXT_PLAIN);
         } else {
             response.setStatus(Status.CLIENT_ERROR_METHOD_NOT_ALLOWED);
         }
     }
 
-    private void recursiveFindProcessings(Integer processingId, Integer workflowRunId, String workflowName) {
+    private void recursiveFindProcessings(Integer processingId, Integer workflowRunId, String workflowName, HashMap<Integer, Boolean> seen, 
+            HashMap<String, HashMap<String, HashMap<String, HashMap<String, Integer>>>> d, HashMap<String, Boolean> algos, HashMap<Integer, Boolean> wrIds) {
         if (seen.get(processingId) != null && seen.get(processingId)) {
             return;
         }
@@ -260,13 +260,12 @@ public class WorkflowRuntimeResource
 
             // now recursively call
             for (Integer childProcId : childProcessingHash.keySet()) {
-                recursiveFindProcessings(childProcId, workflowRunId, workflowName);
+                recursiveFindProcessings(childProcId, workflowRunId, workflowName, seen, d, algos, wrIds);
             }
 
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             System.err.println(e.getMessage());
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally{
             DBAccess.close();
         }
