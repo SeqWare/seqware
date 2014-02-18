@@ -299,7 +299,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
-            <artifactId>dbcp</artifactId>
+            <artifactId>tomcat-dbcp</artifactId>
         </dependency>  
         <dependency>
             <groupId>commons-dbutils</groupId>
