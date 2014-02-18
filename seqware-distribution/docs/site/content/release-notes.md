@@ -9,6 +9,14 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.0.11 (2014-02-14)
+### Task
+* Updating SeqWare to build and test against Java 7 and Tomcat7
+* Automatically batch file provision jobs above a threshold of OOZIE_BATCH_THRESHOLD into batches of OOZIE_BATCH_SIZE
+* Allow workflow authors to manually batch BashJobs into batches
+* [SEQWARE-1811] - Some dependencies aren't available when building seqware-admin-webservice
+* [SEQWARE-1837] - Fix workflow filtering for workflow step time report
+
 ## 1.0.10 (2014-01-27)
 
 ## Improvement
