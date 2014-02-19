@@ -83,7 +83,6 @@ First, run the various update scripts:
 
     psql -U seqware seqware_meta_db < 0.13.6.x_to_1.0.1.sql
     psql -U seqware seqware_meta_db < 1.0.1_to_1.0.3.sql
-    psql -U seqware seqware_meta_db < 1.0.2_to_1.0.3.sql
     psql -U seqware seqware_meta_db < 1.0.4_to_1.0.5.sql
 
 Second, run the migration plugin:
