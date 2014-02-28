@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, PermissionsAware {
+public class WorkflowRun extends PermissionsAware implements Serializable, Comparable<WorkflowRun> {
 
   /** Constant <code>RUNNING="running"</code> */
   public static final String RUNNING = "running";
@@ -840,18 +840,18 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
 
   /** {@inheritDoc} */
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
     boolean hasPermission = true;
     if (workflow != null) {
-      workflow.givesPermission(registration);
+      workflow.givesPermission(registration, considered);
       if (ius != null) {
         for (IUS i : ius) {
-          i.givesPermission(registration);
+          i.givesPermission(registration, considered);
         }
       }
       if (lanes != null) {
         for (Lane l : lanes) {
-          l.givesPermission(registration);
+          l.givesPermission(registration, considered);
         }
       }
     } else {// orphaned WorkflowRun
