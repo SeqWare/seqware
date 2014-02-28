@@ -3,11 +3,9 @@ package net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
-import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -20,7 +18,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAware {
+public class Invoice extends PermissionsAware implements Serializable, Comparable<Invoice> {
   /**
    * LEFT OFF WITH: this needs to be finished
    */
@@ -84,9 +82,17 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
     return new EqualsBuilder().append(this.getSwAccession(), castOther.getSwAccession()).isEquals();
   }
   
-  /** {@inheritDoc} */
+
+  
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+      } else {
+          return true;
+      }
+      
     boolean hasPermission = true;
     if (registration == null) {
       hasPermission = false;

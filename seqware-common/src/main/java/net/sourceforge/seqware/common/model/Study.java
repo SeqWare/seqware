@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Study implements Serializable, PermissionsAware {
+public class Study extends PermissionsAware implements Serializable {
 
   private static final long serialVersionUID = 2L;
   private Integer studyId;
@@ -629,7 +629,14 @@ public class Study implements Serializable, PermissionsAware {
 
   /** {@inheritDoc} */
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+      } else {
+          return true;
+      }
+      
     boolean hasPermission = false;
     if (registration == null) {
       Logger.getLogger(Study.class).warn("Registration is null!");

@@ -3,6 +3,7 @@ package net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -21,7 +22,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class File implements Serializable, Comparable<File>, PermissionsAware {
+public class File extends PermissionsAware implements Serializable, Comparable<File> {
 
   private static final long serialVersionUID = 3681322115923390568L;
   private Integer fileId;
@@ -373,17 +374,24 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
     return file;
   }
 
-  /** {@inheritDoc} */
+
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+      } else {
+          return true;
+      }
+      
     boolean hasPermission = true;
     if (processings != null) {
       for (Processing p : processings) {
-        if (!p.givesPermission(registration)) {
-          hasPermission = false;
-          break;
+        if (!p.givesPermission(registration, considered)) {
+            hasPermission = false;
+            break;
         }
-      }
+        }
     } else {// orphaned File
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(File.class).warn("Modifying Orphan File: " + toString());
