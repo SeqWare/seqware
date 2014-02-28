@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -26,7 +27,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Experiment implements Serializable, Comparable<Experiment>, PermissionsAware {
+public class Experiment extends PermissionsAware implements Serializable, Comparable<Experiment> {
 
   private static final long serialVersionUID = 2L;
   private Integer experimentId;
@@ -1013,14 +1014,20 @@ public class Experiment implements Serializable, Comparable<Experiment>, Permiss
     this.experimentLinks = experimentLinks;
   }
 
-  /** {@inheritDoc} */
   @Override
-  public boolean givesPermission(Registration registration) {
-    boolean hasPermission = false;
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered){
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+      } else {
+          return true;
+      }
+      
+      boolean hasPermission = false;
     if (study != null) {
       StudyService ss = BeanFactory.getStudyServiceBean();
       Study newStudy = ss.findBySWAccession(study.getSwAccession());
-      hasPermission = newStudy.givesPermission(registration);
+      hasPermission = newStudy.givesPermission(registration, considered);
     } else {// orphaned Experiment
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(Experiment.class).warn("Modifying Orphan Experiment: " + this.getName());
