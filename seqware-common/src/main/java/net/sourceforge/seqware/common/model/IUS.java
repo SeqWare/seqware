@@ -457,7 +457,9 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
         boolean consideredBefore = considered.contains(this.getSwAccession());
         if (!consideredBefore) {
             considered.add(this.getSwAccession());
+            Log.debug("Checking permissions for IUS object " + swAccession);
         } else {
+            Log.debug("Skipping permissions for IUS object " + swAccession + " , checked before");
             return true;
         }
         

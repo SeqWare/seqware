@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -1019,7 +1020,9 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
       boolean consideredBefore = considered.contains(this.getSwAccession());
       if (!consideredBefore) {
           considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for experiment object " + swAccession);
       } else {
+          Log.debug("Skipping permissions for experiment object " + swAccession + " , checked before");
           return true;
       }
       

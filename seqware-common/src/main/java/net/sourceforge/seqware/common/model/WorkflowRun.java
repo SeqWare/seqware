@@ -20,6 +20,7 @@ import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.adapters.XmlizeXML;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.dbutils.DbUtils;
 
@@ -838,9 +839,19 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     return wr;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+    boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for WorkflowRun object " + swAccession);
+      } else {
+          Log.debug("Skipping permissions for WorkflowRun object " + swAccession + " , checked before");
+          return true;
+      }
+    
     boolean hasPermission = true;
     if (workflow != null) {
       workflow.givesPermission(registration, considered);

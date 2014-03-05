@@ -841,7 +841,9 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
       boolean consideredBefore = considered.contains(this.getSwAccession());
       if (!consideredBefore) {
           considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for Sample object " + swAccession);
       } else {
+          Log.debug("Skipping permissions for Sample object " + swAccession + " , checked before");
           return true;
       }
       
