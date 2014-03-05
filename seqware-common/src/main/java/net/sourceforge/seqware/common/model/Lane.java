@@ -798,11 +798,13 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
       boolean consideredBefore = considered.contains(this.getSwAccession());
-      if (!consideredBefore) {
-          considered.add(this.getSwAccession());
-      } else {
-          return true;
-      }
+        if (!consideredBefore) {
+            considered.add(this.getSwAccession());
+            Log.debug("Checking permissions for Lane object " + swAccession);
+        } else {
+            Log.debug("Skipping permissions for Lane object " + swAccession + " , checked before");
+            return true;
+        }
         
         boolean hasPermission = true;
 

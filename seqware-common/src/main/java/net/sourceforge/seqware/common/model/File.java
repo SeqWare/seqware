@@ -9,6 +9,7 @@ import java.util.TreeSet;
 
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.dbutils.DbUtils;
 
@@ -380,7 +381,9 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
       boolean consideredBefore = considered.contains(this.getSwAccession());
       if (!consideredBefore) {
           considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for File object " + swAccession);
       } else {
+          Log.debug("Skipping permissions for File object " + swAccession + " , checked before");
           return true;
       }
       
