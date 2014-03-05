@@ -499,7 +499,7 @@ public class RunInfo {
             }
         }
         writer.append("{");
-        writer.append("\tRunInfo{");
+        writer.append("\n\t\"RunInfo\" : {");
         writer.append("\n\t\t").append("\"studyTitle\":\"").append(studyTitle).append("\"");
         writer.append("\n\t\t").append("\"studyDescription\":\"").append(studyDescription).append("\"");
         writer.append("\n\t\t").append("\"studyCenterName\":\"").append(studyCenterName).append("\"");
@@ -516,7 +516,8 @@ public class RunInfo {
         for (LaneInfo lane: lanes) {
             lane.print(writer, metadata);
         }
-        writer.append("}");
+        writer.append("\n\t}");
+        writer.append("\n}");
     }
     
     
