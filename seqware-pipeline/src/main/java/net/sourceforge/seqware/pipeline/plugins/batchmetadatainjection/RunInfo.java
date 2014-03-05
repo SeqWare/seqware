@@ -498,20 +498,20 @@ public class RunInfo {
                 }
             }
         }
-        
-        writer.append("RunInfo{");
-        writer.append("\n\tstudyTitle=").append(studyTitle);
-        writer.append("\n\tstudyDescription=").append(studyDescription);
-        writer.append("\n\tstudyCenterName=").append(studyCenterName);
-        writer.append("\n\tstudyCenterProject=").append(studyCenterProject);
-        writer.append("\n\trunName=").append(runName);
-        writer.append("\n\trunDescription=").append(runDescription);
-        writer.append("\n\trunFilePath=").append(runFilePath);
-        writer.append("\n\texperimentName=").append(experimentName);
-        writer.append("\n\texperimentDescription=").append(experimentDescription);
-        writer.append("\n\tplatform=").append(platform);
-        writer.append("\n\tstudyType=").append(studyTypeStr);
-        writer.append("\n\tskipRun=").append(String.valueOf(runSkip));
+        writer.append("{");
+        writer.append("\tRunInfo{");
+        writer.append("\n\t\t").append("\"studyTitle\":\"").append(studyTitle).append("\"");
+        writer.append("\n\t\t").append("\"studyDescription\":\"").append(studyDescription).append("\"");
+        writer.append("\n\t\t").append("\"studyCenterName\":\"").append(studyCenterName).append("\"");
+        writer.append("\n\t\t").append("\"studyCenterProject\":\"").append(studyCenterProject).append("\"");
+        writer.append("\n\t\t").append("\"runName\":\"").append(runName).append("\"");
+        writer.append("\n\t\t").append("\"runDescription\":\"").append(runDescription).append("\"");
+        writer.append("\n\t\t").append("\"runFilePath\":\"").append(runFilePath).append("\"");
+        writer.append("\n\t\t").append("\"experimentName\":\"").append(experimentName).append("\"");
+        writer.append("\n\t\t").append("\"experimentDescription\":\"").append(experimentDescription).append("\"");
+        writer.append("\n\t\t").append("\"platform\":\"").append(platform).append("\"");
+        writer.append("\n\t\t").append("\"studyType\":\"").append(studyTypeStr).append("\"");
+        writer.append("\n\t\t").append("\"skipRun\":\"").append(String.valueOf(runSkip)).append("\"");
         if (lanes!=null)
         for (LaneInfo lane: lanes) {
             lane.print(writer, metadata);
