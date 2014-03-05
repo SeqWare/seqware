@@ -287,14 +287,14 @@ public class LaneInfo {
             }
         }
 
-        writer.append("\n\tLaneInfo {");
-        writer.append("\n\t\tlaneNumber=").append(laneNumber);
-        writer.append("\n\t\tstudyType=").append(studyTypeStr);
+        writer.append("\n\t\t\"LaneInfo\": {");
+        writer.append("\n\t\t\t\"laneNumber\":\"").append(laneNumber).append("\"");
+        writer.append("\n\t\t\t\"studyType\":\"").append(studyTypeStr).append("\"");
         if (samples != null) {
             for (SampleInfo si : samples) {
                 si.print(writer, metadata);
             }
         }
-        writer.append("\n\t}");
+        writer.append("\n\t\t}");
     }
 }
