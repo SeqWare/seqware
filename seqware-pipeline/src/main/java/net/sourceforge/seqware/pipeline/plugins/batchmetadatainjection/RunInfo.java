@@ -499,7 +499,11 @@ public class RunInfo {
             }
         }
         writer.append("{");
+<<<<<<< .merge_file_YZI2Zd
         writer.append("\n\t\"RunInfo\" : {");
+=======
+        writer.append("\tRunInfo{");
+>>>>>>> .merge_file_TTGRKd
         writer.append("\n\t\t").append("\"studyTitle\":\"").append(studyTitle).append("\"");
         writer.append("\n\t\t").append("\"studyDescription\":\"").append(studyDescription).append("\"");
         writer.append("\n\t\t").append("\"studyCenterName\":\"").append(studyCenterName).append("\"");
