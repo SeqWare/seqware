@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -633,7 +634,9 @@ public class Study extends PermissionsAware implements Serializable {
       boolean consideredBefore = considered.contains(this.getSwAccession());
       if (!consideredBefore) {
           considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for Study object " + swAccession);
       } else {
+          Log.debug("Skipping permissions for Study object " + swAccession + " , checked before");
           return true;
       }
       

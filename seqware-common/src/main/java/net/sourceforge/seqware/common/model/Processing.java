@@ -1177,7 +1177,9 @@ public class Processing extends PermissionsAware implements Serializable, Compar
       boolean consideredBefore = considered.contains(this.getSwAccession());
       if (!consideredBefore) {
           considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for Processing object " + swAccession);
       } else {
+          Log.debug("Skipping permissions for Processing object " + swAccession + " , checked before");
           return true;
       }
       
