@@ -16,9 +16,14 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +35,11 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.*;
+import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -56,6 +66,9 @@ public class BatchMetadataInjection extends Metadata {
         parser.accepts("new", "Create a new study from scratch. Used instead of miseq-sample-sheet");
         parser.accepts("interactive", "Optional: turn on interactive input ");
         parser.accepts("record", "Optional: saves information about the injection in a text file").withOptionalArg();
+        parser.accepts("import-json-sequencer-run", "The location of the RunInfo json file to import.").withOptionalArg();
+        parser.accepts("export-json-sequencer-run", "The location to export the RunInfo json output file.").withOptionalArg();
+        parser.accepts("validate-json-sequencer-run", "The location of the RunInfo json file to validate.").withOptionalArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
         names = new HashMap<Integer, String>();
     }
@@ -114,6 +127,52 @@ public class BatchMetadataInjection extends Metadata {
                 } catch (Exception ex) {
                     Log.error("The run could not be imported.", ex);
                 }
+            } else if (options.has("import-json-sequencer-run")) {
+
+                String jsonFileInputPath = (String) options.valueOf("import-json-sequencer-run");
+
+                if (jsonFileInputPath == null) {
+                    Log.error("Import sequencer run file path missing");
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    return ret;
+                }
+
+                //Read json file, validate it, and deserialize it to RunInfo
+                try {
+                    run = jsonToRunInfo(jsonFileInputPath);
+                } catch (IOException ioe) {
+                    Log.error("Could not parse JSON input file: " + jsonFileInputPath, ioe);
+                    ret.setExitStatus(ReturnValue.INVALIDFILE);
+                    return ret;
+                }
+
+                //Inject the RunInfo data into the seqware db
+                try {
+                    inject(run);
+                } catch (Exception e) {
+                    Log.error("The run could not be imported.", e);
+                    ret.setExitStatus(ReturnValue.FAILURE);
+                    return ret;
+                }
+            } else if (options.has("validate-json-sequencer-run")) {
+                String jsonFileInputPath = (String) options.valueOf("validate-json-sequencer-run");
+
+                if (jsonFileInputPath == null) {
+                    Log.error("Validate sequencer run file path missing");
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    return ret;
+                }
+
+                //If conversion to RunInfo object is successfull, then json file validated against RunInfo schema
+                try {
+                    jsonToRunInfo(jsonFileInputPath);
+                } catch (IOException ioe) {
+                    Log.error("Could not parse JSON input file: " + jsonFileInputPath, ioe);
+                    ret.setExitStatus(ReturnValue.INVALIDFILE);
+                    return ret;
+                }
+                Log.stdout("JSON sequencer run file is valid.");
+                return ret;
             } else {
                 Log.stdout("Combination of parameters not recognized!");
                 Log.stdout(this.get_syntax());
@@ -136,7 +195,36 @@ public class BatchMetadataInjection extends Metadata {
                     Log.warn("Error while writing to the record file " + filename, ex);
                 }
             }
+            if (options.has("export-json-sequencer-run")) {
+                Object o = options.valueOf("export-json-sequencer-run");
+                if (o == null) {
+                    Log.error("Export sequencer run file path missing");
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    return ret;
+                }
 
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.setSerializationInclusion(Inclusion.NON_NULL);
+                ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+                String jsonRunInfo;
+                try {
+                    jsonRunInfo = writer.writeValueAsString(run);
+                    //jsonRunInfo = mapper.generateJsonSchema(RunInfo.class).toString();
+                } catch (IOException ioe) {
+                    Log.error("Could not convert RunInfo object to json", ioe);
+                    ret.setExitStatus(ReturnValue.FAILURE);
+                    return ret;
+        }
+
+                java.io.File jsonFileOutputPath = new java.io.File((String) o);
+                try {
+                    Files.write(jsonRunInfo, jsonFileOutputPath, Charsets.UTF_8);
+                } catch (IOException ioe) {
+                    Log.error("Could not write JSON output file: " + jsonFileOutputPath, ioe);
+                    ret.setExitStatus(ReturnValue.FAILURE);
+        return ret;
+    }
+            }
         }
         return ret;
     }
@@ -211,7 +299,15 @@ public class BatchMetadataInjection extends Metadata {
             Log.debug("Created and" + s.toString());
         }
         if (!sample.getSampleAttributes().isEmpty()) {
-            metadata.annotateSample(librarySampleNameAcc, sample.getSampleAttributes());
+
+            Set<SampleAttribute> sa = null;
+            try {
+                sa = convertTagValueUnitSetToAttributeSet(sample.getSampleAttributes(), SampleAttribute.class);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.exit(1);
+        }
+            metadata.annotateSample(librarySampleNameAcc, sa);
         }
         children = metadata.getChildSamplesFrom(tissueTypeSampleAcc);
         for (Sample s : children) {
@@ -281,7 +377,15 @@ public class BatchMetadataInjection extends Metadata {
         Integer swAccession = getSwAccession(rv);
 
         if (!barcode.getIusAttributes().isEmpty()) {
-            metadata.annotateIUS(swAccession, barcode.getIusAttributes());
+
+            Set<IUSAttribute> ia = null;
+            try {
+                ia = convertTagValueUnitSetToAttributeSet(barcode.getIusAttributes(), IUSAttribute.class);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.exit(1);
+        }
+            metadata.annotateIUS(swAccession, ia);
         }
 
         names.put(swAccession, barcode.getBarcode());
@@ -334,7 +438,15 @@ public class BatchMetadataInjection extends Metadata {
         Integer swAccession = getSwAccession(rv);
 
         if (!lane.getLaneAttributes().isEmpty()) {
-            metadata.annotateLane(swAccession, lane.getLaneAttributes());
+
+            Set<LaneAttribute> la = null;
+            try {
+                la = convertTagValueUnitSetToAttributeSet(lane.getLaneAttributes(), LaneAttribute.class);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.exit(1);
+        }
+            metadata.annotateLane(swAccession, la);
         }
 
         names.put(swAccession, lane.getLaneName());
@@ -371,7 +483,14 @@ public class BatchMetadataInjection extends Metadata {
         }
 
         if (!run.getRunAttributes().isEmpty()) {
-            metadata.annotateSequencerRun(swAccession, run.getRunAttributes());
+            Set<SequencerRunAttribute> ra = null;
+            try {
+                ra = convertTagValueUnitSetToAttributeSet(run.getRunAttributes(), SequencerRunAttribute.class);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.exit(1);
+        }
+            metadata.annotateSequencerRun(swAccession, ra);
         }
 
         names.put(swAccession, run.getRunName());
@@ -419,7 +538,14 @@ public class BatchMetadataInjection extends Metadata {
         }
 
         if (!run.getExperimentAttributes().isEmpty()) {
-            metadata.annotateExperiment(experimentAccession, run.getExperimentAttributes());
+            Set<ExperimentAttribute> ea = null;
+            try {
+                ea = convertTagValueUnitSetToAttributeSet(run.getExperimentAttributes(), ExperimentAttribute.class);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.exit(1);
+        }
+            metadata.annotateExperiment(experimentAccession, ea);
         }
 
         names.put(experimentAccession, run.getExperimentName());
@@ -453,7 +579,14 @@ public class BatchMetadataInjection extends Metadata {
         }
 
         if (!run.getStudyAttributes().isEmpty()) {
-            metadata.annotateStudy(studyAccession, run.getStudyAttributes());
+            Set<StudyAttribute> sa = null;
+            try {
+                sa = convertTagValueUnitSetToAttributeSet(run.getStudyAttributes(), StudyAttribute.class);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.exit(1);
+        }
+            metadata.annotateStudy(studyAccession, sa);
         }
 
         names.put(studyAccession, run.getStudyTitle());
@@ -472,5 +605,55 @@ public class BatchMetadataInjection extends Metadata {
         } else {
             throw new Exception("No accession was returned");
         }
+    }
+    
+    private RunInfo jsonToRunInfo(String filePath) throws IOException {       
+        java.io.File jsonFileInputPath = new java.io.File(filePath);
+        String jsonRunInfo = Files.toString(jsonFileInputPath, Charsets.UTF_8);
+        
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+        
+        return mapper.readValue(jsonRunInfo, RunInfo.class);
+}
+
+    private <SeqwareObjectType, AttributeType extends Attribute<SeqwareObjectType>> Set<AttributeType> convertTagValueUnitSetToAttributeSet(Set<TagValueUnit> tagValueUnits, Class<AttributeType> attributeTypeClass)
+            throws InstantiationException, IllegalAccessException {
+
+        Set<AttributeType> attributes = new HashSet<AttributeType>();
+
+        for (TagValueUnit tvu : tagValueUnits) {
+            AttributeType at = attributeTypeClass.newInstance();
+            at.setTag(tvu.getTag());
+            at.setValue(tvu.getValue());
+            at.setUnit(tvu.getUnit());
+            attributes.add(at);
+        }
+
+        return attributes;
+    }
+
+    public static void main(String[] args) {
+
+        System.out.println(Arrays.asList(args));
+
+//        BatchMetadataInjection b = new BatchMetadataInjection();
+//        b.setParams(Arrays.asList(args));
+        PluginRunner p = new PluginRunner();
+        List<String> a = new ArrayList<String>();
+        a.add("--plugin");
+        a.add(BatchMetadataInjection.class.getCanonicalName());
+        a.add("--");
+        a.addAll(Arrays.asList(args));
+        System.out.println(Arrays.deepToString(a.toArray()));
+
+        p.run(a.toArray(new String[a.size()]));
+//        b.parse_parameters();
+//        b.init();
+//        b.do_test();
+//        b.do_run();
+//        b.clean_up();
+        //b.setParams(Arrays.asList("import-run-info", "test"));
+
     }
 }
