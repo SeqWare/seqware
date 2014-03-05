@@ -489,25 +489,25 @@ public class SampleInfo {
             }
         }
 
-        writer.append("\n\t\tSampleInfo {");
-        writer.append("\n\t\t\t projectCode=" + projectCode);
-        writer.append("\n\t\t\t individualNumber=" + individualNumber);
-        writer.append("\n\t\t\t sampleName=" + name);
-        writer.append("\n\t\t\t sampleDescription=" + sampleDescription);
-        writer.append("\n\t\t\t barcode=" + barcode);
-        writer.append("\n\t\t\t barcodeName=" + iusName);
-        writer.append("\n\t\t\t barcodeDescription=" + iusDescription);
-        writer.append("\n\t\t\t tissueType=" + tissueType);
-        writer.append("\n\t\t\t tissueOrigin=" + tissueOrigin);
-        writer.append("\n\t\t\t tissuePreparation=" + tissuePreparation);
-        writer.append("\n\t\t\t librarySizeCode=" + librarySizeCode);
-        writer.append("\n\t\t\t organism=" + organism);
-        writer.append("\n\t\t\t librarySourceTemplateType=" + librarySourceTemplateType);
-        writer.append("\n\t\t\t libraryType=" + libraryType);
-        writer.append("\n\t\t\t pairedEnd=" + pairedEnd);
-        writer.append("\n\t\t\t targetedResequencing=" + targetedResequencing);
-        writer.append("\n\t\t\t skipBarcode=" + iusSkip);
+        writer.append("\n\t\t\t\"SampleInfo\": {");
+        writer.append("\n\t\t\t\t \"projectCode\":\"" + projectCode).append("\"");
+        writer.append("\n\t\t\t\t \"individualNumber\":\"" + individualNumber).append("\"");
+        writer.append("\n\t\t\t\t \"sampleName\":\"" + name).append("\"");
+        writer.append("\n\t\t\t\t \"sampleDescription\":\"" + sampleDescription).append("\"");
+        writer.append("\n\t\t\t\t \"barcode\":\"" + barcode+"\"");
+        writer.append("\n\t\t\t\t \"barcodeName\":\"" + iusName+"\"");
+        writer.append("\n\t\t\t\t \"barcodeDescription\":\"" + iusDescription+"\"");
+        writer.append("\n\t\t\t\t \"tissueType\":\"" + tissueType+"\"");
+        writer.append("\n\t\t\t\t \"tissueOrigin\":\"" + tissueOrigin+"\"");
+        writer.append("\n\t\t\t\t \"tissuePreparation\":\"" + tissuePreparation+"\"");
+        writer.append("\n\t\t\t\t \"librarySizeCode\":\"" + librarySizeCode+"\"");
+        writer.append("\n\t\t\t\t \"organism\":\"" + organism+"\"");
+        writer.append("\n\t\t\t\t \"librarySourceTemplateType\":\"" + librarySourceTemplateType+"\"");
+        writer.append("\n\t\t\t\t \"libraryType\":\"" + libraryType+"\"");
+        writer.append("\n\t\t\t\t \"pairedEnd\":\"" + pairedEnd+"\"");
+        writer.append("\n\t\t\t\t \"targetedResequencing\":\"" + targetedResequencing+"\"");
+        writer.append("\n\t\t\t\t \"skipBarcode\":\"" + iusSkip+"\"");
 
-        writer.append("\n\t\t}");
+        writer.append("\n\t\t\t}");
     }
 }
