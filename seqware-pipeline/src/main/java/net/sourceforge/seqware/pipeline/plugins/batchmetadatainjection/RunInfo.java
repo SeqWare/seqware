@@ -516,7 +516,7 @@ public class RunInfo {
         for (LaneInfo lane: lanes) {
             lane.print(writer, metadata);
         }
-        writer.append("}");
+        writer.append("\n\t}\n}");
     }
     
     
