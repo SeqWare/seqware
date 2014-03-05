@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -13,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -1013,14 +1015,23 @@ public class Experiment implements Serializable, Comparable<Experiment>, Permiss
     this.experimentLinks = experimentLinks;
   }
 
-  /** {@inheritDoc} */
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermission(Registration registration){
+      return givesPermission(registration, new LinkedHashSet<Integer>());
+  }
+
+  /** {@inheritDoc}
+     * @param registration
+     * @param path
+     * @return  */
+  @Override
+  public boolean givesPermission(Registration registration, LinkedHashSet<Integer> path) {
+    Log.warn("Path: "+path.toString()+"Checking permissions for experiment object " + swAccession + " with user " + registration);
     boolean hasPermission = false;
     if (study != null) {
       StudyService ss = BeanFactory.getStudyServiceBean();
       Study newStudy = ss.findBySWAccession(study.getSwAccession());
-      hasPermission = newStudy.givesPermission(registration);
+      hasPermission = newStudy.givesPermission(registration, Processing.createPath(path, swAccession));
     } else {// orphaned Experiment
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(Experiment.class).warn("Modifying Orphan Experiment: " + this.getName());

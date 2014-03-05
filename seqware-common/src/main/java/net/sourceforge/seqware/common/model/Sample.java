@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -835,13 +836,22 @@ public class Sample implements Serializable, Comparable<Sample>, PermissionsAwar
     this.sampleLinks = sampleLinks;
   }
 
-  /** {@inheritDoc} */
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermission(Registration registration){
+      return givesPermission(registration, new LinkedHashSet<Integer>());
+  }
+
+  /** {@inheritDoc}
+     * @param registration
+     * @param path
+     * @return  */
+  @Override
+  public boolean givesPermission(Registration registration, LinkedHashSet<Integer> path) {
+    Log.warn("Path: "+path.toString()+"Checking permissions for Sample object " + swAccession + " with user " + registration);
     boolean hasPermission = true;
     Log.debug("registration: " + registration + " owner: " + owner);
     if (experiment != null) {
-      hasPermission = experiment.givesPermission(registration);
+      hasPermission = experiment.givesPermission(registration, Processing.createPath(path, swAccession));
     } else {// orphaned Sample
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(Sample.class).warn("Modifying Orphan Sample: " + this.getName());

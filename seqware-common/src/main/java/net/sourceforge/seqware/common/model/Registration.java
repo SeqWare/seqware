@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedHashSet;
 
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
@@ -406,9 +407,19 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
         return registration;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean givesPermission(Registration registration) {
+        return givesPermission(registration, new LinkedHashSet<Integer>());
+    }
+    
+    /**
+     * {@inheritDoc}
+     * @param registration
+     * @param set
+     * @return 
+     */
+    @Override
+    public boolean givesPermission(Registration registration, LinkedHashSet<Integer> set) {
         boolean hasPermission = false;
         if (registration == null) {
             hasPermission = false;

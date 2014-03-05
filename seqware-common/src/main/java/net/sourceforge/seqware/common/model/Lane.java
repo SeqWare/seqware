@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -795,13 +796,22 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware {
         this.laneAttributes = laneAttributes;
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public boolean givesPermission(Registration registration) {
+  @Override
+  public boolean givesPermission(Registration registration){
+      return givesPermission(registration, new LinkedHashSet<Integer>());
+  }
+
+  /** {@inheritDoc}
+     * @param registration
+     * @param path
+     * @return  */
+  @Override
+  public boolean givesPermission(Registration registration, LinkedHashSet<Integer> path) {
         boolean hasPermission = true;
+        Log.warn("Path: "+path.toString()+"Checking permissions for Lane object " + swAccession + " with user " + registration);
 
         if (sample != null) {
-            hasPermission = sample.givesPermission(registration);
+            hasPermission = sample.givesPermission(registration, Processing.createPath(path, swAccession));
         }
 
         // if one of the IUSes doesn't have permission, we can't touch this Lane

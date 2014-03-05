@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -191,12 +192,22 @@ public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunPar
         this.workflowRun = workflowRun;
     }
 
-    /** {@inheritDoc} */
     @Override
     public boolean givesPermission(Registration registration) {
+        return givesPermission(registration, new LinkedHashSet<Integer>());
+    }
+    
+    /**
+     * {@inheritDoc}
+     * @param registration
+     * @param set
+     * @return 
+     */
+    @Override
+    public boolean givesPermission(Registration registration, LinkedHashSet<Integer> set) {
         boolean hasPermission = true;
         if (workflowRun != null) {
-            hasPermission = workflowRun.givesPermission(registration);
+            hasPermission = workflowRun.givesPermission(registration, Processing.createPath(set, this.getWorkflowRunParamId()));
         } else {//Orphaned WorkflowRunParam
             if (registration.isLIMSAdmin()) {
                 Logger.getLogger(WorkflowRunParam.class).warn("Modifying Orphan WorkflowRunParam: " + this.getKey());

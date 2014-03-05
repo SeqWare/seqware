@@ -3,11 +3,13 @@ package net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.dbutils.DbUtils;
 
@@ -373,13 +375,24 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
     return file;
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public boolean givesPermission(Registration registration) {
+    @Override
+    public boolean givesPermission(Registration registration) {
+        return givesPermission(registration, new LinkedHashSet<Integer>());
+    }
+    
+    /**
+     * {@inheritDoc}
+     * @param registration
+     * @param set
+     * @return 
+     */
+    @Override
+    public boolean givesPermission(Registration registration, LinkedHashSet<Integer> set) {
+    Log.debug("Checking permissions for File object " + swAccession + " with user " + registration);
     boolean hasPermission = true;
     if (processings != null) {
       for (Processing p : processings) {
-        if (!p.givesPermission(registration)) {
+        if (!p.givesPermission(registration, Processing.createPath(set, swAccession))) {
           hasPermission = false;
           break;
         }

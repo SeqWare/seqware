@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -84,9 +85,19 @@ public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAw
     return new EqualsBuilder().append(this.getSwAccession(), castOther.getSwAccession()).isEquals();
   }
   
-  /** {@inheritDoc} */
-  @Override
-  public boolean givesPermission(Registration registration) {
+    @Override
+    public boolean givesPermission(Registration registration) {
+        return givesPermission(registration, new LinkedHashSet<Integer>());
+    }
+    
+    /**
+     * {@inheritDoc}
+     * @param registration
+     * @param set
+     * @return 
+     */
+    @Override
+    public boolean givesPermission(Registration registration, LinkedHashSet<Integer> set) {
     boolean hasPermission = true;
     if (registration == null) {
       hasPermission = false;

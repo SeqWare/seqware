@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -451,12 +452,21 @@ public class IUS implements Serializable, Comparable<IUS>, PermissionsAware {
         }
     }
 
-    /** {@inheritDoc} */
     @Override
-    public boolean givesPermission(Registration registration) {
+  public boolean givesPermission(Registration registration){
+      return givesPermission(registration, new LinkedHashSet<Integer>());
+  }
+
+  /** {@inheritDoc}
+     * @param registration
+     * @param path
+     * @return  */
+  @Override
+  public boolean givesPermission(Registration registration, LinkedHashSet<Integer> path) {
+        Log.warn("Path: "+path.toString()+"Checking permissions for IUS object " + swAccession + " with user " + registration);
         boolean hasPermission = true;
         if (sample != null) {
-            hasPermission = sample.givesPermission(registration);
+            hasPermission = sample.givesPermission(registration, Processing.createPath(path, swAccession));
         } else {// orphaned IUS
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
                 Logger.getLogger(IUS.class).warn("Modifying Orphan IUS: " + this.getTag());

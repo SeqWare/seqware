@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -1167,16 +1169,33 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
 
     return p;
   }
-
-  /** {@inheritDoc} */
+  
+    public static LinkedHashSet<Integer> createPath(LinkedHashSet<Integer> seen, int parentId) {
+        LinkedHashSet<Integer> newSet = new LinkedHashSet<Integer>();
+        for (Integer i : seen) {
+            newSet.add(i);
+        }
+        newSet.add(parentId);
+        return newSet;
+    }
+  
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermission(Registration registration){
+      return givesPermission(registration, new LinkedHashSet<Integer>());
+  }
+
+  /** {@inheritDoc}
+     * @param registration
+     * @param path
+     * @return  */
+  @Override
+  public boolean givesPermission(Registration registration, LinkedHashSet<Integer> path) {
     boolean hasPermission = true;
-    Log.debug("Checking permissions for processing object " + swAccession + " with user " + registration);
+    Log.warn("Path: "+path.toString()+"Checking permissions for processing object " + swAccession + " with user " + registration);
     Set<PermissionsAware> list = null;
     if (ius != null && !ius.isEmpty()) {
       for (IUS i : ius) {
-        if (!i.givesPermission(registration)) {
+        if (!i.givesPermission(registration, createPath(path,swAccession))) {
           hasPermission = false;
           break;
         }
@@ -1184,7 +1203,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
       }
     } else if (lanes != null && !lanes.isEmpty()) {
       for (Lane i : lanes) {
-        if (!i.givesPermission(registration)) {
+        if (!i.givesPermission(registration, createPath(path,swAccession))) {
           hasPermission = false;
           break;
         }
@@ -1192,7 +1211,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
       }
     } else if (parents != null && !parents.isEmpty()) {
       for (Processing i : parents) {
-        if (!i.givesPermission(registration)) {
+        if (!i.givesPermission(registration, createPath(path,swAccession))) {
           hasPermission = false;
           break;
         }
@@ -1200,7 +1219,7 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
       }
     } else if (samples != null && !samples.isEmpty()) {
       for (Sample i : samples) {
-        if (!i.givesPermission(registration)) {
+        if (!i.givesPermission(registration, createPath(path,swAccession))) {
           hasPermission = false;
           break;
         }
@@ -1208,14 +1227,14 @@ public class Processing implements Serializable, Comparable<Processing>, Permiss
       }
     } else if (sequencerRuns != null && !sequencerRuns.isEmpty()) {
       for (SequencerRun i : sequencerRuns) {
-        if (!i.givesPermission(registration)) {
+        if (!i.givesPermission(registration, Processing.createPath(path,swAccession))) {
           hasPermission = false;
           break;
         }
 
       }
     } else if (workflowRun != null) {
-      hasPermission = workflowRun.givesPermission(registration);
+      hasPermission = workflowRun.givesPermission(registration, createPath(path,swAccession));
     } else {
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(Processing.class).warn("Modifying Orphan Processing: " + this.toString());

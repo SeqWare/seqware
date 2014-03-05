@@ -1,8 +1,6 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -12,19 +10,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import net.sourceforge.seqware.common.business.ProcessingRelationshipService;
-import net.sourceforge.seqware.common.business.ProcessingService;
-import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.common.model.Processing;
-import net.sourceforge.seqware.common.model.ProcessingRelationship;
 
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.mortbay.log.Log;
 
 import org.restlet.Context;
 import org.restlet.Request;
@@ -35,7 +30,7 @@ import org.restlet.data.Status;
 import org.restlet.representation.OutputRepresentation;
 
 
-public class ProcessingStructureResource extends BasicRestlet {
+public class ProcessingStructureResource extends BasicRestlet {    
 	
     public ProcessingStructureResource(Context context) {
         super(context);
@@ -100,9 +95,11 @@ public class ProcessingStructureResource extends BasicRestlet {
     }
     
     
-	private DotNode buildDotTree( int parentAccession) throws SQLException {
-		
+	private DotNode buildDotTree( int parentAccession) throws SQLException {         
+		LinkedHashSet<Integer> set = new LinkedHashSet<Integer>();
+                
 		String sql0 = "select processing_id, algorithm, sw_accession from processing where sw_accession = " + parentAccession;
+                Log.warn("root: " + sql0);
                 ResultSet rs0 = null;
                 DotNode root = null;
                 try{
@@ -120,6 +117,7 @@ public class ProcessingStructureResource extends BasicRestlet {
 		
 		String sql = "select a.child_id, b.algorithm, b.sw_accession from processing_relationship a, processing b " +
 				"where a.child_id = b.processing_id and a.parent_id = " + root.getProcessingId();   
+                Log.warn("root: " + sql);
                 ResultSet rs = null;
                 List<DotNode> children = new ArrayList<DotNode>();
 		try{
@@ -137,12 +135,20 @@ public class ProcessingStructureResource extends BasicRestlet {
                 }	
 		for(DotNode c: children) {
 			root.addChild(c);
-			this.addSubNodes(c);
+                        LinkedHashSet<Integer> newSet = createPath(set, parentAccession);
+			this.addSubNodes(c, 1, newSet);
 		}
 		return root;
 	}
 	
-	private void addSubNodes(DotNode parent) throws SQLException {
+	private void addSubNodes(DotNode parent, int level, LinkedHashSet<Integer> seen) throws SQLException {
+            Log.warn("Path: " + seen.toString() + " Checking processing " + parent.getProcessingId() + " at level " + level);
+                if (seen.contains(parent.getProcessingId())){
+                    Log.warn("Saw processing " + parent.getProcessingId() + " before in the same path, aborting");
+                    return;
+                }
+                seen.add(parent.getProcessingId());
+                
 		String sql = "select a.child_id, b.algorithm, b.sw_accession from processing_relationship a, processing b " +
 				"where a.child_id = b.processing_id and a.parent_id = " + parent.getProcessingId();  
                 ResultSet rs = null;
@@ -162,9 +168,19 @@ public class ProcessingStructureResource extends BasicRestlet {
                 }	
 		for(DotNode c: children) {
 			parent.addChild(c);
-			this.addSubNodes(c);
+                        LinkedHashSet<Integer> newSet = createPath(seen, parent.getProcessingId());
+			this.addSubNodes(c, level + 1, newSet);
 		}		
 	}
+
+    public static LinkedHashSet<Integer> createPath(LinkedHashSet<Integer> seen, int parentId) {
+        LinkedHashSet<Integer> newSet = new LinkedHashSet<Integer>();
+        for(Integer i : seen){
+            newSet.add(i);
+        }
+        newSet.add(parentId);
+        return newSet;
+    }
 	
 
     

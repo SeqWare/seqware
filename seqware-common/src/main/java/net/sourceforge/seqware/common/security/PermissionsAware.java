@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.common.security;
 
+import java.util.LinkedHashSet;
 import net.sourceforge.seqware.common.model.Registration;
 
 /**
@@ -25,6 +26,8 @@ import net.sourceforge.seqware.common.model.Registration;
  * @version $Id: $Id
  */
 public interface PermissionsAware {
+    
+    public boolean givesPermission(Registration registration, LinkedHashSet<Integer> path);
     
     /**
      * <p>givesPermission.</p>

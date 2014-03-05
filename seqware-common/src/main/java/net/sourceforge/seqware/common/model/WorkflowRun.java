@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -20,6 +21,7 @@ import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.adapters.XmlizeXML;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.dbutils.DbUtils;
 
@@ -837,21 +839,30 @@ public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, Permi
     }
     return wr;
   }
-
-  /** {@inheritDoc} */
+  
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermission(Registration registration){
+      return givesPermission(registration, new LinkedHashSet<Integer>());
+  }
+
+  /** {@inheritDoc}
+     * @param registration
+     * @param path
+     * @return  */
+  @Override
+  public boolean givesPermission(Registration registration, LinkedHashSet<Integer> path) {
+    Log.warn("Path: "+path.toString()+"Checking permissions for WorkflowRun object " + swAccession + " with user " + registration);
     boolean hasPermission = true;
     if (workflow != null) {
-      workflow.givesPermission(registration);
+      workflow.givesPermission(registration, Processing.createPath(path,swAccession));
       if (ius != null) {
         for (IUS i : ius) {
-          i.givesPermission(registration);
+          i.givesPermission(registration, Processing.createPath(path,swAccession));
         }
       }
       if (lanes != null) {
         for (Lane l : lanes) {
-          l.givesPermission(registration);
+          l.givesPermission(registration, Processing.createPath(path,swAccession));
         }
       }
     } else {// orphaned WorkflowRun

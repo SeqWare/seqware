@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -388,14 +389,24 @@ public class WorkflowParam implements Serializable, Comparable<WorkflowParam>, P
         wp.setValues(newValues);
         return wp;
     }
-
-    /** {@inheritDoc} */
+    
     @Override
     public boolean givesPermission(Registration registration) {
+        return givesPermission(registration, new LinkedHashSet<Integer>());
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param registration
+     * @param set
+     * @return 
+     */
+    @Override
+    public boolean givesPermission(Registration registration, LinkedHashSet<Integer> set) {
         boolean hasPermission = true;
 
         if (workflow != null) {
-            hasPermission = workflow.givesPermission(registration);
+            hasPermission = workflow.givesPermission(registration, Processing.createPath(set, this.getWorkflowParamId()));
         } else {//orphaned WorkflowParam
             if (registration.isLIMSAdmin()) {
                 Logger.getLogger(WorkflowParam.class).warn("Modifying Orphan WorkflowParam: " + this.getDisplayName());
