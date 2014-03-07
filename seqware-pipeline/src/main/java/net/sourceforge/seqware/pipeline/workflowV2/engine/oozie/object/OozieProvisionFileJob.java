@@ -136,7 +136,8 @@ public class OozieProvisionFileJob extends OozieJob {
 
     public ArrayList<String> generateRunnerLine() {
         ArrayList<String> args = new ArrayList<String>();
-        args.add("java");
+        String pathToJRE = createPathToJava();
+        args.add(pathToJRE + "java");
         args.add("-Xmx"+jobObj.getCommand().getMaxMemory());
         args.add("-classpath");
         args.add(seqwareJarPath);
