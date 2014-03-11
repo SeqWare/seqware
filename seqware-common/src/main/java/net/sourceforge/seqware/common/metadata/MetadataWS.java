@@ -2292,9 +2292,9 @@ public class MetadataWS extends Metadata {
             }
             client.getContext().getParameters().add("useForwardedForHeader", "false");
             client.getContext().getParameters().add("maxConnectionsPerHost", "100");
-            // if a low level call does not return in five minutes, disconnect 
+            // if a low level call does not return in 20 minutes, disconnect 
             // default apache http client will retry three times and then throw an exception
-            client.getContext().getParameters().add("socketTimeout",Integer.toString(5*60*1000)); 
+            client.getContext().getParameters().add("socketTimeout",Integer.toString(20*60*1000)); 
 
             String[] pathElements = database.split("/");
             resource = new ClientResource(database);
