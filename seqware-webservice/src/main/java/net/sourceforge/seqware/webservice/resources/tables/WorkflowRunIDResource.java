@@ -70,7 +70,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
         WorkflowRun workflowRun = getWorkflowRun(ss);
         // specify that we want the input file set to be copied along, if this works, we should clean up the manual copying below
-        CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(WorkflowRun.class, new String[]{"inputFileAccessions"});
+        CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(WorkflowRun.class, new String[]{"inputFileAccessions","workflowRunParams"});
         WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
         //Log.debug("getXML() Workflow run contains " + workflowRun.getInputFileAccessions().size()  + " input files");
         //dto.setInputFileAccessions(workflowRun.getInputFileAccessions());
