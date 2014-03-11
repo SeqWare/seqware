@@ -1542,19 +1542,24 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public String listInstalledWorkflows() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         try {
             for (Workflow w : ll.findWorkflows()) {
-                sb.append(w.getName() + "\t");
-                sb.append(w.getVersion() + "\t");
-                sb.append(w.getCreateTimestamp() + "\t");
-                sb.append(w.getSwAccession() + "\t");
-                sb.append(w.getPermanentBundleLocation() + "\n");
+                sb.append(w.getName()).append("\t");
+                sb.append(w.getVersion()).append("\t");
+                sb.append(w.getCreateTimestamp()).append("\t");
+                sb.append(w.getSwAccession()).append("\t");
+                String description = w.getDescription();
+                // truncate, some workflows have really long descriptions
+                if (description.length() > 120){
+                    description = description.substring(0, 120) + "...";
+                }
+                sb.append(description).append("\t");
+                sb.append(w.getCwd()).append("\t");
+                sb.append(w.getPermanentBundleLocation()).append("\n");
             }
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return (sb.toString());
