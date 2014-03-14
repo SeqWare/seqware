@@ -5,4 +5,7 @@ module Variables
   def seqware_release_version
     "1.0.11"
   end
+  def qe_release_version
+    "1.0.6"
+  end
 end 
