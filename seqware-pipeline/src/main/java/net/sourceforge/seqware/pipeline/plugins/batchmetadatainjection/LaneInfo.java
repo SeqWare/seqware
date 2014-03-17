@@ -28,7 +28,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author mtaschuk
  */
-public class LaneInfo {
+public class LaneInfo implements Comparable<LaneInfo> {
 
     private String laneNumber = null;
     private String laneName = null;
@@ -295,5 +295,10 @@ public class LaneInfo {
             }
         }
         writer.append("\n\t\t}");
+    }
+    
+    @Override
+    public int compareTo(LaneInfo otherLane){
+        return Integer.parseInt(this.laneNumber) - Integer.parseInt(otherLane.getLaneNumber());
     }
 }
