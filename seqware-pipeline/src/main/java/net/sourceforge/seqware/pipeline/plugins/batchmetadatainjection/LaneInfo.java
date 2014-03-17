@@ -286,15 +286,15 @@ public class LaneInfo implements Comparable<LaneInfo> {
             }
         }
 
-        writer.append("\n\t\t\"LaneInfo\": {");
-        writer.append("\n\t\t\t\"laneNumber\":\"").append(laneNumber).append("\"");
-        writer.append("\n\t\t\t\"studyType\":\"").append(studyTypeStr).append("\"");
+        writer.append("\n\tLaneInfo {");
+        writer.append("\n\t\tlaneNumber=").append(laneNumber);
+        writer.append("\n\t\tstudyType=").append(studyTypeStr);
         if (samples != null) {
             for (SampleInfo si : samples) {
                 si.print(writer, metadata);
             }
         }
-        writer.append("\n\t\t}");
+        writer.append("\n\t}");
     }
     
     @Override
