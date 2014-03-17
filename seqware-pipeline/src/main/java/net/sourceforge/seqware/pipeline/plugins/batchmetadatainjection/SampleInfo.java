@@ -29,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author mtaschuk
  */
-public class SampleInfo {
+public class SampleInfo implements Comparable<SampleInfo> {
 
     private String blank = "";
     //sample required
@@ -509,5 +509,11 @@ public class SampleInfo {
         writer.append("\n\t\t\t\t \"skipBarcode\":\"" + iusSkip+"\"");
 
         writer.append("\n\t\t\t}");
+    }
+    
+    @Override
+    public int compareTo(SampleInfo otherSample){
+        return Integer.parseInt(this.barcode) - Integer.parseInt(otherSample.getBarcode());
+        
     }
 }
