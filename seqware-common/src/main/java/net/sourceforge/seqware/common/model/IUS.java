@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -24,7 +25,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class IUS implements Serializable, Comparable<IUS>, PermissionsAware {
+public class IUS extends PermissionsAware implements Serializable, Comparable<IUS> {
 
     private static final long serialVersionUID = 3472028115923390568L;
     private Integer iusId;
@@ -450,13 +451,21 @@ public class IUS implements Serializable, Comparable<IUS>, PermissionsAware {
             this.skip = skip;
         }
     }
-
-    /** {@inheritDoc} */
+    
     @Override
-    public boolean givesPermission(Registration registration) {
+    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+        boolean consideredBefore = considered.contains(this.getSwAccession());
+        if (!consideredBefore) {
+            considered.add(this.getSwAccession());
+            Log.debug("Checking permissions for IUS object " + swAccession);
+        } else {
+            Log.debug("Skipping permissions for IUS object " + swAccession + " , checked before");
+            return true;
+        }
+        
         boolean hasPermission = true;
         if (sample != null) {
-            hasPermission = sample.givesPermission(registration);
+            hasPermission = sample.givesPermission(registration, considered);
         } else {// orphaned IUS
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
                 Logger.getLogger(IUS.class).warn("Modifying Orphan IUS: " + this.getTag());

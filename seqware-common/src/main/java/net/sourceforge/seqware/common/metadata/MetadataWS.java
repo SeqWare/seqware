@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.common.metadata;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -2291,6 +2292,9 @@ public class MetadataWS extends Metadata {
             }
             client.getContext().getParameters().add("useForwardedForHeader", "false");
             client.getContext().getParameters().add("maxConnectionsPerHost", "100");
+            // if a low level call does not return in 20 minutes, disconnect 
+            // default apache http client will retry three times and then throw an exception
+            client.getContext().getParameters().add("socketTimeout",Integer.toString(20*60*1000)); 
 
             String[] pathElements = database.split("/");
             resource = new ClientResource(database);
@@ -2733,7 +2737,10 @@ public class MetadataWS extends Metadata {
             try {
                 Document text = XmlTools.marshalToDocument(jaxb, parent);
                 result = cResource.put(XmlTools.getRepresentation(text));
-            } finally {
+            } catch(ResourceException ex){
+                Log.fatal("updateObject did not complete successfully: " + cResource);
+                throw new RuntimeException(ex);
+            }finally {
                 if (result != null) {
                     result.exhaust();
                     result.release();
@@ -2831,6 +2838,7 @@ public class MetadataWS extends Metadata {
             } catch (ResourceException e) {
                 Log.error("MetadataWS.addObject " + e.getMessage());
                 e.printStackTrace();
+                throw new RuntimeException(e);
             }
             if (result != null) {
                 result.exhaust();

@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -13,7 +14,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunParam>, PermissionsAware {
+public class WorkflowRunParam extends PermissionsAware implements Serializable, Comparable<WorkflowRunParam> {
 
     /**
      *
@@ -190,13 +191,13 @@ public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunPar
     public void setWorkflowRun(WorkflowRun workflowRun) {
         this.workflowRun = workflowRun;
     }
-
+    
     /** {@inheritDoc} */
     @Override
-    public boolean givesPermission(Registration registration) {
+    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {       
         boolean hasPermission = true;
         if (workflowRun != null) {
-            hasPermission = workflowRun.givesPermission(registration);
+            hasPermission = workflowRun.givesPermission(registration, considered);
         } else {//Orphaned WorkflowRunParam
             if (registration.isLIMSAdmin()) {
                 Logger.getLogger(WorkflowRunParam.class).warn("Modifying Orphan WorkflowRunParam: " + this.getKey());
