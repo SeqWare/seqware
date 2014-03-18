@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
+import java.util.Set;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -14,7 +15,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowParamValue implements Serializable, Comparable<WorkflowParamValue>, PermissionsAware {
+public class WorkflowParamValue extends PermissionsAware implements Serializable, Comparable<WorkflowParamValue> {
 
     private static final long serialVersionUID = 1L;
     private Integer workflowParamValueId;
@@ -198,10 +199,10 @@ public class WorkflowParamValue implements Serializable, Comparable<WorkflowPara
 
     /** {@inheritDoc} */
     @Override
-    public boolean givesPermission(Registration registration) {
+    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = true;
         if (workflowParam != null) {
-            hasPermission = workflowParam.givesPermission(registration);
+            hasPermission = workflowParam.givesPermission(registration, considered);
         } else {//orphaned WorkflowParamValue
             if (registration.isLIMSAdmin()) {
                 Logger.getLogger(WorkflowParamValue.class).warn("Modifying Orphan WorkflowParamValue: " + this.getDisplayName());
