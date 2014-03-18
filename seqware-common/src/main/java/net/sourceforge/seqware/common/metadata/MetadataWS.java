@@ -18,6 +18,7 @@ package net.sourceforge.seqware.common.metadata;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.SocketTimeoutException;
 import java.io.Writer;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -1542,19 +1543,24 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public String listInstalledWorkflows() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         try {
             for (Workflow w : ll.findWorkflows()) {
-                sb.append(w.getName() + "\t");
-                sb.append(w.getVersion() + "\t");
-                sb.append(w.getCreateTimestamp() + "\t");
-                sb.append(w.getSwAccession() + "\t");
-                sb.append(w.getPermanentBundleLocation() + "\n");
+                sb.append(w.getName()).append("\t");
+                sb.append(w.getVersion()).append("\t");
+                sb.append(w.getCreateTimestamp()).append("\t");
+                sb.append(w.getSwAccession()).append("\t");
+                String description = w.getDescription();
+                // truncate, some workflows have really long descriptions
+                if (description.length() > 120){
+                    description = description.substring(0, 120) + "...";
+                }
+                sb.append(description).append("\t");
+                sb.append(w.getCwd()).append("\t");
+                sb.append(w.getPermanentBundleLocation()).append("\n");
             }
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return (sb.toString());
@@ -2761,6 +2767,9 @@ public class MetadataWS implements Metadata {
             }
             client.getContext().getParameters().add("useForwardedForHeader", "false");
             client.getContext().getParameters().add("maxConnectionsPerHost", "100");
+            // if a low level call does not return in 20 minutes, disconnect 
+            // default apache http client will retry three times and then throw an exception
+            client.getContext().getParameters().add("socketTimeout",Integer.toString(20*60*1000)); 
 
             String[] pathElements = database.split("/");
             resource = new ClientResource(database);
@@ -3388,7 +3397,10 @@ public class MetadataWS implements Metadata {
             try {
                 Document text = XmlTools.marshalToDocument(jaxb, parent);
                 result = cResource.put(XmlTools.getRepresentation(text));
-            } finally {
+            } catch(ResourceException ex){
+                Log.fatal("updateObject did not complete successfully: " + cResource);
+                throw new RuntimeException(ex);
+            }finally {
                 if (result != null) {
                     result.exhaust();
                     result.release();
@@ -3490,6 +3502,7 @@ public class MetadataWS implements Metadata {
             } catch (ResourceException e) {
                 Log.error("MetadataWS.addObject " + e.getMessage());
                 e.printStackTrace();
+                throw new RuntimeException(e);
             }
             if (result != null) {
                 result.exhaust();
