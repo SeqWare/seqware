@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Set;
 
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Registration implements Serializable, PermissionsAware, Comparable<Registration> {
+public class Registration extends PermissionsAware implements Serializable, Comparable<Registration> {
 
     /**
      * <p>Getter for the field <code>institution</code>.</p>
@@ -373,7 +374,7 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
 
     /** {@inheritDoc} */
     @Override
-    public boolean givesPermission(Registration registration) {
+    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = false;
         if (registration == null) {
             hasPermission = false;
