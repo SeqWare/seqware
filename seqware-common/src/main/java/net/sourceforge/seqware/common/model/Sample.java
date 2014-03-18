@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Sample implements Serializable, Comparable<Sample>, PermissionsAware, ParentAccessionModel {
+public class Sample extends PermissionsAware implements Serializable, Comparable<Sample>, ParentAccessionModel {
 
   // Attributes relied upon by seqware code
   
@@ -939,11 +939,20 @@ public class Sample implements Serializable, Comparable<Sample>, PermissionsAwar
      * {@inheritDoc}
      */
     @Override
-    public boolean givesPermission(Registration registration) {
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for Sample object " + swAccession);
+      } else {
+          Log.debug("Skipping permissions for Sample object " + swAccession + " , checked before");
+          return true;
+      }
+      
         boolean hasPermission = true;
         Log.debug("registration: " + registration + " owner: " + owner);
         if (experiment != null) {
-            hasPermission = experiment.givesPermission(registration);
+      hasPermission = experiment.givesPermission(registration, considered);
         } else {// orphaned Sample
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
                 Logger.getLogger(Sample.class).warn("Modifying Orphan Sample: " + this.getName());

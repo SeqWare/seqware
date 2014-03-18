@@ -68,6 +68,7 @@ public abstract class OozieJob {
   protected final String maxMemorySgeParamFormat;
   protected final File scriptsDir;
   private boolean useCheckFile = false;
+  protected final File seqwareJar;
 
   public OozieJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
                   String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
@@ -83,6 +84,7 @@ public abstract class OozieJob {
     this.threadsSgeParamFormat = threadsSgeParamFormat;
     this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
     this.scriptsDir = scriptsDir(oozie_working_dir);
+    this.seqwareJar = seqwareJar;
 
     if (useSge) {
       if (this.seqwareJarPath == null) {
@@ -432,6 +434,12 @@ public abstract class OozieJob {
      */
     public void setUseCheckFile(boolean useCheckFile) {
         this.useCheckFile = useCheckFile;
+    }
+
+    protected String createPathToJava() {
+        // lock down version of Java used
+        String pathToJRE = seqwareJar.getParentFile().getParent() + File.separator + "bin" + File.separator + "jre*" + File.separator + "bin" + File.separator;
+        return pathToJRE;
     }
 
 }
