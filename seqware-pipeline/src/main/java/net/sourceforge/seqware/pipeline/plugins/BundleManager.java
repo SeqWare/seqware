@@ -221,8 +221,9 @@ public class BundleManager extends Plugin {
             }
         } else if (options.has("list-installed")) {            
             String params = metadata.listInstalledWorkflows();
+            final String nameVersionCreation_DateSeqWare_Accession = "Name\tVersion\tCreation Date\tSeqWare Accession\tDescription\tCurrent Working Directory\tBundle Location";
             if (options.has("human-expanded")) {
-                params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
+                params = nameVersionCreation_DateSeqWare_Accession+"\n" + params;
                 params = TabExpansionUtil.expansion(params);
                 if (params.trim().equals("")){
                   println("No workflows installed.");
@@ -230,14 +231,14 @@ public class BundleManager extends Plugin {
                   println(params);
                 }
             } else if (options.has("human-aligned")){
-                params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
+                params = nameVersionCreation_DateSeqWare_Accession+"\n" + params;
                 params = TabExpansionUtil.aligned(params);
                 println(params);
             } else {
                 println("=====================================================");
                 println("===============INSTALLED WORKFLOWS===================");
                 println("=====================================================");
-                println("Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location");
+                println(nameVersionCreation_DateSeqWare_Accession);
                 println("-----------------------------------------------------");
                 println(params);
                 println("-----------------------------------------------------");
