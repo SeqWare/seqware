@@ -12,7 +12,7 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 
 ## 1.0.12 (2014-03-19)
 
-Note that the fix for 1860 creates an update to the oozie-sge plugin (version 1.0.2). The fix for SEQWARE-1848 may also require some special care, previous versions of the 1.0.X workflow launcher would run steps in a workflow using system Java. 1.0.12 enforces that the bundled Java is used, this will cause problems for workflows bundled with 1.0.11 so either launch those with 1.0.11 or rebundle with Java 1.7. 
+Note that the fix for 1860 creates an update to the oozie-sge plugin (version 1.0.2). The fix for SEQWARE-1848 may also require some special care, previous versions of the 1.0.X workflow launcher would run steps in a workflow using system Java. 1.0.12 enforces that the bundled Java is used, this will cause problems for workflows bundled with 1.0.11 so either launch those with 1.0.11 or rebundle with Java 1.7. Older bundles should be unaffected.  
 
 Other changes are largely self-explanatory and generally improve usability.  
 
