@@ -12,7 +12,7 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 
 ## 1.0.12 (2014-03-19)
 
-Note that the fix for 1860 creates an update to the oozie-sge plugin (version 1.0.2). The fix for SEQWARE-1848 may also require some special care, previous versions of the 1.0.X workflow launcher would run steps in a workflow using system Java. 1.0.12 enforces that the bundled Java is used, this will cause problems for workflows bundled with 1.0.11 so either launch those with 1.0.11 or rebundle with Java 1.7. Older bundles should be unaffected.  
+Note that the fix for 1860 creates an update to the oozie-sge plugin (version 1.0.2). The fix for SEQWARE-1848 may also require some special care, previous versions of the 1.0.X workflow launcher would run steps in a workflow using system Java. 1.0.12 enforces that the bundled Java is used; this will cause problems for workflows bundled with 1.0.11 so either launch those with 1.0.11 or rebundle with Java 1.7. Older bundles should be unaffected.  
 
 Other changes are largely self-explanatory and generally improve usability.  
 
@@ -30,6 +30,11 @@ Other changes are largely self-explanatory and generally improve usability.
 
 ### Technical task
 * [SEQWARE-1657] - Determine procedure for dealing with partially completed workflows
+
+## 0.13.6.16 (2014-03-19)
+* Introduces a client timeout and exception catching for low-level calls to the web service
+* Performance improvement for authentication checking in the processing hierarchy
+* Adding verbose mode to the module runner
 
 ## 1.0.11 (2014-02-14)
 ### Task
