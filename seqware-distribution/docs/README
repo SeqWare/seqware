@@ -91,4 +91,12 @@ Also, I originally installed this but I had to disable this in the code, didn't 
 
 sudo gem install fast-aleck 
 
+Ran into this message:
+
+    Gem::LoadError: Unable to activate pygments.rb-0.5.4, because yajl-ruby-1.2.0 conflicts with yajl-ruby (~> 1.1.0)
+
+Which requires this fix:
+
+    sudo gem uninstall yajl-ruby --version 1.2.0
+
 
