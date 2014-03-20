@@ -461,8 +461,8 @@ public class BatchMetadataInjectionTest {
         List<TagValueUnit> originalRunAttributes = new ArrayList<TagValueUnit>(original.getRunAttributes());
         List<TagValueUnit> actualRunAttributes = new ArrayList<TagValueUnit>(actual.getRunAttributes());
 
-        Collections.sort(originalRunAttributes, AttributeComparator);
-        Collections.sort(actualRunAttributes, AttributeComparator);
+        Collections.sort(originalRunAttributes);
+        Collections.sort(actualRunAttributes);
 
         Iterator<TagValueUnit> iterRunAttrOrig = originalRunAttributes.iterator();
         Iterator<TagValueUnit> iterRunAttrAct = actualRunAttributes.iterator();
@@ -480,8 +480,8 @@ public class BatchMetadataInjectionTest {
         List<TagValueUnit> originalExperimentAttributes = new ArrayList<TagValueUnit>(original.getExperimentAttributes());
         List<TagValueUnit> actualExperimentAttributes = new ArrayList<TagValueUnit>(actual.getExperimentAttributes());
 
-        Collections.sort(originalExperimentAttributes, AttributeComparator);
-        Collections.sort(actualExperimentAttributes, AttributeComparator);
+        Collections.sort(originalExperimentAttributes);
+        Collections.sort(actualExperimentAttributes);
 
         Iterator<TagValueUnit> iterExperimentAttrOrig = originalExperimentAttributes.iterator();
         Iterator<TagValueUnit> iterExperimentAttrAct = actualExperimentAttributes.iterator();
@@ -518,8 +518,8 @@ public class BatchMetadataInjectionTest {
             //Adds all the lane attributes
             List<TagValueUnit> originalLaneAttributes = new ArrayList<TagValueUnit>(originalLane.getLaneAttributes());
             List<TagValueUnit> actualLaneAttributes = new ArrayList<TagValueUnit>(actualLane.getLaneAttributes());
-            Collections.sort(originalLaneAttributes, AttributeComparator);
-            Collections.sort(actualLaneAttributes, AttributeComparator);
+            Collections.sort(originalLaneAttributes);
+            Collections.sort(actualLaneAttributes);
 
             Iterator<TagValueUnit> iterOrigLaneAttr = originalLaneAttributes.iterator();
             Iterator<TagValueUnit> iterActualLaneAttr = actualLaneAttributes.iterator();
@@ -566,8 +566,8 @@ public class BatchMetadataInjectionTest {
                 List<TagValueUnit> originalSampleAttributes = new ArrayList<TagValueUnit>(originalSample.getSampleAttributes());
                 List<TagValueUnit> actualSampleAttributes = new ArrayList<TagValueUnit>(actualSample.getSampleAttributes());
 
-                Collections.sort(originalSampleAttributes, AttributeComparator);
-                Collections.sort(actualSampleAttributes, AttributeComparator);
+                Collections.sort(originalSampleAttributes);
+                Collections.sort(actualSampleAttributes);
 
                 Iterator<TagValueUnit> iterOrigSampleAttr = originalSampleAttributes.iterator();
                 Iterator<TagValueUnit> iterActualSampleAttr = actualSampleAttributes.iterator();
@@ -582,8 +582,8 @@ public class BatchMetadataInjectionTest {
                 List<TagValueUnit> originalIUSAttributes = new ArrayList<TagValueUnit>(originalSample.getIusAttributes());
                 List<TagValueUnit> actualIUSAttributes = new ArrayList<TagValueUnit>(originalSample.getIusAttributes());
 
-                Collections.sort(originalIUSAttributes, AttributeComparator);
-                Collections.sort(actualIUSAttributes, AttributeComparator);
+                Collections.sort(originalIUSAttributes);
+                Collections.sort(actualIUSAttributes);
 
                 Iterator<TagValueUnit> iterOrigIUSAttr = originalIUSAttributes.iterator();
                 Iterator<TagValueUnit> iterActualIUSIterator = actualIUSAttributes.iterator();
@@ -600,19 +600,5 @@ public class BatchMetadataInjectionTest {
         return equal.isEquals();
 
     }
-
-    public Comparator<TagValueUnit> AttributeComparator = new Comparator<TagValueUnit>() {
-
-        @Override
-        public int compare(TagValueUnit o1, TagValueUnit o2) {
-            int i = o1.getTag().compareTo(o2.getTag());
-            if (i != 0) {
-                return i;
-            }
-            i = o1.getValue().compareTo(o2.getValue());
-            return i;
-        }
-
-    };
 
 }
