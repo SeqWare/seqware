@@ -299,6 +299,16 @@ public class LaneInfo implements Comparable<LaneInfo> {
     
     @Override
     public int compareTo(LaneInfo otherLane){
-        return Integer.parseInt(this.laneNumber) - Integer.parseInt(otherLane.getLaneNumber());
+        int i;
+        i = Integer.parseInt(this.laneNumber) - Integer.parseInt(otherLane.getLaneNumber());
+        if(i != 0){
+            return i;
+        }
+        i = this.laneName.compareTo(otherLane.laneName);
+        if(i !=0){
+            return i;
+        }
+        i = this.laneDescription.compareTo(otherLane.laneDescription);
+        return i;
     }
 }
