@@ -510,10 +510,22 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
         writer.append("\n\t\t}");
     }
-    
+
     @Override
-    public int compareTo(SampleInfo otherSample){
-        return Integer.parseInt(this.barcode) - Integer.parseInt(otherSample.getBarcode());
-        
+    public int compareTo(SampleInfo otherSample) {
+        int i = Integer.parseInt(this.barcode) - Integer.parseInt(otherSample.getBarcode());
+        if (i != 0) {
+            return i;
+        }
+        i = this.projectCode.compareTo(otherSample.projectCode);
+        if (i != 0) {
+            return i;
+        }
+        i = this.iusName.compareTo(otherSample.iusName);
+        if (i != 0) {
+            return i;
+        }
+        i = this.iusDescription.compareTo(otherSample.iusDescription);
+        return i;
     }
 }
