@@ -56,20 +56,22 @@ import org.junit.*;
  * @author Raunaq Suri
  */
 public class BatchMetadataInjectionTest {
-    
-    
+
     private RunInfo originalObject, runInfo;
     List<Map<String, String>> fileReport;
 
     private final List<String> iusSwids = new ArrayList<String>();
     private final List<String> laneSwids = new ArrayList<String>();
-    String webserviceUrl;
+
     //Metadata object
     Map<String, String> hm = ConfigTools.getSettings();
     net.sourceforge.seqware.common.metadata.Metadata metadata = MetadataFactory.get(hm);
-    
+
     private static String miseqPath = null;
     private static String inputJsonCorrect = null;
+    private static String malformedJson = null;
+
+    private String wfaccession = String.valueOf(metadata.getWorkflowAccession("BamQC", "2.1"));
 
     public BatchMetadataInjectionTest() {
     }
@@ -78,6 +80,7 @@ public class BatchMetadataInjectionTest {
     public static void setUpClass() throws Exception {
         miseqPath = BatchMetadataInjectionTest.class.getResource("SampleSheet.csv").getPath();
         inputJsonCorrect = BatchMetadataInjectionTest.class.getResource("input.json").getPath();
+        malformedJson = BatchMetadataInjectionTest.class.getResource("malformedInput.json").getPath();
     }
 
     @AfterClass
@@ -91,31 +94,31 @@ public class BatchMetadataInjectionTest {
     @After
     public void tearDown() {
     }
-    
+
     @Test
-    public void testImportJsonSequencerRun() throws IOException{
+    public void testImportJsonSequencerRun() throws IOException {
         System.out.println("Testing if importing a json file works");
-        String wfaccession = String.valueOf(metadata.getWorkflowAccession("BamQC", "2.1"));
+
         String[] bmiparams = {"--import-json-sequencer-run", inputJsonCorrect};
-        
+
         PrintStream old = System.out;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(baos));
-        
+
         //Runs the Batch Metadata injection with the input json and importing a json run
         BatchMetadataInjection.main(bmiparams);
         String output = baos.toString();
-        
+
         //Gets the IUSs from the stdout
         getStdOut(output);
         runFileLinkerPlugin(createFileLinkerFile(iusSwids), wfaccession);
         getData();
         writeToObjects();
-        
+
         System.setOut(old);
-        Assert.assertTrue("The JSON doesn't match",equals(originalObject, runInfo, inputJsonCorrect)); 
+        Assert.assertTrue("The JSON doesn't match", equals(originalObject, runInfo, inputJsonCorrect));
         System.out.println("The JSON matches");
-            
+
     }
 
     /**
@@ -124,22 +127,22 @@ public class BatchMetadataInjectionTest {
     @Test
     public void testParseMiseqFile() throws Exception {
         System.out.println("parseMiseqFile");
-        HashMap<String,String> map =  new HashMap<String, String>();
-        map.put("study_type","4");
-        map.put("library_type","Type");
+        HashMap<String, String> map = new HashMap<String, String>();
+        map.put("study_type", "4");
+        map.put("library_type", "Type");
         map.put("library_source_template_type", "LSTT");
         map.put("targeted_resequencing", "TRS");
         map.put("tissue_origin", "TO");
         map.put("tissue_preparation", "TP");
-        map.put("library_size_code","12");
-        
-        ParseMiseqFile instance = new ParseMiseqFile(new MetadataNoConnection(),map, false);
+        map.put("library_size_code", "12");
+
+        ParseMiseqFile instance = new ParseMiseqFile(new MetadataNoConnection(), map, false);
         RunInfo run = instance.parseMiseqFile(miseqPath);
         Assert.assertEquals("Incorrect Project Name", "Testdance", run.getStudyTitle());
         Assert.assertEquals("Incorrect Experiment Name", "TDHS", run.getExperimentName());
         Assert.assertEquals("Incorrect Workflow", "Resequencing", run.getWorkflowType());
         Assert.assertEquals("Incorrect Assay", "TruSeq DNA/RNA", run.getAssayType());
-        
+
         Set<SampleInfo> samples = run.getLanes().iterator().next().getSamples();
         Assert.assertEquals("Incorrect number of samples", 6, samples.size());
 //        SampleInfo sample = samples.get(0);
@@ -184,8 +187,6 @@ public class BatchMetadataInjectionTest {
 //        assertSample(archiveSample, samples.get(0));
 //        assertSample(biopsySample, samples.get(1));
 //        assertSample(bloodSample, samples.get(2));
-
-
 
     }
 
@@ -355,7 +356,6 @@ public class BatchMetadataInjectionTest {
 
     }
 
-
     private void getData() {
 
         Map<FileProvenanceParam, List<String>> fileProvenanceParams = new EnumMap<FileProvenanceParam, List<String>>(FileProvenanceParam.class);
@@ -397,10 +397,10 @@ public class BatchMetadataInjectionTest {
         for (String s : swids) {
             count++;
 
-            File file = new File(FileUtils.getTempDirectoryPath()+"/"+randomName + count + ".txt");
+            File file = new File(FileUtils.getTempDirectoryPath() + "/" + randomName + count + ".txt");
             file.createNewFile();
             FileUtils.write(file, "Hello World!");
-            String line = ".,.,.," + String.valueOf(s) + ",.,.," + FileUtils.getTempDirectoryPath()+"/" + randomName + count + ".txt\n";
+            String line = ".,.,.," + String.valueOf(s) + ",.,.," + FileUtils.getTempDirectoryPath() + "/" + randomName + count + ".txt\n";
 
             FileUtils.writeStringToFile(fileLinkerFile, line, true);
             file.deleteOnExit();
@@ -411,8 +411,8 @@ public class BatchMetadataInjectionTest {
     }
 
     private void runFileLinkerPlugin(String fileLinkerPath, String wfaccession) throws IOException {
-        
-        String[] fileLinkerParams = {"--file-list-file", fileLinkerPath, "--workflow-accession",  wfaccession, "--csv-separator", ","};
+
+        String[] fileLinkerParams = {"--file-list-file", fileLinkerPath, "--workflow-accession", wfaccession, "--csv-separator", ","};
         PluginRunner p = new PluginRunner();
         List<String> a = new ArrayList<String>();
         a.add("--plugin");
@@ -605,7 +605,12 @@ public class BatchMetadataInjectionTest {
 
         @Override
         public int compare(TagValueUnit o1, TagValueUnit o2) {
-            return o1.getTag().compareTo(o2.getTag());
+            int i = o1.getTag().compareTo(o2.getTag());
+            if (i != 0) {
+                return i;
+            }
+            i = o1.getValue().compareTo(o2.getValue());
+            return i;
         }
 
     };
