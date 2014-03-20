@@ -16,7 +16,9 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
-public class TagValueUnit {
+import java.util.Comparator;
+
+public class TagValueUnit implements Comparable<TagValueUnit> {
 
     private String tag;
     private String value;
@@ -44,5 +46,15 @@ public class TagValueUnit {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    @Override
+    public int compareTo(TagValueUnit o2) {
+        int i = this.getTag().compareTo(o2.getTag());
+        if (i != 0) {
+            return i;
+        }
+        i = this.getValue().compareTo(o2.getValue());
+        return i;
     }
 }
