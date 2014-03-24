@@ -1,0 +1,44 @@
+{
+    "defaults": {
+        "description": "Raunaq Workflow Test",
+        "metrics_calculate": "calculate.sh",
+        "metrics_compare": "compare.sh",
+        "input_config_dir": "/my/input/dir/",
+        "output_metrics_dir": "/my/output/dir/"
+    },
+    
+    "tests": [
+        {
+            "input_config": "something.ini",
+            "environment_variables" : {
+                "key":"value",
+                "value":"key",
+                "Raunaq":"Suri"
+            }
+        },
+        {
+            "input_config": "something_02.ini"
+        },
+        {
+            "input_config": "something_03.ini"
+        },
+        {
+            "input_config": "something_04.ini"
+        },
+        {
+            "input_config": "something_05.ini"
+        },
+        {
+            "input_config": "something_06.ini"
+        },
+        {
+            "input_config": "something_07.ini"
+        },
+        {
+            "input_config": "something_08.ini"
+        },
+        {
+            "input_config": "something_09.ini"
+        }
+    ]
+}
