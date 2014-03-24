@@ -1,0 +1,29 @@
+{
+    "name": "Workflow JSON Validator",
+    "type": "properties",
+    "pairs": [
+        {"key": "defaults", "optional": false,
+            "rule": {"type": "properties", "pairs": [
+                    {"key": "description", "optional": false, "rule": {"type": "string"}},
+                    {"key": "metrics_calculate", "optional": false, "rule": {"type": "string"}},
+                    {"key": "metrics_compare", "optional": false, "rule": {"type": "string"}},
+                    {"key": "input_config_dir", "optional": false, "rule": {"type": "string"}},
+                    {"key": "output_metrics_dir", "optional": false, "rule": {"type": "string"}}
+
+                ]
+            }
+        }, {"key": "tests", "optional":false, 
+                "rule" : { "type" : "and", 
+                    "rules" : [{"type" : "and", "rules":[{"type":"array"}, {"type":"length", "min": 1}]}, 
+                               {"type" : "content", "rule": {"type": "properties", "pairs":[
+                                           
+                                           {"key": "input_config", "optional":false, "rule":{"type" : "string"}},
+                                           {"key": "environment_variables", "optional":true, "rule":{"type": "object"}}
+                                        ]}
+                                }]
+                           }
+            }
+
+    ]
+
+}
