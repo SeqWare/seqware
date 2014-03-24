@@ -569,6 +569,7 @@ public class WorkflowApp {
               } else{
                   assert (inputBucketGenerator != null);
                   BatchedOozieProvisionFileJob currentInBucket = inputBucketGenerator.attachAndIterateBuckets(oozieProvisionInJob);
+                  currentInBucket.addParent(oozieActualJob);
                   if (!this.jobs.contains(currentInBucket)) {
                       this.jobs.add(currentInBucket);
                   }
