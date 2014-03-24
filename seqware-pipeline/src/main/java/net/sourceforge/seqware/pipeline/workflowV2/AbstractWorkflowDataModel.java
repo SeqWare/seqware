@@ -299,6 +299,9 @@ public abstract class AbstractWorkflowDataModel  {
 	 */
 	public SqwFile createFile(String name) {
 		SqwFile file = new SqwFile();
+                if (this.files.containsKey(name)){
+                    throw new RuntimeException("Cannot register more than one file to the same name");
+                }
 		this.files.put(name, file);
 		return file;		
 	}
