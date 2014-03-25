@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -24,7 +25,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Study implements Serializable, PermissionsAware, ParentAccessionModel, Comparable<Study> {
+public class Study extends PermissionsAware implements Serializable, ParentAccessionModel, Comparable<Study> {
 
   private static final long serialVersionUID = 2L;
   private Integer studyId;
@@ -630,7 +631,16 @@ public class Study implements Serializable, PermissionsAware, ParentAccessionMod
 
   /** {@inheritDoc} */
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for Study object " + swAccession);
+      } else {
+          Log.debug("Skipping permissions for Study object " + swAccession + " , checked before");
+          return true;
+      }
+      
     boolean hasPermission = false;
     if (registration == null) {
       Logger.getLogger(Study.class).warn("Registration is null!");
