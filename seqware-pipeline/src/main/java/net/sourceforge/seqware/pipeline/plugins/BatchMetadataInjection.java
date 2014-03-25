@@ -18,8 +18,10 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ import java.util.logging.Logger;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.jsontools.JSONHelper;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.*;
@@ -55,6 +58,8 @@ public class BatchMetadataInjection extends Metadata {
     private StringBuffer whatWeDid = new StringBuffer();
     private Map<Integer, String> names;
     private boolean interactive = false;
+    private static InputStream schema = BatchMetadataInjection.class.getResourceAsStream("bmischema.json");
+    JSONHelper jsonHelper = new JSONHelper();
 
     //private boolean createStudy = false;
     /**
@@ -607,7 +612,13 @@ public class BatchMetadataInjection extends Metadata {
         }
     }
     
-    private RunInfo jsonToRunInfo(String filePath) throws IOException {       
+    private RunInfo jsonToRunInfo(String filePath) throws IOException {
+      //Checks to ensure that the input is first valid before doing anything
+        if(!jsonHelper.isJSONValid(schema, new FileInputStream(filePath))){
+            //Throws an exception if it's not valid
+            throw new IOException("JSON is not valid");
+        }
+        //Else continue
         java.io.File jsonFileInputPath = new java.io.File(filePath);
         String jsonRunInfo = Files.toString(jsonFileInputPath, Charsets.UTF_8);
         
