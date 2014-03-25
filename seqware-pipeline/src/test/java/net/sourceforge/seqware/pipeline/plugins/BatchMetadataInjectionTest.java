@@ -18,12 +18,14 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,18 +39,19 @@ import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import net.sourceforge.seqware.common.util.jsontools.JSONHelper;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.LaneInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMiseqFile;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.SampleInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.TagValueUnit;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
-import org.apache.commons.exec.CommandLine;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.*;
+
 
 /**
  *
@@ -56,7 +59,7 @@ import org.junit.*;
  * @author Raunaq Suri
  */
 public class BatchMetadataInjectionTest {
-
+    JSONHelper jsonHelper = new JSONHelper();
     private RunInfo originalObject, runInfo;
     List<Map<String, String>> fileReport;
 
@@ -70,14 +73,16 @@ public class BatchMetadataInjectionTest {
     private static String miseqPath = null;
     private static String inputJsonCorrect = null;
     private static String malformedJson = null;
+    private static InputStream schema = null;
 
-    private String wfaccession = String.valueOf(metadata.getWorkflowAccession("BamQC", "2.1"));
+    private final String wfaccession = String.valueOf(metadata.getWorkflowAccession("BamQC", "2.1"));
 
     public BatchMetadataInjectionTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        schema = BatchMetadataInjectionTest.class.getResourceAsStream("bmischema.json");
         miseqPath = BatchMetadataInjectionTest.class.getResource("SampleSheet.csv").getPath();
         inputJsonCorrect = BatchMetadataInjectionTest.class.getResource("input.json").getPath();
         malformedJson = BatchMetadataInjectionTest.class.getResource("malformedInput.json").getPath();
@@ -94,6 +99,19 @@ public class BatchMetadataInjectionTest {
     @After
     public void tearDown() {
     }
+    
+    /**
+     * Tests to see if the json was validated correctly
+     * @throws IOException 
+     */
+    @Test
+    public void testValidJson() throws FileNotFoundException{
+        Assert.assertFalse(jsonHelper.isJSONValid(schema, new FileInputStream(malformedJson)));
+    }
+    /**Tests to see that the json was imported correctly
+     * 
+     * @throws IOException 
+     */
 
     @Test
     public void testImportJsonSequencerRun() throws IOException {
