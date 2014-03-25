@@ -9,6 +9,33 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+
+## 1.0.12 (2014-03-19)
+
+Note that the fix for 1860 creates an update to the oozie-sge plugin (version 1.0.2). The fix for SEQWARE-1848 may also require some special care, previous versions of the 1.0.X workflow launcher would run steps in a workflow using system Java. 1.0.12 enforces that the bundled Java is used; this will cause problems for workflows bundled with 1.0.11 so either launch those with 1.0.11 or rebundle with Java 1.7. Older bundles should be unaffected.  
+
+Other changes are largely self-explanatory and generally improve usability.  
+
+### Defect
+* [SEQWARE-1382] - Check to see if the SW_BUNDLE_DIR is writeable
+* [SEQWARE-1847] - Admin Deletion tool: Optimistic Lock Exception / no version number in the identity map 
+* [SEQWARE-1848] - GenericCommandRunner is not executed with the workflow's bundled java
+
+### Task
+* [SEQWARE-1441] - Get more workflow information from command line
+* [SEQWARE-1596] - obscure NullPointer exception when getProperty() hits a non-existing parameter
+* [SEQWARE-1696] - Installing a bundle using symlink
+* [SEQWARE-1845] - ProvisionFiles doesn't fail and return an appropriate return value/message when an inappropriate input-file-metadata is given
+* [SEQWARE-1860] - Add sudo for "seqware workflow-run cancel"/qdel
+
+### Technical task
+* [SEQWARE-1657] - Determine procedure for dealing with partially completed workflows
+
+## 0.13.6.16 (2014-03-19)
+* Introduces a client timeout and exception catching for low-level calls to the web service
+* Performance improvement for authentication checking in the processing hierarchy
+* Adding verbose mode to the module runner
+
 ## 1.0.11 (2014-02-14)
 ### Task
 * Updating SeqWare to build and test against Java 7 and Tomcat7
@@ -19,7 +46,7 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 
 ## 1.0.10 (2014-01-27)
 
-## Improvement
+### Improvement
 * [SEQWARE-1803] - SeqWare 1.0 support for specifying workflow parameters from command line
 
 ## 1.0.9 (2014-01-07)

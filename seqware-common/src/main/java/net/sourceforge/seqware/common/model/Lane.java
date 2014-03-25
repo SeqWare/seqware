@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Lane implements Serializable, Comparable<Lane>, PermissionsAware, ParentAccessionModel {
+public class Lane extends PermissionsAware implements Serializable, Comparable<Lane>, ParentAccessionModel {
 
     private static final long serialVersionUID = 5681328115923390568L;
     private Integer laneId;
@@ -766,20 +766,28 @@ public class Lane implements Serializable, Comparable<Lane>, PermissionsAware, P
         this.laneAttributes = laneAttributes;
     }
 
-    /** {@inheritDoc} */
     @Override
-    public boolean givesPermission(Registration registration) {
+    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+        if (!consideredBefore) {
+            considered.add(this.getSwAccession());
+            Log.debug("Checking permissions for Lane object " + swAccession);
+        } else {
+            Log.debug("Skipping permissions for Lane object " + swAccession + " , checked before");
+            return true;
+        }
+        
         boolean hasPermission = true;
 
         if (sample != null) {
-            hasPermission = sample.givesPermission(registration);
+            hasPermission = sample.givesPermission(registration, considered);
         }
 
         // if one of the IUSes doesn't have permission, we can't touch this Lane
         // object...
         if (ius != null && !ius.isEmpty()) {
             for (IUS i : ius) {
-                if (!i.givesPermission(registration)) {
+                if (!i.givesPermission(registration, considered)) {
                     hasPermission = false;
                 }
             }

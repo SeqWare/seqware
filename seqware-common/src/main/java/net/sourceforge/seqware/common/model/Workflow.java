@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Workflow implements Serializable, Comparable<Workflow>, PermissionsAware {
+public class Workflow extends PermissionsAware implements Serializable, Comparable<Workflow> {
   /**
    * LEFT OFF WITH: this needs to be finished
    */
@@ -678,7 +678,7 @@ public class Workflow implements Serializable, Comparable<Workflow>, Permissions
 
   /** {@inheritDoc} */
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
     boolean hasPermission = true;
     if (registration == null) {
       hasPermission = false;

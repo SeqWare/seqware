@@ -227,6 +227,7 @@ public class Runner {
         .withRequiredArg().ofType(Integer.class).defaultsTo(0).describedAs("Time in Seconds (Default: 0)");
     parser.accepts("suppress-unimplemented-warnings",
         "Optional: For debugging, hide warnings about unimplemented methods");
+    parser.accepts("verbose","Show debug information");
   }
 
   /**
@@ -240,7 +241,7 @@ public class Runner {
       Log.stderr("ERROR: " + errorMessage);
       Log.stderr("");
     }
-    Log.stdout("Syntax: java net.sourceforge.seqware.pipeline.runner.Runner [--help] [--output std_out_file] [other_runner_params] --module Module -- [ModuleParameters]");
+    Log.stdout("Syntax: java net.sourceforge.seqware.pipeline.runner.Runner [--help] [--verbose] [--output std_out_file] [other_runner_params] --module Module -- [ModuleParameters]");
     Log.stdout("");
     Log.stdout("--> ModuleParameters are passed directly to the Module and ignored by the Runner. ");
     Log.stdout("--> You must pass '--' right after the Module in order to prevent the ModuleParameters being parsed by the runner!");
@@ -481,6 +482,11 @@ public class Runner {
     // Check if help was requested
     if (options.has("help") || options.has("h") || options.has("?")) {
       getSyntax(parser, "");
+    }
+    
+    // check if verbose was requested, then override the log4j.properties
+    if(options.has("verbose")) {
+        Log.setVerbose(true);
     }
 
     /**
