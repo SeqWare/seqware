@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class SequencerRun implements Serializable, Comparable<SequencerRun>, PermissionsAware, ParentAccessionModel {
+public class SequencerRun extends PermissionsAware implements Serializable, Comparable<SequencerRun>, ParentAccessionModel {
 
   private static final long serialVersionUID = 3681328115923390568L;
     private Integer sequencerRunId;
@@ -996,7 +996,7 @@ public class SequencerRun implements Serializable, Comparable<SequencerRun>, Per
 
     /** {@inheritDoc} */
     @Override
-    public boolean givesPermission(Registration registration) {
+    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         Logger.getLogger(SequencerRun.class).info("Sequencer run always gives permission");
         return true;
     }

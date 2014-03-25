@@ -29,8 +29,6 @@ import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 
 import com.amazonaws.ClientConfiguration;
-import java.net.URL;
-import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -60,7 +58,7 @@ public class ProvisionFiles extends Module {
   protected Key dataEncryptionKey = null;
   protected HashMap metaMap = new HashMap();
   protected String algorithmName = "ProvisionFiles";
-  private ProvisionFilesUtil filesUtil = new ProvisionFilesUtil();
+  private final ProvisionFilesUtil filesUtil = new ProvisionFilesUtil();
   private static final String DATA_ENCRYPTION_ALGORITHM = "DESede";
   
   // S3 specific options
@@ -77,6 +75,7 @@ public class ProvisionFiles extends Module {
    *
    * @return a {@link joptsimple.OptionParser} object.
    */
+  @Override
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -160,6 +159,7 @@ public class ProvisionFiles extends Module {
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -167,7 +167,7 @@ public class ProvisionFiles extends Module {
       parser.printHelpOn(output);
       return (output.toString());
     } catch (IOException e) {
-      e.printStackTrace();
+      Log.error("error paring input", e);
       return (e.getMessage());
     }
   }
@@ -176,13 +176,15 @@ public class ProvisionFiles extends Module {
    * {@inheritDoc}
    *
    * Things to check: * FIXME
+     * @return 
    */
   @Override
   public ReturnValue do_test() {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_verify_parameters() {
 
@@ -194,7 +196,7 @@ public class ProvisionFiles extends Module {
     } catch (OptionException e) {
       ret.setStderr(e.getMessage() + System.getProperty("line.separator") + this.get_syntax());
       ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-      e.printStackTrace();
+      Log.error("error paring input", e);
       return ret;
     }
 
@@ -256,7 +258,8 @@ public class ProvisionFiles extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_verify_input() {
 
@@ -282,6 +285,11 @@ public class ProvisionFiles extends Module {
         }
       }
       inputs = newArray;
+    }
+    
+    if (inputs.isEmpty()){
+        return new ReturnValue(null, "No valid input files provided",
+            ReturnValue.INVALIDARGUMENT);
     }
 
     for (String input : inputs) {
@@ -334,7 +342,8 @@ public class ProvisionFiles extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_run() {
 
@@ -410,14 +419,14 @@ public class ProvisionFiles extends Module {
             return (currRet);
           }
         }
-      } else if ((options.valuesOf("input-file").size() == 1 && options.valuesOf("input-file-metadata").size() == 0) &&
+      } else if ((options.valuesOf("input-file").size() == 1 && options.valuesOf("input-file-metadata").isEmpty()) &&
               options.has("output-file") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single file copy
         if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
           Log.error("Failed to copy file");
           ret.setExitStatus(ReturnValue.FAILURE);
           return (ret);
         }
-      } else if ((options.valuesOf("input-file").size() == 0 && options.valuesOf("input-file-metadata").size() == 1) &&
+      } else if ((options.valuesOf("input-file").isEmpty() && options.valuesOf("input-file-metadata").size() == 1) &&
               options.has("input-file-metadata") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single file copy
         if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
           Log.error("Failed to copy file");
@@ -488,11 +497,12 @@ public class ProvisionFiles extends Module {
    * @param output a {@link java.lang.String} object.
    * @param skipIfMissing a boolean.
    * @param fileArray a {@link java.util.ArrayList} object.
+     * @param fullOutputPath
    * @return a boolean.
    */
   protected boolean provisionFile(String input, String output, boolean skipIfMissing, ArrayList<FileMetadata> fileArray, boolean fullOutputPath) {
 
-    BufferedInputStream reader = null;
+    BufferedInputStream reader;
     int bufLen = 5000 * 1024; // 5M buffer
 
     // finally record the metadata about the file if it was passed in using
@@ -534,6 +544,7 @@ public class ProvisionFiles extends Module {
    * @param bufLen a int.
    * @param input a {@link java.lang.String} object.
    * @param fileArray a {@link java.util.ArrayList} object.
+     * @param fullOutputPath
    * @return a boolean.
    */
   protected boolean putDestination(BufferedInputStream reader, String output, int bufLen, String input,
@@ -555,7 +566,7 @@ public class ProvisionFiles extends Module {
     Cipher encryptCipher = getEncryptCipher();
 
     // result
-    boolean result = false;
+    boolean result;
 
     // now create output stream
     if (output.startsWith("s3://")) {
@@ -587,8 +598,8 @@ public class ProvisionFiles extends Module {
         // if the following option is set and it's local source and destination
         // do nothing, useful if using Pegasus for local files and this for
         // S3/HTTP
-        File inputFile = new File(input);
-        result = filesUtil.createSymlink(output, fullOutputPath, inputFile.getAbsolutePath());
+        File localInputFile = new File(input);
+        result = filesUtil.createSymlink(output, fullOutputPath, localInputFile.getAbsolutePath());
       }
 
     }
@@ -643,7 +654,8 @@ public class ProvisionFiles extends Module {
     return (null);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_verify_output() {
     // TODO: should verify output, especially is they are local files!

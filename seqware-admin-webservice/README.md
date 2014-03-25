@@ -40,6 +40,12 @@ If you wish to use a different postgres database, edit the seqware_meta_db prope
 
 * mvn embedded-glassfish:run
 
+### Running with embedded Glassfish with custom logging for debugging
+
+* MAVEN_OPTS="$MAVEN_OPTS -Djava.util.logging.config.file=customlogging.properties" 
+* mvn embedded-glassfish:run
+
+
 # Development
 
 If the database changes note that re-generation will destroy all modifications in the following directories:

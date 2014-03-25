@@ -345,7 +345,7 @@ public class PluginRunnerET {
             try {
                 int workflow_accession = Integer.valueOf(lineParts[3]);
                 String workflowName = lineParts[0];
-                String path = lineParts[4];
+                String path = lineParts[lineParts.length - 2];
                 if (path.equals("null")) {
                     continue;
                 }

@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -13,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -26,7 +28,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Experiment implements Serializable, Comparable<Experiment>, PermissionsAware, ParentAccessionModel {
+public class Experiment extends PermissionsAware implements Serializable, Comparable<Experiment>, ParentAccessionModel {
 
   private static final long serialVersionUID = 2L;
   private Integer experimentId;
@@ -1013,14 +1015,22 @@ public class Experiment implements Serializable, Comparable<Experiment>, Permiss
     this.experimentLinks = experimentLinks;
   }
 
-  /** {@inheritDoc} */
   @Override
-  public boolean givesPermission(Registration registration) {
-    boolean hasPermission = false;
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered){
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for experiment object " + swAccession);
+      } else {
+          Log.debug("Skipping permissions for experiment object " + swAccession + " , checked before");
+          return true;
+      }
+      
+      boolean hasPermission = false;
     if (study != null) {
       StudyService ss = BeanFactory.getStudyServiceBean();
       Study newStudy = ss.findBySWAccession(study.getSwAccession());
-      hasPermission = newStudy.givesPermission(registration);
+      hasPermission = newStudy.givesPermission(registration, considered);
     } else {// orphaned Experiment
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(Experiment.class).warn("Modifying Orphan Experiment: " + this.getName());
