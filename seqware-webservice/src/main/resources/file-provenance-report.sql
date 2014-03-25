@@ -203,10 +203,11 @@ union all
 )
 
 -- concatenated values from sample parents
-, sample_parent_swas_names (sample_id, parent_swas, parent_names) as (
+, sample_parent_swas_names (sample_id, parent_swas, parent_names, parent_organism_ids) as (
     select anc.sample_id
          , array_to_string(array_agg(sw_accession), ':') as parent_swas
          , array_to_string(array_agg(coalesce(nullif(s.name,''),s.title)), ':') as parent_names
+         , array_to_string(array_agg(organism_id), ':') as parent_organism_ids
     from sample_ancestors anc
     join sample s on s.sample_id = anc.ancestor_id
     group by anc.sample_id
@@ -238,13 +239,18 @@ select p.update_tstmp as last_modified
      , ea.attrs as experiment_attrs
      , translate(spn.parent_names, ' ', '_') as sample_parent_names
      , spn.parent_swas as sample_parent_swas
+     , spn.parent_organism_ids as parent_organism_ids
      , spa.parent_attrs as sample_parent_attrs
      , translate(case when s.name is not null and s.name <> '' then s.name else s.title end , ' ', '_') as sample_name
      , s.sw_accession as sample_swa
+     , org.organism_id as organism_id
+     , translate(org.code, ' ', '_') as organism_code 
      , sa.attrs as sample_attrs
      , translate(sr.name, ' ', '_') as sequencer_run_name
      , sr.sw_accession as sequencer_run_swa
      , sra.attrs as sequencer_run_attrs
+     , pla.platform_id as platform_id
+     , translate(pla.name, ' ', '_') as platform_name
      , translate(l.name, ' ', '_') as lane_name
      , coalesce(l.lane_index,0)+1 as lane_number
      , l.sw_accession as lane_swa
@@ -283,10 +289,12 @@ left join sample_parent_swas_names spn on spn.sample_id = ids.sample_id
 left join sample_parent_attrs spa on spa.sample_id = ids.sample_id
 left join sample_parent_skip sps on sps.sample_id = ids.sample_id
 left join sample s on s.sample_id = ids.sample_id
+left join organism org on s.organism_id = org.organism_id  
 left join sample_attrs_str sa on sa.sample_id = ids.sample_id
 left join lane l on l.lane_id = ids.lane_id
 left join lane_attrs_str la on la.lane_id = ids.lane_id
 left join sequencer_run sr on sr.sequencer_run_id = ids.sequencer_run_id
+left join platform pla on sr.platform_id = pla.platform_id
 left join sequencer_run_attrs_str sra on sra.sequencer_run_id = ids.sequencer_run_id
 left join ius i on i.ius_id = ids.ius_id
 left join ius_attrs_str ia on ia.ius_id = ids.ius_id
