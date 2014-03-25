@@ -1,15 +1,15 @@
 {
     "defaults": {
-        "description": "Raunaq Workflow Test",
+        "description": "BamQC workflow test",
         "metrics_calculate": "calculate.sh",
         "metrics_compare": "compare.sh",
-        "input_config_dir": "/my/input/dir/",
-        "output_metrics_dir": "/my/output/dir/"
+        "input_config_dir": "/.mounts/labs/PDE/data/RegressionTests/BamQC/workflow/input_config/",
+        "output_metrics_dir": "/.mounts/labs/PDE/data/RegressionTests/BamQC/workflow/output_expectation/"
     },
     
     "tests": [
         {
-            "input_config": "something.ini",
+            "input_config": "workflow_test_01.ini",
             "environment_variables" : {
                 "key":"value",
                 "value":"key",
@@ -17,28 +17,28 @@
             }
         },
         {
-            "input_config": "something_02.ini"
+            "input_config": "workflow_test_02.ini"
         },
         {
-            "input_config": "something_03.ini"
+            "input_config": "workflow_test_03.ini"
         },
         {
-            "input_config": "something_04.ini"
+            "input_config": "workflow_test_04.ini"
         },
         {
-            "input_config": "something_05.ini"
+            "input_config": "workflow_test_05.ini"
         },
         {
-            "input_config": "something_06.ini"
+            "input_config": "workflow_test_06.ini"
         },
         {
-            "input_config": "something_07.ini"
+            "input_config": "workflow_test_07.ini"
         },
         {
-            "input_config": "something_08.ini"
+            "input_config": "workflow_test_08.ini"
         },
         {
-            "input_config": "something_09.ini"
+            "input_config": "workflow_test_09.ini"
         }
     ]
 }
