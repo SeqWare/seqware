@@ -55,7 +55,7 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
    * emailAddress only.
    */
   public Registration findByEmailAddress(String emailAddress) {
-    String query = "from Registration as registration where registration.emailAddress = ?";
+    String query = "from Registration as registration where lower(registration.emailAddress) = ?";
     Registration registration = null;
     Object[] parameters = { emailAddress };
     List list = this.getHibernateTemplate().find(query, parameters);
