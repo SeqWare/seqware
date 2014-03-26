@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.lang.UnsupportedOperationException;
 import net.sourceforge.seqware.common.util.Log;
 
 /**

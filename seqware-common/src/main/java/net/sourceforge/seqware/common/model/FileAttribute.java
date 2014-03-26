@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.CascadeType;
 import org.hibernate.annotations.Cascade;
-import java.lang.Comparable;
 import org.apache.commons.lang.builder.CompareToBuilder;
 
 
