@@ -35,16 +35,19 @@ public class LibrarySourceServiceImpl implements LibrarySourceService {
    * StudyTypeDAO. This method is called by the Spring framework at run time.
    * @see StudyTypeDAO
    */
+  @Override
   public void setLibrarySourceDAO(LibrarySourceDAO dao) {
     this.dao = dao;
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<LibrarySource> list(Registration registration) {
     return dao.list(registration);
   }
 
   /** {@inheritDoc} */
+  @Override
   public LibrarySource findByID(Integer id) {
     LibrarySource obj = null;
     if (id != null) {

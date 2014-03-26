@@ -90,11 +90,13 @@ public class SequencerRunAttribute implements java.io.Serializable, Attribute<Se
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String getTag() {
     return this.tag;
   }
 
   /** {@inheritDoc} */
+  @Override
   public void setTag(String tag) {
     this.tag = tag;
   }
@@ -104,11 +106,13 @@ public class SequencerRunAttribute implements java.io.Serializable, Attribute<Se
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String getValue() {
     return this.value;
   }
 
   /** {@inheritDoc} */
+  @Override
   public void setValue(String value) {
     this.value = value;
   }

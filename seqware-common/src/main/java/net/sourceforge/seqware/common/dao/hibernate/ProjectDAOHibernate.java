@@ -27,16 +27,19 @@ public class ProjectDAOHibernate extends HibernateDaoSupport implements ProjectD
   }
 
   /** {@inheritDoc} */
+  @Override
   public void insert(Project project) {
     this.getHibernateTemplate().save(project);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(Project project) {
     this.getHibernateTemplate().update(project);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Project> list(Registration registration) {
     ArrayList<Project> projects = new ArrayList<Project>();
     if (registration == null)
@@ -64,6 +67,7 @@ public class ProjectDAOHibernate extends HibernateDaoSupport implements ProjectD
    *
    * Finds an instance of Project in the database by the Project name.
    */
+  @Override
   public Project findByName(String name) {
     String query = "from project as project where project.name = ?";
     Project project = null;
@@ -80,6 +84,7 @@ public class ProjectDAOHibernate extends HibernateDaoSupport implements ProjectD
    *
    * Finds an instance of Project in the database by the Project ID.
    */
+  @Override
   public Project findByID(Integer expID) {
     String query = "from Project as project where project.projectId = ?";
     Project project = null;

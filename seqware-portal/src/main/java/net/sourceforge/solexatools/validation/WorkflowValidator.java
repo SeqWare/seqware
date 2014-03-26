@@ -24,6 +24,7 @@ public class WorkflowValidator implements Validator{
 	/** {@inheritDoc}
      * @param clazz
      * @return  */
+        @Override
 	public boolean supports(Class clazz) {
 		return Workflow.class.equals(clazz);
 	}
@@ -34,6 +35,7 @@ public class WorkflowValidator implements Validator{
      * @param obj
      * @param errors
 	 */
+        @Override
 	public void validate(Object obj, Errors errors) {
 	//	Workflow workflow = (Workflow) obj;
 		ValidationUtils.rejectIfEmpty(errors, "name", "workflow.required.name");

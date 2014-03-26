@@ -60,6 +60,7 @@ public class ProvisionDependenciesBundle extends Module {
    *
    * @return a {@link joptsimple.OptionParser} object.
    */
+  @Override
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -76,6 +77,7 @@ public class ProvisionDependenciesBundle extends Module {
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();

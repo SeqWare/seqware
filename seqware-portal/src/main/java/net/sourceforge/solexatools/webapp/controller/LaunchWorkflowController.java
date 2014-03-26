@@ -85,6 +85,7 @@ public class LaunchWorkflowController extends SimpleFormController {
      * @return 
      * @throws java.lang.Exception 
 	 */
+    @Override
 	protected ModelAndView onSubmit(HttpServletRequest	request,
 			HttpServletResponse	response,
 			Object				command,

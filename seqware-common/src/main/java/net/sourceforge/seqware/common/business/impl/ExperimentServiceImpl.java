@@ -41,6 +41,7 @@ public class ExperimentServiceImpl implements ExperimentService {
    * ExperimentDAO. This method is called by the Spring framework at run time.
    * @see ExperimentDAO
    */
+  @Override
   public void setExperimentDAO(ExperimentDAO experimentDAO) {
     this.experimentDAO = experimentDAO;
   }
@@ -62,6 +63,7 @@ public class ExperimentServiceImpl implements ExperimentService {
    *
    * Inserts an instance of Experiment into the database.
    */
+  @Override
   public Integer insert(Experiment experiment) {
     experiment.setCreateTimestamp(new Date());
     return (experimentDAO.insert(experiment));
@@ -72,6 +74,7 @@ public class ExperimentServiceImpl implements ExperimentService {
    *
    * Updates an instance of Experiment in the database.
    */
+  @Override
   public void update(Experiment experiment) {
     experimentDAO.update(experiment);
   }
@@ -85,6 +88,7 @@ public class ExperimentServiceImpl implements ExperimentService {
   /** {@inheritDoc}
      * @param experiment
      * @param deleteRealFiles */
+  @Override
   public void delete(Experiment experiment, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
     if (deleteRealFiles) {
@@ -99,6 +103,7 @@ public class ExperimentServiceImpl implements ExperimentService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Experiment> list(Registration registration) {
     return experimentDAO.list(registration);
   }
@@ -109,33 +114,39 @@ public class ExperimentServiceImpl implements ExperimentService {
    * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
    * @return a {@link java.util.List} object.
    */
+  @Override
   public List<Experiment> list(Study study) {
     return experimentDAO.list(study);
   }
 
   /** {@inheritDoc}
      * @param experimentId */
+  @Override
   public List<File> getFiles(Integer experimentId) {
     return experimentDAO.getFiles(experimentId);
   }
 
   /** {@inheritDoc}
      * @param experimentId */
+  @Override
   public boolean isHasFile(Integer experimentId) {
     return experimentDAO.isHasFile(experimentId);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer studyId, String metaType) {
     return experimentDAO.getFiles(studyId, metaType);
   }
 
   /** {@inheritDoc} */
+  @Override
   public boolean isHasFile(Integer studyId, String metaType) {
     return experimentDAO.isHasFile(studyId, metaType);
   }
 
   /** {@inheritDoc} */
+  @Override
   public SortedSet<Experiment> setWithHasFile(SortedSet<Experiment> list) {
     for (Experiment experiment : list) {
       experiment.setIsHasFile(isHasFile(experiment.getExperimentId()));
@@ -144,6 +155,7 @@ public class ExperimentServiceImpl implements ExperimentService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public SortedSet<Experiment> listWithHasFile(SortedSet<Experiment> list, String metaType) {
     SortedSet<Experiment> result = new TreeSet<Experiment>();
     for (Experiment experiment : list) {
@@ -165,6 +177,7 @@ public class ExperimentServiceImpl implements ExperimentService {
    * Experiment.
      * @param title
    */
+  @Override
   public Experiment findByTitle(String title) {
     Experiment experiment = null;
     if (title != null) {
@@ -178,6 +191,7 @@ public class ExperimentServiceImpl implements ExperimentService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public Experiment findByID(Integer expID) {
     Experiment experiment = null;
     if (expID != null) {
@@ -213,6 +227,7 @@ public class ExperimentServiceImpl implements ExperimentService {
      * @param oldTitle
      * @param newTitle
    */
+  @Override
   public boolean hasTitleBeenUsed(String oldTitle, String newTitle) {
     boolean titleUsed = false;
     boolean checkTitle = true;

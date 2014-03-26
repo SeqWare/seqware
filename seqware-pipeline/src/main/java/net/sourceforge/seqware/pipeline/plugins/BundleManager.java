@@ -303,6 +303,7 @@ public class BundleManager extends Plugin {
      *
      * @return a {@link java.lang.String} object.
      */
+    @Override
     public String get_description() {
         return ("A plugin that lets you create, test, and install workflow bundles.");
     }

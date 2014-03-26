@@ -29,6 +29,7 @@ public class UNCKerberos extends Authentication
    * Get boolean true/false based on onyen/password pair.  No exception is thrown.
      * @return 
    */
+  @Override
   public boolean loginSuccess(String uid, String password)
   {
     String user = uid;
@@ -147,6 +148,7 @@ public class UNCKerberos extends Authentication
       password = pwd;
     }
 
+    @Override
     public void handle(Callback[] callbacks) throws IOException,
     UnsupportedCallbackException
     {

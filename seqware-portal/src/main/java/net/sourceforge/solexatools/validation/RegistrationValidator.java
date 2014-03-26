@@ -29,6 +29,7 @@ public class RegistrationValidator extends LoginValidator {
      * @param reg
      * @param errors
 	 */
+        @Override
 	public void validate(Object reg, Errors errors) {
 		RegistrationDTO registration = (RegistrationDTO)reg;
 		Debug.put(": validating registration.id = " + registration.getRegistrationId());

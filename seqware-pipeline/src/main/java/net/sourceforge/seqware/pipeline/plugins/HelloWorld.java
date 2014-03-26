@@ -157,6 +157,7 @@ public class HelloWorld extends Plugin {
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String get_description() {
     return("A very simple HelloWorld to show how to make plugins.");
   }

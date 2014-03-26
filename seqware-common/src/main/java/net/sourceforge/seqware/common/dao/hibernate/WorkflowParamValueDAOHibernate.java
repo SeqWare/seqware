@@ -32,23 +32,27 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
     }
 
     /** {@inheritDoc} */
+    @Override
     public Integer insert(WorkflowParamValue workflowParamValue) {
         // this.getSession().evict(workflowParam.getWorkflow());
         return (Integer) this.getHibernateTemplate().save(workflowParamValue);
     }
 
     /** {@inheritDoc} */
+    @Override
     public void update(WorkflowParamValue workflowParamValue) {
         getHibernateTemplate().update(workflowParamValue);
         getSession().flush();
     }
 
     /** {@inheritDoc} */
+    @Override
     public void delete(WorkflowParamValue workflowParamValue) {
         getHibernateTemplate().delete(workflowParamValue);
     }
 
     /** {@inheritDoc} */
+    @Override
     public WorkflowParamValue findByID(Integer id) {
         String query = "from WorkflowParamValue as workflowParamValue where workflowParamValue.workflowParamValueId = ?";
         WorkflowParamValue workflowParamValue = null;

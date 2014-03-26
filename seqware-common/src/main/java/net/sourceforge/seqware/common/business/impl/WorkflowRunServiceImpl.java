@@ -61,6 +61,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
    * WorkflowRunDAO. This method is called by the Spring framework at run time.
    * @see WorkflowRunDAO
    */
+  @Override
   public void setWorkflowRunDAO(WorkflowRunDAO workflowRunDAO) {
     this.workflowRunDAO = workflowRunDAO;
   }
@@ -156,11 +157,13 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(WorkflowRun workflowRun) {
     workflowRunDAO.update(workflowRun);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(WorkflowRun workflowRun, List<Integer> laneIds) {
     workflowRunDAO.update(workflowRun, laneIds);
   }
@@ -168,6 +171,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   /** {@inheritDoc}
      * @param workflowRun
      * @param deleteRealFiles */
+  @Override
   public void delete(WorkflowRun workflowRun, boolean deleteRealFiles) {
     Set<Processing> processings = workflowRun.getProcessings();
 
@@ -216,6 +220,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public Processing getRootProcessing(Integer wfrId) {
     Processing proc = new Processing();
     Set<Processing> processings = findByID(wfrId).getProcessings();
@@ -227,6 +232,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer wfrId) {
     List<File> files = new LinkedList<File>();
     WorkflowRun workflowRun = findByID(wfrId);
@@ -238,6 +244,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> listWithHasFile(List<WorkflowRun> list) {
     for (WorkflowRun workflowRun : list) {
       // Processing processing = getProcessing(workflowRun);
@@ -263,16 +270,19 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
    *
    * @return a {@link java.util.List} object.
    */
+  @Override
   public List<WorkflowRun> list() {
     return workflowRunDAO.list();
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> list(Registration registration) {
     return workflowRunDAO.list(registration, true);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> listMyShared(Registration registration) {
     List<WorkflowRun> sharedWorkflowRuns = new ArrayList<WorkflowRun>();
     sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, true);
@@ -280,6 +290,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> listSharedWithMe(Registration registration) {
     List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<WorkflowRun>();
     sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, true);
@@ -287,16 +298,19 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> listRunning(Registration registration) {
     return workflowRunDAO.listRunning(registration, true);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> list(Registration registration, Boolean isAsc) {
     return workflowRunDAO.list(registration, isAsc);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc) {
     List<WorkflowRun> sharedWorkflowRuns = new ArrayList<WorkflowRun>();
     sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, isAsc);
@@ -304,6 +318,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc) {
     List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<WorkflowRun>();
     sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, isAsc);
@@ -311,6 +326,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> listRunning(Registration registration, Boolean isAsc) {
     return workflowRunDAO.listRunning(registration, isAsc);
   }
@@ -322,6 +338,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public WorkflowRun findByName(String name) {
     WorkflowRun workflowRun = null;
     if (name != null) {
@@ -335,6 +352,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public WorkflowRun findByID(Integer wfrID) {
     WorkflowRun workflowRun = null;
     if (wfrID != null) {
@@ -379,6 +397,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public WorkflowRun findByIDWithIUS(Integer wfrID) {
     WorkflowRun workflowRun = findByID(wfrID);
 
@@ -393,6 +412,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public WorkflowRun findByIDWithIUSAndRunningWR(Integer wfrID) {
     WorkflowRun workflowRun = findByID(wfrID);
 
@@ -428,6 +448,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
    * workflowRun; }
    */
   /** {@inheritDoc} */
+  @Override
   public List<WorkflowRun> listSharedWithMeWithSample(Registration registration) {
     List<WorkflowRun> list = listSharedWithMe(registration);
     for (WorkflowRun workflowRun : list) {
@@ -524,6 +545,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> findFiles(Integer swAccession) {
     WorkflowRun wr = findBySWAccession(swAccession);
     Set<File> files = new HashSet<File>();

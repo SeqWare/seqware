@@ -30,6 +30,7 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
   /**
    * {@inheritDoc}
    */
+  @Override
   public List<LibraryStrategy> list(Registration registration) {
     if (registration == null) { return(null); }
     return(list());
@@ -38,6 +39,7 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
   /**
    * {@inheritDoc}
    */
+  @Override
   public LibraryStrategy findByID(Integer id) {
     String query = "from LibraryStrategy as l where l.libraryStrategyId = ?";
     LibraryStrategy obj = null;

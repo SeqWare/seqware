@@ -41,6 +41,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    * SequencerRunDAO. This method is called by the Spring framework at run time.
    * @see SequencerRunDAO
    */
+  @Override
   public void setSequencerRunDAO(SequencerRunDAO sequencerRunDAO) {
     this.sequencerRunDAO = sequencerRunDAO;
   }
@@ -75,6 +76,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    * Inserts an instance of SequencerRun into the database.
      * @return 
    */
+  @Override
   public Integer insert(SequencerRun sequencerRun) {
     /*
      * //FIXME: need to set the names of each lane!! TreeSet <Lane> list = new
@@ -118,6 +120,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      * @return 
    */
+  @Override
   public Integer insert(SequencerRunWizardDTO sequencerRun) {
 
     sequencerRun.setCreateTimestamp(new Date());
@@ -181,6 +184,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    *
    * Updates an instance of SequencerRun in the database.
    */
+  @Override
   public void update(SequencerRun sequencerRun) {
 
     if (sequencerRun.getProcess()) {
@@ -197,6 +201,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    *
    * Deletes an instance of SequencerRun in the database.
    */
+  @Override
   public void delete(SequencerRun sequencerRun) {
     // get lanes
     SortedSet<Lane> lanes = sequencerRun.getLanes();
@@ -228,6 +233,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<SequencerRun> list(Registration registration) {
     // get list and delete dublicate
     // Set<SequencerRun> tempList = new
@@ -237,6 +243,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<SequencerRun> list(Registration registration, Boolean isAsc) {
     // get list and delete dublicate
     // Set<SequencerRun> tempList = new
@@ -252,6 +259,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    * emailAddress, and copies the SequencerRun properties to an instance of
    * SequencerRun.
    */
+  @Override
   public SequencerRun findByName(String name) {
     SequencerRun sequencerRun = null;
     if (name != null) {
@@ -265,6 +273,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public SequencerRun findByID(Integer expID) {
     SequencerRun sequencerRun = null;
     if (expID != null) {
@@ -314,6 +323,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    *
    * Determines if an email address has already been used.
    */
+  @Override
   public boolean hasNameBeenUsed(String oldName, String newName) {
     boolean nameUsed = false;
     boolean checkName = true;
