@@ -93,6 +93,7 @@ public class StudyServiceImpl implements StudyService {
    * {@inheritDoc}
    *
    * Updates an instance of Study in the database.
+     * @param study
      * @param deleteRealFiles
    */
   public void delete(Study study, boolean deleteRealFiles) {

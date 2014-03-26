@@ -23,6 +23,7 @@ public class FileValidator extends LoginValidator{
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param obj
      * @param errors
 	 */
 	public void validate(Object obj, Errors errors) {

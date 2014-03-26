@@ -163,6 +163,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * requires an external process to launch workflows that have been scheduled.
      *
      * @param inputFiles the value of inputFiles
+     * @param workflowEngine
      * @return 
      */
       public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,

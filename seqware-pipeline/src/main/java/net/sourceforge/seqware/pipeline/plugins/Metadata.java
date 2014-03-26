@@ -191,6 +191,7 @@ public class Metadata extends Plugin {
 
     /**
      * list the fields available to set
+     * @param table
      * @return 
      */
     protected ReturnValue listFields(String table) {

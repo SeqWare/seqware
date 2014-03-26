@@ -67,6 +67,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc}
+     * @param file
      * @param deleteRealFiles */
   @Override
   public void delete(File file, boolean deleteRealFiles) {
@@ -89,6 +90,7 @@ public class FileServiceImpl implements FileService {
   }
 
   /** {@inheritDoc}
+     * @param files
      * @param deleteRealFiles */
   @Override
   public void deleteAll(List<File> files, boolean deleteRealFiles) {

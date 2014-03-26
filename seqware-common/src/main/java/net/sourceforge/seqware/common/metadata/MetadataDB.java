@@ -414,6 +414,7 @@ public class MetadataDB implements Metadata {
   
     /**
      * {@inheritDoc}
+     * @param processingID
      * @return 
      */
     public ReturnValue set_processing_update_tstmp_if_null(int processingID) {
@@ -1027,6 +1028,7 @@ public class MetadataDB implements Metadata {
   /**
    * {@inheritDoc}
      * @param inputFiles
+     * @param workflowengine
    */
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status,
@@ -1603,6 +1605,7 @@ public class MetadataDB implements Metadata {
   /**
    * <p>executeQuery.</p>
    *
+     * @param <T>
    * @param s a {@link java.lang.String} object.
      * @param h
    * @return a {@link java.sql.ResultSet} object.

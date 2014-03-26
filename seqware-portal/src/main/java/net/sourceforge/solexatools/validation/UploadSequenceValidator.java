@@ -27,6 +27,7 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 	}
 	
 	/** {@inheritDoc}
+     * @param clazz
      * @return  */
 	public boolean supports(Class clazz) {
 		return UploadSequence.class.equals(clazz);
@@ -36,6 +37,7 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param obj
      * @param errors
 	 */
 	public void validate(Object obj, Errors errors) {
@@ -145,7 +147,8 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 	
 	/* TODO: this needs to be made more flexible, there are multiple possible extensions for the same file type */
 	/** {@inheritDoc}
-     * @param errors */
+     * @param errors
+     * @param fileTypeId */
 	public void validateExtension(MultipartFile fileOne, MultipartFile fileTwo, 
 			Integer fileTypeId, Errors errors)
 	{

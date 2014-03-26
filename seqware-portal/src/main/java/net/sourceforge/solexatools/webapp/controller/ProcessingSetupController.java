@@ -34,7 +34,8 @@ public class ProcessingSetupController extends BaseCommandController {
 	}
 
 	/** {@inheritDoc}
-     * @return  */
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)

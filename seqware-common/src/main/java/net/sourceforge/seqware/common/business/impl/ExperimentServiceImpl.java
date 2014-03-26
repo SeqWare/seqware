@@ -83,6 +83,7 @@ public class ExperimentServiceImpl implements ExperimentService {
   }
 
   /** {@inheritDoc}
+     * @param experiment
      * @param deleteRealFiles */
   public void delete(Experiment experiment, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
@@ -209,6 +210,7 @@ public class ExperimentServiceImpl implements ExperimentService {
    * {@inheritDoc}
    *
    * Determines if an email address has already been used.
+     * @param oldTitle
      * @param newTitle
    */
   public boolean hasTitleBeenUsed(String oldTitle, String newTitle) {
