@@ -66,7 +66,7 @@ public class StudyTypeResource extends DatabaseResource {
         List<StudyType> objects = (List<StudyType>) testIfNull(ss.list());
         logger.debug("study_types: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<StudyTypeList> jaxbTool = new JaxbObject<StudyTypeList>();
+        JaxbObject<StudyTypeList> jaxbTool = new JaxbObject<>();
 
         StudyTypeList list = new StudyTypeList();
         list.setList(new ArrayList());

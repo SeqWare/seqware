@@ -38,7 +38,7 @@ public class XmlizeIUSSortedSet extends XmlAdapter<IUSList, SortedSet<IUS>>{
      * @throws java.lang.Exception  */
     @Override
     public SortedSet<IUS> unmarshal(IUSList vt) throws Exception {
-        SortedSet<IUS> iusSet = new TreeSet<IUS>();
+        SortedSet<IUS> iusSet = new TreeSet<>();
         for (IUS i : vt.getList())
         {
             iusSet.add(i);
@@ -53,7 +53,7 @@ public class XmlizeIUSSortedSet extends XmlAdapter<IUSList, SortedSet<IUS>>{
     public IUSList marshal(SortedSet<IUS> bt) throws Exception {
         if (bt != null)
         {
-        List<IUS> list = new ArrayList<IUS>(bt);
+        List<IUS> list = new ArrayList<>(bt);
         IUSList iusList = new IUSList();
         iusList.setList(list);
         return iusList;

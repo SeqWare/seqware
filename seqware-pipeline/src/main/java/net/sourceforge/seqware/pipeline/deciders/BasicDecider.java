@@ -79,8 +79,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     protected ReturnValue ret = new ReturnValue();
     private Header header = Header.FILE_SWA;
-    private Set<String> parentWorkflowAccessions = new TreeSet<String>();
-    private Set<String> workflowAccessionsToCheck = new TreeSet<String>();
+    private Set<String> parentWorkflowAccessions = new TreeSet<>();
+    private Set<String> workflowAccessionsToCheck = new TreeSet<>();
     private List<String> metaTypes = null;
     private Boolean forceRunAll = null;
     private Boolean test = null;
@@ -349,7 +349,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private ReturnValue launchWorkflows(Map<String, List<ReturnValue>> mappedFiles) {
         if (mappedFiles != null) {
             
-            List<Entry<String, List<ReturnValue>>> entryList = new ArrayList<Entry<String, List<ReturnValue>>>();
+            List<Entry<String, List<ReturnValue>>> entryList = new ArrayList<>();
             entryList.addAll(mappedFiles.entrySet());
             Collections.sort(entryList, new ReturnValueProcessingTimeComparator());
             
@@ -360,11 +360,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 }
                 
 
-                parentAccessionsToRun = new HashSet<String>();
-                filesToRun = new HashSet<String>();
-                workflowParentAccessionsToRun = new HashSet<String>();
-                fileSWIDsToRun = new HashSet<Integer>();
-                studyReporterOutput = new HashSet<String>();
+                parentAccessionsToRun = new HashSet<>();
+                filesToRun = new HashSet<>();
+                workflowParentAccessionsToRun = new HashSet<>();
+                fileSWIDsToRun = new HashSet<>();
+                studyReporterOutput = new HashSet<>();
 
                 //for each grouping (e.g. sample), iterate through the files
                 List<ReturnValue> files = entry.getValue();
@@ -405,7 +405,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     boolean rerun = forceRunAll || rerunWorkflowRun(filesToRun, fileSWIDsToRun);
  
                     // SEQWARE-1728 - move creation of ini to launches (and test launches) to conserve disk space 
-                    iniFiles = new ArrayList<String>();
+                    iniFiles = new ArrayList<>();
 
                     ReturnValue newRet = this.doFinalCheck(fileString, parentAccessionString);
                     if (newRet.getExitStatus() != ReturnValue.SUCCESS) {
@@ -481,7 +481,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
 
     protected ArrayList<String> constructCommand() {
-        ArrayList<String> runArgs = new ArrayList<String>();
+        ArrayList<String> runArgs = new ArrayList<>();
         runArgs.add("--plugin");
         runArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
         runArgs.add("--");
@@ -489,7 +489,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         runArgs.add(workflowAccession);
         runArgs.add("--ini-files");
         runArgs.add(commaSeparateMy(iniFiles));
-        Collection<String> fileSWIDs = new ArrayList<String>();
+        Collection<String> fileSWIDs = new ArrayList<>();
         runArgs.add("--" + WorkflowLauncher.INPUT_FILES);
         for(Integer fileSWID : fileSWIDsToRun){
             fileSWIDs.add(String.valueOf(fileSWID));
@@ -526,7 +526,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     protected boolean rerunWorkflowRun(final Collection<String> filesToRun, Collection<Integer> fileSWIDs) {
         
         boolean rerun;
-        List<Boolean> failures = new ArrayList<Boolean>();
+        List<Boolean> failures = new ArrayList<>();
         List<Integer> asList = Arrays.asList(fileSWIDs.toArray(new Integer[fileSWIDs.size()]));
         List<WorkflowRun> runs = produceAccessionListWithFileList(asList);
         rerun = processWorkflowRuns(filesToRun, failures, runs);
@@ -566,8 +566,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         Set<String> filesHasRun = determineFilePaths(filesSWIDsHasRun);
         Log.info("Files to run: " + StringUtils.join(filesToRun,','));
         // use set operations to be more explicit about our cases
-        Set<String> setToRun = new HashSet<String>(filesToRun);
-        Set<String> setHasRun = new HashSet<String>(filesHasRun);
+        Set<String> setToRun = new HashSet<>(filesToRun);
+        Set<String> setHasRun = new HashSet<>(filesHasRun);
         return SetOperations.isSuperset(setHasRun, setToRun);
     }
     
@@ -588,8 +588,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         Log.info("Files has run: " + StringUtils.join(filesHasRun,','));
 
         // use set operations to be more explicit about our cases
-        Set<String> setToRun = new HashSet<String>(filesToRun);
-        Set<String> setHasRun = new HashSet<String>(filesHasRun);
+        Set<String> setToRun = new HashSet<>(filesToRun);
+        Set<String> setHasRun = new HashSet<>(filesHasRun);
         if (setToRun.equals(setHasRun)){
             return FILE_STATUS.SAME_FILES;
         }
@@ -666,7 +666,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private String createIniFile(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
         String iniPath = "";
 
-        Map<String, String> iniFileMap = new TreeMap<String, String>();
+        Map<String, String> iniFileMap = new TreeMap<>();
         SortedSet<WorkflowParam> wps = metadata.getWorkflowParams(workflowAccession);
         for (WorkflowParam param : wps) {
             iniFileMap.put(param.getKey(), param.getDefaultValue());
@@ -728,7 +728,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
 
     protected Map<String, String> modifyIniFile(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
-        Map<String, String> iniFileMap = new TreeMap<String, String>();
+        Map<String, String> iniFileMap = new TreeMap<>();
         iniFileMap.put("input_files", commaSeparatedFilePaths);
         return iniFileMap;
     }
@@ -740,7 +740,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 //    protected
     public Map<String, List<ReturnValue>> separateFiles(List<ReturnValue> vals, String groupBy) {
         //get files from study
-        Map<String, List<ReturnValue>> map = new HashMap<String, List<ReturnValue>>();
+        Map<String, List<ReturnValue>> map = new HashMap<>();
 
         //group files according to the designated header (e.g. sample SWID)
         for (ReturnValue r : vals) {
@@ -753,7 +753,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
             List<ReturnValue> vs = map.get(currVal);
             if (vs == null) {
-                vs = new ArrayList<ReturnValue>();
+                vs = new ArrayList<>();
             }
             vs.add(r);
             map.put(currVal, vs);
@@ -921,7 +921,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     private List<WorkflowRun> produceAccessionListWithFileList(List<Integer> fileSWIDs) {
         // grab only the workflows in which we are interested
-        List<Integer> relevantWorkflows = new ArrayList<Integer>();
+        List<Integer> relevantWorkflows = new ArrayList<>();
         relevantWorkflows.add(Integer.valueOf(this.workflowAccession));
         for(String accession : this.workflowAccessionsToCheck){
             relevantWorkflows.add(Integer.valueOf(accession));
@@ -983,7 +983,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
     
     private Set<String> determineFilePaths(Set<Integer> fileSWIDs){
-        Set<String> results = new HashSet<String>();
+        Set<String> results = new HashSet<>();
         for(Integer fileSWID: fileSWIDs){
             net.sourceforge.seqware.common.model.File file = metadata.getFile(fileSWID);
             results.add(file.getFilePath());
@@ -1021,7 +1021,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
 
     private List<ReturnValue> convertFileProvenanceReport(List<Map<String, String>> fileProvenanceReport) {
-        List<ReturnValue> list = new ArrayList<ReturnValue>();
+        List<ReturnValue> list = new ArrayList<>();
         for(Map<String, String> map : fileProvenanceReport){
             ReturnValue row = new ReturnValue();
             row.setAttributes(map);

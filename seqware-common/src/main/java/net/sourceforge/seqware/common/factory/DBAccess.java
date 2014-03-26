@@ -36,7 +36,7 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
  */
 public class DBAccess {
   
-  private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<MetadataDB>();
+  private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<>();
 
   public static MetadataDB get() {
     MetadataDB mdb = metadataDBWrapper.get();

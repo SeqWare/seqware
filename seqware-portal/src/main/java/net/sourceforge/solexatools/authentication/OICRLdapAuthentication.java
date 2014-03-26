@@ -61,7 +61,7 @@ public class OICRLdapAuthentication extends Authentication {
   private boolean oicrLdapAuthenticate(String uid, String password) {
     boolean result = false;
 
-    Hashtable<String, String> env = new Hashtable<String, String>(11);
+    Hashtable<String, String> env = new Hashtable<>(11);
     env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
     env.put(Context.PROVIDER_URL, "ldap://10.0.0.100/");
 
@@ -102,7 +102,7 @@ public class OICRLdapAuthentication extends Authentication {
    * @throws javax.naming.NamingException if any.
    */
   public DirContext getDirContext() throws NamingException {
-    Hashtable<String, String> env = new Hashtable<String, String>(11);
+    Hashtable<String, String> env = new Hashtable<>(11);
     env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
     env.put(Context.PROVIDER_URL, "ldap://10.0.0.100/");
     DirContext ctx = new InitialDirContext(env);

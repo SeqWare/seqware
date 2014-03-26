@@ -66,14 +66,14 @@ public class IusIDResource extends DatabaseIDResource {
         IUSService ss = BeanFactory.getIUSServiceBean();
         IUS ius = (IUS) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<IUS> jaxbTool = new JaxbObject<IUS>();
+        JaxbObject<IUS> jaxbTool = new JaxbObject<>();
 
         IUS dto = copier.hibernate2dto(IUS.class, ius);
 
 		if(fields.contains("attributes")) {
 			Set<IUSAttribute> ias = ius.getIusAttributes();
 			if(ias!=null && !ias.isEmpty()) {
-				Set<IUSAttribute> newias = new TreeSet<IUSAttribute>();
+				Set<IUSAttribute> newias = new TreeSet<>();
 				for(IUSAttribute ia: ias) {
 					newias.add(copier.hibernate2dto(IUSAttribute.class,ia));
 				}
@@ -91,7 +91,7 @@ public class IusIDResource extends DatabaseIDResource {
         authenticate();
         Representation representation = null;
         IUS newIUS = null;
-        JaxbObject<IUS> jo = new JaxbObject<IUS>();
+        JaxbObject<IUS> jo = new JaxbObject<>();
         try {
             String text = entity.getText();
             newIUS = (IUS) XmlTools.unMarshal(jo, new IUS(), text);

@@ -66,7 +66,7 @@ public class ExperimentLibraryDesignResource extends DatabaseResource {
         List<ExperimentLibraryDesign> objects = (List<ExperimentLibraryDesign>) testIfNull(ss.list());
         logger.debug("experiment library designs: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<ExperimentLibraryDesignList> jaxbTool = new JaxbObject<ExperimentLibraryDesignList>();
+        JaxbObject<ExperimentLibraryDesignList> jaxbTool = new JaxbObject<>();
 
         ExperimentLibraryDesignList list = new ExperimentLibraryDesignList();
         list.setList(new ArrayList());

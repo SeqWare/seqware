@@ -44,7 +44,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
   protected Metadata metadata = null;
   protected Map<String, String> config = null;
   protected String outputDir = null;
-  protected ArrayList<File> filesArray = new ArrayList<File>();
+  protected ArrayList<File> filesArray = new ArrayList<>();
   protected Bundle bundleUtil = null;
   protected int totalSteps = 0;
   protected int currStep = 0;
@@ -53,7 +53,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
   public static ReturnValue gridProxyInit() {
     // initialize globus authentication proxy
-    ArrayList<String> theCommand = new ArrayList<String>();
+    ArrayList<String> theCommand = new ArrayList<>();
     theCommand.add("bash");
     theCommand.add("-lc");
     theCommand.add("grid-proxy-init -valid 480:00");
@@ -294,7 +294,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     WorkflowRun wr = this.metadata.getWorkflowRunWithWorkflow(workflowRunAccession);
 
     // the map
-    HashMap<String, String> map = new HashMap<String, String>();
+    HashMap<String, String> map = new HashMap<>();
 
     // iterate over all the generic default params
     // these params are created when a workflow is installed
@@ -487,7 +487,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
     // run the pegasus submission
     Log.stdout("SUBMITTING TO PEGASUS: " + pegasusCmd);
-    ArrayList<String> theCommand = new ArrayList<String>();
+    ArrayList<String> theCommand = new ArrayList<>();
     theCommand.add("bash");
     theCommand.add("-lc");
     theCommand.add(pegasusCmd);
@@ -603,7 +603,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     int workflowRunId = 0;
 
     // will be handed off to the template layer
-    HashMap<String, String> map = new HashMap<String, String>();
+    HashMap<String, String> map = new HashMap<>();
 
     // replace the workflow bundle dir in the file paths of ini files
     boolean first = true;
@@ -823,8 +823,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
    * @return
    */
   public static ArrayList<String> parseParentAccessions(Map<String, String> map) {
-    ArrayList<String> results = new ArrayList<String>();
-    HashMap<String, String> resultsDeDup = new HashMap<String, String>();
+    ArrayList<String> results = new ArrayList<>();
+    HashMap<String, String> resultsDeDup = new HashMap<>();
 
     for (String key : map.keySet()) {
       if ("parent_accession".equals(key) || "parent_accessions".equals(key) || "parent-accessions".equals(key)) {
@@ -875,7 +875,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
   protected Map<String, String> prepareData(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
                                             Map<String, String> preParsedIni, boolean metadataWriteback,
                                             ArrayList<String> parentAccessions) {
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new HashMap<>();
     StringBuilder parentAccessionsStr = new StringBuilder();
     // merge what came into this program to the map object
     if (preParsedIni != null && !preParsedIni.isEmpty()) {
@@ -908,7 +908,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       // in
       first = true;
       Log.info("ARRAY SIZE: " + parentAccessions.size());
-      HashMap<String, String> uniqParentAccessions = new HashMap<String, String>();
+      HashMap<String, String> uniqParentAccessions = new HashMap<>();
       for (String id : parentAccessions) {
         uniqParentAccessions.put(id, "null");
       }

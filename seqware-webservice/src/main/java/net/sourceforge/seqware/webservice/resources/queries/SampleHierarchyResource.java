@@ -39,7 +39,7 @@ public class SampleHierarchyResource extends BasicRestlet {
 			shs = DBAccess.get().executeQuery("select sample_id, parent_id from sample_hierarchy", new ResultSetHandler<List<SampleHierarchy>>(){
         @Override
         public List<SampleHierarchy> handle(ResultSet rs) throws SQLException {
-          List<SampleHierarchy> shs = new ArrayList<SampleHierarchy>();
+          List<SampleHierarchy> shs = new ArrayList<>();
           while(rs.next()) {
             SampleHierarchy sh = new SampleHierarchy();
             sh.setSampleId(rs.getInt("sample_id"));

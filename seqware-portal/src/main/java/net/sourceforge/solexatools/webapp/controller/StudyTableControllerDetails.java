@@ -159,10 +159,10 @@ public class StudyTableControllerDetails extends BaseCommandController {
 
         for (Sample sample : exp.getSamples()) {
 
-          ArrayList<String> sampleStrs = new ArrayList<String>();
+          ArrayList<String> sampleStrs = new ArrayList<>();
           getSampleStrings(sample.getTitle(), sample, sampleStrs);
           for (String sampleStr : sampleStrs) {
-            List<String> cellsModel = new LinkedList<String>();
+            List<String> cellsModel = new LinkedList<>();
 
             cellsModel.add(study.getTitle());
             cellsModel.add(study.getCreateTimestamp().toString());
@@ -231,8 +231,8 @@ public class StudyTableControllerDetails extends BaseCommandController {
   }
   
   private List<WorkflowRun> findSampleWorkflowRuns(Sample sample) {
-    ArrayList<WorkflowRun> wr = new ArrayList<WorkflowRun>();
-    HashMap<String, WorkflowRun> pwr = new HashMap<String, WorkflowRun>();
+    ArrayList<WorkflowRun> wr = new ArrayList<>();
+    HashMap<String, WorkflowRun> pwr = new HashMap<>();
     findProcessingWorkflowRun(sample.getProcessings(), pwr);
     // the hash should be unique, now dump everything into array list for return
     for (WorkflowRun cwr : pwr.values()) {

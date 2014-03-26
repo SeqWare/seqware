@@ -74,7 +74,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
    */
   @Override
   public List<LibrarySelection> list() {
-    ArrayList<LibrarySelection> objects = new ArrayList<LibrarySelection>();
+    ArrayList<LibrarySelection> objects = new ArrayList<>();
 
 
     List expmts = this.getHibernateTemplate().find("from LibrarySelection as ls order by ls.librarySelectionId asc" // desc

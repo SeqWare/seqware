@@ -43,7 +43,7 @@ public class JndiDatasourceCreator {
         ds.setLogAbandoned(true);
         ds.setUrl("jdbc:postgresql://localhost:5432/test_seqware_meta_db");
         
-        Map<String, String> settings = new HashMap<String, String>();
+        Map<String, String> settings = new HashMap<>();
         try {
             settings = ConfigTools.getSettings();
         } catch (Exception e) {

@@ -41,7 +41,7 @@ public class ProjectDAOHibernate extends HibernateDaoSupport implements ProjectD
   /** {@inheritDoc} */
   @Override
   public List<Project> list(Registration registration) {
-    ArrayList<Project> projects = new ArrayList<Project>();
+    ArrayList<Project> projects = new ArrayList<>();
     if (registration == null)
       return projects;
 

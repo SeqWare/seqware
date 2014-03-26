@@ -52,9 +52,9 @@ public class PropagateOwnership {
     }
 
     private void filesFromSample(Sample parentSample, Experiment e, Study study) {
-        Stack<Sample> sampleStack = new Stack<Sample>();
+        Stack<Sample> sampleStack = new Stack<>();
         sampleStack.add(parentSample);
-        Set<Sample> usefulSamples = new TreeSet<Sample>();
+        Set<Sample> usefulSamples = new TreeSet<>();
         while (!sampleStack.isEmpty()) {
             Sample sample = sampleStack.pop();
             sampleStack.addAll(sample.getChildren());
@@ -67,7 +67,7 @@ public class PropagateOwnership {
             SortedSet<IUS> iuses = sample.getIUS();
             for (IUS ius : iuses) {
                 SequencerRun sr = ius.getLane().getSequencerRun();
-                Set<Processing> currentProcessings = new TreeSet<Processing>();
+                Set<Processing> currentProcessings = new TreeSet<>();
 
                 parseProcessingsFromStack(ius, currentProcessings);
                 for (Processing processing : currentProcessings) {
@@ -78,9 +78,9 @@ public class PropagateOwnership {
     }
 
     private void parseProcessingsFromStack(IUS ius, Set<Processing> currentProcessings) {
-        Stack<Processing> processingStack = new Stack<Processing>();
+        Stack<Processing> processingStack = new Stack<>();
         processingStack.addAll(ius.getProcessings());
-        Stack<Processing> parents = new Stack<Processing>();
+        Stack<Processing> parents = new Stack<>();
 
         for (Processing p : ius.getProcessings()) {
             parents.addAll(p.getParents());

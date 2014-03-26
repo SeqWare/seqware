@@ -82,7 +82,7 @@ public class FileServiceImpl implements FileService {
     fileDAO.delete(file);
 
     if (deleteRealFiles) {
-      List<File> deleteFiles = new LinkedList<File>();
+      List<File> deleteFiles = new LinkedList<>();
       deleteFiles.add(file);
       fileDAO.deleteAllWithFolderStore(deleteFiles);
     }
@@ -115,7 +115,7 @@ public class FileServiceImpl implements FileService {
   @Override
   public List<File> getFiles(Integer fileId) {
     File file = findByID(fileId);
-    List<File> files = new ArrayList<File>();
+    List<File> files = new ArrayList<>();
     files.add(file);
     return files;
   }
@@ -124,7 +124,7 @@ public class FileServiceImpl implements FileService {
   @Override
   public List<File> getFiles(Integer fileId, String metaType) {
     File file = findByID(fileId);
-    List<File> files = new ArrayList<File>();
+    List<File> files = new ArrayList<>();
     if (metaType.equals(file.getMetaType())) {
       files.add(file);
     }
@@ -134,7 +134,7 @@ public class FileServiceImpl implements FileService {
   /** {@inheritDoc} */
   @Override
   public Set<File> setWithHasFile(Set<File> list, String metaType) {
-    Set<File> result = new TreeSet<File>();
+    Set<File> result = new TreeSet<>();
     for (File file : list) {
       if (metaType.equals(file.getMetaType())) {
         result.add(file);

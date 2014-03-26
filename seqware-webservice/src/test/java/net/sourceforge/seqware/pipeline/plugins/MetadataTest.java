@@ -84,7 +84,7 @@ public class MetadataTest extends ExtendedPluginTest {
     public void testListStudyFields() {
         systemErr.println("Test List study fields");
 
-        Map<String, String> expectedFields = new HashMap<String, String>();
+        Map<String, String> expectedFields = new HashMap<>();
         expectedFields.put("Field", "Type");
         expectedFields.put("title", "String");
         expectedFields.put("description", "String");
@@ -100,7 +100,7 @@ public class MetadataTest extends ExtendedPluginTest {
     public void testListExperimentFields() {
         systemErr.println("Test List experiment fields");
 
-        Map<String, String> expectedFields = new HashMap<String, String>();
+        Map<String, String> expectedFields = new HashMap<>();
         expectedFields.put("Field", "Type");
         expectedFields.put("title", "String");
         expectedFields.put("description", "String");
@@ -117,7 +117,7 @@ public class MetadataTest extends ExtendedPluginTest {
     @Test
     public void testListSampleFields() {
         systemErr.println("Test List sample fields");
-        Map<String, String> expectedFields = new HashMap<String, String>();
+        Map<String, String> expectedFields = new HashMap<>();
         expectedFields.put("Field", "Type");
         expectedFields.put("title", "String");
         expectedFields.put("description", "String");
@@ -134,7 +134,7 @@ public class MetadataTest extends ExtendedPluginTest {
     public void testListSequencerRunFields() {
         systemErr.println("Test List sequencer run fields");
 
-        Map<String, String> expectedFields = new HashMap<String, String>();
+        Map<String, String> expectedFields = new HashMap<>();
         expectedFields.put("Field", "Type");
         expectedFields.put("name", "String");
         expectedFields.put("description", "String");
@@ -155,7 +155,7 @@ public class MetadataTest extends ExtendedPluginTest {
     public void testListLaneFields() {
         systemErr.println("Test List Lane fields");
 
-        Map<String, String> expectedFields = new HashMap<String, String>();
+        Map<String, String> expectedFields = new HashMap<>();
         expectedFields.put("Field", "Type");
         expectedFields.put("name", "String");
         expectedFields.put("description", "String");
@@ -176,7 +176,7 @@ public class MetadataTest extends ExtendedPluginTest {
     public void testListIUSFields() {
         systemErr.println("Test List IUS fields");
 
-        Map<String, String> expectedFields = new HashMap<String, String>();
+        Map<String, String> expectedFields = new HashMap<>();
         expectedFields.put("Field", "Type");
         expectedFields.put("name", "String");
         expectedFields.put("description", "String");
@@ -839,7 +839,7 @@ public class MetadataTest extends ExtendedPluginTest {
 
     @Test
     public void testInteractiveCreateStudy() {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("Is this information correct", "y");
         params.put("title", "alal" + System.currentTimeMillis());
         params.put("description", "alal");
@@ -870,7 +870,7 @@ public class MetadataTest extends ExtendedPluginTest {
             sAcc = "120";
         }
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("Is this information correct", "y");
         params.put("study_accession", sAcc);
         params.put("title", "experimenttitle" + System.currentTimeMillis());
@@ -896,7 +896,7 @@ public class MetadataTest extends ExtendedPluginTest {
             eAcc = "834";
         }
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("Is this information correct", "y");
         params.put("experiment_accession", eAcc);
         params.put("parent_sample_accession", "");
@@ -917,7 +917,7 @@ public class MetadataTest extends ExtendedPluginTest {
 
     @Test
     public void testInteractiveCreateSequencerRun() {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("Is this information correct", "y");
         params.put("name", "SR" + System.currentTimeMillis());
         params.put("description", "SRD");
@@ -940,7 +940,7 @@ public class MetadataTest extends ExtendedPluginTest {
 
     @Test
     public void testInteractiveCreateLane() {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("Is this information correct", "y");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
 
@@ -977,7 +977,7 @@ public class MetadataTest extends ExtendedPluginTest {
 
     @Test
     public void testInteractiveCreateIUS() {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("Is this information correct", "y");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
 
@@ -1015,7 +1015,7 @@ public class MetadataTest extends ExtendedPluginTest {
         //can test the error checking by extending the TestConsoleAdapter to
         //change on the second query and then checking for the presence of error
         //in the output. But, I'm slightly too lazy for that right now.
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("test-default", "");
         params.put("test-value", "false");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
@@ -1029,7 +1029,7 @@ public class MetadataTest extends ExtendedPluginTest {
         //can test the error checking by extending the TestConsoleAdapter to
         //change on the second query and then checking for the presence of error
         //in the output. But, I'm slightly too lazy for that right now.
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("test-default", "");
         params.put("test-value", "10");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
@@ -1040,7 +1040,7 @@ public class MetadataTest extends ExtendedPluginTest {
 
     @Test
     public void testPromptString() {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("test-default", "");
         params.put("test-value", "value");
         TestConsoleAdapter.initializeTestInstance().setLine(params);

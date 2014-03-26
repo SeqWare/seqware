@@ -78,12 +78,12 @@ public class StudyResource extends DatabaseResource {
 
         if (queryValues.get("title") != null) {
             Study study = (Study) testIfNull(ss.findByTitle(queryValues.get("title")));
-            JaxbObject jaxbTool = new JaxbObject<Study>();
+            JaxbObject jaxbTool = new JaxbObject<>();
             Study dto = copier.hibernate2dto(Study.class, study);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
         } else {
-            JaxbObject jaxbTool = new JaxbObject<StudyList>();
+            JaxbObject jaxbTool = new JaxbObject<>();
             List<Study> studies = (List<Study>) testIfNull(ss.list());
             StudyList eList = new StudyList();
             eList.setList(new ArrayList());
@@ -108,7 +108,7 @@ public class StudyResource extends DatabaseResource {
     @Post("xml")
     public void postJaxb(Representation entity) throws ResourceException {
         try {
-            JaxbObject<Study> jo = new JaxbObject<Study>();
+            JaxbObject<Study> jo = new JaxbObject<>();
             String text = entity.getText();
             Study p = null;
             try {

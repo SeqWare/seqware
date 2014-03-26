@@ -78,7 +78,7 @@ public class ChangeNumberPopupPageController  extends BaseCommandController {
 	private List<String> getListSavedPage(HttpServletRequest request){
 		List<String> listSavedPage = (List <String>)request.getSession(false).getAttribute("listSavedPage");
 		if(listSavedPage == null){
-			listSavedPage = new LinkedList<String>();
+			listSavedPage = new LinkedList<>();
 		}
 		return listSavedPage;
 	}

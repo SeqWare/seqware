@@ -54,17 +54,17 @@ public class Processing extends PermissionsAware implements Serializable, Compar
   private static final long serialVersionUID = 4681328115923390568L;
   private Integer processingId;
   private String filePath;
-  private Set<Study> studies = new TreeSet<Study>();
-  private Set<Sample> samples = new TreeSet<Sample>();
-  private Set<IUS> ius = new TreeSet<IUS>();
-  private Set<Lane> lanes = new TreeSet<Lane>();
-  private Set<File> files = new TreeSet<File>();
-  private Set<SequencerRun> sequencerRuns = new TreeSet<SequencerRun>();
-  private Set<Experiment> experiments = new TreeSet<Experiment>();
-  private Set<Processing> children = new TreeSet<Processing>();
-  private Set<Processing> parents = new TreeSet<Processing>(); // typically just
+  private Set<Study> studies = new TreeSet<>();
+  private Set<Sample> samples = new TreeSet<>();
+  private Set<IUS> ius = new TreeSet<>();
+  private Set<Lane> lanes = new TreeSet<>();
+  private Set<File> files = new TreeSet<>();
+  private Set<SequencerRun> sequencerRuns = new TreeSet<>();
+  private Set<Experiment> experiments = new TreeSet<>();
+  private Set<Processing> children = new TreeSet<>();
+  private Set<Processing> parents = new TreeSet<>(); // typically just
   // one parent!
-  private Set<ProcessingAttribute> processingAttributes = new TreeSet<ProcessingAttribute>();
+  private Set<ProcessingAttribute> processingAttributes = new TreeSet<>();
   private WorkflowRun workflowRunByAncestorWorkflowRunId;
   private String algorithm;
   private ProcessingStatus status;
@@ -825,7 +825,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
    * <p>resetCompletedChildren.</p>
    */
   public void resetCompletedChildren() {
-    Set<Processing> res = new TreeSet<Processing>();
+    Set<Processing> res = new TreeSet<>();
     Set<Processing> all = this.getChildren();
 
     // get processing with workflow run has not status equal completed
@@ -843,7 +843,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
    * <p>resetRunningChildren.</p>
    */
   public void resetRunningChildren() {
-    Set<Processing> res = new TreeSet<Processing>();
+    Set<Processing> res = new TreeSet<>();
     Set<Processing> all = this.getChildren();
 
     // get processing with workflow run has not status equal completed

@@ -154,7 +154,7 @@ public class SampleServiceImpl implements SampleService {
          * = countFiles.get(sample.getSampleId()); if(count > 0){ isHasFile =
          * true; } sample.setIsHasFile(isHasFile); } return list;
          */
-        SortedSet<Sample> result = new TreeSet<Sample>();
+        SortedSet<Sample> result = new TreeSet<>();
         for (Sample sample : list) {
             if (isHasFile(sample.getSampleId())) {
                 sample.setIsHasFile(true);
@@ -179,7 +179,7 @@ public class SampleServiceImpl implements SampleService {
          * true; sample.setIsHasFile(isHasFile); result.add(sample); }
          * //sample.setIsHasFile(isHasFile); } return result;
          */
-        SortedSet<Sample> result = new TreeSet<Sample>();
+        SortedSet<Sample> result = new TreeSet<>();
         for (Sample sample : list) {
             if (isHasFile(sample.getSampleId(), metaType)) {
                 sample.setIsHasFile(true);

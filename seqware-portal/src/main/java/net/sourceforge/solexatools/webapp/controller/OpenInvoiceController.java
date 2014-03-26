@@ -43,7 +43,7 @@ public class OpenInvoiceController  extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<String,Object>();
+		HashMap<String,Object>	model			= new HashMap<>();
 
 		model.put("pendingInvoiceList", getInvoiceService().list(registration, InvoiceState.pending));
                 model.put("openInvoiceList", getInvoiceService().list(registration, InvoiceState.open));

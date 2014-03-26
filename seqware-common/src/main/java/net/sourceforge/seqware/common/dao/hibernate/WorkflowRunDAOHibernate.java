@@ -87,7 +87,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
      */
     @Override
     public List<WorkflowRun> list() {
-        ArrayList<WorkflowRun> workflowRuns = new ArrayList<WorkflowRun>();
+        ArrayList<WorkflowRun> workflowRuns = new ArrayList<>();
         // Limit the workflows to those owned by the user
 
         String query = "from WorkflowRun as workflowRun order by workflowRun.createTimestamp desc";
@@ -113,7 +113,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> list(Registration registration, Boolean isAsc) {
-        ArrayList<WorkflowRun> workflowRuns = new ArrayList<WorkflowRun>();
+        ArrayList<WorkflowRun> workflowRuns = new ArrayList<>();
         logger.debug("Get WFR LIST. " + registration.getEmailAddress());
         /*
          * Criteria criteria = this.getSession().createCriteria(Study.class);
@@ -151,7 +151,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         String querySQL = "select distinct wr.workflow from WorkflowRun as wr where wr.owner.registrationId = ?";
         Object[] parameters = {registration.getRegistrationId()};
         List list = this.getHibernateTemplate().find(querySQL, parameters);
-        List<Workflow> workflows = new ArrayList<Workflow>();
+        List<Workflow> workflows = new ArrayList<>();
         for (Object workflow : list) {
             workflows.add((Workflow) workflow);
         }
@@ -161,7 +161,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc) {
-        List<WorkflowRun> sharedWorkflowRuns = new ArrayList<WorkflowRun>();
+        List<WorkflowRun> sharedWorkflowRuns = new ArrayList<>();
 
         String sortValue = (!isAsc) ? "asc" : "desc";
         String query = "from WorkflowRun as workflowRun where workflowRun.owner.registrationId=? "
@@ -179,7 +179,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc) {
-        List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<WorkflowRun>();
+        List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<>();
         if (registration == null) {
             return sharedWithMeWorkflowRuns;
         }
@@ -200,7 +200,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> listRunning(Registration registration, Boolean isAsc) {
-        List<WorkflowRun> runningWorkflowRuns = new ArrayList<WorkflowRun>();
+        List<WorkflowRun> runningWorkflowRuns = new ArrayList<>();
         String query = "";
         Object[] parameters = {registration.getRegistrationId()};
         String sortValue = (!isAsc) ? "asc" : "desc";
@@ -294,7 +294,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     @SuppressWarnings("rawtypes")
     @Override
     public Set<WorkflowRun> findRunsForIUS(IUS ius) {
-        Set<WorkflowRun> wfRuns = new HashSet<WorkflowRun>();
+        Set<WorkflowRun> wfRuns = new HashSet<>();
 
         // wfRuns.addAll(ius.getWorkflowRuns());
         // Set<Processing> processings = ius.getProcessings();
@@ -323,7 +323,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     }
 
     private Collection<? extends WorkflowRun> workflowRunFromProcessing(Processing processing) {
-        Set<WorkflowRun> wfRuns = new HashSet<WorkflowRun>();
+        Set<WorkflowRun> wfRuns = new HashSet<>();
         if (processing.getWorkflowRun() != null) {
             wfRuns.add(processing.getWorkflowRun());
         }

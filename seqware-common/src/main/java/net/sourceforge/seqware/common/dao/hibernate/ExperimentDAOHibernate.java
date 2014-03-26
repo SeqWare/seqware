@@ -89,7 +89,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
   /** {@inheritDoc} */
   @Override
   public List<Experiment> list(Registration registration) {
-    ArrayList<Experiment> experiments = new ArrayList<Experiment>();
+    ArrayList<Experiment> experiments = new ArrayList<>();
     if (registration == null) {
       return experiments;
     }
@@ -120,7 +120,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
    */
   @Override
   public List<Experiment> list(Study study) {
-    ArrayList<Experiment> experiments = new ArrayList<Experiment>();
+    ArrayList<Experiment> experiments = new ArrayList<>();
     if (study == null) {
       return experiments;
     }
@@ -141,7 +141,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
   /** {@inheritDoc} */
   @Override
   public List<File> getFiles(Integer experimentId) {
-    List<File> files = new ArrayList<File>();
+    List<File> files = new ArrayList<>();
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
         + "SELECT p.child_id as child_id, p.parent_id "
         + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
@@ -392,7 +392,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
      * @param experimentId */
   @Override
   public List<File> getFiles(Integer experimentId, String metaType) {
-    List<File> files = new ArrayList<File>();
+    List<File> files = new ArrayList<>();
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
         + "SELECT p.child_id as child_id, p.parent_id "
         + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
@@ -700,7 +700,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
   /** {@inheritDoc} */
   @Override
   public List<Experiment> list() {
-    ArrayList<Experiment> l = new ArrayList<Experiment>();
+    ArrayList<Experiment> l = new ArrayList<>();
 
     String query = "from Experiment as ex order by ex.title, ex.name, ex.description";
 

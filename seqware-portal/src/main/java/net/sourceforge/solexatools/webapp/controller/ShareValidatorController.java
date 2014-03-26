@@ -56,8 +56,8 @@ public class ShareValidatorController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 		
 		Boolean isHasError = false;
-		List<String> errorMessages = new LinkedList<String>();
-		List<String> emailsHasError = new LinkedList<String>();
+		List<String> errorMessages = new LinkedList<>();
+		List<String> emailsHasError = new LinkedList<>();
 		
 		// get request params
 		String openNodeId = request.getParameter("openNodeId");

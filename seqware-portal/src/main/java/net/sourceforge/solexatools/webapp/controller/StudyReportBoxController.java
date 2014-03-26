@@ -109,7 +109,7 @@ public class StudyReportBoxController extends BaseCommandController {
     }
 
     boolean hasError = false;
-    List<String> errMsgs = new ArrayList<String>();
+    List<String> errMsgs = new ArrayList<>();
 
     // Get StudyId, for which Report is generated
     String idStr = request.getParameter(STUDY_ID);
@@ -314,11 +314,11 @@ public class StudyReportBoxController extends BaseCommandController {
   }
 
   private void createWorkflowCharts(ModelAndView modelAndView, Study study) {
-    Map<Workflow, String> workflowCharts = new HashMap<Workflow, String>();
+    Map<Workflow, String> workflowCharts = new HashMap<>();
     List<Workflow> usedWorkflows = sampleReportService.getWorkflowsForStudy(study);
     for (Workflow workflow : usedWorkflows) {
       List<Status> statuses = sampleReportService.getStatusesForWorkflow(study, workflow);
-      Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
+      Map<Status, Integer> statusCount = new LinkedHashMap<>();
       statusCount.put(Status.failed, 0);
       statusCount.put(Status.pending, 0);
       statusCount.put(Status.running, 0);
@@ -350,7 +350,7 @@ public class StudyReportBoxController extends BaseCommandController {
 
   private void createOverallChart(ModelAndView modelAndView, Study study) {
     List<Status> statuses = sampleReportService.getStatusesForStudy(study);
-    Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
+    Map<Status, Integer> statusCount = new LinkedHashMap<>();
     statusCount.put(Status.failed, 0);
     statusCount.put(Status.pending, 0);
     statusCount.put(Status.running, 0);

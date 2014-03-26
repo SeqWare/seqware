@@ -96,7 +96,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
      * @param isAsc */
   @Override
   public List<Study> list(Registration registration, Boolean isAsc) {
-    ArrayList<Study> studys = new ArrayList<Study>();
+    ArrayList<Study> studys = new ArrayList<>();
     logger.debug("Get Study LIST for " + registration.getEmailAddress());
     /*
      * if(registration == null) return studys;
@@ -168,7 +168,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
   @SuppressWarnings("rawtypes")
   @Override
   public List<Study> list() {
-    ArrayList<Study> studys = new ArrayList<Study>();
+    ArrayList<Study> studys = new ArrayList<>();
 
     String query = "from Study as study order by study.title ";
 
@@ -185,7 +185,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
      * @param isAsc */
   @Override
   public List<Study> listMyShared(Registration registration, Boolean isAsc) {
-    List<Study> sharedStudies = new ArrayList<Study>();
+    List<Study> sharedStudies = new ArrayList<>();
 
     String sortValue = (isAsc) ? "asc" : "desc";
 
@@ -208,7 +208,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
      * @param isAsc */
   @Override
   public List<Study> listSharedWithMe(Registration registration, Boolean isAsc) {
-    ArrayList<Study> studys = new ArrayList<Study>();
+    ArrayList<Study> studys = new ArrayList<>();
 
     String sortValue = (isAsc) ? "asc" : "desc";
 
@@ -248,7 +248,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
   /** {@inheritDoc} */
   @Override
   public List<File> getFiles(Integer studyId) {
-    List<File> files = new ArrayList<File>();
+    List<File> files = new ArrayList<>();
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
         + "SELECT p.child_id as child_id, p.parent_id "
         + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
@@ -549,7 +549,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
   /** {@inheritDoc} */
   @Override
   public List<File> getFiles(Integer studyId, String metaType) {
-    List<File> files = new ArrayList<File>();
+    List<File> files = new ArrayList<>();
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
         + "SELECT p.child_id as child_id, p.parent_id "
         + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
@@ -798,7 +798,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
      * @param isAsc */
   @Override
   public List<Study> listStudyHasFile(Registration registration, String metaType, Boolean isAsc) {
-    List<Study> studies = new ArrayList<Study>();
+    List<Study> studies = new ArrayList<>();
     /*
      * String query = "WITH RECURSIVE processing_root_to_leaf (child_id,
      * parent_id, study_id) AS ( " + "SELECT p.child_id as child_id,

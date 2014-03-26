@@ -81,7 +81,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     /** {@inheritDoc} */
     @Override
     public List<File> getFiles(Integer laneId) {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id "
@@ -138,7 +138,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
      * @param laneId */
     @Override
     public List<File> getFiles(Integer laneId, String metaType) {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id "
@@ -195,7 +195,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     /** {@inheritDoc} */
     @Override
     public List<Lane> list(List<Integer> laneIds) {
-        List<Lane> lanes = new ArrayList<Lane>();
+        List<Lane> lanes = new ArrayList<>();
         
         String paramQuery = "";
         for (int i = 0; i < laneIds.size() - 1; i++) {
@@ -277,7 +277,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
             iter++;
         }
         List list = sql.list();
-        List<Integer> listIUSId = new ArrayList<Integer>();
+        List<Integer> listIUSId = new ArrayList<>();
         for (Object id : list) {
             if (id != null) {
                 Integer iusId = (Integer) id;
@@ -444,7 +444,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     /** {@inheritDoc} */
     @Override
     public List<Lane> list() {
-        ArrayList<Lane> l = new ArrayList<Lane>();
+        ArrayList<Lane> l = new ArrayList<>();
         
         String query = "from Lane";
         

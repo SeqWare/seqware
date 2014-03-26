@@ -177,7 +177,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
             List<int[]> ids = mdb.executeQuery(query, new ResultSetHandler<List<int[]>>(){
               @Override
               public List<int[]> handle(ResultSet rs) throws SQLException {
-                List<int[]> ids = new ArrayList<int[]>();
+                List<int[]> ids = new ArrayList<>();
                 while(rs.next()){
                   ids.add(new int[]{rs.getInt("sw_accession"), rs.getInt("workflow_run_id")});
                 }
@@ -232,7 +232,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     private List<Integer> getListOfFiles(int workflowRunAcc) {
         Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
-        List<Integer> ranOnList = new ArrayList<Integer>();
+        List<Integer> ranOnList = new ArrayList<>();
         if (map.isEmpty()){
             return ranOnList;
         }
@@ -263,7 +263,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
 
     private Map<String, String> generateWorkflowRunMap(int workflowRunAcc) {
         String report = metadata.getWorkflowRunReport(workflowRunAcc);
-        Map<String, String> map = new TreeMap<String, String>();
+        Map<String, String> map = new TreeMap<>();
         if (report == null){
             return map;
         }
@@ -303,7 +303,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
     public static void main(String[] args) {
         WorkflowRunFilesInitialPopulationPlugin mp = new WorkflowRunFilesInitialPopulationPlugin();
         mp.init();
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         mp.setParams(arr);
         mp.parse_parameters();
         mp.do_run();

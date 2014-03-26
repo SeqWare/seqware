@@ -38,7 +38,7 @@ public class XmlizeLaneSortedSet extends XmlAdapter<LaneList, SortedSet<Lane>>{
      * @throws java.lang.Exception  */
     @Override
     public SortedSet<Lane> unmarshal(LaneList vt) throws Exception {
-        SortedSet<Lane> laneSet = new TreeSet<Lane>();
+        SortedSet<Lane> laneSet = new TreeSet<>();
         for (Lane l : vt.getList())
         {
             laneSet.add(l);
@@ -53,7 +53,7 @@ public class XmlizeLaneSortedSet extends XmlAdapter<LaneList, SortedSet<Lane>>{
     public LaneList marshal(SortedSet<Lane> bt) throws Exception {
         if (bt != null)
         {
-        List<Lane> list = new ArrayList<Lane>(bt);        
+        List<Lane> list = new ArrayList<>(bt);        
         LaneList laneList = new LaneList();
         laneList.setList(list);
         return laneList;

@@ -61,7 +61,7 @@ public class LaneIDResource extends DatabaseIDResource {
      */
     @Get
     public void getXml() {
-        JaxbObject<Lane> jaxbTool = new JaxbObject<Lane>();
+        JaxbObject<Lane> jaxbTool = new JaxbObject<>();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
 
         Lane dto;
@@ -83,7 +83,7 @@ public class LaneIDResource extends DatabaseIDResource {
 		if (fields.contains("attributes")) {
 			Set<LaneAttribute> las = lane.getLaneAttributes();
 			if(las!=null && !las.isEmpty()) {
-				Set<LaneAttribute> newlas = new TreeSet<LaneAttribute>();
+				Set<LaneAttribute> newlas = new TreeSet<>();
 				for(LaneAttribute la: las) {
 					newlas.add(copier.hibernate2dto(LaneAttribute.class,la));
 				}
@@ -103,7 +103,7 @@ public class LaneIDResource extends DatabaseIDResource {
         authenticate();
         Representation representation = null;
         Lane newLane = null;
-        JaxbObject<Lane> jo = new JaxbObject<Lane>();
+        JaxbObject<Lane> jo = new JaxbObject<>();
         try {
 
             String text = entity.getText();

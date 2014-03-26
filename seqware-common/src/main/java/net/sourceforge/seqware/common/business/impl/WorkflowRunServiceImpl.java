@@ -176,7 +176,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     Set<Processing> processings = workflowRun.getProcessings();
 
     // get all files from processings
-    List<File> deleteFiles = new LinkedList<File>();
+    List<File> deleteFiles = new LinkedList<>();
 
     if (deleteRealFiles) {
       if (processings != null) {
@@ -234,7 +234,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   /** {@inheritDoc} */
   @Override
   public List<File> getFiles(Integer wfrId) {
-    List<File> files = new LinkedList<File>();
+    List<File> files = new LinkedList<>();
     WorkflowRun workflowRun = findByID(wfrId);
     SortedSet<Processing> processings = workflowRun.getProcessings();
     for (Processing proc : processings) {
@@ -284,7 +284,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> listMyShared(Registration registration) {
-    List<WorkflowRun> sharedWorkflowRuns = new ArrayList<WorkflowRun>();
+    List<WorkflowRun> sharedWorkflowRuns = new ArrayList<>();
     sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, true);
     return sharedWorkflowRuns;
   }
@@ -292,7 +292,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> listSharedWithMe(Registration registration) {
-    List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<WorkflowRun>();
+    List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<>();
     sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, true);
     return sharedWithMeWorkflowRuns;
   }
@@ -312,7 +312,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc) {
-    List<WorkflowRun> sharedWorkflowRuns = new ArrayList<WorkflowRun>();
+    List<WorkflowRun> sharedWorkflowRuns = new ArrayList<>();
     sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, isAsc);
     return sharedWorkflowRuns;
   }
@@ -320,7 +320,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc) {
-    List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<WorkflowRun>();
+    List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<>();
     sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, isAsc);
     return sharedWithMeWorkflowRuns;
   }
@@ -452,7 +452,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   public List<WorkflowRun> listSharedWithMeWithSample(Registration registration) {
     List<WorkflowRun> list = listSharedWithMe(registration);
     for (WorkflowRun workflowRun : list) {
-      SortedSet<Sample> samples = new TreeSet<Sample>();
+      SortedSet<Sample> samples = new TreeSet<>();
       samples = getSamples(workflowRun);
       workflowRun.setSamples(samples);
     }
@@ -460,7 +460,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   private SortedSet<IUS> getAllIUS(WorkflowRun workflowRun) {
-    SortedSet<IUS> ius = new TreeSet<IUS>();
+    SortedSet<IUS> ius = new TreeSet<>();
 
     Set<Processing> processings = workflowRun.getProcessings();
 
@@ -486,7 +486,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   private SortedSet<Sample> getSamples(WorkflowRun workflowRun) {
-    SortedSet<Sample> samples = new TreeSet<Sample>();
+    SortedSet<Sample> samples = new TreeSet<>();
     Set<Processing> processings = workflowRun.getProcessings();
 
     if (processings.isEmpty()) {
@@ -498,7 +498,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     // processing = (Processing) itp.next();
     // }
 
-    Set<Lane> lanes = new TreeSet<Lane>();
+    Set<Lane> lanes = new TreeSet<>();
 
     for (Processing processing : processings) {
       lanes.addAll(processing.getLanes());
@@ -548,11 +548,11 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   @Override
   public List<File> findFiles(Integer swAccession) {
     WorkflowRun wr = findBySWAccession(swAccession);
-    Set<File> files = new HashSet<File>();
-    Stack<Processing> processings = new Stack<Processing>();
+    Set<File> files = new HashSet<>();
+    Stack<Processing> processings = new Stack<>();
     processings.addAll(wr.getProcessings());
     processings.addAll(wr.getOffspringProcessings());
-    Set<Integer> seen = new TreeSet<Integer>();
+    Set<Integer> seen = new TreeSet<>();
 
     while (!processings.isEmpty()) {
       Processing processing = processings.pop();
@@ -573,13 +573,13 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
         }
       }
     }
-    return new ArrayList<File>(files);
+    return new ArrayList<>(files);
   }
 
   /** {@inheritDoc} */
   @Override
   public Set<WorkflowRun> findRunsForSample(Sample sample) {
-    Set<WorkflowRun> runs = new HashSet<WorkflowRun>();
+    Set<WorkflowRun> runs = new HashSet<>();
     Set<IUS> iuses = sample.getIUS();
     if (iuses != null) {
       Iterator<IUS> iusIter = iuses.iterator();

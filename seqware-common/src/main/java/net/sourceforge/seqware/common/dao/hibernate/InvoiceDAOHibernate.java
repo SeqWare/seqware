@@ -58,7 +58,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
    */
   @Override
   public List<Invoice> list() {
-    ArrayList<Invoice> invoices = new ArrayList<Invoice>();
+    ArrayList<Invoice> invoices = new ArrayList<>();
 
     List expmts = null;
 
@@ -77,7 +77,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
   /** {@inheritDoc} */
   @Override
   public List<Invoice> list(Registration registration) {
-    ArrayList<Invoice> invoices = new ArrayList<Invoice>();
+    ArrayList<Invoice> invoices = new ArrayList<>();
 
     // Limit the invoices to those owned by the user
     String query = "";
@@ -101,7 +101,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
   /** {@inheritDoc} */
   @Override
   public List<Invoice> list(Registration registration, InvoiceState state) {
-    ArrayList<Invoice> invoices = new ArrayList<Invoice>();
+    ArrayList<Invoice> invoices = new ArrayList<>();
 
     // Limit the invoices to those owned by the user
     String query = "";

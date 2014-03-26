@@ -74,7 +74,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
   /** {@inheritDoc} */
   @Override
   public List<File> getFiles(Integer iusId) {
-    List<File> files = new ArrayList<File>();
+    List<File> files = new ArrayList<>();
 
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
         + "SELECT p.child_id as child_id, p.parent_id "
@@ -127,7 +127,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
   /** {@inheritDoc} */
   @Override
   public List<File> getFiles(Integer iusId, String metaType) {
-    List<File> files = new ArrayList<File>();
+    List<File> files = new ArrayList<>();
 
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
         + "SELECT p.child_id as child_id, p.parent_id "
@@ -255,7 +255,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
   @SuppressWarnings("rawtypes")
   @Override
   public List<IUS> findBelongsToStudy(Study study) {
-    List<IUS> iuses = new ArrayList<IUS>();
+    List<IUS> iuses = new ArrayList<>();
 
     // Try without Recursive SQL
     for (Experiment exp : study.getExperiments()) {
@@ -296,7 +296,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
   }
 
   private Set<IUS> iusForSample(Sample sample) {
-    Set<IUS> iuses = new HashSet<IUS>();
+    Set<IUS> iuses = new HashSet<>();
 
     iuses.addAll(sample.getIUS());
 
@@ -312,7 +312,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
   /** {@inheritDoc} */
   @Override
   public List<IUS> list() {
-    ArrayList<IUS> l = new ArrayList<IUS>();
+    ArrayList<IUS> l = new ArrayList<>();
 
     String query = "from IUS";
 

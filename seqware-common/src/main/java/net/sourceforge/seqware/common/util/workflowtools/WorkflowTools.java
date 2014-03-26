@@ -60,8 +60,8 @@ public class WorkflowTools {
 
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
-    ArrayList<String> theCommand = new ArrayList<String>();
-    theCommand = new ArrayList<String>();
+    ArrayList<String> theCommand = new ArrayList<>();
+    theCommand = new ArrayList<>();
     theCommand.add("bash");
     theCommand.add("-lc");
     theCommand.add(statusCmd);
@@ -228,7 +228,7 @@ public class WorkflowTools {
    * @return an array of {@link net.sourceforge.seqware.common.module.ReturnValue} objects.
    */
   public ReturnValue[] getFailedJobsInfo(String statusDir) {
-    ArrayList<ReturnValue> returns = new ArrayList<ReturnValue>();
+    ArrayList<ReturnValue> returns = new ArrayList<>();
 
     File[] failedJobLogFiles = getFailedJobLogs(statusDir);
 
@@ -300,7 +300,7 @@ public class WorkflowTools {
   private File[] getFailedJobLogs(String statusDir) {
 
     File dir = new File(statusDir);
-    ArrayList<File> logFiles = new ArrayList<File>();
+    ArrayList<File> logFiles = new ArrayList<>();
 
     if (dir.isDirectory()) {
 
@@ -348,7 +348,7 @@ public class WorkflowTools {
   private String[] findLogNamesFromDagLog(File dagLog) {
 
     String[] logList = null;
-    ArrayList<String> logListArray = new ArrayList<String>();
+    ArrayList<String> logListArray = new ArrayList<>();
 
     try {
 
@@ -360,7 +360,7 @@ public class WorkflowTools {
 
       while (line != null) {
         if (line.contains("ERROR: the following job(s) failed")) {
-          logListArray = new ArrayList<String>();
+          logListArray = new ArrayList<>();
         }
         Matcher m = p.matcher(line);
         if (m.find()) {
@@ -392,7 +392,7 @@ public class WorkflowTools {
         try {
           if(failedJobLogFile.length()<=0) {
         	  Logger.getLogger(WorkflowTools.class.getName()).log(Level.SEVERE, "empty file: " + failedJobLogFile.getAbsolutePath());
-        	  return new HashMap<String, HashMap<String,String>>();
+        	  return new HashMap<>();
           }
           Log.info("  + Parsing file: " + failedJobLogFile.getAbsolutePath());
 
@@ -434,7 +434,7 @@ public class WorkflowTools {
 
   class LogDefaultHandler extends org.xml.sax.helpers.DefaultHandler {
 
-    private HashMap<String, HashMap<String, String>> jobsInfo = new HashMap<String, HashMap<String, String>>();
+    private HashMap<String, HashMap<String, String>> jobsInfo = new HashMap<>();
     private String currentJobReading = null;
     private String currentOutputReading = null;
     private boolean readyToReadData = false;
@@ -509,7 +509,7 @@ public class WorkflowTools {
         //System.out.println("Adding for "+currentJobReading+" method "+currentOutputReading);
         HashMap<String, String> outputMap = jobsInfo.get(currentJobReading);
         if (outputMap == null) {
-          outputMap = new HashMap<String, String>();
+          outputMap = new HashMap<>();
         }
         String dataSection = new String(chars, start, length);
         //for (char currChar : chars) {

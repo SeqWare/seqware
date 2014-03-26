@@ -74,14 +74,14 @@ public class LaneResource extends DatabaseResource {
     Document line;
 
     if (queryValues.get("id") != null) {
-      JaxbObject<Lane> jaxbTool = new JaxbObject<Lane>();
+      JaxbObject<Lane> jaxbTool = new JaxbObject<>();
       Lane p = (Lane) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
 
       Lane dto = copier.hibernate2dto(Lane.class, p);
       line = XmlTools.marshalToDocument(jaxbTool, dto);
 
     } else {
-      JaxbObject<LaneList> jaxbTool = new JaxbObject<LaneList>();
+      JaxbObject<LaneList> jaxbTool = new JaxbObject<>();
       LaneList list = new LaneList();
       List<Lane> lanes = (List<Lane>) testIfNull(ss.list());
       for (Lane l : lanes) {
@@ -105,7 +105,7 @@ public class LaneResource extends DatabaseResource {
   public void postJaxb(Representation entity) throws ResourceException {
     authenticate();
     try {
-      JaxbObject<Lane> jo = new JaxbObject<Lane>();
+      JaxbObject<Lane> jo = new JaxbObject<>();
       String text = entity.getText();
       Lane o = null;
       try {

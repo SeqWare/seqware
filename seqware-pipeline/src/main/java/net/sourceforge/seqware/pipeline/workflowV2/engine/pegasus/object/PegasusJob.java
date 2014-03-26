@@ -35,10 +35,10 @@ public class PegasusJob {
     this.jobObj = job;
     this.basedir = basedir;
     this.sqw_version = sqwVersion;
-    this.parents = new ArrayList<PegasusJob>();
-    this.children = new ArrayList<PegasusJob>();
-    this.parentAccessionFiles = new ArrayList<String>();
-    this.parentAccessions = new ArrayList<String>();
+    this.parents = new ArrayList<>();
+    this.children = new ArrayList<>();
+    this.parentAccessionFiles = new ArrayList<>();
+    this.parentAccessions = new ArrayList<>();
   }
 
   public Element serializeXML() {

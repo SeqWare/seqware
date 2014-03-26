@@ -308,12 +308,12 @@ public class AttributeAnnotator extends Plugin {
           return false;
         Map<String, Map<String, String>> types = bulkMap.get(args[0]);
         if (types == null) {
-          types = new HashMap<String, Map<String, String>>();
+          types = new HashMap<>();
           bulkMap.put(args[0], types);
         }
         Map<String, String> ids = types.get(args[1]);
         if (ids == null) {
-          ids = new LinkedHashMap<String, String>();
+          ids = new LinkedHashMap<>();
           types.put(args[1], ids);
         }
         ids.put(args[2], args[3]);
@@ -341,7 +341,7 @@ public class AttributeAnnotator extends Plugin {
   }
 
   private void bulkInsert() {
-    Map<String, Map<String, Map<String, String>>> bulkMap = new HashMap<String, Map<String, Map<String, String>>>();
+    Map<String, Map<String, Map<String, String>>> bulkMap = new HashMap<>();
     if (this.parseFile(bulkMap)) {
       for (Map.Entry<String, Map<String, Map<String, String>>> entry : bulkMap.entrySet()) {
         if (entry.getKey().equals("w") || entry.getKey().equals("workflow-accesion")) {
@@ -379,7 +379,7 @@ public class AttributeAnnotator extends Plugin {
     for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
       Integer swid = Integer.parseInt((String) entry.getKey());
       Map<String, String> keyvalueMap = entry.getValue();
-      Set<SampleAttribute> atts = new TreeSet<SampleAttribute>();
+      Set<SampleAttribute> atts = new TreeSet<>();
       for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
         SampleAttribute a = new SampleAttribute();
         a.setTag(entry2.getKey());
@@ -394,7 +394,7 @@ public class AttributeAnnotator extends Plugin {
     for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
       Integer swid = Integer.parseInt((String) entry.getKey());
       Map<String, String> keyvalueMap = entry.getValue();
-      Set<ProcessingAttribute> atts = new TreeSet<ProcessingAttribute>();
+      Set<ProcessingAttribute> atts = new TreeSet<>();
       for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
         ProcessingAttribute a = new ProcessingAttribute();
         a.setTag(entry2.getKey());
@@ -409,7 +409,7 @@ public class AttributeAnnotator extends Plugin {
     for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
       Integer swid = Integer.parseInt((String) entry.getKey());
       Map<String, String> keyvalueMap = entry.getValue();
-      Set<StudyAttribute> atts = new TreeSet<StudyAttribute>();
+      Set<StudyAttribute> atts = new TreeSet<>();
       for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
         StudyAttribute a = new StudyAttribute();
         a.setTag(entry2.getKey());
@@ -424,7 +424,7 @@ public class AttributeAnnotator extends Plugin {
     for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
       Integer swid = Integer.parseInt((String) entry.getKey());
       Map<String, String> keyvalueMap = entry.getValue();
-      Set<IUSAttribute> atts = new TreeSet<IUSAttribute>();
+      Set<IUSAttribute> atts = new TreeSet<>();
       for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
         IUSAttribute a = new IUSAttribute();
         a.setTag(entry2.getKey());
@@ -439,7 +439,7 @@ public class AttributeAnnotator extends Plugin {
     for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
       Integer swid = Integer.parseInt((String) entry.getKey());
       Map<String, String> keyvalueMap = entry.getValue();
-      Set<ExperimentAttribute> atts = new TreeSet<ExperimentAttribute>();
+      Set<ExperimentAttribute> atts = new TreeSet<>();
       for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
         ExperimentAttribute a = new ExperimentAttribute();
         a.setTag(entry2.getKey());
@@ -454,7 +454,7 @@ public class AttributeAnnotator extends Plugin {
     for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
       Integer swid = Integer.parseInt((String) entry.getKey());
       Map<String, String> keyvalueMap = entry.getValue();
-      Set<LaneAttribute> atts = new TreeSet<LaneAttribute>();
+      Set<LaneAttribute> atts = new TreeSet<>();
       for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
         LaneAttribute a = new LaneAttribute();
         a.setTag(entry2.getKey());
@@ -469,7 +469,7 @@ public class AttributeAnnotator extends Plugin {
     for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
       Integer swid = Integer.parseInt((String) entry.getKey());
       Map<String, String> keyvalueMap = entry.getValue();
-      Set<SequencerRunAttribute> atts = new TreeSet<SequencerRunAttribute>();
+      Set<SequencerRunAttribute> atts = new TreeSet<>();
       for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
         SequencerRunAttribute a = new SequencerRunAttribute();
         a.setTag(entry2.getKey());
@@ -484,7 +484,7 @@ public class AttributeAnnotator extends Plugin {
     for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
       Integer swid = Integer.parseInt((String) entry.getKey());
       Map<String, String> keyvalueMap = entry.getValue();
-      Set<WorkflowAttribute> atts = new TreeSet<WorkflowAttribute>();
+      Set<WorkflowAttribute> atts = new TreeSet<>();
       for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
         WorkflowAttribute a = new WorkflowAttribute();
         a.setTag(entry2.getKey());
@@ -499,7 +499,7 @@ public class AttributeAnnotator extends Plugin {
     for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
       Integer swid = Integer.parseInt((String) entry.getKey());
       Map<String, String> keyvalueMap = entry.getValue();
-      Set<WorkflowRunAttribute> atts = new TreeSet<WorkflowRunAttribute>();
+      Set<WorkflowRunAttribute> atts = new TreeSet<>();
       for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
         WorkflowRunAttribute a = new WorkflowRunAttribute();
         a.setTag(entry2.getKey());

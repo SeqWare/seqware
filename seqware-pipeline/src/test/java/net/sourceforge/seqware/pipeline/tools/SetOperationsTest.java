@@ -34,8 +34,8 @@ public class SetOperationsTest {
 
     @Test
     public void ExternalTest() {
-        TreeSet<Character> set1 = new TreeSet<Character>();
-        TreeSet<Character> set2 = new TreeSet<Character>();
+        TreeSet<Character> set1 = new TreeSet<>();
+        TreeSet<Character> set2 = new TreeSet<>();
 
         set1.add('A');
         set1.add('B');
@@ -61,7 +61,7 @@ public class SetOperationsTest {
         Assert.assertTrue("Symmetric size wrong", symDifference(set1, set2).size() == 4);
 
 
-        TreeSet<Character> set3 = new TreeSet<Character>(set1);
+        TreeSet<Character> set3 = new TreeSet<>(set1);
 
         set3.remove('D');
         System.out.println("set3: " + set3);

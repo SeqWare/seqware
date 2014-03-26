@@ -29,7 +29,7 @@ public class SequencerRunIDResourceTest extends DatabaseResourceIDTest {
 
     public SequencerRunIDResourceTest() {
         super("/sequencerruns/4715");
-        jo = new JaxbObject<SequencerRun>();
+        jo = new JaxbObject<>();
         o = new SequencerRun();
     }
 

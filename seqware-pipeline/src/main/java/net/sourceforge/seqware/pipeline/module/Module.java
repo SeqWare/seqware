@@ -41,7 +41,7 @@ public abstract class Module implements ModuleInterface {
   File stderrFile;
   protected int processingAccession;
 
-  List<String> parameters = new ArrayList<String>();
+  List<String> parameters = new ArrayList<>();
 
   /**
    * Getter for the file where the stdout will be redirected. By default, the

@@ -32,7 +32,7 @@ public class ExperimentLibraryDesignList{
      * <p>Constructor for ExperimentLibraryDesignList.</p>
      */
     public ExperimentLibraryDesignList() {
-        tList = new ArrayList<ExperimentLibraryDesign>();
+        tList = new ArrayList<>();
     }
 
     /**
