@@ -39,6 +39,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     /** {@inheritDoc}
      * @return  */
+    @Override
     public Integer insert(SequencerRun sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
         getSession().flush();
@@ -51,6 +52,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      * @return 
      */
+    @Override
     public Integer insert(SequencerRunWizardDTO sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
         getSession().flush();
@@ -58,12 +60,14 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     }
 
     /** {@inheritDoc} */
+    @Override
     public void update(SequencerRun sequencerRun) {
         this.getHibernateTemplate().update(sequencerRun);
         getSession().flush();
     }
 
     /** {@inheritDoc} */
+    @Override
     public void delete(SequencerRun sequencerRun) {
         this.getHibernateTemplate().delete(sequencerRun);
     }
@@ -76,6 +80,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      * processingCount = 0; return processingCount; }
      */
     /** {@inheritDoc} */
+    @Override
     public List<Integer> getProcStatuses(SequencerRun sequencerRun) {
       // FIXME: maybe?
       throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
@@ -140,6 +145,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     }
 
     /** {@inheritDoc} */
+    @Override
     public Integer getProcessedCnt(SequencerRun sequencerRun) {
       // FIXME: maybe?
       throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
@@ -173,6 +179,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     }
 
     /** {@inheritDoc} */
+    @Override
     public Integer getProcessingCnt(SequencerRun sequencerRun) {
       // FIXME: maybe?
       throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
@@ -204,6 +211,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     }
 
     /** {@inheritDoc} */
+    @Override
     public Integer getErrorCnt(SequencerRun sequencerRun) {
       // FIXME: maybe?
       throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
@@ -235,6 +243,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     }
 
     /** {@inheritDoc} */
+    @Override
     public List<SequencerRun> list(Registration registration, Boolean isAsc) {
         ArrayList<SequencerRun> sequencerRuns = new ArrayList<SequencerRun>();
         if (registration == null) {
@@ -321,6 +330,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      * Finds an instance of SequencerRun in the database by the SequencerRun
      * name.
      */
+    @Override
     public SequencerRun findByName(String name) {
         String query = "from SequencerRun as sequencerRun where sequencerRun.name = ?";
         SequencerRun sequencerRun = null;
@@ -337,6 +347,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      *
      * Finds an instance of SequencerRun in the database by the SequencerRun ID.
      */
+    @Override
     public SequencerRun findByID(Integer expID) {
         String query = "from SequencerRun as sequencerRun where sequencerRun.sequencerRunId = ?";
         SequencerRun sequencerRun = null;

@@ -28,6 +28,7 @@ public class OrganismDAOHibernate extends HibernateDaoSupport implements Organis
     }
 
     /** {@inheritDoc} */
+    @Override
     public List<Organism> list(Registration registration) {
         ArrayList<Organism> organisms = new ArrayList<Organism>();
         if (registration == null) {
@@ -44,6 +45,7 @@ public class OrganismDAOHibernate extends HibernateDaoSupport implements Organis
     }
 
     /** {@inheritDoc} */
+    @Override
     public Organism findByID(Integer id) {
         String query = "from Organism as p where p.organismId = ?";
         Organism obj = null;

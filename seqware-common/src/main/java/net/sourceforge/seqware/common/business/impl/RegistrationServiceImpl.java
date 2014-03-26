@@ -37,6 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
    * RegistrationDAO. This method is called by the Spring framework at run time.
    * @see RegistrationDAO
    */
+  @Override
   public void setRegistrationDAO(RegistrationDAO registrationDAO) {
     Log.stderr("SETTING REGDAO HERE: " + registrationDAO + " " + this);
     this.registrationDAO = registrationDAO;
@@ -45,6 +46,7 @@ public class RegistrationServiceImpl implements RegistrationService {
   /* Inserts an instance of Registration into the database. */
   /** {@inheritDoc}
      * @param registrationDTO */
+  @Override
   public void insert(RegistrationDTO registrationDTO) {
     Registration registration = this.populateRegistration(registrationDTO);
     registration.setCreateTimestamp(new Date());
@@ -54,12 +56,14 @@ public class RegistrationServiceImpl implements RegistrationService {
   /* Updates an instance of Registration in the database. */
   /** {@inheritDoc}
      * @param registrationDTO */
+  @Override
   public void update(RegistrationDTO registrationDTO) {
     Registration registration = this.populateRegistration(registrationDTO);
     registrationDAO.update(registration);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void insert(String[] emails, InvitationParams invitationParams, MailSender sender) {
     boolean isInvitatonCode = invitationParams.getIsInvitationCode();
     String subjectEmail = invitationParams.getSubjectEmail();
@@ -141,6 +145,7 @@ public class RegistrationServiceImpl implements RegistrationService {
    * emailAddress, and copies the Registration properties to an instance of
    * RegistrationDTO.
    */
+  @Override
   public RegistrationDTO findByEmailAddress(String emailAddress) {
 
     RegistrationDTO registrationDTO = null;
@@ -169,6 +174,7 @@ public class RegistrationServiceImpl implements RegistrationService {
    * emailAddress and password, and copies the Registration properties to an
    * instance of RegistrationDTO.
    */
+  @Override
   public RegistrationDTO findByEmailAddressAndPassword(String emailAddress, String password) {
     RegistrationDTO registrationDTO = null;
     if (emailAddress != null && password != null) {
@@ -190,6 +196,7 @@ public class RegistrationServiceImpl implements RegistrationService {
    *
    * Determines if an email address has already been used.
    */
+  @Override
   public boolean hasEmailAddressBeenUsed(String email) {
     /**
      * We do not want to check if an email address has been used if the user is

@@ -46,6 +46,7 @@ public class ModuleRunner extends Plugin {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public ReturnValue parse_parameters() {
     return(ret); 
   }
@@ -118,6 +119,7 @@ public class ModuleRunner extends Plugin {
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String get_description() {
     return("Description: A wrapper around Runner which will either list all Modules in the classpath (if no args are passed) or trigger a specific Module. Great for running Modules standalone.");
   }

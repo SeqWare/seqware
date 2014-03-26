@@ -52,6 +52,7 @@ public class S3UploadDirectory extends Module {
 
     protected OptionSet options = null;
 
+    @Override
     protected OptionParser getOptionParser() {
         OptionParser parser = new OptionParser();
         parser.acceptsAll(Arrays.asList("input-dir", "i"),
@@ -63,6 +64,7 @@ public class S3UploadDirectory extends Module {
         return (parser);
     }
 
+    @Override
     public String get_syntax() {
         OptionParser parser = getOptionParser();
         StringWriter output = new StringWriter();

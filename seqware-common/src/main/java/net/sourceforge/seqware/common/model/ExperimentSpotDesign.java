@@ -46,6 +46,7 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 	 * @param that a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
 	 * @return a int.
 	 */
+        @Override
 	public int compareTo(ExperimentSpotDesign that) {
 		if(that == null)
 			return -1;
@@ -64,6 +65,7 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
+        @Override
 	public String toString() {
 		return new ToStringBuilder(this)
 			.append("experimentSpotDesignId", getExperimentSpotDesignId())
@@ -72,6 +74,7 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 
 	/** {@inheritDoc}
      * @param other */
+        @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;
 		if ( !(other instanceof ExperimentSpotDesign) ) return false;
@@ -86,6 +89,7 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 	 *
 	 * @return a int.
 	 */
+        @Override
 	public int hashCode() {
 		return new HashCodeBuilder()
 			.append(getExperimentSpotDesignId())

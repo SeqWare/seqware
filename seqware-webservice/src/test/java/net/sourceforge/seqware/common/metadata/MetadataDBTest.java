@@ -162,11 +162,13 @@ public class MetadataDBTest extends MetadataWSTest {
     }
     
     @Test 
+    @Override
     public void testUpdateWorkflowRunWithInputFiles(){
         /** test not supported in direct DB mode */
     }
     
      @Test
+    @Override
     public void getDirectFilesAssociatedWithWorkflowRuns() {
          /** test not supported in direct DB mode */
      }

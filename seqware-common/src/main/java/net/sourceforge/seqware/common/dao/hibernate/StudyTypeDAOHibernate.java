@@ -31,6 +31,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
    * {@inheritDoc}
      * @param studyType
    */
+  @Override
   public void insert(StudyType studyType) {
     this.getHibernateTemplate().save(studyType);
   }
@@ -39,6 +40,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
    * {@inheritDoc}
      * @param studyType
    */
+  @Override
   public void update(StudyType studyType) {
     this.getHibernateTemplate().update(studyType);
   }
@@ -46,6 +48,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
   /**
    * {@inheritDoc}
    */
+  @Override
   public List<StudyType> list(Registration registration) {
     if (registration == null) {
       return (null);
@@ -58,6 +61,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
    *
    * Finds an instance of StudyType in the database by the StudyType name.
    */
+  @Override
   public StudyType findByName(String name) {
     String query = "from studyType as studyType where studyType.name = ?";
     StudyType studyType = null;
@@ -76,6 +80,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
      * @param expID
    */
   @SuppressWarnings("rawtypes")
+  @Override
   public StudyType findByID(Integer expID) {
     String query = "from StudyType as studyType where studyType.studyTypeId = ?";
     StudyType studyType = null;

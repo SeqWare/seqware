@@ -1549,6 +1549,7 @@ public class MetadataDB implements Metadata {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 
+  @Override
     public void fileProvenanceReportTrigger() {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }

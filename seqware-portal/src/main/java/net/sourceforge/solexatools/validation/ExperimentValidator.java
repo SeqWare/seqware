@@ -27,6 +27,7 @@ public class ExperimentValidator implements Validator {
      * @param clazz
      * @return  */
   @SuppressWarnings("rawtypes")
+  @Override
   public boolean supports(Class clazz) {
     return Experiment.class.equals(clazz);
   }
@@ -38,6 +39,7 @@ public class ExperimentValidator implements Validator {
      * @param obj
      * @param errors
    */
+  @Override
   public void validate(Object obj, Errors errors) {
     Experiment experiment = (Experiment) obj;
     ValidationUtils.rejectIfEmpty(errors, "title", "experiment.required.title");

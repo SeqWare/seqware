@@ -42,6 +42,7 @@ public class InvoiceServiceImpl implements InvoiceService {
    * InvoiceDAO. This method is called by the Spring framework at run time.
    * @see InvoiceDAO
    */
+  @Override
   public void setInvoiceDAO(InvoiceDAO invoiceDAO) {
     this.invoiceDAO = invoiceDAO;
   }
@@ -54,11 +55,13 @@ public class InvoiceServiceImpl implements InvoiceService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(Invoice invoice) {
     invoiceDAO.update(invoice);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void delete(Invoice invoice) {
     invoiceDAO.delete(invoice);
   }
@@ -68,21 +71,25 @@ public class InvoiceServiceImpl implements InvoiceService {
    *
    * @return a {@link java.util.List} object.
    */
+  @Override
   public List<Invoice> list() {
     return invoiceDAO.list();
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Invoice> list(Registration registration) {
     return invoiceDAO.list(registration);
   }
   
   /** {@inheritDoc} */
+  @Override
   public List<Invoice> list(Registration registration, InvoiceState state) {
     return invoiceDAO.list(registration, state);
   }
 
   /** {@inheritDoc} */
+  @Override
   public Invoice findByID(Integer iID) {
     Invoice invoice = null;
     if (iID != null) {

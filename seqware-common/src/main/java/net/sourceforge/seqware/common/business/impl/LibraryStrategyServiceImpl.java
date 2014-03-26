@@ -35,16 +35,19 @@ public class LibraryStrategyServiceImpl implements LibraryStrategyService {
    * StudyTypeDAO. This method is called by the Spring framework at run time.
    * @see StudyTypeDAO
    */
+  @Override
   public void setLibraryStrategyDAO(LibraryStrategyDAO dao) {
     this.dao = dao;
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<LibraryStrategy> list(Registration registration) {
     return dao.list(registration);
   }
 
   /** {@inheritDoc} */
+  @Override
   public LibraryStrategy findByID(Integer id) {
     LibraryStrategy obj = null;
     if (id != null) {

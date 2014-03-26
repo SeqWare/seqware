@@ -33,6 +33,7 @@ public class LoginValidator implements Validator {
      * @param clazz
      * @return 
 	 */
+        @Override
 	public boolean supports(Class clazz) {
 		return RegistrationDTO.class.equals(clazz);
 	}
@@ -44,6 +45,7 @@ public class LoginValidator implements Validator {
      * @param obj
      * @param errors
 	 */
+        @Override
 	public void validate(Object obj, Errors errors) {
 		RegistrationDTO registration = (RegistrationDTO) obj;
 		this.validateEmail("emailAddress", registration.getEmailAddress(), errors);
