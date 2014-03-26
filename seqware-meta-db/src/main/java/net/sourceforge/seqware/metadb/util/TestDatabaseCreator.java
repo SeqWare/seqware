@@ -83,7 +83,6 @@ public class TestDatabaseCreator {
      * @param <T>
      * @param h
      * @param query
-     * @param update the value of update
      * @param params
      * @return
      */

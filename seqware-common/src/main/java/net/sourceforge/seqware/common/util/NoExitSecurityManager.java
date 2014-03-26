@@ -21,6 +21,7 @@ public class NoExitSecurityManager extends SecurityManager{
         }
 
         /** {@inheritDoc}
+     * @param permission
      * @param o */
         @Override
         public void checkPermission(Permission permission, Object o) {

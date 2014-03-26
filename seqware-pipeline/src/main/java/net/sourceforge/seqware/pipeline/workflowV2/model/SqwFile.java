@@ -76,7 +76,6 @@ public class SqwFile {
 	 * isInput = !@param isOutput
 	 * isOutput = @param isOutput
      * @param isOutput
-	 * @param isInupt
 	 */
 	public void setIsOutput(boolean isOutput) {
 		this.input = !isOutput;

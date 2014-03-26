@@ -52,6 +52,7 @@ public class SeqwareAccessionIDResource extends BasicResource {
     }
 
     /** {@inheritDoc}
+     * @param rep
      * @return  */
     @Put
     @Override

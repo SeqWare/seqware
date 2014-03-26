@@ -26,6 +26,7 @@ public class RegistrationValidator extends LoginValidator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified RegistrationDTO instance.
+     * @param reg
      * @param errors
 	 */
 	public void validate(Object reg, Errors errors) {

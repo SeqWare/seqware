@@ -37,6 +37,7 @@ public class AbstractJob implements Job {
 	/**
 	 * for Java/Perl/JavaModule job
      * @param mainclass
+     * @param cp
 	 */
 	public AbstractJob(String algo, String cp, String mainclass) {
 		this.cp = cp;

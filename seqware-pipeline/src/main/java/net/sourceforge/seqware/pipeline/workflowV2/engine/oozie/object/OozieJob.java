@@ -404,7 +404,6 @@ public abstract class OozieJob {
   /** 
    * Return true only when an accession file is added successfully
      * @param pafs
-   * @param paf
    * @return 
    */
   public boolean addParentAccessionFile(String ... pafs) {

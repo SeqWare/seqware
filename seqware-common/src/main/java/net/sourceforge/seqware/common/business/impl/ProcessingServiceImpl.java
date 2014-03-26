@@ -117,6 +117,7 @@ public class ProcessingServiceImpl implements ProcessingService {
   }
 
   /** {@inheritDoc}
+     * @param processing
      * @param deleteRealFiles */
   public void delete(Processing processing, boolean deleteRealFiles) {
     List<File> deleteFiles = null;

@@ -52,7 +52,6 @@ public abstract class AbstractWorkflowDataModel  {
     /**
      * Validates and potentially modifies the specified model in preparation for launching.
      * @param model
-     * @param m the model to prepare
      */
     public static void prepare(AbstractWorkflowDataModel model) {
       Map<String,SqwFile> m = new HashMap<String,SqwFile>();
@@ -191,7 +190,6 @@ public abstract class AbstractWorkflowDataModel  {
 	/**
 	 * need metadata writeback? user can override this setting by using --no-metadata or --metadata from command line
      * @param b
-	 * @return
 	 */	
 	public void setMetadataWriteBack(boolean b) {
 		this.metadataWriteBack = b;

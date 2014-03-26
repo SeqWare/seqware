@@ -43,7 +43,8 @@ public class IUSSetupController extends BaseCommandController {
 	}
 	
 	/** {@inheritDoc}
-     * @return  */
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,

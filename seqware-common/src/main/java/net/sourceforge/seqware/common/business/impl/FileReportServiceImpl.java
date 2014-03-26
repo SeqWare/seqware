@@ -46,7 +46,8 @@ public class FileReportServiceImpl implements FileReportService {
   }
 
   /** {@inheritDoc}
-     * @param limit */
+     * @param limit
+     * @param offset */
   @Override
   public List<FileReportRow> getReportForSequencerRun(SequencerRun seqRun, String sortField, String sortOrder,
       int offset, int limit) {

@@ -381,7 +381,8 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /** {@inheritDoc}
-     * @return  */
+     * @return
+     * @throws java.lang.CloneNotSupportedException  */
     @Override
     public WorkflowParam clone() throws CloneNotSupportedException {
         WorkflowParam wp = (WorkflowParam) super.clone();

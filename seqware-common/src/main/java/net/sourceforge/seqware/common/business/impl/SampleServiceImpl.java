@@ -82,6 +82,7 @@ public class SampleServiceImpl implements SampleService {
      * {@inheritDoc}
      *
      * Deletes an instance of Sample in the database.
+     * @param sample
      * @param deleteRealFiles
      */
     public void delete(Sample sample, boolean deleteRealFiles) {

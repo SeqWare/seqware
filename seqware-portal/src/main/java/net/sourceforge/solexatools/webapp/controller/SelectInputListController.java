@@ -131,7 +131,8 @@ public class SelectInputListController extends BaseCommandController {
 	}
 
 	/** {@inheritDoc}
-     * @return  */
+     * @return
+     * @throws java.lang.Exception  */
 	@SuppressWarnings("unchecked")
   @Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,

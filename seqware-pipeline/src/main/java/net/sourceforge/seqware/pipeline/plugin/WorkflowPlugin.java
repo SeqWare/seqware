@@ -504,6 +504,7 @@ public class WorkflowPlugin extends Plugin {
    * @param params
    * @param metadata
    * @param workflowAccession
+     * @param workflowRunAccession
      * @param workflowEngine
    * @return
    */

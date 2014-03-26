@@ -63,6 +63,7 @@ public interface WorkflowRunService {
 
   /**
    * <p>delete.</p>
+     * @param workflowRun
      * @param deleteRealFiles
    */
   public void delete(WorkflowRun workflowRun, boolean deleteRealFiles);

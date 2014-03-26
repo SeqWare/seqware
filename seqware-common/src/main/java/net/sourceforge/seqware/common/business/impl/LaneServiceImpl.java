@@ -371,6 +371,7 @@ public class LaneServiceImpl implements LaneService {
    * {@inheritDoc}
    *
    * Deletes an instance of Lane in the database.
+     * @param lane
      * @param deleteRealFiles
    */
   public void delete(Lane lane, boolean deleteRealFiles) {
