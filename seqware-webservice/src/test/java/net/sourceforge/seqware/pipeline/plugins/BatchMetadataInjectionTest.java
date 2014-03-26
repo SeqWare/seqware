@@ -33,13 +33,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.metadata.MetadataNoConnection;
+import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
-import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.jsontools.JSONHelper;
+import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.LaneInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMiseqFile;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
@@ -52,13 +52,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.*;
 
-
 /**
  *
  * @author mtaschuk
  * @author Raunaq Suri
  */
-public class BatchMetadataInjectionTest {
+public class BatchMetadataInjectionTest extends ExtendedPluginTest {
+
     JSONHelper jsonHelper = new JSONHelper();
     private RunInfo originalObject, runInfo;
     List<Map<String, String>> fileReport;
@@ -67,21 +67,22 @@ public class BatchMetadataInjectionTest {
     private final List<String> laneSwids = new ArrayList<String>();
 
     //Metadata object
-    Map<String, String> hm = ConfigTools.getSettings();
-    net.sourceforge.seqware.common.metadata.Metadata metadata = MetadataFactory.get(hm);
+//    Map<String, String> hm = ConfigTools.getSettings();
+//    net.sourceforge.seqware.common.metadata.Metadata metadata = MetadataFactory.get(hm);
 
     private static String miseqPath = null;
     private static String inputJsonCorrect = null;
     private static String malformedJson = null;
     private static InputStream schema = null;
 
-    private final String wfaccession = String.valueOf(metadata.getWorkflowAccession("BamQC", "2.1"));
+    private final String wfaccession = String.valueOf(metadata.getWorkflowAccession("GenomicAlignmentNovoalign", "0.10.2"));
 
     public BatchMetadataInjectionTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
         schema = BatchMetadataInjectionTest.class.getResourceAsStream("bmischema.json");
         miseqPath = BatchMetadataInjectionTest.class.getResource("SampleSheet.csv").getPath();
         inputJsonCorrect = BatchMetadataInjectionTest.class.getResource("input.json").getPath();
@@ -93,24 +94,25 @@ public class BatchMetadataInjectionTest {
     }
 
     @Before
+    @Override
     public void setUp() {
+        instance = new BatchMetadataInjection();
+        super.setUp();
     }
-
-    @After
-    public void tearDown() {
-    }
-    
     /**
      * Tests to see if the json was validated correctly
-     * @throws IOException 
+     *
+     * @throws java.io.FileNotFoundException
      */
     @Test
-    public void testValidJson() throws FileNotFoundException{
+    public void testValidJson() throws FileNotFoundException {
         Assert.assertFalse(jsonHelper.isJSONValid(schema, new FileInputStream(malformedJson)));
     }
-    /**Tests to see that the json was imported correctly
-     * 
-     * @throws IOException 
+
+    /**
+     * Tests to see that the json was imported correctly
+     *
+     * @throws IOException
      */
 
     @Test
@@ -154,8 +156,8 @@ public class BatchMetadataInjectionTest {
         map.put("tissue_preparation", "TP");
         map.put("library_size_code", "12");
 
-        ParseMiseqFile instance = new ParseMiseqFile(new MetadataNoConnection(), map, false);
-        RunInfo run = instance.parseMiseqFile(miseqPath);
+        ParseMiseqFile parseqinstance = new ParseMiseqFile(new MetadataNoConnection(), map, false);
+        RunInfo run = parseqinstance.parseMiseqFile(miseqPath);
         Assert.assertEquals("Incorrect Project Name", "Testdance", run.getStudyTitle());
         Assert.assertEquals("Incorrect Experiment Name", "TDHS", run.getExperimentName());
         Assert.assertEquals("Incorrect Workflow", "Resequencing", run.getWorkflowType());
