@@ -38,10 +38,10 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     private Integer swAccession;
     private Date createTimestamp;
     private Date updateTimestamp;
-    private Set<Processing> processings = new TreeSet<Processing>();
-    private Set<WorkflowRun> workflowRuns = new TreeSet<WorkflowRun>();
-    private Set<IUSAttribute> iusAttributes = new TreeSet<IUSAttribute>();
-    private Set<IUSLink> iusLinks = new TreeSet<IUSLink>();
+    private Set<Processing> processings = new TreeSet<>();
+    private Set<WorkflowRun> workflowRuns = new TreeSet<>();
+    private Set<IUSAttribute> iusAttributes = new TreeSet<>();
+    private Set<IUSLink> iusLinks = new TreeSet<>();
     private Boolean skip;
     // not persist
     private Boolean isHasFile = false;

@@ -66,7 +66,7 @@ public class LibraryStrategyResource extends DatabaseResource {
         List<LibraryStrategy> objects = (List<LibraryStrategy>) testIfNull(ss.list());
         logger.debug("library_strategies: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<LibraryStrategyList> jaxbTool = new JaxbObject<LibraryStrategyList>();
+        JaxbObject<LibraryStrategyList> jaxbTool = new JaxbObject<>();
 
         LibraryStrategyList list = new LibraryStrategyList();
         list.setList(new ArrayList());

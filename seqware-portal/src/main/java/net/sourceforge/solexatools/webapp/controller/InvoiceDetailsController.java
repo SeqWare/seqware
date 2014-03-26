@@ -54,7 +54,7 @@ public class InvoiceDetailsController  extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<String,Object>();
+		HashMap<String,Object>	model			= new HashMap<>();
 
                 Invoice invoice = getInvoiceService().findBySWAccession(Integer.parseInt(request.getParameter("invoiceSwAccession")));
                 model.put("invoice", invoice);
@@ -62,21 +62,21 @@ public class InvoiceDetailsController  extends BaseCommandController {
                 // now figure out the three types of expenses
                 Set<Expense> expenses = invoice.getExpenses();
                 // fixed
-                Set<Expense> fixed = new TreeSet<Expense>();
+                Set<Expense> fixed = new TreeSet<>();
                 filterExpenses(expenses, fixed, "fixed");
                 model.put("fixed", fixed);
                 model.put("fixed_size", fixed.size());
                 model.put("fixed_total_price", round(totalExpenses(fixed)));
                 
                 // consulting
-                Set<Expense> consulting = new TreeSet<Expense>();
+                Set<Expense> consulting = new TreeSet<>();
                 filterExpenses(expenses, consulting, "consulting");
                 model.put("consulting_size", consulting.size());
                 model.put("consulting", consulting);
                 model.put("consulting_total_price", round(totalExpenses(consulting)));
 
                 // analysis
-                Set<Expense> analysis = new TreeSet<Expense>();
+                Set<Expense> analysis = new TreeSet<>();
                 filterExpenses(expenses, analysis, "analysis");
                 model.put("analysis", analysis);
                 model.put("analysis_size", analysis.size());

@@ -132,7 +132,7 @@ public class LaneServiceImpl implements LaneService {
   /** {@inheritDoc} */
   @Override
   public SortedSet<Lane> listWithHasFile(SortedSet<Lane> list, String metaType) {
-    SortedSet<Lane> result = new TreeSet<Lane>();
+    SortedSet<Lane> result = new TreeSet<>();
     for (Lane lane : list) {
       boolean isHasFile = isHasFile(lane.getLaneId(), metaType);
       if (isHasFile) {
@@ -151,7 +151,7 @@ public class LaneServiceImpl implements LaneService {
   @Override
   public Integer insertLane(Registration registration, Sample sample, UploadSequence uploadSeqence, FileType fileType)
       throws Exception {
-    Set<File> files = new TreeSet<File>();
+    Set<File> files = new TreeSet<>();
     String folderStore = uploadSeqence.getFolderStore();
 
     if (uploadSeqence.getUseOneURL()) {
@@ -202,7 +202,7 @@ public class LaneServiceImpl implements LaneService {
     Processing newProcessing = insertProcessing(registration, files);
 
     // create new Processing
-    Set<Processing> processings = new TreeSet<Processing>();
+    Set<Processing> processings = new TreeSet<>();
     processings.add(newProcessing);
 
     // set new Processing
@@ -215,7 +215,7 @@ public class LaneServiceImpl implements LaneService {
 
     // set new Lane
     ius.setLane(lane);
-    SortedSet<IUS> newIUS = new TreeSet<IUS>();
+    SortedSet<IUS> newIUS = new TreeSet<>();
     newIUS.add(ius);
     lane.setIUS(newIUS);
 
@@ -351,7 +351,7 @@ public class LaneServiceImpl implements LaneService {
   @Override
   public List<Lane> list(List<Integer> laneIds) {
     if (laneIds == null || laneIds.size() == 0)
-      return new ArrayList<Lane>();
+      return new ArrayList<>();
 
     return laneDAO.list(laneIds);
   }
@@ -512,7 +512,7 @@ public class LaneServiceImpl implements LaneService {
 
       Integer id = Integer.parseInt(ids[i]);
       Integer status = Integer.parseInt(statuses[i]);
-      List<File> files = new ArrayList<File>();
+      List<File> files = new ArrayList<>();
 
       if (typeNode.equals("lane")) {
         Lane lane = findByID(Integer.parseInt(ids[i]));
@@ -585,7 +585,7 @@ public class LaneServiceImpl implements LaneService {
   }
 
   private List<File> getListFile(Lane lane) {
-    List<File> list = new ArrayList<File>();
+    List<File> list = new ArrayList<>();
 
     Processing processing = new Processing();
     Set<Processing> processings = lane.getProcessings();
@@ -605,7 +605,7 @@ public class LaneServiceImpl implements LaneService {
   }
 
   private List<File> getFiles(Set<Processing> processings) {
-    List<File> list = new ArrayList<File>();
+    List<File> list = new ArrayList<>();
     for (Processing processing : processings) {
       list.addAll(processing.getFiles());
     }

@@ -59,7 +59,7 @@ public class BatchMetadataInjectionTest {
     @Test
     public void testParseMiseqFile() throws Exception {
         System.out.println("parseMiseqFile");
-        HashMap<String,String> map =  new HashMap<String, String>();
+        HashMap<String,String> map =  new HashMap<>();
         map.put("study_type","4");
         map.put("library_type","Type");
         map.put("library_source_template_type", "LSTT");

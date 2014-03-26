@@ -27,7 +27,7 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 	private String	readSpec;
 	private String	tagSpec;
 	private String  adapterSpec;
-	private SortedSet<ExperimentSpotDesignReadSpec>	readSpecs = new TreeSet<ExperimentSpotDesignReadSpec>();
+	private SortedSet<ExperimentSpotDesignReadSpec>	readSpecs = new TreeSet<>();
 
 	
 	/**

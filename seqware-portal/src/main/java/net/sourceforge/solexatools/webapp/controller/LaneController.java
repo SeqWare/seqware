@@ -165,7 +165,7 @@ public class LaneController extends MultiActionController {
 
 		ModelAndView modelAndView = null;
 		Lane lane = getCurrentLane(request);
-		HashMap<String,Object> model = new HashMap<String,Object>();
+		HashMap<String,Object> model = new HashMap<>();
 		if (lane.getUpdateTimestamp() == null) {
 		//	Integer sampleId = Integer.parseInt(request.getParameter("sampleId"));
 		//  request.setAttribute("sampleId", sampleId);
@@ -346,7 +346,7 @@ public class LaneController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<String,Object>();
+		HashMap<String,Object>	model			= new HashMap<>();
 		Lane				    lane			= getRequestedLane(request);
 		
 		ServletContext context = this.getServletContext();

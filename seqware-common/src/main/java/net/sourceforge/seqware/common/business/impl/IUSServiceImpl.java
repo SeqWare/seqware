@@ -132,7 +132,7 @@ public class IUSServiceImpl implements IUSService {
   /** {@inheritDoc} */
   @Override
   public SortedSet<IUS> listWithHasFile(SortedSet<IUS> list, String metaType) {
-    SortedSet<IUS> result = new TreeSet<IUS>();
+    SortedSet<IUS> result = new TreeSet<>();
     for (IUS ius : list) {
       boolean isHasFile = isHasFile(ius.getIusId(), metaType);
       if (isHasFile) {

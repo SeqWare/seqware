@@ -225,7 +225,7 @@ public class SampleInfo {
      */
     public Set<IUSAttribute> getIusAttributes() {
         if (iusAttributes == null) {
-            iusAttributes = new HashSet<IUSAttribute>();
+            iusAttributes = new HashSet<>();
         }
         return iusAttributes;
     }
@@ -276,7 +276,7 @@ public class SampleInfo {
      */
     public Set<SampleAttribute> getSampleAttributes() {
         if (sampleAttributes == null) {
-            sampleAttributes = new HashSet<SampleAttribute>();
+            sampleAttributes = new HashSet<>();
         }
         return sampleAttributes;
     }

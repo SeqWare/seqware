@@ -66,7 +66,7 @@ public class LibrarySourceResource extends DatabaseResource {
         List<LibrarySource> objects = (List<LibrarySource>) testIfNull(ss.list());
         logger.debug("library_sources: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<LibrarySourceList> jaxbTool = new JaxbObject<LibrarySourceList>();
+        JaxbObject<LibrarySourceList> jaxbTool = new JaxbObject<>();
 
         LibrarySourceList list = new LibrarySourceList();
         list.setList(new ArrayList());

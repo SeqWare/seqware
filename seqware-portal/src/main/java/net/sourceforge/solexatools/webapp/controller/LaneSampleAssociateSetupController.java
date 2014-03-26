@@ -47,7 +47,7 @@ public class LaneSampleAssociateSetupController extends BaseCommandController {
       return new ModelAndView("redirect:/login.htm");
     
     ModelAndView modelAndView = null;
-    HashMap<String,Object>  model     = new HashMap<String,Object>();
+    HashMap<String,Object>  model     = new HashMap<>();
     Lane lane = getRequestedLane(request);
 
     System.err.println("LANE: "+lane.getLaneId());

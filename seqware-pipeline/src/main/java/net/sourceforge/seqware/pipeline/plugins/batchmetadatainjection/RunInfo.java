@@ -154,7 +154,7 @@ public class RunInfo {
      */
     public Set<LaneInfo> getLanes() {
         if (lanes == null) {
-            lanes = new HashSet<LaneInfo>();
+            lanes = new HashSet<>();
         }
         return lanes;
     }
@@ -191,7 +191,7 @@ public class RunInfo {
      */
     public Set<SequencerRunAttribute> getRunAttributes() {
         if (runAttributes == null) {
-            runAttributes = new HashSet<SequencerRunAttribute>();
+            runAttributes = new HashSet<>();
         }
         return runAttributes;
     }
@@ -242,7 +242,7 @@ public class RunInfo {
      */
     public Set<StudyAttribute> getStudyAttributes() {
         if (studyAttributes == null) {
-            studyAttributes = new HashSet<StudyAttribute>();
+            studyAttributes = new HashSet<>();
         }
         return studyAttributes;
     }
@@ -293,7 +293,7 @@ public class RunInfo {
      */
     public Set<ExperimentAttribute> getExperimentAttributes() {
         if (experimentAttributes == null) {
-            experimentAttributes = new HashSet<ExperimentAttribute>();
+            experimentAttributes = new HashSet<>();
         }
         return experimentAttributes;
     }

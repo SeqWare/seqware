@@ -63,7 +63,7 @@ public class InviteNewUserController extends BaseCommandController {
 	throws Exception 
 	{
 		ModelAndView	modelAndView	= null;
-		HashMap<String,Object>	model	= new HashMap<String,Object>();
+		HashMap<String,Object>	model	= new HashMap<>();
 		
 		Registration registration = Security.getRegistration(request);
 		if(registration == null || !registration.isLIMSAdmin())
@@ -78,8 +78,8 @@ public class InviteNewUserController extends BaseCommandController {
 		}
 
 		Boolean isHasError = false;
-		List<String> errorMessages = new LinkedList<String>();
-		List<String> emailsHasError = new LinkedList<String>();
+		List<String> errorMessages = new LinkedList<>();
+		List<String> emailsHasError = new LinkedList<>();
 	
 		String[] emails = getRequestedEmails(request);
 		

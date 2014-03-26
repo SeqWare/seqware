@@ -132,7 +132,7 @@ public final class DeletionDB extends Plugin {
                 // create a key file
                 Set<ModelAccessionIDTuple> find_JSON_rdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()), String.valueOf(tuple.getId()));
                 // add to a sorted set for easy viewing
-                SortedSet<ModelAccessionIDTuple> sortedSet = new TreeSet<ModelAccessionIDTuple>();
+                SortedSet<ModelAccessionIDTuple> sortedSet = new TreeSet<>();
                 sortedSet.addAll(find_JSON_rdelete);
                 // output information for informational purposes
                 outputSummaryInformation(sortedSet, fileClient);
@@ -153,7 +153,7 @@ public final class DeletionDB extends Plugin {
             } else {
                 ObjectMapper mapper = new ObjectMapper();
                 Set<ModelAccessionIDTuple> matchSet;
-                Set<String> filesToBeDeleted = new HashSet<String>();
+                Set<String> filesToBeDeleted = new HashSet<>();
                 try {
                     matchSet = mapper.readValue(inKeyFile, new TypeReference<Set<ModelAccessionIDTuple>>(){});
                     for (ModelAccessionIDTuple t : matchSet) {
@@ -244,7 +244,7 @@ public final class DeletionDB extends Plugin {
     public static void main(String[] args) throws IOException, URISyntaxException {
         DeletionDB mp = new DeletionDB();
         mp.init();
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         mp.setParams(arr);
         mp.parse_parameters();
         ReturnValue do_run = mp.do_run();
@@ -273,7 +273,7 @@ public final class DeletionDB extends Plugin {
     private void outputSummaryInformation(SortedSet<ModelAccessionIDTuple> sortedSet, SeqWareWebServiceClient fileClient) throws UniformInterfaceException {
         // we can output some friendly summary statistics here
         int workflowRunCount = 0;
-        Map<String, Integer> fileTypeCounts = new HashMap<String, Integer>();
+        Map<String, Integer> fileTypeCounts = new HashMap<>();
         for (ModelAccessionIDTuple t : sortedSet) {
             if (t.getAdminModelClass().equals(WorkflowRun.class.getName())) {
                 workflowRunCount++;

@@ -47,7 +47,7 @@ public class PluginRunner {
   private OptionSet options = null;
   private Plugin plugin = null;
   private Metadata meta = null;
-  private HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+  private HashMap<String, ArrayList<String>> map = new HashMap<>();
 
   /**
    * <p>main.</p>
@@ -187,7 +187,7 @@ public class PluginRunner {
       }
       ArrayList<String> classList = map.get(plug.getClass().getPackage().getName());
       if (classList == null) {
-        classList = new ArrayList<String>();
+        classList = new ArrayList<>();
       }
       classList.add(plug.getClass().getSimpleName());
       map.put(plug.getClass().getPackage().getName(), classList);

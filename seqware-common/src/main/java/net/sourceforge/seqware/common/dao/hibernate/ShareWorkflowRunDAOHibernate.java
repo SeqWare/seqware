@@ -111,7 +111,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
   /** {@inheritDoc} */
   @Override
   public List<ShareWorkflowRun> list(WorkflowRun workflowRun) {
-    List<ShareWorkflowRun> shareWorkflowRuns = new ArrayList<ShareWorkflowRun>();
+    List<ShareWorkflowRun> shareWorkflowRuns = new ArrayList<>();
     String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.workflowRunId = ?";
     Object[] parameters = { workflowRun.getWorkflowRunId() };
     List list = this.getHibernateTemplate().find(query, parameters);

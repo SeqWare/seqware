@@ -101,15 +101,15 @@ public class AnalisysRunningListDetailsController extends BaseCommandController 
 		Sample sam = new Sample();
 		Lane lane = new Lane();
 		Processing proc = new Processing();
-		Map<WorkflowRun, Set<Processing>> wfrProc = new HashMap<WorkflowRun, Set<Processing>>();
+		Map<WorkflowRun, Set<Processing>> wfrProc = new HashMap<>();
 		
 		//List<Workflow>  list;
 		PageInfo pageInfo = null;
 		Boolean isHasError = false;
 		String errorMessage = "";
 		
-		List<WorkflowRun>  listAll = new ArrayList<WorkflowRun>();
-		List<WorkflowRun>  listView = new ArrayList<WorkflowRun>();
+		List<WorkflowRun>  listAll = new ArrayList<>();
+		List<WorkflowRun>  listView = new ArrayList<>();
 		
 		String   root     = (String)request.getParameter("root");
 		System.err.println("ROOT: "+root);
@@ -199,7 +199,7 @@ public class AnalisysRunningListDetailsController extends BaseCommandController 
 		for (Processing child : proc.getChildren()) {
 			Set<Processing> processings = wfrProc.get(child.getWorkflowRun());
 			if (processings == null) {
-				processings = new HashSet<Processing>();
+				processings = new HashSet<>();
 			}
 			processings.add(child);
 			if (child.getWorkflowRun() != null) {

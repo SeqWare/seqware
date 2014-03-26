@@ -59,14 +59,14 @@ public class ExperimentIDResource extends DatabaseIDResource {
         
         Experiment experiment = (Experiment) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<Experiment> jaxbTool = new JaxbObject<Experiment>();
+        JaxbObject<Experiment> jaxbTool = new JaxbObject<>();
 
         Experiment dto = copier.hibernate2dto(Experiment.class, experiment, new Class<?>[]{ExperimentSpotDesign.class, ExperimentLibraryDesign.class}, new CollectionPropertyName<?>[]{});
         
 		if (fields.contains("attributes")) {
 			Set<ExperimentAttribute> eas = experiment.getExperimentAttributes();
 			if(eas!=null && !eas.isEmpty()) {
-				Set<ExperimentAttribute> newEas = new TreeSet<ExperimentAttribute>();
+				Set<ExperimentAttribute> newEas = new TreeSet<>();
 				for(ExperimentAttribute ea: eas) {
 					newEas.add(copier.hibernate2dto(ExperimentAttribute.class, ea));
 				}
@@ -86,7 +86,7 @@ public class ExperimentIDResource extends DatabaseIDResource {
         authenticate();
         Representation representation = null;
         Experiment newObj = null;
-        JaxbObject<Experiment> jo = new JaxbObject<Experiment>();
+        JaxbObject<Experiment> jo = new JaxbObject<>();
         try {
             String text = entity.getText();
             newObj = (Experiment) XmlTools.unMarshal(jo, new Experiment(), text);

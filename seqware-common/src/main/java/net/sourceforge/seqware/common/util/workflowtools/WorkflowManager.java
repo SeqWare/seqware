@@ -72,7 +72,7 @@ public class WorkflowManager {
     // Map<String, String> config = ConfigTools.getSettings();
 
     // will be handed off to the template layer
-    HashMap<String, String> map = new HashMap<String, String>();
+    HashMap<String, String> map = new HashMap<>();
 
     if (iniFilesStr != null) {
       String[] lines = iniFilesStr.split("\n");
@@ -152,7 +152,7 @@ public class WorkflowManager {
       run.setOwner(owner);
       SortedSet<WorkflowRunParam> runParams = createWorkflowRunParameters(map);
 
-      Map<String, List<File>> files = new HashMap<String, List<File>>();
+      Map<String, List<File>> files = new HashMap<>();
 
       accession = wrs.insert(owner, run, runParams, files);
       if (accession == 0) {
@@ -220,11 +220,11 @@ public class WorkflowManager {
     Lane lane = ls.findBySWAccession(parentAccession);
 
     if (ius != null) {
-      SortedSet<IUS> iuses = new TreeSet<IUS>();
+      SortedSet<IUS> iuses = new TreeSet<>();
       iuses.add(ius);
       wr.setIus(iuses);
     } else if (lane != null) {
-      SortedSet<Lane> lanes = new TreeSet<Lane>();
+      SortedSet<Lane> lanes = new TreeSet<>();
       lanes.add(lane);
       wr.setLanes(lanes);
     } else {
@@ -239,7 +239,7 @@ public class WorkflowManager {
     public static SortedSet<WorkflowRunParam> createWorkflowRunParameters(HashMap<String, String> map) throws NumberFormatException {
         // FIXME: Deal with workflow Run Params. I am not handling parent files
         // correctly at the moment
-        SortedSet<WorkflowRunParam> runParams = new TreeSet<WorkflowRunParam>();
+        SortedSet<WorkflowRunParam> runParams = new TreeSet<>();
         for (String str : map.keySet()) {
 
           if (map.get(str) != null) {

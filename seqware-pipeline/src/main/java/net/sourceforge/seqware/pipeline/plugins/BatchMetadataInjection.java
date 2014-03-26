@@ -55,7 +55,7 @@ public class BatchMetadataInjection extends Metadata {
         parser.accepts("interactive", "Optional: turn on interactive input ");
         parser.accepts("record", "Optional: saves information about the injection in a text file").withOptionalArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
-        names = new HashMap<Integer, String>();
+        names = new HashMap<>();
     }
 
     /**

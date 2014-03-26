@@ -164,7 +164,7 @@ public class MetadataDB {
    */
   public HashMap<String,Object> getWorkflowRunInfo(int workflowRunAccession) {
     
-    HashMap<String,Object> d = new HashMap<String,Object>();
+    HashMap<String,Object> d = new HashMap<>();
     
     Connection c = setupConnection();
     int workflowRunId = 0;
@@ -193,7 +193,7 @@ public class MetadataDB {
       rs = s.executeQuery("select sw_accession, processing_id, algorithm, status from processing where ancestor_workflow_run_id = "+workflowRunId+" or workflow_run_id = "+workflowRunId);
       while(rs.next()) {
         
-        HashMap<String, Object> proc = new HashMap<String, Object>();
+        HashMap<String, Object> proc = new HashMap<>();
 
         int accession = rs.getInt(1);
         int procId = rs.getInt(2);
@@ -204,7 +204,7 @@ public class MetadataDB {
         proc.put("algo", algo);
         proc.put("status", status);
         
-        HashMap<Integer, String> files = new HashMap<Integer, String>();
+        HashMap<Integer, String> files = new HashMap<>();
         Statement s2 = c.createStatement();
         ResultSet rs2 = s2.executeQuery("select sw_accession, file_path from file where file_id in (select file_id from processing_files where processing_id = "+procId+")");
         while(rs2.next()) {
@@ -236,7 +236,7 @@ public class MetadataDB {
   
   private ArrayList<Map<String, String>> moreGenericGetMetadata(String query) {
 
-    ArrayList<Map<String, String>> data = new ArrayList<Map<String, String>>();
+    ArrayList<Map<String, String>> data = new ArrayList<>();
     
     String rootURL = EnvUtil.getProperty("rooturl");
 
@@ -267,14 +267,14 @@ public class MetadataDB {
       ResultSetMetaData rsMetaData = rs.getMetaData();
 
       int numberOfColumns = rsMetaData.getColumnCount();
-      Map<Integer, String> columnNames = new HashMap<Integer, String>();
+      Map<Integer, String> columnNames = new HashMap<>();
       for (int i = 1; i <= numberOfColumns; i++) {
         // get the column's name.
         System.out.println(rsMetaData.getColumnName(i));
         columnNames.put(i, rsMetaData.getColumnName(i));
       }
       while (rs.next()) {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>();
         for (int i=1; i<=numberOfColumns; i++) {
           String key = columnNames.get(i);
           String value = rs.getString(i);

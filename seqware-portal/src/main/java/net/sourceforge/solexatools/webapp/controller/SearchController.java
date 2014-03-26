@@ -80,7 +80,7 @@ public class SearchController extends BaseCommandController {
 //	}
 	 
 	private List<String> getTypes() {
-		List<String> types = new ArrayList<String>();
+		List<String> types = new ArrayList<>();
 		types.add("All");
 		types.add("Study");
 		types.add("Experiment");

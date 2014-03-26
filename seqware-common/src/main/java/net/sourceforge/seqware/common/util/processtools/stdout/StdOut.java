@@ -37,7 +37,7 @@ public class StdOut {
     BufferedWriter currentFile = null;
     BufferedReader stdout = new BufferedReader(new InputStreamReader(p
         .getInputStream()));
-    ArrayList<BufferedWriter> fileOutputs = new ArrayList<BufferedWriter>();
+    ArrayList<BufferedWriter> fileOutputs = new ArrayList<>();
 
     // Open files
     for (int i = 0; i < numFiles; i++) {
@@ -215,7 +215,7 @@ public class StdOut {
     BufferedWriter currentFile = null;
     BufferedReader stdout = new BufferedReader(new InputStreamReader(p
         .getInputStream()));
-    ArrayList<BufferedWriter> fileOutputs = new ArrayList<BufferedWriter>();
+    ArrayList<BufferedWriter> fileOutputs = new ArrayList<>();
 
     // Open files
     for (int i = 0; i < numFiles; i++) {

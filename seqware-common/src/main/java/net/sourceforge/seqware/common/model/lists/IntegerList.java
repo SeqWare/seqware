@@ -39,7 +39,7 @@ public class IntegerList {
      * <p>Constructor for FileList.</p>
      */
     public IntegerList() {
-        tList = new ArrayList<Integer>();
+        tList = new ArrayList<>();
     }
 
     /**

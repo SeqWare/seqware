@@ -41,12 +41,12 @@ public abstract class AbstractWorkflowDataModel  {
 
     public AbstractWorkflowDataModel() {
     	this.env = new Environment();
-    	this.files = new LinkedHashMap<String, SqwFile>();
+    	this.files = new LinkedHashMap<>();
     	this.setTags(new HashMap<String,String>());
-    	this.configs = new HashMap<String,String>();
+    	this.configs = new HashMap<>();
     	this.workflow = new Workflow();
-    	this.dirs = new ArrayList<String>();
-    	this.parentAccessions = new ArrayList<String>();
+    	this.dirs = new ArrayList<>();
+    	this.parentAccessions = new ArrayList<>();
     }
     
     /**
@@ -54,7 +54,7 @@ public abstract class AbstractWorkflowDataModel  {
      * @param model
      */
     public static void prepare(AbstractWorkflowDataModel model) {
-      Map<String,SqwFile> m = new HashMap<String,SqwFile>();
+      Map<String,SqwFile> m = new HashMap<>();
       for (Map.Entry<String,SqwFile> e : model.files.entrySet()){
         String name = safe(e.getKey());
         if (m.containsKey(name)){
@@ -311,7 +311,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @return parent_accessions separated by ","
 	 */
 	public Collection<String> getParentAccessions() {
-		return new ArrayList<String>(this.parentAccessions);
+		return new ArrayList<>(this.parentAccessions);
 	}
 
 	/**

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class JobBatch extends AbstractJob {
 
-    private List<Job> jobList = new ArrayList<Job>();
+    private List<Job> jobList = new ArrayList<>();
 
     public JobBatch(String algo) {
         super(algo);

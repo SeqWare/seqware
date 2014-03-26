@@ -85,7 +85,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      */
     @Override
     public List<File> getFiles(Integer processingId) {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
 
         /*
          * String query = "WITH RECURSIVE processing_root_to_leaf (child_id,
@@ -166,7 +166,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     /** {@inheritDoc} */
     @Override
     public List<File> getFiles(Integer processingId, String metaType) {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? "
                 + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
@@ -318,7 +318,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     /** {@inheritDoc} */
     @Override
     public List<Processing> list() {
-        ArrayList<Processing> l = new ArrayList<Processing>();
+        ArrayList<Processing> l = new ArrayList<>();
 
         String query = "from Processing";
 

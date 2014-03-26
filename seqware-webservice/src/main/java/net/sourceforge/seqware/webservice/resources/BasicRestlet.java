@@ -55,9 +55,9 @@ public class BasicRestlet extends Restlet {
         Form form = request.getResourceRef().getQueryAsForm();
         queryValues = form.getValuesMap();
         if (queryValues == null) {
-            queryValues = new HashMap<String, String>();
+            queryValues = new HashMap<>();
         }
-        fields = new ArrayList<String>();
+        fields = new ArrayList<>();
 
         if (queryValues.containsKey("show")) {
             String[] fieldArr = queryValues.get("show").split(",");
@@ -66,7 +66,7 @@ public class BasicRestlet extends Restlet {
     }
 
     public static Map<String, String[]> queryMap(Request req) {
-      Map<String, String[]> m = new HashMap<String, String[]>();
+      Map<String, String[]> m = new HashMap<>();
       Form f = req.getResourceRef().getQueryAsForm();
       for (String name : f.getNames()){
         m.put(name, f.getValuesArray(name));

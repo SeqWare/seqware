@@ -33,8 +33,8 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
   private String urlLabel;
   private String md5sum;
   private FileType fileType;
-  private Set<Processing> processings = new TreeSet<Processing>();
-  private Set<FileAttribute> fileAttributes = new TreeSet<FileAttribute>();
+  private Set<Processing> processings = new TreeSet<>();
+  private Set<FileAttribute> fileAttributes = new TreeSet<>();
   private Long size;
   private Boolean skip;
 

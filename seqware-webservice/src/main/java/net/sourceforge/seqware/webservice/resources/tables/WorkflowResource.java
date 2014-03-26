@@ -89,7 +89,7 @@ public class WorkflowResource extends DatabaseResource {
 
     private Document detachWorkflow(Workflow workflow) {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<Workflow> jaxbTool = new JaxbObject<Workflow>();
+        JaxbObject<Workflow> jaxbTool = new JaxbObject<>();
         Workflow dto = copier.hibernate2dto(Workflow.class, workflow);
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         return line;
@@ -97,7 +97,7 @@ public class WorkflowResource extends DatabaseResource {
 
     private Document detachWorkflowList(List<Workflow> workflows) {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<WorkflowList> jaxbTool = new JaxbObject<WorkflowList>();
+        JaxbObject<WorkflowList> jaxbTool = new JaxbObject<>();
         WorkflowList eList = new WorkflowList();
         eList.setList(new ArrayList());
 
@@ -118,7 +118,7 @@ public class WorkflowResource extends DatabaseResource {
     public void postJaxb(Representation entity) {
         authenticate();
         try {
-            JaxbObject<Workflow> jo = new JaxbObject<Workflow>();
+            JaxbObject<Workflow> jo = new JaxbObject<>();
             String text = entity.getText();
             Workflow p;
             try {

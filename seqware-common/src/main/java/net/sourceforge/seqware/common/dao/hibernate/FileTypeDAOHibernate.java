@@ -32,7 +32,7 @@ public class FileTypeDAOHibernate extends HibernateDaoSupport implements FileTyp
    */
   @Override
   public List<FileType> list() {
-    ArrayList<FileType> fileTypes = new ArrayList<FileType>();
+    ArrayList<FileType> fileTypes = new ArrayList<>();
 
     List expmts = this.getHibernateTemplate().find("from FileType as fileType order by fileType.fileTypeId asc" // desc
     );

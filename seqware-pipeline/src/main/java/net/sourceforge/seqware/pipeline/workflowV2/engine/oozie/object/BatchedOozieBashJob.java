@@ -16,7 +16,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 public class BatchedOozieBashJob extends OozieJob {
 
     
-  private List<OozieBashJob> batchedJobs = new ArrayList<OozieBashJob>();
+  private List<OozieBashJob> batchedJobs = new ArrayList<>();
 
 
   public BatchedOozieBashJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
@@ -53,7 +53,7 @@ public class BatchedOozieBashJob extends OozieJob {
 
   @Override
   public List<String> getAccessionFile() {
-    List<String> list = new ArrayList<String>();
+    List<String> list = new ArrayList<>();
     for(OozieJob job : this.batchedJobs){
         List<String> accessionFile = job.getAccessionFile();
         list.addAll(accessionFile);
@@ -64,7 +64,7 @@ public class BatchedOozieBashJob extends OozieJob {
   private File emitRunnerScript() {
     File localFile = file(scriptsDir, runnerFileName(name), true);
 
-    ArrayList<String> args = new ArrayList<String>();
+    ArrayList<String> args = new ArrayList<>();
     for(OozieBashJob batchedJob : batchedJobs){
         batchedJob.setUseCheckFile(true);
         args.add(concat(" ",batchedJob.generateRunnerLine()));

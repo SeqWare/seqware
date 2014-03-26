@@ -131,12 +131,12 @@ public class ModuleRunner extends Plugin {
 
     Log.stdout("\nAvailable Module List:");
 
-    HashMap<String, ArrayList<String>> modules = new HashMap<String, ArrayList<String>>();
+    HashMap<String, ArrayList<String>> modules = new HashMap<>();
 
     for (ModuleInterface mod : mods) {
 
       if (modules.get(mod.getClass().getPackage().getName()) == null) {
-        ArrayList<String> modulesInPackage = new ArrayList<String>();
+        ArrayList<String> modulesInPackage = new ArrayList<>();
         modules.put(mod.getClass().getPackage().getName(), modulesInPackage);
       }
       ArrayList<String> modulesInPackage = modules.get(mod.getClass().getPackage().getName());

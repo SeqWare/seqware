@@ -156,7 +156,7 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 	Flexigrid flexigrid = new Flexigrid(workflowRuns.size(), page);
 	for (WorkflowRun workflowRun : workflowRuns) {
 
-	    List<String> cellsModel = new LinkedList<String>();
+	    List<String> cellsModel = new LinkedList<>();
 	    cellsModel.add(workflowRun.getCreateTimestamp().toString());
 	    cellsModel.add(workflowRun.getWorkflow().getName());
 	    cellsModel.add(workflowRun.getWorkflow().getVersion());

@@ -66,7 +66,7 @@ public class OrganismResource extends DatabaseResource {
         List<Organism> objects = (List<Organism>) testIfNull(ss.list());
         logger.debug("organisms: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<OrganismList> jaxbTool = new JaxbObject<OrganismList>();
+        JaxbObject<OrganismList> jaxbTool = new JaxbObject<>();
 
         OrganismList list = new OrganismList();
         list.setList(new ArrayList());

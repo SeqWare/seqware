@@ -244,7 +244,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     /** {@inheritDoc} */
     @Override
     public List<SequencerRun> list(Registration registration, Boolean isAsc) {
-        ArrayList<SequencerRun> sequencerRuns = new ArrayList<SequencerRun>();
+        ArrayList<SequencerRun> sequencerRuns = new ArrayList<>();
         if (registration == null) {
             return sequencerRuns;
         }
@@ -437,7 +437,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     /** {@inheritDoc} */
     @Override
     public List<SequencerRun> list() {
-        ArrayList<SequencerRun> sequencerRuns = new ArrayList<SequencerRun>();
+        ArrayList<SequencerRun> sequencerRuns = new ArrayList<>();
 
         // SEQWARE-1489
         // bizarre, my initial thought was to restrict this to the base class

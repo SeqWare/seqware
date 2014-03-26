@@ -152,7 +152,7 @@ public class SummaryLaunchWorkflowController extends MultiActionController {
 		if (workflow.getWorkflowParamsWithDifferentFileMetaType().size() > 0) {
 			modelAndView = new ModelAndView("SelectInput");
 		} else {
-			HashMap<String,Object> model = new HashMap<String,Object>();
+			HashMap<String,Object> model = new HashMap<>();
 			request.setAttribute(getCommandName(command), workflow);
 			
 			List<Workflow> list = getWorkflowService().list();

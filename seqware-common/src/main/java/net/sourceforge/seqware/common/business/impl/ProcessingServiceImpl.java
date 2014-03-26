@@ -221,7 +221,7 @@ public class ProcessingServiceImpl implements ProcessingService {
   /** {@inheritDoc} */
   @Override
   public Set<Processing> setWithHasFile(Set<Processing> list, String metaType) {
-    Set<Processing> result = new TreeSet<Processing>();
+    Set<Processing> result = new TreeSet<>();
     for (Processing processing : list) {
       boolean isHasFile = isHasFile(processing.getProcessingId(), metaType);
       if (isHasFile) {
@@ -349,7 +349,7 @@ public class ProcessingServiceImpl implements ProcessingService {
    */
   @Override
   public Set<Processing> findFor(Sample sample, WorkflowRun workflowRun) {
-    Set<Processing> processings = new HashSet<Processing>();
+    Set<Processing> processings = new HashSet<>();
     if (sample.getProcessings() != null) {
       processings.addAll(sample.getProcessings());
       for (Processing proc : sample.getProcessings()) {

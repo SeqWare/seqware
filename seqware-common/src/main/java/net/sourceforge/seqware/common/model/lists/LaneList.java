@@ -34,7 +34,7 @@ public class LaneList {
      * <p>Constructor for LaneList.</p>
      */
     public LaneList() {
-        tList = new ArrayList<Lane>();
+        tList = new ArrayList<>();
     }
 
     /**

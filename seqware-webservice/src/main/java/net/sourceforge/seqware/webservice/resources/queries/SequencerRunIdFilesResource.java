@@ -71,7 +71,7 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
         ReturnValueList list = new ReturnValueList();
         list.setList(returnValues);
 
-        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<ReturnValueList>();
+        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<>();
         Document line = XmlTools.marshalToDocument(jaxbTool, list);
         response.setEntity(XmlTools.getRepresentation(line));
     }
@@ -83,7 +83,7 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
      * @return a {@link java.util.List} object.
      */
     public List<ReturnValue> hello(int srSWA){
-        List<ReturnValue> returnValues = new ArrayList<ReturnValue>();
+        List<ReturnValue> returnValues = new ArrayList<>();
 
         SequencerRunService srs = BeanFactory.getSequencerRunServiceBean();
         SequencerRun sr = (SequencerRun) testIfNull(srs.findBySWAccession(srSWA));

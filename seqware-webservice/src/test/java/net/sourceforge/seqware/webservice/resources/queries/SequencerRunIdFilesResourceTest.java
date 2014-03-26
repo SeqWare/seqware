@@ -32,7 +32,7 @@ public class SequencerRunIdFilesResourceTest extends DatabaseResourceIDTest {
 
     public SequencerRunIdFilesResourceTest() {
         super("/sequencerruns/4715/files");
-        jo = new JaxbObject<ReturnValueList>();
+        jo = new JaxbObject<>();
         o = new ReturnValueList();
     }
 

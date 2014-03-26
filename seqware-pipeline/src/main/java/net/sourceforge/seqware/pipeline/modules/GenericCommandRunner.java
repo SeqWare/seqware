@@ -141,10 +141,10 @@ public class GenericCommandRunner extends Module {
             // by splitting the command line options by space. JOpt expects a String[]
 
             // an array for this module
-            ArrayList<String> myParameters = new ArrayList<String>();
+            ArrayList<String> myParameters = new ArrayList<>();
 
             // an array for everything else that will get passed to the command
-            cmdParameters = new ArrayList<String>();
+            cmdParameters = new ArrayList<>();
 
             // should be able to do this since all the --gcr-* params take an argument
             for (int i = 0; i < this.getParameters().size(); i++) {
@@ -312,7 +312,7 @@ public class GenericCommandRunner extends Module {
                 // handler the key-value
                 if (fm.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
                     Map<String, String> map = FileTools.getKeyValueFromFile(fm.getFilePath());
-                    Set<ProcessingAttribute> atts = new TreeSet<ProcessingAttribute>();
+                    Set<ProcessingAttribute> atts = new TreeSet<>();
                     for (Map.Entry<String, String> entry : map.entrySet()) {
                         ProcessingAttribute a = new ProcessingAttribute();
                         a.setTag(entry.getKey());
@@ -340,7 +340,7 @@ public class GenericCommandRunner extends Module {
         StringBuilder stderr = new StringBuilder();
         StringBuilder stdout = new StringBuilder();
 
-        ArrayList<String> theCommand = new ArrayList<String>();
+        ArrayList<String> theCommand = new ArrayList<>();
         theCommand.add("bash");
         theCommand.add("-lc");
         StringBuffer cmdBuff = new StringBuffer();

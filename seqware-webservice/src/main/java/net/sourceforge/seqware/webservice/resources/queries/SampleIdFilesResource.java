@@ -72,7 +72,7 @@ public class SampleIdFilesResource extends BasicRestlet {
         List<ReturnValue> list = fatf.filesFromSample(sample, null, null);
         returnValues.setList(list);
 
-        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<ReturnValueList>();
+        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<>();
 
         Document line = XmlTools.marshalToDocument(jaxbTool, returnValues);
 

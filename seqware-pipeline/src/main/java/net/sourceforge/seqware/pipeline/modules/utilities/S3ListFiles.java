@@ -190,10 +190,10 @@ public class S3ListFiles extends Module {
     ret.setExitStatus(ReturnValue.SUCCESS);
 
     // stores local file info
-    HashMap<String, HashMap<String, Long>> localFiles = new HashMap<String, HashMap<String, Long>> ();
+    HashMap<String, HashMap<String, Long>> localFiles = new HashMap<> ();
 
     // stores remote file info
-    HashMap<String, HashMap<String, Long>> remoteFiles = new HashMap<String, HashMap<String, Long>> ();
+    HashMap<String, HashMap<String, Long>> remoteFiles = new HashMap<> ();
 
 
     BufferedWriter tabWriter = null;
@@ -236,7 +236,7 @@ public class S3ListFiles extends Module {
     if (options.has("search-local-dir")) {
       List<String> searchDirs = (List<String>) options.valuesOf("search-local-dir");
       for (String dir : searchDirs) {
-        HashMap<String, Long> files = new HashMap<String, Long>();
+        HashMap<String, Long> files = new HashMap<>();
         findFiles(dir, dir, files);
         localFiles.put(dir, files);
       }
@@ -322,7 +322,7 @@ public class S3ListFiles extends Module {
                 try {
                   HashMap<String, Long> bucketMap = remoteFiles.get(bucket);
                   if (bucketMap == null) {
-                    bucketMap = new HashMap<String, Long>();
+                    bucketMap = new HashMap<>();
                     remoteFiles.put(bucket, bucketMap);
                   }
                   bucketMap.put(objectSummary.getKey(), objectSummary.getSize());

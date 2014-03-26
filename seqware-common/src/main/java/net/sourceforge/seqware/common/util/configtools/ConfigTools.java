@@ -40,7 +40,7 @@ public class ConfigTools {
       throw new RuntimeException("The settings file " + settings + " is not a file!");
     }
 
-    HashMap<String, String> hm = new HashMap<String, String>();
+    HashMap<String, String> hm = new HashMap<>();
 
     // now read back the values from the settings file
     MapTools.ini2Map(settings, hm, true);

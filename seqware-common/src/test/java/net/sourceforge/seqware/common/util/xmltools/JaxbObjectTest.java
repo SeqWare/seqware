@@ -116,7 +116,7 @@ public class JaxbObjectTest {
     type.setFileTypeId(-1);
     type.setMetaType("meta-type");
 
-    JaxbObject<FileType> instance = new JaxbObject<FileType>();
+    JaxbObject<FileType> instance = new JaxbObject<>();
     String expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><FileType><displayName>Display Name</displayName><extension>extension</extension><fileTypeId>-1</fileTypeId><metaType>meta-type</metaType></FileType>";
     String result = instance.marshal(type);
     assertEquals(expResult, result);
@@ -136,7 +136,7 @@ public class JaxbObjectTest {
     type.setFileTypeId(-1);
     type.setMetaType("meta-type");
 
-    JaxbObject<FileType> instance = new JaxbObject<FileType>();
+    JaxbObject<FileType> instance = new JaxbObject<>();
     String result = instance.marshal(type);
 
     Reader in = new StringReader(result);
@@ -165,7 +165,7 @@ public class JaxbObjectTest {
     sa2.setValue("t2");
     sample.getSampleAttributes().add(sa2);
 
-    JaxbObject<Sample> instance = new JaxbObject<Sample>();
+    JaxbObject<Sample> instance = new JaxbObject<>();
     String result = instance.marshal(sample);
     System.out.println(result);
     Reader in = new StringReader(result);
@@ -193,7 +193,7 @@ public class JaxbObjectTest {
     sa2.setValue("t2");
     study.getStudyAttributes().add(sa2);
 
-    JaxbObject<Study> instance = new JaxbObject<Study>();
+    JaxbObject<Study> instance = new JaxbObject<>();
     String result = instance.marshal(study);
     System.out.println(result);
     Reader in = new StringReader(result);
@@ -221,7 +221,7 @@ public class JaxbObjectTest {
     sa2.setValue("t2");
     ius.getIusAttributes().add(sa2);
 
-    JaxbObject<IUS> instance = new JaxbObject<IUS>();
+    JaxbObject<IUS> instance = new JaxbObject<>();
     String result = instance.marshal(ius);
     System.out.println(result);
     Reader in = new StringReader(result);
@@ -249,7 +249,7 @@ public class JaxbObjectTest {
     sa2.setValue("t2");
     lane.getLaneAttributes().add(sa2);
 
-    JaxbObject<Lane> instance = new JaxbObject<Lane>();
+    JaxbObject<Lane> instance = new JaxbObject<>();
     String result = instance.marshal(lane);
     System.out.println(result);
     Reader in = new StringReader(result);
@@ -277,7 +277,7 @@ public class JaxbObjectTest {
     sa2.setValue("t2");
     ius.getExperimentAttributes().add(sa2);
 
-    JaxbObject<Experiment> instance = new JaxbObject<Experiment>();
+    JaxbObject<Experiment> instance = new JaxbObject<>();
     String result = instance.marshal(ius);
     System.out.println(result);
     Reader in = new StringReader(result);
@@ -305,7 +305,7 @@ public class JaxbObjectTest {
     sa2.setValue("t2");
     ius.getSequencerRunAttributes().add(sa2);
 
-    JaxbObject<SequencerRun> instance = new JaxbObject<SequencerRun>();
+    JaxbObject<SequencerRun> instance = new JaxbObject<>();
     String result = instance.marshal(ius);
     System.out.println(result);
     Reader in = new StringReader(result);
@@ -333,7 +333,7 @@ public class JaxbObjectTest {
     sa2.setValue("t2");
     ius.getProcessingAttributes().add(sa2);
 
-    JaxbObject<Processing> instance = new JaxbObject<Processing>();
+    JaxbObject<Processing> instance = new JaxbObject<>();
     String result = instance.marshal(ius);
     System.out.println(result);
     Reader in = new StringReader(result);
@@ -351,7 +351,7 @@ public class JaxbObjectTest {
     Processing ius = new Processing();
     ius.setProcessingId(Integer.MIN_VALUE);
 
-    JaxbObject<Processing> instance = new JaxbObject<Processing>();
+    JaxbObject<Processing> instance = new JaxbObject<>();
     String result = instance.marshal(ius);
     System.out.println(result);
     Reader in = new StringReader(result);
@@ -390,10 +390,10 @@ public class JaxbObjectTest {
     p.setIUS(iuses);
     p.setLanes(lanes);
 
-    JaxbObject<WorkflowRun> jaxb = new JaxbObject<WorkflowRun>();
+    JaxbObject<WorkflowRun> jaxb = new JaxbObject<>();
     String wrResult = jaxb.marshal(wr);
 
-    JaxbObject<Processing> jaxbP = new JaxbObject<Processing>();
+    JaxbObject<Processing> jaxbP = new JaxbObject<>();
     String pResult = jaxbP.marshal(p);
 
     WorkflowRun x = (WorkflowRun) XmlTools.unMarshal(jaxb, new WorkflowRun(), wrResult);
@@ -421,17 +421,17 @@ public class JaxbObjectTest {
 
     Sample s1 = new Sample();
     s1.setAlias("alias1");
-    SortedSet<Sample> samples = new TreeSet<Sample>();
+    SortedSet<Sample> samples = new TreeSet<>();
     r1.setSamples(samples);
 
-    ArrayList<WorkflowRun> list = new ArrayList<WorkflowRun>();
+    ArrayList<WorkflowRun> list = new ArrayList<>();
     list.add(r1);
     list.add(r2);
 
     WorkflowRunList2 rvl = new WorkflowRunList2();
     rvl.setList(list);
 
-    JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<WorkflowRunList2>();
+    JaxbObject<WorkflowRunList2> jaxb = new JaxbObject<>();
     String text = jaxb.marshal(rvl);
     if (!text.contains("r1") && !text.contains("r2") && !text.contains("alias1")) {
       Assert.fail("Marshalling WorkflowRunList failed");
@@ -463,14 +463,14 @@ public class JaxbObjectTest {
     // SortedSet<Sample> samples = new TreeSet<Sample>();
     // r1.setSamples(samples);
 
-    ArrayList<Workflow> list = new ArrayList<Workflow>();
+    ArrayList<Workflow> list = new ArrayList<>();
     list.add(r1);
     list.add(r2);
 
     WorkflowList rvl = new WorkflowList();
     rvl.setList(list);
 
-    JaxbObject<WorkflowList> jaxb = new JaxbObject<WorkflowList>();
+    JaxbObject<WorkflowList> jaxb = new JaxbObject<>();
     String text = jaxb.marshal(rvl);
     if (!text.contains("r1") && !text.contains("r2") && !text.contains("alias1")) {
       Assert.fail("Marshalling WorkflowRunList failed");
@@ -496,21 +496,21 @@ public class JaxbObjectTest {
     r2.setAlgorithm("r2");
 
     FileMetadata fm = new FileMetadata("filepath", "metatype");
-    ArrayList<FileMetadata> fmlist = new ArrayList<FileMetadata>();
+    ArrayList<FileMetadata> fmlist = new ArrayList<>();
     fmlist.add(fm);
     r1.setFiles(fmlist);
 
     r1.getAttributes().put("key", "value1");
     r2.getAttributes().put("key", "value2");
 
-    ArrayList<ReturnValue> list = new ArrayList<ReturnValue>();
+    ArrayList<ReturnValue> list = new ArrayList<>();
     list.add(r1);
     list.add(r2);
 
     ReturnValueList rvl = new ReturnValueList();
     rvl.setList(list);
 
-    JaxbObject<ReturnValueList> jaxb = new JaxbObject<ReturnValueList>();
+    JaxbObject<ReturnValueList> jaxb = new JaxbObject<>();
     String text = jaxb.marshal(rvl);
     if (!text.contains("r1") && text.contains("r2")) {
       Assert.fail("Marshalling ReturnValueList failed - simple types");

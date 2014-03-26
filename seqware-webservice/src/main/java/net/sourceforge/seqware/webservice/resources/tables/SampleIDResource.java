@@ -54,7 +54,7 @@ public class SampleIDResource extends DatabaseIDResource {
     public void getXml() {
         authenticate();
 
-        JaxbObject<Lane> jaxbTool = new JaxbObject<Lane>();
+        JaxbObject<Lane> jaxbTool = new JaxbObject<>();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
 
         SampleService ss = BeanFactory.getSampleServiceBean();
@@ -64,7 +64,7 @@ public class SampleIDResource extends DatabaseIDResource {
         if (fields.contains("lanes")) {
             SortedSet<Lane> lanes = sample.getLanes();
             if (lanes != null) {
-                SortedSet<Lane> copiedLanes = new TreeSet<Lane>();
+                SortedSet<Lane> copiedLanes = new TreeSet<>();
                 for (Lane lane : lanes) {
                     copiedLanes.add(copier.hibernate2dto(Lane.class, lane));
                 }
@@ -76,7 +76,7 @@ public class SampleIDResource extends DatabaseIDResource {
         if (fields.contains("ius")) {
             SortedSet<IUS> ius = sample.getIUS();
             if (ius != null) {
-                SortedSet<IUS> copiedIUS = new TreeSet<IUS>();
+                SortedSet<IUS> copiedIUS = new TreeSet<>();
                 for (IUS i : ius) {
                     copiedIUS.add(copier.hibernate2dto(IUS.class, i));
                 }
@@ -88,7 +88,7 @@ public class SampleIDResource extends DatabaseIDResource {
 		if(fields.contains("attributes")) {
 			Set<SampleAttribute> sas = sample.getSampleAttributes();
 			if(sas!=null && !sas.isEmpty()) {
-				Set<SampleAttribute> newsas = new TreeSet<SampleAttribute>();
+				Set<SampleAttribute> newsas = new TreeSet<>();
 				for(SampleAttribute sa: sas) {
 					newsas.add(copier.hibernate2dto(SampleAttribute.class,sa));
 				}
@@ -108,7 +108,7 @@ public class SampleIDResource extends DatabaseIDResource {
         authenticate();
         Representation representation = null;
 		try {
-            JaxbObject<Sample> jo = new JaxbObject<Sample>();
+            JaxbObject<Sample> jo = new JaxbObject<>();
             String text = entity.getText();
             Sample o = null;
             try {
@@ -183,7 +183,7 @@ public class SampleIDResource extends DatabaseIDResource {
                     }
             if (null != o.getParents()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                Set<Sample> parents = new HashSet<Sample>(sample.getParents());
+                Set<Sample> parents = new HashSet<>(sample.getParents());
                 for (Sample s: o.getParents()) {
                     parents.add(ss.findByID(s.getSampleId()));
                 }
@@ -191,7 +191,7 @@ public class SampleIDResource extends DatabaseIDResource {
             }
             if (null != o.getChildren()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                Set<Sample> children = new HashSet<Sample>(sample.getChildren());
+                Set<Sample> children = new HashSet<>(sample.getChildren());
                 for (Sample s: o.getChildren()) {
                     children.add(ss.findByID(s.getSampleId()));
                 }

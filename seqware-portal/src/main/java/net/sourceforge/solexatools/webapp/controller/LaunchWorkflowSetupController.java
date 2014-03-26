@@ -45,7 +45,7 @@ public class LaunchWorkflowSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<String,Object>();	
+		HashMap<String,Object>	model			= new HashMap<>();	
 		
 		
 		List<Workflow> list = getWorkflowService().list();

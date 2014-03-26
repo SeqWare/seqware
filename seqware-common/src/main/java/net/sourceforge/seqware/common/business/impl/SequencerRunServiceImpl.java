@@ -126,7 +126,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     sequencerRun.setCreateTimestamp(new Date());
       
     Log.stderr("Counts: " + sequencerRun.getLaneCount());
-    TreeSet<Lane> list = new TreeSet<Lane>();
+    TreeSet<Lane> list = new TreeSet<>();
     for (int i = 1; i <= sequencerRun.getLaneCount(); i++) {
       Log.stderr("HERE: " + i);
       Lane lane = new Lane();

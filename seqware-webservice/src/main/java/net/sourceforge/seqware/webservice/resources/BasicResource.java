@@ -79,9 +79,9 @@ public class BasicResource extends WadlServerResource {
         Form form = getRequest().getResourceRef().getQueryAsForm();
         queryValues = form.getValuesMap();
         if (queryValues == null) {
-            queryValues = new HashMap<String, String>();
+            queryValues = new HashMap<>();
         }
-        fields = new ArrayList<String>();
+        fields = new ArrayList<>();
 
         if (queryValues.containsKey("show")) {
             String[] fieldArr = queryValues.get("show").split(",");

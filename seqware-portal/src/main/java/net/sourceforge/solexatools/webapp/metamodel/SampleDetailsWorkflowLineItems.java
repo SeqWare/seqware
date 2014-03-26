@@ -17,7 +17,7 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
  */
 public class SampleDetailsWorkflowLineItems {
 
-  private HashMap<WorkflowRun, List<Processing>> workFlowMap = new HashMap<WorkflowRun, List<Processing>>();
+  private HashMap<WorkflowRun, List<Processing>> workFlowMap = new HashMap<>();
   private WorkflowRun dummyWf = new WorkflowRun();
 
   /**
@@ -71,7 +71,7 @@ public class SampleDetailsWorkflowLineItems {
     }
     List<Processing> processings = workFlowMap.get(processing.getWorkflowRun());
     if (processings == null) {
-      processings = new ArrayList<Processing>();
+      processings = new ArrayList<>();
     }
     processings.add(processing);
     if (processing.getWorkflowRun() == null) {
@@ -97,6 +97,6 @@ public class SampleDetailsWorkflowLineItems {
    * @return a {@link java.util.List} object.
    */
   public List<WorkflowRun> getWorkflowsRun() {
-    return new ArrayList<WorkflowRun>(workFlowMap.keySet());
+    return new ArrayList<>(workFlowMap.keySet());
   }
 }

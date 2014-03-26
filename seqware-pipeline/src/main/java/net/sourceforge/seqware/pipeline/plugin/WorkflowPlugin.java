@@ -118,7 +118,7 @@ public class WorkflowPlugin extends Plugin {
 
   public static final String ENGINES_LIST = "pegasus, oozie, oozie-sge";
   public static final String DEFAULT_ENGINE = "oozie";
-  public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(ENGINES_LIST.split(", "))));
+  public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ENGINES_LIST.split(", "))));
   
   private String getEngineParam(){
     String engine = (String) options.valueOf("workflow-engine");
@@ -204,7 +204,7 @@ public class WorkflowPlugin extends Plugin {
     }
 
     // parent accessions
-    ArrayList<String> parentAccessions = new ArrayList<String>();
+    ArrayList<String> parentAccessions = new ArrayList<>();
     if (options.has("parent-accessions")) {
       List opts = options.valuesOf("parent-accessions");
       for (Object opt : opts) {
@@ -214,7 +214,7 @@ public class WorkflowPlugin extends Plugin {
     }
 
     // link-workflow-run-to-parents
-    ArrayList<String> parentsLinkedToWR = new ArrayList<String>();
+    ArrayList<String> parentsLinkedToWR = new ArrayList<>();
     if (options.has("link-workflow-run-to-parents")) {
       List opts = options.valuesOf("link-workflow-run-to-parents");
       for (Object opt : opts) {
@@ -224,7 +224,7 @@ public class WorkflowPlugin extends Plugin {
     }
 
     // ini-files
-    ArrayList<String> iniFiles = new ArrayList<String>();
+    ArrayList<String> iniFiles = new ArrayList<>();
     if (options.has("ini-files")) {
       List opts = options.valuesOf("ini-files");
       for (Object opt : opts) {
@@ -560,7 +560,7 @@ public class WorkflowPlugin extends Plugin {
     int workflowrunaccession = Integer.parseInt(wra); // metadata.get_workflow_run_accession(workflowrunId);
     int workflowrunId = metadata.get_workflow_run_id(workflowrunaccession);
 
-    List<String> parentsLinkedToWR = new ArrayList<String>();
+    List<String> parentsLinkedToWR = new ArrayList<>();
     if (options.has("link-workflow-run-to-parents")) {
       List opts = options.valuesOf("link-workflow-run-to-parents");
       for (Object opt : opts) {
@@ -621,7 +621,7 @@ public class WorkflowPlugin extends Plugin {
         if (options.has(INPUT_FILES)) {
             try {
                 List<String> files = (List<String>) options.valuesOf(INPUT_FILES);
-                inputFiles = new HashSet<Integer>();
+                inputFiles = new HashSet<>();
                 for (String file : files) {
                     String[] tokens = ((String) file).split(",");
                     for (String token : tokens) {

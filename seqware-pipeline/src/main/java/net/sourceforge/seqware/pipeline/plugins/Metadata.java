@@ -67,7 +67,7 @@ public class Metadata extends Plugin {
     };
     protected boolean interactive = false;
     // list of files
-    ArrayList<FileMetadata> files = new ArrayList<FileMetadata>();
+    ArrayList<FileMetadata> files = new ArrayList<>();
 
     /**
      * <p>Constructor for Metadata.</p>
@@ -729,7 +729,7 @@ public class Metadata extends Plugin {
     protected int[] parseParentAccessions() {
       
       List<?> valuesOf = options.valuesOf("parent-accession");
-      ArrayList<Integer> parents = new ArrayList<Integer>();
+      ArrayList<Integer> parents = new ArrayList<>();
       for (Object value : valuesOf) {
         parents.add(Integer.parseInt(value.toString()));
       }

@@ -56,9 +56,9 @@ public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
             String query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("workflow_runs_not_connected_to_study.sql"));
             List<Object[]> workflow_run_study_pairs = qRunner.executeQuery(query, new ArrayListHandler());
             
-            List<Integer> unreachableByStudy = new ArrayList<Integer>();
+            List<Integer> unreachableByStudy = new ArrayList<>();
             // number studies -> workflow runs
-            SortedMap<Integer, SortedSet<Integer>> reachableByMultipleStudies = new TreeMap<Integer, SortedSet<Integer>>();
+            SortedMap<Integer, SortedSet<Integer>> reachableByMultipleStudies = new TreeMap<>();
             
             for(Object[] pair : workflow_run_study_pairs){
                 int studyCount = Integer.valueOf(pair[1].toString());
@@ -79,7 +79,7 @@ public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
             // workflow runs connected to more than one study
             if (reachableByMultipleStudies.size() > 0){
                 for(Entry<Integer, SortedSet<Integer>> e : reachableByMultipleStudies.entrySet()){
-                    CheckDB.processOutput(result, Level.WARNING,  "'Completed' Workflow runs reachable by "+e.getKey()+" studies: " , new ArrayList<Integer>(e.getValue()));
+                    CheckDB.processOutput(result, Level.WARNING,  "'Completed' Workflow runs reachable by "+e.getKey()+" studies: " , new ArrayList<>(e.getValue()));
                 }
             }
             query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("workflow_runs_not_connected_in_hierarchy.sql"));

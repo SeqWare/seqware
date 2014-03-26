@@ -66,7 +66,7 @@ public class LibrarySelectionResource extends DatabaseResource {
         List<LibrarySelection> objects = (List<LibrarySelection>) testIfNull(ss.list());
         logger.debug("library_selections: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<LibrarySelectionList> jaxbTool = new JaxbObject<LibrarySelectionList>();
+        JaxbObject<LibrarySelectionList> jaxbTool = new JaxbObject<>();
 
         LibrarySelectionList list = new LibrarySelectionList();
         list.setList(new ArrayList());
