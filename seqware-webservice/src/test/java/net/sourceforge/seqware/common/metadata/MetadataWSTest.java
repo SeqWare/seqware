@@ -85,6 +85,7 @@ public class MetadataWSTest {
 
     @Before
     public void setUp() {
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     @After
