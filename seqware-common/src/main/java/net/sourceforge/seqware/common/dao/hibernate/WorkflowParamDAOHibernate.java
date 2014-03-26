@@ -36,17 +36,20 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
     }
 
     /** {@inheritDoc} */
+    @Override
     public void update(WorkflowParam workflowParam) {
         getHibernateTemplate().update(workflowParam);
         getSession().flush();
     }
 
     /** {@inheritDoc} */
+    @Override
     public void delete(WorkflowParam workflowParam) {
         getHibernateTemplate().delete(workflowParam);
     }
 
     /** {@inheritDoc} */
+    @Override
     public WorkflowParam findByID(Integer id) {
         String query = "from WorkflowParam as workflowParam where workflowParam.workflowParamId = ?";
         WorkflowParam workflowParam = null;

@@ -41,6 +41,7 @@ public class IUSServiceImpl implements IUSService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public void setIUSDAO(IUSDAO dao) {
     this.dao = dao;
   }
@@ -57,6 +58,7 @@ public class IUSServiceImpl implements IUSService {
   /** {@inheritDoc}
      * @param obj
      * @return  */
+  @Override
   public Integer insert(IUS obj) {
     obj.setCreateTimestamp(new Date());
     return(dao.insert(obj));
@@ -65,6 +67,7 @@ public class IUSServiceImpl implements IUSService {
   /** {@inheritDoc}
      * @param ius
      * @param deleteRealFiles */
+  @Override
   public void delete(IUS ius, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
     if (deleteRealFiles) {
@@ -88,31 +91,37 @@ public class IUSServiceImpl implements IUSService {
 
   /** {@inheritDoc}
      * @param obj */
+  @Override
   public void update(IUS obj) {
     dao.update(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer iusId) {
     return dao.getFiles(iusId);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer iusId, String metaType) {
     return dao.getFiles(iusId, metaType);
   }
 
   /** {@inheritDoc} */
+  @Override
   public boolean isHasFile(Integer iusId, String metaType) {
     return dao.isHasFile(iusId, metaType);
   }
 
   /** {@inheritDoc} */
+  @Override
   public boolean isHasFile(Integer iusId) {
     return dao.isHasFile(iusId);
   }
 
   /** {@inheritDoc} */
+  @Override
   public SortedSet<IUS> setWithHasFile(SortedSet<IUS> list) {
     for (IUS ius : list) {
       ius.setIsHasFile(isHasFile(ius.getIusId()));
@@ -121,6 +130,7 @@ public class IUSServiceImpl implements IUSService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public SortedSet<IUS> listWithHasFile(SortedSet<IUS> list, String metaType) {
     SortedSet<IUS> result = new TreeSet<IUS>();
     for (IUS ius : list) {
@@ -135,6 +145,7 @@ public class IUSServiceImpl implements IUSService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public IUS findByID(Integer id) {
     IUS ius = null;
     if (id != null) {

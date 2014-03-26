@@ -52,6 +52,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      *
      * Updates an instance of Processing in the database.
      */
+    @Override
     public void update(Processing processing) {
 
         this.getHibernateTemplate().update(processing);
@@ -65,6 +66,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * This is likely to not work given the complex tree structures 
      * created with processing entries.
      */
+    @Override
     public void delete(Processing processing) {
       
         this.getHibernateTemplate().delete(processing);
@@ -82,6 +84,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * "processing_root_to_leaf"p, processing_files pf where p.parent_id =
      * processing_id or p.child_id = processing_id;
      */
+    @Override
     public List<File> getFiles(Integer processingId) {
         List<File> files = new ArrayList<File>();
 
@@ -138,6 +141,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /** {@inheritDoc} */
+    @Override
     public boolean isHasFile(Integer processingId) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -161,6 +165,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /** {@inheritDoc} */
+    @Override
     public List<File> getFiles(Integer processingId, String metaType) {
         List<File> files = new ArrayList<File>();
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -189,6 +194,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /** {@inheritDoc} */
+    @Override
     public boolean isHasFile(Integer processingId, String metaType) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -220,6 +226,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * Finds an instance of Processing in the database by the Processing
      * emailAddress.
      */
+    @Override
     public Processing findByFilePath(String filePath) {
         String query = "from processing as processing where processing.file_path = ?";
         Processing processing = null;
@@ -237,6 +244,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * Finds an instance of SequencerRun in the database by the SequencerRun ID.
      * @param id
      */
+    @Override
     public Processing findByID(Integer id) {
         String query = "from Processing as processing where processing.processingId = ?";
         Processing processing = null;

@@ -56,6 +56,7 @@ public class LaneServiceImpl implements LaneService {
    * LaneDAO. This method is called by the Spring framework at run time.
    * @see LaneDAO
    */
+  @Override
   public void setLaneDAO(LaneDAO laneDAO) {
     this.laneDAO = laneDAO;
   }
@@ -96,26 +97,31 @@ public class LaneServiceImpl implements LaneService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer laneId) {
     return laneDAO.getFiles(laneId);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer studyId, String metaType) {
     return laneDAO.getFiles(studyId, metaType);
   }
 
   /** {@inheritDoc} */
+  @Override
   public boolean isHasFile(Integer studyId, String metaType) {
     return laneDAO.isHasFile(studyId, metaType);
   }
 
   /** {@inheritDoc} */
+  @Override
   public boolean isHasFile(Integer laneId) {
     return laneDAO.isHasFile(laneId);
   }
 
   /** {@inheritDoc} */
+  @Override
   public SortedSet<Lane> setWithHasFile(SortedSet<Lane> list) {
     for (Lane lane : list) {
       lane.setIsHasFile(isHasFile(lane.getLaneId()));
@@ -124,6 +130,7 @@ public class LaneServiceImpl implements LaneService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public SortedSet<Lane> listWithHasFile(SortedSet<Lane> list, String metaType) {
     SortedSet<Lane> result = new TreeSet<Lane>();
     for (Lane lane : list) {
@@ -141,6 +148,7 @@ public class LaneServiceImpl implements LaneService {
 
   /** {@inheritDoc}
      * @param uploadSeqence */
+  @Override
   public Integer insertLane(Registration registration, Sample sample, UploadSequence uploadSeqence, FileType fileType)
       throws Exception {
     Set<File> files = new TreeSet<File>();
@@ -340,6 +348,7 @@ public class LaneServiceImpl implements LaneService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Lane> list(List<Integer> laneIds) {
     if (laneIds == null || laneIds.size() == 0)
       return new ArrayList<Lane>();
@@ -352,6 +361,7 @@ public class LaneServiceImpl implements LaneService {
    *
    * Inserts an instance of Lane into the database.
    */
+  @Override
   public void insert(Lane lane) {
     // lane.setExperimentId(exp.getExperimentId());
     lane.setCreateTimestamp(new Date());
@@ -363,6 +373,7 @@ public class LaneServiceImpl implements LaneService {
    *
    * Updates an instance of Lane in the database.
    */
+  @Override
   public void update(Lane lane) {
     laneDAO.update(lane);
   }
@@ -374,6 +385,7 @@ public class LaneServiceImpl implements LaneService {
      * @param lane
      * @param deleteRealFiles
    */
+  @Override
   public void delete(Lane lane, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
     if (deleteRealFiles) {
@@ -393,6 +405,7 @@ public class LaneServiceImpl implements LaneService {
    * Finds an instance of Lane in the database by the Lane emailAddress, and
    * copies the Lane properties to an instance of Lane.
    */
+  @Override
   public Lane findByName(String name) {
     Lane lane = null;
     if (name != null) {
@@ -406,6 +419,7 @@ public class LaneServiceImpl implements LaneService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public Lane findByID(Integer laneID) {
     Lane lane = null;
     if (laneID != null) {
@@ -456,6 +470,7 @@ public class LaneServiceImpl implements LaneService {
    *
    * Determines if an email address has already been used.
    */
+  @Override
   public boolean hasNameBeenUsed(String oldName, String newName) {
     boolean nameUsed = false;
     boolean checkName = true;
@@ -490,6 +505,7 @@ public class LaneServiceImpl implements LaneService {
    * @param statuses an array of {@link java.lang.String} objects.
    * @return a {@link java.util.List} object.
    */
+  @Override
   public List<File> listFile(Registration reqistration, String typeNode, List<File> list, String[] ids,
       String[] statuses) {
     for (int i = 0; i < ids.length; i++) {

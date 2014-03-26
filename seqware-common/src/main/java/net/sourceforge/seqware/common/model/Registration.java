@@ -164,6 +164,7 @@ public class Registration extends PermissionsAware implements Serializable, Comp
      *
      * @return a int.
      */
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(getEmailAddress()).append(getPassword()).toHashCode();
     }

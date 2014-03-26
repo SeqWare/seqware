@@ -30,6 +30,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
   /**
    * {@inheritDoc}
    */
+  @Override
   public List<LibrarySelection> list(Registration registration) {
     if (registration == null) { return(null); }
     return (list());
@@ -38,6 +39,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
   /**
    * {@inheritDoc}
    */
+  @Override
   public LibrarySelection findByID(Integer id) {
     String query = "from LibrarySelection as l where l.librarySelectionId = ?";
     LibrarySelection obj = null;

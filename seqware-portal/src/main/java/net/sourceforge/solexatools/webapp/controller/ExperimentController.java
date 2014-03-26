@@ -239,6 +239,7 @@ public class ExperimentController extends MultiActionController {
   /** {@inheritDoc}
      * @param binder
      * @throws java.lang.Exception */
+  @Override
   protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
     // Uncomment the following line if you're using a Double object
     // binder.registerCustomEditor(Integer.class, new CustomIntegerEditor());
@@ -250,6 +251,7 @@ public class ExperimentController extends MultiActionController {
   /** {@inheritDoc}
      * @param arg1
      * @throws java.lang.Exception */
+  @Override
   protected void bind(HttpServletRequest arg0, Object arg1) throws Exception {
     // TODO Auto-generated method stub
     super.bind(arg0, arg1);

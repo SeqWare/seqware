@@ -60,6 +60,7 @@ public class S3DeleteFiles extends Module {
    *
    * @return a {@link joptsimple.OptionParser} object.
    */
+  @Override
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -76,6 +77,7 @@ public class S3DeleteFiles extends Module {
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -271,6 +273,7 @@ public class S3DeleteFiles extends Module {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public ReturnValue init() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);
@@ -284,6 +287,7 @@ public class S3DeleteFiles extends Module {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public ReturnValue clean_up() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);

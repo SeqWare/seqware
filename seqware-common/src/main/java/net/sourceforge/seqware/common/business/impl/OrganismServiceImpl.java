@@ -36,16 +36,19 @@ public class OrganismServiceImpl implements OrganismService {
      * @param organismDAO
    * @see StudyTypeDAO
    */
+  @Override
   public void setOrganismDAO(OrganismDAO organismDAO) {
     this.organismDAO = organismDAO;
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Organism> list(Registration registration) {
     return organismDAO.list(registration);
   }
 
   /** {@inheritDoc} */
+  @Override
   public Organism findByID(Integer id) {
     Organism obj = null;
     if (id != null) {

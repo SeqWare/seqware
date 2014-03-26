@@ -29,16 +29,19 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
   }
 
   /** {@inheritDoc} */
+  @Override
   public void insert(ExperimentLibraryDesign obj) {
     this.getHibernateTemplate().save(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(ExperimentLibraryDesign obj) {
     this.getHibernateTemplate().update(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<ExperimentLibraryDesign> list(Registration registration) {
 
     ArrayList<ExperimentLibraryDesign> objs = new ArrayList<ExperimentLibraryDesign>();
@@ -60,6 +63,7 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
    * Finds an instance of ExperimentLibraryDesign in the database by the
    * ExperimentLibraryDesign ID.
    */
+  @Override
   public ExperimentLibraryDesign findByID(Integer id) {
     String query = "from ExperimentLibraryDesign as e where e.experimentLibraryDesignId = ?";
     ExperimentLibraryDesign obj = null;

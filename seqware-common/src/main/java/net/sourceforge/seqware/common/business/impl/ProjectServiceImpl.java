@@ -37,6 +37,7 @@ public class ProjectServiceImpl implements ProjectService {
    * ProjectDAO. This method is called by the Spring framework at run time.
    * @see ProjectDAO
    */
+  @Override
   public void setProjectDAO(ProjectDAO projectDAO) {
     this.projectDAO = projectDAO;
   }
@@ -46,6 +47,7 @@ public class ProjectServiceImpl implements ProjectService {
    *
    * Inserts an instance of Project into the database.
    */
+  @Override
   public void insert(Project project) {
     // FIXME: need to set the names of each sample!!
     TreeSet<Sample> list = new TreeSet<Sample>();
@@ -90,6 +92,7 @@ public class ProjectServiceImpl implements ProjectService {
    *
    * Updates an instance of Project in the database.
    */
+  @Override
   public void update(Project project) {
 
     // if (project.getReadyToProcess() != null &&
@@ -102,6 +105,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Project> list(Registration registration) {
     return projectDAO.list(registration);
   }
@@ -112,6 +116,7 @@ public class ProjectServiceImpl implements ProjectService {
    * Finds an instance of Project in the database by the Project emailAddress,
    * and copies the Project properties to an instance of Project.
    */
+  @Override
   public Project findByName(String name) {
     Project project = null;
     if (name != null) {
@@ -125,6 +130,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public Project findByID(Integer expID) {
     Project project = null;
     if (expID != null) {
@@ -144,6 +150,7 @@ public class ProjectServiceImpl implements ProjectService {
    *
    * Determines if an email address has already been used.
    */
+  @Override
   public boolean hasNameBeenUsed(String oldName, String newName) {
     boolean nameUsed = false;
     boolean checkName = true;

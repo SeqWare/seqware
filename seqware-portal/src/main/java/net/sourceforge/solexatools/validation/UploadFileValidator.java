@@ -30,6 +30,7 @@ public class UploadFileValidator implements Validator {
      * @param clazz
      * @return  */
 	@SuppressWarnings("rawtypes")
+        @Override
 	public boolean supports(Class clazz) {
 		return UploadFile.class.equals(clazz);
 	}
@@ -41,6 +42,7 @@ public class UploadFileValidator implements Validator {
      * @param obj
      * @param errors
 	 */
+        @Override
 	public void validate(Object obj, Errors errors) {
 		UploadFile uploadFile = (UploadFile) obj;
 		
