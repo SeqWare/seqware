@@ -71,7 +71,6 @@ public class FileTools {
     // read from file
     try {
       while (dis.read() > 0) {
-        continue;
       }
     } catch (IOException e) {
       e.printStackTrace();
