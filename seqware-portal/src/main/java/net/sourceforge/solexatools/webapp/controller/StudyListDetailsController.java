@@ -25,7 +25,6 @@ import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.Constant;
 import net.sourceforge.solexatools.util.PageInfo;

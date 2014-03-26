@@ -18,8 +18,6 @@ package net.sourceforge.seqware.common.hibernate;
 
 import java.util.*;
 import net.sourceforge.seqware.common.model.*;
-import net.sourceforge.seqware.common.module.FileMetadata;
-import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
 /**

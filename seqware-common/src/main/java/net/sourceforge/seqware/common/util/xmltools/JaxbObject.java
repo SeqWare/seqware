@@ -31,7 +31,6 @@ import javax.xml.transform.stream.StreamSource;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.model.lists.*;
 import org.w3c.dom.Document;
-import org.xml.sax.ContentHandler;
 
 /**
  * Convenience class for converting objects into JAXB XML.

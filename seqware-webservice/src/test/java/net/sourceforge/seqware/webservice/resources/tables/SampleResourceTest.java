@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Set;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.restlet.representation.Representation;

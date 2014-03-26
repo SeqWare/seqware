@@ -1,15 +1,10 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import net.sourceforge.seqware.common.dao.WorkflowRunDAO;
 import net.sourceforge.seqware.common.model.*;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;

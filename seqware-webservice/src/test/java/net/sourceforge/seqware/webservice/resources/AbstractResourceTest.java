@@ -17,7 +17,6 @@
 package net.sourceforge.seqware.webservice.resources;
 
 import java.io.IOException;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;

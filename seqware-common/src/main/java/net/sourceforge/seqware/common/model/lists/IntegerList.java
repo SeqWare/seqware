@@ -19,7 +19,6 @@ package net.sourceforge.seqware.common.model.lists;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
-import net.sourceforge.seqware.common.model.File;
 
 /**
  * <p>List of integers.</p>

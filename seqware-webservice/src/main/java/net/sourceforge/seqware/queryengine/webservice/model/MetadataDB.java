@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.queryengine.webservice.util.EnvUtil;

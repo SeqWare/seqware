@@ -18,7 +18,6 @@ package net.sourceforge.seqware.common.metadata;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.net.SocketTimeoutException;
 import java.io.Writer;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -114,7 +113,6 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
 import org.restlet.ext.ssl.SslContextFactory;
-import org.restlet.ext.xml.DomRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;

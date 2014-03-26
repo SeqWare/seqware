@@ -1,12 +1,5 @@
 #set( $symbol_dollar = '$' )
 package ${package};
-
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
-import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
-import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 /**
  * <p>For more information on developing workflows, see the documentation at
  * <a href="http://seqware.github.io/docs/6-pipeline/java-workflows/">SeqWare Java Workflows</a>.</p>
