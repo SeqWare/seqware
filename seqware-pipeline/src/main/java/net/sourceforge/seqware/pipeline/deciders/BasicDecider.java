@@ -545,7 +545,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * Map a normal status to whether a workflow run completed, failed, or other (submitted, pending, etc.)
      * (the states that we care about for the decider)
      * @param generateStatus
-     * @param status
      * @return 
      */
     protected PREVIOUS_RUN_STATUS determineStatus(WorkflowRunStatus generateStatus){
@@ -560,7 +559,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * Returns true if the filesToRun are totally contained by the files associated with the 
      * files in a given workflowRunAcc
      * @param filesSWIDsHasRun
-     * @param filesHasRun the files in the past run
      * @param filesToRun the files to check to see if they are contained by the past run
      * @return 
      */
@@ -581,6 +579,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * filesToRun and the workflow run have the same number of files with the
      * same file paths. False and prints an error message if there are more
      * files in the workflow run than in the filesToRun.
+     * @param filesToRun
      * @return 
      */
     protected FILE_STATUS compareWorkflowRunFiles(Set<Integer> filesSWIDsHasRun, Collection<String> filesToRun) {

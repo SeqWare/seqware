@@ -23,6 +23,7 @@ public class SequencerRunValidator implements Validator {
 	}
 	
 	/** {@inheritDoc}
+     * @param clazz
      * @return  */
 	public boolean supports(Class clazz) {
 		return SequencerRun.class.equals(clazz);
@@ -32,6 +33,7 @@ public class SequencerRunValidator implements Validator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param obj
      * @param errors
 	 */
 	public void validate(Object obj, Errors errors) {

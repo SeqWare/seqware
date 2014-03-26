@@ -83,6 +83,7 @@ public class LaunchWorkflowController extends SimpleFormController {
 	 *
 	 * Handles the user's request to submit a new study.
      * @return 
+     * @throws java.lang.Exception 
 	 */
 	protected ModelAndView onSubmit(HttpServletRequest	request,
 			HttpServletResponse	response,

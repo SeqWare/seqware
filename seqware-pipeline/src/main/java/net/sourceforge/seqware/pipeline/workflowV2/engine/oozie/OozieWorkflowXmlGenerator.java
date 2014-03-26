@@ -22,6 +22,7 @@ public class OozieWorkflowXmlGenerator {
    * @param wfdm
    * @param output
      * @param maxMemorySgeParamFormat
+     * @param threadsSgeParamFormat
    * @return
    */
   public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String nfsWorkDir, Path hdfsWorkDir, boolean useSge,

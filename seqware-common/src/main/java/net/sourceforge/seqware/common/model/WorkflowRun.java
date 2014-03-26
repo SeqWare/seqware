@@ -889,7 +889,6 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
 
     /**
      * @param inputFiles
-     * @param parentAccessions the parentAccessions to set
      */
     public void setInputFileAccessions(Set<Integer> inputFiles) {
         this.inputFileAccessions = inputFiles;

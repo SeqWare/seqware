@@ -30,6 +30,7 @@ public class LoginValidator implements Validator {
 	 *
 	 * Returns true if this Validator supports the
 	 * specified Class, and false otherwise.
+     * @param clazz
      * @return 
 	 */
 	public boolean supports(Class clazz) {
@@ -40,6 +41,7 @@ public class LoginValidator implements Validator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param obj
      * @param errors
 	 */
 	public void validate(Object obj, Errors errors) {

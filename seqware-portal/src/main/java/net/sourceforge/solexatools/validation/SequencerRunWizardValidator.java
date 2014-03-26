@@ -20,6 +20,7 @@ public class SequencerRunWizardValidator extends SequencerRunValidator {
 	}
 	
 	/** {@inheritDoc}
+     * @param clazz
      * @return  */
 	public boolean supports(Class clazz) {
 		return SequencerRunWizardDTO.class.equals(clazz);
@@ -29,6 +30,7 @@ public class SequencerRunWizardValidator extends SequencerRunValidator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param obj
      * @param errors
 	 */
 	public void validate(Object obj, Errors errors) {

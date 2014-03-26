@@ -166,6 +166,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
   }
 
   /** {@inheritDoc}
+     * @param workflowRun
      * @param deleteRealFiles */
   public void delete(WorkflowRun workflowRun, boolean deleteRealFiles) {
     Set<Processing> processings = workflowRun.getProcessings();

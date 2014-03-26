@@ -130,6 +130,7 @@ public abstract class BatchMetadataParser {
      * @param platformId
      * @param studyType
      * @param assayType
+     * @param workflowType
      * @return
      */
     protected RunInfo generateRunInfo(String runName, String runDescription,
@@ -287,6 +288,7 @@ public abstract class BatchMetadataParser {
      * @param targetedResequencing
      * @param tissuePreparation
      * @param iusDescription
+     * @param iusName
      * @return
      * @throws Exception
      */

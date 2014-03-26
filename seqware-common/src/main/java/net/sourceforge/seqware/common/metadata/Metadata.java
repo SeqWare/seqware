@@ -108,6 +108,7 @@ public interface Metadata {
      * @param description a {@link java.lang.String} object.
      * @param status the value of status
      * @param filePath
+     * @param skip
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
   public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, SequencerRunStatus status);
@@ -120,6 +121,7 @@ public interface Metadata {
    * @param description a {@link java.lang.String} object.
    * @param title a {@link java.lang.String} object.
      * @param laneNumber
+     * @param skip
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
   public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip, Integer laneNumber);
@@ -128,6 +130,7 @@ public interface Metadata {
    * <p>addSample.</p>
    *
      * @param skip
+     * @param barcode
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
   
@@ -437,6 +440,7 @@ public interface Metadata {
      * @param archiveZip a {@link java.lang.String} object.
      * @param storeArchiveZip a boolean.
      * @param workflowEngine
+     * @param workflowType
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
   ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine);
@@ -589,6 +593,7 @@ public interface Metadata {
   /**
    * <p>annotateFile.</p>
    *
+     * @param laneSWID
    * @param fileSWID a int.
      * @param iusAtt
    * @param fileAtt a {@link net.sourceforge.seqware.common.model.FileAttribute} object.
@@ -601,7 +606,6 @@ public interface Metadata {
    *
    * @param fileSWID a int.
      * @param iusAtts
-   * @param fileAtts a {@link java.util.Set} object.
    */
   void annotateFile(int fileSWID, Set<FileAttribute> iusAtts);
   

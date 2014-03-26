@@ -83,6 +83,7 @@ public class DatabaseIDResource extends BasicResource {
 //    }
 
     /** {@inheritDoc}
+     * @param rep
      * @return  */
     @Put
     @Override
@@ -107,6 +108,7 @@ public class DatabaseIDResource extends BasicResource {
     /**
      * Merge attributes from a new set into an existing one while removing duplicates.
      * Unfortunately, due to how duplicates work,
+     * @param existingAttributeSet
      * @param newAttributeSet
      * @param parent
      * @return

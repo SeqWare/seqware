@@ -24,6 +24,7 @@ public class ExperimentValidator implements Validator {
   }
 
   /** {@inheritDoc}
+     * @param clazz
      * @return  */
   @SuppressWarnings("rawtypes")
   public boolean supports(Class clazz) {
@@ -34,6 +35,7 @@ public class ExperimentValidator implements Validator {
    * {@inheritDoc}
    *
    * Validates the specified Object.
+     * @param obj
      * @param errors
    */
   public void validate(Object obj, Errors errors) {

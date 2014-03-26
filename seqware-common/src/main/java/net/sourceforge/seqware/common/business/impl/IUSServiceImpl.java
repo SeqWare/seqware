@@ -55,6 +55,7 @@ public class IUSServiceImpl implements IUSService {
   }
 
   /** {@inheritDoc}
+     * @param obj
      * @return  */
   public Integer insert(IUS obj) {
     obj.setCreateTimestamp(new Date());
@@ -62,6 +63,7 @@ public class IUSServiceImpl implements IUSService {
   }
 
   /** {@inheritDoc}
+     * @param ius
      * @param deleteRealFiles */
   public void delete(IUS ius, boolean deleteRealFiles) {
     List<File> deleteFiles = null;

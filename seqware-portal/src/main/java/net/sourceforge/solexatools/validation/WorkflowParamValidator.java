@@ -22,6 +22,7 @@ public class WorkflowParamValidator implements Validator{
 	}
 	
 	/** {@inheritDoc}
+     * @param clazz
      * @return  */
 	public boolean supports(Class clazz) {
 		return WorkflowParam.class.equals(clazz);
@@ -31,6 +32,7 @@ public class WorkflowParamValidator implements Validator{
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param obj
      * @param errors
 	 */
 	public void validate(Object obj, Errors errors) {
