@@ -75,7 +75,7 @@ public class BatchMetadataInjectionTest {
     private static String malformedJson = null;
     private static InputStream schema = null;
 
-    private final String wfaccession = String.valueOf(metadata.getWorkflowAccession("BamQC", "2.1"));
+    private final String wfaccession = String.valueOf(metadata.getWorkflowAccession("GenomicAlignmentNovoalign", "0.10.2"));
 
     public BatchMetadataInjectionTest() {
     }
