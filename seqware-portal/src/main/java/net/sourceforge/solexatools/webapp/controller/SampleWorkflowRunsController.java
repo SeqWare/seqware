@@ -58,13 +58,13 @@ public class SampleWorkflowRunsController extends BaseCommandController {
 			e.printStackTrace();
 		}
 
-		Map<Workflow, Set<WorkflowRun>> tableModel = new HashMap<Workflow, Set<WorkflowRun>>();
-		Set<Workflow> usedWorkflows = new HashSet<Workflow>();
+		Map<Workflow, Set<WorkflowRun>> tableModel = new HashMap<>();
+		Set<Workflow> usedWorkflows = new HashSet<>();
 		Sample currentSample = sampleService.findBySWAccession(sampleId);
 
 		if (currentSample != null) {
 
-			Set<WorkflowRun> runs = new HashSet<WorkflowRun>();
+			Set<WorkflowRun> runs = new HashSet<>();
 			for (IUS ius : currentSample.getIUS()) {
 				// Get All required runs belongs to Sample IUSs
 				runs.addAll(workflowRunService.findRunsForIUS(ius));
@@ -76,7 +76,7 @@ public class SampleWorkflowRunsController extends BaseCommandController {
 				Set<WorkflowRun> wfWorkflowRuns = tableModel.get(wf);
 				// If no mapping for current Workflow
 				if (wfWorkflowRuns == null) {
-					wfWorkflowRuns = new HashSet<WorkflowRun>();
+					wfWorkflowRuns = new HashSet<>();
 				}
 				wfWorkflowRuns.add(run);
 				tableModel.put(wf, wfWorkflowRuns);

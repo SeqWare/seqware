@@ -157,7 +157,7 @@ public class ExperimentServiceImpl implements ExperimentService {
   /** {@inheritDoc} */
   @Override
   public SortedSet<Experiment> listWithHasFile(SortedSet<Experiment> list, String metaType) {
-    SortedSet<Experiment> result = new TreeSet<Experiment>();
+    SortedSet<Experiment> result = new TreeSet<>();
     for (Experiment experiment : list) {
       if (isHasFile(experiment.getExperimentId(), metaType)) {
         experiment.setIsHasFile(true);

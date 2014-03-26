@@ -74,7 +74,7 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
    */
   @Override
   public List<LibraryStrategy> list() {
-    ArrayList<LibraryStrategy> objects = new ArrayList<LibraryStrategy>();
+    ArrayList<LibraryStrategy> objects = new ArrayList<>();
 
     List expmts = this.getHibernateTemplate().find("from LibraryStrategy as ls order by ls.libraryStrategyId asc" // desc
             );

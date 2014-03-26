@@ -62,7 +62,7 @@ public class LaneInfo {
 
     public Set<LaneAttribute> getLaneAttributes() {
         if (laneAttributes == null) {
-            laneAttributes = new HashSet<LaneAttribute>();
+            laneAttributes = new HashSet<>();
         }
         return laneAttributes;
     }
@@ -161,7 +161,7 @@ public class LaneInfo {
      */
     public Set<SampleInfo> getSamples() {
         if (samples == null) {
-            samples = new HashSet<SampleInfo>();
+            samples = new HashSet<>();
         }
         return samples;
     }

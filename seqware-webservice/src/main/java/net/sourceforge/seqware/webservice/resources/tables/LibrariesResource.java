@@ -45,7 +45,7 @@ public class LibrariesResource extends DatabaseResource {
       Form form = getRequest().getResourceRef().getQueryAsForm();
       queryValues = form.getValuesMap();
       if (queryValues == null) {
-          queryValues = new HashMap<String, String>();
+          queryValues = new HashMap<>();
       }
       attributes = getGroupingAttributesFromQuery(queryValues);
   }
@@ -93,7 +93,7 @@ public class LibrariesResource extends DatabaseResource {
       throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
     }
     
-    List<LibraryDto> libraryDtos = new ArrayList<LibraryDto>();
+    List<LibraryDto> libraryDtos = new ArrayList<>();
     for (Sample sample : libraries) {
       LibraryDto libraryDto = Dtos.asDto(sample);
       libraryDto.setUrl(getResourcesBase() + "/library/" + sample.getSwAccession());

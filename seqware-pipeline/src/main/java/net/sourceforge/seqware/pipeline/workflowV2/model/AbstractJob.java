@@ -30,7 +30,7 @@ public class AbstractJob implements Job {
 	 */
 	public AbstractJob(String algo) {
 		this(algo, "", "");
-		this.parentAccessions = new ArrayList<String>();
+		this.parentAccessions = new ArrayList<>();
 	}
 	
 	/**
@@ -41,9 +41,9 @@ public class AbstractJob implements Job {
 	public AbstractJob(String algo, String cp, String mainclass) {
 		this.cp = cp;
 		this.mainclass = mainclass;
-		this.parents = new ArrayList<Job>();
-		this.files = new ArrayList<SqwFile>();
-		this.requirements = new ArrayList<Requirement>();
+		this.parents = new ArrayList<>();
+		this.files = new ArrayList<>();
+		this.requirements = new ArrayList<>();
 		this.command = new Command();
 		this.algo = algo;
 		this.initRequirements();

@@ -72,13 +72,13 @@ public class IusResource extends DatabaseResource {
     if (queryValues.get("id") != null) {
       IUS p = (IUS) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
 
-      JaxbObject<IUS> jaxbTool = new JaxbObject<IUS>();
+      JaxbObject<IUS> jaxbTool = new JaxbObject<>();
       IUS dto = copier.hibernate2dto(IUS.class, p);
       line = XmlTools.marshalToDocument(jaxbTool, dto);
 
     } else {
 
-      JaxbObject<IUSList> jaxbTool = new JaxbObject<IUSList>();
+      JaxbObject<IUSList> jaxbTool = new JaxbObject<>();
       IUSList list = new IUSList();
       List<IUS> iuses = (List<IUS>) testIfNull(ss.list());
 
@@ -101,7 +101,7 @@ public class IusResource extends DatabaseResource {
   public void postJaxb(Representation entity) throws ResourceException {
     authenticate();
     try {
-      JaxbObject<IUS> jo = new JaxbObject<IUS>();
+      JaxbObject<IUS> jo = new JaxbObject<>();
       String text = entity.getText();
       IUS o = null;
       try {

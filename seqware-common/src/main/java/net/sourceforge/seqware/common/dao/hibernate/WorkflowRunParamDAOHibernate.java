@@ -122,7 +122,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRunParam> list() {
-        ArrayList<WorkflowRunParam> l = new ArrayList<WorkflowRunParam>();
+        ArrayList<WorkflowRunParam> l = new ArrayList<>();
 
         String query = "from WorkflowRunParam";
 

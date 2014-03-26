@@ -24,7 +24,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
   @Override
   public List<FileReportRow> getReportForStudy(Study study) {
     String query = "from FileReportRow as row where row.study.studyId = ?";
-    List<FileReportRow> fileReport = new ArrayList<FileReportRow>();
+    List<FileReportRow> fileReport = new ArrayList<>();
     Object[] parameters = { study.getStudyId() };
     List list = this.getHibernateTemplate().find(query, parameters);
     for (Object obj : list) {
@@ -38,7 +38,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
   @Override
   public List<FileReportRow> getReportForStudy(Study study, String orderField, String sortOrder, int offset, int limit) {
     String query = "from FileReportRow as row where row.study.studyId = ? order by row." + orderField + " " + sortOrder;
-    List<FileReportRow> fileReport = new ArrayList<FileReportRow>();
+    List<FileReportRow> fileReport = new ArrayList<>();
     List list = this.getSession().createQuery(query).setFirstResult(offset).setMaxResults(limit)
         .setInteger(0, study.getStudyId()).list();
     for (Object obj : list) {
@@ -54,7 +54,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
       int offset, int limit) {
     String query = "from FileReportRow as row where row.lane.sequencerRun.sequencerRunId = ? order by row."
         + orderField + " " + sortOrder;
-    List<FileReportRow> fileReport = new ArrayList<FileReportRow>();
+    List<FileReportRow> fileReport = new ArrayList<>();
     List list = this.getSession().createQuery(query).setFirstResult(offset).setMaxResults(limit)
         .setInteger(0, seqRun.getSequencerRunId()).list();
     for (Object obj : list) {
@@ -69,7 +69,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
   public List<FileReportRow> getReportForSequencerRuns(String orderField, String sortOrder, int offset, int limit) {
     String query = "from FileReportRow as row where row.lane.sequencerRun.sequencerRunId != null order by row."
         + orderField + " " + sortOrder;
-    List<FileReportRow> fileReport = new ArrayList<FileReportRow>();
+    List<FileReportRow> fileReport = new ArrayList<>();
     List list = this.getSession().createQuery(query).setFirstResult(offset).setMaxResults(limit).list();
     for (Object obj : list) {
       fileReport.add((FileReportRow) obj);
@@ -83,7 +83,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
   public List<FileReportRow> getReportForSequencerRun(SequencerRun seqRun) {
     if (seqRun == null) {
       String query = "from FileReportRow as row where row.lane.sequencerRun.sequencerRunId != null ";
-      List<FileReportRow> fileReport = new ArrayList<FileReportRow>();
+      List<FileReportRow> fileReport = new ArrayList<>();
       List list = this.getSession().createQuery(query).list();
       for (Object obj : list) {
         fileReport.add((FileReportRow) obj);
@@ -91,7 +91,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
       return fileReport;
     } else {
       String query = "from FileReportRow as row where row.lane.sequencerRun.sequencerRunId = ? ";
-      List<FileReportRow> fileReport = new ArrayList<FileReportRow>();
+      List<FileReportRow> fileReport = new ArrayList<>();
       List list = this.getSession().createQuery(query).setInteger(0, seqRun.getSequencerRunId()).list();
       for (Object obj : list) {
         fileReport.add((FileReportRow) obj);

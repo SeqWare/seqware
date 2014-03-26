@@ -46,7 +46,7 @@ public class SequencerRunSetupControllerDTO extends BaseCommandController {
 		
 		ModelAndView			modelAndView	= null;
 		
-		HashMap<String,String>	model			= new HashMap<String,String>();
+		HashMap<String,String>	model			= new HashMap<>();
 		
 		String page = (String)request.getParameter("page");
 		

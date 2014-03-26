@@ -52,9 +52,9 @@ public class PluginRunnerET {
 
     private static File tempDir = null;
     
-    private static Map<String, Integer> installedWorkflows = new HashMap<String, Integer>();
-    private static Map<String, File> bundleLocations = new HashMap<String, File>();
-    private static List<Integer> launchedWorkflowRuns = new ArrayList<Integer>();
+    private static Map<String, Integer> installedWorkflows = new HashMap<>();
+    private static Map<String, File> bundleLocations = new HashMap<>();
+    private static List<Integer> launchedWorkflowRuns = new ArrayList<>();
     private final static boolean DEBUG_SKIP = false;
     private final static int PARENT = 4707;
 
@@ -208,7 +208,7 @@ public class PluginRunnerET {
         Map<String, File> iniParams = exportWorkflowInis();
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to schedule on host: " + localhost);
-        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
+        Map<String, Integer> wr_accessions = new HashMap<>();
         
         
         for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
@@ -252,7 +252,7 @@ public class PluginRunnerET {
         Map<String, File> iniParams = exportWorkflowInis();
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to launch without wait on host: " + localhost);
-        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
+        Map<String, Integer> wr_accessions = new HashMap<>();
         
         
         for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
@@ -272,7 +272,7 @@ public class PluginRunnerET {
         Map<String, File> iniParams = exportWorkflowInis();
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to launch with wait on host: " + localhost);
-        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
+        Map<String, Integer> wr_accessions = new HashMap<>();
         
         
         for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
@@ -292,7 +292,7 @@ public class PluginRunnerET {
         Map<String, File> iniParams = exportWorkflowInis();
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to launch with wait on host: " + localhost);
-        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
+        Map<String, Integer> wr_accessions = new HashMap<>();
         
         
         for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
@@ -309,7 +309,7 @@ public class PluginRunnerET {
     
     public static void main(String[] args) throws IOException {
         PluginRunnerET it = new PluginRunnerET();
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<>();
         for(String acc : args){
             try{
             Integer accInt = Integer.valueOf(acc);
@@ -328,7 +328,7 @@ public class PluginRunnerET {
     
 
     private Map<String, File> exportWorkflowInis() throws IOException {
-        Map<String, File> iniParams = new HashMap<String, File>();
+        Map<String, File> iniParams = new HashMap<>();
         for(Entry<String, Integer> e : installedWorkflows.entrySet()){
             File workflowIni = exportINIFile(e.getKey(), e.getValue(), false);
             iniParams.put(e.getKey(), workflowIni);
@@ -339,7 +339,7 @@ public class PluginRunnerET {
     public void testLatestWorkflowsInternal(List<Integer> accessions) throws IOException {
         String output = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-installed", ReturnValue.SUCCESS, null);
         Assert.assertTrue("output should include installed workflows", output.contains("INSTALLED WORKFLOWS"));
-        Map<String, WorkflowInfo> latestWorkflows = new HashMap<String, WorkflowInfo>();
+        Map<String, WorkflowInfo> latestWorkflows = new HashMap<>();
         String[] lines = output.split(System.getProperty("line.separator"));
         for (String line : lines) {
             String[] lineParts = line.split("\t");
@@ -376,7 +376,7 @@ public class PluginRunnerET {
         }
         // setup thread pool
         ExecutorService threadPool = Executors.newFixedThreadPool(latestWorkflows.size());       
-        CompletionService<String> pool = new ExecutorCompletionService<String>(threadPool);
+        CompletionService<String> pool = new ExecutorCompletionService<>(threadPool);
         for (Entry<String, WorkflowInfo> e : latestWorkflows.entrySet()) {
             System.out.println("Testing " + e.getKey() + " " + e.getValue().sw_accession);
             

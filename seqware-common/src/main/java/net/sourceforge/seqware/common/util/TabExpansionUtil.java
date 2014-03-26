@@ -46,7 +46,7 @@ public class TabExpansionUtil {
         for (String h : header) {
             maxHeader = Math.max(maxHeader, h.length());
         }
-        List<String[]> records = new ArrayList<String[]>();
+        List<String[]> records = new ArrayList<>();
         for (int i = 1; i < lines.length; i++) {
             String[] record = lines[i].split("\t");
             for (String col : record) {
@@ -90,7 +90,7 @@ public class TabExpansionUtil {
         String[] header = lines[0].split("\t");
         // determine maximum header length and other formatting
         int[] maxContent = new int[header.length];
-        List<String[]> records = new ArrayList<String[]>();
+        List<String[]> records = new ArrayList<>();
         for (int i = 0; i < lines.length; i++) {
             String[] record = lines[i].split("\t");
             int j = 0;

@@ -115,7 +115,7 @@ public class DatabaseIDResource extends BasicResource {
      */
     protected <S, T extends Attribute> void mergeAttributes(Set<T> existingAttributeSet, Set<T> newAttributeSet, S parent) {
         // extract keys
-        Map<String, T> keyMap = new HashMap<String, T>();
+        Map<String, T> keyMap = new HashMap<>();
         for (T exist : existingAttributeSet) {
             keyMap.put(exist.getTag(), exist);
         }

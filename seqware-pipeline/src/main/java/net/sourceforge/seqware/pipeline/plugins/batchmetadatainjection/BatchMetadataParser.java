@@ -103,7 +103,7 @@ public abstract class BatchMetadataParser {
     public BatchMetadataParser(Metadata metadata, Map<String, String> fields, boolean interactive) {
         this.metadata = metadata;
         this.fields = fields;
-        this.defaults = new HashMap<String, String>(fields);
+        this.defaults = new HashMap<>(fields);
         this.interactive = interactive;
     }
 
@@ -377,7 +377,7 @@ public abstract class BatchMetadataParser {
         sa.setSampleDescription(sampleDescription);
 
         if (organismId <= 0) {
-            List<Organism> organisms = new ArrayList<Organism>(metadata.getOrganisms());
+            List<Organism> organisms = new ArrayList<>(metadata.getOrganisms());
             for (int i = 0; i < organisms.size(); i++) {
                 Log.stdout((i + 1) + " : " + organisms.get(i).getName());
             }

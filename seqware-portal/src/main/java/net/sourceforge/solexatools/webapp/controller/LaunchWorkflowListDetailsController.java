@@ -121,14 +121,14 @@ public class LaunchWorkflowListDetailsController extends BaseCommandController {
 		Lane lane = new Lane();
 		IUS ius = new IUS();
 		Processing proc = new Processing();
-		Map<WorkflowRun, Set<Processing>> wfrProc = new HashMap<WorkflowRun, Set<Processing>>();
+		Map<WorkflowRun, Set<Processing>> wfrProc = new HashMap<>();
 
 		PageInfo pageInfo = null;
 		Boolean isHasError = false;
 		String errorMessage = "";
 
-		List<Study> listAll = new ArrayList<Study>();
-		List<Study> listView = new ArrayList<Study>();
+		List<Study> listAll = new ArrayList<>();
+		List<Study> listView = new ArrayList<>();
 
 		String root = (String) request.getParameter("root");
 		System.err.println("ROOT: " + root);
@@ -201,7 +201,7 @@ public class LaunchWorkflowListDetailsController extends BaseCommandController {
 				sam.setProcessings(getProcessingService().setWithHasFile(
 						sam.getProcessings(), metaType));
 
-				SortedSet<Sample> children = new TreeSet<Sample>(
+				SortedSet<Sample> children = new TreeSet<>(
 						sam.getChildren());
 				getSampleService().setWithHasFile(null, children);
 				// Log.info("Lanes SIZE2 = " + sam.getLanes().size());
@@ -279,7 +279,7 @@ public class LaunchWorkflowListDetailsController extends BaseCommandController {
 		for (Processing child : proc.getChildren()) {
 			Set<Processing> processings = wfrProc.get(child.getWorkflowRun());
 			if (processings == null) {
-				processings = new HashSet<Processing>();
+				processings = new HashSet<>();
 			}
 			processings.add(child);
 			if (child.getWorkflowRun() != null) {

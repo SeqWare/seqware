@@ -54,7 +54,7 @@ public class WorkflowRunSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView modelAndView = null;
-		HashMap <String,String> model = new HashMap<String,String>();
+		HashMap <String,String> model = new HashMap<>();
 
 		WorkflowRun workflowRun = figureOutWorkflowRun(request);
 

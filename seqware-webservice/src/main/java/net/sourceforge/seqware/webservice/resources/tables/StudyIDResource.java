@@ -57,13 +57,13 @@ public class StudyIDResource extends DatabaseIDResource {
         StudyService ss = BeanFactory.getStudyServiceBean();
         Study study = (Study) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<Study> jaxbTool = new JaxbObject<Study>();
+        JaxbObject<Study> jaxbTool = new JaxbObject<>();
 
         Study dto = copier.hibernate2dto(Study.class, study);
 
 		if(fields.contains("attributes")) {
 			Set<StudyAttribute> sas = study.getStudyAttributes();
-			Set<StudyAttribute> newsas = new TreeSet<StudyAttribute>();
+			Set<StudyAttribute> newsas = new TreeSet<>();
 			if(sas!=null && !sas.isEmpty()) {
 				for(StudyAttribute sa: sas) {
 					newsas.add(copier.hibernate2dto(StudyAttribute.class,sa));
@@ -82,7 +82,7 @@ public class StudyIDResource extends DatabaseIDResource {
     public Representation put(Representation entity) {
 		Representation representation = null;
 		try {
-            JaxbObject<Study> jo = new JaxbObject<Study>();
+            JaxbObject<Study> jo = new JaxbObject<>();
             String text = entity.getText();
             Study p = null;
             try {

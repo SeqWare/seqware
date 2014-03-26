@@ -68,12 +68,12 @@ public class SequencerRunResource extends DatabaseResource {
     if (queryValues.get("name") != null) {
       String name = queryValues.get("name");
       SequencerRun study = (SequencerRun) testIfNull(ss.findByName(name));
-      JaxbObject<SequencerRun> jaxbTool = new JaxbObject<SequencerRun>();
+      JaxbObject<SequencerRun> jaxbTool = new JaxbObject<>();
       SequencerRun dto = copier.hibernate2dto(SequencerRun.class, study);
       Document line = XmlTools.marshalToDocument(jaxbTool, dto);
       getResponse().setEntity(XmlTools.getRepresentation(line));
     } else {
-      JaxbObject<SequencerRunList> jaxbTool = new JaxbObject<SequencerRunList>();
+      JaxbObject<SequencerRunList> jaxbTool = new JaxbObject<>();
       List<SequencerRun> runs = (List<SequencerRun>) testIfNull(ss.list());
       SequencerRunList eList = new SequencerRunList();
       eList.setList(new ArrayList());
@@ -98,7 +98,7 @@ public class SequencerRunResource extends DatabaseResource {
   public void postJaxb(Representation entity) throws ResourceException {
     authenticate();
     try {
-      JaxbObject<SequencerRun> jo = new JaxbObject<SequencerRun>();
+      JaxbObject<SequencerRun> jo = new JaxbObject<>();
       String text = entity.getText();
       SequencerRun o = null;
       try {

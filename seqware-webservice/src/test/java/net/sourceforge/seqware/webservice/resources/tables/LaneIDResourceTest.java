@@ -28,7 +28,7 @@ public class LaneIDResourceTest extends DatabaseResourceIDTest {
 
     public LaneIDResourceTest() {
         super("/lanes/4714");
-        jo = new JaxbObject<Lane>();
+        jo = new JaxbObject<>();
         o = new Lane();
     }
 

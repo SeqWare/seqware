@@ -44,7 +44,7 @@ public class RegistrationSetupController extends BaseCommandController {
 
 		Registration registration = Security.getRegistration(request);
 		ModelAndView modelAndView;
-		HashMap<String,Object>  model     = new HashMap<String,Object>();
+		HashMap<String,Object>  model     = new HashMap<>();
 
 		Debug.put(": request.requestURI = " + request.getRequestURI());
 		

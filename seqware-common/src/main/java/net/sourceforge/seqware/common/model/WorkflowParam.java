@@ -389,7 +389,7 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
 
         List newFiles = (files == null ? null : new ArrayList(files));
         wp.setFiles(newFiles);
-        SortedSet newValues = (values == null ? null : new TreeSet<WorkflowParamValue>(values));
+        SortedSet newValues = (values == null ? null : new TreeSet<>(values));
         wp.setValues(newValues);
         return wp;
     }

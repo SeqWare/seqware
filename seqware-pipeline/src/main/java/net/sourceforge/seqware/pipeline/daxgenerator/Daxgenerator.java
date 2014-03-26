@@ -61,7 +61,7 @@ public class Daxgenerator {
 
         Map<String, String> map = null;
         if (argMap == null) {
-            map = new HashMap<String, String>();
+            map = new HashMap<>();
         } else {
             map = argMap;
         }
@@ -137,7 +137,7 @@ public class Daxgenerator {
     public static void main(String[] args) {
         String template = null;
         String output = null;
-        ArrayList<String> iniFiles = new ArrayList<String>();
+        ArrayList<String> iniFiles = new ArrayList<>();
 
         // Parse command line for options
         for (int i = 0; i < args.length; i++) {

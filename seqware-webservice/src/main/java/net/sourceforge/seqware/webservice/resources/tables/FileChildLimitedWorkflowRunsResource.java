@@ -61,7 +61,7 @@ public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
             Log.debug("Dealing with FileChildWorkflowRunsResource with Json input");
             JaxbObject jaxbTool;
             Log.info("Using direct json search");
-            List<Integer> workflows = new ArrayList<Integer>();
+            List<Integer> workflows = new ArrayList<>();
             for (String key : queryValues.keySet()) {
                 Log.debug("key: " + key + " -> " + queryValues.get(key));
                 if (key.equals("workflows")) {
@@ -73,7 +73,7 @@ public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
                 }
             }
             // try to deserialize json file list
-            JaxbObject<IntegerList> jo = new JaxbObject<IntegerList>();
+            JaxbObject<IntegerList> jo = new JaxbObject<>();
             String text = entity.getText();
             Log.debug(text);
             List<Integer> o = null;
@@ -89,7 +89,7 @@ public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
             WorkflowRunList2 runs = FileChildWorkflowRunsResource.directRetrieveWorkflowRuns(o, workflows);
             // these variables will be used to return information
             Log.debug("Returning " + runs.getList().size() + " workflow runs");
-            jaxbTool = new JaxbObject<WorkflowRunList>();
+            jaxbTool = new JaxbObject<>();
             Log.debug("JaxbObjects started");
             assert runs.getList().isEmpty();
             final Document line = XmlTools.marshalToDocument(jaxbTool, runs);

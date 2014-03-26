@@ -39,7 +39,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
   private Integer swAccession;
   private Date createTimestamp;
   private Logger logger;
-  private Set<Expense> expenses = new TreeSet<Expense>();
+  private Set<Expense> expenses = new TreeSet<>();
   //private Set<InvoiceAttribute> invoiceAttributes = new TreeSet<InvoiceAttribute>();
 
   /**

@@ -58,7 +58,7 @@ public class WorkflowRunIDWorkflowResource extends BasicRestlet {
             WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
             WorkflowRun run = (WorkflowRun)testIfNull(wrs.findBySWAccession(parseClientInt(id)));
             Workflow w = run.getWorkflow();
-            JaxbObject<Workflow> jaxbTool = new JaxbObject<Workflow>();
+            JaxbObject<Workflow> jaxbTool = new JaxbObject<>();
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             Workflow wdto = copier.hibernate2dto(Workflow.class, w);
             Document doc = XmlTools.marshalToDocument(jaxbTool, wdto);

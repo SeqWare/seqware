@@ -57,7 +57,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
   private SortedSet<WorkflowRun> workflowRuns;
   private SortedSet<WorkflowParam> workflowParams;
   private Logger logger;
-  private Set<WorkflowAttribute> workflowAttributes = new TreeSet<WorkflowAttribute>();
+  private Set<WorkflowAttribute> workflowAttributes = new TreeSet<>();
 
   /**
    * <p>Constructor for Workflow.</p>
@@ -504,7 +504,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     if (workflowParams == null)
       return null;
 
-    SortedSet<WorkflowParam> visibleParams = new TreeSet<WorkflowParam>();
+    SortedSet<WorkflowParam> visibleParams = new TreeSet<>();
     for (WorkflowParam workflowParam : workflowParams) {
       if (workflowParam.getDisplay() != null && workflowParam.getDisplay() && !"file".equals(workflowParam.getType())) {
         visibleParams.add(workflowParam);
@@ -524,7 +524,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
 
     SortedSet<WorkflowParam> visibleParamsWDV = getVisibleWorkflowParams();
 
-    SortedSet<WorkflowParam> res = new TreeSet<WorkflowParam>();
+    SortedSet<WorkflowParam> res = new TreeSet<>();
 
     for (WorkflowParam workflowParam : visibleParamsWDV) {
       String defaultValue = workflowParam.getDefaultValue();
@@ -532,7 +532,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
       if (defaultValue != null) {
         // logger.debug("New param");
         // logger.debug("Def value = " + defaultValue);
-        SortedSet<WorkflowParamValue> differentValues = new TreeSet<WorkflowParamValue>();
+        SortedSet<WorkflowParamValue> differentValues = new TreeSet<>();
         SortedSet<WorkflowParamValue> values = workflowParam.getValues();
         for (WorkflowParamValue workflowParamValue : values) {
           // System.out.print("value = " + workflowParamValue.getValue());
@@ -562,7 +562,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     if (workflowParams == null)
       return null;
 
-    SortedSet<WorkflowParam> paramsWithDifFMT = new TreeSet<WorkflowParam>();
+    SortedSet<WorkflowParam> paramsWithDifFMT = new TreeSet<>();
 
     // SortedSet<WorkflowParam> params = getVisibleWorkflowParams();
     SortedSet<WorkflowParam> params = workflowParams;

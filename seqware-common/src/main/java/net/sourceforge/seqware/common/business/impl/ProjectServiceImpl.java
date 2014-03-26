@@ -50,7 +50,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Override
   public void insert(Project project) {
     // FIXME: need to set the names of each sample!!
-    TreeSet<Sample> list = new TreeSet<Sample>();
+    TreeSet<Sample> list = new TreeSet<>();
     // FIXME: why do I have to manually set these!?!?!
     /*
      * project.getSample1().setCreateTimestamp(new Date());

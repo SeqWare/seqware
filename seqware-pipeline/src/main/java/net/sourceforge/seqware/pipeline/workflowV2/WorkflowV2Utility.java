@@ -80,7 +80,7 @@ public class WorkflowV2Utility {
      * @return
      */
     private static Map<String, String> parseMetadataInfo(File file, String bundleDir) {
-        Map<String, String> ret = new HashMap<String, String>();
+        Map<String, String> ret = new HashMap<>();
         //parse metadataFile
         SAXBuilder builder = new SAXBuilder();
         try {

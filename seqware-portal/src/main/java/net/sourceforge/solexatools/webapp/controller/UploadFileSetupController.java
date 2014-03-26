@@ -63,7 +63,7 @@ public class UploadFileSetupController extends BaseCommandController{
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		Map<String,Object>		model			= new HashMap<String,Object>();
+		Map<String,Object>		model			= new HashMap<>();
 		
 		Integer id = getRequestedId(request);
 		String typeNode = getRequestedTypeNode(request);

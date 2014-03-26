@@ -272,7 +272,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
   /** {@inheritDoc} */
   @Override
   public List<File> list() {
-    ArrayList<File> l = new ArrayList<File>();
+    ArrayList<File> l = new ArrayList<>();
 
     String query = "from File";
 

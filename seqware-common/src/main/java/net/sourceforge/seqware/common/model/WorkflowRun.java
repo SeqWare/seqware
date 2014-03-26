@@ -67,9 +67,9 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
   private String iniFile;
   private String stdErr;
   private String stdOut;
-  private Set<WorkflowRunAttribute> workflowRunAttributes = new TreeSet<WorkflowRunAttribute>();
+  private Set<WorkflowRunAttribute> workflowRunAttributes = new TreeSet<>();
   private String workflowEngine;
-  private Set<Integer> inputFileAccessions = new HashSet<Integer>();
+  private Set<Integer> inputFileAccessions = new HashSet<>();
   
   // artificial fields for SEQWARE-1134, we will need to populate these artificially
   // this is an ugly hack, need to get a better solution 

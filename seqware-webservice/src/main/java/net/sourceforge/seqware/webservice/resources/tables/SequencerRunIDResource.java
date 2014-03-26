@@ -63,14 +63,14 @@ public class SequencerRunIDResource extends DatabaseIDResource {
         authenticate();
         SequencerRunService ss = BeanFactory.getSequencerRunServiceBean();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<SequencerRun> jaxbTool = new JaxbObject<SequencerRun>();
+        JaxbObject<SequencerRun> jaxbTool = new JaxbObject<>();
 
         SequencerRun run = (SequencerRun) testIfNull(ss.findBySWAccession(getId()));
         SequencerRun dto = copier.hibernate2dto(SequencerRun.class, run);
 
 
         if (fields.contains("lanes")) {
-            SortedSet<Lane> laneList = new TreeSet<Lane>();
+            SortedSet<Lane> laneList = new TreeSet<>();
             SortedSet<Lane> lanes = run.getLanes();
             if (lanes != null) {
                 for (Lane lane : lanes) {
@@ -84,7 +84,7 @@ public class SequencerRunIDResource extends DatabaseIDResource {
 		if(fields.contains("attributes")) {
 			Set<SequencerRunAttribute> sras = run.getSequencerRunAttributes();
 			if(sras!=null && !sras.isEmpty()) {
-				Set<SequencerRunAttribute> newsras = new TreeSet<SequencerRunAttribute>();
+				Set<SequencerRunAttribute> newsras = new TreeSet<>();
 				for(SequencerRunAttribute sra: sras) {
 					newsras.add(copier.hibernate2dto(SequencerRunAttribute.class, sra));
 				}
@@ -104,7 +104,7 @@ public class SequencerRunIDResource extends DatabaseIDResource {
     public Representation put(Representation entity) {
         authenticate();
         Representation representation = null;
-        JaxbObject<SequencerRun> jo = new JaxbObject<SequencerRun>();
+        JaxbObject<SequencerRun> jo = new JaxbObject<>();
         SequencerRun newSequencerRun = null;
         try {
             String text = entity.getText();

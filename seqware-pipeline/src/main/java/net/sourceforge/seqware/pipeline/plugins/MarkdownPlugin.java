@@ -170,7 +170,7 @@ public class MarkdownPlugin extends Plugin {
     @Override
     public ReturnValue do_run() {
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
-        Set<String> toSkip = new HashSet<String>();
+        Set<String> toSkip = new HashSet<>();
         if (options.has("skip")) {
             Object valueOf = options.valuesOf("skip");
             String[] vals = valueOf.toString().split(",");
@@ -180,14 +180,14 @@ public class MarkdownPlugin extends Plugin {
         if (options.has("modules")) {
             Collection<ModuleInterface> mods;
             mods = (Collection<ModuleInterface>) Lookup.getDefault().lookupAll(ModuleInterface.class);
-            List<ModuleInterface> modsList = new ArrayList<ModuleInterface>();
+            List<ModuleInterface> modsList = new ArrayList<>();
             modsList.addAll(mods);
             Collections.sort(modsList, new ModuleComparator());
             handlePlugins(bufferedWriter, modsList, toSkip);
         } else {
             Collection<PluginInterface> mods;
             mods = (Collection<PluginInterface>) Lookup.getDefault().lookupAll(PluginInterface.class);
-            List<PluginInterface> modsList = new ArrayList<PluginInterface>();
+            List<PluginInterface> modsList = new ArrayList<>();
             modsList.addAll(mods);
             Collections.sort(modsList, new PluginComparator());
             handlePlugins(bufferedWriter, modsList, toSkip);
@@ -351,7 +351,7 @@ public class MarkdownPlugin extends Plugin {
             buffer.append("| Command-line option | Description |\n");
             buffer.append("|--------------------|--------------|\n");
             // not sure why options are reported once per
-            Set<String> done = new HashSet<String>();
+            Set<String> done = new HashSet<>();
             for (Entry<String, ? extends OptionDescriptor> e : options.entrySet()) {
                 if (done.contains(e.getValue().description())) {
                     continue;
@@ -376,7 +376,7 @@ public class MarkdownPlugin extends Plugin {
     public static void main(String[] args) {
         MarkdownPlugin mp = new MarkdownPlugin();
         mp.init();
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         arr.add("-m");
         mp.setParams(arr);
         mp.parse_parameters();

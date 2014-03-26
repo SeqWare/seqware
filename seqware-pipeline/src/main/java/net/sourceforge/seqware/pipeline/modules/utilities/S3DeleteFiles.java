@@ -185,7 +185,7 @@ public class S3DeleteFiles extends Module {
     ret.setExitStatus(ReturnValue.SUCCESS);
 
     // stores remote file info
-    ArrayList<String> remoteFiles = new ArrayList<String>();
+    ArrayList<String> remoteFiles = new ArrayList<>();
 
     try {
       // read in list of files to delete

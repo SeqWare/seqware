@@ -43,7 +43,7 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
   @Override
   public List<ExperimentLibraryDesign> list(Registration registration) {
 
-    ArrayList<ExperimentLibraryDesign> objs = new ArrayList<ExperimentLibraryDesign>();
+    ArrayList<ExperimentLibraryDesign> objs = new ArrayList<>();
     if (registration == null)
       return objs;
 

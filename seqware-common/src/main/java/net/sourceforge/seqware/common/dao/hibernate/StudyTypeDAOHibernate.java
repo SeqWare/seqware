@@ -115,7 +115,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
    */
   @Override
   public List<StudyType> list() {
-    ArrayList<StudyType> studyTypes = new ArrayList<StudyType>();
+    ArrayList<StudyType> studyTypes = new ArrayList<>();
 
     List expmts = this.getHibernateTemplate().find("from StudyType as studyType order by studyType.studyTypeId asc" // desc
             );

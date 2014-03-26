@@ -48,7 +48,7 @@ public class ExperimentAttributeDAOHibernate extends HibernateDaoSupport impleme
     /** {@inheritDoc} */
     @Override
     public List<ExperimentAttribute> list() {
-        ArrayList<ExperimentAttribute> eAtts = new ArrayList<ExperimentAttribute>();
+        ArrayList<ExperimentAttribute> eAtts = new ArrayList<>();
 
         String query = "from ExperimentAttribute";
 

@@ -114,7 +114,7 @@ public class LoadIndexPageController extends BaseCommandController {
 		List<String> listSavedPage = (List<String>) request.getSession(false)
 				.getAttribute("listSavedPage");
 		if (listSavedPage == null) {
-			listSavedPage = new LinkedList<String>();
+			listSavedPage = new LinkedList<>();
 		}
 		return listSavedPage;
 	}

@@ -284,7 +284,7 @@ public class StudyServiceImpl implements StudyService {
   /** {@inheritDoc} */
   @Override
   public List<Study> listWithHasFile(List<Study> list, String metaType) {
-    List<Study> result = new LinkedList<Study>();
+    List<Study> result = new LinkedList<>();
     for (Study study : list) {
       if (isHasFile(study.getStudyId(), metaType)) {
         study.setIsHasFile(true);

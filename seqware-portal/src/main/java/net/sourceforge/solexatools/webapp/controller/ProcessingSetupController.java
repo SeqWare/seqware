@@ -46,7 +46,7 @@ public class ProcessingSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView modelAndView = null;
-		HashMap <String,String> model = new HashMap<String,String>();
+		HashMap <String,String> model = new HashMap<>();
 
 		SequencerRun sequencerRun = figureOutSequencerRun(request);
 		Processing processing = figureOutProcessing(request);

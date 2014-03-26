@@ -34,7 +34,7 @@ public class ProcessingList  {
      * <p>Constructor for ProcessingList.</p>
      */
     public ProcessingList() {
-        tList = new ArrayList<Processing>();
+        tList = new ArrayList<>();
     }
 
     /**

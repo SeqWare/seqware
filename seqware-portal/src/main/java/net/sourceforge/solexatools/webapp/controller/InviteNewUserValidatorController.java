@@ -44,8 +44,8 @@ public class InviteNewUserValidatorController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 		
 		Boolean isHasError = false;
-		List<String> errorMessages = new LinkedList<String>();
-		List<String> emailsHasError = new LinkedList<String>();
+		List<String> errorMessages = new LinkedList<>();
+		List<String> emailsHasError = new LinkedList<>();
 		
 		String[] emails = request.getParameterValues("emailsToString");
 		

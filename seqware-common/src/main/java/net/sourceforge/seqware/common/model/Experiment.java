@@ -66,9 +66,9 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
   private String expSpotDesignTagSpec;
   private String expSpotDesignAdapterSpec;
   private Integer expSpotDesignReadsPerSpot;
-  private Set<Processing> processings = new TreeSet<Processing>();
-  private Set<ExperimentAttribute> experimentAttributes = new TreeSet<ExperimentAttribute>();
-  private Set<ExperimentLink> experimentLinks = new TreeSet<ExperimentLink>();
+  private Set<Processing> processings = new TreeSet<>();
+  private Set<ExperimentAttribute> experimentAttributes = new TreeSet<>();
+  private Set<ExperimentLink> experimentLinks = new TreeSet<>();
   // these are non-persisted fields used by the platform connection
   private Integer platformInt;
   private SortedSet<Sample> samples;

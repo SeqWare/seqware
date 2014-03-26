@@ -98,7 +98,7 @@ public class IUSController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<String,Object>();
+		HashMap<String,Object>	model			= new HashMap<>();
 		IUS						ius				= getRequestedIUS(request);
 		
 		ServletContext context = this.getServletContext();

@@ -65,7 +65,7 @@ public class StudyIdFilesResource extends BasicRestlet {
         ReturnValueList list = new ReturnValueList();
         list.setList(returnValues);
 
-        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<ReturnValueList>();
+        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<>();
         Document line = XmlTools.marshalToDocument(jaxbTool, list);
         response.setEntity(XmlTools.getRepresentation(line));
     }

@@ -123,7 +123,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         if (data == null) {
             return null;
         }
-        Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
+        Set<ModelAccessionIDTuple> results = new HashSet<>();
         if (data.getLaneCollection() != null) {
             for (Lane l : data.getLaneCollection()) {
                 Set<ModelAccessionIDTuple> recursiveSet = this.deleteLaneRecursive(l.getLaneId(), delete, matchSet);
@@ -149,7 +149,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         if (data == null) {
             return null;
         }
-        Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
+        Set<ModelAccessionIDTuple> results = new HashSet<>();
         if (data.getIusCollection() != null) {
             for (Ius i : data.getIusCollection()) {
                 Set<ModelAccessionIDTuple> recursiveSet = this.deleteIUSRecursive(i.getIusId(), delete, matchSet);
@@ -175,7 +175,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         if (data == null) {
             return null;
         }
-        Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
+        Set<ModelAccessionIDTuple> results = new HashSet<>();
         if (data.getIusWorkflowRunsCollection() != null) {
             for (IusWorkflowRuns iwr : data.getIusWorkflowRunsCollection()) {
                 WorkflowRun workflowRun = iwr.getWorkflowRunId();
@@ -206,7 +206,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
      */
     private Set<ModelAccessionIDTuple> deleteWorkflowRunRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet) {
         EntityManager entityManager = getEntityManager();
-        Set<ModelAccessionIDTuple> results = new HashSet<ModelAccessionIDTuple>();
+        Set<ModelAccessionIDTuple> results = new HashSet<>();
         WorkflowRun data = entityManager.find(WorkflowRun.class, id, LockModeType.OPTIMISTIC);
         if (data == null) {
             return null;
@@ -215,7 +215,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         if (!(data.getStatus().equals(WorkflowRunStatus.completed.name()) || data.getStatus().equals(WorkflowRunStatus.failed.name()) || data.getStatus().equals(WorkflowRunStatus.cancelled.name()))) {
             UtilityREST.throwExceptionWithMessage("Unsettled workflow run blocking deletion: " + data.getSwAccession());   
         }
-        Set<Processing> affectedProcessing = new HashSet<Processing>();
+        Set<Processing> affectedProcessing = new HashSet<>();
         // workflow_run
         if (data.getProcessingCollection() != null) {
             affectedProcessing.addAll(data.getProcessingCollection());
@@ -224,7 +224,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         if (data.getProcessingCollection1() != null) {
             affectedProcessing.addAll(data.getProcessingCollection1());
         }
-        Set<File> affectedFile = new HashSet<File>();
+        Set<File> affectedFile = new HashSet<>();
         for (Processing p : affectedProcessing) {
             // look for child workflow runs and handle them recursively
             if (p.getProcessingRelationshipCollection() != null) {

@@ -24,7 +24,7 @@ public class BatchedOozieProvisionFileJob extends OozieJob {
      */
     public static final String OOZIE_BATCH_SIZE = "OOZIE_BATCH_SIZE";
     
-    private List<OozieProvisionFileJob> provisionJobs = new ArrayList<OozieProvisionFileJob>();
+    private List<OozieProvisionFileJob> provisionJobs = new ArrayList<>();
 
 
   public BatchedOozieProvisionFileJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
@@ -62,7 +62,7 @@ public class BatchedOozieProvisionFileJob extends OozieJob {
   private File emitRunnerScript() {
     File localFile = file(scriptsDir, runnerFileName(name), true);
 
-    ArrayList<String> args = new ArrayList<String>();
+    ArrayList<String> args = new ArrayList<>();
     for(OozieProvisionFileJob batchedJob : provisionJobs){
         batchedJob.setUseCheckFile(true);
         args.add(concat(" ",batchedJob.generateRunnerLine()));
@@ -74,7 +74,7 @@ public class BatchedOozieProvisionFileJob extends OozieJob {
 
   @Override
   public List<String> getAccessionFile() {
-    List<String> list = new ArrayList<String>();
+    List<String> list = new ArrayList<>();
     for(OozieProvisionFileJob job : this.provisionJobs){
         List<String> accessionFile = job.getAccessionFile();
         list.addAll(accessionFile);
