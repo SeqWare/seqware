@@ -1,6 +1,5 @@
 package net.sourceforge.solexatools.webapp.controller;
 
-import java.io.BufferedInputStream;
 import java.util.List;
 
 import javax.servlet.ServletContext;

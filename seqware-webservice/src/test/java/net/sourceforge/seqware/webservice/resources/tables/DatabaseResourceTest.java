@@ -16,10 +16,8 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.IOException;
 import junit.framework.Assert;
 import net.sourceforge.seqware.webservice.resources.AbstractResourceTest;
-import org.junit.Test;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 

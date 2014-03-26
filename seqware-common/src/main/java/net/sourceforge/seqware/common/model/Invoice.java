@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
 

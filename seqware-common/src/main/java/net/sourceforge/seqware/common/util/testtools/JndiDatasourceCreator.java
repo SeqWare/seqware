@@ -2,17 +2,12 @@ package net.sourceforge.seqware.common.util.testtools;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.naming.NoInitialContextException;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
-import org.postgresql.ds.PGPoolingDataSource;
-import org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory;
 import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 
 /**

@@ -8,9 +8,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.SampleService;
-import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Registration;

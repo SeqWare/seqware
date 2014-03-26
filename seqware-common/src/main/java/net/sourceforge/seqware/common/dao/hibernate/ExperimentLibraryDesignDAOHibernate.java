@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.sourceforge.seqware.common.dao.ExperimentLibraryDesignDAO;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
-import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 

@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.apache.commons.dbutils.ResultSetHandler;

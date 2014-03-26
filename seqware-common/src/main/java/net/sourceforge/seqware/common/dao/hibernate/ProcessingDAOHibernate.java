@@ -7,7 +7,6 @@ import java.util.List;
 
 import net.sourceforge.seqware.common.dao.ProcessingDAO;
 import net.sourceforge.seqware.common.model.File;
-import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.util.NullBeanUtils;

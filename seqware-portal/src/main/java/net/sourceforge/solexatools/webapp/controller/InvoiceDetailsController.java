@@ -2,7 +2,6 @@ package net.sourceforge.solexatools.webapp.controller;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.seqware.common.business.InvoiceService;
 
-import net.sourceforge.seqware.common.business.WorkflowService;
 import net.sourceforge.seqware.common.model.Expense;
 import net.sourceforge.seqware.common.model.Invoice;
 import net.sourceforge.seqware.common.model.Registration;

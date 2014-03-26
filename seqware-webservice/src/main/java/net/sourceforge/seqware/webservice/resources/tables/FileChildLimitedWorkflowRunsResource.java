@@ -30,7 +30,6 @@ import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfN
 
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;

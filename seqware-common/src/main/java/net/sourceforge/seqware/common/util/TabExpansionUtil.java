@@ -17,7 +17,6 @@
 package net.sourceforge.seqware.common.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 

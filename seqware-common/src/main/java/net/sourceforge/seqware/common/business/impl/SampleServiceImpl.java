@@ -16,7 +16,6 @@ import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>SampleServiceImpl class.</p>

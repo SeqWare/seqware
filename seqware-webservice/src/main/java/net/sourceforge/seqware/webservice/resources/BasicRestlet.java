@@ -23,7 +23,6 @@ import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Restlet;
 import org.restlet.data.Form;
-import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 /**
