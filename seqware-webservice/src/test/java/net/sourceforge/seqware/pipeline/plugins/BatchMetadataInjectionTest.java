@@ -75,7 +75,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     private static String malformedJson = null;
     private static InputStream schema = null;
 
-    private final String wfaccession = String.valueOf(metadata.getWorkflowAccession("GenomicAlignmentNovoalign", "0.10.2"));
+    private final String wfaccession = "2861";
 
     public BatchMetadataInjectionTest() {
     }
