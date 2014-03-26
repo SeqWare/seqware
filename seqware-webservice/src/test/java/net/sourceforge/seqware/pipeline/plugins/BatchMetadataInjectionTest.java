@@ -75,7 +75,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     private static String malformedJson = null;
     private static InputStream schema = null;
 
-    private final String wfaccession = String.valueOf("2861");
+    private final String wfaccession = "2861";
 
     public BatchMetadataInjectionTest() {
     }
