@@ -73,6 +73,7 @@ public class WorkflowDataModelFactory {
      *
      * @param workflowAccession if this is present, we grab metadata information
      * from the database, not the options
+     * @param workflowRunAccession
      * @return
      */
     public AbstractWorkflowDataModel getWorkflowDataModel(Integer workflowAccession, Integer workflowRunAccession) {

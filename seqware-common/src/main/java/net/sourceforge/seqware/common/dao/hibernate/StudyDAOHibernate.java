@@ -42,14 +42,16 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     logger = Logger.getLogger(StudyDAOHibernate.class);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param study */
   public Integer insert(Study study) {
     this.getHibernateTemplate().save(study);
     this.getSession().flush();
     return study.getSwAccession();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param study */
   public void update(Study study) {
     this.getHibernateTemplate().update(study);
     getSession().flush();
@@ -87,7 +89,8 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     this.getHibernateTemplate().delete(study);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param isAsc */
   public List<Study> list(Registration registration, Boolean isAsc) {
     ArrayList<Study> studys = new ArrayList<Study>();
     logger.debug("Get Study LIST for " + registration.getEmailAddress());
@@ -174,7 +177,8 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return studys;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param isAsc */
   public List<Study> listMyShared(Registration registration, Boolean isAsc) {
     List<Study> sharedStudies = new ArrayList<Study>();
 
@@ -195,7 +199,8 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return sharedStudies;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param isAsc */
   public List<Study> listSharedWithMe(Registration registration, Boolean isAsc) {
     ArrayList<Study> studys = new ArrayList<Study>();
 
@@ -779,7 +784,8 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     return isHasFile;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param isAsc */
   public List<Study> listStudyHasFile(Registration registration, String metaType, Boolean isAsc) {
     List<Study> studies = new ArrayList<Study>();
     /*
@@ -1031,6 +1037,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
    * {@inheritDoc}
    *
    * Finds an instance of Study in the database by the Study ID.
+     * @param expID
    */
   public Study findByID(Integer expID) {
     String query = "from Study as study where study.studyId = ?";
@@ -1176,7 +1183,8 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     }
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param study */
   @Override
   public Integer insert(Registration registration, Study study) {
     Integer swAccession = 0;

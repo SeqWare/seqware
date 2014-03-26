@@ -97,7 +97,8 @@ public class StudyListDetailsController extends BaseCommandController {
     return isAsc;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {

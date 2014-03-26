@@ -27,7 +27,6 @@ public class ConfigTools {
   /**
    * The output keys are always uppercase!
    *
-   * @throws java.lang.Exception if any.
    * @return a {@link java.util.Map} object.
    */
   public static Map<String, String> getSettings() {

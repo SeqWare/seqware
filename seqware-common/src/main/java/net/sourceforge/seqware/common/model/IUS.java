@@ -55,7 +55,8 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
         super();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(IUS that) {
         if (that == null) {
@@ -86,7 +87,8 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
                 + ", isSelected=" + isSelected + '}';
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {

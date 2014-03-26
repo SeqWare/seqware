@@ -165,7 +165,8 @@ public class StudyReportTableController extends BaseCommandController {
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {

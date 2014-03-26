@@ -13,7 +13,8 @@ import net.sourceforge.seqware.common.err.SeqwareException;
  */
 public class SwBadModuleException extends SeqwareException{
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public int getExitCode() {
         return SeqwareExitCode.BadModule;

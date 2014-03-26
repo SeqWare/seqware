@@ -31,7 +31,8 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         super();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(WorkflowParamValue that) {
         if (that == null) {
@@ -55,7 +56,8 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         return new ToStringBuilder(this).append("value", getValue()).toString();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -182,7 +184,8 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         this.workflowParam = workflowParam;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public WorkflowParamValue clone() {
         WorkflowParamValue wp = this;
@@ -197,7 +200,8 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         return wp;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = true;

@@ -120,7 +120,8 @@ public class ValidationReportServiceImpl implements ValidationReportService {
     return result;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param swa */
   @Override
   public String fileReverseHierarchyDisplay(Integer swa) {
     checkNotNull(swa);

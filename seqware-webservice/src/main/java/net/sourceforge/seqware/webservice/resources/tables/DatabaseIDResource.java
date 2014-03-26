@@ -82,7 +82,8 @@ public class DatabaseIDResource extends BasicResource {
 //        return repOutput;
 //    }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Put
     @Override
     public Representation put(Representation rep) {
@@ -92,7 +93,8 @@ public class DatabaseIDResource extends BasicResource {
         return repOutput;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Delete
     @Override
     public Representation delete() {
@@ -106,6 +108,7 @@ public class DatabaseIDResource extends BasicResource {
      * Merge attributes from a new set into an existing one while removing duplicates.
      * Unfortunately, due to how duplicates work,
      * @param newAttributeSet
+     * @param parent
      * @return
      */
     protected <S, T extends Attribute> void mergeAttributes(Set<T> existingAttributeSet, Set<T> newAttributeSet, S parent) {

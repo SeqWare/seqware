@@ -81,6 +81,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
     
     /**
      * <p>getXml.</p>
+     * @throws java.sql.SQLException
      */
     @Get
     public void getXml() throws SQLException {
@@ -253,6 +254,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
      * Use SQL to directly retrieve relevant workflows runs (defined as any workflow runs that 
      * include one or more files in the set we were given)
      * @param files
+     * @param interestingWorkflows
      * @return
      * @throws SQLException 
      */

@@ -66,6 +66,7 @@ public final class CheckDB extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public final ReturnValue init() {
@@ -94,6 +95,7 @@ public final class CheckDB extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -106,6 +108,7 @@ public final class CheckDB extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public final ReturnValue do_run() {

@@ -13,13 +13,15 @@ import java.security.Permission;
  * @version $Id: $Id
  */
 public class NoExitSecurityManager extends SecurityManager{
-        /** {@inheritDoc} */
+        /** {@inheritDoc}
+     * @param permission */
         @Override
         public void checkPermission(Permission permission) {
             //allow anything
         }
 
-        /** {@inheritDoc} */
+        /** {@inheritDoc}
+     * @param o */
         @Override
         public void checkPermission(Permission permission, Object o) {
             //allow everything

@@ -72,7 +72,8 @@ public class ExperimentLibraryDesign implements Serializable, Comparable<Experim
 			.toString();
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param other */
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;
 		if ( !(other instanceof ExperimentLibraryDesign) ) return false;

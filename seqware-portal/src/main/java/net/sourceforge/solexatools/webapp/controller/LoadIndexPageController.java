@@ -182,7 +182,8 @@ public class LoadIndexPageController extends BaseCommandController {
 	 * = true; return isTimeOut; }
 	 */
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

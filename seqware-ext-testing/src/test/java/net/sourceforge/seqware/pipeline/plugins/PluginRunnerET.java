@@ -64,6 +64,7 @@ public class PluginRunnerET {
 
     /**
      * Returns a map of workflow artifactIds to their bundle path.
+     * @return 
      */
     public static Map<String, File> getBundleLocations() {
         return bundleLocations;

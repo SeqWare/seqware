@@ -23,7 +23,8 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 public class BulkDownloaderSizeValidatorController extends
 		BaseCommandController {
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

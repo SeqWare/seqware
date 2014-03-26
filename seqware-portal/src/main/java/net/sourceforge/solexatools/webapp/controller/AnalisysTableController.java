@@ -35,6 +35,7 @@ public class AnalisysTableController extends BaseCommandController {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request,

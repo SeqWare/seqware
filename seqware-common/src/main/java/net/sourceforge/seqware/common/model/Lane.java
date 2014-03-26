@@ -67,7 +67,8 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
         super();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(Lane that) {
         if (that == null || getLaneId() == null) {
@@ -96,7 +97,8 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
                 + swAccession + ", isSelected=" + isSelected + ", isHasFile=" + isHasFile + '}';
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {

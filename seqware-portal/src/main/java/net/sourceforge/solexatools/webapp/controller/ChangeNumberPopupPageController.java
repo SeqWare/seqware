@@ -111,7 +111,8 @@ public class ChangeNumberPopupPageController  extends BaseCommandController {
 		return currentPage;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)

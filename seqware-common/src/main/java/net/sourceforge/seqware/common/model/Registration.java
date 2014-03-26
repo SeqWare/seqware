@@ -152,7 +152,8 @@ public class Registration extends PermissionsAware implements Serializable, Comp
         return true;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param t */
     @Override
     public int compareTo(Registration t) {
         return emailAddress.compareTo(t.getEmailAddress());
@@ -372,7 +373,8 @@ public class Registration extends PermissionsAware implements Serializable, Comp
         return false;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = false;

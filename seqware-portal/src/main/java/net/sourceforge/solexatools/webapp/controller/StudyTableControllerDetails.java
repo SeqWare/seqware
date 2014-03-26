@@ -60,6 +60,7 @@ public class StudyTableControllerDetails extends BaseCommandController {
 
   /**
    * {@inheritDoc}
+     * @return 
    */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,

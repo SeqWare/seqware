@@ -73,6 +73,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    * {@inheritDoc}
    *
    * Inserts an instance of SequencerRun into the database.
+     * @return 
    */
   public Integer insert(SequencerRun sequencerRun) {
     /*
@@ -115,6 +116,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
    * number of assocated Lanes
    *
    * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
+     * @return 
    */
   public Integer insert(SequencerRunWizardDTO sequencerRun) {
 
@@ -374,14 +376,16 @@ public class SequencerRunServiceImpl implements SequencerRunService {
         sequencerRunDAO.update(registration, sequencerRun);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Integer insert(Registration registration, SequencerRun sequencerRun) {
         sequencerRun.setCreateTimestamp(new Date());
         return(sequencerRunDAO.insert(registration, sequencerRun));
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun) {
         sequencerRun.setCreateTimestamp(new Date());

@@ -275,7 +275,8 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         return workflowRun;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Representation put(Representation entity) {
         Representation toreturn = null;

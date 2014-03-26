@@ -26,7 +26,8 @@ public class UploadFileValidator implements Validator {
 		super();
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@SuppressWarnings("rawtypes")
 	public boolean supports(Class clazz) {
 		return UploadFile.class.equals(clazz);
@@ -36,6 +37,7 @@ public class UploadFileValidator implements Validator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param errors
 	 */
 	public void validate(Object obj, Errors errors) {
 		UploadFile uploadFile = (UploadFile) obj;

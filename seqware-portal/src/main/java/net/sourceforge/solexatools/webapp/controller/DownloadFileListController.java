@@ -115,7 +115,8 @@ public class DownloadFileListController extends BaseCommandController {
 		return nameListInSession;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)

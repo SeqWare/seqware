@@ -62,6 +62,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue init() {
@@ -74,6 +75,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -82,6 +84,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_run() {
@@ -143,6 +146,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue clean_up() {
@@ -153,6 +157,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public String get_description() {

@@ -657,6 +657,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      * {@inheritDoc}
      *
      * Finds an instance of Sample in the database by the Sample ID.
+     * @param id
      */
     public Sample findByID(Integer id) {
         String query = "from Sample as sample where sample.sampleId = ?";
@@ -768,6 +769,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     /**
      * {@inheritDoc}
+     * @param registaration
      */
     @SuppressWarnings("unchecked")
     public List<Sample> listSample(Registration registaration) {

@@ -43,6 +43,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
    * {@inheritDoc}
    *
    * Inserts an instance of Lane into the database.
+     * @return 
    */
   public Integer insert(IUS obj) {
     this.getHibernateTemplate().save(obj);
@@ -333,7 +334,8 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
 
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public Integer insert(Registration registration, IUS obj) {
     Logger logger = Logger.getLogger(IUSDAOHibernate.class);

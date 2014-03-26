@@ -25,7 +25,8 @@ Integer i = (Integer) getValue();
 return i.toString();
 }
 
-/** {@inheritDoc} */
+/** {@inheritDoc}
+     * @param str */
 public void setAsText(String str) {
 if( str == "" || str == null )
 setValue(0);

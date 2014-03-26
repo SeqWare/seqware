@@ -19,6 +19,7 @@ public interface IUSDAO {
    * <p>insert.</p>
    *
    * @param obj a {@link net.sourceforge.seqware.common.model.IUS} object.
+     * @return 
    */
   public Integer insert(IUS obj);
 
@@ -27,6 +28,7 @@ public interface IUSDAO {
    *
    * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
    * @param obj a {@link net.sourceforge.seqware.common.model.IUS} object.
+     * @return 
    */
   public Integer insert(Registration registration, IUS obj);
 

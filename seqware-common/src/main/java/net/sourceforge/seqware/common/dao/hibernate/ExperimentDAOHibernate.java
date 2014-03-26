@@ -34,14 +34,16 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param experiment */
   public Integer insert(Experiment experiment) {
     this.getHibernateTemplate().save(experiment);
     this.getSession().flush();
     return experiment.getSwAccession();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param experiment */
   public void update(Experiment experiment) {
     this.getHibernateTemplate().update(experiment);
   }
@@ -58,6 +60,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
    * This deletion will result in just the experiment being deleted but the samples and IUS will remain.
    * This will potentially cause orphans which is not really at all good.  A better solution 
    * is to never delete but just use a deletion attribute.
+     * @param experiment
    */
   public void delete(Experiment experiment) {
     // remove partent study
@@ -378,7 +381,8 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return isHasFile;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param experimentId */
   public List<File> getFiles(Integer experimentId, String metaType) {
     List<File> files = new ArrayList<File>();
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -483,7 +487,8 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     return files;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param experimentId */
   public boolean isHasFile(Integer experimentId, String metaType) {
     boolean isHasFile = false;
     String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -605,6 +610,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
    * {@inheritDoc}
    *
    * Finds an instance of Experiment in the database by the Experiment ID.
+     * @param expID
    */
   public Experiment findByID(Integer expID) {
     String query = "from Experiment as experiment where experiment.experimentId = ?";
@@ -713,7 +719,8 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     }
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param experiment */
   @Override
   public Integer insert(Registration registration, Experiment experiment) {
     Integer swAccession = 0;

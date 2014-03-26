@@ -454,6 +454,7 @@ public class MetadataWSTest {
 
     /**
      * Test of linkWorkflowRunAndParent method, of class MetadataWS.
+     * @throws java.lang.Exception
      */
     //@Test
     public void testLinkWorkflowRunAndParent() throws Exception {

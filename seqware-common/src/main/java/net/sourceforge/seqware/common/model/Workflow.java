@@ -67,7 +67,8 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     logger = Logger.getLogger(Workflow.class);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(Workflow that) {
     if (that == null)
@@ -89,7 +90,8 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     return new ToStringBuilder(this).append("swAccession", getSwAccession()).toString();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other))
@@ -676,7 +678,8 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     this.permanentBundleLocation = permanentBundleLocation;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
     boolean hasPermission = true;

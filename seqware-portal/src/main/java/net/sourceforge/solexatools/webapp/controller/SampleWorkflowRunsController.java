@@ -38,7 +38,8 @@ public class SampleWorkflowRunsController extends BaseCommandController {
 	/** Constant <code>SAMPLE_SWID="sw"</code> */
 	public final static String SAMPLE_SWID = "sw";
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

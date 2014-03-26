@@ -235,6 +235,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * {@inheritDoc}
      *
      * Finds an instance of SequencerRun in the database by the SequencerRun ID.
+     * @param id
      */
     public Processing findByID(Integer id) {
         String query = "from Processing as processing where processing.processingId = ?";

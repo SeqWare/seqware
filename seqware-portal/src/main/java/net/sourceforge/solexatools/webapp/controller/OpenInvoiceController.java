@@ -32,7 +32,8 @@ public class OpenInvoiceController  extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
         
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request, HttpServletResponse response)
 		throws Exception {

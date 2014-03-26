@@ -56,7 +56,8 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
         return swid;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param paramNameFileHash */
     public void insertFilesAsWorkflowRunParam(WorkflowRun workflowRun, Map<String, List<File>> paramNameFileHash) {
         logger.debug("Start insert files ...");
         for (String paramName : paramNameFileHash.keySet()) {

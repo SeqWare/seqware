@@ -22,7 +22,8 @@ public class LaneValidator implements Validator {
 		super();
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	public boolean supports(Class clazz) {
 		return Lane.class.equals(clazz);
 	}
@@ -31,6 +32,7 @@ public class LaneValidator implements Validator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param errors
 	 */
 	public void validate(Object obj, Errors errors) {
 		Lane lane = (Lane) obj;

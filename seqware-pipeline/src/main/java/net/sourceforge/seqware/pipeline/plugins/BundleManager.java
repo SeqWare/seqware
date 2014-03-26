@@ -71,7 +71,8 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue init() {
         return ret;
@@ -80,7 +81,8 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue do_test() {
         // TODO Auto-generated method stub
@@ -90,7 +92,8 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue do_run() {
         
@@ -287,7 +290,8 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
      */
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue clean_up() {
         // TODO Auto-generated method stub

@@ -51,6 +51,7 @@ public abstract class AbstractWorkflowDataModel  {
     
     /**
      * Validates and potentially modifies the specified model in preparation for launching.
+     * @param model
      * @param m the model to prepare
      */
     public static void prepare(AbstractWorkflowDataModel model) {
@@ -100,6 +101,7 @@ public abstract class AbstractWorkflowDataModel  {
      * case they are still provisioned properly with respect to the job (inputs before, outputs after)
      * when you define inputs/outputs here they are provisioned before all jobs
      * and after all jobs respectively
+     * @return 
      */
     public Map<String, SqwFile> setupFiles() {
     	return this.files;
@@ -188,6 +190,7 @@ public abstract class AbstractWorkflowDataModel  {
 	}
 	/**
 	 * need metadata writeback? user can override this setting by using --no-metadata or --metadata from command line
+     * @param b
 	 * @return
 	 */	
 	public void setMetadataWriteBack(boolean b) {
@@ -278,8 +281,7 @@ public abstract class AbstractWorkflowDataModel  {
 	}
 	/**
 	 * create a user defined directory before all jobs started
-	 * @param name:  directory name
-	 * @return 
+	 * @param name:  directory name 
 	 */
 	public void addDirectory(String name) {
 		this.dirs.add(name);
