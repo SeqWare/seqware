@@ -26,7 +26,8 @@ public class LibrarySelection implements Serializable, Comparable<LibrarySelecti
 		super();
 	}
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
 	public int compareTo(LibrarySelection that) {
 		if(that == null)
@@ -48,7 +49,8 @@ public class LibrarySelection implements Serializable, Comparable<LibrarySelecti
     }
 
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

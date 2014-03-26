@@ -27,6 +27,7 @@ public class UNCKerberos extends Authentication
    * {@inheritDoc}
    *
    * Get boolean true/false based on onyen/password pair.  No exception is thrown.
+     * @return 
    */
   public boolean loginSuccess(String uid, String password)
   {

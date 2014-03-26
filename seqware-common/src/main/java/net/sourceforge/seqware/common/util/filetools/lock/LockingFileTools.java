@@ -29,6 +29,7 @@ public class LockingFileTools {
    *
    * @param file a {@link java.io.File} object.
    * @param output a {@link java.lang.String} object.
+     * @param append
    * @return a boolean.
    */
   public static boolean lockAndWrite(File file, String output, boolean append) {

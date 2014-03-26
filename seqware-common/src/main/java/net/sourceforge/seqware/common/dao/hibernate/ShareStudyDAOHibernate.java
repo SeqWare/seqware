@@ -28,6 +28,7 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
    * {@inheritDoc}
    *
    * Inserts an instance of ShareStudy into the database.
+     * @param shareStudy
    */
   public void insert(ShareStudy shareStudy) {
     this.getHibernateTemplate().save(shareStudy);
@@ -37,6 +38,7 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
    * {@inheritDoc}
    *
    * Updates an instance of ShareStudy in the database.
+     * @param shareStudy
    */
   public void update(ShareStudy shareStudy) {
 
@@ -47,6 +49,7 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
    * {@inheritDoc}
    *
    * Updates an instance of ShareStudy in the database.
+     * @param shareStudy
    */
   public void delete(ShareStudy shareStudy) {
 

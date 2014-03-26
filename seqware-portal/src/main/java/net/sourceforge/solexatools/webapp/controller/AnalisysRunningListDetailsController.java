@@ -79,7 +79,8 @@ public class AnalisysRunningListDetailsController extends BaseCommandController 
 		return isAsc;
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)

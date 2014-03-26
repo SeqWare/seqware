@@ -150,7 +150,8 @@ public class ExperimentAttribute implements java.io.Serializable, Comparable<Exp
     this.units = units;
   }
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param t */
 	@Override
 	public int compareTo(ExperimentAttribute t) {
 		return this.tag.compareTo(t.getTag());

@@ -82,6 +82,7 @@ public class LaunchWorkflowController extends SimpleFormController {
 	 * {@inheritDoc}
 	 *
 	 * Handles the user's request to submit a new study.
+     * @return 
 	 */
 	protected ModelAndView onSubmit(HttpServletRequest	request,
 			HttpServletResponse	response,

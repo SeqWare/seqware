@@ -70,7 +70,8 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 			.toString();
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param other */
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;
 		if ( !(other instanceof ExperimentSpotDesign) ) return false;

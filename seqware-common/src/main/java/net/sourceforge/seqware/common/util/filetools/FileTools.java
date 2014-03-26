@@ -858,7 +858,6 @@ public class FileTools {
    * This tool uses the 'whoami' command to find the current user versus the
    * user.name method.
    *
-   * @param path
    * @return
    */
   public static String whoAmI() {

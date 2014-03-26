@@ -44,19 +44,22 @@ public class CycleChecker extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue init() {
         return ret;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue do_run() {
         
@@ -74,13 +77,15 @@ public class CycleChecker extends Plugin {
     }
 
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public String get_description() {
         return "Checks for cycles in the sample hierarchy and processing hierarchy of a particular study and prints some information about the study";

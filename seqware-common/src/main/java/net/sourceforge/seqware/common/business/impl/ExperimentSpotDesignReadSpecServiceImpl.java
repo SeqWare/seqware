@@ -57,7 +57,8 @@ public class ExperimentSpotDesignReadSpecServiceImpl implements ExperimentSpotDe
     dao.delete(obj);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param id */
   @Override
   public ExperimentSpotDesignReadSpec findByID(Integer id) {
     ExperimentSpotDesignReadSpec obj = null;

@@ -26,7 +26,8 @@ public class LibrarySource implements Serializable, Comparable<LibrarySource>, S
 		super();
 	}
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
 	public int compareTo(LibrarySource that) {
 		if(that == null)
@@ -49,7 +50,8 @@ public class LibrarySource implements Serializable, Comparable<LibrarySource>, S
 
 
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

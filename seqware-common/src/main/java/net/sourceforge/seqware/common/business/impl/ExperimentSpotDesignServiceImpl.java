@@ -48,7 +48,8 @@ public class ExperimentSpotDesignServiceImpl implements ExperimentSpotDesignServ
     dao.update(obj);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param id */
   public ExperimentSpotDesign findByID(Integer id) {
     ExperimentSpotDesign obj = null;
     if (id != null) {

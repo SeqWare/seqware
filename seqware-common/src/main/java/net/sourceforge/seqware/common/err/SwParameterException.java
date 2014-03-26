@@ -15,7 +15,8 @@ import net.sourceforge.seqware.common.err.SeqwareException;
 public class SwParameterException extends SeqwareException {
 //    public final static int exitCode = SeqwareExitCode.BadParameter;
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public int getExitCode() {
         return SeqwareExitCode.BadParameter;

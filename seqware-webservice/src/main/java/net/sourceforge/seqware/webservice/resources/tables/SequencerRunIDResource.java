@@ -97,7 +97,8 @@ public class SequencerRunIDResource extends DatabaseIDResource {
 
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
 	@Put
     public Representation put(Representation entity) {

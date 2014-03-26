@@ -118,7 +118,8 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     return new ToStringBuilder(this).append("swAccession", getSwAccession()).toString();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -768,7 +769,8 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     return wr;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(WorkflowRun that) {
     // TODO Auto-generated method stub
@@ -886,6 +888,7 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     }
 
     /**
+     * @param inputFiles
      * @param parentAccessions the parentAccessions to set
      */
     public void setInputFileAccessions(Set<Integer> inputFiles) {

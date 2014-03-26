@@ -36,6 +36,7 @@ public class AbstractJob implements Job {
 	
 	/**
 	 * for Java/Perl/JavaModule job
+     * @param mainclass
 	 */
 	public AbstractJob(String algo, String cp, String mainclass) {
 		this.cp = cp;
@@ -267,6 +268,7 @@ public class AbstractJob implements Job {
 
   /**
    * Allows specifying options to qsub.  When provided, options using queue, maxMem, and threads will not be generated. 
+     * @param qsubOptions
    */
   public void setQsubOptions(String qsubOptions) {
     this.qsubOptions = qsubOptions;

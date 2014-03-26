@@ -33,6 +33,7 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
    * Sets a private member variable with an instance of an implementation of
    * ShareWorkflowRunDAO. This method is called by the Spring framework at run
    * time.
+     * @param dao
    * @see ShareWorkflowRunDAO
    */
   public void setShareWorkflowRunDAO(ShareWorkflowRunDAO dao) {
@@ -65,7 +66,8 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
     dao.delete(shareWorkflowRun);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param WorkflowRunId */
   public boolean isExistsShare(Integer WorkflowRunId, Integer registrationId) {
     boolean isExists = false;
     if (findByWorkflowRunIdAndRegistrationId(WorkflowRunId, registrationId) != null) {
@@ -89,7 +91,8 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
     return shareWorkflowRun;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param shareWorkflowRunId */
   public ShareWorkflowRun findByID(Integer shareWorkflowRunId) {
     ShareWorkflowRun shareWorkflowRun = null;
     if (shareWorkflowRunId != null) {

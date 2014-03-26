@@ -95,7 +95,8 @@ public class SearchController extends BaseCommandController {
 		return types;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,

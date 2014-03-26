@@ -159,6 +159,7 @@ public class MetadataDB implements Metadata {
 
   /**
    * {@inheritDoc}
+     * @param parentSampleAccession
    */
     @Override
     public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title) {
@@ -413,6 +414,7 @@ public class MetadataDB implements Metadata {
   
     /**
      * {@inheritDoc}
+     * @return 
      */
     public ReturnValue set_processing_update_tstmp_if_null(int processingID) {
         // Create a SQL statement
@@ -995,6 +997,7 @@ public class MetadataDB implements Metadata {
 
   /**
    * {@inheritDoc}
+     * @param workflowRunAccession
    */
   @Override
   public ReturnValue update_processing_workflow_run(int processingID, int workflowRunAccession) {
@@ -1023,6 +1026,7 @@ public class MetadataDB implements Metadata {
 
   /**
    * {@inheritDoc}
+     * @param inputFiles
    */
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status,
@@ -1600,6 +1604,7 @@ public class MetadataDB implements Metadata {
    * <p>executeQuery.</p>
    *
    * @param s a {@link java.lang.String} object.
+     * @param h
    * @return a {@link java.sql.ResultSet} object.
    * @throws java.sql.SQLException if any.
    */
@@ -1742,6 +1747,7 @@ public class MetadataDB implements Metadata {
 
   /**
    * {@inheritDoc}
+     * @param iusSWID
    */
   @Override
   public void annotateIUS(int iusSWID, IUSAttribute iusAtt, Boolean skip) {

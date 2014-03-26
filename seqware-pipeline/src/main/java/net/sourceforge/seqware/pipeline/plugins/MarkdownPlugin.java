@@ -63,6 +63,7 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @param config
      */
     @Override
     public void setConfig(Map<String, String> config) {
@@ -76,6 +77,7 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @param params
      */
     @Override
     public void setParams(List<String> params) {
@@ -87,6 +89,7 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @param metadata
      */
     @Override
     public void setMetadata(Metadata metadata) {
@@ -99,6 +102,7 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public String get_syntax() {
@@ -117,6 +121,7 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue parse_parameters() {
@@ -135,6 +140,7 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue init() {
@@ -146,6 +152,7 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -158,6 +165,7 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_run() {
@@ -206,6 +214,7 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue clean_up() {

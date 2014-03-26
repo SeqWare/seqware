@@ -34,19 +34,22 @@ public class AlignmentQualityReportDecider extends Plugin {
   
   ReturnValue ret = new ReturnValue(ReturnValue.NOTIMPLEMENTED);
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue init() {
     return(ret);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_test() {
     return(ret);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_run() {
     
@@ -63,7 +66,8 @@ public class AlignmentQualityReportDecider extends Plugin {
     return(new ReturnValue(ReturnValue.SUCCESS));
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue clean_up() {
     return(ret);

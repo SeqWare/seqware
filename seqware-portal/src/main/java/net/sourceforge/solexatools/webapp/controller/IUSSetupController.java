@@ -42,7 +42,8 @@ public class IUSSetupController extends BaseCommandController {
 		this.iusService = iusService;
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,

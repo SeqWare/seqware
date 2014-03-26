@@ -100,7 +100,8 @@ public class Processing extends PermissionsAware implements Serializable, Compar
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(Processing that) {
     if (that == null || that.getProcessingId() == null) {
@@ -126,7 +127,8 @@ public class Processing extends PermissionsAware implements Serializable, Compar
         + stdout + ", stderr=" + stderr + '}';
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {

@@ -104,6 +104,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
+     * @param that
      */
     @Override
     public int compareTo(Sample that) {
@@ -132,6 +133,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
+     * @param other
      */
     @Override
     public boolean equals(Object other) {
@@ -937,6 +939,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
   public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {

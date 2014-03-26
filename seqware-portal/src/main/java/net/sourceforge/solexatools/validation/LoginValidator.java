@@ -30,6 +30,7 @@ public class LoginValidator implements Validator {
 	 *
 	 * Returns true if this Validator supports the
 	 * specified Class, and false otherwise.
+     * @return 
 	 */
 	public boolean supports(Class clazz) {
 		return RegistrationDTO.class.equals(clazz);
@@ -39,6 +40,7 @@ public class LoginValidator implements Validator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param errors
 	 */
 	public void validate(Object obj, Errors errors) {
 		RegistrationDTO registration = (RegistrationDTO) obj;

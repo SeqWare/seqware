@@ -57,11 +57,13 @@ public interface FileService {
 
   /**
    * <p>delete.</p>
+     * @param deleteRealFiles
    */
   public void delete(File file, boolean deleteRealFiles);
 
   /**
    * <p>deleteAll.</p>
+     * @param deleteRealFiles
    */
   public void deleteAll(List<File> file, boolean deleteRealFiles);
 

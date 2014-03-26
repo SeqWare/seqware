@@ -65,6 +65,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
      *
      * @param id
      * @param victims
+     * @param targetClass
      * @throws NamingException
      * @throws NotSupportedException
      * @throws SystemException
@@ -99,6 +100,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
      * Returns the list of potential victims for a deletion operation
      *
      * @param id
+     * @param targetClass
      * @return
      */
     @GET

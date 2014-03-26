@@ -23,7 +23,6 @@ public class StringUtils {
    *
    * @param source a {@link java.lang.String} object.
    * @param rep a {@link java.lang.String} object.
-   * @return a {@link java.lang.String} object.
    */
   public static String replace(String source, String rep) {
     Matcher m = pattern.matcher(source);
@@ -63,7 +62,6 @@ public class StringUtils {
    * <p>hasVariable.</p>
    *
    * @param input a {@link java.lang.String} object.
-   * @return a boolean.
    */
   public static boolean hasVariable(String input) {
     if (input == null)

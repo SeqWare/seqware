@@ -5,6 +5,7 @@ package net.sourceforge.seqware.common.model;
  *
  * @author boconnor
  * @version $Id: $Id
+ * @param <T>
  */
 public interface Attribute<T> {
 

@@ -135,8 +135,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
    * workflows on a different host from where this command line tool is run but
    * requires an external process to launch workflows that have been scheduled.
    * 
-   * @param scheduledHost
-   *          the value of scheduledHost
    */
   @Override
   public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,
@@ -165,6 +163,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * requires an external process to launch workflows that have been scheduled.
      *
      * @param inputFiles the value of inputFiles
+     * @return 
      */
       public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,
         ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {

@@ -12,7 +12,8 @@ import org.apache.commons.beanutils.BeanUtilsBean;
  */
 public class NullBeanUtils extends BeanUtilsBean {
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @throws java.lang.reflect.InvocationTargetException */
   @Override
   public void copyProperty(Object dest, String name, Object value) throws IllegalAccessException,
       InvocationTargetException {

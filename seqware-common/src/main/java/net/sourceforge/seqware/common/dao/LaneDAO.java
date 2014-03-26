@@ -20,6 +20,7 @@ public interface LaneDAO {
      * <p>insert.</p>
      *
      * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+     * @return 
      */
     public Integer insert(Lane lane);
 
@@ -28,6 +29,7 @@ public interface LaneDAO {
      *
      * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+     * @return 
      */
     public Integer insert(Registration registration, Lane lane);
 

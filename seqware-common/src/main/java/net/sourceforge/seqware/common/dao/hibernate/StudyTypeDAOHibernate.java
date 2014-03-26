@@ -29,6 +29,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
 
   /**
    * {@inheritDoc}
+     * @param studyType
    */
   public void insert(StudyType studyType) {
     this.getHibernateTemplate().save(studyType);
@@ -36,6 +37,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
 
   /**
    * {@inheritDoc}
+     * @param studyType
    */
   public void update(StudyType studyType) {
     this.getHibernateTemplate().update(studyType);
@@ -71,6 +73,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
    * {@inheritDoc}
    *
    * Finds an instance of StudyType in the database by the StudyType ID.
+     * @param expID
    */
   @SuppressWarnings("rawtypes")
   public StudyType findByID(Integer expID) {

@@ -42,7 +42,8 @@ public class FileSetupController extends BaseCommandController {
 		this.fileService = fileService;
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,

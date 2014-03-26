@@ -41,7 +41,8 @@ public class WorkflowRunSetupController extends BaseCommandController {
 		this.workflowRunService = workflowRunService;
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,

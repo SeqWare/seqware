@@ -32,7 +32,8 @@ public class LoginController extends SimpleFormController {
     setCommandClass(RegistrationDTO.class);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
       BindException errors) throws Exception {

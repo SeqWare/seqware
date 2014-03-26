@@ -90,6 +90,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue init() {
@@ -100,6 +101,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -108,6 +110,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_run() {
@@ -188,6 +191,7 @@ public class Metadata extends Plugin {
 
     /**
      * list the fields available to set
+     * @return 
      */
     protected ReturnValue listFields(String table) {
         final String fileDescription = "\nThis takes one file encoded as --file type::file-meta-type::file-path[::description] \n";
@@ -675,6 +679,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @param string
      */
     @Override
     public void print(String string) {
@@ -737,6 +742,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue clean_up() {
@@ -746,6 +752,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public String get_description() {

@@ -37,7 +37,8 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         logger = Logger.getLogger(SequencerRunDAOHibernate.class);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     public Integer insert(SequencerRun sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
         getSession().flush();
@@ -48,6 +49,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      * <p>insert.</p>
      *
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
+     * @return 
      */
     public Integer insert(SequencerRunWizardDTO sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
@@ -464,7 +466,8 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         }
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Integer insert(Registration registration, SequencerRun sequencerRun) {
         Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);
@@ -485,7 +488,8 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         return(null);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun) {
          Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);

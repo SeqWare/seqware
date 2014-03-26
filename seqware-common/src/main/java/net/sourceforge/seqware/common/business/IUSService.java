@@ -31,6 +31,7 @@ public interface IUSService {
    * <p>insert.</p>
    *
    * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
+     * @return 
    */
   public Integer insert(IUS ius);
 
@@ -39,6 +40,7 @@ public interface IUSService {
    *
    * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
    * @param ius a {@link net.sourceforge.seqware.common.model.IUS} object.
+     * @return 
    */
   public Integer insert(Registration registration, IUS ius);
 
@@ -59,6 +61,7 @@ public interface IUSService {
 
   /**
    * <p>delete.</p>
+     * @param deleteRealFiles
    */
   public void delete(IUS ius, boolean deleteRealFiles);
 

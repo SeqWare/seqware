@@ -62,6 +62,7 @@ public interface SampleService {
 
     /**
      * <p>delete.</p>
+     * @param deleteRealFiles
      */
     public void delete(Sample sample, boolean deleteRealFiles);
 
