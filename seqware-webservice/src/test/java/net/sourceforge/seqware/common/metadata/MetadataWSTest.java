@@ -76,6 +76,7 @@ public class MetadataWSTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         instance = newTestMetadataInstance();
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     @AfterClass
@@ -85,7 +86,6 @@ public class MetadataWSTest {
 
     @Before
     public void setUp() {
-        BasicTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     @After
@@ -764,6 +764,7 @@ public class MetadataWSTest {
     
     @Test
     public void testUpdateWorkflowRunWithInputFiles() {
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
         final int wr_sw_accession = 6603;
         WorkflowRun wr = instance.getWorkflowRun(wr_sw_accession);
         // should already be blank
