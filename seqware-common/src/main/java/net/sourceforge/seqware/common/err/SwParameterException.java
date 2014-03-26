@@ -1,8 +1,5 @@
 package net.sourceforge.seqware.common.err;
 
-import net.sourceforge.seqware.common.err.SeqwareExitCode;
-import net.sourceforge.seqware.common.err.SeqwareException;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Xiaoshu Wang (xiao@renci.org)
