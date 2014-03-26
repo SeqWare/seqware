@@ -77,6 +77,7 @@ public class S3UploadDirectory extends Module {
 
     /**
      * Things to check: * FIXME
+     * @return 
      */
     @Override
     public ReturnValue do_test() {

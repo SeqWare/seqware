@@ -83,7 +83,8 @@ public class StudyTypeServiceImpl implements StudyTypeService {
     return studyType;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param studyTypeID */
   public StudyType findByID(Integer studyTypeID) {
     StudyType studyType = null;
     if (studyTypeID != null) {

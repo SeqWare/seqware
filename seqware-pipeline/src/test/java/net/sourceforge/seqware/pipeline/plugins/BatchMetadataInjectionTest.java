@@ -54,6 +54,7 @@ public class BatchMetadataInjectionTest {
 
     /**
      * Test of parseMiseqFile method, of class BatchMetadataInjection.
+     * @throws java.lang.Exception
      */
     @Test
     public void testParseMiseqFile() throws Exception {

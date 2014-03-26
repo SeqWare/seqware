@@ -41,7 +41,8 @@ public class Project implements Serializable {
 			.toString();
 	}
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

@@ -115,6 +115,7 @@ public class ProvisionFilesUtil {
    * Creates symlink of input to output.
    *
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @param input a {@link java.lang.String} object.
    * @return a boolean.
    */
@@ -211,6 +212,7 @@ public class ProvisionFilesUtil {
    *
    * @param reader a {@link java.io.BufferedInputStream} object.
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @param bufLen a int.
    * @param input a {@link java.lang.String} object.
    * @return written File object
@@ -224,6 +226,7 @@ public class ProvisionFilesUtil {
    *
    * @param reader a {@link java.io.BufferedInputStream} object.
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @param bufLen a int.
    * @param input a {@link java.lang.String} object.
    * @return written File object
@@ -445,6 +448,7 @@ public class ProvisionFilesUtil {
    *
    * @param reader a {@link java.io.BufferedInputStream} object.
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @return true if OK
    */
   public boolean putToS3(BufferedInputStream reader, String output, boolean fullOutputPath){
@@ -455,6 +459,7 @@ public class ProvisionFilesUtil {
    * 
    * @param reader
    * @param output
+     * @param fullOutputPath
    * @param connectionTimeout
    * @param maxConnections
    * @param maxErrorRetry
@@ -470,6 +475,7 @@ public class ProvisionFilesUtil {
    *
    * @param reader a {@link java.io.InputStream} object.
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @param decryptCipher a {@link javax.crypto.Cipher} object.
    * @param encryptCipher a {@link javax.crypto.Cipher} object.
    * @return true if OK
@@ -482,6 +488,7 @@ public class ProvisionFilesUtil {
    * 
    * @param reader
    * @param output
+     * @param fullOutputPath
    * @param connectionTimeout
    * @param maxConnections
    * @param maxErrorRetry

@@ -52,7 +52,8 @@ public class ProcessResource extends DatabaseResource {
         super("processing");
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Representation post(Representation entity) {
         return super.post(entity);

@@ -41,7 +41,8 @@ public class HelloWorld extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setConfig(java.util.Map)
    */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param config */
   @Override
   public void setConfig(Map<String, String> config) {
     println("Setting Config");
@@ -54,7 +55,8 @@ public class HelloWorld extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setParams(java.util.List)
    */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param params */
   @Override
   public void setParams(List<String> params) {
     println("Setting Params: "+params);
@@ -64,7 +66,8 @@ public class HelloWorld extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setMetadata(net.sourceforge.seqware.pipeline.metadata.Metadata)
    */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param metadata */
   @Override
   public void setMetadata(Metadata metadata) {
     println("Setting Metadata: "+metadata);
@@ -74,7 +77,8 @@ public class HelloWorld extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#get_syntax()
    */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public String get_syntax() {
     
@@ -90,7 +94,8 @@ public class HelloWorld extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#parse_parameters()
    */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue parse_parameters() {
     
@@ -106,7 +111,8 @@ public class HelloWorld extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
    */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue init() {
     return ret;
@@ -115,7 +121,8 @@ public class HelloWorld extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
    */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_test() {
     // TODO Auto-generated method stub
@@ -125,7 +132,8 @@ public class HelloWorld extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
    */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_run() {
     // TODO Auto-generated method stub
@@ -136,7 +144,8 @@ public class HelloWorld extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
    */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue clean_up() {
     // TODO Auto-generated method stub

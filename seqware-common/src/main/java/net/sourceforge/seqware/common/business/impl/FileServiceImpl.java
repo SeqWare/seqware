@@ -38,6 +38,7 @@ public class FileServiceImpl implements FileService {
    *
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
+     * @param dao
    * @see FileDAO
    */
   @Override
@@ -65,7 +66,8 @@ public class FileServiceImpl implements FileService {
     fileDAO.update(file);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param deleteRealFiles */
   @Override
   public void delete(File file, boolean deleteRealFiles) {
     Set<Processing> processings = file.getProcessings();
@@ -86,7 +88,8 @@ public class FileServiceImpl implements FileService {
 
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param deleteRealFiles */
   @Override
   public void deleteAll(List<File> files, boolean deleteRealFiles) {
     fileDAO.deleteAll(files);
@@ -152,7 +155,8 @@ public class FileServiceImpl implements FileService {
     return file;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param fileId */
   @Override
   public File findByID(Integer fileId) {
     File file = null;

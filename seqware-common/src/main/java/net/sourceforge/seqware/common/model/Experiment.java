@@ -88,7 +88,8 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(Experiment that) {
     if (that == null) {
@@ -120,7 +121,8 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
         + createTimestamp + ", updateTimestamp=" + updateTimestamp + '}';
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {

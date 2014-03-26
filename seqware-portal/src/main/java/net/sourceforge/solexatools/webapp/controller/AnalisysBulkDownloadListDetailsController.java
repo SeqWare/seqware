@@ -76,7 +76,8 @@ public class AnalisysBulkDownloadListDetailsController extends BaseCommandContro
 		return isAsc;
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)

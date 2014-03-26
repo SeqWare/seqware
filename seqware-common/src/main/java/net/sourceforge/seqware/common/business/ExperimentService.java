@@ -61,6 +61,7 @@ public interface ExperimentService {
 
   /**
    * <p>delete.</p>
+     * @param deleteRealFiles
    */
   public void delete(Experiment experiment, boolean deleteRealFiles);
 

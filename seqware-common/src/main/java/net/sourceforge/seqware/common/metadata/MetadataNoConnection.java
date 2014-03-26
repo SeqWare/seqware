@@ -146,7 +146,8 @@ public class MetadataNoConnection implements Metadata {
     return (new ReturnValue(ReturnValue.SUCCESS));
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param parentSampleAccession */
     @Override
     public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title) {
         logger.info("No metadata connection");
@@ -336,7 +337,8 @@ public class MetadataNoConnection implements Metadata {
     logger.info("No metadata connection");
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param workflowRunAccession */
   @Override
   public ReturnValue update_processing_workflow_run(int processingID, int workflowRunAccession) {
     logger.info("No metadata connection");
@@ -346,7 +348,8 @@ public class MetadataNoConnection implements Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param inputFiles */
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status,
       String statusCmd, String workingDirectory, String dax, String ini, String host,
@@ -384,6 +387,7 @@ public class MetadataNoConnection implements Metadata {
     /**
      * {@inheritDoc}
      *
+     * @param workflow_engine
      */ 
   @Override
   public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
@@ -494,7 +498,8 @@ public class MetadataNoConnection implements Metadata {
     return (null);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param iusSWID */
   @Override
   public void annotateIUS(int iusSWID, IUSAttribute iusAtt, Boolean skip) {
     logger.info("No metadata connection");

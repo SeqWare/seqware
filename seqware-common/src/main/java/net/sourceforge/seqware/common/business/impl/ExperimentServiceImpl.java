@@ -82,7 +82,8 @@ public class ExperimentServiceImpl implements ExperimentService {
     experimentDAO.merge(experiment);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param deleteRealFiles */
   public void delete(Experiment experiment, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
     if (deleteRealFiles) {
@@ -111,12 +112,14 @@ public class ExperimentServiceImpl implements ExperimentService {
     return experimentDAO.list(study);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param experimentId */
   public List<File> getFiles(Integer experimentId) {
     return experimentDAO.getFiles(experimentId);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param experimentId */
   public boolean isHasFile(Integer experimentId) {
     return experimentDAO.isHasFile(experimentId);
   }
@@ -159,6 +162,7 @@ public class ExperimentServiceImpl implements ExperimentService {
    * Finds an instance of Experiment in the database by the Experiment
    * emailAddress, and copies the Experiment properties to an instance of
    * Experiment.
+     * @param title
    */
   public Experiment findByTitle(String title) {
     Experiment experiment = null;
@@ -205,6 +209,7 @@ public class ExperimentServiceImpl implements ExperimentService {
    * {@inheritDoc}
    *
    * Determines if an email address has already been used.
+     * @param newTitle
    */
   public boolean hasTitleBeenUsed(String oldTitle, String newTitle) {
     boolean titleUsed = false;

@@ -52,7 +52,8 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
     logger = Logger.getLogger(Invoice.class);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(Invoice that) {
     if (that == null)
@@ -74,7 +75,8 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
     return new ToStringBuilder(this).append("swAccession", getSwAccession()).toString();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other))

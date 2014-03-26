@@ -138,6 +138,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * <p>Constructor for MetadataWS.</p>
+     * @param password
      */
     public MetadataWS(String database, String username, String password) {
       ll = new LowLevel(database, username, password);
@@ -147,8 +148,11 @@ public class MetadataWS implements Metadata {
      * {@inheritDoc}
      *
      */
-    
-    
+
+    /**
+     * {@inheritDoc}
+     * @param workflow_engine
+     */
     @Override
     public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
 
@@ -355,6 +359,7 @@ public class MetadataWS implements Metadata {
      *
      * TODO: this needs to setup rows in experiment_library_design and
      * experiment_spot_design
+     * @param parentSampleAccession
      */
     @Override
     public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession,
@@ -418,6 +423,7 @@ public class MetadataWS implements Metadata {
      * @param description
      * @param pairdEnd
      * @param skip
+     * @param filePath
      * @param status the value of status
      * @return
      */
@@ -1107,6 +1113,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
+     * @param runName
      */
     @Override
     public List<ReturnValue> findFilesAssociatedWithASequencerRun(String runName) {
@@ -1401,6 +1408,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
+     * @param workflowRunAccession
      */
     @Override
     public ReturnValue update_processing_workflow_run(int processingID, int workflowRunAccession) {
@@ -1430,6 +1438,7 @@ public class MetadataWS implements Metadata {
      * {@inheritDoc}
      *
      * @param workflowEngine the value of workflowEngine
+     * @param inputFiles
      */
     @Override
     public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles) {
@@ -1626,6 +1635,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
+     * @param workflowAccession
      */
     @Override
     public SortedSet<WorkflowParam> getWorkflowParams(String workflowAccession) {
@@ -1794,6 +1804,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
+     * @param iusSWID
      */
     @Override
     public void annotateIUS(int iusSWID, IUSAttribute iusAtt, Boolean skip) {
@@ -1894,6 +1905,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
+     * @param swid
      */
     @Override
     public void annotateProcessing(int swid, ProcessingAttribute att, Boolean skip) {
@@ -1928,6 +1940,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
+     * @param swid
      */
     @Override
     public void annotateSample(int swid, SampleAttribute att, Boolean skip) {
@@ -1961,6 +1974,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
+     * @param swid
      */
     @Override
     public void annotateStudy(int swid, StudyAttribute att, Boolean skip) {
@@ -2157,6 +2171,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
+     * @param iusSWID
      */
     @Override
     public void annotateIUS(int iusSWID, Set<IUSAttribute> iusAtts) {
@@ -2264,6 +2279,7 @@ public class MetadataWS implements Metadata {
     
     /**
      * {@inheritDoc}
+     * @param atts
      */
     @Override
     public void annotateFile(int fileSWID, Set<FileAttribute> atts) {
@@ -2290,6 +2306,7 @@ public class MetadataWS implements Metadata {
     
     /**
      * {@inheritDoc}
+     * @param att
      */
     @Override
     public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) {
@@ -2428,6 +2445,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
+     * @param workflowrunSWID
      */
     @Override
     public void annotateWorkflowRun(int workflowrunSWID, Set<WorkflowRunAttribute> atts) {

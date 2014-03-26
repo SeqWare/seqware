@@ -23,7 +23,8 @@ public class StudyValidator implements Validator {
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @SuppressWarnings("rawtypes")
   public boolean supports(Class clazz) {
     return Study.class.equals(clazz);
@@ -33,6 +34,7 @@ public class StudyValidator implements Validator {
    * {@inheritDoc}
    *
    * Validates the specified Object.
+     * @param errors
    */
   public void validate(Object obj, Errors errors) {
     Study study = (Study) obj;

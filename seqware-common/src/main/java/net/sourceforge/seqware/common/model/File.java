@@ -68,7 +68,8 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(File that) {
     return (that.getFileId().compareTo(this.getFileId()));
@@ -83,7 +84,8 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
         + ", skip=" + getSkip() + '}';
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {

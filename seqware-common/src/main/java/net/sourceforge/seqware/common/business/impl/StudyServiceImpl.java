@@ -93,6 +93,7 @@ public class StudyServiceImpl implements StudyService {
    * {@inheritDoc}
    *
    * Updates an instance of Study in the database.
+     * @param deleteRealFiles
    */
   public void delete(Study study, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
@@ -168,7 +169,8 @@ public class StudyServiceImpl implements StudyService {
     return study;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param studyID */
   public Study findByID(Integer studyID) {
     Study study = null;
     if (studyID != null) {
@@ -279,7 +281,8 @@ public class StudyServiceImpl implements StudyService {
     return studyDAO.list();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param isAsc */
   public List<Study> listStudyHasFile(Registration registration, String metaType, Boolean isAsc) {
     return studyDAO.listStudyHasFile(registration, metaType, isAsc);
   }

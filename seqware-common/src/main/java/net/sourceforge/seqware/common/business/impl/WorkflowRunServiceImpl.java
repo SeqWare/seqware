@@ -165,7 +165,8 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     workflowRunDAO.update(workflowRun, laneIds);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param deleteRealFiles */
   public void delete(WorkflowRun workflowRun, boolean deleteRealFiles) {
     Set<Processing> processings = workflowRun.getProcessings();
 

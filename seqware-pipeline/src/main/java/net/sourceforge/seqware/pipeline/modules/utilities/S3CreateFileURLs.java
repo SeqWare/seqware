@@ -77,6 +77,7 @@ public class S3CreateFileURLs extends Module {
    * {@inheritDoc}
    *
    * Not implemented
+     * @return 
    */
   @Override
   public ReturnValue do_test() {
@@ -87,6 +88,7 @@ public class S3CreateFileURLs extends Module {
    * {@inheritDoc}
    *
    * Just makes sure the param was passed in.
+     * @return 
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -113,7 +115,8 @@ public class S3CreateFileURLs extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_verify_input() {
 
@@ -160,7 +163,8 @@ public class S3CreateFileURLs extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_run() {
 
@@ -268,7 +272,8 @@ public class S3CreateFileURLs extends Module {
 }
 
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_verify_output() {
     // TODO: should verify output, especially is they are local files!

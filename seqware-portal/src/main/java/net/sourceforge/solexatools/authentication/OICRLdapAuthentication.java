@@ -34,7 +34,8 @@ public class OICRLdapAuthentication extends Authentication {
 
   static Logger log = Logger.getLogger(OICRLdapAuthentication.class);
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public boolean loginSuccess(String uid, String password) {
     // uid value is an email address.

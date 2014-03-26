@@ -94,6 +94,7 @@ public interface Metadata {
    * <p>addSample.</p>
    *
    * @param experimentAccession a {@link java.lang.Integer} object.
+     * @param parentSampleAccession
    * @param organismId a {@link java.lang.Integer} object.
    * @param description a {@link java.lang.String} object.
    * @param title a {@link java.lang.String} object.
@@ -106,6 +107,7 @@ public interface Metadata {
      *
      * @param description a {@link java.lang.String} object.
      * @param status the value of status
+     * @param filePath
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
   public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath, SequencerRunStatus status);
@@ -117,6 +119,7 @@ public interface Metadata {
    * @param organismId a {@link java.lang.Integer} object.
    * @param description a {@link java.lang.String} object.
    * @param title a {@link java.lang.String} object.
+     * @param laneNumber
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
   public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId, Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip, Integer laneNumber);
@@ -124,6 +127,7 @@ public interface Metadata {
     /**
    * <p>addSample.</p>
    *
+     * @param skip
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
   
@@ -357,6 +361,7 @@ public interface Metadata {
    * Returns the workflow_runs associated with a group of files.
    * Search types are defined as:
    * @param fileAccessions
+     * @param search_type
    * @return 
    */
   List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type);
@@ -394,6 +399,7 @@ public interface Metadata {
      * @param stdErr a {@link java.lang.String} object.
      * @param stdOut a {@link java.lang.String} object.
      * @param workflowEngine the value of workflowEngine
+     * @param inputFiles
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
   ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status, String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut, String workflowEngine, Set<Integer> inputFiles);
@@ -430,6 +436,7 @@ public interface Metadata {
      * @param storeProvisionDir a boolean.
      * @param archiveZip a {@link java.lang.String} object.
      * @param storeArchiveZip a boolean.
+     * @param workflowEngine
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
   ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine);
@@ -536,6 +543,7 @@ public interface Metadata {
    * <p>findFilesAssociatedWithASequencerRun.</p>
    *
    * @param sequencerRunName a {@link java.lang.String} object.
+     * @param requireFiles
    * @return a {@link java.util.List} object.
    */
   public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles);
@@ -582,6 +590,7 @@ public interface Metadata {
    * <p>annotateFile.</p>
    *
    * @param fileSWID a int.
+     * @param iusAtt
    * @param fileAtt a {@link net.sourceforge.seqware.common.model.FileAttribute} object.
    * @param skip a {@link java.lang.Boolean} object.
    */
@@ -591,6 +600,7 @@ public interface Metadata {
    * <p>annotateFile.</p>
    *
    * @param fileSWID a int.
+     * @param iusAtts
    * @param fileAtts a {@link java.util.Set} object.
    */
   void annotateFile(int fileSWID, Set<FileAttribute> iusAtts);

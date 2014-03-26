@@ -54,13 +54,15 @@ public class IUSServiceImpl implements IUSService {
     this.fileDAO = fileDAO;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   public Integer insert(IUS obj) {
     obj.setCreateTimestamp(new Date());
     return(dao.insert(obj));
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param deleteRealFiles */
   public void delete(IUS ius, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
     if (deleteRealFiles) {
@@ -82,7 +84,8 @@ public class IUSServiceImpl implements IUSService {
     }
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param obj */
   public void update(IUS obj) {
     dao.update(obj);
   }
@@ -203,7 +206,8 @@ public class IUSServiceImpl implements IUSService {
     dao.update(registration, ius);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public Integer insert(Registration registration, IUS ius) {
     ius.setCreateTimestamp(new Date());

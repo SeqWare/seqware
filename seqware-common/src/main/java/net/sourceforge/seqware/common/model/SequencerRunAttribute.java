@@ -149,7 +149,8 @@ public class SequencerRunAttribute implements java.io.Serializable, Attribute<Se
 		this.setUnits(unit);
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param t */
 	@Override
 	public int compareTo(SequencerRunAttribute t) {
 		return this.tag.compareTo(t.tag);

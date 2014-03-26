@@ -43,7 +43,8 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   /* Inserts an instance of Registration into the database. */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param registrationDTO */
   public void insert(RegistrationDTO registrationDTO) {
     Registration registration = this.populateRegistration(registrationDTO);
     registration.setCreateTimestamp(new Date());
@@ -51,7 +52,8 @@ public class RegistrationServiceImpl implements RegistrationService {
   }
 
   /* Updates an instance of Registration in the database. */
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param registrationDTO */
   public void update(RegistrationDTO registrationDTO) {
     Registration registration = this.populateRegistration(registrationDTO);
     registrationDAO.update(registration);

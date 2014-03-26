@@ -57,6 +57,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @param config
      */
     @Override
     public void setConfig(Map<String, String> config) {
@@ -70,6 +71,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @param params
      */
     @Override
     public void setParams(List<String> params) {
@@ -81,6 +83,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @param metadata
      */
     @Override
     public void setMetadata(Metadata metadata) {
@@ -93,6 +96,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public String get_syntax() {
@@ -111,6 +115,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue parse_parameters() {
@@ -129,6 +134,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue init() {
@@ -140,6 +146,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -152,6 +159,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_run() {
@@ -274,6 +282,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue clean_up() {

@@ -139,7 +139,8 @@ public class LaneServiceImpl implements LaneService {
     return result;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param uploadSeqence */
   public Integer insertLane(Registration registration, Sample sample, UploadSequence uploadSeqence, FileType fileType)
       throws Exception {
     Set<File> files = new TreeSet<File>();
@@ -370,6 +371,7 @@ public class LaneServiceImpl implements LaneService {
    * {@inheritDoc}
    *
    * Deletes an instance of Lane in the database.
+     * @param deleteRealFiles
    */
   public void delete(Lane lane, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
@@ -632,7 +634,8 @@ public class LaneServiceImpl implements LaneService {
         laneDAO.update(registration, lane);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Integer insert(Registration registration, Lane lane) {
         lane.setCreateTimestamp(new Date());

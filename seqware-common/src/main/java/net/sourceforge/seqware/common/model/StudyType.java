@@ -47,7 +47,8 @@ public class StudyType implements Serializable, SecondTierModel {
                   .append(":\t").append(name).append("\t").append(description).toString();
         }
         
-        /** {@inheritDoc} */
+        /** {@inheritDoc}
+     * @param other */
         @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

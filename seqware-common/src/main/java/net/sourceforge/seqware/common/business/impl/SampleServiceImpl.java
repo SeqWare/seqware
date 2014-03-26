@@ -82,6 +82,7 @@ public class SampleServiceImpl implements SampleService {
      * {@inheritDoc}
      *
      * Deletes an instance of Sample in the database.
+     * @param deleteRealFiles
      */
     public void delete(Sample sample, boolean deleteRealFiles) {
         List<File> deleteFiles = null;
@@ -227,6 +228,7 @@ public class SampleServiceImpl implements SampleService {
 
     /**
      * {@inheritDoc}
+     * @param sampleId
      */
     public Sample findByID(Integer sampleId) {
         Sample sample = null;

@@ -158,7 +158,8 @@ public class SearchResultsListController extends BaseCommandController {
 		this.workflowRunService = workflowRunService;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,

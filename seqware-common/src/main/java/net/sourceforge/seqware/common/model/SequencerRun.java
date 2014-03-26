@@ -83,7 +83,8 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
          */
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(SequencerRun that) {
         if (that == null) {
@@ -108,7 +109,8 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
         return new ToStringBuilder(this).append("sequencerRunId", getSequencerRunId()).append("name", getName()).toString();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -994,7 +996,8 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
         this.sequencerRunAttributes = sequencerRunAttributes;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         Logger.getLogger(SequencerRun.class).info("Sequencer run always gives permission");

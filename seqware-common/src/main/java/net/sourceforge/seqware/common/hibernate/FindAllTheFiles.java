@@ -853,6 +853,7 @@ public class FindAllTheFiles {
    * @param showStatus a boolean.
    * @param returnValues a {@link java.util.List} object.
    * @param studyName a {@link java.lang.String} object.
+     * @param reportInputFiles
    * @throws java.io.IOException if any.
    */
   public static void printTSVFile(Writer writer, boolean showStatus, List<ReturnValue> returnValues, String studyName, boolean reportInputFiles)
@@ -883,6 +884,7 @@ public class FindAllTheFiles {
   /**
    * Prints a line to the Excel spreadsheet.
    *
+     * @param reportInputFiles
    * @throws java.io.IOException if any.
    * @param writer a {@link java.io.Writer} object.
    * @param ret a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
@@ -980,6 +982,7 @@ public class FindAllTheFiles {
   /**
    * Print the header of the Excel spreadsheet to file.
    *
+     * @param reportInputFiles
    * @throws java.io.IOException if any.
    * @param writer a {@link java.io.Writer} object.
    * @param showStatus a boolean.

@@ -95,19 +95,22 @@ public class AttributeAnnotator extends Plugin {
     ret.setExitStatus(ReturnValue.SUCCESS);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue init() {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_test() {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_run() {
 
@@ -279,13 +282,15 @@ public class AttributeAnnotator extends Plugin {
         return ret;
     }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue clean_up() {
     return ret;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public String get_description() {
     return "Experimental plugin. Allows the annotation of objects in the database with 'skip' values.";

@@ -38,6 +38,7 @@ import org.xml.sax.ContentHandler;
  *
  * @author mtaschuk
  * @version $Id: $Id
+ * @param <T>
  */
 public class JaxbObject<T> {
 

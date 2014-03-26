@@ -49,6 +49,7 @@ public class WorkflowManagerTest {
 
     /**
      * Test of runWorkflow method, of class WorkflowManager.
+     * @throws java.lang.Exception
      */
     @Test
     public void testRunWorkflow() throws Exception {
@@ -71,6 +72,7 @@ public class WorkflowManagerTest {
 
     /**
      * Test of linkWorkflowRunAndParent method, of class WorkflowManager.
+     * @throws java.lang.Exception
      */
     @Test
     public void testLinkWorkflowRunAndParent() throws Exception {

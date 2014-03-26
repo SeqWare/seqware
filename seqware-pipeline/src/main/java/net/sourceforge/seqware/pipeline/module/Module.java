@@ -140,6 +140,7 @@ public abstract class Module implements ModuleInterface {
    * found. This is to work around a limitation in JOpt. It breaks apart
    * arguments by space regarless if the arg is a quoted string (and hence
    * should be treated as one arg)
+     * @param parameters
    */
   public void setParameters(List<String> parameters) {
     Log.info("Parsing Command Parameters:");

@@ -55,7 +55,8 @@ public class ExperimentLibraryDesignServiceImpl implements ExperimentLibraryDesi
     return dao.list(registration);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param id */
   public ExperimentLibraryDesign findByID(Integer id) {
     ExperimentLibraryDesign obj = null;
     if (id != null) {

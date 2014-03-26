@@ -82,6 +82,7 @@ public interface ProcessingService {
 
   /**
    * <p>delete.</p>
+     * @param deleteRealFiles
    */
   public void delete(Processing processing, boolean deleteRealFiles);
 

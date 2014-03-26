@@ -34,7 +34,8 @@ public class WorkflowParamValueSetupController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)

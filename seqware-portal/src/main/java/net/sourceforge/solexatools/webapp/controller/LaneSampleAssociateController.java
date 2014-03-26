@@ -38,7 +38,8 @@ public class LaneSampleAssociateController extends BaseCommandController {
     setSupportedMethods(new String[] {METHOD_GET, METHOD_POST});
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,
       HttpServletResponse response)

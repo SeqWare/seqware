@@ -130,7 +130,8 @@ public class SelectInputListController extends BaseCommandController {
 	//	session.setAttribute(nameList, list);
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@SuppressWarnings("unchecked")
   @Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,

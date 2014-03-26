@@ -33,6 +33,7 @@ public class ShareStudyServiceImpl implements ShareStudyService {
    *
    * Sets a private member variable with an instance of an implementation of
    * ShareStudyDAO. This method is called by the Spring framework at run time.
+     * @param dao
    * @see ShareStudyDAO
    */
   public void setShareStudyDAO(ShareStudyDAO dao) {
@@ -88,7 +89,8 @@ public class ShareStudyServiceImpl implements ShareStudyService {
     return shareStudy;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param shareStudyId */
   public ShareStudy findByID(Integer shareStudyId) {
     ShareStudy shareStudy = null;
     if (shareStudyId != null) {

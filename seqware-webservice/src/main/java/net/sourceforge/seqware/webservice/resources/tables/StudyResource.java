@@ -61,7 +61,8 @@ public class StudyResource extends DatabaseResource {
         authenticate();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Representation get() {
         getXML();

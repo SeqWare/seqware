@@ -54,20 +54,23 @@ public class SequencerRunReporter extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue init() {
 
         return ret;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue do_run() {
         String report = this.metadata.getSequencerRunReport();
@@ -93,13 +96,15 @@ public class SequencerRunReporter extends Plugin {
         return ret;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public String get_description() {
         return "Prints a tab-delimited file describing the sequencer run, lane, "

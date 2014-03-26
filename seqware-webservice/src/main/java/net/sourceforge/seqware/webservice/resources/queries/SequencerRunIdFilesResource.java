@@ -83,7 +83,6 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
      *
      * @param srSWA a int.
      * @return a {@link java.util.List} object.
-     * @throws java.sql.SQLException if any.
      */
     public List<ReturnValue> hello(int srSWA){
         List<ReturnValue> returnValues = new ArrayList<ReturnValue>();

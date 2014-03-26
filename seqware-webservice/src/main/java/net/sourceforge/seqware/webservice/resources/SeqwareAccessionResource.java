@@ -30,7 +30,8 @@ import org.restlet.resource.ServerResource;
  */
 public class SeqwareAccessionResource extends BasicResource {
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Get
     @Override
     public Representation get() {

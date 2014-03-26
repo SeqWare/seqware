@@ -78,7 +78,8 @@ public class StudyIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@Override
     @Put
     public Representation put(Representation entity) {

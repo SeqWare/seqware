@@ -116,7 +116,8 @@ public class ProcessingServiceImpl implements ProcessingService {
     processingDAO.update(processing);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param deleteRealFiles */
   public void delete(Processing processing, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
     if (deleteRealFiles) {
@@ -224,7 +225,8 @@ public class ProcessingServiceImpl implements ProcessingService {
     return result;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param id */
   public Processing findByID(Integer id) {
 
     Processing processing = null;

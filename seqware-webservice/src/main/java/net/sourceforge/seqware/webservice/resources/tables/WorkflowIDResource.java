@@ -57,7 +57,8 @@ public class WorkflowIDResource extends DatabaseIDResource {
         super("workflowId");
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public SeqWareWebServiceApplication getApplication() {
         return (SeqWareWebServiceApplication) super.getApplication();
@@ -102,7 +103,8 @@ public class WorkflowIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Representation put(Representation entity) {
         authenticate();

@@ -26,7 +26,8 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 		super();
 	}
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
 	public int compareTo(LibraryStrategy that) {
 		if(that == null)
@@ -49,7 +50,8 @@ public class LibraryStrategy implements Serializable, Comparable<LibraryStrategy
 
 
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

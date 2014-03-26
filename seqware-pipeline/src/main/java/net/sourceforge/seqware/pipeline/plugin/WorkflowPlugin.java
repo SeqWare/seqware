@@ -504,6 +504,7 @@ public class WorkflowPlugin extends Plugin {
    * @param params
    * @param metadata
    * @param workflowAccession
+     * @param workflowEngine
    * @return
    */
   public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params,

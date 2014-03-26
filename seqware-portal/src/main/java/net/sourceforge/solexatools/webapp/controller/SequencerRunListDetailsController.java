@@ -82,7 +82,8 @@ public class SequencerRunListDetailsController extends BaseCommandController {
 		return isAsc;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return  */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
