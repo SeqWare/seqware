@@ -29,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author mtaschuk
  */
-public class SampleInfo {
+public class SampleInfo implements Comparable<SampleInfo> {
 
     private String blank = "";
     //sample required
@@ -55,8 +55,8 @@ public class SampleInfo {
     private String iusName;
     private String iusDescription;
     private boolean iusSkip = false;
-    private Set<SampleAttribute> sampleAttributes;
-    private Set<IUSAttribute> iusAttributes;
+    private Set<TagValueUnit> sampleAttributes;
+    private Set<TagValueUnit> iusAttributes;
 
     public String getIndividualNumber() {
         return individualNumber;
@@ -223,9 +223,9 @@ public class SampleInfo {
      *
      * @return the value of iusAttributes
      */
-    public Set<IUSAttribute> getIusAttributes() {
+    public Set<TagValueUnit> getIusAttributes() {
         if (iusAttributes == null) {
-            iusAttributes = new HashSet<IUSAttribute>();
+            iusAttributes = new HashSet<TagValueUnit>();
         }
         return iusAttributes;
     }
@@ -238,9 +238,9 @@ public class SampleInfo {
      * @param value the value of the attribute
      */
     public void setIusAttribute(String tag, String value) {
-        IUSAttribute sa = null;
+        TagValueUnit sa = null;
         //look for the existing attribute
-        for (IUSAttribute s : getIusAttributes()) {
+        for (TagValueUnit s : getIusAttributes()) {
             if (s.getTag().equals(tag.trim())) {
                 sa = s;
                 break;
@@ -253,7 +253,7 @@ public class SampleInfo {
         }
         //create a new one if it doesn't exist
         if (sa == null) {
-            sa = new IUSAttribute();
+            sa = new TagValueUnit();
             getIusAttributes().add(sa);
         }
         sa.setTag(tag.trim());
@@ -265,7 +265,7 @@ public class SampleInfo {
      *
      * @param iusAttributes new value of iusAttributes
      */
-    public void setIusAttributes(Set<IUSAttribute> iusAttributes) {
+    public void setIusAttributes(Set<TagValueUnit> iusAttributes) {
         this.iusAttributes = iusAttributes;
     }
 
@@ -274,9 +274,9 @@ public class SampleInfo {
      *
      * @return the value of sampleAttributes
      */
-    public Set<SampleAttribute> getSampleAttributes() {
+    public Set<TagValueUnit> getSampleAttributes() {
         if (sampleAttributes == null) {
-            sampleAttributes = new HashSet<SampleAttribute>();
+            sampleAttributes = new HashSet<TagValueUnit>();
         }
         return sampleAttributes;
     }
@@ -289,9 +289,9 @@ public class SampleInfo {
      * @param value the value of the attribute
      */
     public void setSampleAttribute(String tag, String value) {
-        SampleAttribute sa = null;
+        TagValueUnit sa = null;
         //look for the existing attribute
-        for (SampleAttribute s : getSampleAttributes()) {
+        for (TagValueUnit s : getSampleAttributes()) {
             if (s.getTag().equals(tag.trim())) {
                 sa = s;
                 break;
@@ -305,7 +305,7 @@ public class SampleInfo {
             return;
         }
         if (sa == null) {
-            sa = new SampleAttribute();
+            sa = new TagValueUnit();
             getSampleAttributes().add(sa);
         }
         sa.setTag(tag.trim());
@@ -317,7 +317,7 @@ public class SampleInfo {
      *
      * @param sampleAttributes new value of sampleAttributes
      */
-    public void setSampleAttributes(Set<SampleAttribute> sampleAttributes) {
+    public void setSampleAttributes(Set<TagValueUnit> sampleAttributes) {
         this.sampleAttributes = sampleAttributes;
     }
 
@@ -509,5 +509,23 @@ public class SampleInfo {
         writer.append("\n\t\t\t skipBarcode=" + iusSkip);
 
         writer.append("\n\t\t}");
+    }
+
+    @Override
+    public int compareTo(SampleInfo otherSample) {
+        int i = Integer.parseInt(this.barcode) - Integer.parseInt(otherSample.getBarcode());
+        if (i != 0) {
+            return i;
+        }
+        i = this.projectCode.compareTo(otherSample.projectCode);
+        if (i != 0) {
+            return i;
+        }
+        i = this.iusName.compareTo(otherSample.iusName);
+        if (i != 0) {
+            return i;
+        }
+        i = this.iusDescription.compareTo(otherSample.iusDescription);
+        return i;
     }
 }
