@@ -114,6 +114,7 @@ import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
 import org.restlet.ext.ssl.SslContextFactory;
+import org.restlet.ext.xml.DomRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
@@ -3397,6 +3398,7 @@ public class MetadataWS implements Metadata {
             try {
                 Document text = XmlTools.marshalToDocument(jaxb, parent);
                 result = cResource.put(XmlTools.getRepresentation(text));
+                Log.info("update object \n" + XmlTools.getRepresentation(text).getText());
             } catch(ResourceException ex){
                 Log.fatal("updateObject did not complete successfully: " + cResource);
                 throw new RuntimeException(ex);
@@ -3488,6 +3490,7 @@ public class MetadataWS implements Metadata {
                 result = cResource.post(XmlTools.getRepresentation(s));
                 if (result != null) {
                     String text = result.getText();
+                    Log.info("addObject to web service: \n " + text);
                     if (text == null) {
                         Log.warn("WARNING: POST process returned a null value. The object may not have been created");
                     } else {
