@@ -19,8 +19,6 @@ import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
-import static net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter.WRSTDERR;
-import static net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter.WRSTDOUT;
 
 import org.openide.util.lookup.ServiceProvider;
 

@@ -16,7 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import io.seqware.Reports;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

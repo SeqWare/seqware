@@ -17,7 +17,6 @@
 package net.sourceforge.seqware.common.util.filetools;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import net.sourceforge.seqware.common.util.*;

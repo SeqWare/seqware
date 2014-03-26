@@ -1,15 +1,12 @@
 package net.sourceforge.seqware.common.util.configtools;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.filetools.FileTools;
 
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 

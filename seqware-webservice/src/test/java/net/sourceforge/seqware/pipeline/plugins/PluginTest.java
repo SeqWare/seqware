@@ -17,7 +17,6 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.util.Arrays;
-import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.metadata.MetadataWSTest;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;

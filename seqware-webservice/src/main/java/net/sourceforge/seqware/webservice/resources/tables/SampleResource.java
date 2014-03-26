@@ -16,12 +16,9 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.SampleService;
@@ -33,7 +30,6 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.hibernate.Query;
-import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;

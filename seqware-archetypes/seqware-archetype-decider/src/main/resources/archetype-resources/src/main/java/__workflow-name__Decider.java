@@ -1,11 +1,6 @@
 package ${package};
 
 import java.util.*;
-import net.sourceforge.seqware.common.module.FileMetadata;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.pipeline.deciders.BasicDecider;
-import org.apache.commons.lang.ArrayUtils;
 
 /**
  * Launches a workflow with an input BAM file.
