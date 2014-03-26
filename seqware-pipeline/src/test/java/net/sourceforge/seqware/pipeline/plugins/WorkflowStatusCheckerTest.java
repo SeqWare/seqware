@@ -179,7 +179,6 @@ public class WorkflowStatusCheckerTest{
         PowerMockito.mockStatic(FileTools.class);
         when(FileTools.getLocalhost(options)).thenReturn(new LocalhostPair("localhost", new ReturnValue(ReturnValue.SUCCESS)));
         when(FileTools.isFileOwner(anyString())).thenReturn(true);
-        when(FileTools.determineFilePermissions(anyString())).thenReturn("-rw-------");
         final WorkflowTools workflowTools = mock(WorkflowTools.class);
         PowerMockito.whenNew(WorkflowTools.class).withAnyArguments().thenReturn(workflowTools);
 
