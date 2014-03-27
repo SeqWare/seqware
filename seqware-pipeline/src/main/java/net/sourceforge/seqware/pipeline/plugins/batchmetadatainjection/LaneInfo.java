@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.LaneAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
 import org.apache.commons.lang.StringUtils;
 
@@ -28,7 +27,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author mtaschuk
  */
-public class LaneInfo {
+public class LaneInfo implements Comparable<LaneInfo> {
 
     private String laneNumber = null;
     private String laneName = null;
@@ -40,7 +39,7 @@ public class LaneInfo {
     private String librarySelectionAcc = null;
     private String studyTypeAcc = null;
     private Set<SampleInfo> samples;
-    private Set<LaneAttribute> laneAttributes;
+    private Set<TagValueUnit> laneAttributes;
 
     /**
      * Get the value of studyTypeAcc
@@ -60,9 +59,9 @@ public class LaneInfo {
         this.studyTypeAcc = String.valueOf(studyTypeAcc);
     }
 
-    public Set<LaneAttribute> getLaneAttributes() {
+    public Set<TagValueUnit> getLaneAttributes() {
         if (laneAttributes == null) {
-            laneAttributes = new HashSet<>();
+            laneAttributes = new HashSet<TagValueUnit>();
         }
         return laneAttributes;
     }
@@ -76,8 +75,8 @@ public class LaneInfo {
      */
     public void setLaneAttribute(String tag, String value) {
 
-        LaneAttribute sa = null;
-        for (LaneAttribute s : getLaneAttributes()) {
+        TagValueUnit sa = null;
+        for (TagValueUnit s : getLaneAttributes()) {
             if (s.getTag().equals(tag.trim())) {
                 sa = s;
                 break;
@@ -89,14 +88,14 @@ public class LaneInfo {
             return;
         }
         if (sa == null) {
-            sa = new LaneAttribute();
+            sa = new TagValueUnit();
             getLaneAttributes().add(sa);
         }
         sa.setTag(tag.trim());
         sa.setValue(value.trim());
     }
 
-    public void setLaneAttributes(Set<LaneAttribute> laneAttributes) {
+    public void setLaneAttributes(Set<TagValueUnit> laneAttributes) {
         this.laneAttributes = laneAttributes;
     }
 
@@ -295,5 +294,20 @@ public class LaneInfo {
             }
         }
         writer.append("\n\t}");
+    }
+    
+    @Override
+    public int compareTo(LaneInfo otherLane){
+        int i;
+        i = Integer.parseInt(this.laneNumber) - Integer.parseInt(otherLane.getLaneNumber());
+        if(i != 0){
+            return i;
+        }
+        i = this.laneName.compareTo(otherLane.laneName);
+        if(i !=0){
+            return i;
+        }
+        i = this.laneDescription.compareTo(otherLane.laneDescription);
+        return i;
     }
 }
