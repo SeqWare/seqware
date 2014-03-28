@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.sourceforge.seqware.common.dao.ExperimentLibraryDesignDAO;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
-import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
@@ -29,19 +28,22 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
   }
 
   /** {@inheritDoc} */
+  @Override
   public void insert(ExperimentLibraryDesign obj) {
     this.getHibernateTemplate().save(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(ExperimentLibraryDesign obj) {
     this.getHibernateTemplate().update(obj);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<ExperimentLibraryDesign> list(Registration registration) {
 
-    ArrayList<ExperimentLibraryDesign> objs = new ArrayList<ExperimentLibraryDesign>();
+    ArrayList<ExperimentLibraryDesign> objs = new ArrayList<>();
     if (registration == null)
       return objs;
 
@@ -60,6 +62,7 @@ public class ExperimentLibraryDesignDAOHibernate extends HibernateDaoSupport imp
    * Finds an instance of ExperimentLibraryDesign in the database by the
    * ExperimentLibraryDesign ID.
    */
+  @Override
   public ExperimentLibraryDesign findByID(Integer id) {
     String query = "from ExperimentLibraryDesign as e where e.experimentLibraryDesignId = ?";
     ExperimentLibraryDesign obj = null;

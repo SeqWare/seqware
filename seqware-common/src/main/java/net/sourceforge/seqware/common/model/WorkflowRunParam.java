@@ -34,7 +34,8 @@ public class WorkflowRunParam extends PermissionsAware implements Serializable, 
         super();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(WorkflowRunParam that) {
         if (that == null) {
@@ -62,7 +63,8 @@ public class WorkflowRunParam extends PermissionsAware implements Serializable, 
         return new ToStringBuilder(this).append("swAccession", getWorkflowRunParamId()).toString();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -192,7 +194,8 @@ public class WorkflowRunParam extends PermissionsAware implements Serializable, 
         this.workflowRun = workflowRun;
     }
     
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {       
         boolean hasPermission = true;

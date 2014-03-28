@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
 
@@ -41,7 +39,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
   private Integer swAccession;
   private Date createTimestamp;
   private Logger logger;
-  private Set<Expense> expenses = new TreeSet<Expense>();
+  private Set<Expense> expenses = new TreeSet<>();
   //private Set<InvoiceAttribute> invoiceAttributes = new TreeSet<InvoiceAttribute>();
 
   /**
@@ -52,7 +50,8 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
     logger = Logger.getLogger(Invoice.class);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(Invoice that) {
     if (that == null)
@@ -74,7 +73,8 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
     return new ToStringBuilder(this).append("swAccession", getSwAccession()).toString();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other))

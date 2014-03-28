@@ -1,10 +1,8 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -31,7 +29,6 @@ import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.adapters.XmlizeFileSet;
 import net.sourceforge.seqware.common.model.adapters.XmlizeXML;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -39,7 +36,6 @@ import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
-import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -58,17 +54,17 @@ public class Processing extends PermissionsAware implements Serializable, Compar
   private static final long serialVersionUID = 4681328115923390568L;
   private Integer processingId;
   private String filePath;
-  private Set<Study> studies = new TreeSet<Study>();
-  private Set<Sample> samples = new TreeSet<Sample>();
-  private Set<IUS> ius = new TreeSet<IUS>();
-  private Set<Lane> lanes = new TreeSet<Lane>();
-  private Set<File> files = new TreeSet<File>();
-  private Set<SequencerRun> sequencerRuns = new TreeSet<SequencerRun>();
-  private Set<Experiment> experiments = new TreeSet<Experiment>();
-  private Set<Processing> children = new TreeSet<Processing>();
-  private Set<Processing> parents = new TreeSet<Processing>(); // typically just
+  private Set<Study> studies = new TreeSet<>();
+  private Set<Sample> samples = new TreeSet<>();
+  private Set<IUS> ius = new TreeSet<>();
+  private Set<Lane> lanes = new TreeSet<>();
+  private Set<File> files = new TreeSet<>();
+  private Set<SequencerRun> sequencerRuns = new TreeSet<>();
+  private Set<Experiment> experiments = new TreeSet<>();
+  private Set<Processing> children = new TreeSet<>();
+  private Set<Processing> parents = new TreeSet<>(); // typically just
   // one parent!
-  private Set<ProcessingAttribute> processingAttributes = new TreeSet<ProcessingAttribute>();
+  private Set<ProcessingAttribute> processingAttributes = new TreeSet<>();
   private WorkflowRun workflowRunByAncestorWorkflowRunId;
   private String algorithm;
   private ProcessingStatus status;
@@ -100,7 +96,8 @@ public class Processing extends PermissionsAware implements Serializable, Compar
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(Processing that) {
     if (that == null || that.getProcessingId() == null) {
@@ -126,7 +123,8 @@ public class Processing extends PermissionsAware implements Serializable, Compar
         + stdout + ", stderr=" + stderr + '}';
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -827,7 +825,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
    * <p>resetCompletedChildren.</p>
    */
   public void resetCompletedChildren() {
-    Set<Processing> res = new TreeSet<Processing>();
+    Set<Processing> res = new TreeSet<>();
     Set<Processing> all = this.getChildren();
 
     // get processing with workflow run has not status equal completed
@@ -845,7 +843,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
    * <p>resetRunningChildren.</p>
    */
   public void resetRunningChildren() {
-    Set<Processing> res = new TreeSet<Processing>();
+    Set<Processing> res = new TreeSet<>();
     Set<Processing> all = this.getChildren();
 
     // get processing with workflow run has not status equal completed

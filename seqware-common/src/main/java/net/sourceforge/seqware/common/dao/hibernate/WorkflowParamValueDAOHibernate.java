@@ -6,8 +6,6 @@ import java.util.List;
 
 import net.sourceforge.seqware.common.dao.WorkflowParamValueDAO;
 import net.sourceforge.seqware.common.model.Registration;
-import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
@@ -32,23 +30,27 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
     }
 
     /** {@inheritDoc} */
+    @Override
     public Integer insert(WorkflowParamValue workflowParamValue) {
         // this.getSession().evict(workflowParam.getWorkflow());
         return (Integer) this.getHibernateTemplate().save(workflowParamValue);
     }
 
     /** {@inheritDoc} */
+    @Override
     public void update(WorkflowParamValue workflowParamValue) {
         getHibernateTemplate().update(workflowParamValue);
         getSession().flush();
     }
 
     /** {@inheritDoc} */
+    @Override
     public void delete(WorkflowParamValue workflowParamValue) {
         getHibernateTemplate().delete(workflowParamValue);
     }
 
     /** {@inheritDoc} */
+    @Override
     public WorkflowParamValue findByID(Integer id) {
         String query = "from WorkflowParamValue as workflowParamValue where workflowParamValue.workflowParamValueId = ?";
         WorkflowParamValue workflowParamValue = null;
@@ -79,7 +81,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
     /** {@inheritDoc} */
     @Override
     public List<WorkflowParamValue> list() {
-        ArrayList<WorkflowParamValue> l = new ArrayList<WorkflowParamValue>();
+        ArrayList<WorkflowParamValue> l = new ArrayList<>();
 
         String query = "from WorkflowParamValue";
 

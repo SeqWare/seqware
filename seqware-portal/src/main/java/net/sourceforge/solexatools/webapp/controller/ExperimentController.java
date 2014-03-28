@@ -236,7 +236,10 @@ public class ExperimentController extends MultiActionController {
     this.experimentLibraryDesignService = experimentLibraryDesignService;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param binder
+     * @throws java.lang.Exception */
+  @Override
   protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
     // Uncomment the following line if you're using a Double object
     // binder.registerCustomEditor(Integer.class, new CustomIntegerEditor());
@@ -245,7 +248,10 @@ public class ExperimentController extends MultiActionController {
   }
 
   // @Override
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param arg1
+     * @throws java.lang.Exception */
+  @Override
   protected void bind(HttpServletRequest arg0, Object arg1) throws Exception {
     // TODO Auto-generated method stub
     super.bind(arg0, arg1);
@@ -331,7 +337,7 @@ public class ExperimentController extends MultiActionController {
       return new ModelAndView("redirect:/login.htm");
 
     ModelAndView modelAndView = null;
-    HashMap<String, Object> model = new HashMap<String, Object>();
+    HashMap<String, Object> model = new HashMap<>();
     Experiment experiment = getCurrentExperiment(request);
     model.put("platformList", getPlatformService().list(registration));
     model.put("expLibDesignSelectionList", getLibrarySelectionService().list(registration));
@@ -471,7 +477,7 @@ public class ExperimentController extends MultiActionController {
       return new ModelAndView("redirect:/login.htm");
 
     ModelAndView modelAndView = null;
-    HashMap<String, Object> model = new HashMap<String, Object>();
+    HashMap<String, Object> model = new HashMap<>();
     Experiment experiment = getRequestedExperiment(request);
 
     ServletContext context = this.getServletContext();

@@ -64,7 +64,7 @@ public class BasicDeciderTest extends PluginTest {
      */
     private static final boolean WRITE_JSON_ATTRIBUTES = false;
     
-    private final List<String> fastq_gz = new ArrayList<String>();
+    private final List<String> fastq_gz = new ArrayList<>();
         
     private BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
     
@@ -461,7 +461,7 @@ public class BasicDeciderTest extends PluginTest {
 
     public class TestingDecider extends BasicDecider {
 
-        private Set<String> fileSet = new HashSet<String>();
+        private Set<String> fileSet = new HashSet<>();
         private int finalChecks = 0;
         private int launches = 0;
 
@@ -524,7 +524,7 @@ public class BasicDeciderTest extends PluginTest {
         protected Map<String, String> modifyIniFile(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
             Log.debug("INI FILE:" + commaSeparatedFilePaths);
 
-            Map<String, String> iniFileMap = new TreeMap<String, String>();
+            Map<String, String> iniFileMap = new TreeMap<>();
             iniFileMap.put("input_file", commaSeparatedFilePaths);
 
             return iniFileMap;
@@ -538,7 +538,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
@@ -554,7 +554,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://non_matching_file");
         int workflowRunAcc = 6654;
@@ -570,7 +570,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
@@ -587,7 +587,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
         
@@ -605,7 +605,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
@@ -623,7 +623,7 @@ public class BasicDeciderTest extends PluginTest {
         TestingDecider decider = (TestingDecider) instance;
         decider.setMetaws((MetadataWS)metadata);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
@@ -639,7 +639,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
 
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
@@ -658,7 +658,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
 
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
@@ -676,7 +676,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
 
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
@@ -693,7 +693,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
 
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://garbage.gz");
         int workflowRunAcc = 6654;
 

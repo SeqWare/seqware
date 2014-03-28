@@ -79,9 +79,9 @@ public class BasicResource extends WadlServerResource {
         Form form = getRequest().getResourceRef().getQueryAsForm();
         queryValues = form.getValuesMap();
         if (queryValues == null) {
-            queryValues = new HashMap<String, String>();
+            queryValues = new HashMap<>();
         }
-        fields = new ArrayList<String>();
+        fields = new ArrayList<>();
 
         if (queryValues.containsKey("show")) {
             String[] fieldArr = queryValues.get("show").split(",");
@@ -103,6 +103,7 @@ public class BasicResource extends WadlServerResource {
     /**
      * <p>testIfNull.</p>
      *
+     * @param <T>
      * @param o a {@link java.lang.Object} object.
      * @return a {@link java.lang.Object} object.
      */
@@ -115,6 +116,7 @@ public class BasicResource extends WadlServerResource {
 
     /**
      * Parses the ID field and throws resourceExceptions as needed
+     * @param attribute
      * @return 
      */
     public static int parseClientInt(String attribute) throws ResourceException {

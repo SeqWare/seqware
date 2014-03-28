@@ -106,7 +106,7 @@ public class SelectInputListController extends BaseCommandController {
 	//	return files;
 		List<File> files = LaunchWorkflowUtil.getCurrentSelectedFiles(request); 
 		if(files == null){
-			files = new LinkedList<File>();
+			files = new LinkedList<>();
 		}
 		return files;
 	}
@@ -114,7 +114,7 @@ public class SelectInputListController extends BaseCommandController {
 	private List<Lane> getCurrentListInput(HttpServletRequest request){
 		List<Lane> lanes = (List<Lane>)request.getSession(false).getAttribute(getNameInputListInSession());
 		if(lanes == null){
-			lanes = new LinkedList<Lane>();
+			lanes = new LinkedList<>();
 		}
 		return lanes;
 	}
@@ -130,7 +130,9 @@ public class SelectInputListController extends BaseCommandController {
 	//	session.setAttribute(nameList, list);
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@SuppressWarnings("unchecked")
   @Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -162,11 +164,11 @@ public class SelectInputListController extends BaseCommandController {
 		
 //		List<Lane> inputList = getCurrentListInput(request);
 		
-		List<File> files = new ArrayList<File>();
+		List<File> files = new ArrayList<>();
 		if(option.equals("updateFileList")){
 			// update file list
 			Integer nodeId = Integer.parseInt(getRequestedNodeId(request));
-			List<String> nodeIds = new LinkedList<String>();
+			List<String> nodeIds = new LinkedList<>();
 			
 			if(typeNode.equals("study")){
 				files = getStudyService().getFiles(nodeId, metaType);
@@ -209,7 +211,7 @@ public class SelectInputListController extends BaseCommandController {
 					files = getProcessingService().getFiles(processingId);
 					
 					// get Processing
-					SortedSet<Processing> processings = new TreeSet<Processing>();
+					SortedSet<Processing> processings = new TreeSet<>();
 					processings.add(getProcessingService().findByID(processingId));
 					
 					// set one Processing in Workflow Run 

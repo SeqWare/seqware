@@ -46,12 +46,12 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     private Registration owner;
     private Date createTimestamp;
     private Date updateTimestamp;
-    private Set<Processing> processings = new TreeSet<Processing>();
+    private Set<Processing> processings = new TreeSet<>();
     private Integer swAccession;
-    private SortedSet<IUS> ius = new TreeSet<IUS>();
-    private Set<WorkflowRun> workflowRuns = new TreeSet<WorkflowRun>();
-    private Set<LaneLink> laneLinks = new TreeSet<LaneLink>();
-    private Set<LaneAttribute> laneAttributes = new TreeSet<LaneAttribute>();
+    private SortedSet<IUS> ius = new TreeSet<>();
+    private Set<WorkflowRun> workflowRuns = new TreeSet<>();
+    private Set<LaneLink> laneLinks = new TreeSet<>();
+    private Set<LaneAttribute> laneAttributes = new TreeSet<>();
     private Boolean isSelected = false;
     private Boolean isHasFile = false;
     private StudyType studyType;
@@ -67,7 +67,8 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
         super();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(Lane that) {
         if (that == null || getLaneId() == null) {
@@ -96,7 +97,8 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
                 + swAccession + ", isSelected=" + isSelected + ", isHasFile=" + isHasFile + '}';
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -206,7 +208,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getAllProcessings() {
-        Set<Processing> allProcessing = new TreeSet<Processing>();
+        Set<Processing> allProcessing = new TreeSet<>();
         allProcessing.addAll(getProcessings());
         if (getIUS() != null) {
             for (IUS i : getIUS()) {
@@ -340,7 +342,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
         IUS newIUS = new IUS();
         newIUS.setProcessings(processings);
         newIUS.setIusId(this.getLaneId());
-        SortedSet<IUS> i = new TreeSet<IUS>();
+        SortedSet<IUS> i = new TreeSet<>();
         i.add(newIUS);
         this.setIUS(i);
     }
@@ -361,7 +363,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<Sample> getSamples() {
-        SortedSet<Sample> samples = new TreeSet<Sample>();
+        SortedSet<Sample> samples = new TreeSet<>();
         SortedSet<IUS> setIUS = getIUS();
         for (IUS i : setIUS) {
             if (i.getSample() != null) {

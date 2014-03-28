@@ -20,7 +20,6 @@ import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
 
 /**
  * <p>SeqwareAccessionResource class.</p>
@@ -30,7 +29,8 @@ import org.restlet.resource.ServerResource;
  */
 public class SeqwareAccessionResource extends BasicResource {
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Get
     @Override
     public Representation get() {

@@ -33,18 +33,22 @@ public class OrganismServiceImpl implements OrganismService {
    *
    * Sets a private member variable with an instance of an implementation of
    * StudyTypeDAO. This method is called by the Spring framework at run time.
+     * @param organismDAO
    * @see StudyTypeDAO
    */
+  @Override
   public void setOrganismDAO(OrganismDAO organismDAO) {
     this.organismDAO = organismDAO;
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Organism> list(Registration registration) {
     return organismDAO.list(registration);
   }
 
   /** {@inheritDoc} */
+  @Override
   public Organism findByID(Integer id) {
     Organism obj = null;
     if (id != null) {

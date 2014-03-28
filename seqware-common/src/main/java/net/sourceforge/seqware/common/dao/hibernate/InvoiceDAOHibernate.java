@@ -7,15 +7,12 @@ import java.util.List;
 import net.sourceforge.seqware.common.dao.InvoiceDAO;
 import net.sourceforge.seqware.common.model.InvoiceState;
 import net.sourceforge.seqware.common.model.Registration;
-import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Invoice;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -42,12 +39,14 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(Invoice invoice) {
     getHibernateTemplate().update(invoice);
     getSession().flush();
   }
 
   /** {@inheritDoc} */
+  @Override
   public void delete(Invoice invoice) {
     getHibernateTemplate().delete(invoice);
   }
@@ -57,8 +56,9 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
    *
    * @return a {@link java.util.List} object.
    */
+  @Override
   public List<Invoice> list() {
-    ArrayList<Invoice> invoices = new ArrayList<Invoice>();
+    ArrayList<Invoice> invoices = new ArrayList<>();
 
     List expmts = null;
 
@@ -75,8 +75,9 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Invoice> list(Registration registration) {
-    ArrayList<Invoice> invoices = new ArrayList<Invoice>();
+    ArrayList<Invoice> invoices = new ArrayList<>();
 
     // Limit the invoices to those owned by the user
     String query = "";
@@ -98,8 +99,9 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
   }
   
   /** {@inheritDoc} */
+  @Override
   public List<Invoice> list(Registration registration, InvoiceState state) {
-    ArrayList<Invoice> invoices = new ArrayList<Invoice>();
+    ArrayList<Invoice> invoices = new ArrayList<>();
 
     // Limit the invoices to those owned by the user
     String query = "";
@@ -124,6 +126,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
  
 
   /** {@inheritDoc} */
+  @Override
   public Invoice findByID(Integer wfID) {
     String query = "from Invoice as invoice where invoice.invoiceId = ?";
     Invoice invoice = null;

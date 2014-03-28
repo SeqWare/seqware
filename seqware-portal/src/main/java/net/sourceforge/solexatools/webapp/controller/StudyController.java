@@ -219,7 +219,7 @@ public class StudyController extends MultiActionController {
       return new ModelAndView("redirect:/login.htm");
 
     ModelAndView modelAndView = null;
-    HashMap<String, Object> model = new HashMap<String, Object>();
+    HashMap<String, Object> model = new HashMap<>();
     Study study = getCurrentStudy(request);
     model.put("studyTypeList", getStudyTypeService().list(registration));
     if (study.getUpdateTimestamp() == null) {
@@ -322,7 +322,7 @@ public class StudyController extends MultiActionController {
       return new ModelAndView("redirect:/login.htm");
 
     ModelAndView modelAndView = null;
-    HashMap<String, Object> model = new HashMap<String, Object>();
+    HashMap<String, Object> model = new HashMap<>();
     Study study = getRequestedStudy(request);
 
     ServletContext context = this.getServletContext();
@@ -355,7 +355,7 @@ public class StudyController extends MultiActionController {
       return new ModelAndView("redirect:/login.htm");
 
     ModelAndView modelAndView = null;
-    HashMap<String, Object> model = new HashMap<String, Object>();
+    HashMap<String, Object> model = new HashMap<>();
     Study study = getRequestedStudy(request);
 
     if (study != null) {

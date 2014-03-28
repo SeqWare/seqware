@@ -65,9 +65,9 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     private Integer errorCount;
     private Boolean skip;
     private String html;
-    private Set<SequencerRunAttribute> sequencerRunAttributes = new TreeSet<SequencerRunAttribute>();
+    private Set<SequencerRunAttribute> sequencerRunAttributes = new TreeSet<>();
     private Set<Processing> processings;
-    private SortedSet<Lane> lanes = new TreeSet<Lane>();
+    private SortedSet<Lane> lanes = new TreeSet<>();
     // private Lane lane1, lane2, lane3, lane4, lane5, lane6, lane7, lane8;
     private String strRefLane;
 
@@ -83,7 +83,8 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
          */
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(SequencerRun that) {
         if (that == null) {
@@ -108,7 +109,8 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
         return new ToStringBuilder(this).append("sequencerRunId", getSequencerRunId()).append("name", getName()).toString();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -137,7 +139,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getAllProcessing() {
-        Set<Processing> allProcessings = new TreeSet<Processing>();
+        Set<Processing> allProcessings = new TreeSet<>();
 
         // add SequencerRun processing
         allProcessings.addAll(getProcessings());
@@ -994,7 +996,8 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
         this.sequencerRunAttributes = sequencerRunAttributes;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         Logger.getLogger(SequencerRun.class).info("Sequencer run always gives permission");

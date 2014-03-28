@@ -47,7 +47,8 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
         super();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(WorkflowParam that) {
         if (that == null) {
@@ -71,7 +72,8 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
         return new ToStringBuilder(this).append("swAccession", getWorkflowParamId()).toString();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -378,19 +380,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
         this.files = files;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return
+     * @throws java.lang.CloneNotSupportedException  */
     @Override
     public WorkflowParam clone() throws CloneNotSupportedException {
         WorkflowParam wp = (WorkflowParam) super.clone();
 
         List newFiles = (files == null ? null : new ArrayList(files));
         wp.setFiles(newFiles);
-        SortedSet newValues = (values == null ? null : new TreeSet<WorkflowParamValue>(values));
+        SortedSet newValues = (values == null ? null : new TreeSet<>(values));
         wp.setValues(newValues);
         return wp;
     }
     
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = true;

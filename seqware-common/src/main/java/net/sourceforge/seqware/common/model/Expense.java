@@ -46,6 +46,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
+     * @param that
      */
     @Override
     public int compareTo(Expense that) {
@@ -75,6 +76,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
+     * @param other
      */
     @Override
     public boolean equals(Object other) {
@@ -90,6 +92,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {

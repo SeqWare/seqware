@@ -1,17 +1,11 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.Set;
 
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
-import org.apache.commons.dbutils.DbUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
 /**
@@ -152,7 +146,8 @@ public class Registration extends PermissionsAware implements Serializable, Comp
         return true;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param t */
     @Override
     public int compareTo(Registration t) {
         return emailAddress.compareTo(t.getEmailAddress());
@@ -163,6 +158,7 @@ public class Registration extends PermissionsAware implements Serializable, Comp
      *
      * @return a int.
      */
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(getEmailAddress()).append(getPassword()).toHashCode();
     }
@@ -372,7 +368,8 @@ public class Registration extends PermissionsAware implements Serializable, Comp
         return false;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = false;

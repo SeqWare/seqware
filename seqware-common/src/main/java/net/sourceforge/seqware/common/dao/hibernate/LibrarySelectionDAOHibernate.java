@@ -30,6 +30,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
   /**
    * {@inheritDoc}
    */
+  @Override
   public List<LibrarySelection> list(Registration registration) {
     if (registration == null) { return(null); }
     return (list());
@@ -38,6 +39,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
   /**
    * {@inheritDoc}
    */
+  @Override
   public LibrarySelection findByID(Integer id) {
     String query = "from LibrarySelection as l where l.librarySelectionId = ?";
     LibrarySelection obj = null;
@@ -72,7 +74,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
    */
   @Override
   public List<LibrarySelection> list() {
-    ArrayList<LibrarySelection> objects = new ArrayList<LibrarySelection>();
+    ArrayList<LibrarySelection> objects = new ArrayList<>();
 
 
     List expmts = this.getHibernateTemplate().find("from LibrarySelection as ls order by ls.librarySelectionId asc" // desc

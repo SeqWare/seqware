@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,18 +30,20 @@ public class AbstractJob implements Job {
 	 */
 	public AbstractJob(String algo) {
 		this(algo, "", "");
-		this.parentAccessions = new ArrayList<String>();
+		this.parentAccessions = new ArrayList<>();
 	}
 	
 	/**
 	 * for Java/Perl/JavaModule job
+     * @param mainclass
+     * @param cp
 	 */
 	public AbstractJob(String algo, String cp, String mainclass) {
 		this.cp = cp;
 		this.mainclass = mainclass;
-		this.parents = new ArrayList<Job>();
-		this.files = new ArrayList<SqwFile>();
-		this.requirements = new ArrayList<Requirement>();
+		this.parents = new ArrayList<>();
+		this.files = new ArrayList<>();
+		this.requirements = new ArrayList<>();
 		this.command = new Command();
 		this.algo = algo;
 		this.initRequirements();
@@ -267,6 +268,7 @@ public class AbstractJob implements Job {
 
   /**
    * Allows specifying options to qsub.  When provided, options using queue, maxMem, and threads will not be generated. 
+     * @param qsubOptions
    */
   public void setQsubOptions(String qsubOptions) {
     this.qsubOptions = qsubOptions;

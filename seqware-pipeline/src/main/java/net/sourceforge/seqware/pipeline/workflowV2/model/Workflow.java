@@ -15,8 +15,8 @@ public class Workflow {
 
 	
 	public Workflow() {
-		this.jobs = new ArrayList<AbstractJob>();
-		this.tests = new ArrayList<String>();
+		this.jobs = new ArrayList<>();
+		this.tests = new ArrayList<>();
 	}
 	
 	/**

@@ -180,7 +180,7 @@ public class ReturnValue implements Serializable {
      */
     public void setAttribute(String key, String value) {
         if (attributes == null) {
-            attributes = new HashMap<String, String>();
+            attributes = new HashMap<>();
         }
         attributes.put(key, value);
     }
@@ -193,7 +193,7 @@ public class ReturnValue implements Serializable {
      */
     public Map<String, String> getAttributes() {
         if (attributes == null) {
-            attributes = new HashMap<String, String>();
+            attributes = new HashMap<>();
         }
         return (attributes);
     }
@@ -206,7 +206,7 @@ public class ReturnValue implements Serializable {
      */
     public String getAttribute(String key) {
         if (attributes == null) {
-            attributes = new HashMap<String, String>();
+            attributes = new HashMap<>();
         }
         return (attributes.get(key));
     }
@@ -426,7 +426,7 @@ public class ReturnValue implements Serializable {
         this.stdout = null;
         this.stderr = null;
         this.exitStatus = 0;
-        files = new ArrayList<FileMetadata>();
+        files = new ArrayList<>();
     }
 
     /**
@@ -438,7 +438,7 @@ public class ReturnValue implements Serializable {
         this.stdout = null;
         this.stderr = null;
         this.exitStatus = startExitStatus;
-        files = new ArrayList<FileMetadata>();
+        files = new ArrayList<>();
     }
 
     /**
@@ -452,7 +452,7 @@ public class ReturnValue implements Serializable {
         this.stdout = startStdout;
         this.stderr = startStderr;
         this.exitStatus = startExitStatus;
-        files = new ArrayList<FileMetadata>();
+        files = new ArrayList<>();
     }
 
     /**
