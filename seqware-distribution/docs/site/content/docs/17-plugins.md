@@ -65,8 +65,10 @@ Import objects into the database using different file formats.
 | Command-line option | Description |
 |--------------------|--------------|
 |--c, --create|Optional: indicates you want to create a new row, must supply --table and all the required --field params.|
-|--f, --field|Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
-|--file|Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.|
+|--export-json-sequencer-run|The data entered will be exported as a JSON document. The argument should be the location of where you wish to place said document.|
+|--f, --field|Optional: the field you are interested in writing. This is encoded as 'field_name::value', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
+|--file|Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as 'algorithm::file-meta-type::file-path', you should use single quotes when the value includes spaces.|
+|--import-json-sequencer-run|Allows you to choose a valid JSON file to import into the database. The argument should be the location of the JSON file.|
 |--interactive|Optional: turn on interactive input |
 |--lf, --list-fields|Optional: if provided along with the --table option this will list out the fields for that table and their type.|
 |--list-tables, --lt|Optional: if provided will list out the tables this tools knows how to read and/or write to.|
@@ -76,6 +78,7 @@ Import objects into the database using different file formats.
 |--parent-accession|Optional: one or more --parent-accession options can be specified when you create a workflow_run.|
 |--record|Optional: saves information about the injection in a text file|
 |--t, --table|Required: the table you are interested in reading or writing.|
+|--validate-json-sequencer-run|The JSON file which you wish to validate|
 
 
 ##  BundleManager
