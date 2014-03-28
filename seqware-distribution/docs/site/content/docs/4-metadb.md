@@ -68,6 +68,26 @@ the IUS to the root Processing through processing_ius, not through
 ius_workflow_runs.
 
 
+The following is a more complicated database diagram that includes tables used for 
+linking metadata to workflow runs and all attribute tables. This should be more 
+useful for developers rather than users. 
+
+![Complicated DB](/assets/images/metadb/Db_complicated.png)
+
+There is one large division between the tables at the "top" of the database (sequencer_run, 
+lane, sample, ius, experiment, and study) which have physical counterparts
+and are typically created by migration by the LIMS and the tables at the "bottom" of 
+the database (workflow, workflow_run, processing, and file) which are actually used
+by SeqWare to maintain details on what workflows have been installed and run. 
+
+Note there are also attribute tables for each of the above tables (of the form X_attribute) 
+which maintain arbitrary key value information that can be used to guide custom 
+behaviour at your particular SeqWare site. 
+
+Finally, there are a host of linking tables (of the form processing_X) which maintain 
+information on which steps in your workflow are attributable to what physical entities. 
+
+
 ## Upgrading From 0.13.6.X to 1.0.X
 
 First, let's review which tools depend on what. 
