@@ -108,7 +108,8 @@ public class WorkflowAttribute implements Attribute<Workflow>, Comparable<Workfl
     return workflowAttributeId;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param wfa */
   @Override
   public int compareTo(WorkflowAttribute wfa) {
     return (this.tag + this.value).compareTo(wfa.tag + wfa.value);

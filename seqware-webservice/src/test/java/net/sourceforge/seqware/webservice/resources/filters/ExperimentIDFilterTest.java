@@ -80,7 +80,7 @@ public class ExperimentIDFilterTest extends AbstractResourceTest {
         resource = ClientResourceInstance.getChild(relativeURI);
         Log.stdout(getRelativeURI() + " GET");
         ExperimentList parent = new ExperimentList();
-        JaxbObject<ExperimentList> jaxb = new JaxbObject<ExperimentList>();
+        JaxbObject<ExperimentList> jaxb = new JaxbObject<>();
         try {
             Representation rep = resource.get();
             String text = rep.getText();

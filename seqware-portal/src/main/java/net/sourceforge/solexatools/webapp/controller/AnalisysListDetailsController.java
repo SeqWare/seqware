@@ -76,7 +76,9 @@ public class AnalisysListDetailsController extends BaseCommandController {
 		return isAsc;
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -104,14 +106,14 @@ public class AnalisysListDetailsController extends BaseCommandController {
 		Sample sam = new Sample();
 //		Lane lane = new Lane();
 		Processing proc = new Processing();
-		Map<WorkflowRun, List<Processing>> wfrProc = new HashMap<WorkflowRun, List<Processing>>();
+		Map<WorkflowRun, List<Processing>> wfrProc = new HashMap<>();
 		
 		PageInfo pageInfo = null;
 		Boolean isHasError = false;
 		String errorMessage = "";
 		
-		List<WorkflowRun>  listAll = new ArrayList<WorkflowRun>();
-		List<WorkflowRun>  listView = new ArrayList<WorkflowRun>();
+		List<WorkflowRun>  listAll = new ArrayList<>();
+		List<WorkflowRun>  listView = new ArrayList<>();
 		
 		String   root     = (String)request.getParameter("root");
 		System.err.println("ROOT: "+root);
@@ -228,7 +230,7 @@ public class AnalisysListDetailsController extends BaseCommandController {
 		for (Processing child: proc.getChildren()) {
 			List<Processing> processings = wfrProc.get(child.getWorkflowRun());
 			if (processings == null) {
-				processings = new ArrayList<Processing>();
+				processings = new ArrayList<>();
 			}
 			processings.add(child);
 			if (child.getWorkflowRun() != null) {

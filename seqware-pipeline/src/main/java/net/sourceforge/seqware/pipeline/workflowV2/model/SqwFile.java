@@ -25,7 +25,7 @@ public class SqwFile {
 	public SqwFile() {
 		//need to create a random directory for later reference
 		this.uniqueDir = Long.toString(System.nanoTime());
-		this.parentAccessions = new ArrayList<String>();
+		this.parentAccessions = new ArrayList<>();
 	}
 	
 	public String getType() {
@@ -75,7 +75,7 @@ public class SqwFile {
 	/**
 	 * isInput = !@param isOutput
 	 * isOutput = @param isOutput
-	 * @param isInupt
+     * @param isOutput
 	 */
 	public void setIsOutput(boolean isOutput) {
 		this.input = !isOutput;

@@ -31,7 +31,7 @@ public class DummyExperimentIDResourceTest extends DatabaseResourceIDTest {
 
     public DummyExperimentIDResourceTest() {
         super("/experiments/6157");
-        jo = new JaxbObject<Experiment>();
+        jo = new JaxbObject<>();
         o = new Experiment();
     }
 

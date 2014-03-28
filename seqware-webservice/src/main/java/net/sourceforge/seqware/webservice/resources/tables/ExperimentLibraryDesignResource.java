@@ -20,12 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.ExperimentLibraryDesignService;
-import net.sourceforge.seqware.common.business.PlatformService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
-import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.lists.ExperimentLibraryDesignList;
-import net.sourceforge.seqware.common.model.lists.PlatformList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.apache.log4j.Logger;
@@ -69,7 +66,7 @@ public class ExperimentLibraryDesignResource extends DatabaseResource {
         List<ExperimentLibraryDesign> objects = (List<ExperimentLibraryDesign>) testIfNull(ss.list());
         logger.debug("experiment library designs: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<ExperimentLibraryDesignList> jaxbTool = new JaxbObject<ExperimentLibraryDesignList>();
+        JaxbObject<ExperimentLibraryDesignList> jaxbTool = new JaxbObject<>();
 
         ExperimentLibraryDesignList list = new ExperimentLibraryDesignList();
         list.setList(new ArrayList());

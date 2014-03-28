@@ -272,7 +272,7 @@ public class ProvisionFiles extends Module {
     // parses through input files passed in as triplets of metadata and input
     // path
     // add all the metadata-containing inputs
-    ArrayList<String> newArray = new ArrayList<String>();
+    ArrayList<String> newArray = new ArrayList<>();
     List<String> metaInputs = (List<String>) options.valuesOf("input-file-metadata");
     if (metaInputs != null) {
       if (inputs != null && inputs.size() > 0) {
@@ -356,7 +356,7 @@ public class ProvisionFiles extends Module {
 
     ArrayList<FileMetadata> fileArray = ret.getFiles();
 
-    ArrayList<String> newArray = new ArrayList<String>();
+    ArrayList<String> newArray = new ArrayList<>();
     List<String> inputs = (List<String>) options.valuesOf("input-file");
     List<String> metaInputs = (List<String>) options.valuesOf("input-file-metadata");
     List<String> outputFiles = (List<String>) options.valuesOf("output-file");
@@ -389,7 +389,7 @@ public class ProvisionFiles extends Module {
       // handle text/key-value
       if (fmd.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
         Map<String, String> map = FileTools.getKeyValueFromFile(fmd.getFilePath());
-        Set<ProcessingAttribute> atts = new TreeSet<ProcessingAttribute>();
+        Set<ProcessingAttribute> atts = new TreeSet<>();
         for (Map.Entry<String, String> entry : map.entrySet()) {
           ProcessingAttribute a = new ProcessingAttribute();
           a.setTag(entry.getKey());

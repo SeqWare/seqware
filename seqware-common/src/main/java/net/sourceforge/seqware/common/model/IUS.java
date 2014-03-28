@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -39,10 +38,10 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     private Integer swAccession;
     private Date createTimestamp;
     private Date updateTimestamp;
-    private Set<Processing> processings = new TreeSet<Processing>();
-    private Set<WorkflowRun> workflowRuns = new TreeSet<WorkflowRun>();
-    private Set<IUSAttribute> iusAttributes = new TreeSet<IUSAttribute>();
-    private Set<IUSLink> iusLinks = new TreeSet<IUSLink>();
+    private Set<Processing> processings = new TreeSet<>();
+    private Set<WorkflowRun> workflowRuns = new TreeSet<>();
+    private Set<IUSAttribute> iusAttributes = new TreeSet<>();
+    private Set<IUSLink> iusLinks = new TreeSet<>();
     private Boolean skip;
     // not persist
     private Boolean isHasFile = false;
@@ -55,7 +54,8 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
         super();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(IUS that) {
         if (that == null) {
@@ -86,7 +86,8 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
                 + ", isSelected=" + isSelected + '}';
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {

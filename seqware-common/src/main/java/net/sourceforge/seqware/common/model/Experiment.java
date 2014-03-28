@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -67,9 +66,9 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
   private String expSpotDesignTagSpec;
   private String expSpotDesignAdapterSpec;
   private Integer expSpotDesignReadsPerSpot;
-  private Set<Processing> processings = new TreeSet<Processing>();
-  private Set<ExperimentAttribute> experimentAttributes = new TreeSet<ExperimentAttribute>();
-  private Set<ExperimentLink> experimentLinks = new TreeSet<ExperimentLink>();
+  private Set<Processing> processings = new TreeSet<>();
+  private Set<ExperimentAttribute> experimentAttributes = new TreeSet<>();
+  private Set<ExperimentLink> experimentLinks = new TreeSet<>();
   // these are non-persisted fields used by the platform connection
   private Integer platformInt;
   private SortedSet<Sample> samples;
@@ -88,7 +87,8 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(Experiment that) {
     if (that == null) {
@@ -120,7 +120,8 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
         + createTimestamp + ", updateTimestamp=" + updateTimestamp + '}';
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {

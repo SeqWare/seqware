@@ -14,6 +14,8 @@ public class InvitationParams {
 	
 	/**
 	 * <p>Constructor for InvitationParams.</p>
+     * @param templateEmail
+     * @param subjectEmail
 	 */
 	public InvitationParams(boolean isInvitationCode, String subjectEmail, String templateEmail) {
 		this.isInvitationCode = isInvitationCode;
@@ -23,6 +25,7 @@ public class InvitationParams {
 	
 	/**
 	 * <p>Getter for the field <code>isInvitationCode</code>.</p>
+     * @return 
 	 */
 	public boolean getIsInvitationCode() {
 		return isInvitationCode;

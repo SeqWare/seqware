@@ -29,8 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -75,11 +73,12 @@ public class BatchMetadataInjection extends Metadata {
         parser.accepts("export-json-sequencer-run", "The location to export the RunInfo json output file.").withOptionalArg();
         parser.accepts("validate-json-sequencer-run", "The location of the RunInfo json file to validate.").withOptionalArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
-        names = new HashMap<Integer, String>();
+        names = new HashMap<>();
     }
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue init() {
@@ -92,6 +91,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -100,6 +100,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_run() {
@@ -236,6 +237,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue clean_up() {
@@ -246,6 +248,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public String get_description() {

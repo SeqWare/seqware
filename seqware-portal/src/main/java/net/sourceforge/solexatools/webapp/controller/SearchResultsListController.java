@@ -158,7 +158,9 @@ public class SearchResultsListController extends BaseCommandController {
 		this.workflowRunService = workflowRunService;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -228,7 +230,7 @@ public class SearchResultsListController extends BaseCommandController {
 	private List<Object> getListForCriteria(String criteria, String type,
 			ModelAndView modelAndView, boolean isCaseSens) {
 		modelAndView.addObject(criteria);
-		List<Object> out = new ArrayList<Object>();
+		List<Object> out = new ArrayList<>();
 		// Create appropriate model for selected type
 		if (type.equals("Study") || type.equals("All")) {
 			List<Study> studies = studyService.findByCriteria(criteria, isCaseSens);

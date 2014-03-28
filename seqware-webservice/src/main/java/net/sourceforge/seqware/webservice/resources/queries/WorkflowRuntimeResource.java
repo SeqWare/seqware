@@ -60,13 +60,13 @@ public class WorkflowRuntimeResource extends BasicRestlet {
         init(request);
         if (request.getMethod().compareTo(Method.GET) == 0) {
             // processing IDs
-            HashMap<Integer, Boolean> seen = new HashMap<Integer, Boolean>();
+            HashMap<Integer, Boolean> seen = new HashMap<>();
             // main data structure
-            HashMap<String, HashMap<String, HashMap<String, HashMap<String, Integer>>>> d = new HashMap<String, HashMap<String, HashMap<String, HashMap<String, Integer>>>>();
+            HashMap<String, HashMap<String, HashMap<String, HashMap<String, Integer>>>> d = new HashMap<>();
             // algos
-            HashMap<String, Boolean> algos = new HashMap<String, Boolean>();
+            HashMap<String, Boolean> algos = new HashMap<>();
             // workflow run IDs
-            HashMap<Integer, Boolean> wrIds = new HashMap<Integer, Boolean>();
+            HashMap<Integer, Boolean> wrIds = new HashMap<>();
 
             String workflowAccession = null;
             final String workflowId = "workflowId";
@@ -109,7 +109,7 @@ public class WorkflowRuntimeResource extends BasicRestlet {
                 Map<Integer, Map<String, String>> currentProcIds = DBAccess.get().executeQuery(query, new ResultSetHandler<Map<Integer, Map<String, String>>>(){
                   @Override
                   public Map<Integer, Map<String, String>> handle(ResultSet rs) throws SQLException {
-                    Map<Integer, Map<String, String>> currentProcIds = new HashMap<Integer, Map<String, String>>();
+                    Map<Integer, Map<String, String>> currentProcIds = new HashMap<>();
                     while (rs.next()) {
                       Integer processingId = rs.getInt(1);
                       String algorithm = rs.getString(2);
@@ -117,7 +117,7 @@ public class WorkflowRuntimeResource extends BasicRestlet {
                       Timestamp createTstmp = rs.getTimestamp(4);
                       String workflowName = rs.getString(5);
                       Integer workflowRunId = rs.getInt(6);
-                      HashMap<String, String> currentProcHash = new HashMap<String, String>();
+                      HashMap<String, String> currentProcHash = new HashMap<>();
                       currentProcHash.put("procId", processingId.toString());
                       currentProcHash.put("workflowRunId", workflowRunId.toString());
                       currentProcHash.put("workflowName", workflowName);
@@ -195,7 +195,7 @@ public class WorkflowRuntimeResource extends BasicRestlet {
               }
             });
 
-            Map<Integer, Boolean> childProcessingHash = new HashMap<Integer, Boolean>();
+            Map<Integer, Boolean> childProcessingHash = new HashMap<>();
             if (tuple != null) {
 
                 String algorithm = (String)tuple[0];
@@ -212,19 +212,19 @@ public class WorkflowRuntimeResource extends BasicRestlet {
                 //                                               -> counts  -> int
                 HashMap<String, HashMap<String, HashMap<String, Integer>>> algorithmsHash = d.get(workflowName);
                 if (algorithmsHash == null) {
-                    algorithmsHash = new HashMap<String, HashMap<String, HashMap<String, Integer>>>();
+                    algorithmsHash = new HashMap<>();
                     d.put(workflowName, algorithmsHash);
                 }
 
                 HashMap<String, HashMap<String, Integer>> workflowRunHash = algorithmsHash.get(algorithm);
                 if (workflowRunHash == null) {
-                    workflowRunHash = new HashMap<String, HashMap<String, Integer>>();
+                    workflowRunHash = new HashMap<>();
                     algorithmsHash.put(algorithm, workflowRunHash);
                 }
 
                 HashMap<String, Integer> runtimeHash = workflowRunHash.get(workflowRunId.toString());
                 if (runtimeHash == null) {
-                    runtimeHash = new HashMap<String, Integer>();
+                    runtimeHash = new HashMap<>();
                     workflowRunHash.put(workflowRunId.toString(), runtimeHash);
                 }
 
@@ -247,7 +247,7 @@ public class WorkflowRuntimeResource extends BasicRestlet {
                 childProcessingHash = DBAccess.get().executeQuery("select p.processing_id, p.algorithm, p.status, p.create_tstmp from processing as p, processing_relationship as pr where pr.parent_id = " + processingId + " and pr.child_id = p.processing_id and p.ancestor_workflow_run_id = " + workflowRunId, new ResultSetHandler<Map<Integer, Boolean>>(){
                   @Override
                   public Map<Integer, Boolean> handle(ResultSet rs) throws SQLException {
-                    Map<Integer, Boolean> childProcessingHash = new HashMap<Integer, Boolean>();
+                    Map<Integer, Boolean> childProcessingHash = new HashMap<>();
                     while (rs.next()) {
                       childProcessingHash.put(rs.getInt(1), true);
                     }

@@ -19,7 +19,6 @@ package net.sourceforge.seqware.common.model.lists;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
-import net.sourceforge.seqware.common.model.File;
 
 /**
  * <p>List of integers.</p>
@@ -40,7 +39,7 @@ public class IntegerList {
      * <p>Constructor for FileList.</p>
      */
     public IntegerList() {
-        tList = new ArrayList<Integer>();
+        tList = new ArrayList<>();
     }
 
     /**

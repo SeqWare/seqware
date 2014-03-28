@@ -1,8 +1,5 @@
 package net.sourceforge.solexatools.validation;
 
-import net.sourceforge.seqware.common.model.Study;
-
-import org.springframework.validation.Errors;
 
   /**
    * {@inheritDoc}

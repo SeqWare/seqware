@@ -42,7 +42,7 @@ public class Bundle {
   protected String outputDir = null;
   // this is used as the location of the workflow bundle zip
   protected String outputZip = null;
-  protected ArrayList<File> filesArray = new ArrayList<File>();
+  protected ArrayList<File> filesArray = new ArrayList<>();
 
   /**
    * <p>Constructor for Bundle.</p>

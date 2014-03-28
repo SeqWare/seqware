@@ -25,7 +25,8 @@ public class Platform implements Serializable, Comparable<Platform>, SecondTierM
 		super();
 	}
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
 	public int compareTo(Platform that) {
 		if(that == null)
@@ -49,7 +50,8 @@ public class Platform implements Serializable, Comparable<Platform>, SecondTierM
     /** {@inheritDoc} */
 
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

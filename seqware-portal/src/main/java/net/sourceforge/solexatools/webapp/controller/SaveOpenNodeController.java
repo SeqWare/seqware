@@ -39,7 +39,9 @@ public class SaveOpenNodeController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_POST});
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)

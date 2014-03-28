@@ -75,10 +75,10 @@ public abstract class OozieJob {
     this.name = name;
     this.jobObj = job;
     this.oozie_working_dir = oozie_working_dir;
-    this.parents = new ArrayList<OozieJob>();
-    this.children = new ArrayList<OozieJob>();
-    this.parentAccessionFiles = new ArrayList<String>();
-    this.parentAccessions = new ArrayList<String>();
+    this.parents = new ArrayList<>();
+    this.children = new ArrayList<>();
+    this.parentAccessionFiles = new ArrayList<>();
+    this.parentAccessions = new ArrayList<>();
     this.useSge = useSge;
     this.seqwareJarPath = seqwareJar.getAbsolutePath();
     this.threadsSgeParamFormat = threadsSgeParamFormat;
@@ -131,7 +131,7 @@ public abstract class OozieJob {
    * @return Runner args
    */
   protected ArrayList<String> runnerMetaDataArgs() {
-    ArrayList<String> args = new ArrayList<String>();
+    ArrayList<String> args = new ArrayList<>();
 
     if (metadataWriteback) {
       args.add("--metadata");
@@ -191,7 +191,7 @@ public abstract class OozieJob {
   protected File emitOptionsFile() {
     File file = file(scriptsDir, optsFileName(name), false);
 
-    ArrayList<String> args = new ArrayList<String>();
+    ArrayList<String> args = new ArrayList<>();
     args.add("-b");
     args.add("y");
     args.add("-e");
@@ -403,7 +403,7 @@ public abstract class OozieJob {
 
   /** 
    * Return true only when an accession file is added successfully
-   * @param paf
+     * @param pafs
    * @return 
    */
   public boolean addParentAccessionFile(String ... pafs) {

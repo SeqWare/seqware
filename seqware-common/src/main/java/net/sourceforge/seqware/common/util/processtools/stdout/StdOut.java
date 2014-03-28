@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.lang.UnsupportedOperationException;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
@@ -37,7 +36,7 @@ public class StdOut {
     BufferedWriter currentFile = null;
     BufferedReader stdout = new BufferedReader(new InputStreamReader(p
         .getInputStream()));
-    ArrayList<BufferedWriter> fileOutputs = new ArrayList<BufferedWriter>();
+    ArrayList<BufferedWriter> fileOutputs = new ArrayList<>();
 
     // Open files
     for (int i = 0; i < numFiles; i++) {
@@ -215,7 +214,7 @@ public class StdOut {
     BufferedWriter currentFile = null;
     BufferedReader stdout = new BufferedReader(new InputStreamReader(p
         .getInputStream()));
-    ArrayList<BufferedWriter> fileOutputs = new ArrayList<BufferedWriter>();
+    ArrayList<BufferedWriter> fileOutputs = new ArrayList<>();
 
     // Open files
     for (int i = 0; i < numFiles; i++) {

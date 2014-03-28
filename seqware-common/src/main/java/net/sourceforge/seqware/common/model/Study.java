@@ -50,9 +50,9 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
   private Integer existingTypeInt;
   private SortedSet<Experiment> experiments;
   private SortedSet<ShareStudy> sharedStudies;
-  private Set<Processing> processings = new TreeSet<Processing>();
-  private Set<StudyLink> studyLinks = new TreeSet<StudyLink>();
-  private Set<StudyAttribute> studyAttributes = new TreeSet<StudyAttribute>();
+  private Set<Processing> processings = new TreeSet<>();
+  private Set<StudyLink> studyLinks = new TreeSet<>();
+  private Set<StudyAttribute> studyAttributes = new TreeSet<>();
 
   /**
    * <p>Constructor for Study.</p>
@@ -96,7 +96,8 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
         + existingTypeInt + '}';
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -629,7 +630,8 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
     this.studyAttributes = studyAttributes;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
       boolean consideredBefore = considered.contains(this.getSwAccession());

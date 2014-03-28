@@ -16,7 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -161,7 +160,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
      */
     public Set<SampleInfo> getSamples() {
         if (samples == null) {
-            samples = new HashSet<SampleInfo>();
+            samples = new HashSet<>();
         }
         return samples;
     }

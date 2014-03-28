@@ -1,17 +1,12 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
-import org.apache.commons.dbutils.DbUtils;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -38,8 +33,8 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
   private String urlLabel;
   private String md5sum;
   private FileType fileType;
-  private Set<Processing> processings = new TreeSet<Processing>();
-  private Set<FileAttribute> fileAttributes = new TreeSet<FileAttribute>();
+  private Set<Processing> processings = new TreeSet<>();
+  private Set<FileAttribute> fileAttributes = new TreeSet<>();
   private Long size;
   private Boolean skip;
 
@@ -68,7 +63,8 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(File that) {
     return (that.getFileId().compareTo(this.getFileId()));
@@ -83,7 +79,8 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
         + ", skip=" + getSkip() + '}';
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {

@@ -210,7 +210,7 @@ public class SelectInputController  extends MultiActionController {
 		if(isHasPrevParam){
 			modelAndView = new ModelAndView("SelectInput");
 		}else{
-			HashMap<String,Object> model = new HashMap<String,Object>();
+			HashMap<String,Object> model = new HashMap<>();
 			Workflow workflow = getCurrentWorkflow(request);
 			request.setAttribute(getCommandName(command), workflow);
 			

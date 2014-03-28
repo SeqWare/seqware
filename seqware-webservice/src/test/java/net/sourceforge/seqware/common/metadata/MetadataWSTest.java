@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -454,6 +453,7 @@ public class MetadataWSTest {
 
     /**
      * Test of linkWorkflowRunAndParent method, of class MetadataWS.
+     * @throws java.lang.Exception
      */
     //@Test
     public void testLinkWorkflowRunAndParent() throws Exception {
@@ -620,7 +620,7 @@ public class MetadataWSTest {
     @Test
     public void testGetWorkflowRunsRelatedToFile_basic() {
         logger.info("testGetWorkflowRunsRelatedToFile_basic");
-        List<Integer> files = new ArrayList<Integer>();
+        List<Integer> files = new ArrayList<>();
         boolean exceptionThrown = false;
         List<WorkflowRun> result;
         try{
@@ -646,7 +646,7 @@ public class MetadataWSTest {
     @Test
     public void testGetWorkflowRunsRelatedToFile_multipleFiles() {
         logger.info("testGetWorkflowRunsRelatedToFile_multipleFiles");
-        List<Integer> files = new ArrayList<Integer>();
+        List<Integer> files = new ArrayList<>();
         files.add(835);
         files.add(838);
         List<WorkflowRun> result = instance.getWorkflowRunsAssociatedWithFiles(files, FileChildWorkflowRunsResource.SEARCH_TYPE.CHILDREN_VIA_PROCESSING_RELATIONSHIP.toString());
@@ -683,7 +683,7 @@ public class MetadataWSTest {
     @Test
     public void testGetWorkflowRunsRelatedToFile_viaIUS() {
         logger.info("testGetWorkflowRunsRelatedToFile_IUS");
-        List<Integer> files = new ArrayList<Integer>();
+        List<Integer> files = new ArrayList<>();
         files.add(835);
         files.add(838);
         List<WorkflowRun> result = instance.getWorkflowRunsAssociatedWithFiles(files, FileChildWorkflowRunsResource.SEARCH_TYPE.CHILDREN_VIA_IUS_WORKFLOW_RUN.toString());
@@ -693,7 +693,7 @@ public class MetadataWSTest {
     @Test
     public void testGetWorkflowRunsRelatedToFile_viaLane() {
         logger.info("testGetWorkflowRunsRelatedToFile_lane");
-        List<Integer> files = new ArrayList<Integer>();
+        List<Integer> files = new ArrayList<>();
         files.add(835);
         files.add(838);
         List<WorkflowRun> result = instance.getWorkflowRunsAssociatedWithFiles(files, FileChildWorkflowRunsResource.SEARCH_TYPE.CHILDREN_VIA_LANE_WORKFLOW_RUN.toString());
@@ -804,7 +804,7 @@ public class MetadataWSTest {
     public void getDirectFilesAssociatedWithWorkflowRuns() {
         BasicTestDatabaseCreator.resetDatabaseWithUsers();
         
-        List<Integer> files = new ArrayList<Integer>();
+        List<Integer> files = new ArrayList<>();
         // try getting nothing
         List<WorkflowRun> result = instance.getWorkflowRunsAssociatedWithInputFiles(files);
         Assert.assertTrue("should have been no files", result.isEmpty());

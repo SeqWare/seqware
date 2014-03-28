@@ -134,7 +134,8 @@ public class ProcessingAttribute implements java.io.Serializable, Comparable<Pro
     this.units = units;
   }
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param t */
 	@Override
 	public int compareTo(ProcessingAttribute t) {
 		return this.tag.compareTo(t.getTag());

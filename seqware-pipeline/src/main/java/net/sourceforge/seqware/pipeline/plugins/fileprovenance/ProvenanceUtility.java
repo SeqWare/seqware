@@ -50,7 +50,7 @@ public class ProvenanceUtility {
     public static final String ALL = "all";
 
     public static Map<String, OptionSpec> configureFileProvenanceParams(OptionParser parser) {
-        Map<String, OptionSpec> specMap = new HashMap<String, OptionSpec>();
+        Map<String, OptionSpec> specMap = new HashMap<>();
         ArgumentAcceptingOptionSpec<String> studyTitleSpec = parser.acceptsAll(Arrays.asList(STUDY_NAME), "Full study name. " + AT_LEAST_ONE_OF + "Specify multiple names by repeating --study-name").withRequiredArg().ofType(String.class);
         specMap.put(STUDY_NAME, studyTitleSpec);
         ArgumentAcceptingOptionSpec<String> sampleNameSpec = parser.acceptsAll(Arrays.asList(SAMPLE_NAME), "Full sample name. " + AT_LEAST_ONE_OF + " Specify multiple names by repeating --sample-name").withRequiredArg().ofType(String.class);
@@ -79,7 +79,7 @@ public class ProvenanceUtility {
     }
 
     public static Map<FileProvenanceParam, List<String>> convertOptionsToMap(OptionSet options, Metadata metadata) {
-        Map<FileProvenanceParam, List<String>> map = new EnumMap<FileProvenanceParam, List<String>>(FileProvenanceParam.class);
+        Map<FileProvenanceParam, List<String>> map = new EnumMap<>(FileProvenanceParam.class);
         if (options.has(ALL)) {
             /**
              * nothing special
@@ -87,7 +87,7 @@ public class ProvenanceUtility {
         } else {
             if (options.has(STUDY_NAME)) {
                 List<String> studyNames = (List<String>) options.valuesOf(STUDY_NAME);
-                List<String> studySWAs = new ArrayList<String>();
+                List<String> studySWAs = new ArrayList<>();
                 for (String studyName : studyNames) {
                     Study studyByName = metadata.getStudyByName(studyName);
                     studySWAs.add(String.valueOf(studyByName.getSwAccession()));
@@ -96,7 +96,7 @@ public class ProvenanceUtility {
             }
             if (options.has(SAMPLE_NAME)) {
                 List<String> sampleNames = (List<String>) options.valuesOf(SAMPLE_NAME);
-                List<String> sampleSWAs = new ArrayList<String>();
+                List<String> sampleSWAs = new ArrayList<>();
 
                 for (String sampleName : sampleNames) {
                     List<Sample> samplesByName = metadata.getSampleByName(sampleName);
@@ -108,7 +108,7 @@ public class ProvenanceUtility {
             }
             if (options.has(SEQUENCER_RUN_NAME)) {
                 List<String> sequencerRunNames = (List<String>) options.valuesOf(SEQUENCER_RUN_NAME);
-                List<String> sequencerRunSWAs = new ArrayList<String>();
+                List<String> sequencerRunSWAs = new ArrayList<>();
                 for (String sequencerRunName : sequencerRunNames) {
                     SequencerRun run = metadata.getSequencerRunByName(sequencerRunName);
                     sequencerRunSWAs.add(String.valueOf(run.getSwAccession()));
@@ -117,7 +117,7 @@ public class ProvenanceUtility {
             }
             if (options.has(IUS_SWID)) {
                 List<?> swa_values = options.valuesOf(IUS_SWID);
-                List<String> swa_strings = new ArrayList<String>();
+                List<String> swa_strings = new ArrayList<>();
                 for (Object swa : swa_values) {
                     swa_strings.add(String.valueOf(swa));
                 }
@@ -125,7 +125,7 @@ public class ProvenanceUtility {
             }
             if (options.has(LANE_SWID)) {
                 List<?> swa_values = options.valuesOf(LANE_SWID);
-                List<String> swa_strings = new ArrayList<String>();
+                List<String> swa_strings = new ArrayList<>();
                 for (Object swa : swa_values) {
                     swa_strings.add(String.valueOf(swa));
                 }

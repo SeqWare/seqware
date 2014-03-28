@@ -48,7 +48,9 @@ public class BulkDownloaderController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -95,7 +97,7 @@ public class BulkDownloaderController extends BaseCommandController {
 	    
 	    Collection<java.io.File> filesInTemp = FileUtils.listFiles(tempStore, null, false);
 	    java.io.File out = new java.io.File(outFilename);
-	    FileTools.zipListFileRecursiveOld(new ArrayList<java.io.File>(filesInTemp), out, pathToTempStore, null, false);
+	    FileTools.zipListFileRecursiveOld(new ArrayList<>(filesInTemp), out, pathToTempStore, null, false);
 
 	    Log.info("OUTNAME=" + outFilename);
 	    java.io.File realFile = new java.io.File(outFilename);
