@@ -415,10 +415,10 @@ public class SequencerRunReportTableController implements Serializable {
   }
 
   private void createWorkflowCharts(ModelAndView modelAndView, SequencerRun seqRun) {
-    Map<Workflow, String> workflowCharts = new HashMap<Workflow, String>();
+    Map<Workflow, String> workflowCharts = new HashMap<>();
     for (Workflow workflow : workflows) {
       List<Status> statuses = sampleReportService.getStatusesForWorkflow(seqRun, workflow);
-      Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
+      Map<Status, Integer> statusCount = new LinkedHashMap<>();
       statusCount.put(Status.failed, 0);
       statusCount.put(Status.pending, 0);
       statusCount.put(Status.running, 0);
@@ -450,7 +450,7 @@ public class SequencerRunReportTableController implements Serializable {
 
   private void createOverallChart(ModelAndView modelAndView, SequencerRun seqRun) {
     List<Status> statuses = sampleReportService.getStatusesForSequencerRun(seqRun);
-    Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
+    Map<Status, Integer> statusCount = new LinkedHashMap<>();
     statusCount.put(Status.failed, 0);
     statusCount.put(Status.pending, 0);
     statusCount.put(Status.running, 0);
@@ -496,7 +496,7 @@ public class SequencerRunReportTableController implements Serializable {
     Flexigrid flexigrid = new Flexigrid();
 
     for (FileReportRow row : rows) {
-      List<String> cellsModel = new ArrayList<String>();
+      List<String> cellsModel = new ArrayList<>();
 
       cellsModel.add(wrapSwAccession(row.getLane().getSequencerRun().getSwAccession(), removeNulls(row.getLane()
           .getSequencerRun().getName())));
@@ -673,7 +673,7 @@ public class SequencerRunReportTableController implements Serializable {
           statusesOut[i] = wrapStatus(status);
         }
       }
-      List<String> cellsModel = new LinkedList<String>();
+      List<String> cellsModel = new LinkedList<>();
       cellsModel.add(wrapSwAccession(srriD.getSequencerRun().getSwAccession(), removeNulls(srriD.getSequencerRun()
           .getName())));
       cellsModel.add(wrapSwAccession(srriD.getLane().getSwAccession(), removeNulls(srriD.getLane().getName())));
@@ -698,7 +698,7 @@ public class SequencerRunReportTableController implements Serializable {
   }
 
   private String createSampleTableModelJson(List<Workflow> workflows) {
-    List<Flexigrid.ColumnModel> model = new LinkedList<Flexigrid.ColumnModel>();
+    List<Flexigrid.ColumnModel> model = new LinkedList<>();
     model.add(new Flexigrid.ColumnModel("SequencerRun", SAMPLE_SEQUENCER_NAME, WIDTH, true, "left"));
     model.add(new Flexigrid.ColumnModel("Lane", FILE_LANE_NAME, WIDTH, true, "left"));
     model.add(new Flexigrid.ColumnModel("IUS", FILE_IUS_SWID, WIDTH, true, "left"));

@@ -59,7 +59,7 @@ public class FileLinkerParser {
    @VisibleForTesting
    static List<FileLinkerLine> getFileInfo(Reader reader, char separator) {
       CSVReader csvReader = new CSVReader(reader, separator);
-      HeaderColumnNameTranslateMappingStrategy<FileLinkerLine> strat = new HeaderColumnNameTranslateMappingStrategy<FileLinkerLine>();
+      HeaderColumnNameTranslateMappingStrategy<FileLinkerLine> strat = new HeaderColumnNameTranslateMappingStrategy<>();
       strat.setType(FileLinkerLine.class);
       Map<String, String> map = Maps.newHashMap();
       map.put("sequencer_run", "sequencerRun");
@@ -73,7 +73,7 @@ public class FileLinkerParser {
       map.put("file", "filename");
       strat.setColumnMapping(map);
 
-      CsvToBean<FileLinkerLine> csvToBean = new CsvToBean<FileLinkerLine>();
+      CsvToBean<FileLinkerLine> csvToBean = new CsvToBean<>();
       List<FileLinkerLine> defaultUsers = csvToBean.parse(strat, csvReader);
 
       return defaultUsers;

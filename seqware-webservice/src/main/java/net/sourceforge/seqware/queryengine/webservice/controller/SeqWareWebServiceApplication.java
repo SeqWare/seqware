@@ -369,7 +369,8 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         return guard;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public ApplicationInfo getApplicationInfo(Request request, Response response) {
         ApplicationInfo result = super.getApplicationInfo(request, response);

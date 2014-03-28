@@ -29,14 +29,18 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
 
   /**
    * {@inheritDoc}
+     * @param studyType
    */
+  @Override
   public void insert(StudyType studyType) {
     this.getHibernateTemplate().save(studyType);
   }
 
   /**
    * {@inheritDoc}
+     * @param studyType
    */
+  @Override
   public void update(StudyType studyType) {
     this.getHibernateTemplate().update(studyType);
   }
@@ -44,6 +48,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
   /**
    * {@inheritDoc}
    */
+  @Override
   public List<StudyType> list(Registration registration) {
     if (registration == null) {
       return (null);
@@ -56,6 +61,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
    *
    * Finds an instance of StudyType in the database by the StudyType name.
    */
+  @Override
   public StudyType findByName(String name) {
     String query = "from studyType as studyType where studyType.name = ?";
     StudyType studyType = null;
@@ -71,8 +77,10 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
    * {@inheritDoc}
    *
    * Finds an instance of StudyType in the database by the StudyType ID.
+     * @param expID
    */
   @SuppressWarnings("rawtypes")
+  @Override
   public StudyType findByID(Integer expID) {
     String query = "from StudyType as studyType where studyType.studyTypeId = ?";
     StudyType studyType = null;
@@ -107,7 +115,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
    */
   @Override
   public List<StudyType> list() {
-    ArrayList<StudyType> studyTypes = new ArrayList<StudyType>();
+    ArrayList<StudyType> studyTypes = new ArrayList<>();
 
     List expmts = this.getHibernateTemplate().find("from StudyType as studyType order by studyType.studyTypeId asc" // desc
             );

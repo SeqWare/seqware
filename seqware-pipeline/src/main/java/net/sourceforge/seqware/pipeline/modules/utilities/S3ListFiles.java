@@ -63,6 +63,7 @@ public class S3ListFiles extends Module {
    *
    * @return a {@link joptsimple.OptionParser} object.
    */
+  @Override
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -81,6 +82,7 @@ public class S3ListFiles extends Module {
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -97,6 +99,7 @@ public class S3ListFiles extends Module {
    * {@inheritDoc}
    *
    * Not implemented
+     * @return 
    */
   @Override
   public ReturnValue do_test() {
@@ -107,6 +110,7 @@ public class S3ListFiles extends Module {
    * {@inheritDoc}
    *
    * Just makes sure the param was passed in.
+     * @return 
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -135,7 +139,8 @@ public class S3ListFiles extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_verify_input() {
 
@@ -176,7 +181,8 @@ public class S3ListFiles extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_run() {
 
@@ -184,10 +190,10 @@ public class S3ListFiles extends Module {
     ret.setExitStatus(ReturnValue.SUCCESS);
 
     // stores local file info
-    HashMap<String, HashMap<String, Long>> localFiles = new HashMap<String, HashMap<String, Long>> ();
+    HashMap<String, HashMap<String, Long>> localFiles = new HashMap<> ();
 
     // stores remote file info
-    HashMap<String, HashMap<String, Long>> remoteFiles = new HashMap<String, HashMap<String, Long>> ();
+    HashMap<String, HashMap<String, Long>> remoteFiles = new HashMap<> ();
 
 
     BufferedWriter tabWriter = null;
@@ -230,7 +236,7 @@ public class S3ListFiles extends Module {
     if (options.has("search-local-dir")) {
       List<String> searchDirs = (List<String>) options.valuesOf("search-local-dir");
       for (String dir : searchDirs) {
-        HashMap<String, Long> files = new HashMap<String, Long>();
+        HashMap<String, Long> files = new HashMap<>();
         findFiles(dir, dir, files);
         localFiles.put(dir, files);
       }
@@ -316,7 +322,7 @@ public class S3ListFiles extends Module {
                 try {
                   HashMap<String, Long> bucketMap = remoteFiles.get(bucket);
                   if (bucketMap == null) {
-                    bucketMap = new HashMap<String, Long>();
+                    bucketMap = new HashMap<>();
                     remoteFiles.put(bucket, bucketMap);
                   }
                   bucketMap.put(objectSummary.getKey(), objectSummary.getSize());
@@ -458,7 +464,8 @@ public class S3ListFiles extends Module {
   }
 
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public ReturnValue do_verify_output() {
     // TODO: should verify output, especially is they are local files!
@@ -472,6 +479,7 @@ public class S3ListFiles extends Module {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public ReturnValue init() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);
@@ -485,6 +493,7 @@ public class S3ListFiles extends Module {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public ReturnValue clean_up() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);

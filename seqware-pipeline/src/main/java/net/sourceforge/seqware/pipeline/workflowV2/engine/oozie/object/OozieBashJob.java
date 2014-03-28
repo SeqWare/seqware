@@ -99,7 +99,7 @@ public class OozieBashJob extends OozieJob {
   }
 
     public ArrayList<String> generateRunnerLine() {
-        ArrayList<String> args = new ArrayList<String>();
+        ArrayList<String> args = new ArrayList<>();
         String pathToJRE = createPathToJava();
         args.add(pathToJRE + "java");
         args.add("-Xmx"+jobObj.getCommand().getMaxMemory());

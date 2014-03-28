@@ -34,6 +34,7 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
    *
    * Inserts an instance of Registration into the database.
    */
+    @Override
   public void insert(Registration registration) {
     this.getHibernateTemplate().save(registration);
   }
@@ -43,6 +44,7 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
    *
    * Updates an instance of Registration in the database.
    */
+    @Override
   public void update(Registration registration) {
 
     this.getHibernateTemplate().update(registration);
@@ -54,6 +56,7 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
    * Finds an instance of Registration in the database by the Registration
    * emailAddress only.
    */
+    @Override
   public Registration findByEmailAddress(String emailAddress) {
     String query = "from Registration as registration where lower(registration.emailAddress) = ?";
     Registration registration = null;
@@ -71,6 +74,7 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
    * Finds an instance of Registration in the database by the Registration
    * emailAddress and password.
    */
+    @Override
   public Registration findByEmailAddressAndPassword(String emailAddress, String password) {
     String query = "from Registration as registration where registration.emailAddress = ? and registration.password = ?";
     Registration registration = null;

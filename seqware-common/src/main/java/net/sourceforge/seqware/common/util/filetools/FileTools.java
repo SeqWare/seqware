@@ -79,7 +79,6 @@ public class FileTools {
     // read from file
     try {
       while (dis.read() > 0) {
-        continue;
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -127,7 +126,7 @@ public class FileTools {
     int numFiles = files.size();
     BufferedWriter currentFile = null;
     BufferedReader in = null;
-    ArrayList<BufferedWriter> fileOutputs = new ArrayList<BufferedWriter>();
+    ArrayList<BufferedWriter> fileOutputs = new ArrayList<>();
 
     // Open files
     try {
@@ -388,7 +387,7 @@ public class FileTools {
    */
   public static boolean zipDirectoryRecursive(File path, File zipFileName, String excludeRegEx, boolean relative,
           boolean compress) {
-    ArrayList<File> filesToZip = new ArrayList<File>();
+    ArrayList<File> filesToZip = new ArrayList<>();
     if (path.exists()) {
       File[] files = path.listFiles();
       for (int i = 0; i < files.length; i++) {
@@ -470,7 +469,7 @@ public class FileTools {
    */
   public static boolean zipDirectoryRecursiveOld(File path, File zipFileName, String excludeRegEx, boolean relative,
           boolean compress) {
-    ArrayList<File> filesToZip = new ArrayList<File>();
+    ArrayList<File> filesToZip = new ArrayList<>();
     if (path.exists()) {
       File[] files = path.listFiles();
       for (int i = 0; i < files.length; i++) {
@@ -801,7 +800,7 @@ public class FileTools {
    * @return a {@link java.util.Map} object.
    */
   public static Map<String, String> getKeyValueFromFile(String path) {
-    Map<String, String> ret = new LinkedHashMap<String, String>();
+    Map<String, String> ret = new LinkedHashMap<>();
     File file = new File(path);
     BufferedReader freader;
     try {
@@ -848,12 +847,11 @@ public class FileTools {
    * This tool uses the 'whoami' command to find the current user versus the
    * user.name method.
    *
-   * @param path
    * @return
    */
   public static String whoAmI() {
 
-    ArrayList<String> theCommand = new ArrayList<String>();
+    ArrayList<String> theCommand = new ArrayList<>();
     theCommand.add("bash");
     theCommand.add("-lc");
     theCommand.add("whoami");

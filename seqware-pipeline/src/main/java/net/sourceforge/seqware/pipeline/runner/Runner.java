@@ -621,10 +621,10 @@ public class Runner {
     // metadata-parent-accession file in the future
     int workflowRunId = 0;
     int workflowRunAccession = 0;
-    ArrayList<Integer> parentIDs = new ArrayList<Integer>();
-    processingIDFiles = new ArrayList<File>();
-    ArrayList<Integer> parentAccessions = new ArrayList<Integer>();
-    processingAccessionFiles = new ArrayList<File>();
+    ArrayList<Integer> parentIDs = new ArrayList<>();
+    processingIDFiles = new ArrayList<>();
+    ArrayList<Integer> parentAccessions = new ArrayList<>();
+    processingAccessionFiles = new ArrayList<>();
     int ancestorWorkflowRunAccession = 0;
     
     // Abort run if lock file is valid and points to valid processing event

@@ -16,7 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -157,7 +156,7 @@ public class RunInfo {
      */
     public Set<LaneInfo> getLanes() {
         if (lanes == null) {
-            lanes = new HashSet<LaneInfo>();
+            lanes = new HashSet<>();
         }
         return lanes;
     }

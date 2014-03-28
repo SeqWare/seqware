@@ -41,20 +41,20 @@ public abstract class AbstractWorkflowDataModel  {
 
     public AbstractWorkflowDataModel() {
     	this.env = new Environment();
-    	this.files = new LinkedHashMap<String, SqwFile>();
+    	this.files = new LinkedHashMap<>();
     	this.setTags(new HashMap<String,String>());
-    	this.configs = new HashMap<String,String>();
+    	this.configs = new HashMap<>();
     	this.workflow = new Workflow();
-    	this.dirs = new ArrayList<String>();
-    	this.parentAccessions = new ArrayList<String>();
+    	this.dirs = new ArrayList<>();
+    	this.parentAccessions = new ArrayList<>();
     }
     
     /**
      * Validates and potentially modifies the specified model in preparation for launching.
-     * @param m the model to prepare
+     * @param model
      */
     public static void prepare(AbstractWorkflowDataModel model) {
-      Map<String,SqwFile> m = new HashMap<String,SqwFile>();
+      Map<String,SqwFile> m = new HashMap<>();
       for (Map.Entry<String,SqwFile> e : model.files.entrySet()){
         String name = safe(e.getKey());
         if (m.containsKey(name)){
@@ -100,6 +100,7 @@ public abstract class AbstractWorkflowDataModel  {
      * case they are still provisioned properly with respect to the job (inputs before, outputs after)
      * when you define inputs/outputs here they are provisioned before all jobs
      * and after all jobs respectively
+     * @return 
      */
     public Map<String, SqwFile> setupFiles() {
     	return this.files;
@@ -188,7 +189,7 @@ public abstract class AbstractWorkflowDataModel  {
 	}
 	/**
 	 * need metadata writeback? user can override this setting by using --no-metadata or --metadata from command line
-	 * @return
+     * @param b
 	 */	
 	public void setMetadataWriteBack(boolean b) {
 		this.metadataWriteBack = b;
@@ -278,8 +279,7 @@ public abstract class AbstractWorkflowDataModel  {
 	}
 	/**
 	 * create a user defined directory before all jobs started
-	 * @param name:  directory name
-	 * @return 
+	 * @param name:  directory name 
 	 */
 	public void addDirectory(String name) {
 		this.dirs.add(name);
@@ -311,7 +311,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @return parent_accessions separated by ","
 	 */
 	public Collection<String> getParentAccessions() {
-		return new ArrayList<String>(this.parentAccessions);
+		return new ArrayList<>(this.parentAccessions);
 	}
 
 	/**

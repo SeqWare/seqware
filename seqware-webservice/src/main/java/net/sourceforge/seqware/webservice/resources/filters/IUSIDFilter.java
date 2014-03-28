@@ -76,7 +76,7 @@ public class IUSIDFilter extends BasicResource {
         }
 
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<IUSList> jaxbTool = new JaxbObject<IUSList>();
+        JaxbObject<IUSList> jaxbTool = new JaxbObject<>();
 
         IUSList eList = new IUSList();
         eList.setList(new ArrayList());

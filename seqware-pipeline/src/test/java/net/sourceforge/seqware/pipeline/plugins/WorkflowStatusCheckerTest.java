@@ -16,7 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import it.sauronsoftware.junique.AlreadyLockedException;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyObject;
@@ -159,7 +158,7 @@ public class WorkflowStatusCheckerTest{
      */
     private void mockupFakeRuns() throws Exception {
         // mock up some fake workflow_runs so that their status can be checked
-        List<WorkflowRun> wrList = new ArrayList<WorkflowRun>();
+        List<WorkflowRun> wrList = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             WorkflowRun wr = new WorkflowRun();
             wr.setOwnerUserName("user");

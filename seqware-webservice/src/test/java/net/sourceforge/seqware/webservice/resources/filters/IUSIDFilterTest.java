@@ -107,7 +107,7 @@ public class IUSIDFilterTest extends AbstractResourceTest {
         resource = ClientResourceInstance.getChild(relativeURI);
         Log.stdout(getRelativeURI() + " GET");
         IUSList parent = new IUSList();
-        JaxbObject<IUSList> jaxb = new JaxbObject<IUSList>();
+        JaxbObject<IUSList> jaxb = new JaxbObject<>();
         try {
             Representation rep = resource.get();
             String text = rep.getText();

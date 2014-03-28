@@ -63,10 +63,10 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
     // addition form fields
     private String strExpectedNumRuns;
     private String strExpectedNumReads;
-    private SortedSet<Lane> lanes = new TreeSet<Lane>();
-    private SortedSet<IUS> ius = new TreeSet<IUS>();
-    private Set<Processing> processings = new TreeSet<Processing>();
-    private Set<Sample> parents = new TreeSet<Sample>(new Comparator<Sample>() {
+    private SortedSet<Lane> lanes = new TreeSet<>();
+    private SortedSet<IUS> ius = new TreeSet<>();
+    private Set<Processing> processings = new TreeSet<>();
+    private Set<Sample> parents = new TreeSet<>(new Comparator<Sample>() {
 
         @Override
         public int compare(Sample t, Sample t1) {
@@ -83,9 +83,9 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
         
         
     });
-    private Set<Sample> children = new TreeSet<Sample>();
-    private Set<SampleAttribute> sampleAttributes = new TreeSet<SampleAttribute>();
-    private Set<SampleLink> sampleLinks = new TreeSet<SampleLink>();
+    private Set<Sample> children = new TreeSet<>();
+    private Set<SampleAttribute> sampleAttributes = new TreeSet<>();
+    private Set<SampleLink> sampleLinks = new TreeSet<>();
     // non-persisted field to store organism_id
     private Integer organismId;
 
@@ -94,7 +94,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      */
     public Sample() {
         super();
-        lanes = new TreeSet<Lane>();
+        lanes = new TreeSet<>();
         for (IUS i : ius) {
             if (i.getLane() != null) {
                 lanes.add(i.getLane());
@@ -104,6 +104,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
+     * @param that
      */
     @Override
     public int compareTo(Sample that) {
@@ -132,6 +133,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
+     * @param other
      */
     @Override
     public boolean equals(Object other) {
@@ -386,7 +388,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * @param lanes a {@link java.util.SortedSet} object.
      */
     public void setLanesForView(SortedSet<Lane> lanes) {
-        SortedSet<IUS> IUS = new TreeSet<IUS>();
+        SortedSet<IUS> IUS = new TreeSet<>();
         for (Lane lane : lanes) {
             IUS newIUS = new IUS();
             newIUS.setSample(this);
@@ -937,6 +939,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
   public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {

@@ -62,7 +62,7 @@ public class LaneIDFilter extends BasicResource {
                 IUSService ss = BeanFactory.getIUSServiceBean();
                 IUS s = (IUS)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
                 Lane lane = (Lane)testIfNull(s.getLane());
-                lanes = new ArrayList<Lane>();
+                lanes = new ArrayList<>();
                 lanes.add(lane);
             }
         } else {
@@ -78,7 +78,7 @@ public class LaneIDFilter extends BasicResource {
         }
 
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<LaneList> jaxbTool = new JaxbObject<LaneList>();
+        JaxbObject<LaneList> jaxbTool = new JaxbObject<>();
 
         LaneList eList = new LaneList();
         eList.setList(new ArrayList());

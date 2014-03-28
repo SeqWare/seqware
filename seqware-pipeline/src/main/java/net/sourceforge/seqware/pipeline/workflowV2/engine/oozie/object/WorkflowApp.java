@@ -60,8 +60,8 @@ public class WorkflowApp {
     this.wfdm = wfdm;
     this.uniqueWorkingDir = nfsWorkDir;
     this.hdfsWorkDir = hdfsWorkDir;
-    this.jobs = new ArrayList<OozieJob>();
-    this.fileJobMap = new HashMap<SqwFile, OozieJob>();
+    this.jobs = new ArrayList<>();
+    this.fileJobMap = new HashMap<>();
     this.useSge = useSge;
     this.seqwareJar = seqwareJar;
     this.threadsSgeParamFormat = threadsSgeParamFormat;
@@ -176,7 +176,7 @@ public class WorkflowApp {
 
   private void parseDataModel(AbstractWorkflowDataModel wfdm) {
     boolean metadatawriteback = wfdm.isMetadataWriteBack();
-    Set<OozieJob> parents = new LinkedHashSet<OozieJob>();
+    Set<OozieJob> parents = new LinkedHashSet<>();
     // first job create dirs
     // mkdir data job
     AbstractJob abstractRootJob = new BashJob("createdirs");
@@ -309,11 +309,11 @@ public class WorkflowApp {
   }
 
   private List<List<OozieJob>> reOrganizeGraph(OozieJob root) {
-    List<List<OozieJob>> newGraph = new ArrayList<List<OozieJob>>();
+    List<List<OozieJob>> newGraph = new ArrayList<>();
     // to avoid duplicated action
-    Set<String> jobName = new HashSet<String>();
+    Set<String> jobName = new HashSet<>();
     // add the root
-    List<OozieJob> rootList = new ArrayList<OozieJob>();
+    List<OozieJob> rootList = new ArrayList<>();
     rootList.add(root);
     newGraph.add(rootList);
     jobName.add(root.getName());
@@ -323,8 +323,8 @@ public class WorkflowApp {
 
   private void getNextLevel(List<List<OozieJob>> graph, Set<String> existingJob) {
     List<OozieJob> lastLevel = graph.get(graph.size() - 1);
-    List<OozieJob> nextLevel = new ArrayList<OozieJob>();
-    Set<OozieJob> removed = new HashSet<OozieJob>();
+    List<OozieJob> nextLevel = new ArrayList<>();
+    Set<OozieJob> removed = new HashSet<>();
     for (OozieJob job : lastLevel) {
       for (OozieJob child : job.getChildren()) {
         if (!nextLevel.contains(child))
@@ -394,7 +394,7 @@ public class WorkflowApp {
     private void linkLeafsAsProvisionOutParents() {
         // add all provision out job
         // get all the leaf job
-        List<OozieJob> leaves = new ArrayList<OozieJob>();
+        List<OozieJob> leaves = new ArrayList<>();
         for (OozieJob _job : this.jobs) {
             // Note: the leaves accumulated are to be parents of output provisions,
             //       thus the leaves themselves should not be file provisions
@@ -451,7 +451,7 @@ public class WorkflowApp {
         
         // this section handles all provision files events that are not attached to specific jobs
         if (!wfdm.getFiles().isEmpty()) {
-          Set<OozieJob> newParents = new LinkedHashSet<OozieJob>();
+          Set<OozieJob> newParents = new LinkedHashSet<>();
           for (Map.Entry<String, SqwFile> entry : wfdm.getFiles().entrySet()) {
             AbstractJob abstractProvisionXJob = new BashJob("provisionFile_" + entry.getKey().replaceAll("\\.", "_"));
             abstractProvisionXJob.addFile(entry.getValue());

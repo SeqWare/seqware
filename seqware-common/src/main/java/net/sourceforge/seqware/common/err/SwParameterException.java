@@ -1,8 +1,5 @@
 package net.sourceforge.seqware.common.err;
 
-import net.sourceforge.seqware.common.err.SeqwareExitCode;
-import net.sourceforge.seqware.common.err.SeqwareException;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Xiaoshu Wang (xiao@renci.org)
@@ -15,7 +12,8 @@ import net.sourceforge.seqware.common.err.SeqwareException;
 public class SwParameterException extends SeqwareException {
 //    public final static int exitCode = SeqwareExitCode.BadParameter;
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public int getExitCode() {
         return SeqwareExitCode.BadParameter;

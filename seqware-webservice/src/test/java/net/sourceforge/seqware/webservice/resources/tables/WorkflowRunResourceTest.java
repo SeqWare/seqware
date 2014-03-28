@@ -16,9 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.sql.Date;
 import junit.framework.Assert;
-import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;

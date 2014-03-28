@@ -64,7 +64,7 @@ public class Main {
   }
 
     private static List<String> processOverrideParams(List<String> override) {
-        List<String> overrideParams = new ArrayList<String>();
+        List<String> overrideParams = new ArrayList<>();
         if (!override.isEmpty()){
             overrideParams.add("--");
             for(String entry : override){
@@ -115,7 +115,7 @@ public class Main {
   }
 
   private static List<String> optVals(List<String> args, String key) {
-    List<String> vals = new ArrayList<String>();
+    List<String> vals = new ArrayList<>();
 
     for (int i = 0; i < args.size();) {
       String s = args.get(i);
@@ -202,7 +202,7 @@ public class Main {
 
   // COMMANDS:
 
-  private static final SortedSet<String> ANNO_OBJS = new TreeSet<String>(Arrays.asList("experiment", "file", "ius",
+  private static final SortedSet<String> ANNO_OBJS = new TreeSet<>(Arrays.asList("experiment", "file", "ius",
                                                                                        "lane", "processing", "sample",
                                                                                        "sequencer-run", "study",
                                                                                        "workflow", "workflow-run"));
@@ -299,7 +299,7 @@ public class Main {
   private static WorkflowInfo findWorkflowInfo(File dir, String name, String version) {
     BundleInfo bi = Bundle.findBundleInfo(dir);
 
-    List<WorkflowInfo> found = new ArrayList<WorkflowInfo>();
+    List<WorkflowInfo> found = new ArrayList<>();
 
     for (WorkflowInfo wi : bi.getWorkflowInfo()) {
       boolean n = name == null || wi.getName().equals(name);
@@ -396,7 +396,7 @@ public class Main {
   }
 
   private static List<String> resolveFiles(File bundleDir, List<String> filenames) {
-    List<String> resolved = new ArrayList<String>();
+    List<String> resolved = new ArrayList<>();
     for (String filename : filenames) {
       String s = Bundle.resolveWorkflowBundleDirPath(bundleDir, filename);
       File f = new File(s);
@@ -588,7 +588,7 @@ public class Main {
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--table", table, "--create",
           "--interactive");
     } else {
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.Metadata");
       runnerArgs.add("--");
@@ -847,7 +847,7 @@ public class Main {
 
       extras(args, "files report");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.fileprovenance.FileProvenanceReporter");
       runnerArgs.add("--");
@@ -1053,7 +1053,7 @@ public class Main {
 
       extras(args, "workflow report");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
       runnerArgs.add("--");
@@ -1112,7 +1112,7 @@ public class Main {
 
       extras(args, "workflow schedule");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
       runnerArgs.add("--");
@@ -1166,7 +1166,7 @@ public class Main {
 
       extras(args, "workflow-run report");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
       runnerArgs.add("--");
@@ -1209,7 +1209,7 @@ public class Main {
 
       extras(args, "workflow-run delete");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB");
       runnerArgs.add("--");
@@ -1284,7 +1284,7 @@ public class Main {
         kill("seqware: cannot specify both '--accession' and '--host'.");
       }
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
       runnerArgs.add("--");
@@ -1330,7 +1330,7 @@ public class Main {
         kill("seqware: cannot specify both '--accession' and '--host'.");
       }
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker");
       runnerArgs.add("--");
@@ -1375,7 +1375,7 @@ public class Main {
 
       extras(args, "workflow-run stderr");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
       runnerArgs.add("--");
@@ -1411,7 +1411,7 @@ public class Main {
 
       extras(args, "workflow-run stdout");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
       runnerArgs.add("--");
@@ -1523,7 +1523,7 @@ public class Main {
       out("");
     } else {
      
-        List<String> runnerArgs = new ArrayList<String>();
+        List<String> runnerArgs = new ArrayList<>();
         runnerArgs.add("--plugin");
         runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB");
         runnerArgs.add("--");
@@ -1533,7 +1533,7 @@ public class Main {
   }
 
   public static void main(String[] argv) {
-    List<String> args = new ArrayList<String>(Arrays.asList(argv));
+    List<String> args = new ArrayList<>(Arrays.asList(argv));
     if (flag(args, "--debug")) {
       DEBUG.set(true);
     }

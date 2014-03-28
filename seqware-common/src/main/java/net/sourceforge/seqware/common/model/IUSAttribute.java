@@ -148,7 +148,8 @@ public class IUSAttribute implements java.io.Serializable, Attribute<IUS>, Compa
 		 this.setUnits(unit);
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param t */
 	@Override
 	public int compareTo(IUSAttribute t) {
 		return this.tag.compareTo(t.tag);

@@ -159,7 +159,7 @@ public class BulkUtil {
 		}
 
 		if(list == null){
-			list = new LinkedList<String>();
+			list = new LinkedList<>();
 		}
 		return list;
 	}
@@ -196,10 +196,10 @@ public class BulkUtil {
 		if(selectedIds!=null){
 			selectedNessIUSNode(iuss, selectedIds);
 			
-			SortedSet<Processing> processings = new TreeSet<Processing>(sample.getProcessings());
+			SortedSet<Processing> processings = new TreeSet<>(sample.getProcessings());
 			selectedNessProcessingNode(processings, selectedIds);
 			
-			SortedSet<Sample> samples = new TreeSet<Sample>(sample.getChildren());
+			SortedSet<Sample> samples = new TreeSet<>(sample.getChildren());
 			
 			selectedNessSampleNode(samples, selectedIds);
 		}
@@ -228,7 +228,7 @@ public class BulkUtil {
 	public static SortedSet<Sample> selectSampleNode(List<String> selectedIds, Experiment experiment){
 		SortedSet<Sample> samples = experiment.getSamples();
 		if(selectedIds!=null){
-			SortedSet<Processing> processings = new TreeSet<Processing>(experiment.getProcessings());
+			SortedSet<Processing> processings = new TreeSet<>(experiment.getProcessings());
 			selectedNessSampleNode(samples, selectedIds);
 			selectedNessProcessingNode(processings, selectedIds);
 		}
@@ -256,7 +256,7 @@ public class BulkUtil {
 	 */
 	public static SortedSet<Experiment> selectExperimentNode(List<String> selectedIds, Study study){
 		SortedSet<Experiment> experiments = study.getExperiments();
-		SortedSet<Processing> processings = new TreeSet<Processing>(study.getProcessings());
+		SortedSet<Processing> processings = new TreeSet<>(study.getProcessings());
 		if(selectedIds!=null){
 			selectedNessExperimentNode(experiments, selectedIds);
 			selectedNessProcessingNode(processings, selectedIds);
@@ -346,7 +346,7 @@ public class BulkUtil {
 			}
 		}
 		
-		List<WorkflowRun> workflowRuns = new ArrayList<WorkflowRun>();
+		List<WorkflowRun> workflowRuns = new ArrayList<>();
 		
 		// select processing
 		for (String selectedObjectId : selectedIds) {
@@ -406,7 +406,7 @@ public class BulkUtil {
 		if(selectedIds == null)
 			return  lane.getProcessings();
 		
-		Set<File> files = new TreeSet<File>();
+		Set<File> files = new TreeSet<>();
 		Set<Processing> processings = lane.getProcessings();
 		
 		selectedNessProcessingNode(files, processings, selectedIds);
@@ -425,7 +425,7 @@ public class BulkUtil {
 		if(selectedIds == null)
 			return  ius.getProcessings();
 		
-		Set<File> files = new TreeSet<File>();
+		Set<File> files = new TreeSet<>();
 		Set<Processing> processings = ius.getProcessings();
 		
 		selectedNessProcessingNode(files, processings, selectedIds);

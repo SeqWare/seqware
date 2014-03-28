@@ -26,7 +26,10 @@ public class RegistrationValidator extends LoginValidator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified RegistrationDTO instance.
+     * @param reg
+     * @param errors
 	 */
+        @Override
 	public void validate(Object reg, Errors errors) {
 		RegistrationDTO registration = (RegistrationDTO)reg;
 		Debug.put(": validating registration.id = " + registration.getRegistrationId());

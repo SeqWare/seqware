@@ -66,6 +66,7 @@ public final class CheckDB extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public final ReturnValue init() {
@@ -94,6 +95,7 @@ public final class CheckDB extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -106,15 +108,16 @@ public final class CheckDB extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public final ReturnValue do_run() {
         ReturnValue ret = new ReturnValue();
         Collection<CheckDBPluginInterface> plugins = (Collection<CheckDBPluginInterface>) Lookup.getDefault().lookupAll(CheckDBPluginInterface.class);
-        Map<CheckDBPluginInterface, SortedMap<CheckDBPluginInterface.Level, Set<String>>> resultMap = new HashMap<CheckDBPluginInterface, SortedMap<CheckDBPluginInterface.Level, Set<String>>>();
+        Map<CheckDBPluginInterface, SortedMap<CheckDBPluginInterface.Level, Set<String>>> resultMap = new HashMap<>();
         for(CheckDBPluginInterface plugin : plugins){
             
-            SortedMap<Level, Set<String>> result = new TreeMap<Level, Set<String>>();
+            SortedMap<Level, Set<String>> result = new TreeMap<>();
             for(Level l : CheckDBPluginInterface.Level.values()){
                 result.put(l, new HashSet<String>());
             }
@@ -178,7 +181,7 @@ public final class CheckDB extends Plugin {
     public static void main(String[] args) throws IOException, URISyntaxException {
         CheckDB mp = new CheckDB();
         mp.init();
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         mp.setParams(arr);
         mp.parse_parameters();
         ReturnValue do_run = mp.do_run();
@@ -203,7 +206,7 @@ public final class CheckDB extends Plugin {
             Metadata md = MetadataFactory.get(ConfigTools.getSettings());
             Collections.sort(list);
             // shorten list if required
-            List<Integer> outputList = new ArrayList<Integer>(list);
+            List<Integer> outputList = new ArrayList<>(list);
             if (list.size() > NUMBER_TO_OUTPUT){
                 outputList =  outputList.subList(0, NUMBER_TO_OUTPUT);
             } 
