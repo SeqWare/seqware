@@ -130,6 +130,7 @@
                                 <ignorePathToDelete>javadoc</ignorePathToDelete>
                                 <ignorePathToDelete>manuals</ignorePathToDelete>
                                 <ignorePathToDelete>webservice-api</ignorePathToDelete>
+                                <ignorePathToDelete>metadb-schema</ignorePathToDelete>
                                 <ignorePathToDelete>pictures</ignorePathToDelete>
                             </ignorePathsToDelete>
                             <tryUpdate>true</tryUpdate>
