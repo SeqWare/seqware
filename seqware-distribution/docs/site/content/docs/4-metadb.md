@@ -114,3 +114,7 @@ Second, run the migration plugin:
 Third, you'll probably want to create the initial file-provenance-report (note, you'll probably want this to run on a schedule for updates)
 
     seqware files refresh
+
+Optionally, you may want to setup database comments if you wish to explore the database schema:
+
+    psql -U seqware seqware_meta_db < comments_on_tables.sql
