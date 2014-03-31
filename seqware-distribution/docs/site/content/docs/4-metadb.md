@@ -87,6 +87,8 @@ behaviour at your particular SeqWare site.
 Finally, there are a host of linking tables (of the form processing_X) which maintain 
 information on which steps in your workflow are attributable to what physical entities. 
 
+For more in-depth information on our schema including table-by-table descriptions, please refer to [this](/metadb-schema)
+
 
 ## Upgrading From 0.13.6.X to 1.0.X
 
@@ -112,3 +114,7 @@ Second, run the migration plugin:
 Third, you'll probably want to create the initial file-provenance-report (note, you'll probably want this to run on a schedule for updates)
 
     seqware files refresh
+
+Optionally, you may want to setup database comments if you wish to explore the database schema:
+
+    psql -U seqware seqware_meta_db < comments_on_tables.sql

@@ -53,7 +53,6 @@
                             </arguments>
                         </configuration>
                     </execution>
-
                     <execution>
                         <id>compile_website</id>
                         <phase>pre-site</phase>
@@ -66,8 +65,6 @@
                             <workingDirectory>docs/site/</workingDirectory>
                         </configuration>
                     </execution>
-
-
                 </executions>
             </plugin>
             <plugin>
@@ -78,6 +75,18 @@
                     <filesets>
                         <fileset>
                             <directory>.</directory>
+                            <includes>
+                                <include>temp*</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>docs/site/output/</directory>
+                            <includes>
+                                <include>temp*</include>
+                            </includes>
+                        </fileset>
+                        <fileset>
+                            <directory>docs/site/tmp/</directory>
                             <includes>
                                 <include>temp*</include>
                             </includes>
@@ -130,6 +139,7 @@
                                 <ignorePathToDelete>javadoc</ignorePathToDelete>
                                 <ignorePathToDelete>manuals</ignorePathToDelete>
                                 <ignorePathToDelete>webservice-api</ignorePathToDelete>
+                                <ignorePathToDelete>metadb-schema</ignorePathToDelete>
                                 <ignorePathToDelete>pictures</ignorePathToDelete>
                             </ignorePathsToDelete>
                             <tryUpdate>true</tryUpdate>
