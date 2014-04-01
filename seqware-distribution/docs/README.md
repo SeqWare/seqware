@@ -1,3 +1,5 @@
+## Documentation Compilation
+
 In relation to Hubflow, our procedure will be as follows. For new features that 
 are still in a feature branch, documentation can be kept in that feature branch. 
 Compilation should be invoked for local viewing, but do not push the results to 
@@ -10,9 +12,8 @@ Install nanoc (on Ubuntu 12.04):
 For a basic version of nanoc just follow the directions on their site. This is
 what I had to do to get their very nice sample website to compile:
 
-sudo apt-get install ruby1.9.3 ruby-rvm ruby-rdiscount ruby-nokogiri
-
-sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress yajl-ruby pygments.rb 
+    sudo apt-get install ruby1.9.3 ruby-rvm ruby-rdiscount ruby-nokogiri
+    sudo gem install nanoc kramdown adsf mime-types compass haml coderay rubypants builder rainpress yajl-ruby pygments.rb 
 
 You may need to install a specific version of yajl-ruby if you run into a conflict.
 
@@ -26,23 +27,30 @@ In order to do an include:
 look at the admin guide for an example at site/content/docs/3-getting-started/admin-tutorial.md which uses site/layouts/includes/
 
 Go into this directory and compile the site:
-nanoc compile
+
+    nanoc compile
 
 View the site in http://localhost:3000 :
-nanoc view
+
+    nanoc view
 
 Dynamically compile and view the site at localhost:3000:
-nanoc autocompile
+
+    nanoc autocompile
 
 To run checks for broken links:
-nanoc check external_links
-nanoc check ilinks (check internal links)
-nanoc check --deploy (all checks)
+
+    nanoc check external_links
+    nanoc check ilinks (check internal links)
+    nanoc check --deploy (all checks)
 
 Modify the index.html so the logo points to /seqware/ and the css points to /seqware/style.css
 
+### Update Web Documentation 
+
 Push to github (gh-pages):
-mvn site-deploy
+
+    mvn site-deploy
 
 In order to publish to seqware.github.com, checkout our current hotfix and publish our site:
 
@@ -64,10 +72,47 @@ If doing this in succession, you will see a git checkout error.  Until we fix th
 
 Then you would look at the site at: http://seqware.github.io/unstable.seqware.github.com/
 
+### Update Metadb Schema
+
+The seqware.github.com repo acts as the only store of the generated schema documentation. 
+In order to update it:
+
+1. Download the 5.0.0 schemaspy jar from http://schemaspy.sourceforge.net/ 
+2. Create a postgres properties file of the following form (named mypg in this example)
+
+	#
+	# see http://schemaspy.sourceforge.net/dbtypes.html
+	# for configuration / customization details
+	#
+
+	description=PostgreSQL
+
+	connectionSpec=jdbc:postgresql://localhost/test_seqware_meta_db
+	host=localhost
+	db=test_seqware_meta_db
+
+	driver=org.postgresql.Driver
+
+	# Sample path to the postgresql drivers.
+	# Use -dp to override.
+	driverPath=./postgresql-9.3-1101.jdbc4.jar
+
+	selectRowCountSql=select reltuples as row_count from pg_class where relname=:table
+
+3. Download a postgres jdbc driver (ex: postgresql-9.3-1101.jdbc4.jar ) and modify the above accordingly
+4. Generate the documentation 
+
+    java -jar schemaSpy_5.0.0.jar -db test_seqware_meta_db -host localhost -o output -u dyuen -t ./mypg -s public -noads -nologo
+
+5. Clone the documentation repo, copy the results from above, and push
+
+    git clone git@github.com:SeqWare/seqware.github.com.git
+    cp -R output/* seqware.github.com/metadb-schema
+    cd seqware.github.com && git add metadb-schema && git push
 
 
+### Troubleshooting 
 
-TROUBLESHOOTING
 I did not need to perform any of the steps below, but you may need to on your install
 
 Additional setup for Linux Mint 13:
