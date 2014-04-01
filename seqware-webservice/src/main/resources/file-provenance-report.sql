@@ -91,7 +91,7 @@ union all
 )
 
 , study_attrs as (
-    select study_id, tag, array_to_string(array_agg(value), ';') as vals
+    select study_id, tag, array_to_string(array_agg(value), '&') as vals
     from study_attribute
     where study_id is not null and tag is not null
     group by study_id, tag
@@ -106,7 +106,7 @@ union all
 )
 
 , experiment_attrs as (
-    select experiment_id, tag, array_to_string(array_agg(value), ';') as vals
+    select experiment_id, tag, array_to_string(array_agg(value), '&') as vals
     from experiment_attribute
     where experiment_id is not null and tag is not null
     group by experiment_id, tag
@@ -120,7 +120,7 @@ union all
 )
 
 , sample_attrs as (
-    select sample_id, tag, array_to_string(array_agg(value), ';') as vals
+    select sample_id, tag, array_to_string(array_agg(value), '&') as vals
     from sample_attribute
     where sample_id is not null and tag is not null
     group by sample_id, tag
@@ -135,7 +135,7 @@ union all
 
 , sequencer_run_attrs as (
     -- bug: table has sample_id instead of sequencer_run_id
-    select sample_id as sequencer_run_id, tag, array_to_string(array_agg(value), ';') as vals
+    select sample_id as sequencer_run_id, tag, array_to_string(array_agg(value), '&') as vals
     from sequencer_run_attribute
     where sample_id is not null and tag is not null
     group by sample_id, tag
@@ -149,7 +149,7 @@ union all
 )
 
 , lane_attrs as (
-    select lane_id, tag, array_to_string(array_agg(value), ';') as vals
+    select lane_id, tag, array_to_string(array_agg(value), '&') as vals
     from lane_attribute
     where lane_id is not null and tag is not null
     group by lane_id, tag
@@ -163,7 +163,7 @@ union all
 )
 
 , ius_attrs as (
-    select ius_id, tag, array_to_string(array_agg(value), ';') as vals
+    select ius_id, tag, array_to_string(array_agg(value), '&') as vals
     from ius_attribute
     where ius_id is not null and tag is not null
     group by ius_id, tag
@@ -177,7 +177,7 @@ union all
 )
 
 , processing_attrs as (
-    select processing_id, tag, array_to_string(array_agg(value), ';') as vals
+    select processing_id, tag, array_to_string(array_agg(value), '&') as vals
     from processing_attribute
     where processing_id is not null and tag is not null
     group by processing_id, tag
@@ -191,7 +191,7 @@ union all
 )
 
 , file_attrs as (
-    select file_id, tag, array_to_string(array_agg(value), ';') as vals
+    select file_id, tag, array_to_string(array_agg(value), '&') as vals
     from file_attribute
     where file_id is not null and tag is not null
     group by file_id, tag
