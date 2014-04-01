@@ -26,6 +26,7 @@ import net.sourceforge.seqware.common.model.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import net.sourceforge.seqware.common.model.SequencerRunStatus;
 
 /**
  *
@@ -59,7 +60,22 @@ public class RunInfo {
     private String runDescription;
     private String runFilePath;
     private String experimentDescription;
+    private SequencerRunStatus status = null;
 
+    /**
+     * Get the value of the sequencer run status
+     * @return the status. Complete or if not complete, then null
+     */
+    public SequencerRunStatus getStatus(){
+        return status;
+    }
+    /**
+     * Set the value of the sequencer run status
+     * @param status the status
+     */
+    public void setStatus(SequencerRunStatus status){
+        this.status = status;
+    }
     /**
      * Get the value of runFilePath
      *
