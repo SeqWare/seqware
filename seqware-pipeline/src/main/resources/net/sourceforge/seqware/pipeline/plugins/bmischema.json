@@ -2,6 +2,7 @@
 	"name": "Batch Metadata Injection Schema",
 	"type": "properties",
 	"pairs": [ {"key": "studyTitle", "optional": false, "rule" : {"type" : "string" }},
+                         {"key": "status", "optional" : true, "rule" : {"type" : "string"}},
 			 {"key": "studyDescription", "optional": false, "rule" : {"type" : "string" }},
 			 {"key": "studyCenterName", "optional": false, "rule" : {"type" : "string" }},
 			 {"key": "studyCenterProject", "optional": false, "rule" : {"type" : "string" }},
