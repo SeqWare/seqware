@@ -78,11 +78,13 @@ union
 , sample_ancestors (sample_id, ancestor_id) as (
     select sample_id
          , parent_id as ancestor_id
+         , 1 as rank
     from sample_hierarchy
     where parent_id is not null
 union all
     select sa.sample_id
          , sh.parent_id as ancestor_id
+         , sa.rank + 1 as rank
     from sample_ancestors sa
     join sample_hierarchy sh on sh.sample_id = sa.ancestor_id
     where parent_id is not null
@@ -205,9 +207,9 @@ union all
 -- concatenated values from sample parents
 , sample_parent_swas_names (sample_id, parent_swas, parent_names, parent_organism_ids) as (
     select anc.sample_id
-         , array_to_string(array_agg(sw_accession), ':') as parent_swas
-         , array_to_string(array_agg(coalesce(nullif(s.name,''),s.title)), ':') as parent_names
-         , array_to_string(array_agg(organism_id), ':') as parent_organism_ids
+         , array_to_string(array_agg(sw_accession  order by rank), ':') as parent_swas
+         , array_to_string(array_agg(coalesce(nullif(s.name,''),s.title) order by rank), ':') as parent_names
+         , array_to_string(array_agg(organism_id order by rank), ':') as parent_organism_ids
     from sample_ancestors anc
     join sample s on s.sample_id = anc.ancestor_id
     group by anc.sample_id
@@ -215,7 +217,7 @@ union all
 
 , sample_parent_attrs (sample_id, parent_attrs) as (
     select anc.sample_id
-         , array_to_string(array_agg('parent_sample.'||tag||'.'||sw_accession||'='||vals), ';') as parent_attrs
+         , array_to_string(array_agg('parent_sample.'||tag||'.'||sw_accession||'='||vals order by rank), ';') as parent_attrs
     from sample_ancestors anc
     join sample_attrs attr on attr.sample_id = anc.ancestor_id
     join sample s on s.sample_id = anc.ancestor_id
