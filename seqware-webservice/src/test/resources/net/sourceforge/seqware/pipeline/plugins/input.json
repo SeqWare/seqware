@@ -6,6 +6,7 @@
   "studyType" : "1",
   "platformId" : "2",
   "runName" : "TEST_RUN_1",
+  "status" : "Complete",
   "experimentName" : "EXPERIMENT NAME",
   "experimentAttributes" : [ ],
   "studyAttributes" : [ ],
