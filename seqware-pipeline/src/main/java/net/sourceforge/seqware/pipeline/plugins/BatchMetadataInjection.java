@@ -481,6 +481,10 @@ public class BatchMetadataInjection extends Metadata {
             fields.put("name", run.getRunName());
             fields.put("description", run.getRunDescription());
             fields.put("file_path", run.getRunFilePath());
+            
+            if(run.getStatus() != null){
+            fields.put("status", run.getStatus().toString());
+            }
 //        printDefaults();
 //            interactive = true;
             ReturnValue rv = addSequencerRun();
