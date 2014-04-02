@@ -344,12 +344,5 @@
             <version>1.7</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.8.7</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
     </dependencies>
 </project>
