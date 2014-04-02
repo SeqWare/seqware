@@ -98,8 +98,9 @@ public class BasicDeciderTest extends PluginTest {
 
     @Test
     public void testListAllFiles() {
+        // we need to use a valid workflow now that we filter with valid parent workflows
         // this is actually a bit misnamed, we return all files that are associated with all studies
-        String[] params = {"--all", "--wf-accession", "4", "--parent-wf-accessions", "5", "--test"};
+        String[] params = {"--all", "--wf-accession", "4773", "--parent-wf-accessions", "2861,4767,4768,4769,4773,4780,4778,4775,4774,5692,6594,6595,6596,6597,6598,6599,6685,6692,2860,4", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
@@ -109,7 +110,7 @@ public class BasicDeciderTest extends PluginTest {
 
     @Test
     public void testFilesForOneStudy() {
-        String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4", "--parent-wf-accessions", "5", "--test"};
+        String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4773", "--parent-wf-accessions", "2861,4767,4768,4769,4773,4780,4778,4775,4774,5692,6594,6595,6596,6597,6598,6599,6685,6692,2860", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
@@ -118,7 +119,7 @@ public class BasicDeciderTest extends PluginTest {
 
     @Test
     public void testFilesForOneSample() {
-        String[] params = {"--sample-name", "Exome_ABC015069_Test_2", "--wf-accession", "4", "--parent-wf-accessions", "5", "--test"};
+        String[] params = {"--sample-name", "Exome_ABC015069_Test_2", "--wf-accession", "4773", "--parent-wf-accessions", "2861,4767,4768,4769,4773,4780,4778,4775,4774,5692,6594,6595,6596,6597,6598,6599,6685,6692,2860", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
@@ -127,7 +128,7 @@ public class BasicDeciderTest extends PluginTest {
 
     @Test
     public void testFilesForOneSequencerRun() {
-        String[] params = {"--sequencer-run-name", "SRKDKJKLFJKLJ90039", "--wf-accession", "4", "--parent-wf-accessions", "5", "--test"};
+        String[] params = {"--sequencer-run-name", "SRKDKJKLFJKLJ90039", "--wf-accession", "4773", "--parent-wf-accessions", "2861,4767,4768,4769,4773,4780,4778,4775,4774,5692,6594,6595,6596,6597,6598,6599,6685,6692,2860", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
@@ -142,7 +143,7 @@ public class BasicDeciderTest extends PluginTest {
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 80);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 3);
         // we expect to launch 3 times 
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getFinalChecks(), decider.getFinalChecks() == 3);
     }
@@ -173,7 +174,7 @@ public class BasicDeciderTest extends PluginTest {
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 80);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 3);
         // we expect to never launch with the halting decider 
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 3);
         
@@ -195,8 +196,8 @@ public class BasicDeciderTest extends PluginTest {
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
-        // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 80);
+        // we expect to see 133 files in total, this changes due to file provenance report
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 3);
         // we expect to launch exactly twice 
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 2);
         
