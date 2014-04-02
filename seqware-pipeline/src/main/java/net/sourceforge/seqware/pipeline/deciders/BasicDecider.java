@@ -99,7 +99,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private int rerunMax = 5;
     private String host = null;
     
-    private Map<String, OptionSpec> configureFileProvenanceParams;
+    private final Map<String, OptionSpec> configureFileProvenanceParams;
     
 
     public BasicDecider() {
@@ -377,23 +377,21 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     //if there is no parent accessions, or if the parent accession is correct
                     //this makes an assumption that if the wfAcc is null then the parentWorkflowAccessions will be empty
                     //and thus we are able to find files of a particular metatype with no wfAcc
-                    if (parentWorkflowAccessions.isEmpty() || (wfAcc != null && parentWorkflowAccessions.contains(wfAcc))) {
-
-                        //check for each file if the metatype is correct (if it exists), 
-                        //or just add it
-                        for (FileMetadata fm : file.getFiles()) {
-                            if (metaTypes != null) {
-                                if (metaTypes.contains(fm.getMetaType())) {
-                                    addFileToSets(file, fm, workflowParentAccessionsToRun,
-                                            parentAccessionsToRun, filesToRun, fileSWIDsToRun);
-                                }
-                            } else {
+                    
+                    //check for each file if the metatype is correct (if it exists), 
+                    //or just add it
+                    for (FileMetadata fm : file.getFiles()) {
+                        if (metaTypes != null) {
+                            if (metaTypes.contains(fm.getMetaType())) {
                                 addFileToSets(file, fm, workflowParentAccessionsToRun,
                                         parentAccessionsToRun, filesToRun, fileSWIDsToRun);
                             }
+                        } else {
+                            addFileToSets(file, fm, workflowParentAccessionsToRun,
+                                    parentAccessionsToRun, filesToRun, fileSWIDsToRun);
                         }
-
                     }
+
                 }//end iterate through files
                 
 
@@ -579,6 +577,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * filesToRun and the workflow run have the same number of files with the
      * same file paths. False and prints an error message if there are more
      * files in the workflow run than in the filesToRun.
+     * @param filesSWIDsHasRun
      * @param filesToRun
      * @return 
      */
@@ -1012,6 +1011,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             map.put(FileProvenanceParam.skip, new ImmutableList.Builder<String>().add("false").build());
         }
         map.put(FileProvenanceParam.workflow_run_status, new ImmutableList.Builder<String>().add(WorkflowRunStatus.completed.toString()).build());
+        if (this.parentWorkflowAccessions.size() > 0){
+            map.put(FileProvenanceParam.workflow, new ImmutableList.Builder<String>().addAll(this.parentWorkflowAccessions).build());
+        }
         
         fileProvenanceReport = metadata.fileProvenanceReport(map);
         // convert to list of ReturnValues for backwards compatibility
