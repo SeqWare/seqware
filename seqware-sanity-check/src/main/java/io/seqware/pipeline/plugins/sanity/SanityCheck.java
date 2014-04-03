@@ -42,6 +42,7 @@ public final class SanityCheck extends Plugin {
     public SanityCheck() {
         super();
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
+        parser.acceptsAll(Arrays.asList("master", "m"), "To test on a master node");
     }
 
     /* (non-Javadoc)
@@ -108,66 +109,78 @@ public final class SanityCheck extends Plugin {
     @Override
     public final ReturnValue do_run() {
         ReturnValue ret = new ReturnValue();
-        Collection<SanityCheckPluginInterface> plugins = (Collection<SanityCheckPluginInterface>) Lookup.getDefault().lookupAll(SanityCheckPluginInterface.class);
-        MetadataDB metadataDB = null;
-        try {
-            metadataDB = DBAccess.get();
-        } catch (RuntimeException e) {
-            if (e.getMessage().equals(MetadataFactory.NO_DATABASE_CONFIG)) {
-                System.err.println("Warning: No or invalid SeqWare metadb settings");
-            } else {
-                throw e;
+        if (options.has("help") || options.has("h") || options.has("?")) {
+            System.out.println("This plugin is to check to see if your seqware environment is running");
+            System.out.println("Parameters:");
+            System.out.println("--help, h, ?\t Provides this help message");
+            System.out.println("--master, m \t Include this parameter to test if you are on a master node and not a user one");
+            ret.setExitStatus(ReturnValue.SUCCESS);
+        } else {
+            if (options.has("master") || options.has("m")) {
+                masterMode = true;
             }
-        }
 
-        List<SanityCheckPluginInterface> pluginList = new ArrayList<>();
-        pluginList.addAll(plugins);
-        Comparator<SanityCheckPluginInterface> comp = new Comparator<SanityCheckPluginInterface>() {
-            @Override
-            public int compare(SanityCheckPluginInterface o1, SanityCheckPluginInterface o2) {
-                Integer n1 = new Integer(o1.getPriority());
-                Integer n2 = new Integer(o2.getPriority());
-                return n1.compareTo(n2);
-            }
-        };
-        Collections.sort(pluginList, comp);
-
-        //removes the tests that don't need to be ran
-        removeChecks(pluginList);
-
-        List<Boolean> passedTests = new ArrayList<>();
-
-        for (SanityCheckPluginInterface plugin : pluginList) {
-            System.err.println("Running " + plugin.getClass().getSimpleName());
+            Collection<SanityCheckPluginInterface> plugins = (Collection<SanityCheckPluginInterface>) Lookup.getDefault().lookupAll(SanityCheckPluginInterface.class);
+            MetadataDB metadataDB = null;
             try {
+                metadataDB = DBAccess.get();
+            } catch (RuntimeException e) {
+                if (e.getMessage().equals(MetadataFactory.NO_DATABASE_CONFIG)) {
+                    System.err.println("Warning: No or invalid SeqWare metadb settings");
+                } else {
+                    throw e;
+                }
+            }
 
-                boolean check = plugin.check(metadataDB == null ? null : new QueryRunner(metadataDB), metadata);
-                if (!check) {
-                    passedTests.add(false);
-                    System.err.println("Failed check: " + plugin.getClass().getSimpleName());
+            List<SanityCheckPluginInterface> pluginList = new ArrayList<>();
+            pluginList.addAll(plugins);
+            Comparator<SanityCheckPluginInterface> comp = new Comparator<SanityCheckPluginInterface>() {
+                @Override
+                public int compare(SanityCheckPluginInterface o1, SanityCheckPluginInterface o2) {
+                    Integer n1 = new Integer(o1.getPriority());
+                    Integer n2 = new Integer(o2.getPriority());
+                    return n1.compareTo(n2);
+                }
+            };
+            Collections.sort(pluginList, comp);
+
+            //removes the tests that don't need to be ran
+            removeChecks(pluginList);
+
+            List<Boolean> passedTests = new ArrayList<>();
+
+            for (SanityCheckPluginInterface plugin : pluginList) {
+                System.err.println("Running " + plugin.getClass().getSimpleName());
+                try {
+
+                    boolean check = plugin.check(metadataDB == null ? null : new QueryRunner(metadataDB), metadata);
+                    if (!check) {
+                        passedTests.add(false);
+                        System.err.println("Failed check: " + plugin.getClass().getSimpleName());
+                        System.err.println(plugin.getDescription());
+                        ret.setExitStatus(ReturnValue.FAILURE);
+                        return ret;
+                    } else {
+                        passedTests.add(true);
+                        System.err.println("Passed check: " + plugin.getClass().getSimpleName());
+                    }
+                } catch (Exception e) {
+                    Log.fatal("Plugin " + plugin.getClass().getSimpleName() + " died", e);
+                    System.err.println("Crashed and failed check: " + plugin.getClass().getSimpleName());
                     System.err.println(plugin.getDescription());
                     ret.setExitStatus(ReturnValue.FAILURE);
                     return ret;
-                } else {
-                    passedTests.add(true);
-                    System.err.println("Passed check: " + plugin.getClass().getSimpleName());
                 }
-            } catch (Exception e) {
-                Log.fatal("Plugin " + plugin.getClass().getSimpleName() + " died", e);
-                System.err.println("Crashed and failed check: " + plugin.getClass().getSimpleName());
-                System.err.println(plugin.getDescription());
-                ret.setExitStatus(ReturnValue.FAILURE);
-                return ret;
             }
-        }
-        //Iterates through the array and sees if all the tests passed
-        for (Boolean b : passedTests) {
-            if (b.booleanValue() == false) {
-                System.err.println("One of the tests has failed. Exiting with an exit status of 1");
-                System.exit(1);
+            //Iterates through the array and sees if all the tests passed
+            for (Boolean b : passedTests) {
+                if (b.booleanValue() == false) {
+                    System.err.println("One of the tests has failed. Exiting with an exit status of 1");
+                    System.exit(1);
+                }
             }
-        }
 
+        }
         return new ReturnValue();
     }
 
@@ -207,8 +220,7 @@ public final class SanityCheck extends Plugin {
         SanityCheck mp = new SanityCheck();
         mp.init();
         mp.setMetadata(MetadataFactory.getWS(ConfigTools.getSettings()));
-        List<String> arr = new ArrayList<>();
-        mp.setParams(arr);
+        mp.setParams(Arrays.asList(args));
         mp.parse_parameters();
         ReturnValue do_run = mp.do_run();
     }
