@@ -32,9 +32,7 @@ public class StudyReportSetupController extends BaseCommandController {
 		this.studyService = studyService;
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

@@ -40,7 +40,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      *
      * Inserts an instance of Sample into the database.
      */
-    @Override
     public Integer insert(Sample sample) {
         this.getHibernateTemplate().save(sample);
         this.getSession().flush();
@@ -52,7 +51,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      *
      * Updates an instance of Sample in the database.
      */
-    @Override
     public void update(Sample sample) {
 
         this.getHibernateTemplate().update(sample);
@@ -66,7 +64,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      * This will potentially cause orphans which is not really at all good.  A better solution 
      * is to never delete but just use a deletion attribute.
      */
-    @Override
     public void delete(Sample sample) {
         // remove parent experiment
         sample.getExperiment().getSamples().remove(sample);
@@ -98,9 +95,8 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     /**
      * {@inheritDoc}
      */
-    @Override
     public List<File> getFiles(Integer sampleId) {
-        List<File> files = new ArrayList<>();
+        List<File> files = new ArrayList<File>();
 
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id "
@@ -297,9 +293,8 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     /**
      * {@inheritDoc}
      */
-    @Override
     public List<File> getFiles(Integer sampleId, String metaType) {
-        List<File> files = new ArrayList<>();
+        List<File> files = new ArrayList<File>();
         /*
          * String query = "WITH RECURSIVE processing_root_to_leaf (child_id,
          * parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id " +
@@ -413,7 +408,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     /**
      * {@inheritDoc}
      */
-    @Override
     public boolean isHasFile(Integer sampleId, String metaType) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -532,7 +526,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     /**
      * {@inheritDoc}
      */
-    @Override
     public Map<Integer, Integer> getCountFiles(Integer expId) {
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id, sample_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id, s.sample_id "
@@ -555,7 +548,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
         List list = this.getSession().createSQLQuery(query).setInteger(0, expId).setInteger(1, expId).setInteger(2, expId).list();
 
-        Map<Integer, Integer> countFiles = new HashMap<>();
+        Map<Integer, Integer> countFiles = new HashMap<Integer, Integer>();
         for (Object resSet : list) {
             // Sample sm = (Sample)sample;
             // samples.add(sm);
@@ -577,7 +570,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     /**
      * {@inheritDoc}
      */
-    @Override
     public Map<Integer, Integer> getCountFiles(Integer expId, String metaType) {
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id, sample_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id, s.sample_id "
@@ -603,7 +595,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
         List list = this.getSession().createSQLQuery(query).setInteger(0, expId).setString(1, metaType).setString(2, metaType).setString(3, metaType).setInteger(4, expId).setInteger(5, expId).list();
 
-        Map<Integer, Integer> countFiles = new HashMap<>();
+        Map<Integer, Integer> countFiles = new HashMap<Integer, Integer>();
         for (Object resSet : list) {
             Object[] res = (Object[]) resSet;
             Integer sampleId = Integer.parseInt(res[0].toString());
@@ -622,7 +614,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      *
      * Finds an instance of Sample in the database by the Experiment name.
      */
-    @Override
     public Sample findByTitle(String title) {
         String query = "from Sample as sample where lower(sample.title) = ?";
         Sample sample = null;
@@ -639,7 +630,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      *
      * Finds an instance of Sample in the database by the Sample emailAddress.
      */
-    @Override
     public Sample findByName(String name) {
         String query = "from Sample as sample where sample.name = ?";
         Sample sample = null;
@@ -656,7 +646,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      *
      * Finds an instance of Sample in the database by the Sample emailAddress.
      */
-    @Override
     public List<Sample> matchName(String name) {
         String query = "from Sample as sample where sample.name like ?";
         Object[] parameters = {name};
@@ -668,9 +657,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      * {@inheritDoc}
      *
      * Finds an instance of Sample in the database by the Sample ID.
-     * @param id
      */
-    @Override
     public Sample findByID(Integer id) {
         String query = "from Sample as sample where sample.sampleId = ?";
         Sample sample = null;
@@ -740,10 +727,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      *
      * @return a {@link java.util.List} object.
      */
-    @Override
     public List<Sample> listComplete() {
         List<Sample> list = null;
-        List<Sample> filteredList = new ArrayList<>();
+        List<Sample> filteredList = new ArrayList<Sample>();
         String query = "from Sample as sample";
         Object[] parameters = {};
         list = this.getHibernateTemplate().find(query, parameters);
@@ -765,10 +751,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      *
      * @return a {@link java.util.List} object.
      */
-    @Override
     public List<Sample> listIncomplete() {
         List<Sample> list = null;
-        List<Sample> filteredList = new ArrayList<>();
+        List<Sample> filteredList = new ArrayList<Sample>();
         String query = "from Sample as sample";
         Object[] parameters = {};
         list = this.getHibernateTemplate().find(query, parameters);
@@ -783,10 +768,8 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     /**
      * {@inheritDoc}
-     * @param registaration
      */
     @SuppressWarnings("unchecked")
-    @Override
     public List<Sample> listSample(Registration registaration) {
         Integer ownerId = registaration.getRegistrationId();
         List<Sample> list = null;
@@ -885,7 +868,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      */
     @Override
     public List<Sample> list() {
-        ArrayList<Sample> l = new ArrayList<>();
+        ArrayList<Sample> l = new ArrayList<Sample>();
 
         String query = "from Sample";
 

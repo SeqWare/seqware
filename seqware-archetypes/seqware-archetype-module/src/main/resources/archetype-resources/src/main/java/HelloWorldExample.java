@@ -348,7 +348,6 @@ public class HelloWorldExample extends Module {
    * since Pegasus won't clean those for you.
    * 
    * clean_up is optional
-     * @return 
    */
   @Override
   public ReturnValue clean_up() {

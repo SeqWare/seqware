@@ -26,7 +26,6 @@ public class ExperimentSpotDesignServiceImpl implements ExperimentSpotDesignServ
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setExperimentSpotDesignDAO(ExperimentSpotDesignDAO dao) {
     this.dao = dao;
   }
@@ -36,7 +35,6 @@ public class ExperimentSpotDesignServiceImpl implements ExperimentSpotDesignServ
    *
    * Inserts an instance of ExperimentSpotDesign into the database.
    */
-  @Override
   public void insert(ExperimentSpotDesign obj) {
     dao.insert(obj);
   }
@@ -46,14 +44,11 @@ public class ExperimentSpotDesignServiceImpl implements ExperimentSpotDesignServ
    *
    * Updates an instance of ExperimentSpotDesign in the database.
    */
-  @Override
   public void update(ExperimentSpotDesign obj) {
     dao.update(obj);
   }
 
-  /** {@inheritDoc}
-     * @param id */
-  @Override
+  /** {@inheritDoc} */
   public ExperimentSpotDesign findByID(Integer id) {
     ExperimentSpotDesign obj = null;
     if (id != null) {

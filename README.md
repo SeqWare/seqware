@@ -157,7 +157,7 @@ testing, development, and deployment.
 
 ## Copyright
 
-Copyright 2008-2014 Brian D O'Connor, OICR, UNC, and Nimbus Informatics, LLC
+Copyright 2008-2013 Brian D O'Connor, OICR, UNC, and Nimbus Informatics, LLC
 
 ## Contributors
 

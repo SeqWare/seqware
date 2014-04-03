@@ -18,8 +18,7 @@ import org.restlet.security.SecretVerifier;
  */
 public class SeqWareVerifier extends SecretVerifier {
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public int verify(String identifier, char[] secret) {
         RegistrationService registrationService = BeanFactory.getRegistrationServiceBean();

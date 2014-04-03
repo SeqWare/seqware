@@ -51,8 +51,7 @@ public class WorkflowRunsFilter extends BasicResource {
         workflowId = (String) getRequestAttributes().get("workflowId");
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     protected Representation get() {
         String path = this.getRequest().getResourceRef().getPath();
@@ -65,8 +64,7 @@ public class WorkflowRunsFilter extends BasicResource {
         return rep;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     protected Representation post(Representation entity) {
         authenticate();

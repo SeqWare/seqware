@@ -65,7 +65,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
     public void getXml() {
         authenticate();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<WorkflowRun> jaxbTool = new JaxbObject<>();
+        JaxbObject<WorkflowRun> jaxbTool = new JaxbObject<WorkflowRun>();
         WorkflowRunService ss = BeanFactory.getWorkflowRunServiceBean();
 
         WorkflowRun workflowRun = getWorkflowRun(ss);
@@ -79,7 +79,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
             SortedSet<Lane> lanes = workflowRun.getLanes();
             if (lanes != null) {
-                SortedSet<Lane> copiedLanes = new TreeSet<>();
+                SortedSet<Lane> copiedLanes = new TreeSet<Lane>();
                 for (Lane lane : lanes) {
                     copiedLanes.add(copier.hibernate2dto(Lane.class, lane));
                 }
@@ -92,7 +92,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         if (fields.contains("ius")) {
             SortedSet<IUS> iuses = workflowRun.getIus();
             if (iuses != null) {
-                SortedSet<IUS> copiedIUS = new TreeSet<>();
+                SortedSet<IUS> copiedIUS = new TreeSet<IUS>();
                 for (IUS i : iuses) {
                     copiedIUS.add(copier.hibernate2dto(IUS.class, i));
                 }
@@ -105,7 +105,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         if (fields.contains("processes")) {
             SortedSet<Processing> procs = workflowRun.getProcessings();
             if (procs != null) {
-                SortedSet<Processing> copiedPs = new TreeSet<>();
+                SortedSet<Processing> copiedPs = new TreeSet<Processing>();
                 for (Processing p : procs) {
                     copiedPs.add(copier.hibernate2dto(Processing.class, p));
                 }
@@ -115,7 +115,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
             }
             procs = workflowRun.getOffspringProcessings();
             if (procs != null) {
-                SortedSet<Processing> copiedPs = new TreeSet<>();
+                SortedSet<Processing> copiedPs = new TreeSet<Processing>();
                 for (Processing p : procs) {
                     copiedPs.add(copier.hibernate2dto(Processing.class, p));
                 }
@@ -127,7 +127,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 		if (fields.contains("attributes")) {
 			Set<WorkflowRunAttribute> wras = workflowRun.getWorkflowRunAttributes();
 			if(wras!=null && !wras.isEmpty()) {
-				Set<WorkflowRunAttribute> newwras = new TreeSet<>();
+				Set<WorkflowRunAttribute> newwras = new TreeSet<WorkflowRunAttribute>();
 				for(WorkflowRunAttribute wra: wras) {
 					newwras.add(copier.hibernate2dto(WorkflowRunAttribute.class, wra));
 				}
@@ -158,7 +158,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         if (newWR.getIus() != null) {
             SortedSet<IUS> iuses = newWR.getIus();
             if (iuses != null) {
-                SortedSet<IUS> set = new TreeSet<>();
+                SortedSet<IUS> set = new TreeSet<IUS>();
                 for (IUS ius : iuses) {
                     IUSService is = BeanFactory.getIUSServiceBean();
                     IUS newI = is.findBySWAccession(ius.getSwAccession());
@@ -174,7 +174,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         if (newWR.getLanes() != null) {
             SortedSet<Lane> lanes = newWR.getLanes();
             if (lanes != null) {
-                SortedSet<Lane> set = new TreeSet<>();
+                SortedSet<Lane> set = new TreeSet<Lane>();
                 for (Lane lane : lanes) {
                     LaneService ls = BeanFactory.getLaneServiceBean();
                     Lane newL = ls.findBySWAccession(lane.getSwAccession());
@@ -233,7 +233,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         }
         // SEQWARE-1778 - try to properly create parameters in the workflow_run_param table as well
         //convert ini file parameters into expected format
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<String, String>();
         if (wr.getIniFile() != null && !wr.getIniFile().isEmpty()) {
             // just skip if previous ini file params detected
             if (wr.getWorkflowRunParams().size() > 0) {
@@ -275,15 +275,14 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         return workflowRun;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public Representation put(Representation entity) {
         Representation toreturn = null;
         if (entity.getMediaType().equals(MediaType.APPLICATION_XML)) {
             WorkflowRun newWR = null;
 
-            JaxbObject<WorkflowRun> jo = new JaxbObject<>();
+            JaxbObject<WorkflowRun> jo = new JaxbObject<WorkflowRun>();
             try {
                 String text = entity.getText();
                 Log.debug(text);
@@ -333,7 +332,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
     private void addNewIUSes(WorkflowRun wr, WorkflowRun currentWR) throws SQLException, ResourceException {
 
-        Set<Integer> newIUSswa = new HashSet<>();
+        Set<Integer> newIUSswa = new HashSet<Integer>();
         for (IUS ius : wr.getIus()) {
             newIUSswa.add(ius.getSwAccession());
         }
@@ -358,7 +357,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
     }
 
     private void addNewLanes(WorkflowRun wr, WorkflowRun currentWR) throws SQLException, ResourceException {
-        Set<Integer> newLaneSWA = new HashSet<>();
+        Set<Integer> newLaneSWA = new HashSet<Integer>();
         for (Lane lane : wr.getLanes()) {
             newLaneSWA.add(lane.getSwAccession());
         }

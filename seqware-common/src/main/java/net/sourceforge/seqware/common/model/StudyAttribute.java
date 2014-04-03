@@ -138,8 +138,7 @@ public class StudyAttribute implements java.io.Serializable, Comparable<StudyAtt
     this.units = units;
   }
 
-	/** {@inheritDoc}
-     * @param t */
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(StudyAttribute t) {
 		return this.tag.compareTo(t.tag);

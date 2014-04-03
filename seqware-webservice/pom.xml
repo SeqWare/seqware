@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>1.0.13-SNAPSHOT</version>
+        <version>1.0.8-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -403,11 +403,6 @@
             <artifactId>org.restlet.ext.protobuf</artifactId>
         </dependency> -->
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
-        <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.fileupload</artifactId>
         </dependency>
@@ -447,7 +442,7 @@
             <artifactId>freemarker</artifactId>
             <version>2.3.18</version>
         </dependency>
-        <!--        <dependency>
+<!--        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
             <version>7.0.14</version>
@@ -476,13 +471,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.2.4</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>
@@ -534,8 +522,8 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
-                        <configuration>   
+                        <artifactId>tomcat6-maven-plugin</artifactId>
+			 <configuration>   
                             <contextFile>target/seqware-webservice-${project.version}/META-INF/context.xml</contextFile>
                             <useNaming>true</useNaming> 
                         </configuration>

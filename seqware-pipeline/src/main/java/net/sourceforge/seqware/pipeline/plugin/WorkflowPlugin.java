@@ -11,7 +11,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugin;
 
-import io.seqware.WorkflowRuns;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -118,7 +117,7 @@ public class WorkflowPlugin extends Plugin {
 
   public static final String ENGINES_LIST = "pegasus, oozie, oozie-sge";
   public static final String DEFAULT_ENGINE = "oozie";
-  public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ENGINES_LIST.split(", "))));
+  public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(ENGINES_LIST.split(", "))));
   
   private String getEngineParam(){
     String engine = (String) options.valueOf("workflow-engine");
@@ -204,7 +203,7 @@ public class WorkflowPlugin extends Plugin {
     }
 
     // parent accessions
-    ArrayList<String> parentAccessions = new ArrayList<>();
+    ArrayList<String> parentAccessions = new ArrayList<String>();
     if (options.has("parent-accessions")) {
       List opts = options.valuesOf("parent-accessions");
       for (Object opt : opts) {
@@ -214,7 +213,7 @@ public class WorkflowPlugin extends Plugin {
     }
 
     // link-workflow-run-to-parents
-    ArrayList<String> parentsLinkedToWR = new ArrayList<>();
+    ArrayList<String> parentsLinkedToWR = new ArrayList<String>();
     if (options.has("link-workflow-run-to-parents")) {
       List opts = options.valuesOf("link-workflow-run-to-parents");
       for (Object opt : opts) {
@@ -224,7 +223,7 @@ public class WorkflowPlugin extends Plugin {
     }
 
     // ini-files
-    ArrayList<String> iniFiles = new ArrayList<>();
+    ArrayList<String> iniFiles = new ArrayList<String>();
     if (options.has("ini-files")) {
       List opts = options.valuesOf("ini-files");
       for (Object opt : opts) {
@@ -504,8 +503,6 @@ public class WorkflowPlugin extends Plugin {
    * @param params
    * @param metadata
    * @param workflowAccession
-     * @param workflowRunAccession
-     * @param workflowEngine
    * @return
    */
   public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params,
@@ -524,10 +521,7 @@ public class WorkflowPlugin extends Plugin {
         workflowEngine = dataModel.getWorkflow_engine();
       }
     } catch (Exception e) {
-      if (workflowRunAccession != null){
-        Log.fatal("Exception constructing data model, failing workflow " + workflowRunAccession, e);
-        WorkflowRuns.failWorkflow(workflowRunAccession);
-      }
+      Log.fatal(e, e);
       ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
       return ret;
     }
@@ -560,7 +554,7 @@ public class WorkflowPlugin extends Plugin {
     int workflowrunaccession = Integer.parseInt(wra); // metadata.get_workflow_run_accession(workflowrunId);
     int workflowrunId = metadata.get_workflow_run_id(workflowrunaccession);
 
-    List<String> parentsLinkedToWR = new ArrayList<>();
+    List<String> parentsLinkedToWR = new ArrayList<String>();
     if (options.has("link-workflow-run-to-parents")) {
       List opts = options.valuesOf("link-workflow-run-to-parents");
       for (Object opt : opts) {
@@ -621,7 +615,7 @@ public class WorkflowPlugin extends Plugin {
         if (options.has(INPUT_FILES)) {
             try {
                 List<String> files = (List<String>) options.valuesOf(INPUT_FILES);
-                inputFiles = new HashSet<>();
+                inputFiles = new HashSet<Integer>();
                 for (String file : files) {
                     String[] tokens = ((String) file).split(",");
                     for (String token : tokens) {

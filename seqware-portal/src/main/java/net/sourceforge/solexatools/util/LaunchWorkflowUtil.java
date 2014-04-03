@@ -66,7 +66,7 @@ public class LaunchWorkflowUtil {
 	private static Map<Integer, List<String>> getSelectedNodesFromSession(HttpServletRequest request){
 		Map<Integer, List<String>> selectedNodes = (HashMap<Integer, List<String>>)request.getSession(false).getAttribute(SELECTED_NODES);
 		if(selectedNodes==null){
-			selectedNodes = new HashMap<>();
+			selectedNodes = new HashMap<Integer, List<String>>();
 		}
 		return selectedNodes;
 	}
@@ -105,7 +105,7 @@ public class LaunchWorkflowUtil {
 	private static Map<Integer, List<File>> getSelectedFilesFromSession(HttpServletRequest request){
 		Map<Integer, List<File>> selectedFiles = (HashMap<Integer, List<File>>)request.getSession(false).getAttribute(SELECTED_FILES);
 		if(selectedFiles==null){
-			selectedFiles = new HashMap<>();
+			selectedFiles = new HashMap<Integer, List<File>>();
 		}
 		return selectedFiles;
 	}
@@ -140,7 +140,7 @@ public class LaunchWorkflowUtil {
 	 */
 	public static Map<String, List<File>> getAllSelectedFiles(HttpServletRequest request){
 	  
-		HashMap<String, List<File>> files = new HashMap<>();		
+		HashMap<String, List<File>> files = new HashMap<String, List<File>>();		
 		SortedSet<WorkflowParam> params = getCurrentWorkflow(request).getWorkflowParamsWithDifferentFileMetaType();
 		
 		// if current workflow not set in session
@@ -175,7 +175,7 @@ public class LaunchWorkflowUtil {
 	 */
 	public static SummaryData getSummaryData(HttpServletRequest request){
 		SummaryData summaryDate = new SummaryData();
-		List<SummaryLine> summaryLines = new LinkedList<>();
+		List<SummaryLine> summaryLines = new LinkedList<SummaryLine>();
 		
 		Map<Integer, List<File>> selectedFiles = getSelectedFilesFromSession(request);
 		SortedSet<WorkflowParam> visibleParams = getCurrentWorkflow(request).getVisibleWorkflowParams();
@@ -256,7 +256,7 @@ public class LaunchWorkflowUtil {
 			summaryLine.setDisplayName(differentParam.getJsonEscapeDisplayName());
 			summaryLine.setFiles(selectedFiles.get(key));
 			
-			SortedSet<WorkflowParam> summaryParams = new TreeSet<>();
+			SortedSet<WorkflowParam> summaryParams = new TreeSet<WorkflowParam>();
 			
 			for (WorkflowParam visibleParam : visibleParams) {
 				if(summaryLine.getFileMetaType().equals(visibleParam.getFileMetaType())){
@@ -286,7 +286,7 @@ public class LaunchWorkflowUtil {
 	 * @return a {@link java.util.List} object.
 	 */
 	public List<Integer> getIdsSelectedLane(HttpServletRequest request, WorkflowParam param){
-		List<Integer> ids = new LinkedList<>();
+		List<Integer> ids = new LinkedList<Integer>();
 		
 		Integer key = param.getWorkflowParamId();
 		Map<Integer, List<String>> selectedNodes = getSelectedNodesFromSession(request);
@@ -366,7 +366,7 @@ public class LaunchWorkflowUtil {
 	{
 		Map<Integer, String> selectedValues = (Map<Integer, String>)request.getSession(false).getAttribute(SELECTED_VALUES);
 		if(selectedValues == null){
-			selectedValues = new HashMap<>();
+			selectedValues = new HashMap<Integer, String>();
 		}
 		return selectedValues;
 	}
@@ -378,7 +378,7 @@ public class LaunchWorkflowUtil {
 	 * @return a {@link java.util.SortedSet} object.
 	 */
 	public static SortedSet<WorkflowRunParam> getWorkflowRunParam(SortedSet<WorkflowParam> params){
-		SortedSet<WorkflowRunParam> runParams = new TreeSet<>();
+		SortedSet<WorkflowRunParam> runParams = new TreeSet<WorkflowRunParam>();
 	//	SortedSet<WorkflowParam> params = workflow.getWorkflowParams();
 	//  SortedSet<WorkflowParam> params = workflow.getVisibleWorkflowParams();
 		for (WorkflowParam param : params) {

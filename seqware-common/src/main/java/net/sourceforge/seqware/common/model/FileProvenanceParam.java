@@ -10,7 +10,6 @@ public enum FileProvenanceParam {
   ius,
   workflow,
   workflow_run("workflow-run"),
-  workflow_run_status("workflow-run-status"),
   file,
   file_meta_type("file-meta-type"),
   skip;

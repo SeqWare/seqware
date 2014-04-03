@@ -52,7 +52,7 @@ public class CheckForCycles {
             }
             
             results.append("Study Name: ").append(study.getTitle()).append(" SWA: ").append(study.getSwAccession()).append("\n");
-            Set<Sample> samples = new TreeSet<>();
+            Set<Sample> samples = new TreeSet<Sample>();
             results.append("Number of experiments: ").append(study.getExperiments().size()).append("\n");
             for (Experiment exp : study.getExperiments()) {
                 results.append("Experiment: ").append(exp.getName()).append(" SWID: ").append(exp.getSwAccession()).append("\n");
@@ -88,8 +88,8 @@ public class CheckForCycles {
      * @return a {@link java.util.Set} object.
      */
     public Set<Sample> checkSample(Sample sample) {
-        Set<Sample> samples = new TreeSet<>();
-        List<Sample> samplePath = new ArrayList<>();
+        Set<Sample> samples = new TreeSet<Sample>();
+        List<Sample> samplePath = new ArrayList<Sample>();
         samples.add(sample);
         samplePath.add(sample);
         recurseSample(sample, samplePath, samples);
@@ -98,7 +98,7 @@ public class CheckForCycles {
 
     private void recurseSample(Sample sample, List<Sample> samplePath, Set<Sample> samples) {
         for (Sample s1 : sample.getChildren()) {
-            List<Sample> path = new ArrayList<>(samplePath);
+            List<Sample> path = new ArrayList<Sample>(samplePath);
             boolean exists = path.contains(s1);
             path.add(s1);
             if (exists) {
@@ -121,7 +121,7 @@ public class CheckForCycles {
      * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
     public void checkProcessing(Processing processing) {
-        List<Processing> processingPath = new ArrayList<>();
+        List<Processing> processingPath = new ArrayList<Processing>();
         processingPath.add(processing);
         recurseProcessing(processing, processingPath);
 
@@ -129,7 +129,7 @@ public class CheckForCycles {
 
     private void recurseProcessing(Processing processing, List<Processing> processingPath) {
         for (Processing s1 : processing.getChildren()) {
-            List<Processing> path = new ArrayList<>(processingPath);
+            List<Processing> path = new ArrayList<Processing>(processingPath);
             boolean exists = path.contains(s1);
             path.add(s1);
             if (exists) {

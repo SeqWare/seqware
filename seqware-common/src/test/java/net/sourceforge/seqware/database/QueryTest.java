@@ -49,7 +49,7 @@ import org.junit.Test;
  */
 public class QueryTest {
 
-  private Collection<ReturnValue> returnValues = new ArrayList<>();
+  private Collection<ReturnValue> returnValues = new ArrayList<ReturnValue>();
 
   /**
    * <p>Constructor for QueryTest.</p>
@@ -69,7 +69,7 @@ public class QueryTest {
       Study study = ss.findBySWAccession(6144);
       for (Experiment e : study.getExperiments()) {
         for (Sample parentSample : e.getSamples()) {
-          Stack<Sample> sampleStack = new Stack<>();
+          Stack<Sample> sampleStack = new Stack<Sample>();
           sampleStack.addAll(parentSample.getChildren());
           while (!sampleStack.isEmpty()) {
             Sample sample = sampleStack.pop();
@@ -92,7 +92,7 @@ public class QueryTest {
   private void filesFromIUS(IUS ius, Experiment e, Sample parentSample, Sample sample, Study study) {
     Lane lane = ius.getLane();
     SequencerRun sequencerRun = lane.getSequencerRun();
-    Stack<Processing> processingStack = new Stack<>();
+    Stack<Processing> processingStack = new Stack<Processing>();
     processingStack.addAll(ius.getProcessings());
     while (!processingStack.isEmpty()) {
       Processing processing = processingStack.pop();
@@ -220,7 +220,7 @@ public class QueryTest {
     fm.setFilePath(file.getFilePath());
     fm.setMetaType(file.getMetaType());
     fm.setDescription(file.getSwAccession().toString());
-    ArrayList<FileMetadata> files = new ArrayList<>();
+    ArrayList<FileMetadata> files = new ArrayList<FileMetadata>();
     files.add(fm);
 
     ret.setFiles(files);

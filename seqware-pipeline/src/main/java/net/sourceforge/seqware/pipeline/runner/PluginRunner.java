@@ -12,10 +12,14 @@ import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
+import net.sourceforge.seqware.common.metadata.MetadataNoConnection;
+import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.exceptiontools.ExceptionTools;
+import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.common.util.Log;
@@ -47,7 +51,7 @@ public class PluginRunner {
   private OptionSet options = null;
   private Plugin plugin = null;
   private Metadata meta = null;
-  private HashMap<String, ArrayList<String>> map = new HashMap<>();
+  private HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
 
   /**
    * <p>main.</p>
@@ -187,7 +191,7 @@ public class PluginRunner {
       }
       ArrayList<String> classList = map.get(plug.getClass().getPackage().getName());
       if (classList == null) {
-        classList = new ArrayList<>();
+        classList = new ArrayList<String>();
       }
       classList.add(plug.getClass().getSimpleName());
       map.put(plug.getClass().getPackage().getName(), classList);

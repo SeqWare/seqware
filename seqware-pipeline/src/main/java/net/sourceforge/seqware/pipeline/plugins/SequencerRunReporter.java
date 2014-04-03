@@ -21,6 +21,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
+import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
@@ -48,23 +54,20 @@ public class SequencerRunReporter extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
 
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
         String report = this.metadata.getSequencerRunReport();
@@ -90,15 +93,13 @@ public class SequencerRunReporter extends Plugin {
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public String get_description() {
         return "Prints a tab-delimited file describing the sequencer run, lane, "

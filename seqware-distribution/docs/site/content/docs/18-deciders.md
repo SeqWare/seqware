@@ -10,7 +10,7 @@ is_dynamic:            true
 
 ## Overview
 
-So far you've seen how to write a module to wrap a given tool in a consistent way. You've also seen how to write a workflow that links together multiple modules and parameterizes them through a simple ini file. Finally, you can put these together and run the workflow using the commands you saw in the introduction with HelloWorld. But the reality of large projects dictates that you can't run each workflow manually. That's where deciders come in, they essentially are a bit of code that links up the metadata in the MetaDB with a given workflow based on a set of rules encoded in the decider. At UNC and OICR we have deciders for each of our workflows and they let us process data on hourly cron jobs. These deciders, for example, look in the database for all RNASeq human samples that have not previously been processed through a workflows, pulls back the needed data from the MetaDB, and launches a workflow run for that particular lane. This is the heart of what a decider is trying to do, it links metadata to the actual execution of workflows in an automated way.
+So far you've seen how to write a module to wrap a given tool in a consistent way. You've also seen how to write a workflow that links together multiple modules and parameterizes them through a simple ini file. Finally, you can put these together and run the workflow using the commands you saw in the introduction with HelloWorld. But the reality of large projects dictates that you can't run each workflow manually. That's where deciders come in, they essentially are a bit of code that links up the metadata in the MetaDB with a given workflow based on a set of rules encoded in the decider. At UNC we have deciders for each of our workflows and they let us process all the TCGA data on hourly cron jobs. These deciders, for example, look in the database for all RNASeq human samples that have not previously been processed through a workflows, pulls back the needed data from the MetaDB, and launches a workflow run for that particular lane. This is the heart of what a decider is trying to do, it links metadata to the actual execution of workflows in an automated way.
 
 So we created the deciders for:
 
@@ -79,92 +79,37 @@ For 0.13.6.X deciders, when looking for previous workflow runs run on these file
 
 We will demonstrate usage of the basic decider by creating a few toy workflows and connecting them up via basic decider calls. 
 
-As a pre-requisite, you need a clean meta-db. You can clean your postgres database quickly if it is named "test_seqware_meta_db" with the following postgres commands from the seqware-meta-db directory:
-
-    ~/seqware_github/seqware-meta-db$ dropdb test_seqware_meta_db
-    ~/seqware_github/seqware-meta-db$ createdb test_seqware_meta_db
-    ~/seqware_github/seqware-meta-db$ psql test_seqware_meta_db < seqware_meta_db.sql
-    ~/seqware_github/seqware-meta-db$ psql test_seqware_meta_db < seqware_meta_db_data.sql
-
-Next, create required metadata that represents the way your experiments are organized. These steps mimic the start of the user tutorial [User Tutorial](/docs/3-getting-started/user-tutorial/):
-
-    $ seqware create study --title 'Study1' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4
-
-    Created study with SWID: 1 
-
-    $ seqware create experiment --title 'New Test Experiment' --description 'This is a test description' --platform-id 26 --study-accession 1
-
-    Created experiment with SWID:2 
-
-    $ seqware create sample --title 'New Test Sample' --description 'This is a test description' --organism-id 26 --experiment-accession 2 
-
-    Created sample with SWID: 3 
-
-Next, create some files that represent data you will be operating on and a target directory for results:
-    
-    $ mkdir -p /datastore/seqware-results
-    $ echo 'testing basic workflows' > /datastore/input.txt
-
-
 First, create a sequencer_run, lane, and ius. These structures represent a lane from a sequencer run and an independent unit of sequencing. For this toy example, we will link new files to these starting points. (Note that the created SWIDs will vary depending on how much work you've done) 
+
 
     $ seqware create sequencer-run --description description --file-path file_path --name name --paired-end paired_end --platform-accession 26  --skip false
 
-    Created sequencer run with SWID: 4 
+    Created sequencer run with SWID: 8
 
-    $ seqware create lane --sequencer-run-accession 4 --study-type-accession 4 --cycle-descriptor cycle_descriptor --description description --lane-number 1 --library-selection-accession 25 --library-source-accession 5 --library-strategy-accession 21 --name name --skip false
+    $ create lane --sequencer-run-accession 8 --study-type-accession 4 --cycle-descriptor cycle_descriptor --description description --lane-number 1 --library-selection-accession 25 --library-source-accession 5 --library-strategy-accession 21 --name name --skip false
     
-    Created lane with SWID: 5 
+    Created lane with SWID: 9
 
-    $ seqware create ius --barcode barcode --description description --lane-accession 5 --name name --sample-accession  3 --skip false
+    $ seqware create ius --barcode barcode --description description --lane-accession 9 --name name --sample-accession 4 --skip false
 
-    Created IUS with SWID: 6 
+    Created IUS with SWID: 10 
 
-Next, you need to inject your input file that will be used as input for the workflows that you are about to create. When using the decider framework, the starting point for your deciders is a root workflow run. So we create a "root" workflow and create a workflow run that has as its output the input file from the tutorial. 
+Next, you need to inject a file that will be used as input for the workflows that you are about to create. When using the decider framework, the starting point for your deciders is a root workflow run. So we create a "root" workflow and create a workflow run that has as its output the input file from the tutorial. 
 
     $ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --create --table workflow --field name::FileImport --field version::1.0 --field description::description
 
-    Added 'FileImport' (SWID: 7)
-    Created workflow 'FileImport' version 1.0 with SWID: 7
+    Added 'FileImport' (SWID: 11)
+    Created workflow 'FileImport' version 1.0 with SWID: 11
 
-    $ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --create --table workflow_run --field workflow_accession::7 --field status::completed --file imported_file::text/plain::/datastore/input.txt --parent-accession 5 --parent-accession 6 
+    $ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --create --table workflow_run --field workflow_accession::11 --field status::completed --file imported_file::text/plain::/datastore/input.txt --parent-accession 9 --parent-accession 10
 
-    Created workflow run with SWID: 8
+    Created workflow run with SWID: 12
     
-Next, we create two workflows, one which converts text files to tar format, and a second which converts tar files to tar.gz format. Here, we assume that you have already run through the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/). Use Maven Archetypes to generate two workflows in the workflow-dev directory called TarWorkflow and GZWorkflow. Use the following parameters for your archetypes.
-
-	Define value for property 'package': : com.github.seqware
-	Define value for property 'groupId':  com.github.seqware: : 
-	Define value for property 'workflow-name': : Tar
-	Define value for property 'artifactId':  workflow-Tar: : Tar
-	Define value for property 'version':  1.0-SNAPSHOT: : 
-	[INFO] Using property: package = com.github.seqware
-	Confirm properties configuration:
-	package: com.github.seqware
-	groupId: com.github.seqware
-	workflow-name: Tar
-	artifactId: Tar
-	version: 1.0-SNAPSHOT
-	package: com.github.seqware
-
-	Define value for property 'package': : com.github.seqware
-	Define value for property 'groupId':  com.github.seqware: : 
-	Define value for property 'workflow-name': : GZ
-	Define value for property 'artifactId':  workflow-GZ: : GZ
-	Define value for property 'version':  1.0-SNAPSHOT: : 
-	[INFO] Using property: package = com.github.seqware
-	Confirm properties configuration:
-	package: com.github.seqware
-	groupId: com.github.seqware
-	workflow-name: GZ
-	artifactId: GZ
-	version: 1.0-SNAPSHOT
-	package: com.github.seqware
-
+Next, we create two workflows, one which converts text files to tar format, and a second which converts tar files to tar.gz format. Here, we assume that you have already run through the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/). Use Maven Archetypes to generate two workflows in the workflow-dev directory called TarWorkflow and GZWorkflow. 
 
 You will need to edit two files in each workflow, the workflow Java client and the workflow.ini. 
 
-For TarWorkflow/src/main/java/com/github/seqware/TarWorkflow.java:
+For TarWorkflow/src/main/java/com/github/seqware/WorkflowClient.java:
 
 	package com.github.seqware;
 
@@ -175,7 +120,7 @@ For TarWorkflow/src/main/java/com/github/seqware/TarWorkflow.java:
 	import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 	import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
-	public class TarWorkflow extends AbstractWorkflowDataModel {
+	public class WorkflowClient extends AbstractWorkflowDataModel {
 
 	    @Override
 	    public Map<String, SqwFile> setupFiles() {
@@ -193,14 +138,14 @@ For TarWorkflow/src/main/java/com/github/seqware/TarWorkflow.java:
 		    file1.setType("application/x-tar");
 		    file1.setIsOutput(true);
 		    file1.setForceCopy(true);
-		    // determines an output path based on the contents of the workflow.ini to follow and a random number (to avoid overwriting) 
- 		    file1.setOutputPath(this.getMetadata_output_file_prefix() + getMetadata_output_dir() + "/"
-+ this.getName() + "_" + this.getVersion() + "/" + this.getRandom()+"/"+"input.tar");
- 
+		    // if output_file is set in the ini then use it to set the destination of this file
+		    if (hasPropertyAndNotNull("output_file")) {
+			file1.setOutputPath(getProperty("output_file"));
+		    }
 		    return this.getFiles();
 
 		} catch (Exception ex) {
-		    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+		    Logger.getLogger(WorkflowClient.class.getName()).log(Level.SEVERE, null, ex);
 		    throw new RuntimeException(ex);
 		}
 	    }
@@ -212,10 +157,9 @@ For TarWorkflow/src/main/java/com/github/seqware/TarWorkflow.java:
 	    }
 	}
 
-
 Note that input_files is automatically populated in the workflow.ini when the decider runs and generates ini files. 
 
-For GZ/src/main/java/com/github/seqware/GZWorkflow.java
+For GZWorkflow/src/main/java/com/github/seqware/WorkflowClient.java
 
 	package com.github.seqware;
 
@@ -226,85 +170,80 @@ For GZ/src/main/java/com/github/seqware/GZWorkflow.java
 	import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 	import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 
-	public class GZWorkflow extends AbstractWorkflowDataModel {
-
+	public class WorkflowClient extends AbstractWorkflowDataModel {
 	    @Override
 	    public Map<String, SqwFile> setupFiles() {
-		try {
-		    // register an input file
-		    SqwFile file0 = this.createFile("file_in_0");
-		    file0.setSourcePath(getProperty("input_files"));
-		    file0.setType("application/x-tar");
-		    file0.setIsInput(true);
-		    // register an output file
-		    SqwFile file1 = this.createFile("file_out");
-		    file1.setSourcePath("input.tar.gz");
-		    file1.setType("application/gzip");
-		    file1.setIsOutput(true);
-		    file1.setForceCopy(true);
- 		    // determines an output path based on the contents of the workflow.ini to follow and a random number (to avoid overwriting) 
- 		    file1.setOutputPath(this.getMetadata_output_file_prefix() + getMetadata_output_dir() + "/"
-+ this.getName() + "_" + this.getVersion() + "/" + this.getRandom() + "/" + "input.tar.gz");
-		    return this.getFiles();
-		} catch (Exception ex) {
-		    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-		    return (null);
-		}
+	      try {
+		// register an input file
+		SqwFile file0 = this.createFile("file_in_0");
+		file0.setSourcePath(getProperty("input_files"));
+		file0.setType("application/x-tar");
+		file0.setIsInput(true);
+		// register an output file
+		SqwFile file1 = this.createFile("file_out");
+		file1.setSourcePath("input.tar.gz");
+		file1.setType("application/gzip");
+		file1.setIsOutput(true);
+		file1.setForceCopy(true);
+		// if output_file is set in the ini then use it to set the destination of this file
+		if (hasPropertyAndNotNull("output_file")) { file1.setOutputPath(getProperty("output_file")); }
+		return this.getFiles();
+	      } catch (Exception ex) {
+		Logger.getLogger(WorkflowClient.class.getName()).log(Level.SEVERE, null, ex);
+		return(null);
+	      }
 	    }
 
 	    @Override
 	    public void buildWorkflow() {
 		Job job11 = this.getWorkflow().createBashJob("bash_gz");
-		job11.setCommand("tar -zcvf input.tar.gz " + this.getFiles().get("file_in_0").getProvisionedPath());
+		job11.setCommand("tar -zcvf input.tar.gz "+ this.getFiles().get("file_in_0").getProvisionedPath());
 	    }
 	}
 
+For TarWorkflow/workflow/config/workflow.ini and GZWorkflow/workflow/config/workflow.ini:
 
-For Tar/workflow/config/TarWorkflow.ini and GZ/workflow/config/GZworkflow.ini:
-
-	# the output_prefix is used to specify the root of the absolute output path or an S3 bucket name 
-	# you should pick a path that is available on all cluster nodes and can be written by your user
-	output_prefix=/datastore/
-	# this indicates in what directory your results will be placed into under the output_prefix, in this example
-	# your results will reside in /datastore/seqware-results
 	output_dir=seqware-results
+	# the output_prefix is a convension and used to specify the root of the absolute output path or an S3 bucket name 
+	# you should pick a path that is available on all custer nodes and can be written by your user
+	output_prefix=/datastore/
 
 Build, package, and install both workflows. Record the accession for both workflows:
 
-	$ cd Tar/
+	$ cd TarWorkflow/
 	$ mvn clean install 
 	(output snipped)
 	$ cd ..
-	$ cd GZ/
+	$ cd GZWorkflow/
 	$ mvn clean install 
 	(output snipped)
 	$ cd ..
-	$ seqware bundle package --dir GZ/target/Workflow_Bundle_GZ_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
+	$ seqware bundle package --dir GZWorkflow/target/Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
 	Validating Bundle structure
 	Packaging Bundle
 	Bundle has been packaged to /home/seqware/workflow-dev
-	$ seqware bundle package --dir Tar/target/Workflow_Bundle_Tar_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
+	$ seqware bundle package --dir TarWorkflow/target/Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/
 	Validating Bundle structure
 	Packaging Bundle
 	Bundle has been packaged to /home/seqware/workflow-dev
-	$ seqware bundle install --zip Workflow_Bundle_Tar_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip 
+	$ seqware bundle install --zip Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip 
 	Installing Bundle
-	Bundle: Workflow_Bundle_Tar_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
-	Now transferring /home/seqware/workflow-dev/Workflow_Bundle_Tar_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
-	Processing input: /home/seqware/workflow-dev/Workflow_Bundle_Tar_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	Bundle: Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	Now transferring /home/seqware/workflow-dev/Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
+	Processing input: /home/seqware/workflow-dev/Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
 	      output-dir: /home/seqware/released-bundles
 
-	Added 'Tar' (SWID: 13)
-	Bundle Has Been Installed to the MetaDB and Provisioned to Workflow_Bundle_Tar_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
-	$ seqware bundle install --zip Workflow_Bundle_GZ_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip 
+	Added 'TarWorkflow' (SWID: 15)
+	Bundle Has Been Installed to the MetaDB and Provisioned to Workflow_Bundle_TarWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
+	$ seqware bundle install --zip Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip 
 	Installing Bundle
-	Bundle: Workflow_Bundle_GZ_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
-	Now transferring /home/seqware/workflow-dev/Workflow_Bundle_GZ_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
-	Processing input: /home/seqware/workflow-dev/Workflow_Bundle_GZ_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	Bundle: Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
+	Now transferring /home/seqware/workflow-dev/Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip to the directory: /home/seqware/released-bundles Please be aware, this process can take hours if the bundle is many GB in size.
+	Processing input: /home/seqware/workflow-dev/Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip
 	      output-dir: /home/seqware/released-bundles
 
-	Added 'GZ' (SWID: 14)
-	Bundle Has Been Installed to the MetaDB and Provisioned to Workflow_Bundle_GZ_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
+	Added 'GZWorkflow' (SWID: 16)
+	Bundle Has Been Installed to the MetaDB and Provisioned to Workflow_Bundle_GZWorkflow_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>.zip!
 	
 Next, deciders rely upon an up-to-date files report. Refresh this with the following command (this should probably be in a cron on a production system):
 
@@ -312,30 +251,22 @@ Next, deciders rely upon an up-to-date files report. Refresh this with the follo
 
 Now, you are ready to use the basic decider to configure and schedule your workflows. The following command lets the BasicDecider run across the entire database, looking for plain text files that have been imported, in order to schedule TarWorkflows. 
 
-	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types text/plain --wf-accession 13 --schedule 
+	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types text/plain --wf-accession 15 --schedule 
 
-	Created workflow run with SWID: 15
+	Created workflow run with SWID: 22
 	Launching.
 
-	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 13 --ini-files /tmp/5416907367403361290137472468.ini --input-files 12 --parent-accessions 9 --link-workflow-run-to-parents 6 --schedule --host master --
- 	
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 15 --ini-files /tmp/-12647202434325314875216080169.ini --input-files 14 --parent-accessions 18 --link-workflow-run-to-parents 10 --schedule --host master --
 
-Next, wait for the workflow to run to completion, you can use either the 'seqware workflow-run report' or refresh the files report in order to determine when the workflow is complete, but it should take roughly 2 minutes. Another option is the Oozie web interface at http://localhost:11000/oozie/  You may also need to run 'seqware workflow-run propagate-statuses' in order to update the seqware meta-db with workflow run statuses if it is not already in your crontab. 
+Next, wait for the workflow to run to completion, you can use either the 'seqware workflow-run report' or refresh the files report in order to determine when the workflow is complete, but it should take roughly 2 minutes. 
 
 	$ seqware files refresh
-	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types application/x-tar --wf-accession 14 --schedule
+	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types application/x-tar --wf-accession 16 --schedule
 
-	Created workflow run with SWID: 21
+	Created workflow run with SWID: 28
 	Launching.
 
-	java -jar seqware-distribution-1.0.11-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 14 --ini-files /tmp/-15384347942082223855192608272.ini --input-files 20 --parent-accessions 19 --link-workflow-run-to-parents 6 --schedule --host master --
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 16 --ini-files /tmp/10127174104580126102339614094.ini --input-files 27 --parent-accessions 26 --link-workflow-run-to-parents 10 --host master --
 	
-
-### Results
-
-In this tutorial you have learned the following things:
-
-* how to create simple workflows with a single job (tar or gz)
-* how to create metadata that can trigger workflows via deciders
-* how to run the basic decider 
-* how to pass along data from one workflow to another
+Now, you have a functional chain of two toy workflows and a command to import files that can kick-off the whole process.
+In order to automate this process, you may want to consider placing the refresh command and the deciders commands in your crontab.

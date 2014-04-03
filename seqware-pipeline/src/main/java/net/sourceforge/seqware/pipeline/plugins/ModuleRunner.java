@@ -46,7 +46,6 @@ public class ModuleRunner extends Plugin {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  @Override
   public ReturnValue parse_parameters() {
     return(ret); 
   }
@@ -54,8 +53,7 @@ public class ModuleRunner extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
    */
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue init() {
     return ret;
@@ -64,8 +62,7 @@ public class ModuleRunner extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
    */
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_test() {
     return ret;
@@ -74,8 +71,7 @@ public class ModuleRunner extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
    */
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -107,8 +103,7 @@ public class ModuleRunner extends Plugin {
   /* (non-Javadoc)
    * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
    */
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue clean_up() {
     return ret;
@@ -119,7 +114,6 @@ public class ModuleRunner extends Plugin {
    *
    * @return a {@link java.lang.String} object.
    */
-  @Override
   public String get_description() {
     return("Description: A wrapper around Runner which will either list all Modules in the classpath (if no args are passed) or trigger a specific Module. Great for running Modules standalone.");
   }
@@ -131,12 +125,12 @@ public class ModuleRunner extends Plugin {
 
     Log.stdout("\nAvailable Module List:");
 
-    HashMap<String, ArrayList<String>> modules = new HashMap<>();
+    HashMap<String, ArrayList<String>> modules = new HashMap<String, ArrayList<String>>();
 
     for (ModuleInterface mod : mods) {
 
       if (modules.get(mod.getClass().getPackage().getName()) == null) {
-        ArrayList<String> modulesInPackage = new ArrayList<>();
+        ArrayList<String> modulesInPackage = new ArrayList<String>();
         modules.put(mod.getClass().getPackage().getName(), modulesInPackage);
       }
       ArrayList<String> modulesInPackage = modules.get(mod.getClass().getPackage().getName());

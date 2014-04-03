@@ -34,7 +34,7 @@ public class LibrarySelectionList{
      * <p>Constructor for LibrarySelectionList.</p>
      */
     public LibrarySelectionList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<LibrarySelection>();
     }
 
     /**

@@ -31,9 +31,7 @@ public class SequencerRunSetupController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -44,7 +42,7 @@ public class SequencerRunSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,String>	model			= new HashMap<>();
+		HashMap<String,String>	model			= new HashMap<String,String>();
 		SequencerRun				sequencerRun		= getRequestedSequencerRun(request);
 		boolean isReport = request.getParameter("report") != null;
 

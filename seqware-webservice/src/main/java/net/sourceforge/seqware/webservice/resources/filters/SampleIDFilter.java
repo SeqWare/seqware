@@ -86,7 +86,7 @@ public class SampleIDFilter extends BasicResource {
         }
         
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<SampleList> jaxbTool = new JaxbObject<>();
+        JaxbObject<SampleList> jaxbTool = new JaxbObject<SampleList>();
 
         SampleList eList = new SampleList();
         eList.setList(new ArrayList());

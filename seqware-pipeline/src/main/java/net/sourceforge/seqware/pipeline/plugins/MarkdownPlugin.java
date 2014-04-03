@@ -63,7 +63,6 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @param config
      */
     @Override
     public void setConfig(Map<String, String> config) {
@@ -77,7 +76,6 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @param params
      */
     @Override
     public void setParams(List<String> params) {
@@ -89,7 +87,6 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @param metadata
      */
     @Override
     public void setMetadata(Metadata metadata) {
@@ -102,7 +99,6 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public String get_syntax() {
@@ -121,7 +117,6 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue parse_parameters() {
@@ -140,7 +135,6 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue init() {
@@ -152,7 +146,6 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -165,12 +158,11 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue do_run() {
         BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out));
-        Set<String> toSkip = new HashSet<>();
+        Set<String> toSkip = new HashSet<String>();
         if (options.has("skip")) {
             Object valueOf = options.valuesOf("skip");
             String[] vals = valueOf.toString().split(",");
@@ -180,14 +172,14 @@ public class MarkdownPlugin extends Plugin {
         if (options.has("modules")) {
             Collection<ModuleInterface> mods;
             mods = (Collection<ModuleInterface>) Lookup.getDefault().lookupAll(ModuleInterface.class);
-            List<ModuleInterface> modsList = new ArrayList<>();
+            List<ModuleInterface> modsList = new ArrayList<ModuleInterface>();
             modsList.addAll(mods);
             Collections.sort(modsList, new ModuleComparator());
             handlePlugins(bufferedWriter, modsList, toSkip);
         } else {
             Collection<PluginInterface> mods;
             mods = (Collection<PluginInterface>) Lookup.getDefault().lookupAll(PluginInterface.class);
-            List<PluginInterface> modsList = new ArrayList<>();
+            List<PluginInterface> modsList = new ArrayList<PluginInterface>();
             modsList.addAll(mods);
             Collections.sort(modsList, new PluginComparator());
             handlePlugins(bufferedWriter, modsList, toSkip);
@@ -214,7 +206,6 @@ public class MarkdownPlugin extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue clean_up() {
@@ -351,7 +342,7 @@ public class MarkdownPlugin extends Plugin {
             buffer.append("| Command-line option | Description |\n");
             buffer.append("|--------------------|--------------|\n");
             // not sure why options are reported once per
-            Set<String> done = new HashSet<>();
+            Set<String> done = new HashSet<String>();
             for (Entry<String, ? extends OptionDescriptor> e : options.entrySet()) {
                 if (done.contains(e.getValue().description())) {
                     continue;
@@ -376,7 +367,7 @@ public class MarkdownPlugin extends Plugin {
     public static void main(String[] args) {
         MarkdownPlugin mp = new MarkdownPlugin();
         mp.init();
-        List<String> arr = new ArrayList<>();
+        List<String> arr = new ArrayList<String>();
         arr.add("-m");
         mp.setParams(arr);
         mp.parse_parameters();

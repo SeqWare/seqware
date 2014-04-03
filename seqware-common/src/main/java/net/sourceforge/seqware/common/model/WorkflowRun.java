@@ -1,12 +1,16 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import net.sourceforge.seqware.common.business.IUSService;
@@ -16,11 +20,12 @@ import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.adapters.XmlizeXML;
 import net.sourceforge.seqware.common.security.PermissionsAware;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -33,7 +38,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowRun extends PermissionsAware implements Serializable, Comparable<WorkflowRun> {
+public class WorkflowRun implements Serializable, Comparable<WorkflowRun>, PermissionsAware {
   
   private static final long serialVersionUID = 1L;
   private Integer workflowRunId;
@@ -67,9 +72,9 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
   private String iniFile;
   private String stdErr;
   private String stdOut;
-  private Set<WorkflowRunAttribute> workflowRunAttributes = new TreeSet<>();
+  private Set<WorkflowRunAttribute> workflowRunAttributes = new TreeSet<WorkflowRunAttribute>();
   private String workflowEngine;
-  private Set<Integer> inputFileAccessions = new HashSet<>();
+  private Set<Integer> inputFileAccessions = new HashSet<Integer>();
   
   // artificial fields for SEQWARE-1134, we will need to populate these artificially
   // this is an ugly hack, need to get a better solution 
@@ -112,8 +117,7 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     return new ToStringBuilder(this).append("swAccession", getSwAccession()).toString();
   }
 
-  /** {@inheritDoc}
-     * @param other */
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -763,8 +767,7 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     return wr;
   }
 
-  /** {@inheritDoc}
-     * @param that */
+  /** {@inheritDoc} */
   @Override
   public int compareTo(WorkflowRun that) {
     // TODO Auto-generated method stub
@@ -788,30 +791,20 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     return (that.getSwAccession().compareTo(this.getSwAccession()));
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
-  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-    boolean consideredBefore = considered.contains(this.getSwAccession());
-      if (!consideredBefore) {
-          considered.add(this.getSwAccession());
-          Log.debug("Checking permissions for WorkflowRun object " + swAccession);
-      } else {
-          Log.debug("Skipping permissions for WorkflowRun object " + swAccession + " , checked before");
-          return true;
-      }
-    
+  public boolean givesPermission(Registration registration) {
     boolean hasPermission = true;
     if (workflow != null) {
-      workflow.givesPermission(registration, considered);
+      workflow.givesPermission(registration);
       if (ius != null) {
         for (IUS i : ius) {
-          i.givesPermission(registration, considered);
+          i.givesPermission(registration);
         }
       }
       if (lanes != null) {
         for (Lane l : lanes) {
-          l.givesPermission(registration, considered);
+          l.givesPermission(registration);
         }
       }
     } else {// orphaned WorkflowRun
@@ -882,7 +875,7 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     }
 
     /**
-     * @param inputFiles
+     * @param parentAccessions the parentAccessions to set
      */
     public void setInputFileAccessions(Set<Integer> inputFiles) {
         this.inputFileAccessions = inputFiles;

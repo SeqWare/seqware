@@ -25,7 +25,7 @@ If you've setup your seqware user with createdb privileges and the plpgsql langu
 
 If you want to startup the Tomcat server for interactive testing you can simply do:
 
-	mvn tomcat7:run
+	mvn tomcat6:run
 
 You will need to make sure that your ~/.seqware/settings file includes the line 
 
@@ -49,23 +49,23 @@ Three variables need to be changed in each file to reflect your local setup:
 The url, username and password need to be changed to reflect the local database. ''The username and password are the PostgreSQL database username and password.''
 
 ## Installation 
-In order to deploy the Web service into Tomcat, drop the WAR from seqware-webservice/target into the webapps directory, and the XML into TOMCAT_HOME/conf/Catalina/localhost (maps to /etc/tomcat7/Catalina/localhost/ on many Linux distributions). On the SeqWare VM, these directories are /var/lib/tomcat7/webapps and /etc/tomcat7/Catalina/localhost.
+In order to deploy the Web service into Tomcat, drop the WAR from seqware-webservice/target into the webapps directory, and the XML into TOMCAT_HOME/conf/Catalina/localhost (maps to /etc/tomcat6/Catalina/localhost/ on many Linux distributions). On the SeqWare VM, these directories are /var/lib/tomcat6/webapps and /etc/tomcat6/Catalina/localhost.
 
 SeqWare WebService consumes quite a bit of memory, so configure your Tomcat instance with the following attributes:
 
 	JAVA_OPTS= -server -Xss1024K -Xms1G -Xmx2G -XX:MaxPermSize=128M -XX:NewSize=512m
 
-This environment variable should either be set on your command line or in the conf/tomcat7.conf file, depending on your setup. On our production machines, these memory values are all doubled.
+This environment variable should either be set on your command line or in the conf/tomcat6.conf file, depending on your setup. On our production machines, these memory values are all doubled.
 
-Restart Tomcat with <tt>bin/shutdown.sh;bin/startup.sh</tt> (<tt>/etc/init.d/tomcat7 restart</tt> for Tomcat 7).
+Restart Tomcat with <tt>bin/shutdown.sh;bin/startup.sh</tt> (<tt>/etc/init.d/tomcat6 restart</tt> for Tomcat 6).
 
-You can double-check whether this setting was successfully set by going to http://localhost:8080/manager/status/all and checking the JVM section. You may need to edit your <tt>/etc/tomcat7/tomcat-users.xml</tt> file and add/enable the following lines in order to enable access to the tomcat manager
+You can double-check whether this setting was successfully set by going to http://localhost:8080/manager/status/all and checking the JVM section. You may need to edit your <tt>/etc/tomcat6/tomcat-users.xml</tt> file and add/enable the following lines in order to enable access to the tomcat manager
 
 	<role rolename="manager"/>
 	<role rolename="admin"/>
 	<user username="admin" password="admin" roles="admin,manager"/>
 
-In some cases, tomcat will ignore configuring the JAVA_OPTS either on command line or in the /etc/init.d/tomcat7 . In these cases, you can try adding a setenv.sh file with the single line 
+In some cases, tomcat will ignore configuring the JAVA_OPTS either on command line or in the /etc/init.d/tomcat6 . In these cases, you can try adding a setenv.sh file with the single line 
 
 	export JAVA_OPTS="-server -Xss1024K -Xms1G -Xmx2G -XX:MaxPermSize=128M -XX:NewSize=512m"
 

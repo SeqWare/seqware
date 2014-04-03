@@ -35,6 +35,7 @@ import net.sourceforge.seqware.common.business.WorkflowParamService;
 import net.sourceforge.seqware.common.business.WorkflowParamValueService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.business.WorkflowService;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
 
 import org.hibernate.SessionFactory;
 

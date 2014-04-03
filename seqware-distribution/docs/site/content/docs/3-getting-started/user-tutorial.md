@@ -408,7 +408,7 @@ the workflows you are interested in.  Since the report produces a simple
 tab-delimited file you can easily automate the downloading of results by
 looping over the output files.
 
-	seqware files report --study-name 'New Test Study'
+	seqware files report --study 'New Test Study'
 
 The output is a Comma-Separated Values file that contains a line for
 each file output for this workflow.

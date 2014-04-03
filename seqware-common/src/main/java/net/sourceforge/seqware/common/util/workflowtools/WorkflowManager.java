@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.common.util.workflowtools;
 
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import net.sourceforge.seqware.common.business.LaneService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.business.WorkflowService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -71,7 +73,7 @@ public class WorkflowManager {
     // Map<String, String> config = ConfigTools.getSettings();
 
     // will be handed off to the template layer
-    HashMap<String, String> map = new HashMap<>();
+    HashMap<String, String> map = new HashMap<String, String>();
 
     if (iniFilesStr != null) {
       String[] lines = iniFilesStr.split("\n");
@@ -151,7 +153,7 @@ public class WorkflowManager {
       run.setOwner(owner);
       SortedSet<WorkflowRunParam> runParams = createWorkflowRunParameters(map);
 
-      Map<String, List<File>> files = new HashMap<>();
+      Map<String, List<File>> files = new HashMap<String, List<File>>();
 
       accession = wrs.insert(owner, run, runParams, files);
       if (accession == 0) {
@@ -219,11 +221,11 @@ public class WorkflowManager {
     Lane lane = ls.findBySWAccession(parentAccession);
 
     if (ius != null) {
-      SortedSet<IUS> iuses = new TreeSet<>();
+      SortedSet<IUS> iuses = new TreeSet<IUS>();
       iuses.add(ius);
       wr.setIus(iuses);
     } else if (lane != null) {
-      SortedSet<Lane> lanes = new TreeSet<>();
+      SortedSet<Lane> lanes = new TreeSet<Lane>();
       lanes.add(lane);
       wr.setLanes(lanes);
     } else {
@@ -238,7 +240,7 @@ public class WorkflowManager {
     public static SortedSet<WorkflowRunParam> createWorkflowRunParameters(HashMap<String, String> map) throws NumberFormatException {
         // FIXME: Deal with workflow Run Params. I am not handling parent files
         // correctly at the moment
-        SortedSet<WorkflowRunParam> runParams = new TreeSet<>();
+        SortedSet<WorkflowRunParam> runParams = new TreeSet<WorkflowRunParam>();
         for (String str : map.keySet()) {
 
           if (map.get(str) != null) {

@@ -54,16 +54,14 @@ public class InviteNewUserController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET, METHOD_POST});
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	request,
 									HttpServletResponse	response) 
 	throws Exception 
 	{
 		ModelAndView	modelAndView	= null;
-		HashMap<String,Object>	model	= new HashMap<>();
+		HashMap<String,Object>	model	= new HashMap<String,Object>();
 		
 		Registration registration = Security.getRegistration(request);
 		if(registration == null || !registration.isLIMSAdmin())
@@ -78,8 +76,8 @@ public class InviteNewUserController extends BaseCommandController {
 		}
 
 		Boolean isHasError = false;
-		List<String> errorMessages = new LinkedList<>();
-		List<String> emailsHasError = new LinkedList<>();
+		List<String> errorMessages = new LinkedList<String>();
+		List<String> emailsHasError = new LinkedList<String>();
 	
 		String[] emails = getRequestedEmails(request);
 		

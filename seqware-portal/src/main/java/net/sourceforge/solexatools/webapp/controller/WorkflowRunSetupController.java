@@ -41,9 +41,7 @@ public class WorkflowRunSetupController extends BaseCommandController {
 		this.workflowRunService = workflowRunService;
 	}
 	
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,
@@ -54,7 +52,7 @@ public class WorkflowRunSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView modelAndView = null;
-		HashMap <String,String> model = new HashMap<>();
+		HashMap <String,String> model = new HashMap<String,String>();
 
 		WorkflowRun workflowRun = figureOutWorkflowRun(request);
 

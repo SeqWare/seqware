@@ -13,7 +13,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.security.PermissionsAware;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -27,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Experiment extends PermissionsAware implements Serializable, Comparable<Experiment>, ParentAccessionModel {
+public class Experiment implements Serializable, Comparable<Experiment>, PermissionsAware, ParentAccessionModel {
 
   private static final long serialVersionUID = 2L;
   private Integer experimentId;
@@ -66,9 +65,9 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
   private String expSpotDesignTagSpec;
   private String expSpotDesignAdapterSpec;
   private Integer expSpotDesignReadsPerSpot;
-  private Set<Processing> processings = new TreeSet<>();
-  private Set<ExperimentAttribute> experimentAttributes = new TreeSet<>();
-  private Set<ExperimentLink> experimentLinks = new TreeSet<>();
+  private Set<Processing> processings = new TreeSet<Processing>();
+  private Set<ExperimentAttribute> experimentAttributes = new TreeSet<ExperimentAttribute>();
+  private Set<ExperimentLink> experimentLinks = new TreeSet<ExperimentLink>();
   // these are non-persisted fields used by the platform connection
   private Integer platformInt;
   private SortedSet<Sample> samples;
@@ -87,8 +86,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
     super();
   }
 
-  /** {@inheritDoc}
-     * @param that */
+  /** {@inheritDoc} */
   @Override
   public int compareTo(Experiment that) {
     if (that == null) {
@@ -120,8 +118,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
         + createTimestamp + ", updateTimestamp=" + updateTimestamp + '}';
   }
 
-  /** {@inheritDoc}
-     * @param other */
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -1016,22 +1013,14 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
     this.experimentLinks = experimentLinks;
   }
 
+  /** {@inheritDoc} */
   @Override
-  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered){
-      boolean consideredBefore = considered.contains(this.getSwAccession());
-      if (!consideredBefore) {
-          considered.add(this.getSwAccession());
-          Log.debug("Checking permissions for experiment object " + swAccession);
-      } else {
-          Log.debug("Skipping permissions for experiment object " + swAccession + " , checked before");
-          return true;
-      }
-      
-      boolean hasPermission = false;
+  public boolean givesPermission(Registration registration) {
+    boolean hasPermission = false;
     if (study != null) {
       StudyService ss = BeanFactory.getStudyServiceBean();
       Study newStudy = ss.findBySWAccession(study.getSwAccession());
-      hasPermission = newStudy.givesPermission(registration, considered);
+      hasPermission = newStudy.givesPermission(registration);
     } else {// orphaned Experiment
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(Experiment.class).warn("Modifying Orphan Experiment: " + this.getName());

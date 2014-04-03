@@ -42,9 +42,7 @@ public class IUSSetupController extends BaseCommandController {
 		this.iusService = iusService;
 	}
 	
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,
@@ -55,7 +53,7 @@ public class IUSSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView modelAndView = null;
-		HashMap <String,String> model = new HashMap<>();
+		HashMap <String,String> model = new HashMap<String,String>();
 
 		IUS ius = figureOutIUS(request);
 

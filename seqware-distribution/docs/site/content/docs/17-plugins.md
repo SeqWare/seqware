@@ -35,25 +35,23 @@ The decider from which all other deciders came
 
 | Command-line option | Description |
 |--------------------|--------------|
-|--all|Operate across everything. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. |
+|--all|Run everything. One of sample-name, study-name, sequencer-run-name or all is required.|
 |--cf, --check-file-exists|Optional: only launch on the file if the file exists|
 |--check-wf-accessions|The comma-separated, no spaces, workflow accessions of the workflow that perform the same function (e.g. older versions). Any files that have been processed with these workflows will be skipped.|
 |--force-run-all|Forces the decider to run all matches regardless of whether they've been run before or not|
 |--group-by|Optional: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA. One of LANE_SWA or IUS_SWA.|
 |--ho, --host|Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host|
 |--ignore-skip-flag|Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.|
-|--ius-SWID|IUS sw_accession. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple swas by repeating --ius-swa|
-|--lane-SWID|Lane sw_accession. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple swas by repeating --lane-swa|
 |--launch-max|The maximum number of jobs to launch at once.|
 |--meta-types|The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.|
 |--no-meta-db, --no-metadata|Optional: a flag that prevents metadata writeback (which is done by default) by the Decider and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.|
 |--parent-wf-accessions|The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.|
 |--rerun-max|The maximum number of times to re-launch a workflowrun if failed.|
 |--run|Run this workflow now. This is the default behaviour. See also: --schedule|
-|--sample-name|Full sample name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple names by repeating --sample-name|
+|--sample-name|Full sample name. One of sample-name, study-name, sequencer-run-name or all is required.|
 |--schedule|Schedule this workflow to be run rather than running it immediately. See also: --run|
-|--sequencer-run-name|Full sequencer run name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple names by repeating --sequencer-run-name|
-|--study-name|Full study name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. Specify multiple names by repeating --study-name|
+|--sequencer-run-name|Full sequencer run name. One of sample-name, study-name, sequencer-run-name or all is required.|
+|--study-name|Full study name. One of sample-name, study-name, sequencer-run-name or all is required.|
 |--test|Testing mode. Prints the INI files to standard out and does not submit the workflow.|
 |--wf-accession|The workflow accession of the workflow|
 
@@ -65,10 +63,8 @@ Import objects into the database using different file formats.
 | Command-line option | Description |
 |--------------------|--------------|
 |--c, --create|Optional: indicates you want to create a new row, must supply --table and all the required --field params.|
-|--export-json-sequencer-run|The location to export the RunInfo json output file.|
 |--f, --field|Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
 |--file|Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.|
-|--import-json-sequencer-run|The location of the RunInfo json file to import.|
 |--interactive|Optional: turn on interactive input |
 |--lf, --list-fields|Optional: if provided along with the --table option this will list out the fields for that table and their type.|
 |--list-tables, --lt|Optional: if provided will list out the tables this tools knows how to read and/or write to.|
@@ -78,7 +74,6 @@ Import objects into the database using different file formats.
 |--parent-accession|Optional: one or more --parent-accession options can be specified when you create a workflow_run.|
 |--record|Optional: saves information about the injection in a text file|
 |--t, --table|Required: the table you are interested in reading or writing.|
-|--validate-json-sequencer-run|The location of the RunInfo json file to validate.|
 
 
 ##  BundleManager
@@ -147,21 +142,6 @@ Takes a list of files and enters them into the database, linking them with the a
 |--csv-separator||
 |--file-list-file|A file containing the necessary information, with each line in the format parent_sw_accession, file path and mime-type. parent_sw_accession is either an IUS or a Lane.|
 |--workflow-accession|The sw_accession of the Import files workflow|
-
-
-##  FileProvenanceReporter
-net.sourceforge.seqware.pipeline.plugins.fileprovenance.FileProvenanceReporter
-Generates a tab-delimited report of all output files (and their relationships and metadata) from a specified study or from all studies.
-
-| Command-line option | Description |
-|--------------------|--------------|
-|--all|Operate across everything. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. |
-|--ius-SWID|IUS sw_accession. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple swas by repeating --ius-swa|
-|--lane-SWID|Lane sw_accession. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple swas by repeating --lane-swa|
-|--out|The file into which the report will be written.|
-|--sample-name|Full sample name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple names by repeating --sample-name|
-|--sequencer-run-name|Full sequencer run name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple names by repeating --sequencer-run-name|
-|--study-name|Full study name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. Specify multiple names by repeating --study-name|
 
 
 ##  HelloWorld

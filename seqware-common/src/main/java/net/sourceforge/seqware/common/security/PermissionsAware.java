@@ -16,8 +16,6 @@
  */
 package net.sourceforge.seqware.common.security;
 
-import java.util.HashSet;
-import java.util.Set;
 import net.sourceforge.seqware.common.model.Registration;
 
 /**
@@ -26,21 +24,14 @@ import net.sourceforge.seqware.common.model.Registration;
  * @author mtaschuk
  * @version $Id: $Id
  */
-public abstract class PermissionsAware {
+public interface PermissionsAware {
     
-    public boolean givesPermission(Registration registration){
-        return this.givesPermission(registration, new HashSet<Integer>());
-    }
-  
-    public boolean givesPermission(Registration registration, Set<Integer> considered) {
-        return this.givesPermissionInternal(registration, considered);
-    } 
     /**
-     * Short-circuit permission checking by providing a set of entities that have already been checked
-     * @param registration
-     * @param considered
-     * @return 
+     * <p>givesPermission.</p>
+     *
+     * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * @return a boolean.
      */
-    public abstract boolean givesPermissionInternal(Registration registration, Set<Integer> considered);
+    public boolean givesPermission(Registration registration);
         
 }

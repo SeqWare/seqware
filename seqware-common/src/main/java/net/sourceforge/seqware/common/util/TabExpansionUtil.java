@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.common.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
@@ -46,7 +47,7 @@ public class TabExpansionUtil {
         for (String h : header) {
             maxHeader = Math.max(maxHeader, h.length());
         }
-        List<String[]> records = new ArrayList<>();
+        List<String[]> records = new ArrayList<String[]>();
         for (int i = 1; i < lines.length; i++) {
             String[] record = lines[i].split("\t");
             for (String col : record) {
@@ -90,7 +91,7 @@ public class TabExpansionUtil {
         String[] header = lines[0].split("\t");
         // determine maximum header length and other formatting
         int[] maxContent = new int[header.length];
-        List<String[]> records = new ArrayList<>();
+        List<String[]> records = new ArrayList<String[]>();
         for (int i = 0; i < lines.length; i++) {
             String[] record = lines[i].split("\t");
             int j = 0;

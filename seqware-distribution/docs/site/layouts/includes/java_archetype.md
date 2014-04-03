@@ -23,6 +23,5 @@ Alternately, the archetype can be generated without any interaction:
       -DarchetypeCatalog=local \
       -DarchetypeGroupId=com.github.seqware \
       -DarchetypeArtifactId=seqware-archetype-java-workflow \
-      -DgroupId=com.github.seqware \
-      -DartifactId=workflow-MyHelloWorld \
-      -Dworkflow-name=MyHelloWorld
+      -DgroupId=com.example \
+      -DartifactId=MyHelloWorld

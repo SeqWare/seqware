@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
@@ -20,6 +21,7 @@ import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchies;
 import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchy;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +41,7 @@ public class SampleHierarchyResource extends BasicRestlet {
 			shs = DBAccess.get().executeQuery("select sample_id, parent_id from sample_hierarchy", new ResultSetHandler<List<SampleHierarchy>>(){
         @Override
         public List<SampleHierarchy> handle(ResultSet rs) throws SQLException {
-          List<SampleHierarchy> shs = new ArrayList<>();
+          List<SampleHierarchy> shs = new ArrayList<SampleHierarchy>();
           while(rs.next()) {
             SampleHierarchy sh = new SampleHierarchy();
             sh.setSampleId(rs.getInt("sample_id"));

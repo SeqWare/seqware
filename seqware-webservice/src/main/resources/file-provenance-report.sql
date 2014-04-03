@@ -78,20 +78,18 @@ union
 , sample_ancestors (sample_id, ancestor_id) as (
     select sample_id
          , parent_id as ancestor_id
-         , 1 as rank
     from sample_hierarchy
     where parent_id is not null
 union all
     select sa.sample_id
          , sh.parent_id as ancestor_id
-         , sa.rank + 1 as rank
     from sample_ancestors sa
     join sample_hierarchy sh on sh.sample_id = sa.ancestor_id
     where parent_id is not null
 )
 
 , study_attrs as (
-    select study_id, tag, array_to_string(array_agg(value), '&') as vals
+    select study_id, tag, array_to_string(array_agg(value), ';') as vals
     from study_attribute
     where study_id is not null and tag is not null
     group by study_id, tag
@@ -106,7 +104,7 @@ union all
 )
 
 , experiment_attrs as (
-    select experiment_id, tag, array_to_string(array_agg(value), '&') as vals
+    select experiment_id, tag, array_to_string(array_agg(value), ';') as vals
     from experiment_attribute
     where experiment_id is not null and tag is not null
     group by experiment_id, tag
@@ -120,7 +118,7 @@ union all
 )
 
 , sample_attrs as (
-    select sample_id, tag, array_to_string(array_agg(value), '&') as vals
+    select sample_id, tag, array_to_string(array_agg(value), ';') as vals
     from sample_attribute
     where sample_id is not null and tag is not null
     group by sample_id, tag
@@ -135,7 +133,7 @@ union all
 
 , sequencer_run_attrs as (
     -- bug: table has sample_id instead of sequencer_run_id
-    select sample_id as sequencer_run_id, tag, array_to_string(array_agg(value), '&') as vals
+    select sample_id as sequencer_run_id, tag, array_to_string(array_agg(value), ';') as vals
     from sequencer_run_attribute
     where sample_id is not null and tag is not null
     group by sample_id, tag
@@ -149,7 +147,7 @@ union all
 )
 
 , lane_attrs as (
-    select lane_id, tag, array_to_string(array_agg(value), '&') as vals
+    select lane_id, tag, array_to_string(array_agg(value), ';') as vals
     from lane_attribute
     where lane_id is not null and tag is not null
     group by lane_id, tag
@@ -163,7 +161,7 @@ union all
 )
 
 , ius_attrs as (
-    select ius_id, tag, array_to_string(array_agg(value), '&') as vals
+    select ius_id, tag, array_to_string(array_agg(value), ';') as vals
     from ius_attribute
     where ius_id is not null and tag is not null
     group by ius_id, tag
@@ -177,7 +175,7 @@ union all
 )
 
 , processing_attrs as (
-    select processing_id, tag, array_to_string(array_agg(value), '&') as vals
+    select processing_id, tag, array_to_string(array_agg(value), ';') as vals
     from processing_attribute
     where processing_id is not null and tag is not null
     group by processing_id, tag
@@ -191,7 +189,7 @@ union all
 )
 
 , file_attrs as (
-    select file_id, tag, array_to_string(array_agg(value), '&') as vals
+    select file_id, tag, array_to_string(array_agg(value), ';') as vals
     from file_attribute
     where file_id is not null and tag is not null
     group by file_id, tag
@@ -205,11 +203,10 @@ union all
 )
 
 -- concatenated values from sample parents
-, sample_parent_swas_names (sample_id, parent_swas, parent_names, parent_organism_ids) as (
+, sample_parent_swas_names (sample_id, parent_swas, parent_names) as (
     select anc.sample_id
-         , array_to_string(array_agg(sw_accession  order by rank), ':') as parent_swas
-         , array_to_string(array_agg(coalesce(nullif(s.name,''),s.title) order by rank), ':') as parent_names
-         , array_to_string(array_agg(organism_id order by rank), ':') as parent_organism_ids
+         , array_to_string(array_agg(sw_accession), ':') as parent_swas
+         , array_to_string(array_agg(coalesce(nullif(s.name,''),s.title)), ':') as parent_names
     from sample_ancestors anc
     join sample s on s.sample_id = anc.ancestor_id
     group by anc.sample_id
@@ -217,7 +214,7 @@ union all
 
 , sample_parent_attrs (sample_id, parent_attrs) as (
     select anc.sample_id
-         , array_to_string(array_agg('parent_sample.'||tag||'.'||sw_accession||'='||vals order by rank), ';') as parent_attrs
+         , array_to_string(array_agg('parent_sample.'||tag||'.'||sw_accession||'='||vals), ';') as parent_attrs
     from sample_ancestors anc
     join sample_attrs attr on attr.sample_id = anc.ancestor_id
     join sample s on s.sample_id = anc.ancestor_id
@@ -241,18 +238,13 @@ select p.update_tstmp as last_modified
      , ea.attrs as experiment_attrs
      , translate(spn.parent_names, ' ', '_') as sample_parent_names
      , spn.parent_swas as sample_parent_swas
-     , spn.parent_organism_ids as parent_organism_ids
      , spa.parent_attrs as sample_parent_attrs
      , translate(case when s.name is not null and s.name <> '' then s.name else s.title end , ' ', '_') as sample_name
      , s.sw_accession as sample_swa
-     , org.organism_id as organism_id
-     , translate(org.code, ' ', '_') as organism_code 
      , sa.attrs as sample_attrs
      , translate(sr.name, ' ', '_') as sequencer_run_name
      , sr.sw_accession as sequencer_run_swa
      , sra.attrs as sequencer_run_attrs
-     , pla.platform_id as platform_id
-     , translate(pla.name, ' ', '_') as platform_name
      , translate(l.name, ' ', '_') as lane_name
      , coalesce(l.lane_index,0)+1 as lane_number
      , l.sw_accession as lane_swa
@@ -291,12 +283,10 @@ left join sample_parent_swas_names spn on spn.sample_id = ids.sample_id
 left join sample_parent_attrs spa on spa.sample_id = ids.sample_id
 left join sample_parent_skip sps on sps.sample_id = ids.sample_id
 left join sample s on s.sample_id = ids.sample_id
-left join organism org on s.organism_id = org.organism_id  
 left join sample_attrs_str sa on sa.sample_id = ids.sample_id
 left join lane l on l.lane_id = ids.lane_id
 left join lane_attrs_str la on la.lane_id = ids.lane_id
 left join sequencer_run sr on sr.sequencer_run_id = ids.sequencer_run_id
-left join platform pla on sr.platform_id = pla.platform_id
 left join sequencer_run_attrs_str sra on sra.sequencer_run_id = ids.sequencer_run_id
 left join ius i on i.ius_id = ids.ius_id
 left join ius_attrs_str ia on ia.ius_id = ids.ius_id

@@ -74,7 +74,6 @@ public class HibernateTestSuite extends TestCase {
    * @throws java.lang.Exception if any.
    */
   @Before
-  @Override
   public void setUp() throws Exception {
   }
 
@@ -84,7 +83,6 @@ public class HibernateTestSuite extends TestCase {
    * @throws java.lang.Exception if any.
    */
   @After
-  @Override
   public void tearDown() throws Exception {
   }
 }

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent> 
-        <version>1.0.13-SNAPSHOT</version> 
+        <version>1.0.8-SNAPSHOT</version> 
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
@@ -135,7 +135,7 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.tomcat.maven</groupId>
-                        <artifactId>tomcat7-maven-plugin</artifactId>
+                        <artifactId>tomcat6-maven-plugin</artifactId>
                         <configuration>   
                             <contextFile>../seqware-webservice/target/seqware-webservice-${project.version}/META-INF/context.xml</contextFile>
                             <webapps>

@@ -59,7 +59,7 @@ public class WorkflowParamResource extends DatabaseResource {
     public void postJaxb(Representation entity) {
         authenticate();
         try {
-            JaxbObject<WorkflowParam> jo = new JaxbObject<>();
+            JaxbObject<WorkflowParam> jo = new JaxbObject<WorkflowParam>();
             String text = entity.getText();
             WorkflowParam p;
             try {
@@ -107,7 +107,7 @@ public class WorkflowParamResource extends DatabaseResource {
         Document line;
         if (queryValues.get("id") != null) {
 
-            JaxbObject<WorkflowParam> jaxbTool = new JaxbObject<>();
+            JaxbObject<WorkflowParam> jaxbTool = new JaxbObject<WorkflowParam>();
 
             WorkflowParam wp = ((WorkflowParam) testIfNull(ss.findByID(parseClientInt(queryValues.get("id")))));
             WorkflowParam dto = copier.hibernate2dto(WorkflowParam.class, wp);
@@ -118,7 +118,7 @@ public class WorkflowParamResource extends DatabaseResource {
             line = XmlTools.marshalToDocument(jaxbTool, dto);
 
         } else {
-            JaxbObject<WorkflowParam> jaxbTool = new JaxbObject<>();
+            JaxbObject<WorkflowParam> jaxbTool = new JaxbObject<WorkflowParam>();
             List<WorkflowParam> wps = (List<WorkflowParam>) testIfNull(ss.list());
             WorkflowParamList list = new WorkflowParamList();
             for (WorkflowParam wp : wps ) {

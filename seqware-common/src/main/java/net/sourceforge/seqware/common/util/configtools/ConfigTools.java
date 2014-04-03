@@ -1,12 +1,15 @@
 package net.sourceforge.seqware.common.util.configtools;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
 
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 
@@ -24,6 +27,7 @@ public class ConfigTools {
   /**
    * The output keys are always uppercase!
    *
+   * @throws java.lang.Exception if any.
    * @return a {@link java.util.Map} object.
    */
   public static Map<String, String> getSettings() {
@@ -40,7 +44,7 @@ public class ConfigTools {
       throw new RuntimeException("The settings file " + settings + " is not a file!");
     }
 
-    HashMap<String, String> hm = new HashMap<>();
+    HashMap<String, String> hm = new HashMap<String, String>();
 
     // now read back the values from the settings file
     MapTools.ini2Map(settings, hm, true);

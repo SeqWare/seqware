@@ -31,7 +31,7 @@ Hadoop is only present for the Oozie Workflow Engine).
 ## Creating a Java Workflow Bundle
 
 In the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/) you
-saw how to create a MyHelloWorld Java workflow using archetype.
+saw how to create a HelloWorld Java workflow using archetype.
 
 <%= render '/includes/java_archetype/' %>
 
@@ -42,15 +42,14 @@ needed dependencies.
 
 <%= render '/includes/maven_workflow_build/' %>
 
-You will now have a workflow directory called <tt>target/Workflow_Bundle_&lt;WorkflowName&gt;</tt>
+You will now have a workflow directory called <tt>target/Workflow_Bundle_*</tt>
 which contains your assembled workflow.
 
 ## A Tour of the Java Workflow Syntax
 
 <%= render '/includes/java_workflows/java_workflow/' %>
 
-The full contents of the <tt>MyHelloWorldWorkflow.java</tt> are included below. We will 
-describe each section in more detail next:
+The full contents of the <tt>WorkflowClient.java</tt> are included below, we will describe each section in more detail next:
 
 <%= render '/includes/java_workflows/java_workflow_full/' %>
 
@@ -75,12 +74,6 @@ command line tool and bypass this built in system. But the
 easiest way to register workflow files.
 
 <%= render '/includes/java_workflows/java_workflow_files/' %>
-
-Output files are linked to the jobs that produce those files with addFile(SqwFile). 
-A convenience method is provided in the archetype for creating output files. Note that
-these files are not available from this.getFiles().get(String).
-
-<%= render '/includes/java_workflows/java_workflow_outputfiles/' %>
 
 You can also specify directories to be created in the working directory of your workflow.
 
@@ -107,25 +100,19 @@ TODO: discuss the JobTypes, namely Bash
 
 ### Symbolic Links to Local Dependencies
 
-This type of dependency is not generally recommended. In most cases you will want to 
-check a dependency into a maven repository or add it into the binary or data directories 
-of a workflow. 
+This type of dependency is not generally recommended. In most cases you will want to check a dependency into a maven repository or add it into the binary or data directories of a workflow. 
 
 However, in the following cases, you will need to rely on symbolic links:
 
 *   The dependency is too large to go into a maven repository 
 *   The dependency is proprietary or cannot be redistributed 
 
-By convention, the symlinks go into a directory in the root of the workflow called links. 
-They should link to a directory, not to a single file (for the purposes of copying the 
-dependencies to the final bundle. Maven doesn't accept single files for copying upon 
-install. The SeqWare archeype for Java workflow symlinks the entire 'links' folder to the 
-'data' directory in the final workflow bundle.
+By convention, the symlinks go into a directory in the root of the workflow called links. They should link to a directory, not to a single file (for the purposes of copying the dependencies to the final bundle. Maven doesn't accept single files for copying upon install.
 
 
 First, create the link:
 
-    [seqware@seqwarevm workflow-MyHelloWorld]$ cd links
+    [seqware@seqwarevm HelloWorld]$ cd links
     [seqware@seqwarevm links]$ rm -Rf *
     [seqware@seqwarevm links]$ ln -s ../workflow/data/
     [seqware@seqwarevm links]$ ls -alhtr
@@ -135,8 +122,7 @@ First, create the link:
     drwxrwxr-x 2 seqware seqware 4.0K May 31 17:41 .
 
 
-Second, check your bundle's pom.xml to verify that the maven-junction-plugin is present. 
-This plugin will create a link when compiling your bundle:
+Second, modify your bundle's pom.xml to create a link when compiling your bundle:
 	
     <build>
        ...
@@ -173,10 +159,7 @@ This plugin will create a link when compiling your bundle:
     </build>
     </project>
 
-Your bundles will now contain a symbolic link to your dependency after "mvn clean install" 
-in the data directory and this will only be included in the bundle when the bundle is 
-packaged (and/or installed). Note that the destination directory cannot exist before the 
-junction occurs or it will fail.
+Your bundles will now contain a symbolic link to your dependency after "mvn clean install" in the data directory and this will only be included in the bundle when the bundle is packaged (and/or installed). 
 
 
 ## Running the Workflow

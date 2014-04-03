@@ -1,0 +1,1399 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="seqware_meta_db" schema="public" type="PostgreSQL - 9.2.4">
+   <tables>
+      <table name="expense" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('expense_expense_id_seq'::regclass)" digits="0" id="0" name="expense_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="expense_id" foreignKey="expense_attribute_expense_id_fkey" implied="false" onDeleteCascade="false" table="expense_attribute"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="invoice_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="invoice_id" foreignKey="invoice_id_fk" implied="false" onDeleteCascade="false" table="invoice"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="workflow_run_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="agent" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="expense_type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="price_per_unit" nullable="true" remarks="" size="131089" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="7" name="total_units" nullable="true" remarks="" size="131089" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="8" name="total_price" nullable="true" remarks="" size="131089" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="9" name="added_surcharge" nullable="true" remarks="" size="131089" type="numeric"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="10" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="11" name="expense_finished_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="expense_id" sequenceNumberInPK="1"/>
+         <index name="expense_pkey" unique="true">
+            <column ascending="true" name="expense_id"/>
+         </index>
+      </table>
+      <table name="expense_attribute" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('expense_attribute_expense_attribute_id_seq'::regclass)" digits="0" id="0" name="expense_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="expense_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="expense_id" foreignKey="expense_attribute_expense_id_fkey" implied="false" onDeleteCascade="false" table="expense"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="units" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="expense_attribute_id" sequenceNumberInPK="1"/>
+         <index name="expense_attribute_pkey" unique="true">
+            <column ascending="true" name="expense_attribute_id"/>
+         </index>
+      </table>
+      <table name="experiment" numRows="149" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('experiment_experiment_id_seq'::regclass)" digits="0" id="0" name="experiment_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="experiment_id" foreignKey="experiment_attribute_experiment_id_fkey" implied="false" onDeleteCascade="false" table="experiment_attribute"/>
+            <child column="experiment_id" foreignKey="experiment_link_experiment_id_fkey" implied="false" onDeleteCascade="false" table="experiment_link"/>
+            <child column="experiment_id" foreignKey="processing_experiments_experiment_id_fkey" implied="false" onDeleteCascade="false" table="processing_experiments"/>
+            <child column="experiment_id" foreignKey="sample_experiment_id_fkey" implied="false" onDeleteCascade="false" table="sample"/>
+            <child column="experiment_id" foreignKey="fk_share_experiment_experiment_id" implied="false" onDeleteCascade="false" table="share_experiment"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="study_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="study_id" foreignKey="experiment_study_id_fkey" implied="false" onDeleteCascade="false" table="study"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="experiment_library_design_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="experiment_library_design_id" foreignKey="experiment_experiment_library_design_id_fkey" implied="false" onDeleteCascade="false" table="experiment_library_design"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="experiment_spot_design_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="experiment_spot_design_id" foreignKey="experiment_experiment_spot_design_id_fkey" implied="false" onDeleteCascade="false" table="experiment_spot_design"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="4" name="platform_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="platform_id" foreignKey="experiment_platform_id_fkey" implied="false" onDeleteCascade="false" table="platform"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="5" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="title" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="alias" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="accession" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="status" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="11" name="center_name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="12" name="sequence_space" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="13" name="base_caller" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="14" name="quality_scorer" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="15" name="quality_number_of_levels" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="16" name="quality_multiplier" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="17" name="quality_type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="18" name="expected_number_runs" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="19" name="expected_number_spots" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="20" name="expected_number_reads" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" digits="0" id="21" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="experiment__owner_fk" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="22" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="23" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="24" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="experiment_id" sequenceNumberInPK="1"/>
+         <index name="experiment_pkey" unique="true">
+            <column ascending="true" name="experiment_id"/>
+         </index>
+      </table>
+      <table name="experiment_attribute" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('experiment_attribute_experiment_attribute_id_seq'::regclass)" digits="0" id="0" name="experiment_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="experiment_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="experiment_id" foreignKey="experiment_attribute_experiment_id_fkey" implied="false" onDeleteCascade="false" table="experiment"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="units" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="experiment_attribute_id" sequenceNumberInPK="1"/>
+         <index name="experiment_attribute_pkey" unique="true">
+            <column ascending="true" name="experiment_attribute_id"/>
+         </index>
+      </table>
+      <table name="experiment_library_design" numRows="6" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('experiment_library_design_experiment_library_design_id_seq'::regclass)" digits="0" id="0" name="experiment_library_design_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="experiment_library_design_id" foreignKey="experiment_experiment_library_design_id_fkey" implied="false" onDeleteCascade="false" table="experiment"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="construction_protocol" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="strategy" nullable="true" remarks="" size="10" type="int4">
+            <parent column="library_strategy_id" foreignKey="experiment_library_design_strategy_fkey" implied="false" onDeleteCascade="false" table="library_strategy"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="5" name="source" nullable="true" remarks="" size="10" type="int4">
+            <parent column="library_source_id" foreignKey="experiment_library_design_source_fkey" implied="false" onDeleteCascade="false" table="library_source"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="6" name="selection" nullable="true" remarks="" size="10" type="int4">
+            <parent column="library_selection_id" foreignKey="experiment_library_design_selection_fkey" implied="false" onDeleteCascade="false" table="library_selection"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="7" name="layout" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="paired_orientation" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="nominal_length" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="17" id="10" name="nominal_sdev" nullable="true" remarks="" size="17" type="float8"/>
+         <primaryKey column="experiment_library_design_id" sequenceNumberInPK="1"/>
+         <index name="experiment_library_design_pkey" unique="true">
+            <column ascending="true" name="experiment_library_design_id"/>
+         </index>
+      </table>
+      <table name="experiment_link" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('experiment_link_experiment_link_id_seq'::regclass)" digits="0" id="0" name="experiment_link_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="experiment_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="experiment_id" foreignKey="experiment_link_experiment_id_fkey" implied="false" onDeleteCascade="false" table="experiment"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="db" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="id" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="experiment_link_id" sequenceNumberInPK="1"/>
+         <index name="experiment_link_pkey" unique="true">
+            <column ascending="true" name="experiment_link_id"/>
+         </index>
+      </table>
+      <table name="experiment_spot_design" numRows="19" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('experiment_spot_design_experiment_spot_design_id_seq'::regclass)" digits="0" id="0" name="experiment_spot_design_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="experiment_spot_design_id" foreignKey="experiment_experiment_spot_design_id_fkey" implied="false" onDeleteCascade="false" table="experiment"/>
+            <child column="experiment_spot_design_id" foreignKey="experiment_spot_design_read_spec_experiment_spot_design_id_fkey" implied="false" onDeleteCascade="false" table="experiment_spot_design_read_spec"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="decode_method" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="2" name="reads_per_spot" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="read_spec" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="tag_spec" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="adapter_spec" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="experiment_spot_design_id" sequenceNumberInPK="1"/>
+         <index name="experiment_spot_design_pkey" unique="true">
+            <column ascending="true" name="experiment_spot_design_id"/>
+         </index>
+      </table>
+      <table name="experiment_spot_design_read_spec" numRows="32" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('experiment_spot_design_read_s_experiment_spot_design_read_s_seq'::regclass)" digits="0" id="0" name="experiment_spot_design_read_spec_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="experiment_spot_design_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="experiment_spot_design_id" foreignKey="experiment_spot_design_read_spec_experiment_spot_design_id_fkey" implied="false" onDeleteCascade="false" table="experiment_spot_design"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="read_index" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="read_label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="read_class" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="read_type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="base_coord" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="7" name="cycle_coord" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="length" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="9" name="expected_basecall" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="experiment_spot_design_read_spec_id" sequenceNumberInPK="1"/>
+         <index name="experiment_spot_design_read_spec_pkey" unique="true">
+            <column ascending="true" name="experiment_spot_design_read_spec_id"/>
+         </index>
+      </table>
+      <table name="file" numRows="8615" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('file_file_id_seq'::regclass)" digits="0" id="0" name="file_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="file_id" foreignKey="fk7750ef99bb4f9efd" implied="false" onDeleteCascade="false" table="file_attribute"/>
+            <child column="file_id" foreignKey="processing_files_file_id_fkey" implied="false" onDeleteCascade="false" table="processing_files"/>
+            <child column="file_id" foreignKey="fk_share_file_file_id" implied="false" onDeleteCascade="false" table="share_file"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="file_path" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="md5sum" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="url_label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="meta_type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_file_owner_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="9" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="10" name="file_type_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="file_type_id" foreignKey="fk_file_file_type_id" implied="false" onDeleteCascade="false" table="file_type"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="11" name="size" nullable="true" remarks="" size="19" type="int8"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="12" name="skip" nullable="true" remarks="" size="1" type="bool"/>
+         <primaryKey column="file_id" sequenceNumberInPK="1"/>
+         <index name="file_pkey" unique="true">
+            <column ascending="true" name="file_id"/>
+         </index>
+         <index name="sw_accession_file" unique="false">
+            <column ascending="true" name="sw_accession"/>
+         </index>
+      </table>
+      <table name="file_attribute" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('file_attribute_id_seq'::regclass)" digits="0" id="0" name="file_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="file_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="file_id" foreignKey="fk7750ef99bb4f9efd" implied="false" onDeleteCascade="false" table="file"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="unit" nullable="true" remarks="" size="255" type="varchar"/>
+         <primaryKey column="file_attribute_id" sequenceNumberInPK="1"/>
+         <index name="file_attribute_pkey" unique="true">
+            <column ascending="true" name="file_attribute_id"/>
+         </index>
+         <index name="file_attribute_file_id_tag_value_key" unique="true">
+            <column ascending="true" name="file_id"/>
+            <column ascending="true" name="tag"/>
+            <column ascending="true" name="value"/>
+         </index>
+      </table>
+      <table name="file_report" numRows="10389" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('file_report_row_id_seq'::regclass)" digits="0" id="0" name="row_id" nullable="false" remarks="" size="10" type="serial">
+            <parent column="row_id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" table="sample_report"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="study_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="2" name="ius_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="lane_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="4" name="file_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="5" name="sample_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="6" name="experiment_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="7" name="child_sample_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="processing_id" nullable="true" remarks="" size="10" type="int4"/>
+         <primaryKey column="row_id" sequenceNumberInPK="1"/>
+         <index name="file_report_pkey" unique="true">
+            <column ascending="true" name="row_id"/>
+         </index>
+         <index name="file_report_study_id_idx" unique="false">
+            <column ascending="true" name="study_id"/>
+         </index>
+      </table>
+      <table name="file_type" numRows="3" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('file_type_file_type_id_seq'::regclass)" digits="0" id="0" name="file_type_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="file_type_id" foreignKey="fk_file_file_type_id" implied="false" onDeleteCascade="false" table="file"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="display_name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="meta_type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="extension" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="file_type_id" sequenceNumberInPK="1"/>
+         <index name="file_type_pkey" unique="true">
+            <column ascending="true" name="file_type_id"/>
+         </index>
+      </table>
+      <table name="invoice" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('invoice_invoice_id_seq'::regclass)" digits="0" id="0" name="invoice_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="invoice_id" foreignKey="invoice_id_fk" implied="false" onDeleteCascade="false" table="expense"/>
+            <child column="invoice_id" foreignKey="invoice_attribute_invoice_id_fkey" implied="false" onDeleteCascade="false" table="invoice_attribute"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="owner_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="invoice_owner_id_fk" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="start_date" nullable="false" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="3" name="end_date" nullable="false" remarks="" size="13" type="date"/>
+         <column autoUpdated="false" digits="0" id="4" name="state" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="finalized" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="6" name="fully_paid" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="7" name="paid_amount" nullable="true" remarks="" size="131089" type="numeric"/>
+         <column autoUpdated="false" digits="0" id="8" name="days_until_due" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="9" name="external_id" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="client_notes" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="11" name="notes" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="12" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="13" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="invoice_id" sequenceNumberInPK="1"/>
+         <index name="invoice_pkey" unique="true">
+            <column ascending="true" name="invoice_id"/>
+         </index>
+      </table>
+      <table name="invoice_attribute" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('invoice_attribute_invoice_attribute_id_seq'::regclass)" digits="0" id="0" name="invoice_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="invoice_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="invoice_id" foreignKey="invoice_attribute_invoice_id_fkey" implied="false" onDeleteCascade="false" table="invoice"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="units" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="invoice_attribute_id" sequenceNumberInPK="1"/>
+         <index name="invoice_attribute_pkey" unique="true">
+            <column ascending="true" name="invoice_attribute_id"/>
+         </index>
+      </table>
+      <table name="ius" numRows="4796" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('ius_ius_id_seq'::regclass)" digits="0" id="0" name="ius_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="ius_id" foreignKey="ius_attribute_ius_id_fkey" implied="false" onDeleteCascade="false" table="ius_attribute"/>
+            <child column="ius_id" foreignKey="fk_ius_link_ius_id" implied="false" onDeleteCascade="false" table="ius_link"/>
+            <child column="ius_id" foreignKey="fk_ius_workflow_runs_ius_id" implied="false" onDeleteCascade="false" table="ius_workflow_runs"/>
+            <child column="ius_id" foreignKey="processing_ius_ius_id_fkey" implied="false" onDeleteCascade="false" table="processing_ius"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="sample_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="ius__sample_fk" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="lane_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="lane_id" foreignKey="ius__lane_fk" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_ius_owner_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="4" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="alias" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="tag" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="8" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="9" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="10" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="11" name="skip" nullable="true" remarks="" size="1" type="bool"/>
+         <primaryKey column="ius_id" sequenceNumberInPK="1"/>
+         <index name="ius_pkey" unique="true">
+            <column ascending="true" name="ius_id"/>
+         </index>
+         <index name="sample_id_ius" unique="false">
+            <column ascending="true" name="sample_id"/>
+         </index>
+      </table>
+      <table name="ius_attribute" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('ius_attribute_ius_attribute_id_seq'::regclass)" digits="0" id="0" name="ius_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="ius_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="ius_id" foreignKey="ius_attribute_ius_id_fkey" implied="false" onDeleteCascade="false" table="ius"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="units" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="ius_attribute_id" sequenceNumberInPK="1"/>
+         <index name="ius_attribute_pkey" unique="true">
+            <column ascending="true" name="ius_attribute_id"/>
+         </index>
+      </table>
+      <table name="ius_link" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="ius_link_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="ius_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="ius_id" foreignKey="fk_ius_link_ius_id" implied="false" onDeleteCascade="false" table="ius"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="label" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="url" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="db" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="id" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="ius_link_id" sequenceNumberInPK="1"/>
+         <index name="pk_ius_link" unique="true">
+            <column ascending="true" name="ius_link_id"/>
+         </index>
+      </table>
+      <table name="ius_workflow_runs" numRows="7085" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('ius_workflow_runs_ius_workflow_runs_id_seq'::regclass)" digits="0" id="0" name="ius_workflow_runs_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="ius_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="ius_id" foreignKey="fk_ius_workflow_runs_ius_id" implied="false" onDeleteCascade="false" table="ius"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="workflow_run_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="workflow_run_id" foreignKey="fk_ius_workflow_runs_workflow_run_id" implied="false" onDeleteCascade="false" table="workflow_run"/>
+         </column>
+         <primaryKey column="ius_workflow_runs_id" sequenceNumberInPK="1"/>
+         <index name="pk_ius_workflow_runs" unique="true">
+            <column ascending="true" name="ius_workflow_runs_id"/>
+         </index>
+         <index name="ius_id_ius_workflow_runs" unique="false">
+            <column ascending="true" name="ius_id"/>
+         </index>
+         <index name="workflow_run_id_ius_workflow_runs" unique="false">
+            <column ascending="true" name="workflow_run_id"/>
+         </index>
+      </table>
+      <table name="lane" numRows="3172" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('lane_lane_id_seq'::regclass)" digits="0" id="0" name="lane_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="lane_id" foreignKey="ius__lane_fk" implied="false" onDeleteCascade="false" table="ius"/>
+            <child column="lane_id" foreignKey="lane_attribute_lane_id_fkey" implied="false" onDeleteCascade="false" table="lane_attribute"/>
+            <child column="lane_id" foreignKey="fk_lane_link_lane_id" implied="false" onDeleteCascade="false" table="lane_link"/>
+            <child column="lane_id" foreignKey="fk_lane_workflow_runs_lane_id" implied="false" onDeleteCascade="false" table="lane_workflow_runs"/>
+            <child column="lane_id" foreignKey="processing_lanes_lane_id_fkey" implied="false" onDeleteCascade="false" table="processing_lanes"/>
+            <child column="lane_id" foreignKey="fk_share_lane_lane_id" implied="false" onDeleteCascade="false" table="share_lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="sequencer_run_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="sequencer_run_id" foreignKey="lane_sequencer_run_id_fkey" implied="false" onDeleteCascade="false" table="sequencer_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="sample_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="lane_sample_id_fkey" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="organism_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="organism_id" foreignKey="lane_organism_id_fkey" implied="false" onDeleteCascade="false" table="organism"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="4" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="alias" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="lane_index" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="cycle_descriptor" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="cycle_count" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="10" name="cycle_sequence" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="11" name="type" nullable="true" remarks="" size="10" type="int4">
+            <parent column="lane_type_id" foreignKey="lane_type_fkey" implied="false" onDeleteCascade="false" table="lane_type"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="12" name="study_type" nullable="true" remarks="" size="10" type="int4">
+            <parent column="study_type_id" foreignKey="lane_study_type_fkey" implied="false" onDeleteCascade="false" table="study_type"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="13" name="library_strategy" nullable="true" remarks="" size="10" type="int4">
+            <parent column="library_strategy_id" foreignKey="lane_library_strategy_fkey" implied="false" onDeleteCascade="false" table="library_strategy"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="14" name="library_selection" nullable="true" remarks="" size="10" type="int4">
+            <parent column="library_selection_id" foreignKey="lane_library_selection_fkey" implied="false" onDeleteCascade="false" table="library_selection"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="15" name="library_source" nullable="true" remarks="" size="10" type="int4">
+            <parent column="library_source_id" foreignKey="lane_library_source_fkey" implied="false" onDeleteCascade="false" table="library_source"/>
+         </column>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="16" name="skip" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="17" name="tags" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="18" name="regions" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="19" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="20" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="lane_owner_id_fkey" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" digits="6" id="21" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="22" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="lane_id" sequenceNumberInPK="1"/>
+         <index name="lane_pkey" unique="true">
+            <column ascending="true" name="lane_id"/>
+         </index>
+      </table>
+      <table name="lane_attribute" numRows="3175" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('lane_attribute_lane_attribute_id_seq'::regclass)" digits="0" id="0" name="lane_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="lane_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="lane_id" foreignKey="lane_attribute_lane_id_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="units" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="lane_attribute_id" sequenceNumberInPK="1"/>
+         <index name="lane_attribute_pkey" unique="true">
+            <column ascending="true" name="lane_attribute_id"/>
+         </index>
+      </table>
+      <table name="lane_link" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="lane_link_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="lane_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="lane_id" foreignKey="fk_lane_link_lane_id" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="label" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="url" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="db" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="id" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="lane_link_id" sequenceNumberInPK="1"/>
+         <index name="pk_lane_link" unique="true">
+            <column ascending="true" name="lane_link_id"/>
+         </index>
+      </table>
+      <table name="lane_type" numRows="7" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('lane_type_lane_type_id_seq'::regclass)" digits="0" id="0" name="lane_type_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="type" foreignKey="lane_type_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="code" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="lane_type_id" sequenceNumberInPK="1"/>
+         <index name="lane_type_pkey" unique="true">
+            <column ascending="true" name="lane_type_id"/>
+         </index>
+      </table>
+      <table name="lane_workflow_runs" numRows="1115" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('lane_workflow_runs_lane_workflow_runs_id_seq'::regclass)" digits="0" id="0" name="lane_workflow_runs_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="lane_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="lane_id" foreignKey="fk_lane_workflow_runs_lane_id" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="workflow_run_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="workflow_run_id" foreignKey="fk_lane_workflow_runs_workflow_run_id" implied="false" onDeleteCascade="false" table="workflow_run"/>
+         </column>
+         <primaryKey column="lane_workflow_runs_id" sequenceNumberInPK="1"/>
+         <index name="pk_lane_workflow_runs" unique="true">
+            <column ascending="true" name="lane_workflow_runs_id"/>
+         </index>
+      </table>
+      <table name="library_selection" numRows="25" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('library_selection_library_selection_id_seq'::regclass)" digits="0" id="0" name="library_selection_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="selection" foreignKey="experiment_library_design_selection_fkey" implied="false" onDeleteCascade="false" table="experiment_library_design"/>
+            <child column="library_selection" foreignKey="lane_library_selection_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="library_selection_id" sequenceNumberInPK="1"/>
+         <index name="library_selection_pkey" unique="true">
+            <column ascending="true" name="library_selection_id"/>
+         </index>
+      </table>
+      <table name="library_source" numRows="7" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('library_source_library_source_id_seq'::regclass)" digits="0" id="0" name="library_source_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="source" foreignKey="experiment_library_design_source_fkey" implied="false" onDeleteCascade="false" table="experiment_library_design"/>
+            <child column="library_source" foreignKey="lane_library_source_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="library_source_id" sequenceNumberInPK="1"/>
+         <index name="library_source_pkey" unique="true">
+            <column ascending="true" name="library_source_id"/>
+         </index>
+      </table>
+      <table name="library_strategy" numRows="21" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('library_strategy_library_strategy_id_seq'::regclass)" digits="0" id="0" name="library_strategy_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="strategy" foreignKey="experiment_library_design_strategy_fkey" implied="false" onDeleteCascade="false" table="experiment_library_design"/>
+            <child column="library_strategy" foreignKey="lane_library_strategy_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="library_strategy_id" sequenceNumberInPK="1"/>
+         <index name="library_strategy_pkey" unique="true">
+            <column ascending="true" name="library_strategy_id"/>
+         </index>
+      </table>
+      <table name="organism" numRows="56" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('organism_organism_id_seq'::regclass)" digits="0" id="0" name="organism_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="organism_id" foreignKey="lane_organism_id_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+            <child column="organism_id" foreignKey="sample__organism_fk" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="code" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="accession" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="ncbi_taxid" nullable="true" remarks="" size="10" type="int4"/>
+         <primaryKey column="organism_id" sequenceNumberInPK="1"/>
+         <index name="organism_pkey" unique="true">
+            <column ascending="true" name="organism_id"/>
+         </index>
+         <index name="organism_code_key" unique="true">
+            <column ascending="true" name="code"/>
+         </index>
+         <index name="organism_ncbi_taxid_key" unique="true">
+            <column ascending="true" name="ncbi_taxid"/>
+         </index>
+      </table>
+      <table name="platform" numRows="28" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('platform_platform_id_seq'::regclass)" digits="0" id="0" name="platform_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="platform_id" foreignKey="experiment_platform_id_fkey" implied="false" onDeleteCascade="false" table="experiment"/>
+            <child column="platform_id" foreignKey="sequencer_run_platform_id_fkey" implied="false" onDeleteCascade="false" table="sequencer_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="instrument_model" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="platform_id" sequenceNumberInPK="1"/>
+         <index name="platform_pkey" unique="true">
+            <column ascending="true" name="platform_id"/>
+         </index>
+      </table>
+      <table name="processing" numRows="151875" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_processing_id_seq'::regclass)" digits="0" id="0" name="processing_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="processing_id" foreignKey="processing_attribute_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing_attribute"/>
+            <child column="processing_id" foreignKey="processing_experiments_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing_experiments"/>
+            <child column="processing_id" foreignKey="processing_files_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing_files"/>
+            <child column="processing_id" foreignKey="processing_ius_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing_ius"/>
+            <child column="processing_id" foreignKey="processing_lanes_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing_lanes"/>
+            <child column="child_id" foreignKey="processing_relationship_child_id_fkey" implied="false" onDeleteCascade="true" table="processing_relationship"/>
+            <child column="parent_id" foreignKey="processing_relationship_parent_id_fkey" implied="false" onDeleteCascade="false" table="processing_relationship"/>
+            <child column="processing_id" foreignKey="processing_samples_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing_samples"/>
+            <child column="processing_id" foreignKey="processing_sequencer_runs_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing_sequencer_runs"/>
+            <child column="processing_id" foreignKey="processing_studies_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing_studies"/>
+            <child column="processing_id" foreignKey="fk_share_processing_processing_id" implied="false" onDeleteCascade="false" table="share_processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="workflow_run_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="workflow_run_id" foreignKey="processing_workflow_run_id_fkey" implied="false" onDeleteCascade="false" table="workflow_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="ancestor_workflow_run_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="workflow_run_id" foreignKey="processing_ancestor_workflow_run_id_fkey" implied="false" onDeleteCascade="false" table="workflow_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="algorithm" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="status" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="url_label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="version" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="parameters" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="stdout" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="11" name="stderr" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="12" name="exit_status" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="13" name="process_exit_status" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="14" name="task_group" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="15" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_processing_owner_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="16" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="17" name="run_start_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="18" name="run_stop_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="19" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="20" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="processing_id" sequenceNumberInPK="1"/>
+         <index name="processing_pkey" unique="true">
+            <column ascending="true" name="processing_id"/>
+         </index>
+         <index name="ancestor_workflow_run_processing" unique="false">
+            <column ascending="true" name="ancestor_workflow_run_id"/>
+         </index>
+         <index name="sw_accession_processing" unique="true">
+            <column ascending="true" name="sw_accession"/>
+         </index>
+         <index name="workflow_run_processing" unique="false">
+            <column ascending="true" name="workflow_run_id"/>
+         </index>
+      </table>
+      <table name="processing_attribute" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_attribute_processing_attribute_id_seq'::regclass)" digits="0" id="0" name="processing_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="processing_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_attribute_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="units" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="processing_attribute_id" sequenceNumberInPK="1"/>
+         <index name="processing_attribute_pkey" unique="true">
+            <column ascending="true" name="processing_attribute_id"/>
+         </index>
+      </table>
+      <table name="processing_experiments" numRows="3" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_experiments_processing_experiments_id_seq'::regclass)" digits="0" id="0" name="processing_experiments_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="experiment_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="experiment_id" foreignKey="processing_experiments_experiment_id_fkey" implied="false" onDeleteCascade="false" table="experiment"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="processing_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_experiments_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="6" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <primaryKey column="processing_experiments_id" sequenceNumberInPK="1"/>
+         <index name="processing_experiments_pkey" unique="true">
+            <column ascending="true" name="processing_experiments_id"/>
+         </index>
+         <index name="processing_experiments_unique_key" unique="true">
+            <column ascending="true" name="experiment_id"/>
+            <column ascending="true" name="processing_id"/>
+         </index>
+      </table>
+      <table name="processing_files" numRows="8589" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_files_processing_files_id_seq'::regclass)" digits="0" id="0" name="processing_files_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="processing_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_files_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="file_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="file_id" foreignKey="processing_files_file_id_fkey" implied="false" onDeleteCascade="false" table="file"/>
+         </column>
+         <primaryKey column="processing_files_id" sequenceNumberInPK="1"/>
+         <index name="processing_files_pkey" unique="true">
+            <column ascending="true" name="processing_files_id"/>
+         </index>
+         <index name="file_id_processing_files" unique="false">
+            <column ascending="true" name="file_id"/>
+         </index>
+         <index name="processing_id_processing_files" unique="false">
+            <column ascending="true" name="processing_id"/>
+         </index>
+      </table>
+      <table name="processing_ius" numRows="5047" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_ius_processing_ius_id_seq'::regclass)" digits="0" id="0" name="processing_ius_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="ius_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="ius_id" foreignKey="processing_ius_ius_id_fkey" implied="false" onDeleteCascade="false" table="ius"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="processing_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_ius_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="6" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <primaryKey column="processing_ius_id" sequenceNumberInPK="1"/>
+         <index name="processing_ius_pkey" unique="true">
+            <column ascending="true" name="processing_ius_id"/>
+         </index>
+         <index name="processing_ius_unique_key" unique="true">
+            <column ascending="true" name="ius_id"/>
+            <column ascending="true" name="processing_id"/>
+         </index>
+      </table>
+      <table name="processing_lanes" numRows="1744" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_lanes_processing_lanes_id_seq'::regclass)" digits="0" id="0" name="processing_lanes_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="lane_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="lane_id" foreignKey="processing_lanes_lane_id_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="processing_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_lanes_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="6" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <primaryKey column="processing_lanes_id" sequenceNumberInPK="1"/>
+         <index name="processing_lanes_pkey" unique="true">
+            <column ascending="true" name="processing_lanes_id"/>
+         </index>
+         <index name="processing_lanes_unique_key" unique="true">
+            <column ascending="true" name="lane_id"/>
+            <column ascending="true" name="processing_id"/>
+         </index>
+      </table>
+      <table name="processing_relationship" numRows="96301" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_relationship_processing_relationship_id_seq'::regclass)" digits="0" id="0" name="processing_relationship_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="parent_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_relationship_parent_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="child_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_relationship_child_id_fkey" implied="false" onDeleteCascade="true" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="relationship" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="processing_relationship_id" sequenceNumberInPK="1"/>
+         <index name="processing_relationship_pkey" unique="true">
+            <column ascending="true" name="processing_relationship_id"/>
+         </index>
+         <index name="index_processing_relationship_child_id" unique="false">
+            <column ascending="true" name="child_id"/>
+         </index>
+         <index name="index_processing_relationship_parent_id" unique="false">
+            <column ascending="true" name="parent_id"/>
+         </index>
+      </table>
+      <table name="processing_samples" numRows="37" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_samples_processing_samples_id_seq'::regclass)" digits="0" id="0" name="processing_samples_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="sample_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="processing_samples_sample_id_fkey" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="processing_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_samples_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="6" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <primaryKey column="processing_samples_id" sequenceNumberInPK="1"/>
+         <index name="processing_samples_pkey" unique="true">
+            <column ascending="true" name="processing_samples_id"/>
+         </index>
+         <index name="processing_samples_unique_key" unique="true">
+            <column ascending="true" name="sample_id"/>
+            <column ascending="true" name="processing_id"/>
+         </index>
+         <index name="sample_id_processing_samples" unique="false">
+            <column ascending="true" name="sample_id"/>
+         </index>
+      </table>
+      <table name="processing_sequencer_runs" numRows="8" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_sequencer_runs_processing_sequencer_runs_id_seq'::regclass)" digits="0" id="0" name="processing_sequencer_runs_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="sequencer_run_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sequencer_run_id" foreignKey="processing_sequencer_runs_sequencer_run_id_fkey" implied="false" onDeleteCascade="false" table="sequencer_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="processing_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_sequencer_runs_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="6" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <primaryKey column="processing_sequencer_runs_id" sequenceNumberInPK="1"/>
+         <index name="processing_sequencer_runs_pkey" unique="true">
+            <column ascending="true" name="processing_sequencer_runs_id"/>
+         </index>
+         <index name="processing_sequencer_runs_unique_key" unique="true">
+            <column ascending="true" name="sequencer_run_id"/>
+            <column ascending="true" name="processing_id"/>
+         </index>
+      </table>
+      <table name="processing_studies" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('processing_studies_processing_studies_id_seq'::regclass)" digits="0" id="0" name="processing_studies_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="study_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="study_id" foreignKey="processing_studies_study_id_fkey" implied="false" onDeleteCascade="false" table="study"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="processing_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="processing_studies_processing_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="label" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="6" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <primaryKey column="processing_studies_id" sequenceNumberInPK="1"/>
+         <index name="processing_studies_pkey" unique="true">
+            <column ascending="true" name="processing_studies_id"/>
+         </index>
+         <index name="processing_studies_unique_key" unique="true">
+            <column ascending="true" name="study_id"/>
+            <column ascending="true" name="processing_id"/>
+         </index>
+      </table>
+      <table name="registration" numRows="57" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('registration_registration_id_seq'::regclass)" digits="0" id="0" name="registration_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="owner_id" foreignKey="experiment__owner_fk" implied="false" onDeleteCascade="false" table="experiment"/>
+            <child column="owner_id" foreignKey="fk_file_owner_id" implied="false" onDeleteCascade="false" table="file"/>
+            <child column="owner_id" foreignKey="invoice_owner_id_fk" implied="false" onDeleteCascade="false" table="invoice"/>
+            <child column="owner_id" foreignKey="fk_ius_owner_id" implied="false" onDeleteCascade="false" table="ius"/>
+            <child column="owner_id" foreignKey="lane_owner_id_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+            <child column="owner_id" foreignKey="fk_processing_owner_id" implied="false" onDeleteCascade="false" table="processing"/>
+            <child column="owner_id" foreignKey="sample__owner_fk" implied="false" onDeleteCascade="false" table="sample"/>
+            <child column="owner_id" foreignKey="sequencer_run_owner_id_fkey" implied="false" onDeleteCascade="false" table="sequencer_run"/>
+            <child column="registration_id" foreignKey="fk_share_experiment_registration_id" implied="false" onDeleteCascade="false" table="share_experiment"/>
+            <child column="registration_id" foreignKey="fk_share_file_registration_id" implied="false" onDeleteCascade="false" table="share_file"/>
+            <child column="registration_id" foreignKey="fk_share_lane_registration_id" implied="false" onDeleteCascade="false" table="share_lane"/>
+            <child column="registration_id" foreignKey="fk_share_processing_registration_id" implied="false" onDeleteCascade="false" table="share_processing"/>
+            <child column="registration_id" foreignKey="fk_share_sample_registration_id" implied="false" onDeleteCascade="false" table="share_sample"/>
+            <child column="registration_id" foreignKey="fk_share_study_registration_id" implied="false" onDeleteCascade="false" table="share_study"/>
+            <child column="registration_id" foreignKey="fk_share_workflow_run_registration_id" implied="false" onDeleteCascade="false" table="share_workflow_run"/>
+            <child column="owner_id" foreignKey="study_owner_id_fkey" implied="false" onDeleteCascade="false" table="study"/>
+            <child column="owner_id" foreignKey="fk_workflow_registration_id" implied="false" onDeleteCascade="false" table="workflow"/>
+            <child column="owner_id" foreignKey="fk_workflow_run_registration_id" implied="false" onDeleteCascade="false" table="workflow_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="email" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="password" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="password_hint" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="first_name" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="last_name" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="institution" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="invitation_code" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="8" name="lims_admin" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="9" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="10" name="last_update_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="11" name="developer_ml" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="12" name="user_ml" nullable="false" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="13" name="payee" nullable="false" remarks="" size="1" type="bool"/>
+         <primaryKey column="registration_id" sequenceNumberInPK="1"/>
+         <index name="registration_pkey" unique="true">
+            <column ascending="true" name="registration_id"/>
+         </index>
+         <index name="email_registration" unique="false">
+            <column ascending="true" name="email"/>
+         </index>
+         <index name="registration_email_key" unique="true">
+            <column ascending="true" name="email"/>
+         </index>
+      </table>
+      <table name="sample" numRows="32459" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('sample_sample_id_seq'::regclass)" digits="0" id="0" name="sample_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="sample_id" foreignKey="ius__sample_fk" implied="false" onDeleteCascade="false" table="ius"/>
+            <child column="sample_id" foreignKey="lane_sample_id_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+            <child column="sample_id" foreignKey="processing_samples_sample_id_fkey" implied="false" onDeleteCascade="false" table="processing_samples"/>
+            <child column="sample_id" foreignKey="sample_attribute_sample_id_fkey" implied="false" onDeleteCascade="false" table="sample_attribute"/>
+            <child column="parent_id" foreignKey="sample_hierarchy_parent_id_fkey" implied="false" onDeleteCascade="false" table="sample_hierarchy"/>
+            <child column="sample_id" foreignKey="sample_hierarchy_sample_id_fkey" implied="false" onDeleteCascade="false" table="sample_hierarchy"/>
+            <child column="sample_id" foreignKey="sample_link_sample_id_fkey" implied="false" onDeleteCascade="false" table="sample_link"/>
+            <child column="child_id" foreignKey="sample_relationship_child_id_fkey" implied="false" onDeleteCascade="true" table="sample_relationship"/>
+            <child column="parent_id" foreignKey="sample_relationship_parent_id_fkey" implied="false" onDeleteCascade="false" table="sample_relationship"/>
+            <child column="sample_id" foreignKey="fk48cd19ddcc73e37d" implied="false" onDeleteCascade="false" table="sample_search"/>
+            <child column="sample_id" foreignKey="fk_share_sample_sample_id" implied="false" onDeleteCascade="false" table="share_sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="experiment_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="experiment_id" foreignKey="sample_experiment_id_fkey" implied="false" onDeleteCascade="false" table="experiment"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="organism_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="organism_id" foreignKey="sample__organism_fk" implied="false" onDeleteCascade="false" table="organism"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="title" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="alias" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="scientific_name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="common_name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="anonymized_name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="individual_name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="11" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="12" name="taxon_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="13" name="tags" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="14" name="adapters" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="15" name="regions" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="16" name="expected_number_runs" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="17" name="expected_number_spots" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="18" name="expected_number_reads" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="19" name="skip" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="20" name="is_public" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="21" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="sample__owner_fk" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="22" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="23" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="24" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="sample_id" sequenceNumberInPK="1"/>
+         <index name="sample_pkey" unique="true">
+            <column ascending="true" name="sample_id"/>
+         </index>
+         <index name="experiment_id_sample" unique="false">
+            <column ascending="true" name="experiment_id"/>
+         </index>
+      </table>
+      <table name="sample_attribute" numRows="80867" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('sample_attribute_sample_attribute_id_seq'::regclass)" digits="0" id="0" name="sample_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="sample_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="sample_attribute_sample_id_fkey" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="units" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="sample_attribute_id" sequenceNumberInPK="1"/>
+         <index name="sample_attribute_pkey" unique="true">
+            <column ascending="true" name="sample_attribute_id"/>
+         </index>
+         <index name="sample_id_sample_attribute" unique="false">
+            <column ascending="true" name="sample_id"/>
+         </index>
+      </table>
+      <table name="sample_hierarchy" numRows="32493" remarks="Relationship of samples as they pass through the wet lab." schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="sample_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="sample_hierarchy_sample_id_fkey" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="parent_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="sample_hierarchy_parent_id_fkey" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <index name="parent_sample_hierarchy" unique="false">
+            <column ascending="true" name="parent_id"/>
+         </index>
+         <index name="sample_hierarchy_sample_id_key" unique="true">
+            <column ascending="true" name="sample_id"/>
+            <column ascending="true" name="parent_id"/>
+         </index>
+      </table>
+      <table name="sample_link" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('sample_link_sample_link_id_seq'::regclass)" digits="0" id="0" name="sample_link_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="sample_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="sample_link_sample_id_fkey" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="label" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="url" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="db" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="id" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="sample_link_id" sequenceNumberInPK="1"/>
+         <index name="sample_link_pkey" unique="true">
+            <column ascending="true" name="sample_link_id"/>
+         </index>
+      </table>
+      <table name="sample_relationship" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('sample_relationship_sample_relationship_id_seq'::regclass)" digits="0" id="0" name="sample_relationship_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="parent_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="sample_relationship_parent_id_fkey" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="child_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="sample_relationship_child_id_fkey" implied="false" onDeleteCascade="true" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="relationship" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="sample_relationship_id" sequenceNumberInPK="1"/>
+         <index name="sample_relationship_pkey" unique="true">
+            <column ascending="true" name="sample_relationship_id"/>
+         </index>
+      </table>
+      <table name="sample_report" numRows="702972" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="study_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="child_sample_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="2" name="workflow_id" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="status" nullable="true" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="true" defaultValue="nextval('sample_report_row_id_seq'::regclass)" digits="0" id="4" name="row_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="row_id" foreignKey="Implied Constraint" implied="true" onDeleteCascade="false" table="file_report"/>
+         </column>
+         <primaryKey column="row_id" sequenceNumberInPK="1"/>
+         <index name="sample_report_pkey" unique="true">
+            <column ascending="true" name="row_id"/>
+         </index>
+         <index name="sample_report_study_id_child_sample_id_workflow_id_idx" unique="false">
+            <column ascending="true" name="study_id"/>
+            <column ascending="true" name="child_sample_id"/>
+            <column ascending="true" name="workflow_id"/>
+         </index>
+      </table>
+      <table name="sample_search" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('sample_search_id_seq'::regclass)" digits="0" id="0" name="sample_search_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="sample_search_id" foreignKey="fkf378ceba921d0a72" implied="false" onDeleteCascade="false" table="sample_search_attribute"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="sample_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="fk48cd19ddcc73e37d" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="6" id="2" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="sample_search_id" sequenceNumberInPK="1"/>
+         <index name="sample_search_pkey" unique="true">
+            <column ascending="true" name="sample_search_id"/>
+         </index>
+      </table>
+      <table name="sample_search_attribute" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('sample_search_attribute_id_seq'::regclass)" digits="0" id="0" name="sample_search_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="sample_search_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sample_search_id" foreignKey="fkf378ceba921d0a72" implied="false" onDeleteCascade="false" table="sample_search"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="false" remarks="" size="255" type="varchar"/>
+         <primaryKey column="sample_search_attribute_id" sequenceNumberInPK="1"/>
+         <index name="sample_search_attribute_pkey" unique="true">
+            <column ascending="true" name="sample_search_attribute_id"/>
+         </index>
+         <index name="sample_search_attribute_sample_search_id_tag_value_key" unique="true">
+            <column ascending="true" name="sample_search_id"/>
+            <column ascending="true" name="tag"/>
+            <column ascending="true" name="value"/>
+         </index>
+      </table>
+      <table name="sequencer_run" numRows="477" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('sequencer_run_sequencer_run_id_seq'::regclass)" digits="0" id="0" name="sequencer_run_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="sequencer_run_id" foreignKey="lane_sequencer_run_id_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+            <child column="sequencer_run_id" foreignKey="processing_sequencer_runs_sequencer_run_id_fkey" implied="false" onDeleteCascade="false" table="processing_sequencer_runs"/>
+            <child column="sample_id" foreignKey="fk_sequencer_run_attribute_sequencer_run_id" implied="false" onDeleteCascade="false" table="sequencer_run_attribute"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="status" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="platform_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="platform_id" foreignKey="sequencer_run_platform_id_fkey" implied="false" onDeleteCascade="false" table="platform"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="5" name="instrument_name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="cycle_descriptor" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="cycle_count" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="8" name="cycle_sequence" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="file_path" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="paired_end" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="11" name="process" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="12" name="ref_lane" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="13" name="paired_file_path" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="14" name="use_ipar_intensities" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="15" name="color_matrix" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="16" name="color_matrix_code" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="17" name="slide_count" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="18" name="slide_1_lane_count" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="19" name="slide_1_file_path" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="20" name="slide_2_lane_count" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="21" name="slide_2_file_path" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="22" name="flow_sequence" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="23" name="flow_count" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="24" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="sequencer_run_owner_id_fkey" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="25" name="run_center" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="26" name="base_caller" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="27" name="quality_scorer" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="28" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="29" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="30" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" defaultValue="false" digits="0" id="31" name="skip" nullable="true" remarks="" size="1" type="bool"/>
+         <primaryKey column="sequencer_run_id" sequenceNumberInPK="1"/>
+         <index name="sequencer_run_pkey" unique="true">
+            <column ascending="true" name="sequencer_run_id"/>
+         </index>
+      </table>
+      <table name="sequencer_run_attribute" numRows="477" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('sequencer_run_attribute_sequencer_run_attribute_id_seq'::regclass)" digits="0" id="0" name="sequencer_run_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="sample_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sequencer_run_id" foreignKey="fk_sequencer_run_attribute_sequencer_run_id" implied="false" onDeleteCascade="false" table="sequencer_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="units" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="sequencer_run_attribute_id" sequenceNumberInPK="1"/>
+         <index name="sequencer_run_attribute_pkey" unique="true">
+            <column ascending="true" name="sequencer_run_attribute_id"/>
+         </index>
+      </table>
+      <table name="share_experiment" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="share_experiment_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="1" name="experiment_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="experiment_id" foreignKey="fk_share_experiment_experiment_id" implied="false" onDeleteCascade="false" table="experiment"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="registration_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_share_experiment_registration_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="3" name="active" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="4" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="5" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="6" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="share_experiment_id" sequenceNumberInPK="1"/>
+         <index name="pk_share_experiment" unique="true">
+            <column ascending="true" name="share_experiment_id"/>
+         </index>
+      </table>
+      <table name="share_file" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="file_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="file_id" foreignKey="fk_share_file_file_id" implied="false" onDeleteCascade="false" table="file"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="registration_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_share_file_registration_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="2" name="active" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="3" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="4" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="5" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="0" id="6" name="share_file_id" nullable="false" remarks="" size="10" type="int4"/>
+         <primaryKey column="share_file_id" sequenceNumberInPK="1"/>
+         <index name="pk_share_file" unique="true">
+            <column ascending="true" name="share_file_id"/>
+         </index>
+      </table>
+      <table name="share_lane" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="lane_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="lane_id" foreignKey="fk_share_lane_lane_id" implied="false" onDeleteCascade="false" table="lane"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="registration_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_share_lane_registration_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="2" name="active" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="3" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="4" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="5" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="0" id="6" name="share_lane_id" nullable="false" remarks="" size="10" type="int4"/>
+         <primaryKey column="share_lane_id" sequenceNumberInPK="1"/>
+         <index name="pk_share_lane" unique="true">
+            <column ascending="true" name="share_lane_id"/>
+         </index>
+      </table>
+      <table name="share_processing" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="processing_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="processing_id" foreignKey="fk_share_processing_processing_id" implied="false" onDeleteCascade="false" table="processing"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="registration_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_share_processing_registration_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="2" name="active" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="3" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="4" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="5" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="0" id="6" name="share_processing_id" nullable="false" remarks="" size="10" type="int4"/>
+         <primaryKey column="share_processing_id" sequenceNumberInPK="1"/>
+         <index name="pk_share_processing" unique="true">
+            <column ascending="true" name="share_processing_id"/>
+         </index>
+      </table>
+      <table name="share_sample" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="false" digits="0" id="0" name="sample_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="sample_id" foreignKey="fk_share_sample_sample_id" implied="false" onDeleteCascade="false" table="sample"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="registration_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_share_sample_registration_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="2" name="active" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="3" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="4" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="5" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="0" id="6" name="share_sample_id" nullable="false" remarks="" size="10" type="int4"/>
+         <primaryKey column="share_sample_id" sequenceNumberInPK="1"/>
+         <index name="pk_share_sample" unique="true">
+            <column ascending="true" name="share_sample_id"/>
+         </index>
+      </table>
+      <table name="share_study" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('share_study_id_seq'::regclass)" digits="0" id="0" name="share_study_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="study_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="study_id" foreignKey="fk_share_study_study_id" implied="false" onDeleteCascade="false" table="study"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="email" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="registration_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_share_study_registration_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="4" name="active" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="5" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="6" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="7" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="share_study_id" sequenceNumberInPK="1"/>
+         <index name="share_study_pkey" unique="true">
+            <column ascending="true" name="share_study_id"/>
+         </index>
+      </table>
+      <table name="share_workflow_run" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('share_workflow_run_share_workflow_run_id_seq'::regclass)" digits="0" id="0" name="share_workflow_run_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="workflow_run_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="workflow_run_id" foreignKey="fk_share_workflow_run_workflow_run_id" implied="false" onDeleteCascade="false" table="workflow_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="registration_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_share_workflow_run_registration_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" defaultValue="true" digits="0" id="3" name="active" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="4" name="email" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="5" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="6" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="7" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="share_workflow_run_id" sequenceNumberInPK="1"/>
+         <index name="share_workflow_run_pkey" unique="true">
+            <column ascending="true" name="share_workflow_run_id"/>
+         </index>
+      </table>
+      <table name="study" numRows="110" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('study_study_id_seq'::regclass)" digits="0" id="0" name="study_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="study_id" foreignKey="experiment_study_id_fkey" implied="false" onDeleteCascade="false" table="experiment"/>
+            <child column="study_id" foreignKey="processing_studies_study_id_fkey" implied="false" onDeleteCascade="false" table="processing_studies"/>
+            <child column="study_id" foreignKey="fk_share_study_study_id" implied="false" onDeleteCascade="false" table="share_study"/>
+            <child column="study_id" foreignKey="study_attribute_study_id_fkey" implied="false" onDeleteCascade="false" table="study_attribute"/>
+            <child column="study_id" foreignKey="study_link_study_id_fkey" implied="false" onDeleteCascade="false" table="study_link"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="title" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="alias" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="accession" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="abstract" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="existing_type" nullable="false" remarks="" size="10" type="int4">
+            <parent column="study_type_id" foreignKey="study_existing_type_fkey" implied="false" onDeleteCascade="false" table="study_type"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="7" name="new_type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="center_name" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="center_project_name" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" defaultValue="0" digits="0" id="10" name="project_id" nullable="false" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="11" name="status" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="12" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="study_owner_id_fkey" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="13" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="6" id="14" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="15" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <primaryKey column="study_id" sequenceNumberInPK="1"/>
+         <index name="study_pkey" unique="true">
+            <column ascending="true" name="study_id"/>
+         </index>
+      </table>
+      <table name="study_attribute" numRows="110" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('study_attribute_study_attribute_id_seq'::regclass)" digits="0" id="0" name="study_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="study_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="study_id" foreignKey="study_attribute_study_id_fkey" implied="false" onDeleteCascade="false" table="study"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="units" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="study_attribute_id" sequenceNumberInPK="1"/>
+         <index name="study_attribute_pkey" unique="true">
+            <column ascending="true" name="study_attribute_id"/>
+         </index>
+      </table>
+      <table name="study_link" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('study_link_study_link_id_seq'::regclass)" digits="0" id="0" name="study_link_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="study_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="study_id" foreignKey="study_link_study_id_fkey" implied="false" onDeleteCascade="false" table="study"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="label" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="url" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="db" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="id" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="study_link_id" sequenceNumberInPK="1"/>
+         <index name="study_link_pkey" unique="true">
+            <column ascending="true" name="study_link_id"/>
+         </index>
+      </table>
+      <table name="study_type" numRows="11" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('study_type_study_type_id_seq'::regclass)" digits="0" id="0" name="study_type_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="study_type" foreignKey="lane_study_type_fkey" implied="false" onDeleteCascade="false" table="lane"/>
+            <child column="existing_type" foreignKey="study_existing_type_fkey" implied="false" onDeleteCascade="false" table="study"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="study_type_id" sequenceNumberInPK="1"/>
+         <index name="study_type_pkey" unique="true">
+            <column ascending="true" name="study_type_id"/>
+         </index>
+         <index name="study_type_name_key" unique="true">
+            <column ascending="true" name="name"/>
+         </index>
+      </table>
+      <table name="version" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('version_version_id_seq'::regclass)" digits="0" id="0" name="version_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="major" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="3" name="minor" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="4" name="bugfix" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="5" name="type" nullable="true" remarks="" size="100" type="varchar"/>
+      </table>
+      <table name="workflow" numRows="28" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('workflow_workflow_id_seq'::regclass)" digits="0" id="0" name="workflow_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="workflow_id" foreignKey="fk2d251a1c685fba9d" implied="false" onDeleteCascade="false" table="workflow_attribute"/>
+            <child column="workflow_id" foreignKey="fk_workflow_param_workflow_id" implied="false" onDeleteCascade="false" table="workflow_param"/>
+            <child column="workflow_id" foreignKey="workflow_run_workflow_id_fkey" implied="false" onDeleteCascade="false" table="workflow_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="description" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="input_algorithm" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="version" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="seqware_version" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_workflow_registration_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="7" name="base_ini_file" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="cmd" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="current_working_dir" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="host" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="11" name="username" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="12" name="workflow_template" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="6" id="13" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="14" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="15" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="16" name="permanent_bundle_location" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="17" name="workflow_class" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="18" name="workflow_type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="19" name="workflow_engine" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="workflow_id" sequenceNumberInPK="1"/>
+         <index name="workflow_pkey" unique="true">
+            <column ascending="true" name="workflow_id"/>
+         </index>
+      </table>
+      <table name="workflow_attribute" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('workflow_attribute_id_seq'::regclass)" digits="0" id="0" name="workflow_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="workflow_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="workflow_id" foreignKey="fk2d251a1c685fba9d" implied="false" onDeleteCascade="false" table="workflow"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="unit" nullable="true" remarks="" size="255" type="varchar"/>
+         <primaryKey column="workflow_attribute_id" sequenceNumberInPK="1"/>
+         <index name="workflow_attribute_pkey" unique="true">
+            <column ascending="true" name="workflow_attribute_id"/>
+         </index>
+         <index name="workflow_attribute_workflow_id_tag_value_key" unique="true">
+            <column ascending="true" name="workflow_id"/>
+            <column ascending="true" name="tag"/>
+            <column ascending="true" name="value"/>
+         </index>
+      </table>
+      <table name="workflow_param" numRows="809" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('workflow_param_workflow_param_id_seq'::regclass)" digits="0" id="0" name="workflow_param_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="workflow_param_id" foreignKey="fk_workflow_param_value_workflow_param_id" implied="false" onDeleteCascade="false" table="workflow_param_value"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="workflow_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="workflow_id" foreignKey="fk_workflow_param_workflow_id" implied="false" onDeleteCascade="false" table="workflow"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="type" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="key" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="display" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="0" id="5" name="display_name" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="file_meta_type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="default_value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="workflow_param_id" sequenceNumberInPK="1"/>
+         <index name="pk_workflow_param" unique="true">
+            <column ascending="true" name="workflow_param_id"/>
+         </index>
+      </table>
+      <table name="workflow_param_value" numRows="47" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('workflow_param_value_workflow_param_value_id_seq'::regclass)" digits="0" id="0" name="workflow_param_value_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="workflow_param_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="workflow_param_id" foreignKey="fk_workflow_param_value_workflow_param_id" implied="false" onDeleteCascade="false" table="workflow_param"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="display_name" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="workflow_param_value_id" sequenceNumberInPK="1"/>
+         <index name="pk_workflow_param_value" unique="true">
+            <column ascending="true" name="workflow_param_value_id"/>
+         </index>
+      </table>
+      <table name="workflow_run" numRows="1828" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('workflow_run_workflow_run_id_seq'::regclass)" digits="0" id="0" name="workflow_run_id" nullable="false" remarks="" size="10" type="serial">
+            <child column="workflow_run_id" foreignKey="fk_ius_workflow_runs_workflow_run_id" implied="false" onDeleteCascade="false" table="ius_workflow_runs"/>
+            <child column="workflow_run_id" foreignKey="fk_lane_workflow_runs_workflow_run_id" implied="false" onDeleteCascade="false" table="lane_workflow_runs"/>
+            <child column="ancestor_workflow_run_id" foreignKey="processing_ancestor_workflow_run_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+            <child column="workflow_run_id" foreignKey="processing_workflow_run_id_fkey" implied="false" onDeleteCascade="false" table="processing"/>
+            <child column="workflow_run_id" foreignKey="fk_share_workflow_run_workflow_run_id" implied="false" onDeleteCascade="false" table="share_workflow_run"/>
+            <child column="workflow_run_id" foreignKey="fk35f09d686071c5f8" implied="false" onDeleteCascade="false" table="workflow_run_attribute"/>
+            <child column="workflow_run_id" foreignKey="fk_workflow_run_param_workflow_run_id" implied="false" onDeleteCascade="false" table="workflow_run_param"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="1" name="workflow_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="workflow_id" foreignKey="workflow_run_workflow_id_fkey" implied="false" onDeleteCascade="false" table="workflow"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="owner_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="registration_id" foreignKey="fk_workflow_run_registration_id" implied="false" onDeleteCascade="false" table="registration"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="3" name="name" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="ini_file" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="cmd" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="6" name="workflow_template" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="7" name="dax" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="8" name="status" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="9" name="status_cmd" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="10" name="seqware_revision" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="11" name="host" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="12" name="current_working_dir" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="13" name="username" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="6" id="14" name="create_tstmp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="15" name="update_tstmp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="true" defaultValue="nextval('sw_accession_seq'::regclass)" digits="0" id="16" name="sw_accession" nullable="true" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="17" name="stderr" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="18" name="stdout" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="19" name="workflow_engine" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="workflow_run_id" sequenceNumberInPK="1"/>
+         <index name="workflow_run_pkey" unique="true">
+            <column ascending="true" name="workflow_run_id"/>
+         </index>
+         <index name="status_workflow_run" unique="false">
+            <column ascending="true" name="status"/>
+         </index>
+         <index name="sw_accession_workflow_run" unique="true">
+            <column ascending="true" name="sw_accession"/>
+         </index>
+      </table>
+      <table name="workflow_run_attribute" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('workflow_run_attribute_id_seq'::regclass)" digits="0" id="0" name="workflow_run_attribute_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="workflow_run_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="workflow_run_id" foreignKey="fk35f09d686071c5f8" implied="false" onDeleteCascade="false" table="workflow_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="tag" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="3" name="value" nullable="false" remarks="" size="255" type="varchar"/>
+         <column autoUpdated="false" digits="0" id="4" name="unit" nullable="true" remarks="" size="255" type="varchar"/>
+         <primaryKey column="workflow_run_attribute_id" sequenceNumberInPK="1"/>
+         <index name="workflow_run_attribute_pkey" unique="true">
+            <column ascending="true" name="workflow_run_attribute_id"/>
+         </index>
+         <index name="workflow_run_attribute_workflow_run_id_tag_value_key" unique="true">
+            <column ascending="true" name="workflow_run_id"/>
+            <column ascending="true" name="tag"/>
+            <column ascending="true" name="value"/>
+         </index>
+      </table>
+      <table name="workflow_run_param" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('workflow_run_param_workflow_run_param_id_seq'::regclass)" digits="0" id="0" name="workflow_run_param_id" nullable="false" remarks="" size="10" type="serial"/>
+         <column autoUpdated="false" digits="0" id="1" name="workflow_run_id" nullable="false" remarks="" size="10" type="int4">
+            <parent column="workflow_run_id" foreignKey="fk_workflow_run_param_workflow_run_id" implied="false" onDeleteCascade="false" table="workflow_run"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="type" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="key" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="parent_processing_accession" nullable="true" remarks="" size="10" type="int4"/>
+         <column autoUpdated="false" digits="0" id="5" name="value" nullable="true" remarks="" size="2147483647" type="text"/>
+         <primaryKey column="workflow_run_param_id" sequenceNumberInPK="1"/>
+         <index name="pk_workflow_run_param" unique="true">
+            <column ascending="true" name="workflow_run_param_id"/>
+         </index>
+      </table>
+   </tables>
+</database>

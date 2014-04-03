@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.sourceforge.seqware.common.dao.ProcessingDAO;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
@@ -51,7 +52,6 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      *
      * Updates an instance of Processing in the database.
      */
-    @Override
     public void update(Processing processing) {
 
         this.getHibernateTemplate().update(processing);
@@ -65,7 +65,6 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * This is likely to not work given the complex tree structures 
      * created with processing entries.
      */
-    @Override
     public void delete(Processing processing) {
       
         this.getHibernateTemplate().delete(processing);
@@ -83,9 +82,8 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * "processing_root_to_leaf"p, processing_files pf where p.parent_id =
      * processing_id or p.child_id = processing_id;
      */
-    @Override
     public List<File> getFiles(Integer processingId) {
-        List<File> files = new ArrayList<>();
+        List<File> files = new ArrayList<File>();
 
         /*
          * String query = "WITH RECURSIVE processing_root_to_leaf (child_id,
@@ -140,7 +138,6 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isHasFile(Integer processingId) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -164,9 +161,8 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /** {@inheritDoc} */
-    @Override
     public List<File> getFiles(Integer processingId, String metaType) {
-        List<File> files = new ArrayList<>();
+        List<File> files = new ArrayList<File>();
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? "
                 + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
@@ -193,7 +189,6 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     }
 
     /** {@inheritDoc} */
-    @Override
     public boolean isHasFile(Integer processingId, String metaType) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
@@ -225,7 +220,6 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * Finds an instance of Processing in the database by the Processing
      * emailAddress.
      */
-    @Override
     public Processing findByFilePath(String filePath) {
         String query = "from processing as processing where processing.file_path = ?";
         Processing processing = null;
@@ -241,9 +235,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      * {@inheritDoc}
      *
      * Finds an instance of SequencerRun in the database by the SequencerRun ID.
-     * @param id
      */
-    @Override
     public Processing findByID(Integer id) {
         String query = "from Processing as processing where processing.processingId = ?";
         Processing processing = null;
@@ -318,7 +310,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     /** {@inheritDoc} */
     @Override
     public List<Processing> list() {
-        ArrayList<Processing> l = new ArrayList<>();
+        ArrayList<Processing> l = new ArrayList<Processing>();
 
         String query = "from Processing";
 

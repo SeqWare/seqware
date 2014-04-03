@@ -96,7 +96,7 @@ public class LaneIDFilterTest extends AbstractResourceTest {
         resource = ClientResourceInstance.getChild(relativeURI);
         Log.stdout(getRelativeURI() + " GET");
         LaneList parent = new LaneList();
-        JaxbObject<LaneList> jaxb = new JaxbObject<>();
+        JaxbObject<LaneList> jaxb = new JaxbObject<LaneList>();
         try {
             Representation rep = resource.get();
             String text = rep.getText();

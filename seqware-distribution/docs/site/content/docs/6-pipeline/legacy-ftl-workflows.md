@@ -21,7 +21,7 @@ only disadvantage of the Java workflow language is the fact that it must be
 compiled after editing. The FTL workflow language is interpreted at runtime so
 no compilation is needed.</p>
 
-This document really focuses on the format of the FTL workflow language. For
+This document really focuses on the format of the FLT workflow language. For
 more information about the entire workflow bundle please see the [Developer
 Tutorial](/docs/3-getting-started/developer-tutorial/).  You should read this
 guide before this page.

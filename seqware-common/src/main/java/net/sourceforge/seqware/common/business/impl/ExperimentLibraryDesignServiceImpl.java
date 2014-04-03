@@ -28,7 +28,6 @@ public class ExperimentLibraryDesignServiceImpl implements ExperimentLibraryDesi
   }
 
   /** {@inheritDoc} */
-  @Override
   public void setExperimentLibraryDesignDAO(ExperimentLibraryDesignDAO dao) {
     this.dao = dao;
   }
@@ -38,7 +37,6 @@ public class ExperimentLibraryDesignServiceImpl implements ExperimentLibraryDesi
    *
    * Inserts an instance of ExperimentLibraryDesign into the database.
    */
-  @Override
   public void insert(ExperimentLibraryDesign obj) {
     dao.insert(obj);
   }
@@ -48,20 +46,16 @@ public class ExperimentLibraryDesignServiceImpl implements ExperimentLibraryDesi
    *
    * Updates an instance of ExperimentLibraryDesign in the database.
    */
-  @Override
   public void update(ExperimentLibraryDesign obj) {
     dao.update(obj);
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<ExperimentLibraryDesign> list(Registration registration) {
     return dao.list(registration);
   }
 
-  /** {@inheritDoc}
-     * @param id */
-  @Override
+  /** {@inheritDoc} */
   public ExperimentLibraryDesign findByID(Integer id) {
     ExperimentLibraryDesign obj = null;
     if (id != null) {

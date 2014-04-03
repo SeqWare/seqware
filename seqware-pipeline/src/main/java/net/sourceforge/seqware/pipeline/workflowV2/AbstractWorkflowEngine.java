@@ -14,7 +14,6 @@ public abstract class AbstractWorkflowEngine {
 
   /**
    * Run the prepared workflow.
-     * @return 
    */
   public abstract ReturnValue runWorkflow();
 

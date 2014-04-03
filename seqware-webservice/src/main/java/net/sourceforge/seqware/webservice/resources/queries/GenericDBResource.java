@@ -114,8 +114,7 @@ public class GenericDBResource extends BasicRestlet implements WadlDescribable {
         return s.toString();
     }
 
-    /** {@inheritDoc}
-     * @param ai */
+    /** {@inheritDoc} */
     @Override
     public ResourceInfo getResourceInfo(ApplicationInfo ai) {
         ResourceInfo ri = new ResourceInfo();

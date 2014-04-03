@@ -78,7 +78,7 @@ public class ChangeNumberPopupPageController  extends BaseCommandController {
 	private List<String> getListSavedPage(HttpServletRequest request){
 		List<String> listSavedPage = (List <String>)request.getSession(false).getAttribute("listSavedPage");
 		if(listSavedPage == null){
-			listSavedPage = new LinkedList<>();
+			listSavedPage = new LinkedList<String>();
 		}
 		return listSavedPage;
 	}
@@ -111,9 +111,7 @@ public class ChangeNumberPopupPageController  extends BaseCommandController {
 		return currentPage;
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)

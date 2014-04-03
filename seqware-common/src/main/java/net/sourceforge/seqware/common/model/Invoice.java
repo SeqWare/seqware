@@ -3,10 +3,14 @@ package net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -19,7 +23,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Invoice extends PermissionsAware implements Serializable, Comparable<Invoice> {
+public class Invoice implements Serializable, Comparable<Invoice>, PermissionsAware {
   /**
    * LEFT OFF WITH: this needs to be finished
    */
@@ -39,7 +43,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
   private Integer swAccession;
   private Date createTimestamp;
   private Logger logger;
-  private Set<Expense> expenses = new TreeSet<>();
+  private Set<Expense> expenses = new TreeSet<Expense>();
   //private Set<InvoiceAttribute> invoiceAttributes = new TreeSet<InvoiceAttribute>();
 
   /**
@@ -50,8 +54,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
     logger = Logger.getLogger(Invoice.class);
   }
 
-  /** {@inheritDoc}
-     * @param that */
+  /** {@inheritDoc} */
   @Override
   public int compareTo(Invoice that) {
     if (that == null)
@@ -73,8 +76,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
     return new ToStringBuilder(this).append("swAccession", getSwAccession()).toString();
   }
 
-  /** {@inheritDoc}
-     * @param other */
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object other) {
     if ((this == other))
@@ -85,17 +87,9 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
     return new EqualsBuilder().append(this.getSwAccession(), castOther.getSwAccession()).isEquals();
   }
   
-
-  
+  /** {@inheritDoc} */
   @Override
-  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      boolean consideredBefore = considered.contains(this.getSwAccession());
-      if (!consideredBefore) {
-          considered.add(this.getSwAccession());
-      } else {
-          return true;
-      }
-      
+  public boolean givesPermission(Registration registration) {
     boolean hasPermission = true;
     if (registration == null) {
       hasPermission = false;

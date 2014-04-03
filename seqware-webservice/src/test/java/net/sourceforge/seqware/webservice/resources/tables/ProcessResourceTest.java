@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import junit.framework.Assert;
+import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;

@@ -102,7 +102,6 @@ public class WorkflowStatusChecker extends Plugin {
 
   /**
    * {@inheritDoc}
-     * @return 
    */
   @Override
   public ReturnValue init() {
@@ -136,7 +135,6 @@ public class WorkflowStatusChecker extends Plugin {
 
   /**
    * {@inheritDoc}
-     * @return 
    */
   @Override
   public ReturnValue do_test() {
@@ -145,7 +143,6 @@ public class WorkflowStatusChecker extends Plugin {
 
   /**
    * {@inheritDoc}
-     * @return 
    */
   @Override
   public ReturnValue do_run() {
@@ -159,7 +156,7 @@ public class WorkflowStatusChecker extends Plugin {
 
     } else { // this checks workflows and writes their status back to the DB
 
-      Set<WorkflowRun> runningWorkflows = new HashSet<>();
+      Set<WorkflowRun> runningWorkflows = new HashSet<WorkflowRun>();
 
       if (options.has(WORKFLOW_RUN_ACCESSION)){
         List<Integer> swids = (List<Integer>) options.valuesOf(WORKFLOW_RUN_ACCESSION);
@@ -191,7 +188,7 @@ public class WorkflowStatusChecker extends Plugin {
         pool = Executors.newSingleThreadExecutor();
       }
 
-      List<Future<?>> futures = new ArrayList<>(runningWorkflows.size());
+      List<Future<?>> futures = new ArrayList<Future<?>>(runningWorkflows.size());
       // loop over running workflows and check their status
       for (WorkflowRun wr : runningWorkflows) {
         futures.add(pool.submit(new CheckerThread(wr)));
@@ -213,7 +210,6 @@ public class WorkflowStatusChecker extends Plugin {
 
   /**
    * {@inheritDoc}
-     * @return 
    */
   @Override
   public ReturnValue clean_up() {
@@ -222,7 +218,6 @@ public class WorkflowStatusChecker extends Plugin {
 
   /**
    * {@inheritDoc}
-     * @return 
    */
   @Override
   public String get_description() {
@@ -584,7 +579,7 @@ public class WorkflowStatusChecker extends Plugin {
   private static final Pattern SGE_ERR_FILE = Pattern.compile(".+\\.e(\\d+)");
 
   private static SortedMap<Integer, File> sgeFiles(Pattern p, File dir, final Set<String> extIds) {
-    SortedMap<Integer, File> idFiles = new TreeMap<>();
+    SortedMap<Integer, File> idFiles = new TreeMap<Integer, File>();
     for (File f : dir.listFiles()) {
       Matcher m = p.matcher(f.getName());
       if (m.find()) {
@@ -634,7 +629,7 @@ public class WorkflowStatusChecker extends Plugin {
   
   private static Set<String> sgeIds(WorkflowJob wf){
     List<WorkflowAction> actions = wf.getActions();
-    final Set<String> extIds = new HashSet<>();
+    final Set<String> extIds = new HashSet<String>();
     for (WorkflowAction a : actions) {
       String extId = a.getExternalId();
       if (a != null) {

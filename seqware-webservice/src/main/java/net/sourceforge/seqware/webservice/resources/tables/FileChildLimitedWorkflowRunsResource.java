@@ -30,6 +30,7 @@ import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfN
 
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
+import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
@@ -61,7 +62,7 @@ public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
             Log.debug("Dealing with FileChildWorkflowRunsResource with Json input");
             JaxbObject jaxbTool;
             Log.info("Using direct json search");
-            List<Integer> workflows = new ArrayList<>();
+            List<Integer> workflows = new ArrayList<Integer>();
             for (String key : queryValues.keySet()) {
                 Log.debug("key: " + key + " -> " + queryValues.get(key));
                 if (key.equals("workflows")) {
@@ -73,7 +74,7 @@ public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
                 }
             }
             // try to deserialize json file list
-            JaxbObject<IntegerList> jo = new JaxbObject<>();
+            JaxbObject<IntegerList> jo = new JaxbObject<IntegerList>();
             String text = entity.getText();
             Log.debug(text);
             List<Integer> o = null;
@@ -89,7 +90,7 @@ public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
             WorkflowRunList2 runs = FileChildWorkflowRunsResource.directRetrieveWorkflowRuns(o, workflows);
             // these variables will be used to return information
             Log.debug("Returning " + runs.getList().size() + " workflow runs");
-            jaxbTool = new JaxbObject<>();
+            jaxbTool = new JaxbObject<WorkflowRunList>();
             Log.debug("JaxbObjects started");
             assert runs.getList().isEmpty();
             final Document line = XmlTools.marshalToDocument(jaxbTool, runs);

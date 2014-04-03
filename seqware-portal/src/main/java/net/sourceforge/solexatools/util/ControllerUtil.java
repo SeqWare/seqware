@@ -76,7 +76,7 @@ public class ControllerUtil {
     for (Processing child : proc.getChildren()) {
       Set<Processing> processings = wfrProc.get(child.getWorkflowRun());
       if (processings == null) {
-        processings = new HashSet<>();
+        processings = new HashSet<Processing>();
       }
       processings.add(child);
       if (child.getWorkflowRun() != null) {

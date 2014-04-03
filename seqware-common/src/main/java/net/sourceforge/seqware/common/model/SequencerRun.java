@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class SequencerRun extends PermissionsAware implements Serializable, Comparable<SequencerRun>, ParentAccessionModel {
+public class SequencerRun implements Serializable, Comparable<SequencerRun>, PermissionsAware, ParentAccessionModel {
 
   private static final long serialVersionUID = 3681328115923390568L;
     private Integer sequencerRunId;
@@ -65,9 +65,9 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     private Integer errorCount;
     private Boolean skip;
     private String html;
-    private Set<SequencerRunAttribute> sequencerRunAttributes = new TreeSet<>();
+    private Set<SequencerRunAttribute> sequencerRunAttributes = new TreeSet<SequencerRunAttribute>();
     private Set<Processing> processings;
-    private SortedSet<Lane> lanes = new TreeSet<>();
+    private SortedSet<Lane> lanes = new TreeSet<Lane>();
     // private Lane lane1, lane2, lane3, lane4, lane5, lane6, lane7, lane8;
     private String strRefLane;
 
@@ -83,8 +83,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
          */
     }
 
-    /** {@inheritDoc}
-     * @param that */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(SequencerRun that) {
         if (that == null) {
@@ -109,8 +108,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
         return new ToStringBuilder(this).append("sequencerRunId", getSequencerRunId()).append("name", getName()).toString();
     }
 
-    /** {@inheritDoc}
-     * @param other */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -139,7 +137,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getAllProcessing() {
-        Set<Processing> allProcessings = new TreeSet<>();
+        Set<Processing> allProcessings = new TreeSet<Processing>();
 
         // add SequencerRun processing
         allProcessings.addAll(getProcessings());
@@ -996,10 +994,9 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
         this.sequencerRunAttributes = sequencerRunAttributes;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
-    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+    public boolean givesPermission(Registration registration) {
         Logger.getLogger(SequencerRun.class).info("Sequencer run always gives permission");
         return true;
     }

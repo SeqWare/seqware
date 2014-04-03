@@ -28,7 +28,7 @@ public class WorkflowRunIDResourceTest extends DatabaseResourceIDTest {
 
     public WorkflowRunIDResourceTest() {
         super("/workflowruns/6060");
-        jo = new JaxbObject<>();
+        jo = new JaxbObject<WorkflowRun>();
         o = new WorkflowRun();
     }
 

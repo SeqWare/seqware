@@ -34,7 +34,6 @@ public class StudyTypeServiceImpl implements StudyTypeService {
    * StudyTypeDAO. This method is called by the Spring framework at run time.
    * @see StudyTypeDAO
    */
-  @Override
   public void setStudyTypeDAO(StudyTypeDAO studyTypeDAO) {
     this.studyTypeDAO = studyTypeDAO;
   }
@@ -44,7 +43,6 @@ public class StudyTypeServiceImpl implements StudyTypeService {
    *
    * Inserts an instance of StudyType into the database.
    */
-  @Override
   public void insert(StudyType studyType) {
 
     studyTypeDAO.insert(studyType);
@@ -55,7 +53,6 @@ public class StudyTypeServiceImpl implements StudyTypeService {
    *
    * Updates an instance of StudyType in the database.
    */
-  @Override
   public void update(StudyType studyType) {
 
     studyTypeDAO.update(studyType);
@@ -63,7 +60,6 @@ public class StudyTypeServiceImpl implements StudyTypeService {
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<StudyType> list(Registration registration) {
     return studyTypeDAO.list(registration);
   }
@@ -75,7 +71,6 @@ public class StudyTypeServiceImpl implements StudyTypeService {
    * emailAddress, and copies the StudyType properties to an instance of
    * StudyType.
    */
-  @Override
   public StudyType findByName(String name) {
     StudyType studyType = null;
     if (name != null) {
@@ -88,9 +83,7 @@ public class StudyTypeServiceImpl implements StudyTypeService {
     return studyType;
   }
 
-  /** {@inheritDoc}
-     * @param studyTypeID */
-  @Override
+  /** {@inheritDoc} */
   public StudyType findByID(Integer studyTypeID) {
     StudyType studyType = null;
     if (studyTypeID != null) {

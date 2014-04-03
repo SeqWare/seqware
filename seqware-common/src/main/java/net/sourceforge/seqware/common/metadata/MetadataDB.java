@@ -37,7 +37,6 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
@@ -159,7 +158,6 @@ public class MetadataDB implements Metadata {
 
   /**
    * {@inheritDoc}
-     * @param parentSampleAccession
    */
     @Override
     public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title) {
@@ -414,8 +412,6 @@ public class MetadataDB implements Metadata {
   
     /**
      * {@inheritDoc}
-     * @param processingID
-     * @return 
      */
     public ReturnValue set_processing_update_tstmp_if_null(int processingID) {
         // Create a SQL statement
@@ -998,7 +994,6 @@ public class MetadataDB implements Metadata {
 
   /**
    * {@inheritDoc}
-     * @param workflowRunAccession
    */
   @Override
   public ReturnValue update_processing_workflow_run(int processingID, int workflowRunAccession) {
@@ -1027,8 +1022,6 @@ public class MetadataDB implements Metadata {
 
   /**
    * {@inheritDoc}
-     * @param inputFiles
-     * @param workflowengine
    */
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status,
@@ -1321,7 +1314,7 @@ public class MetadataDB implements Metadata {
       // open the ini file and parse each item
       // FIXME: this assumes there is one ini file which is generally fine for
       // bundled workflows but we could make this more flexible
-      HashMap<String, Map<String, String>> hm = new HashMap<>();
+      HashMap<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
       MapTools.ini2RichMap(configFile, hm);
 
       // foreach workflow param add an entry in the workflow_param table
@@ -1400,7 +1393,7 @@ public class MetadataDB implements Metadata {
       return executeQuery(sql, new ResultSetHandler<Map<String, String>>(){
         @Override
         public Map<String, String> handle(ResultSet rs) throws SQLException {
-          HashMap<String, String> map = new HashMap<>();
+          HashMap<String, String> map = new HashMap<String, String>();
           if (rs.next()) {
             map.put("name", rs.getString("name"));
             map.put("description", rs.getString("description"));
@@ -1549,7 +1542,6 @@ public class MetadataDB implements Metadata {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 
-  @Override
     public void fileProvenanceReportTrigger() {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
@@ -1562,11 +1554,6 @@ public class MetadataDB implements Metadata {
 
     @Override
     public SequencerRun getSequencerRunByName(String name) {
-        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
-    }
-
-    @Override
-    public Processing getProcessing(int processingAccession) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
   
@@ -1606,9 +1593,7 @@ public class MetadataDB implements Metadata {
   /**
    * <p>executeQuery.</p>
    *
-     * @param <T>
    * @param s a {@link java.lang.String} object.
-     * @param h
    * @return a {@link java.sql.ResultSet} object.
    * @throws java.sql.SQLException if any.
    */
@@ -1656,7 +1641,7 @@ public class MetadataDB implements Metadata {
       return executeQuery(sql, new ResultSetHandler<List<WorkflowRun>>(){
         @Override
         public List<WorkflowRun> handle(ResultSet rs) throws SQLException {
-          ArrayList<WorkflowRun> results = new ArrayList<>();
+          ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
           while (rs.next()) {
             WorkflowRun wr = new WorkflowRun();
             wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
@@ -1696,7 +1681,7 @@ public class MetadataDB implements Metadata {
       return executeQuery(sql, new ResultSetHandler<List<WorkflowRun>>(){
         @Override
         public List<WorkflowRun> handle(ResultSet rs) throws SQLException {
-          ArrayList<WorkflowRun> results = new ArrayList<>();
+          ArrayList<WorkflowRun> results = new ArrayList<WorkflowRun>();
           while (rs.next()) {
             WorkflowRun wr = new WorkflowRun();
             wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
@@ -1751,7 +1736,6 @@ public class MetadataDB implements Metadata {
 
   /**
    * {@inheritDoc}
-     * @param iusSWID
    */
   @Override
   public void annotateIUS(int iusSWID, IUSAttribute iusAtt, Boolean skip) {
@@ -2114,6 +2098,4 @@ public class MetadataDB implements Metadata {
     public List<Object> getViaAccessions(int[] accessions) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
-    
-    
 }
