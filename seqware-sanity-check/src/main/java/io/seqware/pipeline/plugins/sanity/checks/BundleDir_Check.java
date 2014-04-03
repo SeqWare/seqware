@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package io.seqware.pipeline.plugins.sanity.checks;
 
 import io.seqware.pipeline.plugins.sanity.QueryRunner;
@@ -61,11 +60,15 @@ public class BundleDir_Check implements SanityCheckPluginInterface {
         } else if (!settings.containsKey("SW_BUNDLE_DIR") || !settings.containsKey("SW_BUNDLE_REPO_DIR")) {
             return false;
         }
-        
+
         File bundleDir = new File(settings.get("SW_BUNDLE_DIR"));
         File bundleRepoDir = new File("SW_BUNDLE_REPO_DIR");
-        if(bundleDir.canRead() && bundleDir.canWrite() && bundleRepoDir.canRead() && bundleRepoDir.canWrite()){
-        } else {
+        if (bundleDir.exists() && bundleRepoDir.exists()) {
+            if (bundleDir.canRead() && bundleDir.canWrite() && bundleRepoDir.canRead() && bundleRepoDir.canWrite()) {
+            } else {
+                return false;
+            }
+        }else{
             return false;
         }
 
