@@ -19,32 +19,47 @@ package io.seqware.pipeline.plugins.sanity.checks;
 import io.seqware.pipeline.plugins.sanity.QueryRunner;
 import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.UUID;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.Organism;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Checks that the database you're pointing to (if there is one) is consistent with the web service you're pointing to 
+ * Checks that the database you're pointing to (if there is one) is consistent
+ * with the web service you're pointing to
+ *
  * @author dyuen
+ * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
-public class WS_Check implements SanityCheckPluginInterface { 
+public class WS_Check implements SanityCheckPluginInterface {
+
+    @Override
+    public boolean isTutorialTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isMasterTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isDBTest() {
+        return false;
+    }
 
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
         metadataWS.getOrganisms();
         return true;
     }
-    
+
     @Override
-    public String getDescription(){
+    public String getDescription() {
         return ".seqware web service settings do not point to a working web service";
     }
-    
+
     @Override
-    public int getPriority(){
+    public int getPriority() {
         return 5;
     }
 }

@@ -21,37 +21,46 @@ import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.io.File;
 import java.sql.SQLException;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase1;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase2;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase3;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase4;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase5;
-import net.sourceforge.seqware.pipeline.cli_tutorial.CLIUserPhase6;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Runs through our CLI tutorial
+ *
  * @author dyuen
+ * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
-public class Script_Check implements SanityCheckPluginInterface { 
+public class Script_Check implements SanityCheckPluginInterface {
+
+    @Override
+    public boolean isTutorialTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isMasterTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isDBTest() {
+        return false;
+    }
 
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
         File retrieveCompiledSeqwareScript = ITUtility.retrieveCompiledSeqwareScript();
         return retrieveCompiledSeqwareScript.exists();
     }
-    
+
     @Override
-    public String getDescription(){
+    public String getDescription() {
         return "Could not locate seqware script";
     }
-    
+
     @Override
-    public int getPriority(){
+    public int getPriority() {
         return 8;
     }
 }
