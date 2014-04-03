@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
  */
 public class BundleInfo {
 
-  private ArrayList<WorkflowInfo> workflows = new ArrayList<WorkflowInfo>();
+  private ArrayList<WorkflowInfo> workflows = new ArrayList<>();
   private File metadata = null;
 
   /**

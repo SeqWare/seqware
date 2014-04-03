@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -20,6 +21,7 @@ import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import org.apache.commons.lang3.ArrayUtils;
 
 /*
  * TODO:
@@ -61,6 +63,20 @@ public class Main {
     System.err.println(String.format(format, args));
   }
 
+    private static List<String> processOverrideParams(List<String> override) {
+        List<String> overrideParams = new ArrayList<>();
+        if (!override.isEmpty()){
+            overrideParams.add("--");
+            for(String entry : override){
+                String key = entry.substring(0, entry.indexOf("="));
+                String value = entry.substring(entry.indexOf("=") + 1);
+                overrideParams.add("--"+key);
+                overrideParams.add(value);
+            }
+        }
+        return overrideParams;
+    }
+
   private static class Kill extends RuntimeException {
   }
 
@@ -99,7 +115,7 @@ public class Main {
   }
 
   private static List<String> optVals(List<String> args, String key) {
-    List<String> vals = new ArrayList<String>();
+    List<String> vals = new ArrayList<>();
 
     for (int i = 0; i < args.size();) {
       String s = args.get(i);
@@ -186,7 +202,7 @@ public class Main {
 
   // COMMANDS:
 
-  private static final SortedSet<String> ANNO_OBJS = new TreeSet<String>(Arrays.asList("experiment", "file", "ius",
+  private static final SortedSet<String> ANNO_OBJS = new TreeSet<>(Arrays.asList("experiment", "file", "ius",
                                                                                        "lane", "processing", "sample",
                                                                                        "sequencer-run", "study",
                                                                                        "workflow", "workflow-run"));
@@ -283,7 +299,7 @@ public class Main {
   private static WorkflowInfo findWorkflowInfo(File dir, String name, String version) {
     BundleInfo bi = Bundle.findBundleInfo(dir);
 
-    List<WorkflowInfo> found = new ArrayList<WorkflowInfo>();
+    List<WorkflowInfo> found = new ArrayList<>();
 
     for (WorkflowInfo wi : bi.getWorkflowInfo()) {
       boolean n = name == null || wi.getName().equals(name);
@@ -333,15 +349,16 @@ public class Main {
       out("  --dir <bundle-dir>  The root directory of the bundle");
       out("");
       out("Optional parameters:");
-      out("  --engine <type>     The engine that will process the workflow run.");
-      out("                      May be one of: " + WorkflowPlugin.ENGINES_LIST);
-      out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-      out("                      or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
-      out("  --ini <ini-file>    An ini file to configure the workflow run.");
-      out("                      Repeat this parameter to provide multiple files.");
-      out("                      Defaults to the value of the 'config' node in metadata.xml.");
-      out("  --name <wf-name>    The name of the workflow in the bundle.");
-      out("  --version <ver>     The version of the workflow in the bundle.");
+      out("  --engine <type>            The engine that will process the workflow run.");
+      out("                             May be one of: " + WorkflowPlugin.ENGINES_LIST);
+      out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+      out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
+      out("  --ini <ini-file>           An ini file to configure the workflow run.");
+      out("                             Repeat this parameter to provide multiple files.");
+      out("                             Defaults to the value of the 'config' node in metadata.xml.");
+      out("  --name <wf-name>           The name of the workflow in the bundle.");
+      out("  --version <ver>            The version of the workflow in the bundle.");
+      out("  --override <key=value>     Override specific parameters from the workflow.ini");
       out("");
     } else {
       String dir = reqVal(args, "--dir");
@@ -349,6 +366,7 @@ public class Main {
       String name = optVal(args, "--name", null);
       String version = optVal(args, "--version", null);
       String engine = optVal(args, "--engine", null);
+      List<String> override = optVals(args, "--override");
 
       extras(args, "bundle launch");
 
@@ -360,22 +378,25 @@ public class Main {
         inis.add(wi.getConfigPath());
       }
       inis = resolveFiles(bundleDir, inis);
-
+      List<String> overrideParams = processOverrideParams(override);
+      
       out("Performing launch of workflow '" + name + "' version '" + version + "'");
-
+      
+      String[] runParams;
       if (engine == null) {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
-            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata");
+        runParams = new String[]{"--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata"};
       } else {
-        run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
-            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--workflow-engine",
-            engine);
+        runParams = new String[]{"--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
+            "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--workflow-engine",engine};
       }
+      String[] addAll = ArrayUtils.addAll(runParams, overrideParams.toArray(new String[overrideParams.size()]));
+      run(addAll);
     }
   }
 
   private static List<String> resolveFiles(File bundleDir, List<String> filenames) {
-    List<String> resolved = new ArrayList<String>();
+    List<String> resolved = new ArrayList<>();
     for (String filename : filenames) {
       String s = Bundle.resolveWorkflowBundleDirPath(bundleDir, filename);
       File f = new File(s);
@@ -567,7 +588,7 @@ public class Main {
       run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--table", table, "--create",
           "--interactive");
     } else {
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.Metadata");
       runnerArgs.add("--");
@@ -799,7 +820,7 @@ public class Main {
   }
 
   private static void filesReport(List<String> args) {
-    if (isHelp(args, false)) {
+    if (isHelp(args, true)) {
       out("");
       out("Usage: seqware files report --help");
       out("       seqware files report <params>");
@@ -808,31 +829,61 @@ public class Main {
       out("  A report of the provenance of output files.");
       out("");
       out("Optional parameters:");
-      out("  --out <file>        The name of the output file");
-      out("  --study <title>     Limit files to the specified study title");
+      out("  --out <file>                   The name of the output file");
+      out("  --study-name <name>            Limit files to the specified study name. Can occur multiple times.");
+      out("  --sample-name <name>           Limit files to the specified sample name. Can occur multiple times.");
+      out("  --sequencer-run-name <name>    Limit files to the specified sequencer run name. Can occur multiple times.");
+      out("  --ius-SWID <swid>              Limit files to the specified ius SWID. Can occur multiple times.");
+      out("  --lane-SWID <swid>             Limit files to the specified lane SWID. Can occur multiple times.");
       out("");
     } else {
-      String study = optVal(args, "--study", null);
-      String file = optVal(args, "--out", null);
+                
+      List<String> studies = optVals(args, "--study-name");
+      List<String> samples = optVals(args, "--sample-name");
+      List<String> sequencerRuns = optVals(args, "--sequencer-run-name");
+      List<String> iusSWIDs = optVals(args, "--ius-SWID");
+      List<String> laneSWIDs = optVals(args, "--lane-SWID");
+      String file = optVal(args, "--out", (new Date() + ".tsv").replace(" ", "_"));
 
       extras(args, "files report");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
-      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter");
+      runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.fileprovenance.FileProvenanceReporter");
       runnerArgs.add("--");
-      runnerArgs.add("--no-links");
 
-      if (study != null) {
-        runnerArgs.add("--study");
-        runnerArgs.add(study);
-      }
-      if (file != null) {
-        runnerArgs.add("--output-filename");
-        runnerArgs.add(file);
-      }
+        if (studies.isEmpty() && samples.isEmpty() && sequencerRuns.isEmpty() && iusSWIDs.isEmpty() && laneSWIDs.isEmpty()) {
+            runnerArgs.add("-all");
+        } else {
+
+            for (String study : studies) {
+                runnerArgs.add("--study-name");
+                runnerArgs.add(study);
+            }
+            for (String sample : samples) {
+                runnerArgs.add("--sample-name");
+                runnerArgs.add(sample);
+            }
+            for (String sequencerRun : sequencerRuns) {
+                runnerArgs.add("--sequencer-run-name");
+                runnerArgs.add(sequencerRun);
+            }
+            for (String iusSWID : iusSWIDs) {
+                runnerArgs.add("--ius-SWID");
+                runnerArgs.add(iusSWID);
+            }
+            for (String laneSWID : laneSWIDs) {
+                runnerArgs.add("--lane-SWID");
+                runnerArgs.add(laneSWID);
+            }
+        }
+        if (file != null) {
+            runnerArgs.add("--out");
+            runnerArgs.add(file);
+        }
 
       run(runnerArgs);
+      out("Created file "+file);
     }
   }
 
@@ -1002,7 +1053,7 @@ public class Main {
 
       extras(args, "workflow report");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
       runnerArgs.add("--");
@@ -1048,6 +1099,7 @@ public class Main {
       out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
       out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
       out("                             Repeat this parameter to provide multiple parents");
+      out("  --override <key=value>     Override specific parameters from the workflow.ini");
       out("");
     } else {
       String wfId = reqVal(args, "--accession");
@@ -1055,10 +1107,12 @@ public class Main {
       List<String> iniFiles = reqVals(args, "--ini");
       String engine = optVal(args, "--engine", null);
       List<String> parentIds = optVals(args, "--parent-accession");
+      List<String> override = optVals(args, "--override");
+
 
       extras(args, "workflow schedule");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
       runnerArgs.add("--");
@@ -1081,8 +1135,11 @@ public class Main {
         runnerArgs.add("--host");
         runnerArgs.add(host);
       }
+      
+      List<String> overrideParams = processOverrideParams(override);
 
-      run(runnerArgs);
+      String[] totalArgs = ArrayUtils.addAll(runnerArgs.toArray(new String[runnerArgs.size()]), overrideParams.toArray(new String[overrideParams.size()]));
+      run(totalArgs);
     }
   }
 
@@ -1109,7 +1166,7 @@ public class Main {
 
       extras(args, "workflow-run report");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
       runnerArgs.add("--");
@@ -1152,7 +1209,7 @@ public class Main {
 
       extras(args, "workflow-run delete");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.deletion.DeletionDB");
       runnerArgs.add("--");
@@ -1227,7 +1284,7 @@ public class Main {
         kill("seqware: cannot specify both '--accession' and '--host'.");
       }
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
       runnerArgs.add("--");
@@ -1273,7 +1330,7 @@ public class Main {
         kill("seqware: cannot specify both '--accession' and '--host'.");
       }
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker");
       runnerArgs.add("--");
@@ -1318,7 +1375,7 @@ public class Main {
 
       extras(args, "workflow-run stderr");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
       runnerArgs.add("--");
@@ -1354,7 +1411,7 @@ public class Main {
 
       extras(args, "workflow-run stdout");
 
-      List<String> runnerArgs = new ArrayList<String>();
+      List<String> runnerArgs = new ArrayList<>();
       runnerArgs.add("--plugin");
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter");
       runnerArgs.add("--");
@@ -1466,7 +1523,7 @@ public class Main {
       out("");
     } else {
      
-        List<String> runnerArgs = new ArrayList<String>();
+        List<String> runnerArgs = new ArrayList<>();
         runnerArgs.add("--plugin");
         runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB");
         runnerArgs.add("--");
@@ -1476,7 +1533,7 @@ public class Main {
   }
 
   public static void main(String[] argv) {
-    List<String> args = new ArrayList<String>(Arrays.asList(argv));
+    List<String> args = new ArrayList<>(Arrays.asList(argv));
     if (flag(args, "--debug")) {
       DEBUG.set(true);
     }

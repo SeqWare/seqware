@@ -2,6 +2,8 @@ package net.sourceforge.seqware.pipeline.bundle;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +42,7 @@ public class Bundle {
   protected String outputDir = null;
   // this is used as the location of the workflow bundle zip
   protected String outputZip = null;
-  protected ArrayList<File> filesArray = new ArrayList<File>();
+  protected ArrayList<File> filesArray = new ArrayList<>();
 
   /**
    * <p>Constructor for Bundle.</p>
@@ -150,6 +152,17 @@ public class Bundle {
       ret.setStderr("ERROR: the bundle you passed is either null or is not a file. It must be a zip file!");
       return (ret);
     }
+    
+      // check the bundle dir
+      File bundleDirFile = new File(bundleDir);
+      Path toPath = bundleDirFile.toPath();
+      if (!Files.isReadable(toPath)) {
+          throw new RuntimeException("ERROR: The provisioned bundle directory you provided is not readable");
+      }
+      if (!Files.isWritable(toPath)) {
+          throw new RuntimeException("\"ERROR: The provisioned bundle directory you provided is not writeable\"");
+      }
+    
 
     String bundleName = bundle.getName();
     bundleName = bundleName.replaceAll(".zip", "");
@@ -573,12 +586,12 @@ public class Bundle {
         return (new ReturnValue(ReturnValue.FAILURE));
       } else if (permanentBundleLocation.startsWith("s3://")) {
         Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the S3 location: " + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
-        packageBundleToS3(bundle, permanentBundleLocation);
+        ret = packageBundleToS3(bundle, permanentBundleLocation);
       } else {
         // then it's a directory          
         // now package this up
         Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the directory: " + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
-        packageBundle(bundle, new File(permanentBundleLocation));
+        ret = packageBundle(bundle, new File(permanentBundleLocation));
       }
     } // installing from a zip file (will be unzipped below by getBundleInfo) copy to permanent location
     else if (bundle != null && bundle.isFile() && bundle.getName().endsWith(".zip")) {
@@ -588,11 +601,16 @@ public class Bundle {
         return (new ReturnValue(ReturnValue.FAILURE));
       } else if (permanentBundleLocation.startsWith("s3://")) {
         Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the S3 location: " + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
-        copyBundleToS3(bundle, permanentBundleLocation);
+        ret = copyBundleToS3(bundle, permanentBundleLocation);
       } else {
         Log.stdout("Now transferring " + bundle.getAbsolutePath() +" to the directory: " + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
-        copyBundle(bundle.getAbsolutePath(), permanentBundleLocation);
+        ret = copyBundle(bundle.getAbsolutePath(), permanentBundleLocation);
       }
+    }
+    
+    if (ret.getExitStatus() != ReturnValue.SUCCESS) {
+        Log.error("The workflow install failed");
+        return (ret);
     }
 
     // asumption here is this unbundles it, in the future this won't be the case!

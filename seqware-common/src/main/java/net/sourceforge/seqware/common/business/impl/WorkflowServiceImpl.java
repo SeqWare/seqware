@@ -39,6 +39,7 @@ public class WorkflowServiceImpl implements WorkflowService {
    * WorkflowDAO. This method is called by the Spring framework at run time.
    * @see WorkflowDAO
    */
+  @Override
   public void setWorkflowDAO(WorkflowDAO workflowDAO) {
     this.workflowDAO = workflowDAO;
   }
@@ -51,11 +52,13 @@ public class WorkflowServiceImpl implements WorkflowService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(Workflow workflow) {
     workflowDAO.update(workflow);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void delete(Workflow workflow) {
     workflowDAO.delete(workflow);
   }
@@ -65,21 +68,25 @@ public class WorkflowServiceImpl implements WorkflowService {
    *
    * @return a {@link java.util.List} object.
    */
+  @Override
   public List<Workflow> list() {
     return workflowDAO.list();
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Workflow> list(Registration registration) {
     return workflowDAO.list(registration);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Workflow> listMyShared(Registration registration) {
     return workflowDAO.listMyShared(registration);
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Workflow> listSharedWithMe(Registration registration) {
     return workflowDAO.listSharedWithMe(registration);
   }
@@ -91,6 +98,7 @@ public class WorkflowServiceImpl implements WorkflowService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Workflow> findByName(String name) {
     List<Workflow> workflows = null;
     if (name != null) {
@@ -104,6 +112,7 @@ public class WorkflowServiceImpl implements WorkflowService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public Workflow findByID(Integer wfID) {
     Workflow workflow = null;
     if (wfID != null) {

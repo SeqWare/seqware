@@ -60,6 +60,7 @@ public class FileAttributeServerResourceTest extends RestletTestCase {
   private String uri;
 
   @Before
+  @Override
   public void setUp() throws Exception {
     super.setUp();
     Engine.getInstance().getRegisteredConverters().clear();
@@ -84,6 +85,7 @@ public class FileAttributeServerResourceTest extends RestletTestCase {
   }
 
   @After
+  @Override
   public void tearDown() throws Exception {
     c.stop();
     c = null;

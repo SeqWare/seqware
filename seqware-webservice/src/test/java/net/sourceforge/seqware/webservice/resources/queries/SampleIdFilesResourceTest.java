@@ -31,7 +31,7 @@ public class SampleIdFilesResourceTest extends DatabaseResourceIDTest {
 
     public SampleIdFilesResourceTest() {
         super("/samples/6207/files");
-        jo = new JaxbObject<ReturnValueList>();
+        jo = new JaxbObject<>();
         o = new ReturnValueList();
     }
 

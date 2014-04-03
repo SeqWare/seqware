@@ -31,7 +31,9 @@ public class InviteNewUserValidatorController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -42,8 +44,8 @@ public class InviteNewUserValidatorController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 		
 		Boolean isHasError = false;
-		List<String> errorMessages = new LinkedList<String>();
-		List<String> emailsHasError = new LinkedList<String>();
+		List<String> errorMessages = new LinkedList<>();
+		List<String> emailsHasError = new LinkedList<>();
 		
 		String[] emails = request.getParameterValues("emailsToString");
 		

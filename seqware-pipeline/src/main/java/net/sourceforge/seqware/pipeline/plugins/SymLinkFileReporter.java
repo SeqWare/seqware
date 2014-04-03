@@ -79,6 +79,7 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue init() {
@@ -88,6 +89,7 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -96,6 +98,7 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_run() {
@@ -386,6 +389,7 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue clean_up() {
@@ -397,6 +401,7 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public String get_description() {

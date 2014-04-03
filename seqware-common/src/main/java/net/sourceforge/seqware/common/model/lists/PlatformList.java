@@ -32,7 +32,7 @@ public class PlatformList{
      * <p>Constructor for PlatformList.</p>
      */
     public PlatformList() {
-        tList = new ArrayList<Platform>();
+        tList = new ArrayList<>();
     }
 
     /**

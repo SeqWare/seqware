@@ -127,7 +127,7 @@ public class SampleIDFilterTest extends AbstractResourceTest {
         resource = ClientResourceInstance.getChild(relativeURI);
         Log.stdout(getRelativeURI() + " GET");
         SampleList parent = new SampleList();
-        JaxbObject<SampleList> jaxb = new JaxbObject<SampleList>();
+        JaxbObject<SampleList> jaxb = new JaxbObject<>();
         try {
             Representation rep = resource.get();
             String text = rep.getText();

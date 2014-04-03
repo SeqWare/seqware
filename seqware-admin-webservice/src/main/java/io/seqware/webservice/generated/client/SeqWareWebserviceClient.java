@@ -35,9 +35,6 @@ public class SeqWareWebserviceClient {
     * 
     * @param modelName
     *           Lowercase resource name. (e.g. study, registration, sample)
-    * @param baseUri
-    *           Url for the webservice in the form
-    *           {@code http://localhost:38080/seqware-admin-webservice/webresources}.
     */
    public SeqWareWebserviceClient(String modelName) {
       ClientConfig config = new DefaultClientConfig();

@@ -1,15 +1,12 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Set;
 import java.util.TreeSet;
 
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
-import org.apache.commons.dbutils.DbUtils;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -21,7 +18,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class File implements Serializable, Comparable<File>, PermissionsAware {
+public class File extends PermissionsAware implements Serializable, Comparable<File> {
 
   private static final long serialVersionUID = 3681322115923390568L;
   private Integer fileId;
@@ -36,8 +33,8 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
   private String urlLabel;
   private String md5sum;
   private FileType fileType;
-  private Set<Processing> processings = new TreeSet<Processing>();
-  private Set<FileAttribute> fileAttributes = new TreeSet<FileAttribute>();
+  private Set<Processing> processings = new TreeSet<>();
+  private Set<FileAttribute> fileAttributes = new TreeSet<>();
   private Long size;
   private Boolean skip;
 
@@ -66,7 +63,8 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(File that) {
     return (that.getFileId().compareTo(this.getFileId()));
@@ -81,7 +79,8 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
         + ", skip=" + getSkip() + '}';
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -343,17 +342,26 @@ public class File implements Serializable, Comparable<File>, PermissionsAware {
     this.fileType = fileType;
   }
 
-  /** {@inheritDoc} */
+
   @Override
-  public boolean givesPermission(Registration registration) {
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for File object " + swAccession);
+      } else {
+          Log.debug("Skipping permissions for File object " + swAccession + " , checked before");
+          return true;
+      }
+      
     boolean hasPermission = true;
     if (processings != null) {
       for (Processing p : processings) {
-        if (!p.givesPermission(registration)) {
-          hasPermission = false;
-          break;
+        if (!p.givesPermission(registration, considered)) {
+            hasPermission = false;
+            break;
         }
-      }
+        }
     } else {// orphaned File
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(File.class).warn("Modifying Orphan File: " + toString());

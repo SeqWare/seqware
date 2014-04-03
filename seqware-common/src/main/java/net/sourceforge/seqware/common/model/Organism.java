@@ -27,7 +27,8 @@ public class Organism implements Serializable, Comparable<Organism>, SecondTierM
 		super();
 	}
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
 	public int compareTo(Organism that) {
 		if(that == null)
@@ -42,7 +43,8 @@ public class Organism implements Serializable, Comparable<Organism>, SecondTierM
 		return(that.getName().compareTo(this.getName()));
 	}	
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

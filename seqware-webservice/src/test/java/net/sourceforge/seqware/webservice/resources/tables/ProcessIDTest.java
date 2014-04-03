@@ -28,7 +28,7 @@ public class ProcessIDTest extends DatabaseResourceIDTest {
 
     public ProcessIDTest() {
         super("/processes/2804");
-        jo = new JaxbObject<Processing>();
+        jo = new JaxbObject<>();
         o = new Processing();
     }
 

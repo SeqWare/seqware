@@ -52,7 +52,8 @@ public class ProcessResource extends DatabaseResource {
         super("processing");
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Representation post(Representation entity) {
         return super.post(entity);
@@ -69,12 +70,12 @@ public class ProcessResource extends DatabaseResource {
         Document line;
         ProcessingService ss = BeanFactory.getProcessingServiceBean();
         if (queryValues.get("id") != null) {
-            JaxbObject<Processing> jaxbTool = new JaxbObject<Processing>();
+            JaxbObject<Processing> jaxbTool = new JaxbObject<>();
             Processing p = (Processing) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
             Processing dto = copier.hibernate2dto(Processing.class, p);
             if (fields.contains("files")) {
                 Set<File> files = p.getFiles();
-                Set<File> copiedFiles = new HashSet<File>();
+                Set<File> copiedFiles = new HashSet<>();
                 if (files != null) {
                     for (File file : files) {
                         copiedFiles.add(copier.hibernate2dto(File.class, file));
@@ -87,7 +88,7 @@ public class ProcessResource extends DatabaseResource {
             line = XmlTools.marshalToDocument(jaxbTool, dto);
 
         } else {
-            JaxbObject<ProcessingList> jaxbTool = new JaxbObject<ProcessingList>();
+            JaxbObject<ProcessingList> jaxbTool = new JaxbObject<>();
             ProcessingList list = new ProcessingList();
             List<Processing> processings = (List<Processing>) testIfNull(ss.list());
             for (Processing p : processings) {
@@ -109,7 +110,7 @@ public class ProcessResource extends DatabaseResource {
     public void postJaxb(Representation entity) {
         authenticate();
         try {
-            JaxbObject<Processing> jo = new JaxbObject<Processing>();
+            JaxbObject<Processing> jo = new JaxbObject<>();
             String text = entity.getText();
             Processing p;
             try {

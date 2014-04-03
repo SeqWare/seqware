@@ -158,7 +158,8 @@ public class StudySampleReportFileLineItem implements Comparable<StudySampleRepo
 		this.libraryType = libraryType;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param arg0 */
 	@Override
 	public int compareTo(StudySampleReportFileLineItem arg0) {
 		// TODO Auto-generated method stub

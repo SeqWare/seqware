@@ -17,9 +17,6 @@
 package net.sourceforge.seqware.common.util.workflowtools;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.junit.*;
 import static org.junit.Assert.*;

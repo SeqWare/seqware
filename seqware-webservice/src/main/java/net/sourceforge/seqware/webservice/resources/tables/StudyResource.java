@@ -25,12 +25,10 @@ import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyType;
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.lists.StudyList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -61,7 +59,8 @@ public class StudyResource extends DatabaseResource {
         authenticate();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Representation get() {
         getXML();
@@ -79,12 +78,12 @@ public class StudyResource extends DatabaseResource {
 
         if (queryValues.get("title") != null) {
             Study study = (Study) testIfNull(ss.findByTitle(queryValues.get("title")));
-            JaxbObject jaxbTool = new JaxbObject<Study>();
+            JaxbObject jaxbTool = new JaxbObject<>();
             Study dto = copier.hibernate2dto(Study.class, study);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
         } else {
-            JaxbObject jaxbTool = new JaxbObject<StudyList>();
+            JaxbObject jaxbTool = new JaxbObject<>();
             List<Study> studies = (List<Study>) testIfNull(ss.list());
             StudyList eList = new StudyList();
             eList.setList(new ArrayList());
@@ -109,7 +108,7 @@ public class StudyResource extends DatabaseResource {
     @Post("xml")
     public void postJaxb(Representation entity) throws ResourceException {
         try {
-            JaxbObject<Study> jo = new JaxbObject<Study>();
+            JaxbObject<Study> jo = new JaxbObject<>();
             String text = entity.getText();
             Study p = null;
             try {
