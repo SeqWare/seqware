@@ -93,7 +93,7 @@
     <artifactId>seqware</artifactId>
     <packaging>pom</packaging>
     <groupId>com.github.seqware</groupId>
-    <version>1.0.8-SNAPSHOT</version>
+    <version>1.0.13-SNAPSHOT</version>
 
     <repositories>
         <repository>
@@ -200,8 +200,8 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.tomcat</groupId>
-                <artifactId>dbcp</artifactId>
-                <version>6.0.29</version>
+                <artifactId>tomcat-dbcp</artifactId>
+                <version>7.0.50</version>
             </dependency>            
             <!-- while moving to HubFlow, the combination of HubFlow and maven:prepare is causing problems.
             release:update-versions seems to have an easier time with versions defined here -->
@@ -621,8 +621,8 @@
                 
                 <plugin>
                     <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat6-maven-plugin</artifactId>
-                    <version>2.1</version>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.2</version>
                     <configuration>
                         <port>8889</port>
 			<useNaming>true</useNaming>
@@ -661,8 +661,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
                     <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
+                        <source>1.7</source>
+                        <target>1.7</target>
                         <showDeprecation>true</showDeprecation>
                         <!-- added forkMode, the full GitHub mvn compile seems to blow up with an OutOfMemoryError -->
                         <!-- Moved forkMode setting to Properties section, so it can be overriden on command line -->
@@ -704,7 +704,7 @@
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>${maven-pmd-plugin.version}</version>
                     <configuration>
-                        <targetJdk>1.6</targetJdk>
+                        <targetJdk>1.7</targetJdk>
                     </configuration>
                 </plugin>
                 <plugin>

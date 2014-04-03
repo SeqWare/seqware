@@ -32,6 +32,8 @@ public class LogoutController extends AbstractController {
    * {@inheritDoc}
    *
    * Handles a user's logout request.
+     * @return 
+     * @throws java.lang.Exception 
    */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,

@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -26,7 +27,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Experiment implements Serializable, Comparable<Experiment>, PermissionsAware, ParentAccessionModel {
+public class Experiment extends PermissionsAware implements Serializable, Comparable<Experiment>, ParentAccessionModel {
 
   private static final long serialVersionUID = 2L;
   private Integer experimentId;
@@ -65,9 +66,9 @@ public class Experiment implements Serializable, Comparable<Experiment>, Permiss
   private String expSpotDesignTagSpec;
   private String expSpotDesignAdapterSpec;
   private Integer expSpotDesignReadsPerSpot;
-  private Set<Processing> processings = new TreeSet<Processing>();
-  private Set<ExperimentAttribute> experimentAttributes = new TreeSet<ExperimentAttribute>();
-  private Set<ExperimentLink> experimentLinks = new TreeSet<ExperimentLink>();
+  private Set<Processing> processings = new TreeSet<>();
+  private Set<ExperimentAttribute> experimentAttributes = new TreeSet<>();
+  private Set<ExperimentLink> experimentLinks = new TreeSet<>();
   // these are non-persisted fields used by the platform connection
   private Integer platformInt;
   private SortedSet<Sample> samples;
@@ -86,7 +87,8 @@ public class Experiment implements Serializable, Comparable<Experiment>, Permiss
     super();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param that */
   @Override
   public int compareTo(Experiment that) {
     if (that == null) {
@@ -118,7 +120,8 @@ public class Experiment implements Serializable, Comparable<Experiment>, Permiss
         + createTimestamp + ", updateTimestamp=" + updateTimestamp + '}';
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param other */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -1013,14 +1016,22 @@ public class Experiment implements Serializable, Comparable<Experiment>, Permiss
     this.experimentLinks = experimentLinks;
   }
 
-  /** {@inheritDoc} */
   @Override
-  public boolean givesPermission(Registration registration) {
-    boolean hasPermission = false;
+  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered){
+      boolean consideredBefore = considered.contains(this.getSwAccession());
+      if (!consideredBefore) {
+          considered.add(this.getSwAccession());
+          Log.debug("Checking permissions for experiment object " + swAccession);
+      } else {
+          Log.debug("Skipping permissions for experiment object " + swAccession + " , checked before");
+          return true;
+      }
+      
+      boolean hasPermission = false;
     if (study != null) {
       StudyService ss = BeanFactory.getStudyServiceBean();
       Study newStudy = ss.findBySWAccession(study.getSwAccession());
-      hasPermission = newStudy.givesPermission(registration);
+      hasPermission = newStudy.givesPermission(registration, considered);
     } else {// orphaned Experiment
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(Experiment.class).warn("Modifying Orphan Experiment: " + this.getName());

@@ -65,7 +65,7 @@ public class RootSampleResource extends DatabaseResource {
 
         SampleService ss = BeanFactory.getSampleServiceBean();
 
-        jaxbTool = new JaxbObject<SampleList>();
+        jaxbTool = new JaxbObject<>();
         List<Sample> samples = (List<Sample>) testIfNull(ss.list());
         SampleList eList = new SampleList();
         eList.setList(new ArrayList());

@@ -41,7 +41,7 @@ public abstract class Module implements ModuleInterface {
   File stderrFile;
   protected int processingAccession;
 
-  List<String> parameters = new ArrayList<String>();
+  List<String> parameters = new ArrayList<>();
 
   /**
    * Getter for the file where the stdout will be redirected. By default, the
@@ -100,6 +100,7 @@ public abstract class Module implements ModuleInterface {
    *
    * @return a {@link java.lang.String} object.
    */
+  @Override
   public String getAlgorithm() {
     return algorithm;
   }
@@ -140,7 +141,9 @@ public abstract class Module implements ModuleInterface {
    * found. This is to work around a limitation in JOpt. It breaks apart
    * arguments by space regarless if the arg is a quoted string (and hence
    * should be treated as one arg)
+     * @param parameters
    */
+  @Override
   public void setParameters(List<String> parameters) {
     Log.info("Parsing Command Parameters:");
     // Clear the parameters first. Otherwise, it will have side effect when
@@ -252,6 +255,7 @@ public abstract class Module implements ModuleInterface {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public abstract ReturnValue do_run();
 
   // Default member functions member functions
@@ -260,6 +264,7 @@ public abstract class Module implements ModuleInterface {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public ReturnValue init() {
     return ReturnValue.featureNotImplemented();
   }
@@ -269,6 +274,7 @@ public abstract class Module implements ModuleInterface {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public ReturnValue clean_up() {
     return ReturnValue.featureNotImplemented();
   }
@@ -278,6 +284,7 @@ public abstract class Module implements ModuleInterface {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public abstract ReturnValue do_test();
 
   /**
@@ -285,6 +292,7 @@ public abstract class Module implements ModuleInterface {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public abstract ReturnValue do_verify_input();
 
   /**
@@ -292,6 +300,7 @@ public abstract class Module implements ModuleInterface {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public abstract ReturnValue do_verify_parameters();
 
   /**
@@ -299,6 +308,7 @@ public abstract class Module implements ModuleInterface {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
+  @Override
   public abstract ReturnValue do_verify_output();
 
   /**

@@ -103,7 +103,7 @@ public class NodeHtmlUtil {
   // Hacking, could we do something like this to "skip over" processing events
   // that don't have files?
   private static ArrayList<Processing> findProcessingWithFiles(Processing proc, WorkflowRun workflowRun) {
-    ArrayList<Processing> results = new ArrayList<Processing>();
+    ArrayList<Processing> results = new ArrayList<>();
     if (proc.getFiles().size() > 0) {
       results.add(proc);
     } else {

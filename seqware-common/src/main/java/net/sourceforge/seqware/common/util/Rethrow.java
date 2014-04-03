@@ -19,6 +19,7 @@ public class Rethrow {
    * </pre>
    * 
    * @param t
+     * @return 
    */
   public static RuntimeException rethrow(Throwable t) {
     if (t instanceof RuntimeException)

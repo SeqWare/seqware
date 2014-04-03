@@ -34,7 +34,7 @@ public class Studies {
     Metadata md = MetadataFactory.get(ConfigTools.getSettings());
     List<Study> studies = md.getAllStudies();
     StringBuilder sb = new StringBuilder();
-    List<String> strs = new ArrayList<String>(Arrays.asList("Title", "Description", "Creation Date",
+    List<String> strs = new ArrayList<>(Arrays.asList("Title", "Description", "Creation Date",
                                                             "SeqWare Accession", "Study Type", "Center Name",
                                                             "Center Project Name"));
     tsv(sb, strs);

@@ -31,7 +31,8 @@ public class ShareWorkflowRun implements Serializable, Comparable<ShareWorkflowR
 	public ShareWorkflowRun() {
 		super();
 	}
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param that */
 	@Override
 	public int compareTo(ShareWorkflowRun that) {
 		if(that == null)
@@ -53,7 +54,8 @@ public class ShareWorkflowRun implements Serializable, Comparable<ShareWorkflowR
 		//	.append("email", getEmail())
 			.toString();
 	}
-        /** {@inheritDoc} */
+        /** {@inheritDoc}
+     * @param other */
         @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

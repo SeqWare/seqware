@@ -23,14 +23,12 @@ import net.sourceforge.seqware.common.business.LaneService;
 import net.sourceforge.seqware.common.business.LibrarySelectionService;
 import net.sourceforge.seqware.common.business.LibrarySourceService;
 import net.sourceforge.seqware.common.business.LibraryStrategyService;
-import net.sourceforge.seqware.common.business.PlatformService;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.LibrarySelection;
 import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
-import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.lists.LaneList;
@@ -76,14 +74,14 @@ public class LaneResource extends DatabaseResource {
     Document line;
 
     if (queryValues.get("id") != null) {
-      JaxbObject<Lane> jaxbTool = new JaxbObject<Lane>();
+      JaxbObject<Lane> jaxbTool = new JaxbObject<>();
       Lane p = (Lane) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
 
       Lane dto = copier.hibernate2dto(Lane.class, p);
       line = XmlTools.marshalToDocument(jaxbTool, dto);
 
     } else {
-      JaxbObject<LaneList> jaxbTool = new JaxbObject<LaneList>();
+      JaxbObject<LaneList> jaxbTool = new JaxbObject<>();
       LaneList list = new LaneList();
       List<Lane> lanes = (List<Lane>) testIfNull(ss.list());
       for (Lane l : lanes) {
@@ -107,7 +105,7 @@ public class LaneResource extends DatabaseResource {
   public void postJaxb(Representation entity) throws ResourceException {
     authenticate();
     try {
-      JaxbObject<Lane> jo = new JaxbObject<Lane>();
+      JaxbObject<Lane> jo = new JaxbObject<>();
       String text = entity.getText();
       Lane o = null;
       try {

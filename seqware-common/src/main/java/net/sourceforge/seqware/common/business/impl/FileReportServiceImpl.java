@@ -45,7 +45,9 @@ public class FileReportServiceImpl implements FileReportService {
     return fileReportDAO.countOfRows(study);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param limit
+     * @param offset */
   @Override
   public List<FileReportRow> getReportForSequencerRun(SequencerRun seqRun, String sortField, String sortOrder,
       int offset, int limit) {

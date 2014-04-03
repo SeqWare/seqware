@@ -30,6 +30,7 @@ import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
 import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
@@ -89,7 +90,7 @@ public class MetadataNoConnection implements Metadata {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
     finished.setExitStatus(ReturnValue.SUCCESS);
-    List<ReturnValue> list = new ArrayList<ReturnValue>();
+    List<ReturnValue> list = new ArrayList<>();
     list.add(finished);
     return list;
 
@@ -101,7 +102,7 @@ public class MetadataNoConnection implements Metadata {
     logger.info("No metadata connection");
     ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
     finished.setExitStatus(ReturnValue.SUCCESS);
-    List<ReturnValue> list = new ArrayList<ReturnValue>();
+    List<ReturnValue> list = new ArrayList<>();
     list.add(finished);
     return list;
 
@@ -145,7 +146,8 @@ public class MetadataNoConnection implements Metadata {
     return (new ReturnValue(ReturnValue.SUCCESS));
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param parentSampleAccession */
     @Override
     public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title) {
         logger.info("No metadata connection");
@@ -170,32 +172,32 @@ public class MetadataNoConnection implements Metadata {
   @Override
   public List<Platform> getPlatforms() {
               logger.info("No metadata connection");
-        return (new ArrayList<Platform>());
+        return (new ArrayList<>());
   }
   @Override
   public List<Organism> getOrganisms() {
                     logger.info("No metadata connection");
-        return (new ArrayList<Organism>());
+        return (new ArrayList<>());
   }
   @Override
   public List<StudyType> getStudyTypes() {
                     logger.info("No metadata connection");
-        return (new ArrayList<StudyType>());
+        return (new ArrayList<>());
   }
   @Override
   public List<LibraryStrategy> getLibraryStrategies() {
                     logger.info("No metadata connection");
-        return (new ArrayList<LibraryStrategy>());
+        return (new ArrayList<>());
   }
   @Override
   public List<LibrarySelection> getLibrarySelections() {
                     logger.info("No metadata connection");
-        return (new ArrayList<LibrarySelection>());
+        return (new ArrayList<>());
   }
   @Override
   public List<LibrarySource> getLibrarySource() {
                     logger.info("No metadata connection");
-        return (new ArrayList<LibrarySource>());
+        return (new ArrayList<>());
   }
   
   // FIXME: This should all be a transaction. For now, we end up with cruft in
@@ -335,7 +337,8 @@ public class MetadataNoConnection implements Metadata {
     logger.info("No metadata connection");
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param workflowRunAccession */
   @Override
   public ReturnValue update_processing_workflow_run(int processingID, int workflowRunAccession) {
     logger.info("No metadata connection");
@@ -345,7 +348,8 @@ public class MetadataNoConnection implements Metadata {
 
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param inputFiles */
   @Override
   public ReturnValue update_workflow_run(int workflowRunId, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status,
       String statusCmd, String workingDirectory, String dax, String ini, String host,
@@ -383,6 +387,8 @@ public class MetadataNoConnection implements Metadata {
     /**
      * {@inheritDoc}
      *
+     * @param workflow_engine
+     * @param workflow_type
      */ 
   @Override
   public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflow_class, String workflow_type, String workflow_engine) {
@@ -397,7 +403,7 @@ public class MetadataNoConnection implements Metadata {
   @Override
   public Map<String, String> get_workflow_info(int workflowAccession) {
     logger.info("No metadata connection");
-    HashMap<String, String> map = new HashMap<String, String>();
+    HashMap<String, String> map = new HashMap<>();
     return (map);
 
   }
@@ -448,21 +454,21 @@ public class MetadataNoConnection implements Metadata {
   @Override
   public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName) {
     logger.info("No metadata connection");
-    return new ArrayList<ReturnValue>();
+    return new ArrayList<>();
   }
 
   /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
     logger.info("No metadata connection");
-    return new ArrayList<WorkflowRun>();
+    return new ArrayList<>();
   }
 
   /** {@inheritDoc} */
   @Override
   public List<WorkflowRun> getWorkflowRunsByHost(String host) {
     logger.info("No metadata connection");
-    return new ArrayList<WorkflowRun>();
+    return new ArrayList<>();
   }
 
   /** {@inheritDoc} */
@@ -479,7 +485,7 @@ public class MetadataNoConnection implements Metadata {
   @Override
   public List<Study> getAllStudies() {
     logger.info("No metadata connection");
-    return new ArrayList<Study>();
+    return new ArrayList<>();
   }
 
   /**
@@ -493,7 +499,8 @@ public class MetadataNoConnection implements Metadata {
     return (null);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param iusSWID */
   @Override
   public void annotateIUS(int iusSWID, IUSAttribute iusAtt, Boolean skip) {
     logger.info("No metadata connection");
@@ -566,7 +573,7 @@ public class MetadataNoConnection implements Metadata {
   @Override
   public SortedSet<WorkflowParam> getWorkflowParams(String swAccession) {
     logger.info("No metadata connection");
-    return new TreeSet<WorkflowParam>();
+    return new TreeSet<>();
   }
 
   /** {@inheritDoc} */
@@ -671,67 +678,67 @@ public class MetadataNoConnection implements Metadata {
 
     @Override
     public List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles) {
-         return new ArrayList<ReturnValue>();
+         return new ArrayList<>();
     }
 
     @Override
     public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
-         return new ArrayList<ReturnValue>();
+         return new ArrayList<>();
     }
 
     @Override
     public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles) {
-         return new ArrayList<ReturnValue>();
+         return new ArrayList<>();
     }
 
     @Override
     public List<SequencerRun> getAllSequencerRuns() {
-        return new ArrayList<SequencerRun>();
+        return new ArrayList<>();
     }
 
     @Override
     public List<Lane> getLanesFrom(int sequencerRunAccession) {
-        return new ArrayList<Lane>();
+        return new ArrayList<>();
     }
 
     @Override
     public List<IUS> getIUSFrom(int laneOrSampleAccession) {
-        return new ArrayList<IUS>();
+        return new ArrayList<>();
     }
 
     @Override
     public List<Experiment> getExperimentsFrom(int studyAccession) {
-        return new ArrayList<Experiment>();
+        return new ArrayList<>();
     }
 
     @Override
     public List<Sample> getSamplesFrom(int experimentAccession) {
-        return new ArrayList<Sample>();
+        return new ArrayList<>();
     }
 
     @Override
     public List<Sample> getChildSamplesFrom(int parentSampleAccession) {
-        return new ArrayList<Sample>();
+        return new ArrayList<>();
     }
 
     @Override
     public List<Sample> getParentSamplesFrom(int childSampleAccession) {
-        return new ArrayList<Sample>();
+        return new ArrayList<>();
     }
     
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions) {
-        return new ArrayList<WorkflowRun>();
+        return new ArrayList<>();
     }
     
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithInputFiles(List<Integer> fileAccessions, List<Integer> workflowAccessions) {
-        return new ArrayList<WorkflowRun>();
+        return new ArrayList<>();
     }
     
     @Override
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
-        return new ArrayList<WorkflowRun>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -811,6 +818,12 @@ public class MetadataNoConnection implements Metadata {
 
     @Override
     public SequencerRun getSequencerRunByName(String name) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public Processing getProcessing(int processingAccession) {
         logger.info("No metadata connection");
         return null;
     }

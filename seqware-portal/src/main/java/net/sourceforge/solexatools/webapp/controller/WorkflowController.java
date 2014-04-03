@@ -219,7 +219,7 @@ public class WorkflowController extends MultiActionController{
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<String,Object>();
+		HashMap<String,Object>	model			= new HashMap<>();
 		Workflow				workflow		= getRequestedWorkflow(request);
 
 		if (workflow != null) {
@@ -251,7 +251,7 @@ public class WorkflowController extends MultiActionController{
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<String,Object>();
+		HashMap<String,Object>	model			= new HashMap<>();
 	/*	Study				    study			= getRequestedStudy(request);
 
 		if (study != null) {

@@ -25,13 +25,13 @@ import java.util.TreeSet;
  */
 public class SetOperations {
     public static <T> Set<T> union(Set<T> setA, Set<T> setB) {
-    Set<T> tmp = new TreeSet<T>(setA);
+    Set<T> tmp = new TreeSet<>(setA);
     tmp.addAll(setB);
     return tmp;
   }
 
   public static <T> Set<T> intersection(Set<T> setA, Set<T> setB) {
-    Set<T> tmp = new TreeSet<T>();
+    Set<T> tmp = new TreeSet<>();
     for (T x : setA)
       if (setB.contains(x))
         tmp.add(x);
@@ -39,7 +39,7 @@ public class SetOperations {
   }
 
   public static <T> Set<T> difference(Set<T> setA, Set<T> setB) {
-    Set<T> tmp = new TreeSet<T>(setA);
+    Set<T> tmp = new TreeSet<>(setA);
     tmp.removeAll(setB);
     return tmp;
   }

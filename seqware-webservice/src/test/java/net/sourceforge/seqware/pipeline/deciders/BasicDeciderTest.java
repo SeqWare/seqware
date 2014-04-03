@@ -64,7 +64,7 @@ public class BasicDeciderTest extends PluginTest {
      */
     private static final boolean WRITE_JSON_ATTRIBUTES = false;
     
-    private final List<String> fastq_gz = new ArrayList<String>();
+    private final List<String> fastq_gz = new ArrayList<>();
         
     private BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
     
@@ -98,40 +98,41 @@ public class BasicDeciderTest extends PluginTest {
 
     @Test
     public void testListAllFiles() {
+        // we need to use a valid workflow now that we filter with valid parent workflows
         // this is actually a bit misnamed, we return all files that are associated with all studies
-        String[] params = {"--all", "--wf-accession", "4", "--parent-wf-accessions", "5", "--test"};
+        String[] params = {"--all", "--wf-accession", "4773", "--parent-wf-accessions", "2861,4767,4768,4769,4773,4780,4778,4775,4774,5692,6594,6595,6596,6597,6598,6599,6685,6692,2860,4", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 80);
     }
 
     @Test
     public void testFilesForOneStudy() {
-        String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4", "--parent-wf-accessions", "5", "--test"};
+        String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4773", "--parent-wf-accessions", "2861,4767,4768,4769,4773,4780,4778,4775,4774,5692,6594,6595,6596,6597,6598,6599,6685,6692,2860", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 21);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 17);
     }
 
     @Test
     public void testFilesForOneSample() {
-        String[] params = {"--sample-name", "Exome_ABC015069_Test_2", "--wf-accession", "4", "--parent-wf-accessions", "5", "--test"};
+        String[] params = {"--sample-name", "Exome_ABC015069_Test_2", "--wf-accession", "4773", "--parent-wf-accessions", "2861,4767,4768,4769,4773,4780,4778,4775,4774,5692,6594,6595,6596,6597,6598,6599,6685,6692,2860", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 21);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 17);
     }
 
     @Test
     public void testFilesForOneSequencerRun() {
-        String[] params = {"--sequencer-run-name", "SRKDKJKLFJKLJ90039", "--wf-accession", "4", "--parent-wf-accessions", "5", "--test"};
+        String[] params = {"--sequencer-run-name", "SRKDKJKLFJKLJ90039", "--wf-accession", "4773", "--parent-wf-accessions", "2861,4767,4768,4769,4773,4780,4778,4775,4774,5692,6594,6595,6596,6597,6598,6599,6685,6692,2860", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 42);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 32);
     }
     
     @Test
@@ -142,7 +143,7 @@ public class BasicDeciderTest extends PluginTest {
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 3);
         // we expect to launch 3 times 
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getFinalChecks(), decider.getFinalChecks() == 3);
     }
@@ -155,9 +156,9 @@ public class BasicDeciderTest extends PluginTest {
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 80);
         // we expect to launch 3 times 
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getFinalChecks(), decider.getFinalChecks() == 133);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getFinalChecks(), decider.getFinalChecks() == 80);
     }
     
     @Test
@@ -173,7 +174,7 @@ public class BasicDeciderTest extends PluginTest {
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 3);
         // we expect to never launch with the halting decider 
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 3);
         
@@ -195,8 +196,8 @@ public class BasicDeciderTest extends PluginTest {
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
-        // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
+        // we expect to see 133 files in total, this changes due to file provenance report
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 3);
         // we expect to launch exactly twice 
         Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 2);
         
@@ -212,8 +213,8 @@ public class BasicDeciderTest extends PluginTest {
         launchAndCaptureOutput(params);
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 133);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 96);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 80);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 61);
     }
     
     @Test
@@ -221,8 +222,8 @@ public class BasicDeciderTest extends PluginTest {
         String[] params = {"--sample", "Sample_Tumour", "--wf-accession", "2860", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--test"};
         launchAndCaptureOutput(params);
         TestingDecider decider = (TestingDecider) instance;
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 39);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 20);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 15);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 12);
     }
     
     
@@ -235,13 +236,13 @@ public class BasicDeciderTest extends PluginTest {
         String[] params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10", "--test"};
         launchAndCaptureOutput(params);
         TestingDecider decider = (TestingDecider) instance;
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 57);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 47);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 36);
         
         params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "1", "--test"};
         launchAndCaptureOutput(params);
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 68);
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 55);
+        Assert.assertTrue("output 2 does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 47);
+        Assert.assertTrue("output 2 does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 34);
     }
     
     @Test 
@@ -329,8 +330,8 @@ public class BasicDeciderTest extends PluginTest {
         // run decider and check that attributes are pulled back properly
         String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4", "--meta-types", "text/h-tumour,application/vcf-4-gzip,text/annovar-tags,application/zip-report-bundle,txt,chemical/seq-na-fastq-gzip,application/bam,text/vcf-4,chemical/seq-na-fastq", "--test"};
         launchAndCaptureOutput(params);
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 21);
-        Assert.assertTrue("we didn't check the correct number of files, we checked " + decider.filesChecked, decider.filesChecked == 21);   
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 17);
+        Assert.assertTrue("we didn't check the correct number of files, we checked " + decider.filesChecked, decider.filesChecked == 17);   
         
         // swap back the decider
         instance = new TestingDecider();
@@ -356,8 +357,8 @@ public class BasicDeciderTest extends PluginTest {
         // use a special decider to ensure that filemetadata is populated
         String[] params = {"--study-name", "AbcCo_Exome_Sequencing", "--wf-accession", "4", "--meta-types", "text/h-tumour,application/vcf-4-gzip,text/annovar-tags,application/zip-report-bundle,txt,chemical/seq-na-fastq-gzip,application/bam,text/vcf-4,chemical/seq-na-fastq", "--test"};
         launchAndCaptureOutput(params);
-        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 21);
-        Assert.assertTrue("we didn't check the correct number of files, we checked " + decider.filesChecked, decider.filesChecked == 21);
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 17);
+        Assert.assertTrue("we didn't check the correct number of files, we checked " + decider.filesChecked, decider.filesChecked == 17);
         
         // swap back the decider
         instance = new TestingDecider();
@@ -461,7 +462,7 @@ public class BasicDeciderTest extends PluginTest {
 
     public class TestingDecider extends BasicDecider {
 
-        private Set<String> fileSet = new HashSet<String>();
+        private Set<String> fileSet = new HashSet<>();
         private int finalChecks = 0;
         private int launches = 0;
 
@@ -524,7 +525,7 @@ public class BasicDeciderTest extends PluginTest {
         protected Map<String, String> modifyIniFile(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
             Log.debug("INI FILE:" + commaSeparatedFilePaths);
 
-            Map<String, String> iniFileMap = new TreeMap<String, String>();
+            Map<String, String> iniFileMap = new TreeMap<>();
             iniFileMap.put("input_file", commaSeparatedFilePaths);
 
             return iniFileMap;
@@ -538,7 +539,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
@@ -554,7 +555,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://non_matching_file");
         int workflowRunAcc = 6654;
@@ -570,7 +571,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
@@ -587,7 +588,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
         
@@ -605,7 +606,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
@@ -623,7 +624,7 @@ public class BasicDeciderTest extends PluginTest {
         TestingDecider decider = (TestingDecider) instance;
         decider.setMetaws((MetadataWS)metadata);
         
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         
 
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
@@ -639,7 +640,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
 
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R2_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
@@ -658,7 +659,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
 
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R3_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
@@ -676,7 +677,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
 
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://abcco.uploads/s_G1_L001_R1_001_index8.fastq.gz");
         int workflowRunAcc = 6654;
         //assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
@@ -693,7 +694,7 @@ public class BasicDeciderTest extends PluginTest {
         decider.setMetaws((MetadataWS)metadata);
         decider.setMetaType(fastq_gz);
 
-        List<String> filesToRun = new ArrayList<String>();
+        List<String> filesToRun = new ArrayList<>();
         filesToRun.add("s3://garbage.gz");
         int workflowRunAcc = 6654;
 

@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import joptsimple.OptionException;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.*;
@@ -105,7 +103,7 @@ public abstract class BatchMetadataParser {
     public BatchMetadataParser(Metadata metadata, Map<String, String> fields, boolean interactive) {
         this.metadata = metadata;
         this.fields = fields;
-        this.defaults = new HashMap<String, String>(fields);
+        this.defaults = new HashMap<>(fields);
         this.interactive = interactive;
     }
 
@@ -129,6 +127,8 @@ public abstract class BatchMetadataParser {
      * @param filePath
      * @param platformId
      * @param studyType
+     * @param assayType
+     * @param workflowType
      * @return
      */
     protected RunInfo generateRunInfo(String runName, String runDescription,
@@ -285,6 +285,8 @@ public abstract class BatchMetadataParser {
      * @param organismId
      * @param targetedResequencing
      * @param tissuePreparation
+     * @param iusDescription
+     * @param iusName
      * @return
      * @throws Exception
      */
@@ -375,7 +377,7 @@ public abstract class BatchMetadataParser {
         sa.setSampleDescription(sampleDescription);
 
         if (organismId <= 0) {
-            List<Organism> organisms = new ArrayList<Organism>(metadata.getOrganisms());
+            List<Organism> organisms = new ArrayList<>(metadata.getOrganisms());
             for (int i = 0; i < organisms.size(); i++) {
                 Log.stdout((i + 1) + " : " + organisms.get(i).getName());
             }

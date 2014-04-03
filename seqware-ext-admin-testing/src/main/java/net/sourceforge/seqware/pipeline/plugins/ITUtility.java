@@ -133,6 +133,7 @@ public class ITUtility {
      * via maven properties or some such. But I really need something to help me
      * run tests on production bundles
      *
+     * @return 
      */
     protected static File retrieveFullAssembledJar() {
         String workingDir = System.getProperty("user.dir");

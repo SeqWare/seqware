@@ -31,7 +31,6 @@ import com.amazonaws.ClientConfiguration;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -42,9 +41,6 @@ import com.amazonaws.services.s3.transfer.Transfer.TransferState;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
 import java.io.*;
-import java.net.URI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.CipherInputStream;
 import net.sourceforge.seqware.common.util.Log;
 //import org.apache.hadoop.conf.Configuration;
@@ -115,6 +111,7 @@ public class ProvisionFilesUtil {
    * Creates symlink of input to output.
    *
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @param input a {@link java.lang.String} object.
    * @return a boolean.
    */
@@ -211,6 +208,7 @@ public class ProvisionFilesUtil {
    *
    * @param reader a {@link java.io.BufferedInputStream} object.
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @param bufLen a int.
    * @param input a {@link java.lang.String} object.
    * @return written File object
@@ -224,6 +222,7 @@ public class ProvisionFilesUtil {
    *
    * @param reader a {@link java.io.BufferedInputStream} object.
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @param bufLen a int.
    * @param input a {@link java.lang.String} object.
    * @return written File object
@@ -445,6 +444,7 @@ public class ProvisionFilesUtil {
    *
    * @param reader a {@link java.io.BufferedInputStream} object.
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @return true if OK
    */
   public boolean putToS3(BufferedInputStream reader, String output, boolean fullOutputPath){
@@ -455,6 +455,7 @@ public class ProvisionFilesUtil {
    * 
    * @param reader
    * @param output
+     * @param fullOutputPath
    * @param connectionTimeout
    * @param maxConnections
    * @param maxErrorRetry
@@ -470,6 +471,7 @@ public class ProvisionFilesUtil {
    *
    * @param reader a {@link java.io.InputStream} object.
    * @param output a {@link java.lang.String} object.
+     * @param fullOutputPath
    * @param decryptCipher a {@link javax.crypto.Cipher} object.
    * @param encryptCipher a {@link javax.crypto.Cipher} object.
    * @return true if OK
@@ -482,6 +484,7 @@ public class ProvisionFilesUtil {
    * 
    * @param reader
    * @param output
+     * @param fullOutputPath
    * @param connectionTimeout
    * @param maxConnections
    * @param maxErrorRetry

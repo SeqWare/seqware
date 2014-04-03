@@ -1,8 +1,5 @@
 package net.sourceforge.seqware.common.err;
 
-import net.sourceforge.seqware.common.err.SeqwareExitCode;
-import net.sourceforge.seqware.common.err.SeqwareException;
-
 /**
  * User: Xiaoshu Wang (xiao@renci.org)
  * Date: 9/6/11
@@ -13,7 +10,8 @@ import net.sourceforge.seqware.common.err.SeqwareException;
  */
 public class SwRunnerParameterException extends SeqwareException{
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public int getExitCode() {
         return SeqwareExitCode.BadRunnerParams;

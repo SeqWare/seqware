@@ -1,9 +1,6 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -30,7 +27,7 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 	private String	readSpec;
 	private String	tagSpec;
 	private String  adapterSpec;
-	private SortedSet<ExperimentSpotDesignReadSpec>	readSpecs = new TreeSet<ExperimentSpotDesignReadSpec>();
+	private SortedSet<ExperimentSpotDesignReadSpec>	readSpecs = new TreeSet<>();
 
 	
 	/**
@@ -46,6 +43,7 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 	 * @param that a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
 	 * @return a int.
 	 */
+        @Override
 	public int compareTo(ExperimentSpotDesign that) {
 		if(that == null)
 			return -1;
@@ -64,13 +62,16 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 	 *
 	 * @return a {@link java.lang.String} object.
 	 */
+        @Override
 	public String toString() {
 		return new ToStringBuilder(this)
 			.append("experimentSpotDesignId", getExperimentSpotDesignId())
 			.toString();
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param other */
+        @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;
 		if ( !(other instanceof ExperimentSpotDesign) ) return false;
@@ -85,6 +86,7 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
 	 *
 	 * @return a int.
 	 */
+        @Override
 	public int hashCode() {
 		return new HashCodeBuilder()
 			.append(getExperimentSpotDesignId())

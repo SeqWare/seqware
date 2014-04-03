@@ -26,14 +26,12 @@ import net.sourceforge.seqware.common.hibernate.WorkflowRunReport;
 import net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.apache.log4j.Logger;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
-import org.restlet.data.Form;
 import org.restlet.data.MediaType;
 import org.restlet.data.Method;
 import org.restlet.data.Status;
