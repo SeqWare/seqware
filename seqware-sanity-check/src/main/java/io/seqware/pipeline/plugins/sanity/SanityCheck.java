@@ -1,5 +1,6 @@
 package io.seqware.pipeline.plugins.sanity;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -53,23 +54,31 @@ public final class SanityCheck extends Plugin {
      */
     @Override
     public final ReturnValue init() {
-        try {
-            HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-            // do a defensive check to see if we have a direct database connection available
-            if (settings.get("SW_DB_SERVER") == null
-                    || settings.get("SW_DB") == null
-                    || settings.get("SW_DB_USER") == null
-                    || settings.get("SW_DB_PASS") == null) {
-                hasDBSettings = false;
+        File settingsFile = new File(ConfigTools.getSettingsFilePath());
+        if (!settingsFile.canRead()) {
+            System.err.println("Unable to get read access to settings file");
+            ReturnValue ret = new ReturnValue();
+            ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
+        } else {
+            try {
+
+                HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
+                // do a defensive check to see if we have a direct database connection available
+                if (settings.get("SW_DB_SERVER") == null
+                        || settings.get("SW_DB") == null
+                        || settings.get("SW_DB_USER") == null
+                        || settings.get("SW_DB_PASS") == null) {
+                    hasDBSettings = false;
+                    ReturnValue ret = new ReturnValue();
+                    System.out.println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
+                    ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
+                    return (ret);
+                }
+            } catch (Exception e) {
                 ReturnValue ret = new ReturnValue();
-                System.out.println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
                 ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
                 return (ret);
             }
-        } catch (Exception e) {
-            ReturnValue ret = new ReturnValue();
-            ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-            return (ret);
         }
         return new ReturnValue();
     }
