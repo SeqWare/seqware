@@ -26,47 +26,65 @@ import net.sourceforge.seqware.common.model.Organism;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Checks that the database you're pointing to (if there is one) is consistent with the web service you're pointing to 
+ * Checks that the database you're pointing to (if there is one) is consistent
+ * with the web service you're pointing to
+ *
  * @author dyuen
+ * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
-public class DB_WS_ConsistencyCheck implements SanityCheckPluginInterface { 
+public class DB_WS_ConsistencyCheck implements SanityCheckPluginInterface {
+
+    @Override
+    public boolean isTutorialTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isMasterTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isDBTest() {
+        return true;
+    }
 
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
-        if (qRunner == null){
-             System.err.println("Warning: No or invalid SeqWare metadb settings");
-             return true;
+        if (qRunner == null) {
+            System.err.println("Warning: No or invalid SeqWare metadb settings");
+            return true;
         }
         // create bizarro study
         UUID randomUUID = UUID.randomUUID();
-        int rowsAffected = qRunner.updateQuery("insert into organism(code) VALUES ('"+randomUUID.toString()+"')");
-        if (rowsAffected != 1){
+        int rowsAffected = qRunner.updateQuery("insert into organism(code) VALUES ('" + randomUUID.toString() + "')");
+        if (rowsAffected != 1) {
             System.err.println("Could not write to database using given database parameters");
             return false;
         }
         // try to retrieve
         List<Organism> organisms = metadataWS.getOrganisms();
         boolean found = false;
-        for(Organism o : organisms){
-            if (o.getCode().equals(randomUUID.toString())){
+        for (Organism o : organisms) {
+            if (o.getCode().equals(randomUUID.toString())) {
                 found = true;
             }
         }
-        if (!found){
+        if (!found) {
             System.err.println("REST web service does not match database options in your .seqware/settings");
             return false;
         }
         return true;
     }
-    
+
     @Override
-    public String getDescription(){
+    public String getDescription() {
         return ".seqware database settings are present and are inconsistent with the provided web service settings";
     }
-    
+
     @Override
-    public int getPriority(){
+    public int getPriority() {
         return 10;
     }
 }
