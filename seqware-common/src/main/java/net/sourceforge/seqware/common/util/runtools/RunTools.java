@@ -265,7 +265,7 @@ public class RunTools {
      * @return
      */
     private static String[] splitCommandPreserveQuote(String command) {
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<String>();
         String[] tokens = command.split("\\s+");
         boolean matching = false;
         String quoteString = null;

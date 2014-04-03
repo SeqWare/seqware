@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Sample extends PermissionsAware implements Serializable, Comparable<Sample>, ParentAccessionModel {
+public class Sample implements Serializable, Comparable<Sample>, PermissionsAware, ParentAccessionModel {
 
   // Attributes relied upon by seqware code
   
@@ -63,10 +63,10 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
     // addition form fields
     private String strExpectedNumRuns;
     private String strExpectedNumReads;
-    private SortedSet<Lane> lanes = new TreeSet<>();
-    private SortedSet<IUS> ius = new TreeSet<>();
-    private Set<Processing> processings = new TreeSet<>();
-    private Set<Sample> parents = new TreeSet<>(new Comparator<Sample>() {
+    private SortedSet<Lane> lanes = new TreeSet<Lane>();
+    private SortedSet<IUS> ius = new TreeSet<IUS>();
+    private Set<Processing> processings = new TreeSet<Processing>();
+    private Set<Sample> parents = new TreeSet<Sample>(new Comparator<Sample>() {
 
         @Override
         public int compare(Sample t, Sample t1) {
@@ -83,9 +83,9 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
         
         
     });
-    private Set<Sample> children = new TreeSet<>();
-    private Set<SampleAttribute> sampleAttributes = new TreeSet<>();
-    private Set<SampleLink> sampleLinks = new TreeSet<>();
+    private Set<Sample> children = new TreeSet<Sample>();
+    private Set<SampleAttribute> sampleAttributes = new TreeSet<SampleAttribute>();
+    private Set<SampleLink> sampleLinks = new TreeSet<SampleLink>();
     // non-persisted field to store organism_id
     private Integer organismId;
 
@@ -94,7 +94,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      */
     public Sample() {
         super();
-        lanes = new TreeSet<>();
+        lanes = new TreeSet<Lane>();
         for (IUS i : ius) {
             if (i.getLane() != null) {
                 lanes.add(i.getLane());
@@ -104,7 +104,6 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
-     * @param that
      */
     @Override
     public int compareTo(Sample that) {
@@ -133,7 +132,6 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
-     * @param other
      */
     @Override
     public boolean equals(Object other) {
@@ -388,7 +386,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * @param lanes a {@link java.util.SortedSet} object.
      */
     public void setLanesForView(SortedSet<Lane> lanes) {
-        SortedSet<IUS> IUS = new TreeSet<>();
+        SortedSet<IUS> IUS = new TreeSet<IUS>();
         for (Lane lane : lanes) {
             IUS newIUS = new IUS();
             newIUS.setSample(this);
@@ -939,23 +937,13 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
-  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      boolean consideredBefore = considered.contains(this.getSwAccession());
-      if (!consideredBefore) {
-          considered.add(this.getSwAccession());
-          Log.debug("Checking permissions for Sample object " + swAccession);
-      } else {
-          Log.debug("Skipping permissions for Sample object " + swAccession + " , checked before");
-          return true;
-      }
-      
+    public boolean givesPermission(Registration registration) {
         boolean hasPermission = true;
         Log.debug("registration: " + registration + " owner: " + owner);
         if (experiment != null) {
-      hasPermission = experiment.givesPermission(registration, considered);
+            hasPermission = experiment.givesPermission(registration);
         } else {// orphaned Sample
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
                 Logger.getLogger(Sample.class).warn("Modifying Orphan Sample: " + this.getName());

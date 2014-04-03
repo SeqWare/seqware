@@ -28,9 +28,7 @@ public class InviteNewUserSetupController extends BaseCommandController{
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 													 HttpServletResponse response)
@@ -39,7 +37,7 @@ public class InviteNewUserSetupController extends BaseCommandController{
 		Registration registration = Security.getRegistration(request);
 		
 		ModelAndView modelAndView;
-		HashMap<String,Object>  model     = new HashMap<>();
+		HashMap<String,Object>  model     = new HashMap<String,Object>();
 
 		Debug.put(": request.requestURI = " + request.getRequestURI());
 		

@@ -33,7 +33,6 @@ public class FileTypeServiceImpl implements FileTypeService {
    * FileTypeDAO. This method is called by the Spring framework at run time.
    * @see FileTypeDAO
    */
-  @Override
   public void setFileTypeDAO(FileTypeDAO fileTypeDAO) {
     this.fileTypeDAO = fileTypeDAO;
   }
@@ -43,13 +42,11 @@ public class FileTypeServiceImpl implements FileTypeService {
    *
    * @return a {@link java.util.List} object.
    */
-  @Override
   public List<FileType> list() {
     return fileTypeDAO.list();
   }
 
   /** {@inheritDoc} */
-  @Override
   public FileType findByID(Integer id) {
     FileType obj = null;
     if (id != null) {

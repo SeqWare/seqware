@@ -8,7 +8,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.SampleService;
+import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Registration;
@@ -36,9 +38,7 @@ public class SampleWorkflowRunsController extends BaseCommandController {
 	/** Constant <code>SAMPLE_SWID="sw"</code> */
 	public final static String SAMPLE_SWID = "sw";
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -58,13 +58,13 @@ public class SampleWorkflowRunsController extends BaseCommandController {
 			e.printStackTrace();
 		}
 
-		Map<Workflow, Set<WorkflowRun>> tableModel = new HashMap<>();
-		Set<Workflow> usedWorkflows = new HashSet<>();
+		Map<Workflow, Set<WorkflowRun>> tableModel = new HashMap<Workflow, Set<WorkflowRun>>();
+		Set<Workflow> usedWorkflows = new HashSet<Workflow>();
 		Sample currentSample = sampleService.findBySWAccession(sampleId);
 
 		if (currentSample != null) {
 
-			Set<WorkflowRun> runs = new HashSet<>();
+			Set<WorkflowRun> runs = new HashSet<WorkflowRun>();
 			for (IUS ius : currentSample.getIUS()) {
 				// Get All required runs belongs to Sample IUSs
 				runs.addAll(workflowRunService.findRunsForIUS(ius));
@@ -76,7 +76,7 @@ public class SampleWorkflowRunsController extends BaseCommandController {
 				Set<WorkflowRun> wfWorkflowRuns = tableModel.get(wf);
 				// If no mapping for current Workflow
 				if (wfWorkflowRuns == null) {
-					wfWorkflowRuns = new HashSet<>();
+					wfWorkflowRuns = new HashSet<WorkflowRun>();
 				}
 				wfWorkflowRuns.add(run);
 				tableModel.put(wf, wfWorkflowRuns);

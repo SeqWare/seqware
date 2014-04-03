@@ -4,8 +4,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
+import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -18,7 +21,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Expense extends PermissionsAware implements Serializable, Comparable<Expense> {
+public class Expense implements Serializable, Comparable<Expense>, PermissionsAware {
 
     private static final long serialVersionUID = 1L;
     private Integer expenseId;
@@ -46,7 +49,6 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
-     * @param that
      */
     @Override
     public int compareTo(Expense that) {
@@ -76,7 +78,6 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
-     * @param other
      */
     @Override
     public boolean equals(Object other) {
@@ -92,21 +93,17 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
-    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+    public boolean givesPermission(Registration registration) {
         boolean hasPermission = true;
-        String username = "unregistered user";
         if (registration == null) {
             hasPermission = false;
-        } else{
-            username = registration.getEmailAddress();
         }
 
         if (!hasPermission) {
             Logger.getLogger(Workflow.class).info("Expense does not give permission");
-            throw new SecurityException("User " + username
+            throw new SecurityException("User " + registration.getEmailAddress()
                     + " does not have permission to modify aspects of invoice " + this.getSwAccession());
         } else {
             Logger.getLogger(Workflow.class).info("Expenses are public by default");

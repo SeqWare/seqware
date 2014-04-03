@@ -13,6 +13,7 @@ import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.Log;
 

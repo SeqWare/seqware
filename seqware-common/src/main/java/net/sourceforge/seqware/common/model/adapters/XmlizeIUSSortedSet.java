@@ -33,12 +33,10 @@ import net.sourceforge.seqware.common.model.lists.IUSList;
  */
 public class XmlizeIUSSortedSet extends XmlAdapter<IUSList, SortedSet<IUS>>{
 
-    /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+    /** {@inheritDoc} */
     @Override
     public SortedSet<IUS> unmarshal(IUSList vt) throws Exception {
-        SortedSet<IUS> iusSet = new TreeSet<>();
+        SortedSet<IUS> iusSet = new TreeSet<IUS>();
         for (IUS i : vt.getList())
         {
             iusSet.add(i);
@@ -46,14 +44,12 @@ public class XmlizeIUSSortedSet extends XmlAdapter<IUSList, SortedSet<IUS>>{
         return iusSet;        
     }
 
-    /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+    /** {@inheritDoc} */
     @Override
     public IUSList marshal(SortedSet<IUS> bt) throws Exception {
         if (bt != null)
         {
-        List<IUS> list = new ArrayList<>(bt);
+        List<IUS> list = new ArrayList<IUS>(bt);
         IUSList iusList = new IUSList();
         iusList.setList(list);
         return iusList;

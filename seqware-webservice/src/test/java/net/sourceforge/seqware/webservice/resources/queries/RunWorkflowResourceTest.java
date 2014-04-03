@@ -40,7 +40,7 @@ public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
     @Override
     public void testGet() {
         System.out.println(getRelativeURI() + " GET");
-        jo = new JaxbObject<>();
+        jo = new JaxbObject<WorkflowRunList2>();
         o = new WorkflowRunList2();
         Representation rep = null;
         try {
@@ -68,7 +68,7 @@ public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
     @Override
     public void testPost() {
         System.out.println(getRelativeURI() + " POST");
-        jo = new JaxbObject<>();
+        jo = new JaxbObject<ReturnValue>();
         o = new ReturnValue();
         Representation rep = null;
         try {
@@ -104,7 +104,7 @@ public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
     @Test
     public void testPostNoMetadata() {
         System.out.println(getRelativeURI() + " POST");
-        jo = new JaxbObject<>();
+        jo = new JaxbObject<ReturnValue>();
         o = new ReturnValue();
         Representation rep = null;
         try {

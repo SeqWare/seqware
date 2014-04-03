@@ -34,7 +34,7 @@ public class OrganismList{
      * <p>Constructor for OrganismList.</p>
      */
     public OrganismList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<Organism>();
     }
 
     /**

@@ -28,9 +28,7 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
    * {@inheritDoc}
    *
    * Inserts an instance of ShareStudy into the database.
-     * @param shareStudy
    */
-  @Override
   public void insert(ShareStudy shareStudy) {
     this.getHibernateTemplate().save(shareStudy);
   }
@@ -39,9 +37,7 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
    * {@inheritDoc}
    *
    * Updates an instance of ShareStudy in the database.
-     * @param shareStudy
    */
-  @Override
   public void update(ShareStudy shareStudy) {
 
     this.getHibernateTemplate().update(shareStudy);
@@ -51,9 +47,7 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
    * {@inheritDoc}
    *
    * Updates an instance of ShareStudy in the database.
-     * @param shareStudy
    */
-  @Override
   public void delete(ShareStudy shareStudy) {
 
     this.getHibernateTemplate().delete(shareStudy);
@@ -64,7 +58,6 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
    *
    * Finds an instance of ShareStudy in the database by the ShareStudy ID.
    */
-  @Override
   public ShareStudy findByStudyIdAndRegistrationId(Integer studyId, Integer registrationId) {
     String query = "from ShareStudy as shareStudy where shareStudy.studyId = ? and shareStudy.registration.registrationId = ?";
     ShareStudy shareStudy = null;
@@ -81,7 +74,6 @@ public class ShareStudyDAOHibernate extends HibernateDaoSupport implements Share
    *
    * Finds an instance of ShareStudy in the database by the ShareStudy ID.
    */
-  @Override
   public ShareStudy findByID(Integer id) {
     String query = "from ShareStudy as shareStudy where shareStudy.shareStudyId = ?";
     ShareStudy shareStudy = null;

@@ -28,12 +28,16 @@ import org.junit.*;
  * @author dyuen
  */
 public class FileProvenanceTest extends ExtendedPluginTest {
+
+    @BeforeClass
+    public static void beforeClass(){
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
+    }
     
     @Before
     @Override
     public void setUp() {
         super.setUp();
-        BasicTestDatabaseCreator.resetDatabaseWithUsers();
     }
     
     public FileProvenanceTest() {

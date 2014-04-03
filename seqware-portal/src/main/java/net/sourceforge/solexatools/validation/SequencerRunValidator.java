@@ -22,10 +22,7 @@ public class SequencerRunValidator implements Validator {
 		super();
 	}
 	
-	/** {@inheritDoc}
-     * @param clazz
-     * @return  */
-        @Override
+	/** {@inheritDoc} */
 	public boolean supports(Class clazz) {
 		return SequencerRun.class.equals(clazz);
 	}
@@ -34,10 +31,7 @@ public class SequencerRunValidator implements Validator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
-     * @param obj
-     * @param errors
 	 */
-        @Override
 	public void validate(Object obj, Errors errors) {
 		SequencerRun sequencerRun = (SequencerRun) obj;
 		this.validateName(sequencerRun.getName(), errors);

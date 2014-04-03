@@ -19,6 +19,8 @@ import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
+import static net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter.WRSTDERR;
+import static net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter.WRSTDOUT;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -69,8 +71,7 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue init() {
         return ret;
@@ -79,8 +80,7 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         // TODO Auto-generated method stub
@@ -90,8 +90,7 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
         
@@ -222,9 +221,8 @@ public class BundleManager extends Plugin {
             }
         } else if (options.has("list-installed")) {            
             String params = metadata.listInstalledWorkflows();
-            final String nameVersionCreation_DateSeqWare_Accession = "Name\tVersion\tCreation Date\tSeqWare Accession\tDescription\tCurrent Working Directory\tBundle Location";
             if (options.has("human-expanded")) {
-                params = nameVersionCreation_DateSeqWare_Accession+"\n" + params;
+                params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
                 params = TabExpansionUtil.expansion(params);
                 if (params.trim().equals("")){
                   println("No workflows installed.");
@@ -232,14 +230,14 @@ public class BundleManager extends Plugin {
                   println(params);
                 }
             } else if (options.has("human-aligned")){
-                params = nameVersionCreation_DateSeqWare_Accession+"\n" + params;
+                params = "Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location\n" + params;
                 params = TabExpansionUtil.aligned(params);
                 println(params);
             } else {
                 println("=====================================================");
                 println("===============INSTALLED WORKFLOWS===================");
                 println("=====================================================");
-                println(nameVersionCreation_DateSeqWare_Accession);
+                println("Name\tVersion\tCreation Date\tSeqWare Accession\tBundle Location");
                 println("-----------------------------------------------------");
                 println(params);
                 println("-----------------------------------------------------");
@@ -288,8 +286,7 @@ public class BundleManager extends Plugin {
     /* (non-Javadoc)
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
      */
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue clean_up() {
         // TODO Auto-generated method stub
@@ -301,7 +298,6 @@ public class BundleManager extends Plugin {
      *
      * @return a {@link java.lang.String} object.
      */
-    @Override
     public String get_description() {
         return ("A plugin that lets you create, test, and install workflow bundles.");
     }

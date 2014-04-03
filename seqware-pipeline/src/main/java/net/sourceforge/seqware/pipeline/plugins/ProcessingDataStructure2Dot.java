@@ -94,7 +94,7 @@ public class ProcessingDataStructure2Dot extends Plugin {
 		private String processingId;
 		
 		public DotNode(String pid) {
-			this.children = new ArrayList<>();
+			this.children = new ArrayList<DotNode>();
 			this.processingId = pid;
 		}
 		
@@ -150,7 +150,7 @@ public class ProcessingDataStructure2Dot extends Plugin {
 		List<String> children = metadb.executeQuery(sql, new ResultSetHandler<List<String>>(){
       @Override
       public List<String> handle(ResultSet rs) throws SQLException {
-        List<String> children = new ArrayList<>();
+        List<String> children = new ArrayList<String>();
         while(rs.next()) {
           children.add(rs.getString("child_id"));
         }
@@ -168,7 +168,7 @@ public class ProcessingDataStructure2Dot extends Plugin {
 		FileWriter fw = new FileWriter(file);
 		fw.write("digraph dag {\n");
 		//avoid duplicated
-		Set<String> allEdge = new HashSet<>();
+		Set<String> allEdge = new HashSet<String>();
 		this.visitNode(root, fw, allEdge);
 		fw.write("}\n");
 		fw.close();
@@ -179,7 +179,7 @@ public class ProcessingDataStructure2Dot extends Plugin {
 		List<String> children = db.executeQuery(sql, new ResultSetHandler<List<String>>(){
       @Override
       public List<String> handle(ResultSet rs) throws SQLException {
-        List<String> children = new ArrayList<>();
+        List<String> children = new ArrayList<String>();
         while(rs.next()) {
           children.add(rs.getString("child_id"));
         }

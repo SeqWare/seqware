@@ -6,6 +6,7 @@ import java.util.List;
 import net.sourceforge.seqware.common.dao.ExperimentAttributeDAO;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+import net.sourceforge.seqware.common.model.Study;
 
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -48,7 +49,7 @@ public class ExperimentAttributeDAOHibernate extends HibernateDaoSupport impleme
     /** {@inheritDoc} */
     @Override
     public List<ExperimentAttribute> list() {
-        ArrayList<ExperimentAttribute> eAtts = new ArrayList<>();
+        ArrayList<ExperimentAttribute> eAtts = new ArrayList<ExperimentAttribute>();
 
         String query = "from ExperimentAttribute";
 

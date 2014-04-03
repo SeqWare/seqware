@@ -50,7 +50,7 @@ public class UserPhase5 {
         PluginRunnerET.buildAndInstallArchetypes(archetypes, SEQWARE_VERSION, false, false);
 
         //list workflows and ensure that the workflow is installed
-        List<Integer> accessions = new ArrayList<>();
+        List<Integer> accessions = new ArrayList<Integer>();
         accessions.addAll(PluginRunnerET.getInstalledWorkflows().values());
         Assert.assertTrue("one accession expected", accessions.size() == 1);
         AccessionMap.accessionMap.put(WORKFLOW, accessions.get(0).toString());

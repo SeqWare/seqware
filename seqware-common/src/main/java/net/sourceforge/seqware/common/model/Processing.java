@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Set;
@@ -29,6 +30,7 @@ import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.adapters.XmlizeFileSet;
 import net.sourceforge.seqware.common.model.adapters.XmlizeXML;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -36,6 +38,7 @@ import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
+import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -49,22 +52,22 @@ import org.restlet.resource.ResourceException;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Processing extends PermissionsAware implements Serializable, Comparable<Processing> , ParentAccessionModel {
+public class Processing implements Serializable, Comparable<Processing>, PermissionsAware, ParentAccessionModel {
 
   private static final long serialVersionUID = 4681328115923390568L;
   private Integer processingId;
   private String filePath;
-  private Set<Study> studies = new TreeSet<>();
-  private Set<Sample> samples = new TreeSet<>();
-  private Set<IUS> ius = new TreeSet<>();
-  private Set<Lane> lanes = new TreeSet<>();
-  private Set<File> files = new TreeSet<>();
-  private Set<SequencerRun> sequencerRuns = new TreeSet<>();
-  private Set<Experiment> experiments = new TreeSet<>();
-  private Set<Processing> children = new TreeSet<>();
-  private Set<Processing> parents = new TreeSet<>(); // typically just
+  private Set<Study> studies = new TreeSet<Study>();
+  private Set<Sample> samples = new TreeSet<Sample>();
+  private Set<IUS> ius = new TreeSet<IUS>();
+  private Set<Lane> lanes = new TreeSet<Lane>();
+  private Set<File> files = new TreeSet<File>();
+  private Set<SequencerRun> sequencerRuns = new TreeSet<SequencerRun>();
+  private Set<Experiment> experiments = new TreeSet<Experiment>();
+  private Set<Processing> children = new TreeSet<Processing>();
+  private Set<Processing> parents = new TreeSet<Processing>(); // typically just
   // one parent!
-  private Set<ProcessingAttribute> processingAttributes = new TreeSet<>();
+  private Set<ProcessingAttribute> processingAttributes = new TreeSet<ProcessingAttribute>();
   private WorkflowRun workflowRunByAncestorWorkflowRunId;
   private String algorithm;
   private ProcessingStatus status;
@@ -96,8 +99,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
     super();
   }
 
-  /** {@inheritDoc}
-     * @param that */
+  /** {@inheritDoc} */
   @Override
   public int compareTo(Processing that) {
     if (that == null || that.getProcessingId() == null) {
@@ -123,8 +125,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
         + stdout + ", stderr=" + stderr + '}';
   }
 
-  /** {@inheritDoc}
-     * @param other */
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -825,7 +826,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
    * <p>resetCompletedChildren.</p>
    */
   public void resetCompletedChildren() {
-    Set<Processing> res = new TreeSet<>();
+    Set<Processing> res = new TreeSet<Processing>();
     Set<Processing> all = this.getChildren();
 
     // get processing with workflow run has not status equal completed
@@ -843,7 +844,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
    * <p>resetRunningChildren.</p>
    */
   public void resetRunningChildren() {
-    Set<Processing> res = new TreeSet<>();
+    Set<Processing> res = new TreeSet<Processing>();
     Set<Processing> all = this.getChildren();
 
     // get processing with workflow run has not status equal completed
@@ -1091,27 +1092,16 @@ public class Processing extends PermissionsAware implements Serializable, Compar
 
     return p;
   }
-  
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
-  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      boolean consideredBefore = considered.contains(this.getSwAccession());
-      if (!consideredBefore) {
-          considered.add(this.getSwAccession());
-          Log.debug("Checking permissions for Processing object " + swAccession);
-      } else {
-          Log.debug("Skipping permissions for Processing object " + swAccession + " , checked before");
-          return true;
-      }
-      
+  public boolean givesPermission(Registration registration) {
     boolean hasPermission = true;
     Log.debug("Checking permissions for processing object " + swAccession + " with user " + registration);
     Set<PermissionsAware> list = null;
     if (ius != null && !ius.isEmpty()) {
       for (IUS i : ius) {
-        if (!i.givesPermission(registration, considered)) {
+        if (!i.givesPermission(registration)) {
           hasPermission = false;
           break;
         }
@@ -1119,7 +1109,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
       }
     } else if (lanes != null && !lanes.isEmpty()) {
       for (Lane i : lanes) {
-        if (!i.givesPermission(registration, considered)) {
+        if (!i.givesPermission(registration)) {
           hasPermission = false;
           break;
         }
@@ -1127,7 +1117,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
       }
     } else if (parents != null && !parents.isEmpty()) {
       for (Processing i : parents) {
-        if (!i.givesPermission(registration, considered)) {
+        if (!i.givesPermission(registration)) {
           hasPermission = false;
           break;
         }
@@ -1135,7 +1125,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
       }
     } else if (samples != null && !samples.isEmpty()) {
       for (Sample i : samples) {
-        if (!i.givesPermission(registration, considered)) {
+        if (!i.givesPermission(registration)) {
           hasPermission = false;
           break;
         }
@@ -1143,14 +1133,14 @@ public class Processing extends PermissionsAware implements Serializable, Compar
       }
     } else if (sequencerRuns != null && !sequencerRuns.isEmpty()) {
       for (SequencerRun i : sequencerRuns) {
-        if (!i.givesPermission(registration, considered)) {
+        if (!i.givesPermission(registration)) {
           hasPermission = false;
           break;
         }
 
       }
     } else if (workflowRun != null) {
-      hasPermission = workflowRun.givesPermission(registration, considered);
+      hasPermission = workflowRun.givesPermission(registration);
     } else {
       if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
         Logger.getLogger(Processing.class).warn("Modifying Orphan Processing: " + this.toString());

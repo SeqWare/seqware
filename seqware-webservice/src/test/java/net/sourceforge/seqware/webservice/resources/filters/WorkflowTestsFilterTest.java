@@ -66,7 +66,6 @@ public class WorkflowTestsFilterTest extends AbstractResourceTest {
     }
 
 //    @Override
-    @Override
     public void testDelete() {
         System.out.println(getRelativeURI() + " DELETE");
 //        try {

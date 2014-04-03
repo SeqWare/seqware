@@ -173,7 +173,7 @@ public class FileUploadServiceImpl implements FileUploadService {
   }
 
   private Processing insert(UploadFile uploadFile, FileType fileType, Registration registration) throws Exception {
-    Set<File> files = new TreeSet<>();
+    Set<File> files = new TreeSet<File>();
 
     // if(file!= null && !file.isEmpty()){
     files.add(createFile(uploadFile, fileType.getMetaType(), registration));

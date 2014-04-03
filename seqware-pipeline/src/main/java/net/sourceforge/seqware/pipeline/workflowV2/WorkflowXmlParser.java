@@ -95,7 +95,7 @@ public class WorkflowXmlParser {
 		}
 		//handle jobs
 		Element jobsE = root.getChild("jobs");
-		Map<String, Job> jobsMap = new HashMap<>();
+		Map<String, Job> jobsMap = new HashMap<String, Job>();
 		if(jobsE != null) {
 			List<Element> jobES = jobsE.getChildren();
 			for(Element je: jobES) {

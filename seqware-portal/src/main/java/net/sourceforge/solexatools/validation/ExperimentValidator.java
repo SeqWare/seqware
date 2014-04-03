@@ -23,11 +23,8 @@ public class ExperimentValidator implements Validator {
     super();
   }
 
-  /** {@inheritDoc}
-     * @param clazz
-     * @return  */
+  /** {@inheritDoc} */
   @SuppressWarnings("rawtypes")
-  @Override
   public boolean supports(Class clazz) {
     return Experiment.class.equals(clazz);
   }
@@ -36,10 +33,7 @@ public class ExperimentValidator implements Validator {
    * {@inheritDoc}
    *
    * Validates the specified Object.
-     * @param obj
-     * @param errors
    */
-  @Override
   public void validate(Object obj, Errors errors) {
     Experiment experiment = (Experiment) obj;
     ValidationUtils.rejectIfEmpty(errors, "title", "experiment.required.title");

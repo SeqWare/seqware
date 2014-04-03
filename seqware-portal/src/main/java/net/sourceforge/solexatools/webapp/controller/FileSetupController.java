@@ -42,9 +42,7 @@ public class FileSetupController extends BaseCommandController {
 		this.fileService = fileService;
 	}
 	
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,
@@ -55,7 +53,7 @@ public class FileSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView modelAndView = null;
-		HashMap <String,String> model = new HashMap<>();
+		HashMap <String,String> model = new HashMap<String,String>();
 
 		File file = figureOutFile(request);
 

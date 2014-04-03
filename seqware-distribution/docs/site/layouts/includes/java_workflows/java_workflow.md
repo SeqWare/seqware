@@ -1,6 +1,6 @@
 You can see the full Java workflow source code by looking at [Workflow
 Examples](/docs/15-workflow-examples/) or, in this case, just the
-<tt>src/main/java/com/github/seqware/MyHelloWorldWorkflow.java</tt> file produced by the Maven Archetype above.
+<tt>src/main/java/com/github/seqware/WorkflowClient.java</tt> file produced by the Maven Archetype above.
 
 This Java class is pretty simple in its construction. It is used to define
 input and output files along with the individual steps in the workflow and how

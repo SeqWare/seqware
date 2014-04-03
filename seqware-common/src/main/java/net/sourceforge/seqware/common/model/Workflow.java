@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Workflow extends PermissionsAware implements Serializable, Comparable<Workflow> {
+public class Workflow implements Serializable, Comparable<Workflow>, PermissionsAware {
   /**
    * LEFT OFF WITH: this needs to be finished
    */
@@ -57,7 +57,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
   private SortedSet<WorkflowRun> workflowRuns;
   private SortedSet<WorkflowParam> workflowParams;
   private Logger logger;
-  private Set<WorkflowAttribute> workflowAttributes = new TreeSet<>();
+  private Set<WorkflowAttribute> workflowAttributes = new TreeSet<WorkflowAttribute>();
 
   /**
    * <p>Constructor for Workflow.</p>
@@ -67,8 +67,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     logger = Logger.getLogger(Workflow.class);
   }
 
-  /** {@inheritDoc}
-     * @param that */
+  /** {@inheritDoc} */
   @Override
   public int compareTo(Workflow that) {
     if (that == null)
@@ -90,8 +89,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     return new ToStringBuilder(this).append("swAccession", getSwAccession()).toString();
   }
 
-  /** {@inheritDoc}
-     * @param other */
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object other) {
     if ((this == other))
@@ -504,7 +502,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     if (workflowParams == null)
       return null;
 
-    SortedSet<WorkflowParam> visibleParams = new TreeSet<>();
+    SortedSet<WorkflowParam> visibleParams = new TreeSet<WorkflowParam>();
     for (WorkflowParam workflowParam : workflowParams) {
       if (workflowParam.getDisplay() != null && workflowParam.getDisplay() && !"file".equals(workflowParam.getType())) {
         visibleParams.add(workflowParam);
@@ -524,7 +522,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
 
     SortedSet<WorkflowParam> visibleParamsWDV = getVisibleWorkflowParams();
 
-    SortedSet<WorkflowParam> res = new TreeSet<>();
+    SortedSet<WorkflowParam> res = new TreeSet<WorkflowParam>();
 
     for (WorkflowParam workflowParam : visibleParamsWDV) {
       String defaultValue = workflowParam.getDefaultValue();
@@ -532,7 +530,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
       if (defaultValue != null) {
         // logger.debug("New param");
         // logger.debug("Def value = " + defaultValue);
-        SortedSet<WorkflowParamValue> differentValues = new TreeSet<>();
+        SortedSet<WorkflowParamValue> differentValues = new TreeSet<WorkflowParamValue>();
         SortedSet<WorkflowParamValue> values = workflowParam.getValues();
         for (WorkflowParamValue workflowParamValue : values) {
           // System.out.print("value = " + workflowParamValue.getValue());
@@ -562,7 +560,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     if (workflowParams == null)
       return null;
 
-    SortedSet<WorkflowParam> paramsWithDifFMT = new TreeSet<>();
+    SortedSet<WorkflowParam> paramsWithDifFMT = new TreeSet<WorkflowParam>();
 
     // SortedSet<WorkflowParam> params = getVisibleWorkflowParams();
     SortedSet<WorkflowParam> params = workflowParams;
@@ -678,10 +676,9 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     this.permanentBundleLocation = permanentBundleLocation;
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
-  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+  public boolean givesPermission(Registration registration) {
     boolean hasPermission = true;
     if (registration == null) {
       hasPermission = false;

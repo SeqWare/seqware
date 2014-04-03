@@ -34,25 +34,21 @@ public class WorkflowRunParamServiceImpl implements WorkflowRunParamService {
    * WorkflowRunDAO. This method is called by the Spring framework at run time.
    * @see WorkflowRunDAO
    */
-  @Override
   public void setWorkflowRunParamDAO(WorkflowRunParamDAO workflowRunParamDAO) {
     this.workflowRunParamDAO = workflowRunParamDAO;
   }
 
   /** {@inheritDoc} */
-  @Override
   public void insert(WorkflowRunParam workflowRunParam) {
     workflowRunParamDAO.insert(workflowRunParam);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void update(WorkflowRunParam workflowRunParam) {
     workflowRunParamDAO.update(workflowRunParam);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void delete(WorkflowRunParam workflowRunParam) {
     workflowRunParamDAO.delete(workflowRunParam);
   }

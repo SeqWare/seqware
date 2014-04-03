@@ -34,7 +34,7 @@ public class ReturnValueList {
      * <p>Constructor for ReturnValueList.</p>
      */
     public ReturnValueList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<ReturnValue>();
     }
 
     /**

@@ -20,15 +20,12 @@ public CustomIntegerEditor() {
  *
  * @return a {@link java.lang.String} object.
  */
-@Override
 public String getAsText() {
 Integer i = (Integer) getValue();
 return i.toString();
 }
 
-/** {@inheritDoc}
-     * @param str */
-@Override
+/** {@inheritDoc} */
 public void setAsText(String str) {
 if( str == "" || str == null )
 setValue(0);

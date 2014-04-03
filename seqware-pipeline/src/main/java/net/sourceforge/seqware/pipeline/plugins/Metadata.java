@@ -30,6 +30,7 @@ import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
+import net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 
@@ -67,7 +68,7 @@ public class Metadata extends Plugin {
     };
     protected boolean interactive = false;
     // list of files
-    ArrayList<FileMetadata> files = new ArrayList<>();
+    ArrayList<FileMetadata> files = new ArrayList<FileMetadata>();
 
     /**
      * <p>Constructor for Metadata.</p>
@@ -89,7 +90,6 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue init() {
@@ -100,7 +100,6 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -109,7 +108,6 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue do_run() {
@@ -190,8 +188,6 @@ public class Metadata extends Plugin {
 
     /**
      * list the fields available to set
-     * @param table
-     * @return 
      */
     protected ReturnValue listFields(String table) {
         final String fileDescription = "\nThis takes one file encoded as --file type::file-meta-type::file-path[::description] \n";
@@ -679,7 +675,6 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @param string
      */
     @Override
     public void print(String string) {
@@ -729,7 +724,7 @@ public class Metadata extends Plugin {
     protected int[] parseParentAccessions() {
       
       List<?> valuesOf = options.valuesOf("parent-accession");
-      ArrayList<Integer> parents = new ArrayList<>();
+      ArrayList<Integer> parents = new ArrayList<Integer>();
       for (Object value : valuesOf) {
         parents.add(Integer.parseInt(value.toString()));
       }
@@ -742,7 +737,6 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue clean_up() {
@@ -752,7 +746,6 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public String get_description() {

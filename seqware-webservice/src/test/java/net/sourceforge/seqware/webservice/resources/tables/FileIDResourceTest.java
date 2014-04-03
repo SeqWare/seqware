@@ -29,7 +29,7 @@ import org.junit.Ignore;
 public class FileIDResourceTest extends DatabaseResourceIDTest {
   public FileIDResourceTest() {
     super("/files/1963");
-    jo = new JaxbObject<>();
+    jo = new JaxbObject<File>();
     o = new File();
   }
 

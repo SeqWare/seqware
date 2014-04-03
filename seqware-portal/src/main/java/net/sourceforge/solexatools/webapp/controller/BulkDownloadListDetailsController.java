@@ -86,9 +86,7 @@ public class BulkDownloadListDetailsController extends BaseCommandController {
 		return isAsc;
 	}
 	
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -112,14 +110,14 @@ public class BulkDownloadListDetailsController extends BaseCommandController {
 	//	Lane lane = new Lane();
 		IUS ius = new IUS();
 		Processing proc = new Processing();
-		Map<WorkflowRun, List<Processing>> wfrProc = new HashMap<>();
+		Map<WorkflowRun, List<Processing>> wfrProc = new HashMap<WorkflowRun, List<Processing>>();
 		
 		PageInfo pageInfo = null;
 		Boolean isHasError = false;
 		String errorMessage = "";
 		
-		List<Study>  listAll = new ArrayList<>();
-		List<Study>  listView = new ArrayList<>();
+		List<Study>  listAll = new ArrayList<Study>();
+		List<Study>  listView = new ArrayList<Study>();
 		
 		String   root     = (String)request.getParameter("root");
 		System.err.println("ROOT: "+root);
@@ -172,7 +170,7 @@ public class BulkDownloadListDetailsController extends BaseCommandController {
 				BulkUtil.selectIUSNode(selectedIds, sam);
 				getIUSService().setWithHasFile(sam.getIUS());
 				getProcessingService().setWithHasFile(sam.getProcessings());
-				SortedSet<Sample> children = new TreeSet<>(sam.getChildren());
+				SortedSet<Sample> children = new TreeSet<Sample>(sam.getChildren());
 				getSampleService().setWithHasFile(null, children);
 			}else
 			if(root.indexOf("exp_") != -1){
@@ -251,7 +249,7 @@ public class BulkDownloadListDetailsController extends BaseCommandController {
 		for (Processing child: proc.getChildren()) {
 			List<Processing> processings = wfrProc.get(child.getWorkflowRun());
 			if (processings == null) {
-				processings = new ArrayList<>();
+				processings = new ArrayList<Processing>();
 			}
 			processings.add(child);
 			if (child.getWorkflowRun() != null) {

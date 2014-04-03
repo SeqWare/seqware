@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
-import java.util.Set;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -14,7 +13,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowRunParam extends PermissionsAware implements Serializable, Comparable<WorkflowRunParam> {
+public class WorkflowRunParam implements Serializable, Comparable<WorkflowRunParam>, PermissionsAware {
 
     /**
      *
@@ -34,8 +33,7 @@ public class WorkflowRunParam extends PermissionsAware implements Serializable, 
         super();
     }
 
-    /** {@inheritDoc}
-     * @param that */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(WorkflowRunParam that) {
         if (that == null) {
@@ -63,8 +61,7 @@ public class WorkflowRunParam extends PermissionsAware implements Serializable, 
         return new ToStringBuilder(this).append("swAccession", getWorkflowRunParamId()).toString();
     }
 
-    /** {@inheritDoc}
-     * @param other */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -193,14 +190,13 @@ public class WorkflowRunParam extends PermissionsAware implements Serializable, 
     public void setWorkflowRun(WorkflowRun workflowRun) {
         this.workflowRun = workflowRun;
     }
-    
-    /** {@inheritDoc}
-     * @return  */
+
+    /** {@inheritDoc} */
     @Override
-    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {       
+    public boolean givesPermission(Registration registration) {
         boolean hasPermission = true;
         if (workflowRun != null) {
-            hasPermission = workflowRun.givesPermission(registration, considered);
+            hasPermission = workflowRun.givesPermission(registration);
         } else {//Orphaned WorkflowRunParam
             if (registration.isLIMSAdmin()) {
                 Logger.getLogger(WorkflowRunParam.class).warn("Modifying Orphan WorkflowRunParam: " + this.getKey());

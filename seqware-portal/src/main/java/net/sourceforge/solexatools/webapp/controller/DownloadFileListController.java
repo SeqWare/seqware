@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.swing.plaf.metal.MetalFileChooserUI;
 
 import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.FileService;
@@ -114,9 +115,7 @@ public class DownloadFileListController extends BaseCommandController {
 		return nameListInSession;
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -143,11 +142,11 @@ public class DownloadFileListController extends BaseCommandController {
 		
 		List<File>	listAllFile = BulkUtil.getFiles(request, nameFileListInSession);
 		
-		List<File> files = new ArrayList<>();
+		List<File> files = new ArrayList<File>();
 		if(option.equals("updateFileList")){
 			// update file list
 			Integer nodeId = Integer.parseInt(getRequestedNodeId(request));
-			List<String> nodeIds = new LinkedList<>();
+			List<String> nodeIds = new LinkedList<String>();
 			
 			if(typeNode.equals("study")){
 				files = getStudyService().getFiles(nodeId);
@@ -185,7 +184,7 @@ public class DownloadFileListController extends BaseCommandController {
 					files = getProcessingService().getFiles(processingId);
 					
 					// get Processing
-					SortedSet<Processing> processings = new TreeSet<>();
+					SortedSet<Processing> processings = new TreeSet<Processing>();
 					processings.add(getProcessingService().findByID(processingId));
 					
 					// set one Processing in Workflow Run 
@@ -255,7 +254,7 @@ public class DownloadFileListController extends BaseCommandController {
 	}
 	
 	private List<File> addFiles(List<File> list, List<File> addList){
-		Set<File> temp = new HashSet<>();
+		Set<File> temp = new HashSet<File>();
 		temp.addAll(list);
 		temp.addAll(addList);
 		

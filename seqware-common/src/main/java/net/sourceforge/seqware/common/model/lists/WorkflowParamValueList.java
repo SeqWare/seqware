@@ -34,7 +34,7 @@ public class WorkflowParamValueList {
      * <p>Constructor for WorkflowParamValueList.</p>
      */
     public WorkflowParamValueList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<WorkflowParamValue>();
     }
 
     /**

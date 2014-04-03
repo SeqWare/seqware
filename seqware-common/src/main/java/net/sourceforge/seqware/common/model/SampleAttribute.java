@@ -150,8 +150,7 @@ public class SampleAttribute implements java.io.Serializable, Attribute<Sample>,
 		this.setUnits(unit);
 	}
 
-	/** {@inheritDoc}
-     * @param t */
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(SampleAttribute t) {
 		return tag.compareTo(t.tag);

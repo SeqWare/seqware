@@ -32,9 +32,7 @@ public class LaunchWorkflowSetupController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -45,7 +43,7 @@ public class LaunchWorkflowSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();	
+		HashMap<String,Object>	model			= new HashMap<String,Object>();	
 		
 		
 		List<Workflow> list = getWorkflowService().list();

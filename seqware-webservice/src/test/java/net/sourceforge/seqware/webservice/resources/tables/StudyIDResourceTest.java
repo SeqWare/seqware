@@ -28,7 +28,7 @@ public class StudyIDResourceTest extends DatabaseResourceIDTest {
 
     public StudyIDResourceTest() {
         super("/studies/4758");
-        jo = new JaxbObject<>();
+        jo = new JaxbObject<Study>();
         o = new Study();
     }
      @Override

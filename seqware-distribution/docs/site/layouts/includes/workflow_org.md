@@ -25,19 +25,19 @@ developers.
 |           `-- com
 |               `-- github
 |                   `-- seqware
-|                       `-- MyHelloWorldWorkflow.java
+|                       `-- WorkflowClient.java
 |-- target
-|   `-- Workflow_Bundle_MyHelloWorld_1.0_SeqWare_<%= seqware_release_version %>
-|       `-- Workflow_Bundle_MyHelloWorld
-|           `-- 1.0
+|   `-- Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>
+|       `-- Workflow_Bundle_HelloWorld
+|           `-- 1.0-SNAPSHOT
 |               |-- bin
 |               |-- classes
 |               |   `-- com
 |               |       `-- github
 |               |           `-- seqware
-|               |               `-- MyHelloWorldWorkflow.class
+|               |               `-- WorkflowClient.class
 |               |-- config
-|               |   `-- MyHelloWorldWorkflow.ini
+|               |   `-- workflow.ini
 |               |-- data
 |               |   `-- input.txt
 |               |-- lib
@@ -45,7 +45,7 @@ developers.
 |               `-- metadata.xml
 |-- workflow
 |   |-- config
-|   |   `-- MyHelloWorldWorkflow.ini
+|   |   `-- workflow.ini
 |   |-- data
 |   |   `-- input.txt
 |   |-- lib

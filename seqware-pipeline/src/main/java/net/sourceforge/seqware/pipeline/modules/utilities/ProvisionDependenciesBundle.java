@@ -60,7 +60,6 @@ public class ProvisionDependenciesBundle extends Module {
    *
    * @return a {@link joptsimple.OptionParser} object.
    */
-  @Override
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -77,7 +76,6 @@ public class ProvisionDependenciesBundle extends Module {
    *
    * @return a {@link java.lang.String} object.
    */
-  @Override
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -94,15 +92,13 @@ public class ProvisionDependenciesBundle extends Module {
    * {@inheritDoc}
    *
    * Things to check: * FIXME
-     * @return 
    */
   @Override
   public ReturnValue do_test() {
     return new ReturnValue(ReturnValue.NOTIMPLEMENTED);
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_parameters() {
 
@@ -130,8 +126,7 @@ public class ProvisionDependenciesBundle extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
 
@@ -161,8 +156,7 @@ public class ProvisionDependenciesBundle extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -326,8 +320,7 @@ public class ProvisionDependenciesBundle extends Module {
 
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // TODO: should use a MANIFEST to ensure all files are there

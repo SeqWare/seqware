@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -23,9 +24,6 @@ import java.util.Set;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.*;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import net.sourceforge.seqware.common.model.SequencerRunStatus;
 
 /**
  *
@@ -49,32 +47,17 @@ public class RunInfo {
     private String workflowType;
     private String assayType;
     //samples, lanes, barcodes
-    //private List<SampleInfo> samples = null;
-    private Set<TagValueUnit> experimentAttributes;
-    private Set<TagValueUnit> studyAttributes;
-    private Set<TagValueUnit> runAttributes;
+    private List<SampleInfo> samples = null;
+    private Set<ExperimentAttribute> experimentAttributes;
+    private Set<StudyAttribute> studyAttributes;
+    private Set<SequencerRunAttribute> runAttributes;
     private Set<LaneInfo> lanes;
     private boolean runSkip = false;
     private boolean pairedEnd = true;
     private String runDescription;
     private String runFilePath;
     private String experimentDescription;
-    private SequencerRunStatus status = null;
 
-    /**
-     * Get the value of the sequencer run status
-     * @return the status. Complete or if not complete, then null
-     */
-    public SequencerRunStatus getStatus(){
-        return status;
-    }
-    /**
-     * Set the value of the sequencer run status
-     * @param status the status
-     */
-    public void setStatus(SequencerRunStatus status){
-        this.status = status;
-    }
     /**
      * Get the value of runFilePath
      *
@@ -172,7 +155,7 @@ public class RunInfo {
      */
     public Set<LaneInfo> getLanes() {
         if (lanes == null) {
-            lanes = new HashSet<>();
+            lanes = new HashSet<LaneInfo>();
         }
         return lanes;
     }
@@ -207,23 +190,24 @@ public class RunInfo {
      *
      * @return the value of runAttributes
      */
-    public Set<TagValueUnit> getRunAttributes() {
+    public Set<SequencerRunAttribute> getRunAttributes() {
         if (runAttributes == null) {
-            runAttributes = new HashSet<TagValueUnit>();
+            runAttributes = new HashSet<SequencerRunAttribute>();
         }
         return runAttributes;
     }
 
     /**
-     * Adds a new run attribute if the tag does not exist for this run, or changes the value of an existing run attribute.
+     * Adds a new run attribute if the tag does not exist for this run, or
+     * changes the value of an existing run attribute.
      *
      * @param tag the key of the attribute
      * @param value the value of the attribute
      */
     public void setRunAttribute(String tag, String value) {
-        TagValueUnit sa = null;
+        SequencerRunAttribute sa = null;
         //look for the existing attribute
-        for (TagValueUnit s : getRunAttributes()) {
+        for (SequencerRunAttribute s : getRunAttributes()) {
             if (s.getTag().equals(tag.trim())) {
                 sa = s;
                 break;
@@ -236,7 +220,7 @@ public class RunInfo {
         }
         //create a new attribute
         if (sa == null) {
-            sa = new TagValueUnit();
+            sa = new SequencerRunAttribute();
             getRunAttributes().add(sa);
         }
         sa.setTag(tag.trim());
@@ -248,7 +232,7 @@ public class RunInfo {
      *
      * @param runAttributes new value of runAttributes
      */
-    public void setRunAttributes(Set<TagValueUnit> runAttributes) {
+    public void setRunAttributes(Set<SequencerRunAttribute> runAttributes) {
         this.runAttributes = runAttributes;
     }
 
@@ -257,9 +241,9 @@ public class RunInfo {
      *
      * @return the value of studyAttributes
      */
-    public Set<TagValueUnit> getStudyAttributes() {
+    public Set<StudyAttribute> getStudyAttributes() {
         if (studyAttributes == null) {
-            studyAttributes = new HashSet<TagValueUnit>();
+            studyAttributes = new HashSet<StudyAttribute>();
         }
         return studyAttributes;
     }
@@ -272,9 +256,9 @@ public class RunInfo {
      * @param value the value of the attribute
      */
     public void setStudyAttribute(String tag, String value) {
-        TagValueUnit sa = null;
+        StudyAttribute sa = null;
         //look for the existing attribute
-        for (TagValueUnit s : getStudyAttributes()) {
+        for (StudyAttribute s : getStudyAttributes()) {
             if (s.getTag().equals(tag.trim())) {
                 sa = s;
                 break;
@@ -287,7 +271,7 @@ public class RunInfo {
         }
         //create a new attribute
         if (sa == null) {
-            sa = new TagValueUnit();
+            sa = new StudyAttribute();
             getStudyAttributes().add(sa);
         }
         sa.setTag(tag.trim());
@@ -299,7 +283,7 @@ public class RunInfo {
      *
      * @param studyAttributes new value of studyAttributes
      */
-    public void setStudyAttributes(Set<TagValueUnit> studyAttributes) {
+    public void setStudyAttributes(Set<StudyAttribute> studyAttributes) {
         this.studyAttributes = studyAttributes;
     }
 
@@ -308,9 +292,9 @@ public class RunInfo {
      *
      * @return the value of experimentAttributes
      */
-    public Set<TagValueUnit> getExperimentAttributes() {
+    public Set<ExperimentAttribute> getExperimentAttributes() {
         if (experimentAttributes == null) {
-            experimentAttributes = new HashSet<TagValueUnit>();
+            experimentAttributes = new HashSet<ExperimentAttribute>();
         }
         return experimentAttributes;
     }
@@ -320,7 +304,7 @@ public class RunInfo {
      *
      * @param experimentAttributes new value of experimentAttributes
      */
-    public void setExperimentAttributes(Set<TagValueUnit> experimentAttributes) {
+    public void setExperimentAttributes(Set<ExperimentAttribute> experimentAttributes) {
         this.experimentAttributes = experimentAttributes;
     }
 
@@ -514,6 +498,7 @@ public class RunInfo {
                 }
             }
         }
+        
         writer.append("RunInfo{");
         writer.append("\n\tstudyTitle=").append(studyTitle);
         writer.append("\n\tstudyDescription=").append(studyDescription);
@@ -531,18 +516,9 @@ public class RunInfo {
         for (LaneInfo lane: lanes) {
             lane.print(writer, metadata);
         }
-        writer.append("\n\t}");
-        writer.append("\n}");
+        writer.append("}");
     }
     
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
-    }
     
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
     
 }

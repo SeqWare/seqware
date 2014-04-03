@@ -8,8 +8,7 @@ public class Pfn  {
   private String site;
 
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   public Element serializeXML() {
     Element element = new Element("pfn", Adag.NAMESPACE);
     element.setAttribute("url", this.url);

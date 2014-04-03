@@ -16,13 +16,16 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
+import net.sourceforge.seqware.common.model.StudyType;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.restlet.data.Status;
@@ -57,13 +60,13 @@ public class StudyIDResource extends DatabaseIDResource {
         StudyService ss = BeanFactory.getStudyServiceBean();
         Study study = (Study) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<Study> jaxbTool = new JaxbObject<>();
+        JaxbObject<Study> jaxbTool = new JaxbObject<Study>();
 
         Study dto = copier.hibernate2dto(Study.class, study);
 
 		if(fields.contains("attributes")) {
 			Set<StudyAttribute> sas = study.getStudyAttributes();
-			Set<StudyAttribute> newsas = new TreeSet<>();
+			Set<StudyAttribute> newsas = new TreeSet<StudyAttribute>();
 			if(sas!=null && !sas.isEmpty()) {
 				for(StudyAttribute sa: sas) {
 					newsas.add(copier.hibernate2dto(StudyAttribute.class,sa));
@@ -75,14 +78,13 @@ public class StudyIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-	/** {@inheritDoc}
-     * @return  */
+	/** {@inheritDoc} */
 	@Override
     @Put
     public Representation put(Representation entity) {
 		Representation representation = null;
 		try {
-            JaxbObject<Study> jo = new JaxbObject<>();
+            JaxbObject<Study> jo = new JaxbObject<Study>();
             String text = entity.getText();
             Study p = null;
             try {

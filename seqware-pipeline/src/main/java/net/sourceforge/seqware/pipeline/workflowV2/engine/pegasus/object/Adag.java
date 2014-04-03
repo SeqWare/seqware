@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.object;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.JavaSeqwareModuleJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.PerlJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.WorkflowExecutableUtils;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -55,8 +57,8 @@ public class Adag  {
 
     public Adag(AbstractWorkflowDataModel wfdm) {
     	this.wfdm = wfdm;
-		this.jobs = new ArrayList<>();
-		this.fileJobMap = new HashMap<>();
+		this.jobs = new ArrayList<PegasusJob>();
+		this.fileJobMap = new HashMap<SqwFile, ProvisionFilesJob>();
 		this.parseWorkflow(wfdm);
 		this.setDefaultExcutables();
     }
@@ -64,7 +66,7 @@ public class Adag  {
 
 
     private void setDefaultExcutables() {
-		executables = new ArrayList<>();
+		executables = new ArrayList<WorkflowExecutable>();
 		executables.add(WorkflowExecutableUtils.getDefaultJavaExcutable(this.wfdm));
     executables.add(WorkflowExecutableUtils.getDefaultJavaLocalExcutable(this.wfdm));
 		executables.add(WorkflowExecutableUtils.getDefaultPerlExcutable(this.wfdm));
@@ -104,7 +106,7 @@ public class Adag  {
 	
 	private void parseWorkflow(AbstractWorkflowDataModel wfdm) {
 		boolean metadatawriteback = wfdm.isMetadataWriteBack();
-		List<PegasusJob> parents = new ArrayList<>();
+		List<PegasusJob> parents = new ArrayList<PegasusJob>();
 		//mkdir data job
 		AbstractJob job0 = new BashJob("createdirs");
 		job0.getCommand().addArgument("mkdir -p provisionfiles; ");
@@ -133,7 +135,7 @@ public class Adag  {
 
 		//sqwfiles
 		if(!wfdm.getFiles().isEmpty()) {
-			Collection<PegasusJob> newParents = new ArrayList<>();
+			Collection<PegasusJob> newParents = new ArrayList<PegasusJob>();
 			for(Map.Entry<String,SqwFile> entry: wfdm.getFiles().entrySet()) {
 				AbstractJob job = new BashJob("provisionFile_"+entry.getKey());
 				SqwFile file = entry.getValue();
@@ -174,7 +176,7 @@ public class Adag  {
 		
 		int idCount = this.jobs.size();
 		//need to remember the provisionOut and reset the job's children to provisionout's children
-		Map<PegasusJob, PegasusJob> hasProvisionOut = new HashMap<>();
+		Map<PegasusJob, PegasusJob> hasProvisionOut = new HashMap<PegasusJob, PegasusJob>();
 		for(AbstractJob job: wfdm.getWorkflow().getJobs()) {
 			PegasusJob pjob = this.createPegasusJobObject(job, wfdm);
 			pjob.setId(idCount);
@@ -266,7 +268,7 @@ public class Adag  {
 		
 		//add all provision out job
 		//get all the leaf job
-		List<PegasusJob> leaves = new ArrayList<>();
+		List<PegasusJob> leaves = new ArrayList<PegasusJob>();
 		for(PegasusJob _job: this.jobs) {
 		  // Note: the leaves accumulated are to be parents of output provisions,
 		  //       thus the leaves themselves should not be file provisions

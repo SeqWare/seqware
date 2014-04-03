@@ -22,10 +22,7 @@ public class SampleValidator implements Validator {
 		super();
 	}
 	
-	/** {@inheritDoc}
-     * @param clazz
-     * @return  */
-        @Override
+	/** {@inheritDoc} */
 	public boolean supports(Class clazz) {
 		return Sample.class.equals(clazz);
 	}
@@ -34,10 +31,7 @@ public class SampleValidator implements Validator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
-     * @param obj
-     * @param errors
 	 */
-        @Override
 	public void validate(Object obj, Errors errors) {
 		Sample sample = (Sample) obj;
 		ValidationUtils.rejectIfEmpty(errors, "title", "sample.required.title");

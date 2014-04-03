@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <parent> 
-        <version>1.0.13-SNAPSHOT</version>
+        <version>1.0.8-SNAPSHOT</version>
         <groupId>com.github.seqware</groupId> 
         <artifactId>seqware</artifactId> 
         <relativePath>../pom.xml</relativePath> 
@@ -299,7 +299,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-dbcp</artifactId>
+            <artifactId>dbcp</artifactId>
         </dependency>  
         <dependency>
             <groupId>commons-dbutils</groupId>
@@ -338,11 +338,6 @@
             <artifactId>stax-api</artifactId>
             <version>1.0-2</version>
         </dependency>
-        <dependency>
-            <groupId>com.sdicons.jsontools</groupId>
-            <artifactId>jsontools-core</artifactId>
-            <version>1.7</version>
-            <type>jar</type>
-        </dependency>
+
     </dependencies>
 </project>

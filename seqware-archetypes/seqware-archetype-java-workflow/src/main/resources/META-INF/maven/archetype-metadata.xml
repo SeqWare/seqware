@@ -4,14 +4,19 @@
                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <requiredProperties>
         <requiredProperty key="package">
+            <defaultValue>com.github.seqware</defaultValue>
         </requiredProperty>
         <requiredProperty key="groupId">
-            <defaultValue>${package}</defaultValue>
+            <defaultValue>com.github.seqware</defaultValue>
         </requiredProperty>
-        <requiredProperty key="workflow-name">
+        <requiredProperty key="workflowDirectoryName">
+            <defaultValue>${artifactId}</defaultValue>
         </requiredProperty>
-        <requiredProperty key="artifactId">
-            <defaultValue>workflow-${workflow-name}</defaultValue>
+        <requiredProperty key="workflowName">
+             <defaultValue>${artifactId}</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="workflowVersion">
+            <defaultValue>${version}</defaultValue>
         </requiredProperty>
     </requiredProperties>
     <fileSets>
@@ -28,12 +33,18 @@
             </includes>
         </fileSet>
         <fileSet filtered="true" encoding="UTF-8">
+            <directory>workflow/data</directory>
+            <includes>
+                <include>**/*.txt</include>
+            </includes>
+        </fileSet>
+        <fileSet filtered="false" encoding="UTF-8">
             <directory>workflow</directory>
             <includes>
                 <include>**/*.xml</include>
             </includes>
         </fileSet>
-        <fileSet filtered="true" encoding="UTF-8">
+        <fileSet encoding="UTF-8">
             <directory>workflow/config</directory>
             <includes>
                 <include>**/*.ini</include>

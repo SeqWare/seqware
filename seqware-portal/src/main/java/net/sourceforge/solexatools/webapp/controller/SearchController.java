@@ -80,7 +80,7 @@ public class SearchController extends BaseCommandController {
 //	}
 	 
 	private List<String> getTypes() {
-		List<String> types = new ArrayList<>();
+		List<String> types = new ArrayList<String>();
 		types.add("All");
 		types.add("Study");
 		types.add("Experiment");
@@ -95,9 +95,7 @@ public class SearchController extends BaseCommandController {
 		return types;
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,

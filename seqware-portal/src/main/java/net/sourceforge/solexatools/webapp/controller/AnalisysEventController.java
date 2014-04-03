@@ -111,7 +111,7 @@ public class AnalisysEventController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
+		HashMap<String,Object>	model			= new HashMap<String,Object>();
 		WorkflowRun				workflowRun		= getRequestedWorkflowRun(request);
 		
 		ServletContext context = this.getServletContext();
@@ -145,7 +145,7 @@ public class AnalisysEventController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
+		HashMap<String,Object>	model			= new HashMap<String,Object>();
 		WorkflowRun			    workflowRun		= getRequestedWorkflowRun(request);
 
 		if (workflowRun != null) {
@@ -190,7 +190,7 @@ public class AnalisysEventController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
+		HashMap<String,Object>	model			= new HashMap<String,Object>();
 		WorkflowRun				workflowRun		= getRequestedWorkflowRun(request);
 
 		if (workflowRun != null) {

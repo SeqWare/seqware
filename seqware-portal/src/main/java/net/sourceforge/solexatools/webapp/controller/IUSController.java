@@ -1,6 +1,7 @@
 package net.sourceforge.solexatools.webapp.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.Constant;
 
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
@@ -98,7 +100,7 @@ public class IUSController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
+		HashMap<String,Object>	model			= new HashMap<String,Object>();
 		IUS						ius				= getRequestedIUS(request);
 		
 		ServletContext context = this.getServletContext();

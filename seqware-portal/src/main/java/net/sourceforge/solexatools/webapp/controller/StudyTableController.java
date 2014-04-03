@@ -2,6 +2,7 @@ package net.sourceforge.solexatools.webapp.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.model.Registration;
 
@@ -30,8 +31,6 @@ public class StudyTableController extends BaseCommandController {
 
   /**
    * {@inheritDoc}
-     * @return 
-     * @throws java.lang.Exception 
    */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,

@@ -31,7 +31,6 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
    *
    * Inserts an instance of ShareWorkflowRun into the database.
    */
-  @Override
   public void insert(ShareWorkflowRun shareWorkflowRun) {
     this.getHibernateTemplate().save(shareWorkflowRun);
   }
@@ -41,7 +40,6 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
    *
    * Updates an instance of ShareWorkflowRun in the database.
    */
-  @Override
   public void update(ShareWorkflowRun shareWorkflowRun) {
 
     this.getHibernateTemplate().update(shareWorkflowRun);
@@ -52,7 +50,6 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
    *
    * Updates an instance of ShareWorkflowRun in the database.
    */
-  @Override
   public void delete(ShareWorkflowRun shareWorkflowRun) {
 
     this.getHibernateTemplate().delete(shareWorkflowRun);
@@ -64,7 +61,6 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
    * Finds an instance of ShareWorkflowRun in the database by the
    * ShareWorkflowRun ID.
    */
-  @Override
   public ShareWorkflowRun findByWorkflowRunIdAndRegistrationId(Integer workflowRunId, Integer registrationId) {
     String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.workflowRunId = ? and shareWorkflowRun.registration.registrationId = ?";
     ShareWorkflowRun shareWorkflowRun = null;
@@ -82,7 +78,6 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
    * Finds an instance of ShareWorkflowRun in the database by the
    * ShareWorkflowRun ID.
    */
-  @Override
   public ShareWorkflowRun findByID(Integer id) {
     String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.shareWorkflowRunId = ?";
     ShareWorkflowRun shareWorkflowRun = null;
@@ -109,9 +104,8 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<ShareWorkflowRun> list(WorkflowRun workflowRun) {
-    List<ShareWorkflowRun> shareWorkflowRuns = new ArrayList<>();
+    List<ShareWorkflowRun> shareWorkflowRuns = new ArrayList<ShareWorkflowRun>();
     String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.workflowRunId = ?";
     Object[] parameters = { workflowRun.getWorkflowRunId() };
     List list = this.getHibernateTemplate().find(query, parameters);
@@ -123,7 +117,6 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
   }
 
   /** {@inheritDoc} */
-  @Override
   public ShareWorkflowRun getShareWorkflowRun(String email, WorkflowRun workflowRun) {
     String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.workflowRunId = ? and shareWorkflowRun.email = ?";
     ShareWorkflowRun shareWorkflowRun = null;

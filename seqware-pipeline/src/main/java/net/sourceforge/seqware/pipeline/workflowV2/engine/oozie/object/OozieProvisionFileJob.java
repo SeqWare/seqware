@@ -22,7 +22,6 @@ public class OozieProvisionFileJob extends OozieJob {
     this.file = file;
   }
 
-  @Override
   protected Element createSgeElement() {
     File runnerScript = emitRunnerScript();
     File optionsFile = emitOptionsFile();
@@ -34,7 +33,6 @@ public class OozieProvisionFileJob extends OozieJob {
     return sge;
   }
 
-  @Override
   protected Element createJavaElement() {
     Element java = new Element("java", WF_XMLNS);
     add(java, "job-tracker", "${jobTracker}");
@@ -58,10 +56,18 @@ public class OozieProvisionFileJob extends OozieJob {
   }
 
   private File emitRunnerScript() {
-    File localFile = file(scriptsDir, runnerFileName(name), true);
-    ArrayList<String> args = generateRunnerLine();
-    writeScript(concat(" ", args), localFile);
-    return localFile;
+    File file = file(scriptsDir, runnerFileName(name), true);
+
+    ArrayList<String> args = new ArrayList<String>();
+    args.add("java");
+    args.add("-Xmx"+jobObj.getCommand().getMaxMemory());
+    args.add("-classpath");
+    args.add(seqwareJarPath);
+    args.add("net.sourceforge.seqware.pipeline.runner.Runner");
+    args.addAll(runnerArgs());
+
+    writeScript(concat(" ", args), file);
+    return file;
   }
 
   private List<String> runnerArgs() {
@@ -133,17 +139,5 @@ public class OozieProvisionFileJob extends OozieJob {
   public void setMetadataOutputPrefix(String metadataOutputPrefix) {
     this.metadataOutputPrefix = metadataOutputPrefix;
   }
-
-    public ArrayList<String> generateRunnerLine() {
-        ArrayList<String> args = new ArrayList<>();
-        String pathToJRE = createPathToJava();
-        args.add(pathToJRE + "java");
-        args.add("-Xmx"+jobObj.getCommand().getMaxMemory());
-        args.add("-classpath");
-        args.add(seqwareJarPath);
-        args.add("net.sourceforge.seqware.pipeline.runner.Runner");
-        args.addAll(runnerArgs());
-        return args;
-    }
 
 }

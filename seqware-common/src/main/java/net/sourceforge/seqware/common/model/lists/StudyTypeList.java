@@ -34,7 +34,7 @@ public class StudyTypeList{
      * <p>Constructor for StudyTypeList.</p>
      */
     public StudyTypeList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<StudyType>();
     }
 
     /**

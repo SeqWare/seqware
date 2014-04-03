@@ -33,7 +33,6 @@ public class FileResourceTest extends DatabaseResourceTest
         super("/files");
     }
     
-    @Override
      public void testPost() {
         System.out.println(getRelativeURI() + " POST");
         Representation rep = null;

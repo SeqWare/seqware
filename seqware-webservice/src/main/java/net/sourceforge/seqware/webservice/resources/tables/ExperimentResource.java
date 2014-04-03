@@ -74,7 +74,7 @@ public class ExperimentResource extends DatabaseResource {
         List<Experiment> experiments = (List<Experiment>) testIfNull(ss.list());
         logger.debug("experiments: " + experiments.size() + " " + experiments);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<ExperimentList> jaxbTool = new JaxbObject<>();
+        JaxbObject<ExperimentList> jaxbTool = new JaxbObject<ExperimentList>();
 
         ExperimentList eList = new ExperimentList();
         eList.setList(new ArrayList());
@@ -99,7 +99,7 @@ public class ExperimentResource extends DatabaseResource {
     public void postJaxb(Representation entity) throws ResourceException {
         authenticate();
         try {
-            JaxbObject<Experiment> jo = new JaxbObject<>();
+            JaxbObject<Experiment> jo = new JaxbObject<Experiment>();
             String text = entity.getText();
             Experiment o = null;
             try {

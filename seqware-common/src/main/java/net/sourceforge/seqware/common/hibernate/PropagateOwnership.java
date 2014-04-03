@@ -18,6 +18,8 @@ package net.sourceforge.seqware.common.hibernate;
 
 import java.util.*;
 import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.module.FileMetadata;
+import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
@@ -52,9 +54,9 @@ public class PropagateOwnership {
     }
 
     private void filesFromSample(Sample parentSample, Experiment e, Study study) {
-        Stack<Sample> sampleStack = new Stack<>();
+        Stack<Sample> sampleStack = new Stack<Sample>();
         sampleStack.add(parentSample);
-        Set<Sample> usefulSamples = new TreeSet<>();
+        Set<Sample> usefulSamples = new TreeSet<Sample>();
         while (!sampleStack.isEmpty()) {
             Sample sample = sampleStack.pop();
             sampleStack.addAll(sample.getChildren());
@@ -67,7 +69,7 @@ public class PropagateOwnership {
             SortedSet<IUS> iuses = sample.getIUS();
             for (IUS ius : iuses) {
                 SequencerRun sr = ius.getLane().getSequencerRun();
-                Set<Processing> currentProcessings = new TreeSet<>();
+                Set<Processing> currentProcessings = new TreeSet<Processing>();
 
                 parseProcessingsFromStack(ius, currentProcessings);
                 for (Processing processing : currentProcessings) {
@@ -78,9 +80,9 @@ public class PropagateOwnership {
     }
 
     private void parseProcessingsFromStack(IUS ius, Set<Processing> currentProcessings) {
-        Stack<Processing> processingStack = new Stack<>();
+        Stack<Processing> processingStack = new Stack<Processing>();
         processingStack.addAll(ius.getProcessings());
-        Stack<Processing> parents = new Stack<>();
+        Stack<Processing> parents = new Stack<Processing>();
 
         for (Processing p : ius.getProcessings()) {
             parents.addAll(p.getParents());

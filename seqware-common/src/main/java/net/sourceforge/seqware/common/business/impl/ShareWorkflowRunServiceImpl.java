@@ -33,10 +33,8 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
    * Sets a private member variable with an instance of an implementation of
    * ShareWorkflowRunDAO. This method is called by the Spring framework at run
    * time.
-     * @param dao
    * @see ShareWorkflowRunDAO
    */
-  @Override
   public void setShareWorkflowRunDAO(ShareWorkflowRunDAO dao) {
     this.dao = dao;
   }
@@ -46,7 +44,6 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
    *
    * Inserts an instance of ShareWorkflowRun into the database.
    */
-  @Override
   public void insert(ShareWorkflowRun shareWorkflowRun) {
     // shareWorkflowRun.setEmail(shareWorkflowRun.getEmail().trim().toLowerCase());
     shareWorkflowRun.setCreateTimestamp(new Date());
@@ -59,20 +56,16 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
    *
    * Updates an instance of ShareWorkflowRun in the database.
    */
-  @Override
   public void update(ShareWorkflowRun shareWorkflowRun) {
     dao.update(shareWorkflowRun);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void delete(ShareWorkflowRun shareWorkflowRun) {
     dao.delete(shareWorkflowRun);
   }
 
-  /** {@inheritDoc}
-     * @param WorkflowRunId */
-  @Override
+  /** {@inheritDoc} */
   public boolean isExistsShare(Integer WorkflowRunId, Integer registrationId) {
     boolean isExists = false;
     if (findByWorkflowRunIdAndRegistrationId(WorkflowRunId, registrationId) != null) {
@@ -82,7 +75,6 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
   }
 
   /** {@inheritDoc} */
-  @Override
   public ShareWorkflowRun findByWorkflowRunIdAndRegistrationId(Integer workflowRunId, Integer registrationId) {
     ShareWorkflowRun shareWorkflowRun = null;
     if (workflowRunId != null && registrationId != null) {
@@ -97,9 +89,7 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
     return shareWorkflowRun;
   }
 
-  /** {@inheritDoc}
-     * @param shareWorkflowRunId */
-  @Override
+  /** {@inheritDoc} */
   public ShareWorkflowRun findByID(Integer shareWorkflowRunId) {
     ShareWorkflowRun shareWorkflowRun = null;
     if (shareWorkflowRunId != null) {

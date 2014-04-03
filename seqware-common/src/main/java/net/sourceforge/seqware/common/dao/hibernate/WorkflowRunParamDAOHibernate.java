@@ -30,21 +30,18 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
     }
 
     /** {@inheritDoc} */
-    @Override
     public void insert(WorkflowRunParam workflowRunParam) {
         this.getHibernateTemplate().save(workflowRunParam);
         getSession().flush();
     }
 
     /** {@inheritDoc} */
-    @Override
     public void update(WorkflowRunParam workflowRunParam) {
         getHibernateTemplate().update(workflowRunParam);
         getSession().flush();
     }
 
     /** {@inheritDoc} */
-    @Override
     public void delete(WorkflowRunParam workflowRunParam) {
         getHibernateTemplate().delete(workflowRunParam);
     }
@@ -59,9 +56,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
         return swid;
     }
 
-    /** {@inheritDoc}
-     * @param paramNameFileHash */
-    @Override
+    /** {@inheritDoc} */
     public void insertFilesAsWorkflowRunParam(WorkflowRun workflowRun, Map<String, List<File>> paramNameFileHash) {
         logger.debug("Start insert files ...");
         for (String paramName : paramNameFileHash.keySet()) {
@@ -122,7 +117,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRunParam> list() {
-        ArrayList<WorkflowRunParam> l = new ArrayList<>();
+        ArrayList<WorkflowRunParam> l = new ArrayList<WorkflowRunParam>();
 
         String query = "from WorkflowRunParam";
 

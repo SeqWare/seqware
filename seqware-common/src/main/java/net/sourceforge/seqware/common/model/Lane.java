@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Lane extends PermissionsAware implements Serializable, Comparable<Lane>, ParentAccessionModel {
+public class Lane implements Serializable, Comparable<Lane>, PermissionsAware, ParentAccessionModel {
 
     private static final long serialVersionUID = 5681328115923390568L;
     private Integer laneId;
@@ -46,12 +46,12 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     private Registration owner;
     private Date createTimestamp;
     private Date updateTimestamp;
-    private Set<Processing> processings = new TreeSet<>();
+    private Set<Processing> processings = new TreeSet<Processing>();
     private Integer swAccession;
-    private SortedSet<IUS> ius = new TreeSet<>();
-    private Set<WorkflowRun> workflowRuns = new TreeSet<>();
-    private Set<LaneLink> laneLinks = new TreeSet<>();
-    private Set<LaneAttribute> laneAttributes = new TreeSet<>();
+    private SortedSet<IUS> ius = new TreeSet<IUS>();
+    private Set<WorkflowRun> workflowRuns = new TreeSet<WorkflowRun>();
+    private Set<LaneLink> laneLinks = new TreeSet<LaneLink>();
+    private Set<LaneAttribute> laneAttributes = new TreeSet<LaneAttribute>();
     private Boolean isSelected = false;
     private Boolean isHasFile = false;
     private StudyType studyType;
@@ -67,8 +67,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
         super();
     }
 
-    /** {@inheritDoc}
-     * @param that */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(Lane that) {
         if (that == null || getLaneId() == null) {
@@ -97,8 +96,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
                 + swAccession + ", isSelected=" + isSelected + ", isHasFile=" + isHasFile + '}';
     }
 
-    /** {@inheritDoc}
-     * @param other */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -208,7 +206,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getAllProcessings() {
-        Set<Processing> allProcessing = new TreeSet<>();
+        Set<Processing> allProcessing = new TreeSet<Processing>();
         allProcessing.addAll(getProcessings());
         if (getIUS() != null) {
             for (IUS i : getIUS()) {
@@ -342,7 +340,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
         IUS newIUS = new IUS();
         newIUS.setProcessings(processings);
         newIUS.setIusId(this.getLaneId());
-        SortedSet<IUS> i = new TreeSet<>();
+        SortedSet<IUS> i = new TreeSet<IUS>();
         i.add(newIUS);
         this.setIUS(i);
     }
@@ -363,7 +361,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<Sample> getSamples() {
-        SortedSet<Sample> samples = new TreeSet<>();
+        SortedSet<Sample> samples = new TreeSet<Sample>();
         SortedSet<IUS> setIUS = getIUS();
         for (IUS i : setIUS) {
             if (i.getSample() != null) {
@@ -768,28 +766,20 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
         this.laneAttributes = laneAttributes;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      boolean consideredBefore = considered.contains(this.getSwAccession());
-        if (!consideredBefore) {
-            considered.add(this.getSwAccession());
-            Log.debug("Checking permissions for Lane object " + swAccession);
-        } else {
-            Log.debug("Skipping permissions for Lane object " + swAccession + " , checked before");
-            return true;
-        }
-        
+    public boolean givesPermission(Registration registration) {
         boolean hasPermission = true;
 
         if (sample != null) {
-            hasPermission = sample.givesPermission(registration, considered);
+            hasPermission = sample.givesPermission(registration);
         }
 
         // if one of the IUSes doesn't have permission, we can't touch this Lane
         // object...
         if (ius != null && !ius.isEmpty()) {
             for (IUS i : ius) {
-                if (!i.givesPermission(registration, considered)) {
+                if (!i.givesPermission(registration)) {
                     hasPermission = false;
                 }
             }

@@ -165,9 +165,7 @@ public class StudyReportTableController extends BaseCommandController {
     super();
   }
 
-  /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -237,7 +235,7 @@ public class StudyReportTableController extends BaseCommandController {
   }
 
   private String createSampleTableModelJson(Study study) {
-    List<Flexigrid.ColumnModel> model = new LinkedList<>();
+    List<Flexigrid.ColumnModel> model = new LinkedList<Flexigrid.ColumnModel>();
     model.add(new Flexigrid.ColumnModel("Sample", "s_sample", WIDTH, true, "left"));
     model.add(new Flexigrid.ColumnModel("Child Sample", "s_child", WIDTH, true, "left"));
     for (Workflow workflow : this.workflows) {
@@ -353,7 +351,7 @@ public class StudyReportTableController extends BaseCommandController {
     int total = fileReportService.countOfRows(study);
 
     for (FileReportRow row : rows) {
-      List<String> cellsModel = new ArrayList<>();
+      List<String> cellsModel = new ArrayList<String>();
       // The model is
       // Study Title\tStudy SWID\tExperiment Name\tExperiment SWID\tParent
       // Sample Name\t" +
@@ -514,7 +512,7 @@ public class StudyReportTableController extends BaseCommandController {
     for (Sample sample : childSamples) {
       Sample rootSample = sampleService.getRootSample(sample);
       // Fill statuses with row model
-      List<String> statusesOut = new ArrayList<>();
+      List<String> statusesOut = new ArrayList<String>();
       for (Workflow workflow : this.workflows) {
         Status status = sampleReportService.getStatus(study, sample, workflow);
         if (status == null) {
@@ -523,7 +521,7 @@ public class StudyReportTableController extends BaseCommandController {
           statusesOut.add(wrapStatus(status));
         }
       }
-      List<String> cellsModel = new LinkedList<>();
+      List<String> cellsModel = new LinkedList<String>();
       cellsModel.add(wrapSwAccession(rootSample.getSwAccession(), rootSample.getTitle()));
       cellsModel.add(wrapSwAccession(sample.getSwAccession(), rootSample.getSampleId().intValue() != sample
           .getSampleId().intValue() ? sample.getTitle() : "no child"));

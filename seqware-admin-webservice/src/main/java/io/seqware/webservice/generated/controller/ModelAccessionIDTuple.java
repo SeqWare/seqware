@@ -18,6 +18,7 @@ package io.seqware.webservice.generated.controller;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Holds information for the recursive deletion tool

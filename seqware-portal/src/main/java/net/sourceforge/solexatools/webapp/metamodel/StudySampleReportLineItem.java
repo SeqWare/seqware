@@ -226,8 +226,7 @@ public class StudySampleReportLineItem implements Comparable<StudySampleReportLi
 		this.sortKeySample = sortKeySample;
 	}
 
-	/** {@inheritDoc}
-     * @param lineItem */
+	/** {@inheritDoc} */
 	@Override
 	public int compareTo(StudySampleReportLineItem lineItem) {
 		return lineItem.getSortKeySample().getName().compareTo(sortKeySample.getName());

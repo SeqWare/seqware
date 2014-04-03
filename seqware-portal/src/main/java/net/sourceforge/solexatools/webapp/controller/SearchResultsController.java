@@ -15,9 +15,7 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
  */
 public class SearchResultsController extends BaseCommandController {
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest httpservletrequest,

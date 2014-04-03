@@ -18,6 +18,7 @@ package net.sourceforge.seqware.common.model.lists;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 
@@ -35,7 +36,7 @@ public class WorkflowRunList {
      * <p>Constructor for WorkflowRunList.</p>
      */
     public WorkflowRunList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<WorkflowRun>();
     }
 
     /**

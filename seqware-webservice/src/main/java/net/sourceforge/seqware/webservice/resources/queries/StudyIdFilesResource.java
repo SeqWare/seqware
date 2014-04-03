@@ -29,6 +29,7 @@ import net.sourceforge.seqware.common.model.lists.ReturnValueList;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.restlet.Context;
@@ -65,7 +66,7 @@ public class StudyIdFilesResource extends BasicRestlet {
         ReturnValueList list = new ReturnValueList();
         list.setList(returnValues);
 
-        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<>();
+        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<ReturnValueList>();
         Document line = XmlTools.marshalToDocument(jaxbTool, list);
         response.setEntity(XmlTools.getRepresentation(line));
     }

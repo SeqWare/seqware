@@ -76,9 +76,7 @@ public class AnalisysBulkDownloadListDetailsController extends BaseCommandContro
 		return isAsc;
 	}
 	
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -100,14 +98,14 @@ public class AnalisysBulkDownloadListDetailsController extends BaseCommandContro
 		Sample sam = new Sample();
 		Lane lane = new Lane();
 		Processing proc = new Processing();
-		Map<WorkflowRun, List<Processing>> wfrProc = new HashMap<>();
+		Map<WorkflowRun, List<Processing>> wfrProc = new HashMap<WorkflowRun, List<Processing>>();
 		
 		PageInfo pageInfo = null;
 		Boolean isHasError = false;
 		String errorMessage = "";
 		
-		List<WorkflowRun>  listAll = new ArrayList<>();
-		List<WorkflowRun>  listView = new ArrayList<>();
+		List<WorkflowRun>  listAll = new ArrayList<WorkflowRun>();
+		List<WorkflowRun>  listView = new ArrayList<WorkflowRun>();
 		
 		String   root     = (String)request.getParameter("root");
 		System.err.println("ROOT: "+root);
@@ -226,7 +224,7 @@ public class AnalisysBulkDownloadListDetailsController extends BaseCommandContro
 		for (Processing child: proc.getChildren()) {
 			List<Processing> processings = wfrProc.get(child.getWorkflowRun());
 			if (processings == null) {
-				processings = new ArrayList<>();
+				processings = new ArrayList<Processing>();
 			}
 			processings.add(child);
 			if (child.getWorkflowRun() != null) {
