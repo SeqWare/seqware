@@ -126,7 +126,7 @@ public final class SanityCheck extends Plugin {
         //removes the tests that don't need to be ran
         removeChecks(pluginList);
 
-        System.out.println(pluginList.toString());
+        List<Boolean> passedTests = new ArrayList<>();
 
         for (SanityCheckPluginInterface plugin : pluginList) {
             System.err.println("Running " + plugin.getClass().getSimpleName());
@@ -134,11 +134,13 @@ public final class SanityCheck extends Plugin {
 
                 boolean check = plugin.check(metadataDB == null ? null : new QueryRunner(metadataDB), metadata);
                 if (!check) {
+                    passedTests.add(false);
                     System.err.println("Failed check: " + plugin.getClass().getSimpleName());
                     System.err.println(plugin.getDescription());
                     ret.setExitStatus(ReturnValue.FAILURE);
                     return ret;
                 } else {
+                    passedTests.add(true);
                     System.err.println("Passed check: " + plugin.getClass().getSimpleName());
                 }
             } catch (Exception e) {
@@ -149,6 +151,14 @@ public final class SanityCheck extends Plugin {
                 return ret;
             }
         }
+        //Iterates through the array and sees if all the tests passed
+        for (Boolean b : passedTests) {
+            if (b.booleanValue() == false) {
+                System.err.println("One of the tests has failed. Exiting with an exit status of 1");
+                System.exit(1);
+            }
+        }
+
         return new ReturnValue();
     }
 
