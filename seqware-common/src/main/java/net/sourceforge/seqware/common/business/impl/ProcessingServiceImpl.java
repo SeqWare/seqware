@@ -51,6 +51,7 @@ public class ProcessingServiceImpl implements ProcessingService {
    * ProcessingDAO. This method is called by the Spring framework at run time.
    * @see ProcessingDAO
    */
+  @Override
   public void setProcessingDAO(ProcessingDAO processingDAO) {
     this.processingDAO = processingDAO;
   }
@@ -72,6 +73,7 @@ public class ProcessingServiceImpl implements ProcessingService {
    *
    * Inserts an instance of Processing into the database.
    */
+  @Override
   public void insert(SequencerRun sequencerRun, Processing processing) {
 
     if (processing.getStatus() == null) {
@@ -112,11 +114,15 @@ public class ProcessingServiceImpl implements ProcessingService {
    *
    * Updates an instance of Processing in the database.
    */
+  @Override
   public void update(Processing processing) {
     processingDAO.update(processing);
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param processing
+     * @param deleteRealFiles */
+  @Override
   public void delete(Processing processing, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
     if (deleteRealFiles) {
@@ -171,16 +177,19 @@ public class ProcessingServiceImpl implements ProcessingService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer processingId) {
     return processingDAO.getFiles(processingId);
   }
 
   /** {@inheritDoc} */
+  @Override
   public boolean isHasFile(Integer processingId) {
     return processingDAO.isHasFile(processingId);
   }
 
   /** {@inheritDoc} */
+  @Override
   public Set<Processing> setWithHasFile(Set<Processing> list) {
     for (Processing processing : list) {
       boolean isHasFile = isHasFile(processing.getProcessingId());
@@ -193,6 +202,7 @@ public class ProcessingServiceImpl implements ProcessingService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<File> getFiles(Integer processingId, String metaType) {
     return processingDAO.getFiles(processingId, metaType);
   }
@@ -209,8 +219,9 @@ public class ProcessingServiceImpl implements ProcessingService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public Set<Processing> setWithHasFile(Set<Processing> list, String metaType) {
-    Set<Processing> result = new TreeSet<Processing>();
+    Set<Processing> result = new TreeSet<>();
     for (Processing processing : list) {
       boolean isHasFile = isHasFile(processing.getProcessingId(), metaType);
       if (isHasFile) {
@@ -224,7 +235,9 @@ public class ProcessingServiceImpl implements ProcessingService {
     return result;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @param id */
+  @Override
   public Processing findByID(Integer id) {
 
     Processing processing = null;
@@ -241,6 +254,7 @@ public class ProcessingServiceImpl implements ProcessingService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public Processing findByIDOnlyWithRunningWR(Integer processingID) {
     Processing processing = findByID(processingID);
     /*
@@ -335,7 +349,7 @@ public class ProcessingServiceImpl implements ProcessingService {
    */
   @Override
   public Set<Processing> findFor(Sample sample, WorkflowRun workflowRun) {
-    Set<Processing> processings = new HashSet<Processing>();
+    Set<Processing> processings = new HashSet<>();
     if (sample.getProcessings() != null) {
       processings.addAll(sample.getProcessings());
       for (Processing proc : sample.getProcessings()) {

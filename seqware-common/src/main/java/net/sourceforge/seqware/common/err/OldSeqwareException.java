@@ -43,7 +43,8 @@ public class OldSeqwareException extends SeqwareException{
         this.returnValue = returnValue;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public int getExitCode() {
         return exitCode;

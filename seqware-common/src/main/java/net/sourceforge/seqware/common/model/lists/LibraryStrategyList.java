@@ -34,7 +34,7 @@ public class LibraryStrategyList{
      * <p>Constructor for LibraryStrategyList.</p>
      */
     public LibraryStrategyList() {
-        tList = new ArrayList<LibraryStrategy>();
+        tList = new ArrayList<>();
     }
 
     /**

@@ -35,16 +35,19 @@ public class LibrarySelectionServiceImpl implements LibrarySelectionService {
    * StudyTypeDAO. This method is called by the Spring framework at run time.
    * @see StudyTypeDAO
    */
+  @Override
   public void setLibrarySelectionDAO(LibrarySelectionDAO dao) {
     this.dao = dao;
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<LibrarySelection> list(Registration registration) {
     return dao.list(registration);
   }
 
   /** {@inheritDoc} */
+  @Override
   public LibrarySelection findByID(Integer id) {
     LibrarySelection obj = null;
     if (id != null) {

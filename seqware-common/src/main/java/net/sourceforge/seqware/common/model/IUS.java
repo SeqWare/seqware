@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class IUS implements Serializable, Comparable<IUS>, PermissionsAware, ParentAccessionModel {
+public class IUS extends PermissionsAware implements Serializable, Comparable<IUS>, ParentAccessionModel {
 
     private static final long serialVersionUID = 3472028115923390568L;
     private Integer iusId;
@@ -38,10 +38,10 @@ public class IUS implements Serializable, Comparable<IUS>, PermissionsAware, Par
     private Integer swAccession;
     private Date createTimestamp;
     private Date updateTimestamp;
-    private Set<Processing> processings = new TreeSet<Processing>();
-    private Set<WorkflowRun> workflowRuns = new TreeSet<WorkflowRun>();
-    private Set<IUSAttribute> iusAttributes = new TreeSet<IUSAttribute>();
-    private Set<IUSLink> iusLinks = new TreeSet<IUSLink>();
+    private Set<Processing> processings = new TreeSet<>();
+    private Set<WorkflowRun> workflowRuns = new TreeSet<>();
+    private Set<IUSAttribute> iusAttributes = new TreeSet<>();
+    private Set<IUSLink> iusLinks = new TreeSet<>();
     private Boolean skip;
     // not persist
     private Boolean isHasFile = false;
@@ -54,7 +54,8 @@ public class IUS implements Serializable, Comparable<IUS>, PermissionsAware, Par
         super();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(IUS that) {
         if (that == null) {
@@ -85,7 +86,8 @@ public class IUS implements Serializable, Comparable<IUS>, PermissionsAware, Par
                 + ", isSelected=" + isSelected + '}';
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -450,13 +452,21 @@ public class IUS implements Serializable, Comparable<IUS>, PermissionsAware, Par
             this.skip = skip;
         }
     }
-
-    /** {@inheritDoc} */
+    
     @Override
-    public boolean givesPermission(Registration registration) {
+    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+        boolean consideredBefore = considered.contains(this.getSwAccession());
+        if (!consideredBefore) {
+            considered.add(this.getSwAccession());
+            Log.debug("Checking permissions for IUS object " + swAccession);
+        } else {
+            Log.debug("Skipping permissions for IUS object " + swAccession + " , checked before");
+            return true;
+        }
+        
         boolean hasPermission = true;
         if (sample != null) {
-            hasPermission = sample.givesPermission(registration);
+            hasPermission = sample.givesPermission(registration, considered);
         } else {// orphaned IUS
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
                 Logger.getLogger(IUS.class).warn("Modifying Orphan IUS: " + this.getTag());

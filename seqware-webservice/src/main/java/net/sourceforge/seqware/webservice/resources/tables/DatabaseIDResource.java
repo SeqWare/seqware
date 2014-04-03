@@ -82,7 +82,9 @@ public class DatabaseIDResource extends BasicResource {
 //        return repOutput;
 //    }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param rep
+     * @return  */
     @Put
     @Override
     public Representation put(Representation rep) {
@@ -92,7 +94,8 @@ public class DatabaseIDResource extends BasicResource {
         return repOutput;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Delete
     @Override
     public Representation delete() {
@@ -105,12 +108,14 @@ public class DatabaseIDResource extends BasicResource {
     /**
      * Merge attributes from a new set into an existing one while removing duplicates.
      * Unfortunately, due to how duplicates work,
+     * @param existingAttributeSet
      * @param newAttributeSet
+     * @param parent
      * @return
      */
     protected <S, T extends Attribute> void mergeAttributes(Set<T> existingAttributeSet, Set<T> newAttributeSet, S parent) {
         // extract keys
-        Map<String, T> keyMap = new HashMap<String, T>();
+        Map<String, T> keyMap = new HashMap<>();
         for (T exist : existingAttributeSet) {
             keyMap.put(exist.getTag(), exist);
         }

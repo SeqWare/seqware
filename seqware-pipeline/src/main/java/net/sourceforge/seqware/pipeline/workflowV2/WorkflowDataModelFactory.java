@@ -18,11 +18,10 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.StringUtils;
 import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
 
 /**
@@ -72,6 +71,7 @@ public class WorkflowDataModelFactory {
      *
      * @param workflowAccession if this is present, we grab metadata information
      * from the database, not the options
+     * @param workflowRunAccession
      * @return
      */
     public AbstractWorkflowDataModel getWorkflowDataModel(Integer workflowAccession, Integer workflowRunAccession) {
@@ -247,15 +247,20 @@ public class WorkflowDataModelFactory {
                 m = clazz.getMethod("buildWorkflow");
                 m.invoke(dataModel);
             } catch (SecurityException e) {
-                Log.error(e);
+                Log.error("SecurityException",e);
+                Rethrow.rethrow(e);
             } catch (NoSuchMethodException e) {
-                Log.error(e);
+                Log.error("NoSuchMethodException",e);
+                Rethrow.rethrow(e);
             } catch (IllegalArgumentException e) {
-                Log.error(e);
+                Log.error("IllegalArgumentException",e);
+                Rethrow.rethrow(e);
             } catch (IllegalAccessException e) {
-                Log.error(e);
+                Log.error("IllegalAccessException",e);
+                Rethrow.rethrow(e);
             } catch (InvocationTargetException e) {
-                Log.error(e);
+                Log.error("InvocationTargetException",e);
+                Rethrow.rethrow(e);
             }
         } else {
             WorkflowXmlParser xmlParser = new WorkflowXmlParser();
@@ -300,7 +305,7 @@ public class WorkflowDataModelFactory {
 
     private Map<String, String> loadIniConfigs(Integer workflowAccession, Integer workflowRunAccession, String bundlePath) {
         // the map
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         if (workflowRunAccession != null) {
             Log.info("loading ini files from DB");
             // TODO: this code is from BasicWorkflow, make a notice of that when refactoring
@@ -341,10 +346,10 @@ public class WorkflowDataModelFactory {
         } else {
             Log.info("loading ini files from options");
 
-            Map<String, String> ret = new HashMap<String, String>();
+            Map<String, String> ret = new HashMap<>();
             //set conifg, pass the config files to Map<String,String>, also put the .settings to Map<String,String>
             // ini-files
-            ArrayList<String> iniFiles = new ArrayList<String>();
+            ArrayList<String> iniFiles = new ArrayList<>();
             if (options.has("ini-files")) {
                 List opts = options.valuesOf("ini-files");
                 for (Object opt : opts) {
@@ -376,7 +381,7 @@ public class WorkflowDataModelFactory {
         //merge parent-accessions
         if (options.has("parent-accessions")) {
             // parent accessions
-            ArrayList<String> parentAccessions = new ArrayList<String>();
+            ArrayList<String> parentAccessions = new ArrayList<>();
             if (options.has("parent-accessions")) {
                 List opts = options.valuesOf("parent-accessions");
                 for (Object opt : opts) {

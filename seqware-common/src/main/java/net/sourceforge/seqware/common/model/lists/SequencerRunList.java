@@ -34,7 +34,7 @@ public class SequencerRunList{
      * <p>Constructor for SequencerRunList.</p>
      */
     public SequencerRunList() {
-        tList = new ArrayList<SequencerRun>();
+        tList = new ArrayList<>();
     }
 
     /**

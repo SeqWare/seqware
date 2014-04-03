@@ -145,7 +145,8 @@ public class LaneAttribute implements java.io.Serializable, Comparable<LaneAttri
         this.units = units;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param t */
     @Override
     public int compareTo(LaneAttribute t) {
         return t.getTag().compareTo(tag);

@@ -101,8 +101,8 @@ public class StudyListDetailsFlatController extends ApplicationObjectSupport {
     Boolean isHasError = false;
     String errorMessage = "";
 
-    List<Study> listAll = new ArrayList<Study>();
-    List<Study> listView = new ArrayList<Study>();
+    List<Study> listAll = new ArrayList<>();
+    List<Study> listView = new ArrayList<>();
 
     ModelAndView modelAndView;
 
@@ -273,7 +273,7 @@ public class StudyListDetailsFlatController extends ApplicationObjectSupport {
   }
 
   private List<SampleDetailsLineItem> getSampleDetails(Sample sam) {
-    List<SampleDetailsLineItem> sampleDetails = new ArrayList<SampleDetailsLineItem>();
+    List<SampleDetailsLineItem> sampleDetails = new ArrayList<>();
 
     for (IUS ius : sam.getIUS()) {
       Lane lane = ius.getLane();

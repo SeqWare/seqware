@@ -26,7 +26,8 @@ public class FileType implements Serializable, Comparable<FileType> {
 		super();
 	}
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
 	public int compareTo(FileType that) {
 		if(that == null)
@@ -49,7 +50,8 @@ public class FileType implements Serializable, Comparable<FileType> {
 			.toString();
 	}
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

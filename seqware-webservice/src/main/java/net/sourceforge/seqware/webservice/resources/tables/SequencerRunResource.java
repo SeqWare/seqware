@@ -22,14 +22,10 @@ import java.util.List;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.PlatformService;
 import net.sourceforge.seqware.common.business.SequencerRunService;
-import net.sourceforge.seqware.common.business.SequencerRunService;
-import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Platform;
-import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
-import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.lists.SequencerRunList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
@@ -72,12 +68,12 @@ public class SequencerRunResource extends DatabaseResource {
     if (queryValues.get("name") != null) {
       String name = queryValues.get("name");
       SequencerRun study = (SequencerRun) testIfNull(ss.findByName(name));
-      JaxbObject<SequencerRun> jaxbTool = new JaxbObject<SequencerRun>();
+      JaxbObject<SequencerRun> jaxbTool = new JaxbObject<>();
       SequencerRun dto = copier.hibernate2dto(SequencerRun.class, study);
       Document line = XmlTools.marshalToDocument(jaxbTool, dto);
       getResponse().setEntity(XmlTools.getRepresentation(line));
     } else {
-      JaxbObject<SequencerRunList> jaxbTool = new JaxbObject<SequencerRunList>();
+      JaxbObject<SequencerRunList> jaxbTool = new JaxbObject<>();
       List<SequencerRun> runs = (List<SequencerRun>) testIfNull(ss.list());
       SequencerRunList eList = new SequencerRunList();
       eList.setList(new ArrayList());
@@ -102,7 +98,7 @@ public class SequencerRunResource extends DatabaseResource {
   public void postJaxb(Representation entity) throws ResourceException {
     authenticate();
     try {
-      JaxbObject<SequencerRun> jo = new JaxbObject<SequencerRun>();
+      JaxbObject<SequencerRun> jo = new JaxbObject<>();
       String text = entity.getText();
       SequencerRun o = null;
       try {

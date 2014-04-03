@@ -5,7 +5,6 @@ import java.util.List;
 import net.sourceforge.seqware.common.dao.InvoiceDAO;
 import net.sourceforge.seqware.common.model.InvoiceState;
 import net.sourceforge.seqware.common.model.Registration;
-import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Invoice;
 
 /**

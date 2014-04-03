@@ -19,7 +19,10 @@ public class SequencerRunWizardValidator extends SequencerRunValidator {
 		super();
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param clazz
+     * @return  */
+        @Override
 	public boolean supports(Class clazz) {
 		return SequencerRunWizardDTO.class.equals(clazz);
 	}
@@ -28,7 +31,10 @@ public class SequencerRunWizardValidator extends SequencerRunValidator {
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param obj
+     * @param errors
 	 */
+        @Override
 	public void validate(Object obj, Errors errors) {
 		SequencerRunWizardDTO sequencerRunWizardDTO = (SequencerRunWizardDTO) obj;
 		this.validateName(sequencerRunWizardDTO.getName(), errors);

@@ -1,12 +1,10 @@
 package net.sourceforge.seqware.common.hibernate;
 
-import net.sourceforge.seqware.common.ContextImpl;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
 import org.springframework.orm.hibernate3.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;

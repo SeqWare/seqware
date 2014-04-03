@@ -30,8 +30,9 @@ public class FileTypeDAOHibernate extends HibernateDaoSupport implements FileTyp
    *
    * @return a {@link java.util.List} object.
    */
+  @Override
   public List<FileType> list() {
-    ArrayList<FileType> fileTypes = new ArrayList<FileType>();
+    ArrayList<FileType> fileTypes = new ArrayList<>();
 
     List expmts = this.getHibernateTemplate().find("from FileType as fileType order by fileType.fileTypeId asc" // desc
     );
@@ -43,6 +44,7 @@ public class FileTypeDAOHibernate extends HibernateDaoSupport implements FileTyp
   }
 
   /** {@inheritDoc} */
+  @Override
   public FileType findByID(Integer id) {
     String query = "from FileType as fileType where fileType.fileTypeId = ?";
     FileType obj = null;

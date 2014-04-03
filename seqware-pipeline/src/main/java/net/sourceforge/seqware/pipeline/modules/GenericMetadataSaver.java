@@ -86,6 +86,7 @@ public class GenericMetadataSaver extends Module {
    * {@inheritDoc}
    *
    * A method used to return the syntax for this module
+     * @return 
    */
   @Override
   public String get_syntax() {
@@ -109,6 +110,7 @@ public class GenericMetadataSaver extends Module {
    * create a temporary directory using the FileTools object.
    *
    * init is optional
+     * @return 
    */
   @Override
   public ReturnValue init() {
@@ -132,10 +134,10 @@ public class GenericMetadataSaver extends Module {
       // by splitting the command line options by space. JOpt expects a String[]
 
       // an array for this module
-      ArrayList<String> myParameters = new ArrayList<String>();
+      ArrayList<String> myParameters = new ArrayList<>();
 
       // an array for everything else that will get passed to the command
-      cmdParameters = new ArrayList<String>();
+      cmdParameters = new ArrayList<>();
 
       // should be able to do this since all the --gms-* params except one take
       // an argument
@@ -178,6 +180,7 @@ public class GenericMetadataSaver extends Module {
    * {@inheritDoc}
    *
    * Verifies that the parameters make sense
+     * @return 
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -203,6 +206,7 @@ public class GenericMetadataSaver extends Module {
    *
    * The do_verify_input method ensures that the input is reasonable and valid
    * for this tool. For this generic command runner we really can't tell if the
+     * @return 
    */
   @Override
   public ReturnValue do_verify_input() {
@@ -236,6 +240,7 @@ public class GenericMetadataSaver extends Module {
    * programs your calling here by running them on a "known good" test dataset
    * and then compare the new answer with the previous known good answer. Other
    * forms of testing could be encapsulated here as well.
+     * @return 
    */
   @Override
   public ReturnValue do_test() {
@@ -254,6 +259,7 @@ public class GenericMetadataSaver extends Module {
    *
    * This is the core of a module. It just saves metadata back to the DB using
    * the standardized ReturnValue object as a wrapper.
+     * @return 
    */
   @Override
   public ReturnValue do_run() {
@@ -273,7 +279,7 @@ public class GenericMetadataSaver extends Module {
         ret.getFiles().add(fm);
         if (fm.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
           Map<String, String> map = FileTools.getKeyValueFromFile(fm.getFilePath());
-          Set<ProcessingAttribute> atts = new TreeSet<ProcessingAttribute>();
+          Set<ProcessingAttribute> atts = new TreeSet<>();
           for (Map.Entry<String, String> entry : map.entrySet()) {
             ProcessingAttribute a = new ProcessingAttribute();
             a.setTag(entry.getKey());
@@ -297,6 +303,7 @@ public class GenericMetadataSaver extends Module {
    * {@inheritDoc}
    *
    * A method to check to make sure the output was created correctly
+     * @return 
    */
   @Override
   public ReturnValue do_verify_output() {
@@ -315,6 +322,7 @@ public class GenericMetadataSaver extends Module {
    * working directory since Pegasus won't clean those for you.
    *
    * clean_up is optional
+     * @return 
    */
   @Override
   public ReturnValue clean_up() {

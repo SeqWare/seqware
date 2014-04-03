@@ -43,7 +43,9 @@ public class ShareValidatorController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -54,8 +56,8 @@ public class ShareValidatorController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 		
 		Boolean isHasError = false;
-		List<String> errorMessages = new LinkedList<String>();
-		List<String> emailsHasError = new LinkedList<String>();
+		List<String> errorMessages = new LinkedList<>();
+		List<String> emailsHasError = new LinkedList<>();
 		
 		// get request params
 		String openNodeId = request.getParameter("openNodeId");

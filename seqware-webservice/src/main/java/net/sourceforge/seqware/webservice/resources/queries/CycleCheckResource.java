@@ -18,7 +18,6 @@ package net.sourceforge.seqware.webservice.resources.queries;
 
 import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
 import net.sourceforge.seqware.common.hibernate.CheckForCycles;
-import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.restlet.Context;

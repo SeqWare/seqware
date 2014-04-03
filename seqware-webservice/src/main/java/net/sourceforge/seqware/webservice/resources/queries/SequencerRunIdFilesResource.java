@@ -19,7 +19,6 @@ package net.sourceforge.seqware.webservice.resources.queries;
 import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
 import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
@@ -34,7 +33,6 @@ import net.sourceforge.seqware.common.model.lists.ReturnValueList;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.restlet.Context;
@@ -73,7 +71,7 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
         ReturnValueList list = new ReturnValueList();
         list.setList(returnValues);
 
-        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<ReturnValueList>();
+        JaxbObject<ReturnValueList> jaxbTool = new JaxbObject<>();
         Document line = XmlTools.marshalToDocument(jaxbTool, list);
         response.setEntity(XmlTools.getRepresentation(line));
     }
@@ -83,10 +81,9 @@ public class SequencerRunIdFilesResource extends BasicRestlet {
      *
      * @param srSWA a int.
      * @return a {@link java.util.List} object.
-     * @throws java.sql.SQLException if any.
      */
     public List<ReturnValue> hello(int srSWA){
-        List<ReturnValue> returnValues = new ArrayList<ReturnValue>();
+        List<ReturnValue> returnValues = new ArrayList<>();
 
         SequencerRunService srs = BeanFactory.getSequencerRunServiceBean();
         SequencerRun sr = (SequencerRun) testIfNull(srs.findBySWAccession(srSWA));

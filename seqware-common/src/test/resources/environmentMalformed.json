@@ -1,0 +1,40 @@
+{
+    "defaults": {
+	"description": "Raunaq's Incorrect JSON",
+        "metrics_calculate": "calculate.sh",
+        "metrics_compare": "compare.sh",
+        "input_config_dir": "/asdfasfasdf/input_config/",
+        "output_metrics_dir": "/asdasdasd/asasdad/asd/tqe/output_expectation/"
+    },
+    
+    "tests": [
+        {
+            "input_config": "hello_01.ini",
+            "environment_variables" : "Raunaq Suri"
+        },
+        {
+            "input_config": "hello_test_02.ini"
+        },
+        {
+            "input_config": "hello_test_03.ini"
+        },
+        {
+            "input_config": "hello_test_04.ini"
+        },
+        {
+            "input_config": "hello_test_05.ini"
+        },
+        {
+            "input_config": "hello_test_06.ini"
+        },
+        {
+            "input_config": "hello_test_07.ini"
+        },
+        {
+            "input_config": "hello_test_08.ini"
+        },
+        {
+            "input_config": "hello_test_09.ini"
+        }
+    ]
+}

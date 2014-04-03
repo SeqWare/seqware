@@ -28,7 +28,6 @@ import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -57,7 +56,7 @@ public class DeveloperPhase1 {
         PluginRunnerET.buildAndInstallArchetypes(archetypes, SEQWARE_VERSION, false, false);
 
         //list workflows and ensure that the workflow is installed
-        List<Integer> accessions = new ArrayList<Integer>();
+        List<Integer> accessions = new ArrayList<>();
         accessions.addAll(PluginRunnerET.getInstalledWorkflows().values());
         Assert.assertTrue("one accession expected", accessions.size() == 1);
         AccessionMap.accessionMap.put(WORKFLOW, accessions.get(0).toString()); 
@@ -72,7 +71,7 @@ public class DeveloperPhase1 {
         File metadata = new File(bundleDir.getAbsolutePath() + File.separatorChar + "workflow", "metadata.xml");
         Assert.assertTrue("metadata.xml does not exist at " + metadata.getAbsolutePath(), metadata.exists());  
         File workflowClientJava = new File(bundleDir.getAbsolutePath()  + File.separatorChar + "src" + File.separatorChar + "main" + File.separatorChar + "java" 
-            + File.separatorChar + "com" + File.separatorChar + "seqware" + File.separatorChar + "github" + File.separatorChar , "WorkflowClient.java");
+            + File.separatorChar + "com" + File.separatorChar + "seqware" + File.separatorChar + "github" + File.separatorChar , "seqwarearchetypejavaworkflowWorkflow.java");
         Assert.assertTrue("java client does not exist at " + workflowClientJava.getAbsolutePath(), workflowClientJava.exists());  
         
         // allocate needed items for future tests
@@ -99,8 +98,10 @@ public class DeveloperPhase1 {
         // edit lines to match tutorial changes
         boolean linesAdded = false;
         for(int i = 0; i < readLines.size(); i++){
-            if(readLines.get(i).contains("job11.addParent(job00)")){
-                readLines.add(i+1, "\nJob job12 = this.getWorkflow().createBashJob(\"bash_date\");\njob12.setCommand(\"date > dir1/time\");\njob12.addParent(job11);");
+            if(readLines.get(i).contains("copyJob2.addFile(createOutputFile(\"dir1/output\", \"txt/plain\", manualOutput));")){
+		readLines.remove(i);
+                readLines.add(i, "\nJob dateJob = this.getWorkflow().createBashJob(\"bash_date\");\ndateJob.setCommand(\"date >> dir1/output\");"+
+				"\ndateJob.addParent(copyJob2);\ndateJob.addFile(createOutputFile(\"dir1/output\", \"txt/plain\", manualOutput)); ");
                 linesAdded = true;
             }
         }

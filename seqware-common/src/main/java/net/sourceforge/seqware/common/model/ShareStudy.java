@@ -32,7 +32,8 @@ public class ShareStudy implements Serializable, Comparable<ShareStudy>{
 	public ShareStudy() {
 		super();
 	}
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param that */
 	@Override
 	public int compareTo(ShareStudy that) {
 		if(that == null)
@@ -54,7 +55,8 @@ public class ShareStudy implements Serializable, Comparable<ShareStudy>{
 	//		.append("email", getEmail())
 			.toString();
 	}
-        /** {@inheritDoc} */
+        /** {@inheritDoc}
+     * @param other */
         @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

@@ -13,7 +13,6 @@ import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.Experiment;
-import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 

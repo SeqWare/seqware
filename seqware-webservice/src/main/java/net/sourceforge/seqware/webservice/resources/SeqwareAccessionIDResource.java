@@ -22,7 +22,6 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Put;
 import org.restlet.resource.Delete;
-import org.restlet.resource.ServerResource;
 
 /**
  * <p>SeqwareAccessionIDResource class.</p>
@@ -40,7 +39,8 @@ public class SeqwareAccessionIDResource extends BasicResource {
         this.swa = (String) getRequestAttributes().get("SWA");
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Get
     @Override
     public Representation get() {
@@ -50,7 +50,9 @@ public class SeqwareAccessionIDResource extends BasicResource {
         return repOutput;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param rep
+     * @return  */
     @Put
     @Override
     public Representation put(Representation rep) {
@@ -60,7 +62,8 @@ public class SeqwareAccessionIDResource extends BasicResource {
         return repOutput;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Delete
     @Override
     public Representation delete() {
