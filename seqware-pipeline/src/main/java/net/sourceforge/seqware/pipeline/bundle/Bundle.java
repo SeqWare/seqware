@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
@@ -260,7 +261,12 @@ public class Bundle {
 
     File outputZipFile = new File(bundleOutput.getAbsolutePath() + File.separator + bundlePath.getName() + ".zip");
 
-    if (!FileTools.zipDirectoryRecursive(bundlePath, outputZipFile, null, true, true)) {
+    boolean compression = true;
+    Map<String, String> settings = ConfigTools.getSettings();
+    if (settings.containsKey(FileTools.COMPRESSION_SETTING) && settings.get(FileTools.COMPRESSION_SETTING).equals("OFF")){
+        compression = false;
+    }
+    if (!FileTools.zipDirectoryRecursive(bundlePath, outputZipFile, null, true, compression)) {
       //tests
       ret.setExitStatus(ReturnValue.FAILURE);
     }
@@ -296,8 +302,13 @@ public class Bundle {
       ret.setExitStatus(ReturnValue.FAILURE);
       return (ret);
     }
-
-    if (!FileTools.zipDirectoryRecursive(bundlePath, new File(tempDir.getAbsolutePath() + File.separator + bundlePath.getName() + ".zip"), null, true, true)) {
+    
+    boolean compression = true;
+    Map<String, String> settings = ConfigTools.getSettings();
+    if (settings.containsKey(FileTools.COMPRESSION_SETTING) && settings.get(FileTools.COMPRESSION_SETTING).equals("OFF")){
+        compression = false;
+    }
+    if (!FileTools.zipDirectoryRecursive(bundlePath, new File(tempDir.getAbsolutePath() + File.separator + bundlePath.getName() + ".zip"), null, true, compression)) {
       ret.setExitStatus(ReturnValue.FAILURE);
     }
 
