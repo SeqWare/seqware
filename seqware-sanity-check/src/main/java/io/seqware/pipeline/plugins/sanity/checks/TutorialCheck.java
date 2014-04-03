@@ -25,7 +25,6 @@ import net.sourceforge.seqware.pipeline.tutorial.UserPhase1;
 import net.sourceforge.seqware.pipeline.tutorial.UserPhase2;
 import net.sourceforge.seqware.pipeline.tutorial.UserPhase3;
 import net.sourceforge.seqware.pipeline.tutorial.UserPhase4;
-import net.sourceforge.seqware.pipeline.tutorial.UserPhase5;
 import net.sourceforge.seqware.pipeline.tutorial.UserPhase6;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
@@ -34,31 +33,48 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Runs through our pre-CLI tutorial
+ *
  * @author dyuen
+ * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
-public class TutorialCheck implements SanityCheckPluginInterface { 
+public class TutorialCheck implements SanityCheckPluginInterface {
+
+    @Override
+    public boolean isTutorialTest() {
+        return true;
+    }
+
+    @Override
+    public boolean isMasterTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isDBTest() {
+        return false;
+    }
 
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
         JUnitCore core = new JUnitCore();
-        Result run = core.run(UserPhase1.class, UserPhase2.class, UserPhase3.class , UserPhase4.class , ProvidedBundleUserPhase5.class, UserPhase6.class);
+        Result run = core.run(UserPhase1.class, UserPhase2.class, UserPhase3.class, UserPhase4.class, ProvidedBundleUserPhase5.class, UserPhase6.class);
         System.out.println("Test run count: " + run.getRunCount());
         System.out.println("Test fail count: " + run.getFailureCount());
-        for(Failure f : run.getFailures()){
+        for (Failure f : run.getFailures()) {
             System.out.println(f.getTestHeader());
             System.out.println(f.getMessage());
         }
         return run.wasSuccessful();
     }
-    
+
     @Override
-    public String getDescription(){
+    public String getDescription() {
         return "Could not run through the old pre-CLI \"Getting Started\" tutorials";
     }
-    
+
     @Override
-    public int getPriority(){
+    public int getPriority() {
         return 100;
     }
 }

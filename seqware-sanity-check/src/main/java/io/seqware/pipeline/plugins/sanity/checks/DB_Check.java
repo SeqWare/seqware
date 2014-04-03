@@ -24,29 +24,47 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Checks that the database you're pointing to (if there is one) is consistent with the web service you're pointing to 
+ * Checks that the database you're pointing to (if there is one) is consistent
+ * with the web service you're pointing to
+ *
  * @author dyuen
+ * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
-public class DB_Check implements SanityCheckPluginInterface { 
+public class DB_Check implements SanityCheckPluginInterface {
+
+    @Override
+    public boolean isTutorialTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isMasterTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isDBTest() {
+        return true;
+    }
 
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
-        if (qRunner == null){
-             System.err.println("Warning: No or invalid SeqWare metadb settings");
-             return true;
+        if (qRunner == null) {
+            System.err.println("Warning: No or invalid SeqWare metadb settings");
+            return true;
         }
         Object executeQuery = qRunner.executeQuery("select count(*) from processing;", new ScalarHandler());
         return true;
     }
-    
+
     @Override
-    public String getDescription(){
+    public String getDescription() {
         return ".seqware database settings are present and are inconsistent with the provided web service settings";
     }
-    
+
     @Override
-    public int getPriority(){
+    public int getPriority() {
         return 10;
     }
 }

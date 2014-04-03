@@ -32,27 +32,44 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Runs through our CLI tutorial
+ *
  * @author dyuen
+ * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
-public class CLICheck implements SanityCheckPluginInterface { 
+public class CLICheck implements SanityCheckPluginInterface {
+
+    @Override
+    public boolean isTutorialTest() {
+        return true;
+    }
+
+    @Override
+    public boolean isMasterTest() {
+        return false;
+    }
+
+    @Override
+    public boolean isDBTest() {
+        return false;
+    }
 
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
         JUnitCore core = new JUnitCore();
-        Result run = core.run(CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class , CLIUserPhase4.class , ProvidedBundleCLIUserPhase5.class, CLIUserPhase6.class);
+        Result run = core.run(CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class, CLIUserPhase4.class, ProvidedBundleCLIUserPhase5.class, CLIUserPhase6.class);
         System.out.println("Test run count: " + run.getRunCount());
         System.out.println("Test fail count: " + run.getFailureCount());
         return run.wasSuccessful();
     }
-    
+
     @Override
-    public String getDescription(){
+    public String getDescription() {
         return "Could not run through the CLI \"Getting Started\" tutorials";
     }
-    
+
     @Override
-    public int getPriority(){
+    public int getPriority() {
         return 110;
     }
 }
