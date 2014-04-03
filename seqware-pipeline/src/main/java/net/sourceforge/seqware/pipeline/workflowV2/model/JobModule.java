@@ -21,7 +21,7 @@ public class JobModule {
    */
   public JobModule(Module module) {
 	  this.moduleType = module;
-    this.arguments = new ArrayList<Argument>();
+    this.arguments = new ArrayList<>();
   }
 
   /**

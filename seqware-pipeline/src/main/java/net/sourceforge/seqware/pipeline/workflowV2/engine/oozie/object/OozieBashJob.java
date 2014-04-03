@@ -11,16 +11,18 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 
 public class OozieBashJob extends OozieJob {
+    public static final String OOZIE_RETRY_MAX = "OOZIE_RETRY_MAX";
+    public static final String OOZIE_RETRY_INTERVAL = "OOZIE_RETRY_INTERVAL";
+    private File jobScript = null;
 
   public OozieBashJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
                       String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
     super(job, name, oozie_working_dir, useSge, seqwareJar, threadsSgeParamFormat, maxMemorySgeParamFormat);
   }
 
+  @Override
   protected Element createSgeElement() {
-
-    File jobScript = emitJobScript();
-    File runnerScript = emitRunnerScript(jobScript);
+    File runnerScript = emitRunnerScript();
     File optionsFile = emitOptionsFile();
 
     Element sge = new Element("sge", SGE_XMLNS);
@@ -30,9 +32,8 @@ public class OozieBashJob extends OozieJob {
     return sge;
   }
 
+  @Override
   protected Element createJavaElement() {
-    File jobScript = emitJobScript();
-
     Element java = new Element("java", WF_XMLNS);
     add(java, "job-tracker", "${jobTracker}");
     add(java, "name-node", "${nameNode}");
@@ -47,7 +48,7 @@ public class OozieBashJob extends OozieJob {
     add(java, "main-class", "net.sourceforge.seqware.pipeline.runner.Runner");
     String settings = String.format("-D%s='%s'", ConfigTools.SEQWARE_SETTINGS_PROPERTY, ConfigTools.getSettingsFilePath());
     add(java, "java-opts", settings);
-    for (String arg : runnerArgs(jobScript)) {
+    for (String arg : runnerArgs(getJobScript())) {
       add(java, "arg", arg);
     }
 
@@ -64,17 +65,9 @@ public class OozieBashJob extends OozieJob {
     return file;
   }
 
-  private File emitRunnerScript(File jobScript) {
+  private File emitRunnerScript() {
     File file = file(scriptsDir, runnerFileName(name), true);
-
-    ArrayList<String> args = new ArrayList<String>();
-    args.add("java");
-    args.add("-Xmx"+jobObj.getCommand().getMaxMemory());
-    args.add("-classpath");
-    args.add(seqwareJarPath);
-    args.add("net.sourceforge.seqware.pipeline.runner.Runner");
-    args.addAll(runnerArgs(jobScript));
-
+    ArrayList<String> args = generateRunnerLine();
     writeScript(concat(" ", args), file);
 
     return file;
@@ -104,5 +97,27 @@ public class OozieBashJob extends OozieJob {
     args.add(jobScript.getAbsolutePath());
     return args;
   }
+
+    public ArrayList<String> generateRunnerLine() {
+        ArrayList<String> args = new ArrayList<>();
+        String pathToJRE = createPathToJava();
+        args.add(pathToJRE + "java");
+        args.add("-Xmx"+jobObj.getCommand().getMaxMemory());
+        args.add("-classpath");
+        args.add(seqwareJarPath);
+        args.add("net.sourceforge.seqware.pipeline.runner.Runner");
+        args.addAll(runnerArgs(getJobScript()));
+        return args;
+    }
+
+    /**
+     * @return the jobScript
+     */
+    public File getJobScript() {
+        if (this.jobScript == null){
+            this.jobScript = emitJobScript();
+        }
+        return jobScript;
+    }
 
 }

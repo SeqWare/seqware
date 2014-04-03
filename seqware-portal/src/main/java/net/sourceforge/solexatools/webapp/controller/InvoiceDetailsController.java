@@ -2,7 +2,6 @@ package net.sourceforge.solexatools.webapp.controller;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.seqware.common.business.InvoiceService;
 
-import net.sourceforge.seqware.common.business.WorkflowService;
 import net.sourceforge.seqware.common.model.Expense;
 import net.sourceforge.seqware.common.model.Invoice;
 import net.sourceforge.seqware.common.model.Registration;
@@ -42,7 +40,9 @@ public class InvoiceDetailsController  extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
         
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request, HttpServletResponse response)
 		throws Exception {
@@ -54,7 +54,7 @@ public class InvoiceDetailsController  extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<String,Object>();
+		HashMap<String,Object>	model			= new HashMap<>();
 
                 Invoice invoice = getInvoiceService().findBySWAccession(Integer.parseInt(request.getParameter("invoiceSwAccession")));
                 model.put("invoice", invoice);
@@ -62,21 +62,21 @@ public class InvoiceDetailsController  extends BaseCommandController {
                 // now figure out the three types of expenses
                 Set<Expense> expenses = invoice.getExpenses();
                 // fixed
-                Set<Expense> fixed = new TreeSet<Expense>();
+                Set<Expense> fixed = new TreeSet<>();
                 filterExpenses(expenses, fixed, "fixed");
                 model.put("fixed", fixed);
                 model.put("fixed_size", fixed.size());
                 model.put("fixed_total_price", round(totalExpenses(fixed)));
                 
                 // consulting
-                Set<Expense> consulting = new TreeSet<Expense>();
+                Set<Expense> consulting = new TreeSet<>();
                 filterExpenses(expenses, consulting, "consulting");
                 model.put("consulting_size", consulting.size());
                 model.put("consulting", consulting);
                 model.put("consulting_total_price", round(totalExpenses(consulting)));
 
                 // analysis
-                Set<Expense> analysis = new TreeSet<Expense>();
+                Set<Expense> analysis = new TreeSet<>();
                 filterExpenses(expenses, analysis, "analysis");
                 model.put("analysis", analysis);
                 model.put("analysis_size", analysis.size());

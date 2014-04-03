@@ -82,7 +82,9 @@ public class SequencerRunListDetailsController extends BaseCommandController {
 		return isAsc;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -110,14 +112,14 @@ public class SequencerRunListDetailsController extends BaseCommandController {
 		Lane lane = new Lane();
 		IUS ius = new IUS();
 		Processing proc = new Processing();
-		Map<WorkflowRun, List<Processing>> wfrProc = new HashMap<WorkflowRun, List<Processing>>();
+		Map<WorkflowRun, List<Processing>> wfrProc = new HashMap<>();
 		
 		PageInfo pageInfo = null;
 		Boolean isHasError = false;
 		String errorMessage = "";
 		
-		List<SequencerRun>  listAll = new ArrayList<SequencerRun>();
-		List<SequencerRun>  listView = new ArrayList<SequencerRun>();
+		List<SequencerRun>  listAll = new ArrayList<>();
+		List<SequencerRun>  listView = new ArrayList<>();
 		String   root     = (String)request.getParameter("root");
 		System.err.println("ROOT: "+root);
 		if (root == null || "".equals(root) || "source".equals(root)) {
@@ -200,7 +202,7 @@ public class SequencerRunListDetailsController extends BaseCommandController {
 		for (Processing child: proc.getChildren()) {
 			List<Processing> processings = wfrProc.get(child.getWorkflowRun());
 			if (processings == null) {
-				processings = new ArrayList<Processing>();
+				processings = new ArrayList<>();
 			}
 			processings.add(child);
 			if (child.getWorkflowRun() != null) {

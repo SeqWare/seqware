@@ -34,7 +34,7 @@ public class ExperimentList {
      * <p>Constructor for ExperimentList.</p>
      */
     public ExperimentList() {
-        tList = new ArrayList<Experiment>();
+        tList = new ArrayList<>();
     }
 
     /**

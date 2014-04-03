@@ -18,8 +18,6 @@ package net.sourceforge.seqware.common.model.lists;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import net.sourceforge.seqware.common.model.Processing;
 
 /**
@@ -36,7 +34,7 @@ public class ProcessingList  {
      * <p>Constructor for ProcessingList.</p>
      */
     public ProcessingList() {
-        tList = new ArrayList<Processing>();
+        tList = new ArrayList<>();
     }
 
     /**

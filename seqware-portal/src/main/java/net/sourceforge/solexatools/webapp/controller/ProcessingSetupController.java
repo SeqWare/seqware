@@ -33,7 +33,9 @@ public class ProcessingSetupController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 												 HttpServletResponse response)
@@ -44,7 +46,7 @@ public class ProcessingSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView modelAndView = null;
-		HashMap <String,String> model = new HashMap<String,String>();
+		HashMap <String,String> model = new HashMap<>();
 
 		SequencerRun sequencerRun = figureOutSequencerRun(request);
 		Processing processing = figureOutProcessing(request);

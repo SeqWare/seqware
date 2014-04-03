@@ -60,7 +60,8 @@ public class Argument {
     this.key = key;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Argument == false) {
@@ -73,7 +74,8 @@ public class Argument {
     return new EqualsBuilder().append(this.key, rhs.key).append(this.value, rhs.value).isEquals();
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return  */
   @Override
   public int hashCode() {
     return new HashCodeBuilder(17, 37).append(this.key).append(this.value).toHashCode();

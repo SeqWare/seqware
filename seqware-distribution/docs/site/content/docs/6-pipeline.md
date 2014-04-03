@@ -129,6 +129,8 @@ Other useful tools used for import, export, and annotation of results.
 : The underlying SeqWare MetaDB supports the annotation of entities in the system using flexible key/value pairs. This guide shows you how to annotate entities in the underlying data model using this approach.
 * [Database validation](/docs/24-checkdb/)
 : The underlying SeqWare MetaDB relies upon a certain number of conventions. This utility allows you to check that these are properly followed.  
+* [Batch Metadata Injector](/docs/19/)
+: The batch metadata injector is a testing/development tool used to create arbitrary metadata for testing workflows.  
 
 ## Command Line Reference
 

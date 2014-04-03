@@ -79,7 +79,7 @@ public class ProcessingRelationshipDAOHibernate extends HibernateDaoSupport impl
 
     @Override
     public List<ProcessingRelationship> listByParentProcessingId(int processingId) {
-        List<ProcessingRelationship> ret = new ArrayList<ProcessingRelationship>();
+        List<ProcessingRelationship> ret = new ArrayList<>();
         String query = "from ProcessingRelationship as pl where pl.processingByParentId.processingId = ?";
         Object[] parameters = { processingId };
         List list = this.getHibernateTemplate().find(query, parameters);

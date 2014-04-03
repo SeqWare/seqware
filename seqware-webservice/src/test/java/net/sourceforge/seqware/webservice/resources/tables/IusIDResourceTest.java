@@ -28,7 +28,7 @@ public class IusIDResourceTest extends DatabaseResourceIDTest {
 
     public IusIDResourceTest() {
         super("/ius/6112");
-        jo = new JaxbObject<IUS>();
+        jo = new JaxbObject<>();
         o = new IUS();
     }
      @Override

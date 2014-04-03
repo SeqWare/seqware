@@ -31,13 +31,18 @@
               "Experiment Attributes" 
               "Parent Sample Name" 
               "Parent Sample SWID" 
+              "Parent Sample Organism IDs"
               "Parent Sample Attributes" 
               "Sample Name" 
               "Sample SWID" 
+              "Sample Organism ID"
+              "Sample Organism Code"
               "Sample Attributes" 
               "Sequencer Run Name" 
               "Sequencer Run SWID" 
-              "Sequencer Run Attributes" 
+              "Sequencer Run Attributes"
+              "Sequencer Run Platform ID"
+              "Sequencer Run Platform Name"
               "Lane Name" 
               "Lane Number" 
               "Lane SWID" 
@@ -96,16 +101,19 @@
     "study"           (in "study_swa" (->ints values))
     "experiment"      (in "experiment_swa" (->ints values))
     "sample"          (in "sample_swa" (->ints values))
+    "organism"        (in "organism_id" (->ints values))
     "sample-ancestor" (like "sample_parent_swas" values)
     "sequencer-run"   (in "sequencer_run_swa" (->ints values))
     "lane"            (in "lane_swa" (->ints values))
     "ius"             (in "ius_swa" (->ints values))
     "workflow"        (in "workflow_swa" (->ints values))
     "workflow-run"    (in "workflow_run_swa" (->ints values))
+    "workflow-run-status" (in "workflow_run_status" values)
+    "processing"      (in "processing_swa" (->ints values))
     "file"            (in "file_swa" (->ints values))
     "file-meta-type"  (in "file_meta_type" values)
     "skip"            (in "skip" (->bools values))
-    nil))
+    (throw (Exception. "Invalid parameter"))))
 
 (defn apply-values [ps values]
   (loop [i 1

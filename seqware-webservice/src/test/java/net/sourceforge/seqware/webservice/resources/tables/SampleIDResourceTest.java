@@ -28,7 +28,7 @@ public class SampleIDResourceTest extends DatabaseResourceIDTest {
 
     public SampleIDResourceTest() {
         super("/samples/6207");
-        jo = new JaxbObject<Sample>();
+        jo = new JaxbObject<>();
         o = new Sample();
     }
     @Override

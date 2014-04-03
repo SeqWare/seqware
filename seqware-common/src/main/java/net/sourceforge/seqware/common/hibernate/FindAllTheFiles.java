@@ -106,7 +106,7 @@ public class FindAllTheFiles {
     }
   }
 
-  private List<ReturnValue> returnValues = new ArrayList<ReturnValue>();
+  private List<ReturnValue> returnValues = new ArrayList<>();
   /** Constant <code>STUDY_TITLE="Header.STUDY_TITLE.getTitle()"</code> */
   public static final String STUDY_TITLE = Header.STUDY_TITLE.getTitle();
   /** Constant <code>STUDY_SWA="Header.STUDY_SWA.getTitle()"</code> */
@@ -203,10 +203,10 @@ public class FindAllTheFiles {
   
   /** Constant <code>FILETYPE_ALL="all"</code> */
   public static final String FILETYPE_ALL = "all";
-  private Set<Integer> fileSwas = new HashSet<Integer>();
-  private Set<Integer> usefulProcessings = new TreeSet<Integer>();
-  private Set<Integer> unUsefulProcessings = new TreeSet<Integer>();
-  private Set<Integer> seenWorkflowRuns = new TreeSet<Integer>();
+  private Set<Integer> fileSwas = new HashSet<>();
+  private Set<Integer> usefulProcessings = new TreeSet<>();
+  private Set<Integer> unUsefulProcessings = new TreeSet<>();
+  private Set<Integer> seenWorkflowRuns = new TreeSet<>();
   /**
    * When true, we report only leafs that are nodes.
    * When false, we report all leafs regardless of whether they are nodes.
@@ -259,9 +259,9 @@ public class FindAllTheFiles {
    * @return a {@link java.util.List} object.
    */
   public List<ReturnValue> filesFromSample(Sample parentSample, Experiment e, Study study) {
-    Stack<Sample> sampleStack = new Stack<Sample>();
+    Stack<Sample> sampleStack = new Stack<>();
     sampleStack.add(parentSample);
-    Set<Sample> usefulSamples = new TreeSet<Sample>();
+    Set<Sample> usefulSamples = new TreeSet<>();
     logger.debug("filesFromSample Parent:" + parentSample.getName());
     while (!sampleStack.isEmpty()) {
       Sample sample = sampleStack.pop();
@@ -300,7 +300,7 @@ public class FindAllTheFiles {
       Set<Processing> processings = sample.getProcessings();
       if (processings != null && processings.size() > 0) {
 
-        Set<Processing> processingStack = new TreeSet<Processing>();
+        Set<Processing> processingStack = new TreeSet<>();
 
         for (Processing processing : processings) {
           parseProcessingsFromStack(processing, processingStack);
@@ -327,7 +327,7 @@ public class FindAllTheFiles {
   public List<ReturnValue> filesFromIUS(IUS ius, Experiment e, Sample sample, Study study) {
     Lane lane = ius.getLane();
     SequencerRun sequencerRun = lane.getSequencerRun();
-    Set<Processing> currentProcessings = new TreeSet<Processing>();
+    Set<Processing> currentProcessings = new TreeSet<>();
 
     parseProcessingsFromStack(ius, lane, currentProcessings);
     // if (study != null) { // because the workflow_run level amalgamates
@@ -380,7 +380,7 @@ public class FindAllTheFiles {
     // entries
     if (ius != null && ius.isEmpty()) {
       Set<WorkflowRun> runs = lane.getWorkflowRuns();
-      Set<Processing> ps = new TreeSet<Processing>();
+      Set<Processing> ps = new TreeSet<>();
       parseProcessingsFromWorkflowRuns(runs, ps);
 
       for (Processing processing : ps) {
@@ -422,9 +422,9 @@ public class FindAllTheFiles {
   }
   
   private void parseProcessingsFromStack(IUS ius, Lane lane, Set<Processing> currentProcessings) {
-    Stack<Processing> processingStack = new Stack<Processing>();
+    Stack<Processing> processingStack = new Stack<>();
     processingStack.addAll(ius.getProcessings());
-    Stack<Processing> parents = new Stack<Processing>();
+    Stack<Processing> parents = new Stack<>();
 
     for (Processing p : ius.getProcessings()) {
       parents.addAll(p.getParents());
@@ -465,9 +465,9 @@ public class FindAllTheFiles {
   }
 
   private void parseProcessingsFromStack(Processing currProcessing, Set<Processing> currentProcessings) {
-    Stack<Processing> processingStack = new Stack<Processing>();
+    Stack<Processing> processingStack = new Stack<>();
     processingStack.add(currProcessing);
-    Stack<Processing> parents = new Stack<Processing>();
+    Stack<Processing> parents = new Stack<>();
     parents.add(currProcessing);
 
     while (!processingStack.isEmpty()) {
@@ -544,7 +544,7 @@ public class FindAllTheFiles {
     fm.setFilePath(file.getFilePath());
     fm.setMetaType(file.getMetaType());
     fm.setDescription(file.getSwAccession().toString());
-    ArrayList<FileMetadata> files = new ArrayList<FileMetadata>();
+    ArrayList<FileMetadata> files = new ArrayList<>();
     files.add(fm);
 
     ret.setFiles(files);
@@ -601,7 +601,7 @@ public class FindAllTheFiles {
       StringBuilder psName = new StringBuilder();
       StringBuilder psSwa = new StringBuilder();
 
-      Stack<Sample> parentSamples = new Stack<Sample>();
+      Stack<Sample> parentSamples = new Stack<>();
       parentSamples.addAll(sample.getParents());
       while (!parentSamples.isEmpty()) {
         Sample parentSample = parentSamples.pop();
@@ -778,10 +778,10 @@ public class FindAllTheFiles {
   public static List<ReturnValue> filterReturnValues(List<ReturnValue> returnValues, String studyName, String fileType,
       boolean duplicates, boolean showFailedAndRunning, boolean showStatus) throws IOException {
 
-    List<ReturnValue> newReturnValues = new ArrayList<ReturnValue>();
+    List<ReturnValue> newReturnValues = new ArrayList<>();
 
     Log.info("There are " + returnValues.size() + " files in total before filtering");
-    Set<FileMetadata> set = new TreeSet<FileMetadata>(new Comparator<FileMetadata>() {
+    Set<FileMetadata> set = new TreeSet<>(new Comparator<FileMetadata>() {
 
       @Override
       public int compare(FileMetadata t, FileMetadata t1) {
@@ -853,6 +853,7 @@ public class FindAllTheFiles {
    * @param showStatus a boolean.
    * @param returnValues a {@link java.util.List} object.
    * @param studyName a {@link java.lang.String} object.
+     * @param reportInputFiles
    * @throws java.io.IOException if any.
    */
   public static void printTSVFile(Writer writer, boolean showStatus, List<ReturnValue> returnValues, String studyName, boolean reportInputFiles)
@@ -883,6 +884,7 @@ public class FindAllTheFiles {
   /**
    * Prints a line to the Excel spreadsheet.
    *
+     * @param reportInputFiles
    * @throws java.io.IOException if any.
    * @param writer a {@link java.io.Writer} object.
    * @param ret a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
@@ -980,6 +982,7 @@ public class FindAllTheFiles {
   /**
    * Print the header of the Excel spreadsheet to file.
    *
+     * @param reportInputFiles
    * @throws java.io.IOException if any.
    * @param writer a {@link java.io.Writer} object.
    * @param showStatus a boolean.

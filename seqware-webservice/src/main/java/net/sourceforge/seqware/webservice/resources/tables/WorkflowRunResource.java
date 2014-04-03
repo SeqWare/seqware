@@ -25,7 +25,6 @@ import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.RegistrationDTO;
-import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
@@ -66,7 +65,7 @@ public class WorkflowRunResource extends DatabaseResource {
 
 
         if (queryValues.get("id") != null) {
-            JaxbObject<WorkflowRun> jaxbTool = new JaxbObject<WorkflowRun>();
+            JaxbObject<WorkflowRun> jaxbTool = new JaxbObject<>();
             WorkflowRun wr = (WorkflowRun) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
             WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, wr);
 
@@ -102,7 +101,7 @@ public class WorkflowRunResource extends DatabaseResource {
         authenticate();
 
         WorkflowRun p = null;
-        JaxbObject<WorkflowRun> jo = new JaxbObject<WorkflowRun>();
+        JaxbObject<WorkflowRun> jo = new JaxbObject<>();
         try {
             String text = entity.getText();
             p = (WorkflowRun) XmlTools.unMarshal(jo, new WorkflowRun(), text);
@@ -160,8 +159,8 @@ public class WorkflowRunResource extends DatabaseResource {
 
     private void respondWithList(List<WorkflowRun> runs, Hibernate3DtoCopier copier) {
         WorkflowRunList2 eList = new WorkflowRunList2();
-        ArrayList<WorkflowRun> list = new ArrayList<WorkflowRun>();
-        JaxbObject<WorkflowRunList2> jaxbTool = new JaxbObject<WorkflowRunList2>();
+        ArrayList<WorkflowRun> list = new ArrayList<>();
+        JaxbObject<WorkflowRunList2> jaxbTool = new JaxbObject<>();
 
         for (WorkflowRun run : runs) {
             WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, run);

@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,18 +30,20 @@ public class AbstractJob implements Job {
 	 */
 	public AbstractJob(String algo) {
 		this(algo, "", "");
-		this.parentAccessions = new ArrayList<String>();
+		this.parentAccessions = new ArrayList<>();
 	}
 	
 	/**
 	 * for Java/Perl/JavaModule job
+     * @param mainclass
+     * @param cp
 	 */
 	public AbstractJob(String algo, String cp, String mainclass) {
 		this.cp = cp;
 		this.mainclass = mainclass;
-		this.parents = new ArrayList<Job>();
-		this.files = new ArrayList<SqwFile>();
-		this.requirements = new ArrayList<Requirement>();
+		this.parents = new ArrayList<>();
+		this.files = new ArrayList<>();
+		this.requirements = new ArrayList<>();
 		this.command = new Command();
 		this.algo = algo;
 		this.initRequirements();
@@ -71,6 +72,7 @@ public class AbstractJob implements Job {
 	 * 
 	 * @return a job command object
 	 */
+        @Override
 	public Command getCommand() {
 		return command;
 	}
@@ -86,13 +88,18 @@ public class AbstractJob implements Job {
 	/**
 	 * add a job specific file for provision
 	 */
+        @Override
 	public void addFile(SqwFile file) {
+                if (file.isAttached()){
+                    throw new RuntimeException("cannot add file, file is already attached to a job");
+                }
 		this.files.add(file);
 	}
 	/**
 	 * add all parent jobs
 	 * @return
 	 */
+        @Override
 	public Collection<Job> getParents() {
 		return parents;
 	}
@@ -135,19 +142,23 @@ public class AbstractJob implements Job {
 		this.requirements = requirements;
 	}
 	
+        @Override
 	public int getThreads() {
 		return Integer.parseInt(this.getRequirementByType(Type.COUNT).getValue());
 	}
 	
+        @Override
 	public AbstractJob setThreads(int count) {
 		this.getRequirementByType(Type.COUNT).setValue(""+count);
 		return this;
 	}
 	
+        @Override
 	public String getMaxMemory() {
 		return this.getRequirementByType(Type.MAXMEMORY).getValue();
 	}
 	
+        @Override
 	public AbstractJob setMaxMemory(String mem) {
 		this.getRequirementByType(Type.MAXMEMORY).setValue(mem);
 		return this;
@@ -205,6 +216,7 @@ public class AbstractJob implements Job {
     return this;
 	}
 	
+        @Override
 	public String getQueue() {
 	  Requirement req = this.getRequirementByType(Type.QUEUE);
 	  if (req != null){
@@ -238,12 +250,15 @@ public class AbstractJob implements Job {
 		return this.parentAccessions;
 	}
 
+        @Override
 	public boolean isLocal(){
 	  return runLocal;
 	}
+        @Override
 	public void setLocal(){
 	  setLocal(true);
 	}
+        @Override
 	public void setLocal(boolean runLocal){
 	  this.runLocal = runLocal;
 	}
@@ -253,6 +268,7 @@ public class AbstractJob implements Job {
 
   /**
    * Allows specifying options to qsub.  When provided, options using queue, maxMem, and threads will not be generated. 
+     * @param qsubOptions
    */
   public void setQsubOptions(String qsubOptions) {
     this.qsubOptions = qsubOptions;

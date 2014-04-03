@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.Set;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.restlet.representation.Representation;
@@ -45,7 +44,7 @@ public class SampleResourceTest extends DatabaseResourceTest {
 
     private void testCreateNormalSample() {
         Representation rep = null;
-        JaxbObject<Sample> jbo = new JaxbObject<Sample>();
+        JaxbObject<Sample> jbo = new JaxbObject<>();
         try {
             Sample sample = new Sample();
             sample.setName("Normal Sample");
@@ -73,7 +72,7 @@ public class SampleResourceTest extends DatabaseResourceTest {
     
      private void testCreateRootSample() {
         Representation rep = null;
-        JaxbObject<Sample> jbo = new JaxbObject<Sample>();
+        JaxbObject<Sample> jbo = new JaxbObject<>();
         try {
             Sample sample = new Sample();
             sample.setName("Intended Root Sample");

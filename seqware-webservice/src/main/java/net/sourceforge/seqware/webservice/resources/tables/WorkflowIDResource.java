@@ -57,7 +57,8 @@ public class WorkflowIDResource extends DatabaseIDResource {
         super("workflowId");
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public SeqWareWebServiceApplication getApplication() {
         return (SeqWareWebServiceApplication) super.getApplication();
@@ -71,14 +72,14 @@ public class WorkflowIDResource extends DatabaseIDResource {
         authenticate();
         WorkflowService ss = BeanFactory.getWorkflowServiceBean();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<Workflow> jaxbTool = new JaxbObject<Workflow>();
+        JaxbObject<Workflow> jaxbTool = new JaxbObject<>();
         Workflow workflow = (Workflow) testIfNull(ss.findBySWAccession(getId()));
         Workflow dto = copier.hibernate2dto(Workflow.class, workflow);
 
         if (fields.contains("params")) {
             SortedSet<WorkflowParam> wps = workflow.getWorkflowParams();
             if (wps != null) {
-                SortedSet<WorkflowParam> copiedParams = new TreeSet<WorkflowParam>();
+                SortedSet<WorkflowParam> copiedParams = new TreeSet<>();
                 for (WorkflowParam param : workflow.getWorkflowParams()) {
                     copiedParams.add(copier.hibernate2dto(WorkflowParam.class, param));
                 }
@@ -90,7 +91,7 @@ public class WorkflowIDResource extends DatabaseIDResource {
 		if (fields.contains("attributes")) {
 			Set<WorkflowAttribute> was = workflow.getWorkflowAttributes();
 			if(was!=null && !was.isEmpty()) {
-				Set<WorkflowAttribute> newwas = new TreeSet<WorkflowAttribute>();
+				Set<WorkflowAttribute> newwas = new TreeSet<>();
 				for(WorkflowAttribute wa: was) {
 					newwas.add(copier.hibernate2dto(WorkflowAttribute.class,wa));
 				}
@@ -102,13 +103,14 @@ public class WorkflowIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     public Representation put(Representation entity) {
         authenticate();
         Representation representation = null;
         Workflow newWorkflow = null;
-        JaxbObject<Workflow> jo = new JaxbObject<Workflow>();
+        JaxbObject<Workflow> jo = new JaxbObject<>();
         try {
             String text = entity.getText();
             newWorkflow = (Workflow) XmlTools.unMarshal(jo, new Workflow(), text);

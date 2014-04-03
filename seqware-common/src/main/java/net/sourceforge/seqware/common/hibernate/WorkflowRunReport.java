@@ -108,7 +108,7 @@ public class WorkflowRunReport {
     }
 
     private Collection<WorkflowRunReportRow> runThroughWorkflowRuns(Collection<WorkflowRun> runs) {
-        List<WorkflowRunReportRow> rows = new ArrayList<WorkflowRunReportRow>();
+        List<WorkflowRunReportRow> rows = new ArrayList<>();
         for (WorkflowRun wr : runs) {
             if (earliestDate != null && latestDate != null) {
                 logger.debug("Checking dates: " + earliestDate.toString() + " and " + latestDate.toString());
@@ -142,7 +142,7 @@ public class WorkflowRunReport {
         } else {
             useThese = processings;
         }
-        Set<Sample> identitySamples = new HashSet<Sample>();
+        Set<Sample> identitySamples = new HashSet<>();
 
         for (Processing p : useThese) {
             identitySamples.addAll(findIdentitySamples(p));
@@ -166,7 +166,7 @@ public class WorkflowRunReport {
     }
 
     protected Collection<Processing> collectProcessings(WorkflowRun wr) {
-        List<Processing> processings = new ArrayList<Processing>();
+        List<Processing> processings = new ArrayList<>();
 
         WorkflowRun newwr =  BeanFactory.getWorkflowRunServiceBean().findByID(wr.getWorkflowRunId());
 
@@ -235,7 +235,7 @@ public class WorkflowRunReport {
     }
 
     protected Collection<File> findFiles(Collection<Processing> processings) {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (Processing processing : processings) {
             files.addAll(processing.getFiles());
         }
@@ -245,10 +245,10 @@ public class WorkflowRunReport {
 
     protected Collection<Processing> findParents(Collection<Processing> processings, int workflowRunSWID,
                                                  boolean findImmediateOnly) {
-        Set<Integer> seenPs = new TreeSet<Integer>();
+        Set<Integer> seenPs = new TreeSet<>();
 
-        List<Processing> allParentProcs = new ArrayList<Processing>();
-        Queue<Processing> queue = new LinkedList<Processing>();
+        List<Processing> allParentProcs = new ArrayList<>();
+        Queue<Processing> queue = new LinkedList<>();
         queue.addAll(processings);
 
         while (!queue.isEmpty()) {
@@ -286,7 +286,7 @@ public class WorkflowRunReport {
 //        logger.debug("iuses: " + iuses.size() + " lanes: " + lanes.size() + " samples: " + samples.size());
         logger.debug("iuses: " + iuses.size() + " samples: " + samples.size());
 
-        List<Sample> allIdentitySamples = new ArrayList<Sample>();
+        List<Sample> allIdentitySamples = new ArrayList<>();
 
         if (iuses != null) {
             for (IUS i : iuses) {
@@ -314,10 +314,10 @@ public class WorkflowRunReport {
 
     private Collection<Sample> findLibrarySamples(Collection<Sample> allIdentitySamples) {
 
-        List<Sample> allLibrarySamples = new ArrayList<Sample>();
-        Set<Integer> seenSams = new TreeSet<Integer>();
+        List<Sample> allLibrarySamples = new ArrayList<>();
+        Set<Integer> seenSams = new TreeSet<>();
 
-        Queue<Sample> queue = new LinkedList<Sample>();
+        Queue<Sample> queue = new LinkedList<>();
         queue.addAll(allIdentitySamples);
 
         while (!queue.isEmpty()) {

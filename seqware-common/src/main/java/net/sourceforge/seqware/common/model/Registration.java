@@ -1,16 +1,11 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
+import java.util.Set;
 
-import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.security.PermissionsAware;
-import org.apache.commons.dbutils.DbUtils;
-import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
 /**
@@ -19,7 +14,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Registration implements Serializable, PermissionsAware, Comparable<Registration> {
+public class Registration extends PermissionsAware implements Serializable, Comparable<Registration> {
 
     /**
      * <p>Getter for the field <code>institution</code>.</p>
@@ -151,7 +146,8 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
         return true;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param t */
     @Override
     public int compareTo(Registration t) {
         return emailAddress.compareTo(t.getEmailAddress());
@@ -162,6 +158,7 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
      *
      * @return a int.
      */
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(getEmailAddress()).append(getPassword()).toHashCode();
     }
@@ -371,9 +368,10 @@ public class Registration implements Serializable, PermissionsAware, Comparable<
         return false;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
-    public boolean givesPermission(Registration registration) {
+    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = false;
         if (registration == null) {
             hasPermission = false;
