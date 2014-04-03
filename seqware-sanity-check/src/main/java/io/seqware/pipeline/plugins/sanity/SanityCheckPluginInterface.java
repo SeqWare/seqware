@@ -21,27 +21,40 @@ import net.sourceforge.seqware.common.metadata.Metadata;
 
 /**
  * Specifies an interface for checks that can be done for a SeqWare install
+ *
  * @author dyuen
+ * @author Raunaq Suri
  */
 public interface SanityCheckPluginInterface {
+
+    public boolean isMasterTest();
+
+    public boolean isTutorialTest();
+
+    public boolean isDBTest();
+
     /**
-     * 
-     * @param qRunner a runner constructed using your database options, may not be present for non-admins
-     * @param metadataWS a metadata interface constructed using the web service interface
+     *
+     * @param qRunner a runner constructed using your database options, may not
+     * be present for non-admins
+     * @param metadataWS a metadata interface constructed using the web service
+     * interface
      * @return whether the check succeeded
-     * @throws SQLException 
+     * @throws SQLException
      */
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException;
-    
+
     /**
      * Describes the check and indicates what may be wrong
-     * @return 
+     *
+     * @return
      */
     public String getDescription();
-    
+
     /**
      * Indicate the priority of the check, higher is later
-     * @return 
+     *
+     * @return
      */
     public int getPriority();
 }
