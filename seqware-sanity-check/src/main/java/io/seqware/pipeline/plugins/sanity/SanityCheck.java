@@ -4,6 +4,7 @@ package io.seqware.pipeline.plugins.sanity;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -46,6 +47,7 @@ public final class SanityCheck extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public final ReturnValue init() {
@@ -74,6 +76,7 @@ public final class SanityCheck extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -86,6 +89,7 @@ public final class SanityCheck extends Plugin {
      */
     /**
      * {@inheritDoc}
+     * @return 
      */
     @Override
     public final ReturnValue do_run() {
@@ -102,7 +106,7 @@ public final class SanityCheck extends Plugin {
             }
         }
         
-        List<SanityCheckPluginInterface> pluginList = new ArrayList<SanityCheckPluginInterface>();
+        List<SanityCheckPluginInterface> pluginList = new ArrayList<>();
         pluginList.addAll(plugins);
         Comparator<SanityCheckPluginInterface> comp =  new Comparator<SanityCheckPluginInterface>(){
             @Override
@@ -152,7 +156,7 @@ public final class SanityCheck extends Plugin {
         SanityCheck mp = new SanityCheck();
         mp.init();
         mp.setMetadata(MetadataFactory.getWS(ConfigTools.getSettings()));
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         mp.setParams(arr);
         mp.parse_parameters();
         ReturnValue do_run = mp.do_run();
