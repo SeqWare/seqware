@@ -28,6 +28,8 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ * Ensures that oozie is working by connecting to oozie url and checking the
+ * response code
  *
  * @author Raunaq Suri
  */
