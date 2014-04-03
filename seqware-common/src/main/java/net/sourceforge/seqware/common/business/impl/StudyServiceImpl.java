@@ -44,7 +44,6 @@ public class StudyServiceImpl implements StudyService {
    * StudyDAO. This method is called by the Spring framework at run time.
    * @see StudyDAO
    */
-  @Override
   public void setStudyDAO(StudyDAO studyDAO) {
     this.studyDAO = studyDAO;
   }
@@ -66,7 +65,6 @@ public class StudyServiceImpl implements StudyService {
    *
    * Inserts an instance of Study into the database.
    */
-  @Override
   public Integer insert(Study study) {
 
     study.setCreateTimestamp(new Date());
@@ -79,7 +77,6 @@ public class StudyServiceImpl implements StudyService {
    *
    * Updates an instance of Study in the database.
    */
-  @Override
   public void update(Study study) {
 
     studyDAO.update(study);
@@ -96,10 +93,7 @@ public class StudyServiceImpl implements StudyService {
    * {@inheritDoc}
    *
    * Updates an instance of Study in the database.
-     * @param study
-     * @param deleteRealFiles
    */
-  @Override
   public void delete(Study study, boolean deleteRealFiles) {
     List<File> deleteFiles = null;
     if (deleteRealFiles) {
@@ -112,55 +106,46 @@ public class StudyServiceImpl implements StudyService {
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<File> getFiles(Integer studyId) {
     return studyDAO.getFiles(studyId);
   }
 
   /** {@inheritDoc} */
-  @Override
   public boolean isHasFile(Integer studyId) {
     return studyDAO.isHasFile(studyId);
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<File> getFiles(Integer studyId, String metaType) {
     return studyDAO.getFiles(studyId, metaType);
   }
 
   /** {@inheritDoc} */
-  @Override
   public boolean isHasFile(Integer studyId, String metaType) {
     return studyDAO.isHasFile(studyId, metaType);
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Study> list(Registration registration) {
     return list(registration, true);
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Study> list(Registration registration, Boolean isAcs) {
     return studyDAO.list(registration, isAcs);
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Study> listMyShared(Registration registration, Boolean isAcs) {
     return studyDAO.listMyShared(registration, isAcs);
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Study> listSharedWithMe(Registration registration) {
     return listSharedWithMe(registration, true);
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Study> listSharedWithMe(Registration registration, Boolean isAcs) {
     return studyDAO.listSharedWithMe(registration, isAcs);
   }
@@ -171,7 +156,6 @@ public class StudyServiceImpl implements StudyService {
    * Finds an instance of Study in the database by the Study emailAddress, and
    * copies the Study properties to an instance of Study.
    */
-  @Override
   public Study findByTitle(String title) {
     Study study = null;
     if (title != null) {
@@ -184,9 +168,7 @@ public class StudyServiceImpl implements StudyService {
     return study;
   }
 
-  /** {@inheritDoc}
-     * @param studyID */
-  @Override
+  /** {@inheritDoc} */
   public Study findByID(Integer studyID) {
     Study study = null;
     if (studyID != null) {
@@ -247,7 +229,6 @@ public class StudyServiceImpl implements StudyService {
    *
    * Determines if an email address has already been used.
    */
-  @Override
   public boolean hasTitleBeenUsed(String oldTitle, String newTitle) {
     boolean titleUsed = false;
     boolean checkTitle = true;
@@ -273,7 +254,6 @@ public class StudyServiceImpl implements StudyService {
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Study> listWithHasFile(List<Study> list) {
     for (Study study : list) {
       study.setIsHasFile(isHasFile(study.getStudyId()));
@@ -282,9 +262,8 @@ public class StudyServiceImpl implements StudyService {
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Study> listWithHasFile(List<Study> list, String metaType) {
-    List<Study> result = new LinkedList<>();
+    List<Study> result = new LinkedList<Study>();
     for (Study study : list) {
       if (isHasFile(study.getStudyId(), metaType)) {
         study.setIsHasFile(true);
@@ -300,9 +279,7 @@ public class StudyServiceImpl implements StudyService {
     return studyDAO.list();
   }
 
-  /** {@inheritDoc}
-     * @param isAsc */
-  @Override
+  /** {@inheritDoc} */
   public List<Study> listStudyHasFile(Registration registration, String metaType, Boolean isAsc) {
     return studyDAO.listStudyHasFile(registration, metaType, isAsc);
   }

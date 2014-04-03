@@ -60,7 +60,6 @@ public class S3DeleteFiles extends Module {
    *
    * @return a {@link joptsimple.OptionParser} object.
    */
-  @Override
   protected OptionParser getOptionParser() {
     OptionParser parser = new OptionParser();
     parser
@@ -77,7 +76,6 @@ public class S3DeleteFiles extends Module {
    *
    * @return a {@link java.lang.String} object.
    */
-  @Override
   public String get_syntax() {
     OptionParser parser = getOptionParser();
     StringWriter output = new StringWriter();
@@ -94,7 +92,6 @@ public class S3DeleteFiles extends Module {
    * {@inheritDoc}
    *
    * Not implemented
-     * @return 
    */
   @Override
   public ReturnValue do_test() {
@@ -105,7 +102,6 @@ public class S3DeleteFiles extends Module {
    * {@inheritDoc}
    *
    * Just makes sure the param was passed in.
-     * @return 
    */
   @Override
   public ReturnValue do_verify_parameters() {
@@ -134,8 +130,7 @@ public class S3DeleteFiles extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_input() {
 
@@ -176,8 +171,7 @@ public class S3DeleteFiles extends Module {
     return (ret);
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_run() {
 
@@ -185,7 +179,7 @@ public class S3DeleteFiles extends Module {
     ret.setExitStatus(ReturnValue.SUCCESS);
 
     // stores remote file info
-    ArrayList<String> remoteFiles = new ArrayList<>();
+    ArrayList<String> remoteFiles = new ArrayList<String>();
 
     try {
       // read in list of files to delete
@@ -258,8 +252,7 @@ public class S3DeleteFiles extends Module {
 
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
   public ReturnValue do_verify_output() {
     // TODO: should verify output, especially is they are local files!
@@ -273,7 +266,6 @@ public class S3DeleteFiles extends Module {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  @Override
   public ReturnValue init() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);
@@ -287,7 +279,6 @@ public class S3DeleteFiles extends Module {
    *
    * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
    */
-  @Override
   public ReturnValue clean_up() {
     ReturnValue ret = new ReturnValue();
     ret.setReturnValue(ReturnValue.SUCCESS);

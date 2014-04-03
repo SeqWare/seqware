@@ -3,6 +3,7 @@ package	net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 
 /**
@@ -25,8 +26,7 @@ public class LibrarySource implements Serializable, Comparable<LibrarySource>, S
 		super();
 	}
 
-    /** {@inheritDoc}
-     * @param that */
+    /** {@inheritDoc} */
     @Override
 	public int compareTo(LibrarySource that) {
 		if(that == null)
@@ -49,8 +49,7 @@ public class LibrarySource implements Serializable, Comparable<LibrarySource>, S
 
 
 
-    /** {@inheritDoc}
-     * @param other */
+    /** {@inheritDoc} */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

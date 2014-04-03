@@ -42,7 +42,6 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
    *
    * Inserts an instance of File into the database.
    */
-  @Override
   public void insert(File file) {
 
     this.getHibernateTemplate().save(file);
@@ -53,7 +52,6 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
    *
    * Updates an instance of File in the database.
    */
-  @Override
   public void update(File file) {
 
     this.getHibernateTemplate().update(file);
@@ -64,21 +62,18 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
    *
    * Updates an instance of File in the database.
    */
-  @Override
   public void delete(File file) {
 
     this.getHibernateTemplate().delete(file);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void deleteAll(List<File> files) {
 
     this.getHibernateTemplate().deleteAll(files);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void deleteAllWithFolderStore(List<File> list) {
     for (File file : list) {
       String fileName = file.getFilePath();
@@ -111,7 +106,6 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
    *
    * Finds an instance of File in the database by the File Path.
    */
-  @Override
   public File findByPath(String path) {
     String query = "from File as file where file.filePath = ?";
     File file = null;
@@ -128,7 +122,6 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
    *
    * Finds an instance of File in the database by the File ID.
    */
-  @Override
   public File findByID(Integer id) {
     String query = "from File as file where file.fileId = ?";
     File file = null;
@@ -164,7 +157,6 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
   }
 
   /** {@inheritDoc} */
-  @Override
   public java.io.File saveFile(MultipartFile uploadFile, String folderStore, Registration owner) throws IOException {
     String targetPath = ProvisionFilesUtil.createTargetPath(folderStore, owner.getEmailAddress(), uploadFile
         .getOriginalFilename().replace(" ", "_"));
@@ -272,7 +264,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
   /** {@inheritDoc} */
   @Override
   public List<File> list() {
-    ArrayList<File> l = new ArrayList<>();
+    ArrayList<File> l = new ArrayList<File>();
 
     String query = "from File";
 

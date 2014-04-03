@@ -65,7 +65,6 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
     return dax;
   }
 
-  @Override
   public ReturnValue runWorkflow() {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -81,7 +80,7 @@ public class PegasusWorkflowEngine extends AbstractWorkflowEngine {
 
     // run the pegasus submission
     Log.stdout("SUBMITTING TO PEGASUS: " + pegasusCmd);
-    ArrayList<String> theCommand = new ArrayList<>();
+    ArrayList<String> theCommand = new ArrayList<String>();
     theCommand.add("bash");
     theCommand.add("-lc");
     theCommand.add(pegasusCmd);

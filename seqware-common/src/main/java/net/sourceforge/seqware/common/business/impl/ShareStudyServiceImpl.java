@@ -33,10 +33,8 @@ public class ShareStudyServiceImpl implements ShareStudyService {
    *
    * Sets a private member variable with an instance of an implementation of
    * ShareStudyDAO. This method is called by the Spring framework at run time.
-     * @param dao
    * @see ShareStudyDAO
    */
-  @Override
   public void setShareStudyDAO(ShareStudyDAO dao) {
     this.dao = dao;
   }
@@ -46,7 +44,6 @@ public class ShareStudyServiceImpl implements ShareStudyService {
    *
    * Inserts an instance of ShareStudy into the database.
    */
-  @Override
   public void insert(ShareStudy shareStudy) {
     // shareStudy.setEmail(shareStudy.getEmail().trim().toLowerCase());
     shareStudy.setCreateTimestamp(new Date());
@@ -59,19 +56,16 @@ public class ShareStudyServiceImpl implements ShareStudyService {
    *
    * Updates an instance of ShareStudy in the database.
    */
-  @Override
   public void update(ShareStudy shareStudy) {
     dao.update(shareStudy);
   }
 
   /** {@inheritDoc} */
-  @Override
   public void delete(ShareStudy shareStudy) {
     dao.delete(shareStudy);
   }
 
   /** {@inheritDoc} */
-  @Override
   public boolean isExistsShare(Integer studyId, Integer registrationId) {
     boolean isExists = false;
     if (findByStudyIdAndRegistrationId(studyId, registrationId) != null) {
@@ -81,7 +75,6 @@ public class ShareStudyServiceImpl implements ShareStudyService {
   }
 
   /** {@inheritDoc} */
-  @Override
   public ShareStudy findByStudyIdAndRegistrationId(Integer studyId, Integer registrationId) {
     ShareStudy shareStudy = null;
     if (studyId != null && registrationId != null) {
@@ -95,9 +88,7 @@ public class ShareStudyServiceImpl implements ShareStudyService {
     return shareStudy;
   }
 
-  /** {@inheritDoc}
-     * @param shareStudyId */
-  @Override
+  /** {@inheritDoc} */
   public ShareStudy findByID(Integer shareStudyId) {
     ShareStudy shareStudy = null;
     if (shareStudyId != null) {

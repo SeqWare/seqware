@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import net.sourceforge.seqware.common.business.StudyService;
 
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.model.Experiment;
@@ -20,6 +21,7 @@ import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.solexatools.Security;
@@ -58,8 +60,6 @@ public class StudyTableControllerDetails extends BaseCommandController {
 
   /**
    * {@inheritDoc}
-     * @return 
-     * @throws java.lang.Exception 
    */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,
@@ -159,10 +159,10 @@ public class StudyTableControllerDetails extends BaseCommandController {
 
         for (Sample sample : exp.getSamples()) {
 
-          ArrayList<String> sampleStrs = new ArrayList<>();
+          ArrayList<String> sampleStrs = new ArrayList<String>();
           getSampleStrings(sample.getTitle(), sample, sampleStrs);
           for (String sampleStr : sampleStrs) {
-            List<String> cellsModel = new LinkedList<>();
+            List<String> cellsModel = new LinkedList<String>();
 
             cellsModel.add(study.getTitle());
             cellsModel.add(study.getCreateTimestamp().toString());
@@ -231,8 +231,8 @@ public class StudyTableControllerDetails extends BaseCommandController {
   }
   
   private List<WorkflowRun> findSampleWorkflowRuns(Sample sample) {
-    ArrayList<WorkflowRun> wr = new ArrayList<>();
-    HashMap<String, WorkflowRun> pwr = new HashMap<>();
+    ArrayList<WorkflowRun> wr = new ArrayList<WorkflowRun>();
+    HashMap<String, WorkflowRun> pwr = new HashMap<String, WorkflowRun>();
     findProcessingWorkflowRun(sample.getProcessings(), pwr);
     // the hash should be unique, now dump everything into array list for return
     for (WorkflowRun cwr : pwr.values()) {

@@ -32,9 +32,7 @@ public class SequencerRunSetupControllerDTO extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -46,7 +44,7 @@ public class SequencerRunSetupControllerDTO extends BaseCommandController {
 		
 		ModelAndView			modelAndView	= null;
 		
-		HashMap<String,String>	model			= new HashMap<>();
+		HashMap<String,String>	model			= new HashMap<String,String>();
 		
 		String page = (String)request.getParameter("page");
 		

@@ -94,7 +94,7 @@ public class OozieXML2Dot extends Plugin {
       	FileWriter fw = new FileWriter(output);
       	fw.write("digraph dag {\n");
       	//avoid duplicated
-      	Set<String> allEdge = new HashSet<>();
+      	Set<String> allEdge = new HashSet<String>();
       	this.visitNode(rootNode, fw, allEdge);
       	fw.write("}\n");
       	fw.close();
@@ -166,7 +166,7 @@ public class OozieXML2Dot extends Plugin {
 		private String name;
 		
 		public DotNode(String pid) {
-			this.children = new ArrayList<>();
+			this.children = new ArrayList<DotNode>();
 			this.name = pid;
 		}
 		

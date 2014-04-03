@@ -34,7 +34,7 @@ public class FileList {
      * <p>Constructor for FileList.</p>
      */
     public FileList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<File>();
     }
 
     /**

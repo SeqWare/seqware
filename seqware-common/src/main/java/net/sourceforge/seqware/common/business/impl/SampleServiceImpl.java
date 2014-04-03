@@ -16,6 +16,7 @@ import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>SampleServiceImpl class.</p>
@@ -43,7 +44,6 @@ public class SampleServiceImpl implements SampleService {
      *
      * @see SampleDAO
      */
-    @Override
     public void setSampleDAO(SampleDAO sampleDAO) {
         this.sampleDAO = sampleDAO;
     }
@@ -64,7 +64,6 @@ public class SampleServiceImpl implements SampleService {
      *
      * Inserts an instance of Sample into the database.
      */
-    @Override
     public Integer insert(Sample sample) {
         sample.setCreateTimestamp(new Date());
         return (sampleDAO.insert(sample));
@@ -75,7 +74,6 @@ public class SampleServiceImpl implements SampleService {
      *
      * Updates an instance of Sample in the database.
      */
-    @Override
     public void update(Sample sample) {
         sampleDAO.update(sample);
     }
@@ -84,10 +82,7 @@ public class SampleServiceImpl implements SampleService {
      * {@inheritDoc}
      *
      * Deletes an instance of Sample in the database.
-     * @param sample
-     * @param deleteRealFiles
      */
-    @Override
     public void delete(Sample sample, boolean deleteRealFiles) {
         List<File> deleteFiles = null;
         if (deleteRealFiles) {
@@ -114,7 +109,6 @@ public class SampleServiceImpl implements SampleService {
     /**
      * {@inheritDoc}
      */
-    @Override
     public List<File> getFiles(Integer sampleId) {
         return sampleDAO.getFiles(sampleId);
     }
@@ -122,7 +116,6 @@ public class SampleServiceImpl implements SampleService {
     /**
      * {@inheritDoc}
      */
-    @Override
     public boolean isHasFile(Integer sampleId) {
         return sampleDAO.isHasFile(sampleId);
     }
@@ -130,7 +123,6 @@ public class SampleServiceImpl implements SampleService {
     /**
      * {@inheritDoc}
      */
-    @Override
     public List<File> getFiles(Integer studyId, String metaType) {
         return sampleDAO.getFiles(studyId, metaType);
     }
@@ -138,7 +130,6 @@ public class SampleServiceImpl implements SampleService {
     /**
      * {@inheritDoc}
      */
-    @Override
     public boolean isHasFile(Integer studyId, String metaType) {
         return sampleDAO.isHasFile(studyId, metaType);
     }
@@ -146,7 +137,6 @@ public class SampleServiceImpl implements SampleService {
     /**
      * {@inheritDoc}
      */
-    @Override
     public SortedSet<Sample> setWithHasFile(Integer expId, SortedSet<Sample> list) {
         /*
          * Map<Integer, Integer> countFiles = sampleDAO.getCountFiles(expId);
@@ -154,7 +144,7 @@ public class SampleServiceImpl implements SampleService {
          * = countFiles.get(sample.getSampleId()); if(count > 0){ isHasFile =
          * true; } sample.setIsHasFile(isHasFile); } return list;
          */
-        SortedSet<Sample> result = new TreeSet<>();
+        SortedSet<Sample> result = new TreeSet<Sample>();
         for (Sample sample : list) {
             if (isHasFile(sample.getSampleId())) {
                 sample.setIsHasFile(true);
@@ -169,7 +159,6 @@ public class SampleServiceImpl implements SampleService {
     /**
      * {@inheritDoc}
      */
-    @Override
     public SortedSet<Sample> listWithHasFile(Integer expId, SortedSet<Sample> list, String metaType) {
         /*
          * SortedSet<Sample> result = new TreeSet<Sample>(); Map<Integer,
@@ -179,7 +168,7 @@ public class SampleServiceImpl implements SampleService {
          * true; sample.setIsHasFile(isHasFile); result.add(sample); }
          * //sample.setIsHasFile(isHasFile); } return result;
          */
-        SortedSet<Sample> result = new TreeSet<>();
+        SortedSet<Sample> result = new TreeSet<Sample>();
         for (Sample sample : list) {
             if (isHasFile(sample.getSampleId(), metaType)) {
                 sample.setIsHasFile(true);
@@ -194,7 +183,6 @@ public class SampleServiceImpl implements SampleService {
     /**
      * {@inheritDoc}
      */
-    @Override
     public Sample findByTitle(String title) {
         Sample sample = null;
         if (title != null) {
@@ -213,7 +201,6 @@ public class SampleServiceImpl implements SampleService {
      * Finds an instance of Sample in the database by the Sample emailAddress,
      * and copies the Sample properties to an instance of Sample.
      */
-    @Override
     public Sample findByName(String name) {
         Sample sample = null;
         if (name != null) {
@@ -226,7 +213,6 @@ public class SampleServiceImpl implements SampleService {
         return sample;
     }
 
-    @Override
     public List<Sample> matchName(String name) {
         List<Sample> sample = null;
         if (name != null) {
@@ -241,9 +227,7 @@ public class SampleServiceImpl implements SampleService {
 
     /**
      * {@inheritDoc}
-     * @param sampleId
      */
-    @Override
     public Sample findByID(Integer sampleId) {
         Sample sample = null;
         if (sampleId != null) {
@@ -301,7 +285,6 @@ public class SampleServiceImpl implements SampleService {
      *
      * Determines if an email address has already been used.
      */
-    @Override
     public boolean hasNameBeenUsed(String oldName, String newName) {
         boolean nameUsed = false;
         boolean checkName = true;
@@ -332,7 +315,6 @@ public class SampleServiceImpl implements SampleService {
      *
      * @return a {@link java.util.List} object.
      */
-    @Override
     public List<Sample> listComplete() {
         return sampleDAO.listComplete();
     }
@@ -342,7 +324,6 @@ public class SampleServiceImpl implements SampleService {
      *
      * @return a {@link java.util.List} object.
      */
-    @Override
     public List<Sample> listIncomplete() {
         return sampleDAO.listIncomplete();
     }
@@ -382,7 +363,6 @@ public class SampleServiceImpl implements SampleService {
     /**
      * {@inheritDoc}
      */
-    @Override
     public List<ReturnValue> findFiles(Integer swAccession) {
         return sampleDAO.findFiles(swAccession);
     }

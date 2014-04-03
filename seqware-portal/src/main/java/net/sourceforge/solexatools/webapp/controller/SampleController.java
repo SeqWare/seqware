@@ -214,7 +214,7 @@ public class SampleController extends MultiActionController {
 		return new ModelAndView("redirect:/login.htm");
 
     ModelAndView modelAndView = null;
-    HashMap<String,Object> model = new HashMap<>();
+    HashMap<String,Object> model = new HashMap<String,Object>();
     Sample sample = getCurrentSample(request);
     model.put("organismList", getOrganismService().list(registration));
     if (sample.getUpdateTimestamp() == null) {
@@ -353,7 +353,7 @@ public class SampleController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
+		HashMap<String,Object>	model			= new HashMap<String,Object>();
 		Sample				    sample			= getRequestedSample(request);
 		
 		ServletContext context = this.getServletContext();

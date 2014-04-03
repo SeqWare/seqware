@@ -181,7 +181,7 @@ public class SymLinkFileReporterTest {
     private void mockSimpleStudyWithFiles() {
         when(options.has("study")).thenReturn(true);
         when(options.valueOf("study")).thenReturn("TestStudy");
-        List<ReturnValue> list = new ArrayList<>();
+        List<ReturnValue> list = new ArrayList<ReturnValue>();
         for(int i = 0; i < 10; i++){
             ReturnValue ret = new ReturnValue();
             list.add(ret);

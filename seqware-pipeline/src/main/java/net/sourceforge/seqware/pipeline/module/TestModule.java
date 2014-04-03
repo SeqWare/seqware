@@ -21,15 +21,13 @@ import net.sourceforge.seqware.common.util.Log;
  */
 public class TestModule extends Module {
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public String getAlgorithm() {
         return "TestModule";
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_run() {
         Log.info("stdout: TestModule.do_run");
@@ -37,8 +35,7 @@ public class TestModule extends Module {
         return new ReturnValue(ReturnValue.SUCCESS);
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_test() {
         Log.info("stdout: TestModule.do_test");
@@ -46,8 +43,7 @@ public class TestModule extends Module {
         return new ReturnValue(ReturnValue.SUCCESS);
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_input() {
         Log.info("stdout: TestModule.do_verify_input");
@@ -55,8 +51,7 @@ public class TestModule extends Module {
         return new ReturnValue(ReturnValue.SUCCESS);
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_parameters() {
         Log.info("stdout: TestModule.do_verify_parameters");
@@ -64,8 +59,7 @@ public class TestModule extends Module {
         return new ReturnValue(ReturnValue.SUCCESS);
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public ReturnValue do_verify_output() {
         Log.info("stdout: TestModule.do_verify_output");

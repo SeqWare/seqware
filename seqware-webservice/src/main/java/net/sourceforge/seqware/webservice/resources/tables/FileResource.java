@@ -63,21 +63,21 @@ public class FileResource extends DatabaseResource {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
 
         if (queryValues.get("id") != null) {
-            JaxbObject<File> jaxbTool = new JaxbObject<>();
+            JaxbObject<File> jaxbTool = new JaxbObject<File>();
             File p = (File) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
 
             File dto = copier.hibernate2dto(File.class, p);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
         } else if (queryValues.get("path") != null) {
-            JaxbObject<File> jaxbTool = new JaxbObject<>();
+            JaxbObject<File> jaxbTool = new JaxbObject<File>();
             File p = (File) testIfNull(ss.findByPath(queryValues.get("path")));
 
             File dto = copier.hibernate2dto(File.class, p);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
         } else {
-            JaxbObject<FileList> jaxbTool = new JaxbObject<>();
+            JaxbObject<FileList> jaxbTool = new JaxbObject<FileList>();
             List<File> files = (List<File>) testIfNull(ss.findByOwnerId(registration.getRegistrationId()));
             FileList eList = new FileList();
             eList.setList(new ArrayList());
@@ -100,7 +100,7 @@ public class FileResource extends DatabaseResource {
     public void postJaxb(Representation entity) {
         authenticate();
         try {
-            JaxbObject<File> jo = new JaxbObject<>();
+            JaxbObject<File> jo = new JaxbObject<File>();
 
             File p = null;
             try {

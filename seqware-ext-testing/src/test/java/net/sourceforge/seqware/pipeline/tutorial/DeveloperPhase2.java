@@ -55,7 +55,7 @@ public class DeveloperPhase2 {
 
     protected void testWorkflow() throws IOException {
         ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BuildDir.getAbsolutePath() + 
-               " -t --workflow seqwarearchetypejavaworkflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
+               " -t --workflow seqware-archetype-java-workflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
     }
 
     protected void packageBundle(File tempPackageDir) throws IOException {

@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
@@ -18,6 +19,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.oozie.client.OozieClient;
+import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
 import org.apache.oozie.client.WorkflowJob.Status;
@@ -105,7 +107,6 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
     this.populateHdfsWorkDir(objectModel);
   }
 
-  @Override
   public ReturnValue runWorkflow() {
     ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
     OozieClient wc = this.getOozieClient();

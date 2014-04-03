@@ -40,9 +40,7 @@ public class StudyReportController extends BaseCommandController {
     setSupportedMethods(new String[] { METHOD_GET });
   }
 
-  /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -69,7 +67,7 @@ public class StudyReportController extends BaseCommandController {
     }
 
     // find the right study
-    List<Study> list = new ArrayList<>();
+    List<Study> list = new ArrayList<Study>();
     if (studyId != null) {
       Study currStudy = getStudyService().findByID(Integer.parseInt(studyId));
       list.add(currStudy);
@@ -78,24 +76,24 @@ public class StudyReportController extends BaseCommandController {
     }
 
     // calculate the number of root samples associated with this study
-    HashMap<String, Integer> samplesWithProcMap = new HashMap<>();
+    HashMap<String, Integer> samplesWithProcMap = new HashMap<String, Integer>();
 
     // main sample hash
-    HashMap<String, Object> mainStudyHash = new HashMap<>();
+    HashMap<String, Object> mainStudyHash = new HashMap<String, Object>();
     // main sample hash for samples with IUS
-    HashMap<String, Object> mainStudyHashSamplesWithIUS = new HashMap<>();
+    HashMap<String, Object> mainStudyHashSamplesWithIUS = new HashMap<String, Object>();
     // main sample hash for samples with Proc
-    HashMap<String, Object> samplesToWorlflows = new HashMap<>();
+    HashMap<String, Object> samplesToWorlflows = new HashMap<String, Object>();
 
     // samples without IUS or processing
-    HashMap<String, String> noSeqSamples = new HashMap<>();
+    HashMap<String, String> noSeqSamples = new HashMap<String, String>();
 
     // sample flowcell and ius info
-    HashMap<String, ArrayList<String>> sampleFlowcellInfo = new HashMap<>();
+    HashMap<String, ArrayList<String>> sampleFlowcellInfo = new HashMap<String, ArrayList<String>>();
 
     // sampleFiles
-    HashMap<String, HashMap<String, String>> sampleFiles = new HashMap<>();
-    HashMap<String, Integer> samplesCount = new HashMap<>();
+    HashMap<String, HashMap<String, String>> sampleFiles = new HashMap<String, HashMap<String, String>>();
+    HashMap<String, Integer> samplesCount = new HashMap<String, Integer>();
     ModelAndView modelAndView = new ModelAndView("StudyReportList");
     
     int rootSamples = 0;
@@ -104,14 +102,14 @@ public class StudyReportController extends BaseCommandController {
     int samplesWithIUS = 0;
     for (Study study : list) {
       // main sample hash
-      HashMap<String, Sample> mainSampleHash = new HashMap<>();
-      HashMap<String, Sample> mainSampleHashWithIUS = new HashMap<>();
+      HashMap<String, Sample> mainSampleHash = new HashMap<String, Sample>();
+      HashMap<String, Sample> mainSampleHashWithIUS = new HashMap<String, Sample>();
 
       mainStudyHash.put(study.getTitle(), mainSampleHash);
       mainStudyHashSamplesWithIUS.put(study.getTitle(), mainSampleHashWithIUS);
       for (Experiment exp : study.getExperiments()) {
         for (Sample sample : exp.getSamples()) {
-          HashMap<String, Workflow> sampleWorkflows = new HashMap<>();
+          HashMap<String, Workflow> sampleWorkflows = new HashMap<String, Workflow>();
           mainSampleHash.put(sample.getName(), sample);
           totalSamples++;
           if (sample.getParents() == null || sample.getParents().size() == 0) {
@@ -149,7 +147,7 @@ public class StudyReportController extends BaseCommandController {
               samplesWithProcMap.put(sample.getSwAccession().toString(), 1);
             }
 
-            HashMap<String, String> fileInfo = new HashMap<>();
+            HashMap<String, String> fileInfo = new HashMap<String, String>();
             for (Processing proc : processings) {
               if (proc.getWorkflowRun() != null) {
                 Workflow w = proc.getWorkflowRun().getWorkflow();

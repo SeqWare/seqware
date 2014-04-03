@@ -33,12 +33,10 @@ import net.sourceforge.seqware.common.model.lists.LaneList;
  */
 public class XmlizeLaneSortedSet extends XmlAdapter<LaneList, SortedSet<Lane>>{
 
-    /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+    /** {@inheritDoc} */
     @Override
     public SortedSet<Lane> unmarshal(LaneList vt) throws Exception {
-        SortedSet<Lane> laneSet = new TreeSet<>();
+        SortedSet<Lane> laneSet = new TreeSet<Lane>();
         for (Lane l : vt.getList())
         {
             laneSet.add(l);
@@ -46,14 +44,12 @@ public class XmlizeLaneSortedSet extends XmlAdapter<LaneList, SortedSet<Lane>>{
         return laneSet;        
     }
 
-    /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+    /** {@inheritDoc} */
     @Override
     public LaneList marshal(SortedSet<Lane> bt) throws Exception {
         if (bt != null)
         {
-        List<Lane> list = new ArrayList<>(bt);        
+        List<Lane> list = new ArrayList<Lane>(bt);        
         LaneList laneList = new LaneList();
         laneList.setList(list);
         return laneList;

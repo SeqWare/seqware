@@ -34,7 +34,7 @@ public class SampleList{
      * <p>Constructor for SampleList.</p>
      */
     public SampleList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<Sample>();
     }
 
     /**

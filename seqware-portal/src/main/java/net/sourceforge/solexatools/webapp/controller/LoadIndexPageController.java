@@ -114,7 +114,7 @@ public class LoadIndexPageController extends BaseCommandController {
 		List<String> listSavedPage = (List<String>) request.getSession(false)
 				.getAttribute("listSavedPage");
 		if (listSavedPage == null) {
-			listSavedPage = new LinkedList<>();
+			listSavedPage = new LinkedList<String>();
 		}
 		return listSavedPage;
 	}
@@ -182,9 +182,7 @@ public class LoadIndexPageController extends BaseCommandController {
 	 * = true; return isTimeOut; }
 	 */
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

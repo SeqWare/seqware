@@ -97,7 +97,7 @@ public class SequencerRunWizardController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 		
 		ModelAndView modelAndView = null;
-		HashMap<String,Object> model = new HashMap<>();
+		HashMap<String,Object> model = new HashMap<String,Object>();
 		SequencerRun sequencerRun = getCurrentSequencerRun(request);
 		model.put("platformList", getPlatformService().list(registration));
 		if (sequencerRun.getUpdateTimestamp() == null) {
@@ -211,7 +211,7 @@ public class SequencerRunWizardController extends MultiActionController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
+		HashMap<String,Object>	model			= new HashMap<String,Object>();
 		SequencerRun		    sequencerRun	= getRequestedSequencerRun(request);
 
 		if (sequencerRun != null) {

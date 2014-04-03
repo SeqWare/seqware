@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import net.sf.beanlib.CollectionPropertyName;
 
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.IUSService;
@@ -38,6 +39,8 @@ import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
@@ -53,6 +56,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
@@ -82,7 +86,7 @@ public class ProcessIDResource extends DatabaseIDResource {
      */
     @Get
     public void getXml() {
-        JaxbObject<Lane> jaxbTool = new JaxbObject<>();
+        JaxbObject<Lane> jaxbTool = new JaxbObject<Lane>();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
 
 
@@ -104,7 +108,7 @@ public class ProcessIDResource extends DatabaseIDResource {
         if (fields.contains("attributes")) {
             Set<ProcessingAttribute> pas = processing.getProcessingAttributes();
             if (pas != null && !pas.isEmpty()) {
-                Set<ProcessingAttribute> newpas = new TreeSet<>();
+                Set<ProcessingAttribute> newpas = new TreeSet<ProcessingAttribute>();
                 for (ProcessingAttribute pa : pas) {
                     newpas.add(copier.hibernate2dto(ProcessingAttribute.class, pa));
                 }
@@ -116,15 +120,13 @@ public class ProcessIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc}
-     * @param rep
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public Representation put(Representation rep) {
         authenticate();
         Representation toreturn = null;
         if (rep.getMediaType().equals(MediaType.APPLICATION_XML)) {
-            JaxbObject<Processing> jo = new JaxbObject<>();
+            JaxbObject<Processing> jo = new JaxbObject<Processing>();
             Processing p = null;
             try {
                 String text = rep.getText();
@@ -180,7 +182,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                     }
                 }
                 if (p.getIUS() != null) {
-                    HashSet<IUS> set = new HashSet<>();
+                    HashSet<IUS> set = new HashSet<IUS>();
                     IUSService is = BeanFactory.getIUSServiceBean();
                     for (IUS i : p.getIUS()) {
                         IUS newI = is.findBySWAccession(i.getSwAccession());
@@ -197,7 +199,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                     }
                 }
                 if (p.getLanes() != null) {
-                    HashSet<Lane> set = new HashSet<>();
+                    HashSet<Lane> set = new HashSet<Lane>();
                     LaneService ls = BeanFactory.getLaneServiceBean();
                     for (Lane l : p.getLanes()) {
                         Lane newL = ls.findBySWAccession(l.getSwAccession());
@@ -214,7 +216,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                     }
                 }
                 if (p.getSamples() != null) {
-                    HashSet<Sample> set = new HashSet<>();
+                    HashSet<Sample> set = new HashSet<Sample>();
                     SampleService ss = BeanFactory.getSampleServiceBean();
                     for (Sample s : p.getSamples()) {
                         Sample newS = ss.findBySWAccession(s.getSwAccession());
@@ -232,7 +234,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
                 if (p.getSequencerRuns() != null) {
-                    HashSet<SequencerRun> set = new HashSet<>();
+                    HashSet<SequencerRun> set = new HashSet<SequencerRun>();
                     SequencerRunService srs = BeanFactory.getSequencerRunServiceBean();
                     for (SequencerRun sr : p.getSequencerRuns()) {
                         SequencerRun newSR = srs.findBySWAccession(sr.getSwAccession());
@@ -249,7 +251,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                     }
                 }
                 if (p.getStudies() != null) {
-                    HashSet<Study> set = new HashSet<>();
+                    HashSet<Study> set = new HashSet<Study>();
                     StudyService srs = BeanFactory.getStudyServiceBean();
                     for (Study sr : p.getStudies()) {
                         Study newS = srs.findBySWAccession(sr.getSwAccession());
@@ -267,7 +269,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
                 if (p.getChildren() != null || p.getParents() != null) {
-                    HashSet<Processing> childSet = new HashSet<>();
+                    HashSet<Processing> childSet = new HashSet<Processing>();
                     for (Processing proc : p.getChildren()) {
                         Processing newProc = ps.findBySWAccession(proc.getSwAccession());
                         if (newProc != null && newProc.givesPermission(registration)) {
@@ -281,7 +283,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                     } else {
                         processing.getChildren().addAll(childSet);
                     }
-                    HashSet<Processing> parentSet = new HashSet<>();
+                    HashSet<Processing> parentSet = new HashSet<Processing>();
                     for (Processing proc : p.getParents()) {
                         Processing newProc = ps.findBySWAccession(proc.getSwAccession());
                         if (newProc != null && newProc.givesPermission(registration)) {
@@ -423,7 +425,7 @@ public class ProcessIDResource extends DatabaseIDResource {
       }
       @Override
       public List<Integer> handle(ResultSet rs) throws SQLException {
-        List<Integer> ids = new ArrayList<>();
+        List<Integer> ids = new ArrayList<Integer>();
         while (rs.next()){
           ids.add(rs.getInt(col));
         }
@@ -433,7 +435,7 @@ public class ProcessIDResource extends DatabaseIDResource {
     
     private void addNewFiles(Processing p) throws SQLException, ResourceException {
         Log.debug("Starting addNewFiles() with " + p.toString());
-        Set<Integer> newFiles = new HashSet<>();
+        Set<Integer> newFiles = new HashSet<Integer>();
         for (File file : p.getFiles()) {
             newFiles.add(file.getFileId());
         }
@@ -463,7 +465,7 @@ public class ProcessIDResource extends DatabaseIDResource {
 
     private void addNewIUSes(Processing p) throws SQLException, ResourceException {
         Log.debug("Starting addNewIUS() with " + p.toString());
-        Set<Integer> newIUSswa = new HashSet<>();
+        Set<Integer> newIUSswa = new HashSet<Integer>();
         for (IUS ius : p.getIUS()) {
             newIUSswa.add(ius.getSwAccession());
         }
@@ -497,7 +499,7 @@ public class ProcessIDResource extends DatabaseIDResource {
 
     private void addNewLanes(Processing p) throws SQLException, ResourceException {
         Log.debug("Starting addNewLanes() with " + p.toString());
-        Set<Integer> newLane = new HashSet<>();
+        Set<Integer> newLane = new HashSet<Integer>();
         for (Lane lane : p.getLanes()) {
             newLane.add(lane.getSwAccession());
         }
@@ -527,7 +529,7 @@ public class ProcessIDResource extends DatabaseIDResource {
 
     private void addNewSequencerRuns(Processing p) throws SQLException, ResourceException {
         Log.debug("Starting addNewSequencerRuns() with " + p.toString());
-        Set<Integer> newObj = new HashSet<>();
+        Set<Integer> newObj = new HashSet<Integer>();
         for (SequencerRun obj : p.getSequencerRuns()) {
             newObj.add(obj.getSwAccession());
         }
@@ -558,7 +560,7 @@ public class ProcessIDResource extends DatabaseIDResource {
 
     private void addNewStudies(Processing p) throws SQLException, ResourceException {
         Log.debug("Starting addNewStudies() with " + p.toString());
-        Set<Integer> newObj = new HashSet<>();
+        Set<Integer> newObj = new HashSet<Integer>();
         for (Study obj : p.getStudies()) {
             newObj.add(obj.getSwAccession());
         }
@@ -588,7 +590,7 @@ public class ProcessIDResource extends DatabaseIDResource {
 
     private void addNewExperiments(Processing p) throws SQLException, ResourceException {
         Log.debug("Starting addNewExperiments() with " + p.toString());
-        Set<Integer> newObj = new HashSet<>();
+        Set<Integer> newObj = new HashSet<Integer>();
         for (Experiment obj : p.getExperiments()) {
             newObj.add(obj.getSwAccession());
         }
@@ -618,7 +620,7 @@ public class ProcessIDResource extends DatabaseIDResource {
 
     private void addNewSamples(Processing p) throws SQLException, ResourceException {
         Log.debug("Starting addNewSamples() with " + p.toString());
-        Set<Integer> newObj = new HashSet<>();
+        Set<Integer> newObj = new HashSet<Integer>();
         for (Sample obj : p.getSamples()) {
             newObj.add(obj.getSwAccession());
         }
@@ -652,7 +654,7 @@ public class ProcessIDResource extends DatabaseIDResource {
         Set<Processing> parents = p.getParents();
 
         //parents
-        Set<Integer> newParents = new HashSet<>();
+        Set<Integer> newParents = new HashSet<Integer>();
         for (Processing pr : parents) {
             newParents.add(pr.getProcessingId());
         }
@@ -674,7 +676,7 @@ public class ProcessIDResource extends DatabaseIDResource {
         }
 
 //children
-        Set<Integer> newChildren = new HashSet<>();
+        Set<Integer> newChildren = new HashSet<Integer>();
         for (Processing pr : children) {
             newChildren.add(pr.getProcessingId());
         }

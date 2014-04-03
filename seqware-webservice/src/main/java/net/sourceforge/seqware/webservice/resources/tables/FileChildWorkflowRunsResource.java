@@ -16,12 +16,14 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.ws.rs.Path;
 
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
@@ -46,9 +48,11 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.ArrayUtils;
 import org.restlet.data.Status;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * This resource will pull back the workflow runs that are generated from a
@@ -77,7 +81,6 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
     
     /**
      * <p>getXml.</p>
-     * @throws java.sql.SQLException
      */
     @Get
     public void getXml() throws SQLException {
@@ -93,7 +96,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
         
         
         FileService fs = BeanFactory.getFileServiceBean();
-        Set<File> files = new HashSet<>();
+        Set<File> files = new HashSet<File>();
         SEARCH_TYPE searchType = SEARCH_TYPE.CHILDREN_VIA_PROCESSING_RELATIONSHIP;
         Log.debug("File service started");
         for (String key : queryValues.keySet()) {
@@ -118,7 +121,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
         Log.debug("Working with " + files.size() + " files and doing a search of type: " + searchType.toString());
 
         // these variables will be used to return information
-        jaxbTool = new JaxbObject<>();
+        jaxbTool = new JaxbObject<WorkflowRunList>();
         WorkflowRunList2 eList = new WorkflowRunList2();
         eList.setList(new ArrayList());
         Log.debug("JaxbObjects started");
@@ -163,7 +166,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
 
     protected WorkflowRunList2 handleWorkflowRunsViaIUS(Set<File> files, final Hibernate3DtoCopier copier) {
         WorkflowRunList2 result = new WorkflowRunList2();
-        Set<WorkflowRun> parentWorkflowRuns = new HashSet<>();
+        Set<WorkflowRun> parentWorkflowRuns = new HashSet<WorkflowRun>();
         for (File file : files) {
             //2) check if we have children in the ius_workflow_runs that are relevant
             for (Processing p : file.getProcessings()) {
@@ -194,7 +197,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
 
     protected WorkflowRunList2 handleWorkflowRunsViaLane(final Set<File> files, final Hibernate3DtoCopier copier) {
         final WorkflowRunList2 result = new WorkflowRunList2();
-        Set<WorkflowRun> parentWorkflowRuns = new HashSet<>();
+        Set<WorkflowRun> parentWorkflowRuns = new HashSet<WorkflowRun>();
         for (File file : files) {
             //3) check if we have children in the lane_workflow_runs that are relevant
             for (Processing p : file.getProcessings()) {
@@ -250,7 +253,6 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
      * Use SQL to directly retrieve relevant workflows runs (defined as any workflow runs that 
      * include one or more files in the set we were given)
      * @param files
-     * @param interestingWorkflows
      * @return
      * @throws SQLException 
      */
@@ -297,7 +299,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
                 List<Integer> workflowSWIDs = mdb.executeQuery(query.toString(), new ResultSetHandler<List<Integer>>(){
                   @Override
                   public List<Integer> handle(ResultSet rs) throws SQLException {
-                    List<Integer> ids = new ArrayList<>();
+                    List<Integer> ids = new ArrayList<Integer>();
                     while (rs.next()) {
                       ids.add(rs.getInt("sw_accession"));
                     }
@@ -324,7 +326,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
     private void handleDirectGetXML() throws SQLException, NumberFormatException {
         JaxbObject jaxbTool;
         Log.info("Using direct search");
-        List<Integer> files = new ArrayList<>();
+        List<Integer> files = new ArrayList<Integer>();
         for (String key : queryValues.keySet()) {
             Log.debug("key: " + key + " -> " + queryValues.get(key));
             if (key.equals("files")) {
@@ -338,7 +340,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
         Log.debug("Working with " + files.size() + " files");
         WorkflowRunList2 runs = directRetrieveWorkflowRuns(files, new ArrayList<Integer>());
         // these variables will be used to return information
-        jaxbTool = new JaxbObject<>();
+        jaxbTool = new JaxbObject<WorkflowRunList>();
         Log.debug("JaxbObjects started");
         assert runs.getList().isEmpty();
         final Document line = XmlTools.marshalToDocument(jaxbTool, runs);

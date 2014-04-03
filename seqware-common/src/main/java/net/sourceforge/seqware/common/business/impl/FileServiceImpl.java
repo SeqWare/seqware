@@ -38,7 +38,6 @@ public class FileServiceImpl implements FileService {
    *
    * Sets a private member variable with an instance of an implementation of
    * FileDAO. This method is called by the Spring framework at run time.
-     * @param dao
    * @see FileDAO
    */
   @Override
@@ -66,9 +65,7 @@ public class FileServiceImpl implements FileService {
     fileDAO.update(file);
   }
 
-  /** {@inheritDoc}
-     * @param file
-     * @param deleteRealFiles */
+  /** {@inheritDoc} */
   @Override
   public void delete(File file, boolean deleteRealFiles) {
     Set<Processing> processings = file.getProcessings();
@@ -82,16 +79,14 @@ public class FileServiceImpl implements FileService {
     fileDAO.delete(file);
 
     if (deleteRealFiles) {
-      List<File> deleteFiles = new LinkedList<>();
+      List<File> deleteFiles = new LinkedList<File>();
       deleteFiles.add(file);
       fileDAO.deleteAllWithFolderStore(deleteFiles);
     }
 
   }
 
-  /** {@inheritDoc}
-     * @param files
-     * @param deleteRealFiles */
+  /** {@inheritDoc} */
   @Override
   public void deleteAll(List<File> files, boolean deleteRealFiles) {
     fileDAO.deleteAll(files);
@@ -115,7 +110,7 @@ public class FileServiceImpl implements FileService {
   @Override
   public List<File> getFiles(Integer fileId) {
     File file = findByID(fileId);
-    List<File> files = new ArrayList<>();
+    List<File> files = new ArrayList<File>();
     files.add(file);
     return files;
   }
@@ -124,7 +119,7 @@ public class FileServiceImpl implements FileService {
   @Override
   public List<File> getFiles(Integer fileId, String metaType) {
     File file = findByID(fileId);
-    List<File> files = new ArrayList<>();
+    List<File> files = new ArrayList<File>();
     if (metaType.equals(file.getMetaType())) {
       files.add(file);
     }
@@ -134,7 +129,7 @@ public class FileServiceImpl implements FileService {
   /** {@inheritDoc} */
   @Override
   public Set<File> setWithHasFile(Set<File> list, String metaType) {
-    Set<File> result = new TreeSet<>();
+    Set<File> result = new TreeSet<File>();
     for (File file : list) {
       if (metaType.equals(file.getMetaType())) {
         result.add(file);
@@ -157,8 +152,7 @@ public class FileServiceImpl implements FileService {
     return file;
   }
 
-  /** {@inheritDoc}
-     * @param fileId */
+  /** {@inheritDoc} */
   @Override
   public File findByID(Integer fileId) {
     File file = null;

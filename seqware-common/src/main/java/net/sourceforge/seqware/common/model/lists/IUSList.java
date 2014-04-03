@@ -34,7 +34,7 @@ public class IUSList{
      * <p>Constructor for IUSList.</p>
      */
     public IUSList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<IUS>();
     }
 
     /**

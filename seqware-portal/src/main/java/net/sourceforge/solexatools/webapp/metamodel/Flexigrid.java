@@ -24,7 +24,7 @@ public class Flexigrid {
   public Flexigrid(int total, int page) {
     this.total = total;
     this.page = page;
-    rows = new ArrayList<>();
+    rows = new ArrayList<Flexigrid.Cells>();
   }
 
   /**
@@ -34,14 +34,14 @@ public class Flexigrid {
    */
   public Flexigrid(int total) {
     this.total = total;
-    rows = new ArrayList<>();
+    rows = new ArrayList<Flexigrid.Cells>();
   }
 
   /**
    * <p>Constructor for Flexigrid.</p>
    */
   public Flexigrid() {
-    rows = new ArrayList<>();
+    rows = new ArrayList<Flexigrid.Cells>();
   }
 
   /**

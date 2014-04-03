@@ -59,7 +59,7 @@ public class FileIDResource extends DatabaseIDResource {
 
         File file = (File) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<File> jaxbTool = new JaxbObject<>();
+        JaxbObject<File> jaxbTool = new JaxbObject<File>();
 
         File dto = copier.hibernate2dto(File.class, file);
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
@@ -67,15 +67,14 @@ public class FileIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     @Put
     public Representation put(Representation entity) {
         authenticate();
         Representation representation = null;
         File newFile = null;
-        JaxbObject<File> jo = new JaxbObject<>();
+        JaxbObject<File> jo = new JaxbObject<File>();
         try {
             String text = entity.getText();
             newFile = (File) XmlTools.unMarshal(jo, new File(), text);

@@ -27,9 +27,7 @@ import org.apache.commons.lang.StringEscapeUtils;
  */
 public class XmlizeXML extends XmlAdapter<String, String> {
 
-    /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+    /** {@inheritDoc} */
     @Override
     public String unmarshal(String vt) throws Exception {
 //        String out = vt.replace("&amp;", "&");
@@ -39,9 +37,7 @@ public class XmlizeXML extends XmlAdapter<String, String> {
         return out;
     }
 
-    /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+    /** {@inheritDoc} */
     @Override
     public String marshal(String bt) throws Exception {
         String out = StringEscapeUtils.escapeXml(bt);	

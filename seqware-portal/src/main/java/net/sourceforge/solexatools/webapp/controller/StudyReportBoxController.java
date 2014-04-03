@@ -96,9 +96,7 @@ public class StudyReportBoxController extends BaseCommandController {
     this.sampleReportService = service;
   }
 
-  /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -109,7 +107,7 @@ public class StudyReportBoxController extends BaseCommandController {
     }
 
     boolean hasError = false;
-    List<String> errMsgs = new ArrayList<>();
+    List<String> errMsgs = new ArrayList<String>();
 
     // Get StudyId, for which Report is generated
     String idStr = request.getParameter(STUDY_ID);
@@ -314,11 +312,11 @@ public class StudyReportBoxController extends BaseCommandController {
   }
 
   private void createWorkflowCharts(ModelAndView modelAndView, Study study) {
-    Map<Workflow, String> workflowCharts = new HashMap<>();
+    Map<Workflow, String> workflowCharts = new HashMap<Workflow, String>();
     List<Workflow> usedWorkflows = sampleReportService.getWorkflowsForStudy(study);
     for (Workflow workflow : usedWorkflows) {
       List<Status> statuses = sampleReportService.getStatusesForWorkflow(study, workflow);
-      Map<Status, Integer> statusCount = new LinkedHashMap<>();
+      Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
       statusCount.put(Status.failed, 0);
       statusCount.put(Status.pending, 0);
       statusCount.put(Status.running, 0);
@@ -350,7 +348,7 @@ public class StudyReportBoxController extends BaseCommandController {
 
   private void createOverallChart(ModelAndView modelAndView, Study study) {
     List<Status> statuses = sampleReportService.getStatusesForStudy(study);
-    Map<Status, Integer> statusCount = new LinkedHashMap<>();
+    Map<Status, Integer> statusCount = new LinkedHashMap<Status, Integer>();
     statusCount.put(Status.failed, 0);
     statusCount.put(Status.pending, 0);
     statusCount.put(Status.running, 0);

@@ -45,7 +45,6 @@ public class DeleteDBET {
     /**
      * Test various forms of invalid parameters
      * SEQWARE-1678
-     * @throws java.io.IOException
      */
     @Test
     public void testInvalidParameters() throws IOException {

@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.common.util.filetools;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import net.sourceforge.seqware.common.util.*;
@@ -87,7 +88,7 @@ public class FileToolsTest {
             if (!sudoersFile.exists()) {
                 Log.fatal("Could not test FileTools on file where we have no read rights");
             }
-            ArrayList<File> files = new ArrayList<>();
+            ArrayList<File> files = new ArrayList<File>();
             FileTools.listFilesRecursive(sudoersFile, files);
         } catch (Exception e) {
             Assert.assertTrue("Did not avoid crash when listing file with no read permissions", false);

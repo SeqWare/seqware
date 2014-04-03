@@ -70,7 +70,6 @@ public class FileAttributesServerResourceTest extends RestletTestCase {
   private String uri;
 
   @Before
-  @Override
   public void setUp() throws Exception {
     super.setUp();
     Engine.getInstance().getRegisteredConverters().clear();
@@ -90,7 +89,6 @@ public class FileAttributesServerResourceTest extends RestletTestCase {
   }
 
   @After
-  @Override
   public void tearDown() throws Exception {
     c.stop();
     c = null;
@@ -121,8 +119,8 @@ public class FileAttributesServerResourceTest extends RestletTestCase {
 
     client = new Client(Protocol.HTTP);
     Request request = new Request(Method.GET, uri + "/file/1/attributes");
-    List<Preference<MediaType>> m = new ArrayList<>();
-    m.add(new Preference<>(MediaType.APPLICATION_JSON));
+    List<Preference<MediaType>> m = new ArrayList<Preference<MediaType>>();
+    m.add(new Preference<MediaType>(MediaType.APPLICATION_JSON));
     request.getClientInfo().setAcceptedMediaTypes(m);
     request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
     Response response = client.handle(request);
@@ -140,8 +138,8 @@ public class FileAttributesServerResourceTest extends RestletTestCase {
     client = new Client(Protocol.HTTP);
     Request request = new Request(Method.GET, uri + "/file/1/attributes");
     request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
-    List<Preference<MediaType>> m = new ArrayList<>();
-    m.add(new Preference<>(MediaType.APPLICATION_XML));
+    List<Preference<MediaType>> m = new ArrayList<Preference<MediaType>>();
+    m.add(new Preference<MediaType>(MediaType.APPLICATION_XML));
     request.getClientInfo().setAcceptedMediaTypes(m);
     Response response = client.handle(request);
 
@@ -160,8 +158,8 @@ public class FileAttributesServerResourceTest extends RestletTestCase {
     Request request = new Request(Method.GET, uri + "/file/1/attributes");
     request.setEntity("", MediaType.APPLICATION_XML);
     request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
-    List<Preference<MediaType>> m = new ArrayList<>();
-    m.add(new Preference<>(MediaType.APPLICATION_XML));
+    List<Preference<MediaType>> m = new ArrayList<Preference<MediaType>>();
+    m.add(new Preference<MediaType>(MediaType.APPLICATION_XML));
     request.getClientInfo().setAcceptedMediaTypes(m);
     
     Response response = client.handle(request);

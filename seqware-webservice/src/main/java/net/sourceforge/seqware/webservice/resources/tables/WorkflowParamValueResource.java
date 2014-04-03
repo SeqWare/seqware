@@ -57,7 +57,7 @@ public class WorkflowParamValueResource extends DatabaseResource {
     public void postJaxb(Representation entity) {
         authenticate();
         try {
-            JaxbObject<WorkflowParamValue> jo = new JaxbObject<>();
+            JaxbObject<WorkflowParamValue> jo = new JaxbObject<WorkflowParamValue>();
             String text = entity.getText();
             WorkflowParamValue p;
             try {
@@ -99,7 +99,7 @@ public class WorkflowParamValueResource extends DatabaseResource {
         if (queryValues.get("id") != null) {
             WorkflowParamValue wp = ((WorkflowParamValue) testIfNull(ss.findByID(parseClientInt(queryValues.get("id")))));
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-            JaxbObject<WorkflowParamValue> jaxbTool = new JaxbObject<>();
+            JaxbObject<WorkflowParamValue> jaxbTool = new JaxbObject<WorkflowParamValue>();
 
             WorkflowParamValue dto = copier.hibernate2dto(WorkflowParamValue.class, wp);
 
@@ -107,7 +107,7 @@ public class WorkflowParamValueResource extends DatabaseResource {
 
         } else {
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-            JaxbObject<WorkflowParamValueList> jaxbTool = new JaxbObject<>();
+            JaxbObject<WorkflowParamValueList> jaxbTool = new JaxbObject<WorkflowParamValueList>();
 
             WorkflowParamValueList list = new WorkflowParamValueList();
             List<WorkflowParamValue> wpvs = (List<WorkflowParamValue>) testIfNull(ss.list());

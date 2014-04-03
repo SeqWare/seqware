@@ -42,7 +42,6 @@ public interface LaneService {
      *
      * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
-     * @return 
      */
     public Integer insert(Registration registration, Lane lane);
 
@@ -63,8 +62,6 @@ public interface LaneService {
 
     /**
      * <p>delete.</p>
-     * @param lane
-     * @param deleteRealFiles
      */
     public void delete(Lane lane, boolean deleteRealFiles);
 

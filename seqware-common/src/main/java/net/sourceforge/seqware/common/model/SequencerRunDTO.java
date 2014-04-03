@@ -74,8 +74,7 @@ public class SequencerRunDTO implements Serializable {
 			.append("name", getName())
 			.toString();
 	}
-/** {@inheritDoc}
-     * @param other */
+/** {@inheritDoc} */
 @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

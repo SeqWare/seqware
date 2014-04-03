@@ -23,7 +23,7 @@ public class UploadFile implements Serializable{
 	private MultipartFile file;
 	private String fileURL;
 	private String strStartURL;
-	private Boolean useURL = false;
+	private Boolean useURL = new Boolean(false);
 	
 	private String folderStore;
 	

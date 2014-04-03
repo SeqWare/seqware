@@ -16,8 +16,11 @@
  */
 package net.sourceforge.seqware.common.factory;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -36,7 +39,7 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
  */
 public class DBAccess {
   
-  private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<>();
+  private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<MetadataDB>();
 
   public static MetadataDB get() {
     MetadataDB mdb = metadataDBWrapper.get();

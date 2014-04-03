@@ -69,7 +69,7 @@ public class ParseMiseqFile extends BatchMetadataParser {
     }
 
     public Set<LaneInfo> parseMiseqData(BufferedReader freader) throws IOException, Exception {
-        Set<SampleInfo> samples = new HashSet<>();
+        Set<SampleInfo> samples = new HashSet<SampleInfo>();
 
         //there is only one lane in Miseq
         LaneInfo laneInfo = generateLaneInfo("1", 4);
@@ -119,7 +119,7 @@ public class ParseMiseqFile extends BatchMetadataParser {
             samples.add(sample);
         }
 
-        Set<LaneInfo> lanes = new HashSet<>();
+        Set<LaneInfo> lanes = new HashSet<LaneInfo>();
         lanes.add(laneInfo);
         return lanes;
     }
@@ -127,7 +127,7 @@ public class ParseMiseqFile extends BatchMetadataParser {
     public RunInfo parseMiseqHeader(BufferedReader freader, File file) throws IOException {
         String line = null;
         
-        Map<String, String> headerInfo = new HashMap<>();
+        Map<String, String> headerInfo = new HashMap<String, String>();
         while (!(line = freader.readLine()).startsWith("[Data]")) {
             if (!line.startsWith("[")) {
                 String[] args = line.split(",");

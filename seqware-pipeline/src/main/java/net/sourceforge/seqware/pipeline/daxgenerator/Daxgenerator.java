@@ -2,8 +2,11 @@ package net.sourceforge.seqware.pipeline.daxgenerator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.freemarker.Freemarker;
@@ -61,7 +64,7 @@ public class Daxgenerator {
 
         Map<String, String> map = null;
         if (argMap == null) {
-            map = new HashMap<>();
+            map = new HashMap<String, String>();
         } else {
             map = argMap;
         }
@@ -137,7 +140,7 @@ public class Daxgenerator {
     public static void main(String[] args) {
         String template = null;
         String output = null;
-        ArrayList<String> iniFiles = new ArrayList<>();
+        ArrayList<String> iniFiles = new ArrayList<String>();
 
         // Parse command line for options
         for (int i = 0; i < args.length; i++) {

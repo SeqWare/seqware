@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -25,7 +24,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Study extends PermissionsAware implements Serializable, ParentAccessionModel, Comparable<Study> {
+public class Study implements Serializable, PermissionsAware, ParentAccessionModel {
 
   private static final long serialVersionUID = 2L;
   private Integer studyId;
@@ -50,9 +49,9 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
   private Integer existingTypeInt;
   private SortedSet<Experiment> experiments;
   private SortedSet<ShareStudy> sharedStudies;
-  private Set<Processing> processings = new TreeSet<>();
-  private Set<StudyLink> studyLinks = new TreeSet<>();
-  private Set<StudyAttribute> studyAttributes = new TreeSet<>();
+  private Set<Processing> processings = new TreeSet<Processing>();
+  private Set<StudyLink> studyLinks = new TreeSet<StudyLink>();
+  private Set<StudyAttribute> studyAttributes = new TreeSet<StudyAttribute>();
 
   /**
    * <p>Constructor for Study.</p>
@@ -67,7 +66,6 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
    * @param that a {@link net.sourceforge.seqware.common.model.Study} object.
    * @return a int.
    */
-  @Override
   public int compareTo(Study that) {
     if (that == null) {
       return -1;
@@ -96,8 +94,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
         + existingTypeInt + '}';
   }
 
-  /** {@inheritDoc}
-     * @param other */
+  /** {@inheritDoc} */
   @Override
   public boolean equals(Object other) {
     if ((this == other)) {
@@ -630,19 +627,9 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
     this.studyAttributes = studyAttributes;
   }
 
-  /** {@inheritDoc}
-     * @return  */
+  /** {@inheritDoc} */
   @Override
-  public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      boolean consideredBefore = considered.contains(this.getSwAccession());
-      if (!consideredBefore) {
-          considered.add(this.getSwAccession());
-          Log.debug("Checking permissions for Study object " + swAccession);
-      } else {
-          Log.debug("Skipping permissions for Study object " + swAccession + " , checked before");
-          return true;
-      }
-      
+  public boolean givesPermission(Registration registration) {
     boolean hasPermission = false;
     if (registration == null) {
       Logger.getLogger(Study.class).warn("Registration is null!");

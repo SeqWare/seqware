@@ -34,7 +34,7 @@ public class WorkflowList{
      * <p>Constructor for WorkflowList.</p>
      */
     public WorkflowList() {
-        tList = new ArrayList<>();
+        tList = new ArrayList<Workflow>();
     }
 
     /**

@@ -35,8 +35,7 @@ public class ExperimentSpotDesignReadSpec implements Serializable, Comparable<Ex
 		super();
 	}
 	
-    /** {@inheritDoc}
-     * @param that */
+    /** {@inheritDoc} */
     @Override
 	public int compareTo(ExperimentSpotDesignReadSpec that) {
 		if(that == null)
@@ -59,8 +58,7 @@ public class ExperimentSpotDesignReadSpec implements Serializable, Comparable<Ex
 			.toString();
 	}
 
-    /** {@inheritDoc}
-     * @param other */
+    /** {@inheritDoc} */
     @Override
 	public boolean equals(Object other) {
 		if ( (this == other ) ) return true;

@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
-import java.util.Set;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -15,7 +14,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowParamValue extends PermissionsAware implements Serializable, Comparable<WorkflowParamValue> {
+public class WorkflowParamValue implements Serializable, Comparable<WorkflowParamValue>, PermissionsAware {
 
     private static final long serialVersionUID = 1L;
     private Integer workflowParamValueId;
@@ -31,8 +30,7 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         super();
     }
 
-    /** {@inheritDoc}
-     * @param that */
+    /** {@inheritDoc} */
     @Override
     public int compareTo(WorkflowParamValue that) {
         if (that == null) {
@@ -56,8 +54,7 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         return new ToStringBuilder(this).append("value", getValue()).toString();
     }
 
-    /** {@inheritDoc}
-     * @param other */
+    /** {@inheritDoc} */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -184,8 +181,7 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         this.workflowParam = workflowParam;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
     public WorkflowParamValue clone() {
         WorkflowParamValue wp = this;
@@ -200,13 +196,12 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         return wp;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /** {@inheritDoc} */
     @Override
-    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+    public boolean givesPermission(Registration registration) {
         boolean hasPermission = true;
         if (workflowParam != null) {
-            hasPermission = workflowParam.givesPermission(registration, considered);
+            hasPermission = workflowParam.givesPermission(registration);
         } else {//orphaned WorkflowParamValue
             if (registration.isLIMSAdmin()) {
                 Logger.getLogger(WorkflowParamValue.class).warn("Modifying Orphan WorkflowParamValue: " + this.getDisplayName());

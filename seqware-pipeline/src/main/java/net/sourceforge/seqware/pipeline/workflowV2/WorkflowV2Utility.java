@@ -80,7 +80,7 @@ public class WorkflowV2Utility {
      * @return
      */
     private static Map<String, String> parseMetadataInfo(File file, String bundleDir) {
-        Map<String, String> ret = new HashMap<>();
+        Map<String, String> ret = new HashMap<String, String>();
         //parse metadataFile
         SAXBuilder builder = new SAXBuilder();
         try {
@@ -149,7 +149,6 @@ public class WorkflowV2Utility {
     /**
      * Determine the bundle path from the provided options
      *
-     * @param options
      * @return bundlePath
      */
     public static String determineRelativeBundlePath(OptionSet options) {

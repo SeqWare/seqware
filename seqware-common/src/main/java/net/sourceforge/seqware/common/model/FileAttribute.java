@@ -12,7 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.CascadeType;
 import org.hibernate.annotations.Cascade;
-import org.apache.commons.lang.builder.CompareToBuilder;
 
 
 @Entity
@@ -23,7 +22,7 @@ import org.apache.commons.lang.builder.CompareToBuilder;
  * @version $Id: $Id
  */
 @Table(name = "file_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "file_id", "tag", "value" }) })
-public class FileAttribute implements Attribute<File>, Comparable<FileAttribute> {
+public class FileAttribute implements Attribute<File> {
 
   @Id
   @SequenceGenerator(name = "file_attribute_id_seq_gen", sequenceName = "file_attribute_id_seq")
@@ -137,16 +136,6 @@ public class FileAttribute implements Attribute<File>, Comparable<FileAttribute>
     @Override
     public void setAttributeParent(File parent) {
         this.setFile(parent);
-    }
-
-    @Override
-    public int compareTo(FileAttribute t) {
-        FileAttribute other = (FileAttribute)t;
-        return new CompareToBuilder()
-       .append(this.file, other.file)
-       .append(this.tag, other.tag)
-       .append(this.value, other.value)
-       .toComparison();
     }
 
 }

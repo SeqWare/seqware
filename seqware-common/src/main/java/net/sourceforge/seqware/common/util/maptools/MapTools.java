@@ -5,16 +5,21 @@ import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +27,6 @@ import java.util.regex.Pattern;
 import javax.xml.bind.DatatypeConverter;
 
 import net.sourceforge.seqware.common.util.Log;
-import org.apache.commons.io.IOUtils;
 
 /**
  * <p>MapTools class.</p>
@@ -74,7 +78,7 @@ public class MapTools {
             while ((line = br.readLine()) != null) {
                 // this deals with key value annotations
                 if (line.startsWith("#") && line.matches("^#\\s*key=.*$")) {
-                    detailsMap = new HashMap<>();
+                    detailsMap = new HashMap<String, String>();
                     line = line.replaceAll("#\\s*", "");
                     String[] kvs = line.split(":");
                     for (String pair : kvs) {
@@ -88,7 +92,7 @@ public class MapTools {
                 } else if (isLineMatchesKeyValue(line)) {
                     String[] kv = line.split("\\s*=\\s*");
                     if (detailsMap == null || !kv[0].equals(detailsMap.get("key"))) {
-                        detailsMap = new HashMap<>();
+                        detailsMap = new HashMap<String, String>();
                         detailsMap.put("key", kv[0]);
                     }
                     if (kv.length == 1){
@@ -114,14 +118,10 @@ public class MapTools {
      */
     public static void ini2Map(String iniFile, Map<String, String> hm, boolean keyToUpper) {
         // Load config ini from disk
-        FileInputStream iStream = null;
         try {
-            iStream = new FileInputStream(iniFile);
-            ini2Map(iStream, hm, keyToUpper);
+            ini2Map(new FileInputStream(iniFile), hm, keyToUpper);
         } catch (Exception e) {
             rethrow(e);
-        } finally{
-            IOUtils.closeQuietly(iStream);
         }
     }
 
@@ -198,7 +198,7 @@ public class MapTools {
      * @return a {@link java.util.Map} object.
      */
     public static Map mapString2Int(Map map) {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<String, Object>();
         Iterator iter = map.keySet().iterator();
         while (iter.hasNext()) {
             String key = (String) iter.next();
@@ -231,7 +231,7 @@ public class MapTools {
     }
     
     public static Map<String, String> providedMap(String bundleDir){
-      Map<String, String> m = new HashMap<>();
+      Map<String, String> m = new HashMap<String, String>();
       provideBundleDir(m, bundleDir);
       return m;
     }
@@ -268,8 +268,8 @@ public class MapTools {
       return expandVariables(raw, provided, false);
     }
     public static Map<String, String> expandVariables(Map<String, String> raw, Map<String, String> provided, boolean allowMissingVars){
-      raw = new HashMap<>(raw); // don't mess with someone else's data structure
-      Map<String, String> exp = new HashMap<>();
+      raw = new HashMap<String, String>(raw); // don't mess with someone else's data structure
+      Map<String, String> exp = new HashMap<String, String>();
       
       int prevCount;
       do {
@@ -331,7 +331,7 @@ public class MapTools {
      * @return a {@link java.util.Map} object.
      */
     public static Map<String, String> iniString2Map(String iniString) {
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> result = new HashMap<String, String>();
         String[] lines = iniString.split("\n");
         for (String line : lines) {
             if (isLineMatchesKeyValue(line)) {

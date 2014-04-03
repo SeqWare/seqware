@@ -34,9 +34,7 @@ public class WorkflowParamValueSetupController extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -47,7 +45,7 @@ public class WorkflowParamValueSetupController extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
+		HashMap<String,Object>	model			= new HashMap<String,Object>();
 		
 		getRequestedWorkflowParam(request);
 		WorkflowParamValue		workflowParamValue	= getRequestedWorkflowParamValue(request);

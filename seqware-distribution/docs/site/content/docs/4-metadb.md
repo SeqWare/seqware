@@ -68,28 +68,6 @@ the IUS to the root Processing through processing_ius, not through
 ius_workflow_runs.
 
 
-The following is a more complicated database diagram that includes tables used for 
-linking metadata to workflow runs and all attribute tables. This should be more 
-useful for developers rather than users. 
-
-![Complicated DB](/assets/images/metadb/Db_complicated.png)
-
-There is one large division between the tables at the "top" of the database (sequencer_run, 
-lane, sample, ius, experiment, and study) which have physical counterparts
-and are typically created by migration by the LIMS and the tables at the "bottom" of 
-the database (workflow, workflow_run, processing, and file) which are actually used
-by SeqWare to maintain details on what workflows have been installed and run. 
-
-Note there are also attribute tables for each of the above tables (of the form X_attribute) 
-which maintain arbitrary key value information that can be used to guide custom 
-behaviour at your particular SeqWare site. 
-
-Finally, there are a host of linking tables (of the form processing_X) which maintain 
-information on which steps in your workflow are attributable to what physical entities. 
-
-For more in-depth information on our schema including table-by-table descriptions, please refer to [this](/metadb-schema)
-
-
 ## Upgrading From 0.13.6.X to 1.0.X
 
 First, let's review which tools depend on what. 
@@ -105,6 +83,7 @@ First, run the various update scripts:
 
     psql -U seqware seqware_meta_db < 0.13.6.x_to_1.0.1.sql
     psql -U seqware seqware_meta_db < 1.0.1_to_1.0.3.sql
+    psql -U seqware seqware_meta_db < 1.0.2_to_1.0.3.sql
     psql -U seqware seqware_meta_db < 1.0.4_to_1.0.5.sql
 
 Second, run the migration plugin:
@@ -114,7 +93,3 @@ Second, run the migration plugin:
 Third, you'll probably want to create the initial file-provenance-report (note, you'll probably want this to run on a schedule for updates)
 
     seqware files refresh
-
-Optionally, you may want to setup database comments if you wish to explore the database schema:
-
-    psql -U seqware seqware_meta_db < comments_on_tables.sql

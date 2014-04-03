@@ -143,9 +143,7 @@ public class EntityController extends BaseCommandController {
 		this.workflowRunService = workflowRunService;
 	}
 
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

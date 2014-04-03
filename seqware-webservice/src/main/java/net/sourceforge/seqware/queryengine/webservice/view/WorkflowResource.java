@@ -77,7 +77,7 @@ public class WorkflowResource extends ServerResource {
         String swid = (String) getRequestAttributes().get("workflowId");
 
         // now build a model  
-        ArrayList<Map<String, String>> data = new ArrayList<>();
+        ArrayList<Map<String, String>> data = new ArrayList<Map<String, String>>();
 
         // contains all the get params
         Form form = this.getRequest().getResourceRef().getQueryAsForm();
@@ -173,10 +173,10 @@ public class WorkflowResource extends ServerResource {
 
 
                 // the other variables that have been posted (not files)
-                Map<String, String> props = new HashMap<>();
+                Map<String, String> props = new HashMap<String, String>();
 
                 // a hash that contains the field name mapped to the actual output file path
-                HashMap<String, String> files = new HashMap<>();
+                HashMap<String, String> files = new HashMap<String, String>();
 
                 // random number
                 Random randomGenerator = new Random(new Date().getTime());

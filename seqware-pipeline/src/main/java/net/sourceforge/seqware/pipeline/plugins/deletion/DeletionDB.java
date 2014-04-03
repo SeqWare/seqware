@@ -71,7 +71,6 @@ public final class DeletionDB extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public final ReturnValue init() {
@@ -97,7 +96,6 @@ public final class DeletionDB extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public ReturnValue do_test() {
@@ -110,7 +108,6 @@ public final class DeletionDB extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
      */
     @Override
     public final ReturnValue do_run() {
@@ -132,7 +129,7 @@ public final class DeletionDB extends Plugin {
                 // create a key file
                 Set<ModelAccessionIDTuple> find_JSON_rdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()), String.valueOf(tuple.getId()));
                 // add to a sorted set for easy viewing
-                SortedSet<ModelAccessionIDTuple> sortedSet = new TreeSet<>();
+                SortedSet<ModelAccessionIDTuple> sortedSet = new TreeSet<ModelAccessionIDTuple>();
                 sortedSet.addAll(find_JSON_rdelete);
                 // output information for informational purposes
                 outputSummaryInformation(sortedSet, fileClient);
@@ -153,7 +150,7 @@ public final class DeletionDB extends Plugin {
             } else {
                 ObjectMapper mapper = new ObjectMapper();
                 Set<ModelAccessionIDTuple> matchSet;
-                Set<String> filesToBeDeleted = new HashSet<>();
+                Set<String> filesToBeDeleted = new HashSet<String>();
                 try {
                     matchSet = mapper.readValue(inKeyFile, new TypeReference<Set<ModelAccessionIDTuple>>(){});
                     for (ModelAccessionIDTuple t : matchSet) {
@@ -244,7 +241,7 @@ public final class DeletionDB extends Plugin {
     public static void main(String[] args) throws IOException, URISyntaxException {
         DeletionDB mp = new DeletionDB();
         mp.init();
-        List<String> arr = new ArrayList<>();
+        List<String> arr = new ArrayList<String>();
         mp.setParams(arr);
         mp.parse_parameters();
         ReturnValue do_run = mp.do_run();
@@ -273,7 +270,7 @@ public final class DeletionDB extends Plugin {
     private void outputSummaryInformation(SortedSet<ModelAccessionIDTuple> sortedSet, SeqWareWebServiceClient fileClient) throws UniformInterfaceException {
         // we can output some friendly summary statistics here
         int workflowRunCount = 0;
-        Map<String, Integer> fileTypeCounts = new HashMap<>();
+        Map<String, Integer> fileTypeCounts = new HashMap<String, Integer>();
         for (ModelAccessionIDTuple t : sortedSet) {
             if (t.getAdminModelClass().equals(WorkflowRun.class.getName())) {
                 workflowRunCount++;

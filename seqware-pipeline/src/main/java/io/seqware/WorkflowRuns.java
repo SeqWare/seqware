@@ -4,9 +4,6 @@ import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
-import static net.sourceforge.seqware.common.model.WorkflowRunStatus.pending;
-import static net.sourceforge.seqware.common.model.WorkflowRunStatus.running;
-import static net.sourceforge.seqware.common.model.WorkflowRunStatus.submitted;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
 public class WorkflowRuns {
@@ -27,13 +24,6 @@ public class WorkflowRuns {
       throw new UnsupportedOperationException("Workflow run cancellation not supported for engine: "
                                               + wr.getWorkflowEngine());
     }
-  }
-  
-  public static void failWorkflow(int workflowRunAccession) {
-    Metadata md = MetadataFactory.get(ConfigTools.getSettings());
-    WorkflowRun wr = md.getWorkflowRun(workflowRunAccession);
-    wr.setStatus(WorkflowRunStatus.failed);
-    md.updateWorkflowRun(wr);
   }
 
   public static void submitRetry(int workflowRunAccession) {

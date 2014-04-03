@@ -67,8 +67,6 @@ public interface StudyService {
 
   /**
    * <p>delete.</p>
-     * @param study
-     * @param deleteRealFiles
    */
   public void delete(Study study, boolean deleteRealFiles);
 

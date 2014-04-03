@@ -12,7 +12,7 @@ public class Command {
 	private String gcrOutputFile;
 	
 	public Command() {
-		this.arguments = new ArrayList<>();
+		this.arguments = new ArrayList<String>();
 	}
 
 	public Command addArgument(String argument) {

@@ -38,9 +38,7 @@ public class LaneSampleAssociateController extends BaseCommandController {
     setSupportedMethods(new String[] {METHOD_GET, METHOD_POST});
   }
 
-  /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+  /** {@inheritDoc} */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request,
       HttpServletResponse response)
@@ -51,7 +49,7 @@ public class LaneSampleAssociateController extends BaseCommandController {
       return new ModelAndView("redirect:/login.htm");
     
     ModelAndView modelAndView = null;
-    HashMap<String,Object>  model     = new HashMap<>();
+    HashMap<String,Object>  model     = new HashMap<String,Object>();
     Lane lane = getRequestedLane(request);
     Sample sample = getRequestedSample(request);
 

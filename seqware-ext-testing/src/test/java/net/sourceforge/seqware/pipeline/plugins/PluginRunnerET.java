@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
@@ -20,7 +19,6 @@ import java.util.concurrent.Executors;
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -50,11 +48,10 @@ import org.springframework.util.SerializationUtils;
  */
 public class PluginRunnerET {
 
-    private static File tempDir = null;
-    
-    private static Map<String, Integer> installedWorkflows = new HashMap<>();
-    private static Map<String, File> bundleLocations = new HashMap<>();
-    private static List<Integer> launchedWorkflowRuns = new ArrayList<>();
+    private static File tempDir = Files.createTempDir();
+    private static Map<String, Integer> installedWorkflows = new HashMap<String, Integer>();
+    private static Map<String, File> bundleLocations = new HashMap<String, File>();
+    private static List<Integer> launchedWorkflowRuns = new ArrayList<Integer>();
     private final static boolean DEBUG_SKIP = false;
     private final static int PARENT = 4707;
 
@@ -62,10 +59,6 @@ public class PluginRunnerET {
         return installedWorkflows;
     }
 
-    /**
-     * Returns a map of workflow artifactIds to their bundle path.
-     * @return 
-     */
     public static Map<String, File> getBundleLocations() {
         return bundleLocations;
     }
@@ -90,8 +83,8 @@ public class PluginRunnerET {
                 return;
             }
         }
-        createSharedTempDir();
         
+        tempDir = Files.createTempDir();
         Log.info("Trying to build and test archetypes at: " + tempDir.getAbsolutePath());
         PluginRunner it = new PluginRunner();
         String SEQWARE_VERSION = it.getClass().getPackage().getImplementationVersion();
@@ -126,25 +119,18 @@ public class PluginRunnerET {
     public static void buildAndInstallArchetypes(String[] archetypes, String SEQWARE_VERSION, boolean testListing, boolean deleteBundles) throws IOException, NumberFormatException {
         for (String archetype : archetypes) {
             String workflow = "seqware-archetype-" + archetype;
-	    String workflowName = workflow.replace("-","");
             // generate and install archetypes to local maven repo
-            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow +" -Dworkflow-name="+workflowName+" -B -Dgoals=install";
+            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow + " -DworkflowDirectoryName=" + workflow + " -DworkflowName=" + workflow + " -DworkflowVersion=1.0-SNAPSHOT -B -Dgoals=install";
             String genOutput = ITUtility.runArbitraryCommand(command, 0, tempDir);
             Log.info(genOutput);
             // install the workflows to the database and record their information 
             File workflowDir = new File(tempDir, workflow);
             File targetDir = new File(workflowDir, "target");
-            final String workflow_name = "Workflow_Bundle_" + workflowName + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION;
-            File bundleDir = new File(targetDir, workflow_name);
+            File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflow + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
             
             bundleLocations.put(workflow, bundleDir);
-            
-            // zip up the bundles first if we want the bundle locations to survive 
-            String zipCommand = "--plugin net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- --path-to-package "+bundleDir.getAbsolutePath()+" --bundle "+tempDir.getAbsolutePath();
-            String zipOutput = ITUtility.runSeqWareJar(zipCommand, ReturnValue.SUCCESS, null);
-            Log.info(zipOutput);     
-            
-            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b " + tempDir.getAbsolutePath() +File.separatorChar+ workflow_name + ".zip";
+
+            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b " + bundleDir.getAbsolutePath();
             String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS, null);
             Log.info(installOutput);     
             
@@ -170,7 +156,7 @@ public class PluginRunnerET {
         installedWorkflows.clear();
         bundleLocations.clear();
         launchedWorkflowRuns.clear();
-        createSharedTempDir();
+        tempDir = Files.createTempDir();
     }
 
     public static void monitorAndClean(boolean monitor) throws IOException {
@@ -188,14 +174,6 @@ public class PluginRunnerET {
         
         clearStaticVariables();
     }
-
-    private static void createSharedTempDir() {
-        // need to create in a shared location for seqware installs with multiple nodes
-        //tempDir = Files.createTempDir();
-        String parentDir = ConfigTools.getSettings().get("OOZIE_WORK_DIR");
-        tempDir = new File(parentDir, String.valueOf(Math.abs(new Random().nextInt())));
-        tempDir.mkdir();
-    }
     
     @Test 
     public void testExportParameters() throws IOException{
@@ -208,7 +186,7 @@ public class PluginRunnerET {
         Map<String, File> iniParams = exportWorkflowInis();
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to schedule on host: " + localhost);
-        Map<String, Integer> wr_accessions = new HashMap<>();
+        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
         
         
         for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
@@ -252,7 +230,7 @@ public class PluginRunnerET {
         Map<String, File> iniParams = exportWorkflowInis();
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to launch without wait on host: " + localhost);
-        Map<String, Integer> wr_accessions = new HashMap<>();
+        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
         
         
         for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
@@ -272,7 +250,7 @@ public class PluginRunnerET {
         Map<String, File> iniParams = exportWorkflowInis();
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to launch with wait on host: " + localhost);
-        Map<String, Integer> wr_accessions = new HashMap<>();
+        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
         
         
         for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
@@ -292,7 +270,7 @@ public class PluginRunnerET {
         Map<String, File> iniParams = exportWorkflowInis();
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to launch with wait on host: " + localhost);
-        Map<String, Integer> wr_accessions = new HashMap<>();
+        Map<String, Integer> wr_accessions = new HashMap<String, Integer>();
         
         
         for (Entry<String, Integer> e : installedWorkflows.entrySet()) {
@@ -309,7 +287,7 @@ public class PluginRunnerET {
     
     public static void main(String[] args) throws IOException {
         PluginRunnerET it = new PluginRunnerET();
-        List<Integer> list = new ArrayList<>();
+        List<Integer> list = new ArrayList<Integer>();
         for(String acc : args){
             try{
             Integer accInt = Integer.valueOf(acc);
@@ -328,7 +306,7 @@ public class PluginRunnerET {
     
 
     private Map<String, File> exportWorkflowInis() throws IOException {
-        Map<String, File> iniParams = new HashMap<>();
+        Map<String, File> iniParams = new HashMap<String, File>();
         for(Entry<String, Integer> e : installedWorkflows.entrySet()){
             File workflowIni = exportINIFile(e.getKey(), e.getValue(), false);
             iniParams.put(e.getKey(), workflowIni);
@@ -339,14 +317,14 @@ public class PluginRunnerET {
     public void testLatestWorkflowsInternal(List<Integer> accessions) throws IOException {
         String output = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-installed", ReturnValue.SUCCESS, null);
         Assert.assertTrue("output should include installed workflows", output.contains("INSTALLED WORKFLOWS"));
-        Map<String, WorkflowInfo> latestWorkflows = new HashMap<>();
+        Map<String, WorkflowInfo> latestWorkflows = new HashMap<String, WorkflowInfo>();
         String[] lines = output.split(System.getProperty("line.separator"));
         for (String line : lines) {
             String[] lineParts = line.split("\t");
             try {
                 int workflow_accession = Integer.valueOf(lineParts[3]);
                 String workflowName = lineParts[0];
-                String path = lineParts[lineParts.length - 2];
+                String path = lineParts[4];
                 if (path.equals("null")) {
                     continue;
                 }
@@ -376,7 +354,7 @@ public class PluginRunnerET {
         }
         // setup thread pool
         ExecutorService threadPool = Executors.newFixedThreadPool(latestWorkflows.size());       
-        CompletionService<String> pool = new ExecutorCompletionService<>(threadPool);
+        CompletionService<String> pool = new ExecutorCompletionService<String>(threadPool);
         for (Entry<String, WorkflowInfo> e : latestWorkflows.entrySet()) {
             System.out.println("Testing " + e.getKey() + " " + e.getValue().sw_accession);
             

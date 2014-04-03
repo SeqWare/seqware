@@ -25,5 +25,5 @@ import java.util.Map;
  * @author dyuen
  */
 public class AccessionMap {
-    public static Map<String, String> accessionMap = new HashMap<>();
+    public static Map<String, String> accessionMap = new HashMap<String, String>();
 }

@@ -66,7 +66,7 @@ public class PlatformResource extends DatabaseResource {
         List<Platform> objects = (List<Platform>) testIfNull(ss.list());
         logger.debug("platforms: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<PlatformList> jaxbTool = new JaxbObject<>();
+        JaxbObject<PlatformList> jaxbTool = new JaxbObject<PlatformList>();
 
         PlatformList list = new PlatformList();
         list.setList(new ArrayList());

@@ -35,6 +35,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
+import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.restlet.Context;
@@ -79,7 +80,7 @@ public class RunWorkflowResource
                 } else {
                     Log.info("Could not find worklfow runs");
                 }
-                JaxbObject<WorkflowRunList2> jaxbTool = new JaxbObject<>();
+                JaxbObject<WorkflowRunList2> jaxbTool = new JaxbObject<WorkflowRunList2>();
                 line = jaxbTool.marshal(list);
             } catch (JAXBException ex) {
                 ex.printStackTrace();
@@ -108,7 +109,7 @@ public class RunWorkflowResource
             String iniFilesStr = request.getEntityAsText();
             boolean noMetadata = false;
             String parentAccessionsStr = "";
-            ArrayList<String> parentsLinkedToWR = new ArrayList<>();
+            ArrayList<String> parentsLinkedToWR = new ArrayList<String>();
 
             for (Parameter param : form) {
                 String name = param.getName();
@@ -142,7 +143,7 @@ public class RunWorkflowResource
                 return;
             }
             try {
-                JaxbObject<ReturnValue> jaxbTool = new JaxbObject<>();
+                JaxbObject<ReturnValue> jaxbTool = new JaxbObject<ReturnValue>();
                 line = jaxbTool.marshal(ret);
                 response.setEntity(line, MediaType.APPLICATION_XML);
             } catch (JAXBException ex) {

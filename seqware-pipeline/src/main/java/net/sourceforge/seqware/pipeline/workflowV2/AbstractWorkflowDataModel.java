@@ -1,12 +1,20 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
+import static net.sourceforge.seqware.common.util.Str.isSafe;
 import static net.sourceforge.seqware.common.util.Str.safe;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import net.sourceforge.seqware.common.util.Str;
+import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Environment;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
@@ -41,20 +49,20 @@ public abstract class AbstractWorkflowDataModel  {
 
     public AbstractWorkflowDataModel() {
     	this.env = new Environment();
-    	this.files = new LinkedHashMap<>();
+    	this.files = new LinkedHashMap<String, SqwFile>();
     	this.setTags(new HashMap<String,String>());
-    	this.configs = new HashMap<>();
+    	this.configs = new HashMap<String,String>();
     	this.workflow = new Workflow();
-    	this.dirs = new ArrayList<>();
-    	this.parentAccessions = new ArrayList<>();
+    	this.dirs = new ArrayList<String>();
+    	this.parentAccessions = new ArrayList<String>();
     }
     
     /**
      * Validates and potentially modifies the specified model in preparation for launching.
-     * @param model
+     * @param m the model to prepare
      */
     public static void prepare(AbstractWorkflowDataModel model) {
-      Map<String,SqwFile> m = new HashMap<>();
+      Map<String,SqwFile> m = new HashMap<String,SqwFile>();
       for (Map.Entry<String,SqwFile> e : model.files.entrySet()){
         String name = safe(e.getKey());
         if (m.containsKey(name)){
@@ -100,7 +108,6 @@ public abstract class AbstractWorkflowDataModel  {
      * case they are still provisioned properly with respect to the job (inputs before, outputs after)
      * when you define inputs/outputs here they are provisioned before all jobs
      * and after all jobs respectively
-     * @return 
      */
     public Map<String, SqwFile> setupFiles() {
     	return this.files;
@@ -189,7 +196,7 @@ public abstract class AbstractWorkflowDataModel  {
 	}
 	/**
 	 * need metadata writeback? user can override this setting by using --no-metadata or --metadata from command line
-     * @param b
+	 * @return
 	 */	
 	public void setMetadataWriteBack(boolean b) {
 		this.metadataWriteBack = b;
@@ -279,7 +286,8 @@ public abstract class AbstractWorkflowDataModel  {
 	}
 	/**
 	 * create a user defined directory before all jobs started
-	 * @param name:  directory name 
+	 * @param name:  directory name
+	 * @return 
 	 */
 	public void addDirectory(String name) {
 		this.dirs.add(name);
@@ -299,9 +307,6 @@ public abstract class AbstractWorkflowDataModel  {
 	 */
 	public SqwFile createFile(String name) {
 		SqwFile file = new SqwFile();
-                if (this.files.containsKey(name)){
-                    throw new RuntimeException("Cannot register more than one file to the same name");
-                }
 		this.files.put(name, file);
 		return file;		
 	}
@@ -311,7 +316,7 @@ public abstract class AbstractWorkflowDataModel  {
 	 * @return parent_accessions separated by ","
 	 */
 	public Collection<String> getParentAccessions() {
-		return new ArrayList<>(this.parentAccessions);
+		return new ArrayList<String>(this.parentAccessions);
 	}
 
 	/**

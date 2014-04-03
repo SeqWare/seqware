@@ -41,14 +41,12 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
   }
 
   /** {@inheritDoc} */
-  @Override
   public void update(Workflow workflow) {
     getHibernateTemplate().update(workflow);
     getSession().flush();
   }
 
   /** {@inheritDoc} */
-  @Override
   public void delete(Workflow workflow) {
     getHibernateTemplate().delete(workflow);
   }
@@ -58,9 +56,8 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
    *
    * @return a {@link java.util.List} object.
    */
-  @Override
   public List<Workflow> list() {
-    ArrayList<Workflow> workflows = new ArrayList<>();
+    ArrayList<Workflow> workflows = new ArrayList<Workflow>();
 
     List expmts = null;
 
@@ -77,9 +74,8 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Workflow> list(Registration registration) {
-    ArrayList<Workflow> workflows = new ArrayList<>();
+    ArrayList<Workflow> workflows = new ArrayList<Workflow>();
 
     // Limit the workflows to those owned by the user
     String query = "";
@@ -101,9 +97,8 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Workflow> listMyShared(Registration registration) {
-    List<Workflow> sharedWorkflows = new ArrayList<>();
+    List<Workflow> sharedWorkflows = new ArrayList<Workflow>();
     List<Workflow> workflows = list(registration);
     for (Workflow workflow : workflows) {
       /*
@@ -115,13 +110,11 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Workflow> listSharedWithMe(Registration registration) {
-    return new ArrayList<>();
+    return new ArrayList<Workflow>();
   }
 
   /** {@inheritDoc} */
-  @Override
   public List<Workflow> findByName(String name) {
     String query = "from Workflow as workflow where workflow.name = ?";
     Object[] parameters = { name };
@@ -130,7 +123,6 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
   }
 
   /** {@inheritDoc} */
-  @Override
   public Workflow findByID(Integer wfID) {
     String query = "from Workflow as workflow where workflow.workflowId = ?";
     Workflow workflow = null;
@@ -264,7 +256,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     }
     @SuppressWarnings("rawtypes")
     List result = sqlQuery.addEntity(Workflow.class).list();
-    List<Workflow> workflows = new ArrayList<>(result.size());
+    List<Workflow> workflows = new ArrayList<Workflow>(result.size());
     for (Object obj : result) {
       workflows.add((Workflow) obj);
     }

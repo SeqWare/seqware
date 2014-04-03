@@ -23,6 +23,7 @@ import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Restlet;
 import org.restlet.data.Form;
+import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 /**
@@ -55,9 +56,9 @@ public class BasicRestlet extends Restlet {
         Form form = request.getResourceRef().getQueryAsForm();
         queryValues = form.getValuesMap();
         if (queryValues == null) {
-            queryValues = new HashMap<>();
+            queryValues = new HashMap<String, String>();
         }
-        fields = new ArrayList<>();
+        fields = new ArrayList<String>();
 
         if (queryValues.containsKey("show")) {
             String[] fieldArr = queryValues.get("show").split(",");
@@ -66,7 +67,7 @@ public class BasicRestlet extends Restlet {
     }
 
     public static Map<String, String[]> queryMap(Request req) {
-      Map<String, String[]> m = new HashMap<>();
+      Map<String, String[]> m = new HashMap<String, String[]>();
       Form f = req.getResourceRef().getQueryAsForm();
       for (String name : f.getNames()){
         m.put(name, f.getValuesArray(name));

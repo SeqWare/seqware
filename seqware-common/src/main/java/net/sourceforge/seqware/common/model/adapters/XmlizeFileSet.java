@@ -32,25 +32,21 @@ import net.sourceforge.seqware.common.model.lists.FileList;
  */
 public class XmlizeFileSet extends XmlAdapter<FileList, Set<File>> {
 
-    /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+    /** {@inheritDoc} */
     @Override
     public Set<File> unmarshal(FileList vt) throws Exception {
-        Set<File> fileSet = new TreeSet<>();
+        Set<File> fileSet = new TreeSet<File>();
         for (File l : vt.getList()) {
             fileSet.add(l);
         }
         return fileSet;
     }
 
-    /** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+    /** {@inheritDoc} */
     @Override
     public FileList marshal(Set<File> bt) throws Exception {
         if (bt != null) {
-            List<File> list = new ArrayList<>(bt);
+            List<File> list = new ArrayList<File>(bt);
             FileList fileList = new FileList();
             fileList.setList(list);
             return fileList;

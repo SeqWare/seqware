@@ -42,7 +42,7 @@ public class ClientResourceInstance {
     }
 
     public static ClientResource getChild(String relativeURL) {
-        Map<String, String> settings = new HashMap<>();
+        Map<String, String> settings = new HashMap<String, String>();
         if (clientResource == null) {
             String hostURL = "http://localhost:8889"; 
             try {

@@ -16,19 +16,30 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
+import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.OrganismService;
+import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.lists.ExperimentList;
 import net.sourceforge.seqware.common.model.lists.OrganismList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.apache.log4j.Logger;
+import org.restlet.data.Status;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * <p>ExperimentResource class.</p>
@@ -66,7 +77,7 @@ public class OrganismResource extends DatabaseResource {
         List<Organism> objects = (List<Organism>) testIfNull(ss.list());
         logger.debug("organisms: " + objects.size() + " " + objects);
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<OrganismList> jaxbTool = new JaxbObject<>();
+        JaxbObject<OrganismList> jaxbTool = new JaxbObject<OrganismList>();
 
         OrganismList list = new OrganismList();
         list.setList(new ArrayList());

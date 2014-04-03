@@ -26,7 +26,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 public class SampleReportDAOHibernate extends HibernateDaoSupport implements SampleReportDAO {
 
   private static List<Status> statuses(List result){
-    List<Status> statuses = new ArrayList<>();
+    List<Status> statuses = new ArrayList<Status>();
     for (Object obj : result) {
       statuses.add(Status.valueOf((String) obj));
     }
@@ -57,7 +57,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   @Override
   public List<Workflow> getWorkflowsForStudy(Study study) {
     String query = "select distinct row.workflow from SampleReportRow as row where row.study.studyId = ?";
-    List<Workflow> usedWorkflows = new ArrayList<>();
+    List<Workflow> usedWorkflows = new ArrayList<Workflow>();
     Object[] parameters = { study.getStudyId() };
     List list = this.getHibernateTemplate().find(query, parameters);
     for (Object obj : list) {
@@ -72,7 +72,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   public List<Workflow> getWorkflows(SequencerRun seqRun) {
     if (seqRun != null) {
       String query = "select distinct row.workflow from SampleReportRow as row where row.sequencerRun.sequencerRunId = ?";
-      List<Workflow> usedWorkflows = new ArrayList<>();
+      List<Workflow> usedWorkflows = new ArrayList<Workflow>();
       Object[] parameters = { seqRun.getSequencerRunId() };
       List list = this.getHibernateTemplate().find(query, parameters);
       for (Object obj : list) {
@@ -81,7 +81,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
       return usedWorkflows;
     } else {
       String query = "select distinct row.workflow from SampleReportRow as row where row.sequencerRun.sequencerRunId != null";
-      List<Workflow> usedWorkflows = new ArrayList<>();
+      List<Workflow> usedWorkflows = new ArrayList<Workflow>();
       List list = this.getHibernateTemplate().find(query);
       for (Object obj : list) {
         usedWorkflows.add((Workflow) obj);
@@ -194,7 +194,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
   @Override
   public List<Sample> getChildSamples(Study study) {
     String query = "select distinct row.childSample from SampleReportRow as row where row.study.studyId = ?";
-    List<Sample> childSamples = new ArrayList<>();
+    List<Sample> childSamples = new ArrayList<Sample>();
     Object[] parameters = { study.getStudyId() };
     // this.getHibernateTemplate().setFetchSize(5000);
     List list = this.getHibernateTemplate().find(query, parameters);
@@ -319,7 +319,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
       result = this.getSession().createQuery(query).setFirstResult(offset).setMaxResults(limit).list();
     }
 
-    List<SequencerRunReportId> keys = new ArrayList<>();
+    List<SequencerRunReportId> keys = new ArrayList<SequencerRunReportId>();
 
     for (Object obj : result) {
       Object[] objArr = (Object[]) obj;

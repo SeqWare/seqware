@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.seqware.common.business.InvoiceService;
+import net.sourceforge.seqware.common.business.WorkflowService;
 import net.sourceforge.seqware.common.model.InvoiceState;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.solexatools.Security;
@@ -31,9 +32,7 @@ public class OpenInvoiceController  extends BaseCommandController {
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
         
-	/** {@inheritDoc}
-     * @return
-     * @throws java.lang.Exception  */
+	/** {@inheritDoc} */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request, HttpServletResponse response)
 		throws Exception {
@@ -43,7 +42,7 @@ public class OpenInvoiceController  extends BaseCommandController {
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
+		HashMap<String,Object>	model			= new HashMap<String,Object>();
 
 		model.put("pendingInvoiceList", getInvoiceService().list(registration, InvoiceState.pending));
                 model.put("openInvoiceList", getInvoiceService().list(registration, InvoiceState.open));
