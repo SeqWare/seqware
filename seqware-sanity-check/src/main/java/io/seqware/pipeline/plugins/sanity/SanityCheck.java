@@ -1,10 +1,7 @@
 package io.seqware.pipeline.plugins.sanity;
 
-
-
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,15 +24,19 @@ import org.openide.util.lookup.ServiceProvider;
  * A database validation tool for your SeqWare metadb
  *
  * @author dyuen ProviderFor(PluginInterface.class)
+ * @author Raunaq Suri
  * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public final class SanityCheck extends Plugin {
-    public static final int NUMBER_TO_OUTPUT = 100;
 
+    public static final int NUMBER_TO_OUTPUT = 100;
+    private boolean masterMode = false;
+    private boolean hasDBSettings = true;
 
     /**
-     * <p>Constructor for HelloWorld.</p>
+     * <p>
+     * Constructor for HelloWorld.</p>
      */
     public SanityCheck() {
         super();
@@ -47,17 +48,19 @@ public final class SanityCheck extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
+     *
+     * @return
      */
     @Override
     public final ReturnValue init() {
-         try {
+        try {
             HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
             // do a defensive check to see if we have a direct database connection available
             if (settings.get("SW_DB_SERVER") == null
                     || settings.get("SW_DB") == null
                     || settings.get("SW_DB_USER") == null
                     || settings.get("SW_DB_PASS") == null) {
+                hasDBSettings = false;
                 ReturnValue ret = new ReturnValue();
                 System.out.println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
                 ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
@@ -76,7 +79,8 @@ public final class SanityCheck extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
+     *
+     * @return
      */
     @Override
     public ReturnValue do_test() {
@@ -89,26 +93,27 @@ public final class SanityCheck extends Plugin {
      */
     /**
      * {@inheritDoc}
-     * @return 
+     *
+     * @return
      */
     @Override
     public final ReturnValue do_run() {
         ReturnValue ret = new ReturnValue();
         Collection<SanityCheckPluginInterface> plugins = (Collection<SanityCheckPluginInterface>) Lookup.getDefault().lookupAll(SanityCheckPluginInterface.class);
         MetadataDB metadataDB = null;
-        try{
-             metadataDB = DBAccess.get();
-        } catch(RuntimeException e){
-            if (e.getMessage().equals(MetadataFactory.NO_DATABASE_CONFIG)){
+        try {
+            metadataDB = DBAccess.get();
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals(MetadataFactory.NO_DATABASE_CONFIG)) {
                 System.err.println("Warning: No or invalid SeqWare metadb settings");
-            } else{
+            } else {
                 throw e;
             }
         }
-        
+
         List<SanityCheckPluginInterface> pluginList = new ArrayList<>();
         pluginList.addAll(plugins);
-        Comparator<SanityCheckPluginInterface> comp =  new Comparator<SanityCheckPluginInterface>(){
+        Comparator<SanityCheckPluginInterface> comp = new Comparator<SanityCheckPluginInterface>() {
             @Override
             public int compare(SanityCheckPluginInterface o1, SanityCheckPluginInterface o2) {
                 Integer n1 = new Integer(o1.getPriority());
@@ -117,20 +122,26 @@ public final class SanityCheck extends Plugin {
             }
         };
         Collections.sort(pluginList, comp);
-        
-        for(SanityCheckPluginInterface plugin : pluginList){
+
+        //removes the tests that don't need to be ran
+        removeChecks(pluginList);
+
+        System.out.println(pluginList.toString());
+
+        for (SanityCheckPluginInterface plugin : pluginList) {
             System.err.println("Running " + plugin.getClass().getSimpleName());
-            try{        
-                boolean check = plugin.check(metadataDB == null? null : new QueryRunner(metadataDB), metadata);
-                if (!check){
+            try {
+
+                boolean check = plugin.check(metadataDB == null ? null : new QueryRunner(metadataDB), metadata);
+                if (!check) {
                     System.err.println("Failed check: " + plugin.getClass().getSimpleName());
                     System.err.println(plugin.getDescription());
                     ret.setExitStatus(ReturnValue.FAILURE);
                     return ret;
-                } else{
+                } else {
                     System.err.println("Passed check: " + plugin.getClass().getSimpleName());
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.fatal("Plugin " + plugin.getClass().getSimpleName() + " died", e);
                 System.err.println("Crashed and failed check: " + plugin.getClass().getSimpleName());
                 System.err.println(plugin.getDescription());
@@ -141,16 +152,37 @@ public final class SanityCheck extends Plugin {
         return new ReturnValue();
     }
 
+    /**
+     * Remove all checks that are not necessary
+     *
+     * @param pluginList the list of plugins
+     */
+    private void removeChecks(List<SanityCheckPluginInterface> pluginList) {
+        for (int i = pluginList.size() - 1; i > -1; i--) {
+
+            SanityCheckPluginInterface plugin = pluginList.get(i);
+            if (!hasDBSettings && plugin.isDBTest()) {
+                pluginList.remove(i);
+
+            } else if (plugin.isTutorialTest()) {
+                pluginList.remove(i);
+            } else if (!masterMode && plugin.isMasterTest()) {
+                pluginList.remove(i);
+            }
+
+        }
+    }
 
     /**
-     * <p>get_description.</p>
+     * <p>
+     * get_description.</p>
      *
      * @return a {@link java.lang.String} object.
      */
     @Override
     public final String get_description() {
         return ("A sanity check tool for your SeqWare install");
-    }   
+    }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         SanityCheck mp = new SanityCheck();
