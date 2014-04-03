@@ -29,7 +29,6 @@ import net.sourceforge.seqware.common.model.lists.ProcessingList;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.restlet.Context;
@@ -66,7 +65,7 @@ public class ProcessIdProcessResource extends BasicRestlet {
         ProcessingService s = BeanFactory.getProcessingServiceBean();
         Processing p = (Processing) testIfNull(s.findBySWAccession(parseClientInt(id)));
 
-        JaxbObject<ProcessingList> jaxbTool = new JaxbObject<ProcessingList>();
+        JaxbObject<ProcessingList> jaxbTool = new JaxbObject<>();
 
         Set<Processing> parents = p.getParents();
         ProcessingList list = new ProcessingList();

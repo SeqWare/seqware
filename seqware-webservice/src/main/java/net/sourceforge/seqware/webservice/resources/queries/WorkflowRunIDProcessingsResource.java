@@ -30,7 +30,6 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.lists.ProcessingList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.restlet.Context;
@@ -68,7 +67,7 @@ public class WorkflowRunIDProcessingsResource extends BasicRestlet {
             ProcessingList list = new ProcessingList();
             list.setList(procs);
 
-            JaxbObject<ProcessingList> jaxbTool = new JaxbObject<ProcessingList>();
+            JaxbObject<ProcessingList> jaxbTool = new JaxbObject<>();
 
             Document doc = XmlTools.marshalToDocument(jaxbTool, list);
 
@@ -89,7 +88,7 @@ public class WorkflowRunIDProcessingsResource extends BasicRestlet {
     public List<Processing> collectProcessingList(int wrSWA) throws SQLException {
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
         WorkflowRun run = (WorkflowRun)testIfNull(wrs.findBySWAccession(wrSWA));
-        SortedSet<Processing> procs = new TreeSet<Processing>(new Comparator<Processing>(){
+        SortedSet<Processing> procs = new TreeSet<>(new Comparator<Processing>(){
             @Override
             public int compare(Processing t, Processing t1) {
                 return t.getCreateTimestamp().compareTo(t1.getCreateTimestamp());
@@ -101,7 +100,7 @@ public class WorkflowRunIDProcessingsResource extends BasicRestlet {
         if (run.getOffspringProcessings()!=null)
             procs.addAll(run.getOffspringProcessings());
         
-        List<Processing> procDto = new ArrayList<Processing>();
+        List<Processing> procDto = new ArrayList<>();
         
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         for (Processing p : procs) {

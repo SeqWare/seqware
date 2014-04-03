@@ -67,7 +67,7 @@ public class ExperimentIDFilter extends BasicResource {
         }
 
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-        JaxbObject<ExperimentList> jaxbTool = new JaxbObject<ExperimentList>();
+        JaxbObject<ExperimentList> jaxbTool = new JaxbObject<>();
 
         ExperimentList eList = new ExperimentList();
         eList.setList(new ArrayList());

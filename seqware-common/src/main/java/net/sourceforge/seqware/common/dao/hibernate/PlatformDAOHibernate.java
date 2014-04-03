@@ -28,8 +28,9 @@ public class PlatformDAOHibernate extends HibernateDaoSupport implements Platfor
     }
 
     /** {@inheritDoc} */
+    @Override
     public List<Platform> list(Registration registration) {
-        ArrayList<Platform> platforms = new ArrayList<Platform>();
+        ArrayList<Platform> platforms = new ArrayList<>();
         if (registration == null) {
             return platforms;
         }
@@ -46,6 +47,7 @@ public class PlatformDAOHibernate extends HibernateDaoSupport implements Platfor
     }
 
     /** {@inheritDoc} */
+    @Override
     public Platform findByID(Integer id) {
         String query = "from Platform as p where p.platformId = ?";
         Platform obj = null;
@@ -76,7 +78,7 @@ public class PlatformDAOHibernate extends HibernateDaoSupport implements Platfor
     /** {@inheritDoc} */
     @Override
     public List<Platform> list() {
-        ArrayList<Platform> platforms = new ArrayList<Platform>();
+        ArrayList<Platform> platforms = new ArrayList<>();
 
         List expmts = this.getHibernateTemplate().find("from Platform as platform order by platform.platformId asc" // desc
                 );

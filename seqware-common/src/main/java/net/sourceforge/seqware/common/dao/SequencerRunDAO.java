@@ -18,6 +18,7 @@ public interface SequencerRunDAO {
      * <p>insert.</p>
      *
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
+     * @return 
      */
     public Integer insert(SequencerRun sequencerRun);
 
@@ -26,6 +27,7 @@ public interface SequencerRunDAO {
      *
      * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
+     * @return 
      */
     public Integer insert(Registration registration, SequencerRun sequencerRun);
 
@@ -33,6 +35,7 @@ public interface SequencerRunDAO {
      * <p>insert.</p>
      *
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
+     * @return 
      */
     public Integer insert(SequencerRunWizardDTO sequencerRun);
 
@@ -41,6 +44,7 @@ public interface SequencerRunDAO {
      *
      * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
+     * @return 
      */
     public Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun);
 

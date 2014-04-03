@@ -101,6 +101,16 @@ OOZIE_JOBTRACKER=localhost:8021
 OOZIE_NAMENODE=hdfs://localhost:8020
 OOZIE_QUEUENAME=default
 OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
+
+# Number of times that Oozie will retry user steps in workflows
+OOZIE_RETRY_MAX=5
+# Minutes to wait before retry for user steps in workflows
+OOZIE_RETRY_INTERVAL=5
+# Above this threshold, provision file events on the same job/workflow will be batched together  
+OOZIE_BATCH_THRESHOLD=10
+# Number of provision file events that should be batched together
+OOZIE_BATCH_SIZE=100
+
 MAPRED.JOB.TRACKER=localhost:8021
 FS.DEFAULTFS=hdfs://localhost:8020
 FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem

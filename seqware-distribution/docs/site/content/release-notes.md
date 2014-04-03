@@ -9,6 +9,92 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+
+## 1.0.12 (2014-03-19)
+
+Note that the fix for 1860 creates an update to the oozie-sge plugin (version 1.0.2). The fix for SEQWARE-1848 may also require some special care, previous versions of the 1.0.X workflow launcher would run steps in a workflow using system Java. 1.0.12 enforces that the bundled Java is used; this will cause problems for workflows bundled with 1.0.11 so either launch those with 1.0.11 or rebundle with Java 1.7. Older bundles should be unaffected.  
+
+Other changes are largely self-explanatory and generally improve usability.  
+
+### Defect
+* [SEQWARE-1382] - Check to see if the SW_BUNDLE_DIR is writeable
+* [SEQWARE-1847] - Admin Deletion tool: Optimistic Lock Exception / no version number in the identity map 
+* [SEQWARE-1848] - GenericCommandRunner is not executed with the workflow's bundled java
+
+### Task
+* [SEQWARE-1441] - Get more workflow information from command line
+* [SEQWARE-1596] - obscure NullPointer exception when getProperty() hits a non-existing parameter
+* [SEQWARE-1696] - Installing a bundle using symlink
+* [SEQWARE-1845] - ProvisionFiles doesn't fail and return an appropriate return value/message when an inappropriate input-file-metadata is given
+* [SEQWARE-1860] - Add sudo for "seqware workflow-run cancel"/qdel
+
+### Technical task
+* [SEQWARE-1657] - Determine procedure for dealing with partially completed workflows
+
+## 0.13.6.16 (2014-03-19)
+* Introduces a client timeout and exception catching for low-level calls to the web service
+* Performance improvement for authentication checking in the processing hierarchy
+* Adding verbose mode to the module runner
+
+## 1.0.11 (2014-02-14)
+### Task
+* Updating SeqWare to build and test against Java 7 and Tomcat7
+* Automatically batch file provision jobs above a threshold of OOZIE_BATCH_THRESHOLD into batches of OOZIE_BATCH_SIZE
+* Allow workflow authors to manually batch BashJobs into batches
+* [SEQWARE-1811] - Some dependencies aren't available when building seqware-admin-webservice
+* [SEQWARE-1837] - Fix workflow filtering for workflow step time report
+
+## 1.0.10 (2014-01-27)
+
+### Improvement
+* [SEQWARE-1803] - SeqWare 1.0 support for specifying workflow parameters from command line
+
+## 1.0.9 (2014-01-07)
+
+### Defect
+* [SEQWARE-1807] - Oozie workflow jobs/actions do not relaunch - workflow fails
+
+### Improvement
+* [SEQWARE-1743] - Uninformative exceptions in Java workflow building
+
+### Story
+* [SEQWARE-1770] - Installed workflows have incorrect permissions on exectuables
+
+### Task
+* [SEQWARE-1817] - oozie development environments should use postgres
+* [SEQWARE-1819] - .seqware/settings opened too many times on workflow launch with large workflows
+
+## 0.13.6.15 (2014-01-07)
+* BasicDecider includes a compatibility mode to run against legacy 0.13.6.5 web services
+
+## 1.0.8 (2013-12-12)
+### Defect
+* [SEQWARE-1783] - SeqWare Admin WS does not create SeqWare Accessions
+* [SEQWARE-1804] - SqwFile parent accessions do not get passed to Command Runner
+
+### Task
+* [SEQWARE-1766] - CLI: State where stdout and stderr are saved to
+* [SEQWARE-1788] - SymlinkReporter does not report correct infomation for files provisioned out with setParentAccessions
+* [SEQWARE-1790] - Migrate the Oozie-SGE code to SeqWare
+* [SEQWARE-1791] - Get vagrant provisioning of multiple SGE nodes working
+* [SEQWARE-1793] - Implement a replacement for the symlinkreporter based on the file-provenance-report
+* [SEQWARE-1802] - File records missing in file provenance report
+* [SEQWARE-1805] - BasicDecider adding support for filtering by barcode (IUS) and lane
+* [SEQWARE-1808] - Ensure that BasicDecider only uses input from completed workflow runs
+
+### Technical task
+* [SEQWARE-1670] - SymLinker doesn't report all connections to GATK runs
+* [SEQWARE-1704] - seqware pipeline: symlinkreporter should error out if any ws requests fail in dump all mode
+* [SEQWARE-1762] - skipped sequencer runs are still shown in the symlink reporter
+* [SEQWARE-1763] - missing links between workflow run and IUS for GATKAnnotateAndSort and SomaticClassifier workflow
+* [SEQWARE-1779] - Missing CLI functionality in seqware files report
+* [SEQWARE-1795] - Plugin to run through CLI and pre-CLI tutorials
+* [SEQWARE-1796] - Create tool to verify that db settings (if present) match web service
+
+## 0.13.6.14 (2013-12-12)
+* BasicDecider now uses only input files from completed workflow runs
+* Disabled linking behaviour between provision out steps which caused large numbers of provision out steps to operate in series rather than in parallel 
+
 ## 1.0.7 (2013-11-13)
 
 ### Defect

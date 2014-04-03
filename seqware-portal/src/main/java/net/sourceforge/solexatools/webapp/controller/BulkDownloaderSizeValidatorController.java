@@ -1,6 +1,5 @@
 package net.sourceforge.solexatools.webapp.controller;
 
-import java.io.BufferedInputStream;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -23,7 +22,9 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 public class BulkDownloaderSizeValidatorController extends
 		BaseCommandController {
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

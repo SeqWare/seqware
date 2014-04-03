@@ -1,9 +1,7 @@
 package net.sourceforge.seqware.common.util.filetools.lock;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.channels.FileLock;
@@ -19,18 +17,23 @@ public class LockingFileTools {
   
   private final static int RETRIES = 100;
 
+  public static boolean lockAndAppend(File file, String output) {
+      return lockAndWrite(file, output, true);
+  }
+  
   /**
    * Try to acquire lock. If we can, write the String to file and then release
    * the lock
    *
    * @param file a {@link java.io.File} object.
    * @param output a {@link java.lang.String} object.
+     * @param append
    * @return a boolean.
    */
-  public static boolean lockAndAppend(File file, String output) {
+  public static boolean lockAndWrite(File file, String output, boolean append) {
     for (int i=0; i<RETRIES; i++) {
       try {
-        FileOutputStream fos = new FileOutputStream(file, true);
+        FileOutputStream fos = new FileOutputStream(file, append);
         FileLock fl = fos.getChannel().tryLock();
         if (fl != null) {
           OutputStreamWriter fw = new OutputStreamWriter(fos);          

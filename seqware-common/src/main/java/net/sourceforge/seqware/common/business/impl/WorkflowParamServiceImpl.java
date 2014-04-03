@@ -30,6 +30,7 @@ public class WorkflowParamServiceImpl implements WorkflowParamService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public void setWorkflowParamDAO(WorkflowParamDAO workflowParamDAO) {
     this.workflowParamDAO = workflowParamDAO;
   }
@@ -41,16 +42,19 @@ public class WorkflowParamServiceImpl implements WorkflowParamService {
   }
 
   /** {@inheritDoc} */
+  @Override
   public void update(WorkflowParam workflowParam) {
     workflowParamDAO.update(workflowParam);
   }
 
   /** {@inheritDoc} */
+  @Override
   public void delete(WorkflowParam workflowParam) {
     workflowParamDAO.delete(workflowParam);
   }
 
   /** {@inheritDoc} */
+  @Override
   public WorkflowParam findByID(Integer id) {
     WorkflowParam workflowParam = null;
     if (id != null) {

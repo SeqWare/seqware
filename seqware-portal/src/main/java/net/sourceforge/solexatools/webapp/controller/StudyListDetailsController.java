@@ -25,7 +25,6 @@ import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.Constant;
 import net.sourceforge.solexatools.util.PageInfo;
@@ -97,7 +96,9 @@ public class StudyListDetailsController extends BaseCommandController {
     return isAsc;
   }
 
-  /** {@inheritDoc} */
+  /** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
   @Override
   protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response)
       throws Exception {
@@ -128,14 +129,14 @@ public class StudyListDetailsController extends BaseCommandController {
     // Lane lane = new Lane();
     IUS ius = new IUS();
     Processing proc = new Processing();
-    Map<WorkflowRun, Set<Processing>> wfrProc = new HashMap<WorkflowRun, Set<Processing>>();
+    Map<WorkflowRun, Set<Processing>> wfrProc = new HashMap<>();
 
     PageInfo pageInfo = null;
     Boolean isHasError = false;
     String errorMessage = "";
 
-    List<Study> listAll = new ArrayList<Study>();
-    List<Study> listView = new ArrayList<Study>();
+    List<Study> listAll = new ArrayList<>();
+    List<Study> listView = new ArrayList<>();
 
     String root = (String) request.getParameter("root");
     System.err.println("ROOT: " + root);
@@ -257,7 +258,7 @@ public class StudyListDetailsController extends BaseCommandController {
     for (Processing child : proc.getChildren()) {
       Set<Processing> processings = wfrProc.get(child.getWorkflowRun());
       if (processings == null) {
-        processings = new HashSet<Processing>();
+        processings = new HashSet<>();
       }
       processings.add(child);
       if (child.getWorkflowRun() != null) {
@@ -267,7 +268,7 @@ public class StudyListDetailsController extends BaseCommandController {
   }
 
   private List<SampleDetailsLineItem> getSampleDetails(Sample sam) {
-    List<SampleDetailsLineItem> sampleDetails = new ArrayList<SampleDetailsLineItem>();
+    List<SampleDetailsLineItem> sampleDetails = new ArrayList<>();
 
     for (IUS ius : sam.getIUS()) {
       Lane lane = ius.getLane();

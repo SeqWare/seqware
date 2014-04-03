@@ -3,6 +3,7 @@ package net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import net.sourceforge.seqware.common.security.PermissionsAware;
@@ -18,7 +19,7 @@ import org.apache.log4j.Logger;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowParam implements Serializable, Comparable<WorkflowParam>, PermissionsAware {
+public class WorkflowParam extends PermissionsAware implements Serializable, Comparable<WorkflowParam> {
 
     /**
      *
@@ -46,7 +47,8 @@ public class WorkflowParam implements Serializable, Comparable<WorkflowParam>, P
         super();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param that */
     @Override
     public int compareTo(WorkflowParam that) {
         if (that == null) {
@@ -70,7 +72,8 @@ public class WorkflowParam implements Serializable, Comparable<WorkflowParam>, P
         return new ToStringBuilder(this).append("swAccession", getWorkflowParamId()).toString();
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @param other */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -377,25 +380,28 @@ public class WorkflowParam implements Serializable, Comparable<WorkflowParam>, P
         this.files = files;
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return
+     * @throws java.lang.CloneNotSupportedException  */
     @Override
     public WorkflowParam clone() throws CloneNotSupportedException {
         WorkflowParam wp = (WorkflowParam) super.clone();
 
         List newFiles = (files == null ? null : new ArrayList(files));
         wp.setFiles(newFiles);
-        SortedSet newValues = (values == null ? null : new TreeSet<WorkflowParamValue>(values));
+        SortedSet newValues = (values == null ? null : new TreeSet<>(values));
         wp.setValues(newValues);
         return wp;
     }
-
-    /** {@inheritDoc} */
+    
+    /** {@inheritDoc}
+     * @return  */
     @Override
-    public boolean givesPermission(Registration registration) {
+    public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = true;
 
         if (workflow != null) {
-            hasPermission = workflow.givesPermission(registration);
+            hasPermission = workflow.givesPermission(registration, considered);
         } else {//orphaned WorkflowParam
             if (registration.isLIMSAdmin()) {
                 Logger.getLogger(WorkflowParam.class).warn("Modifying Orphan WorkflowParam: " + this.getDisplayName());

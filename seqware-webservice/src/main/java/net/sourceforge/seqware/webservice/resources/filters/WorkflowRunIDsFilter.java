@@ -48,7 +48,8 @@ public class WorkflowRunIDsFilter extends ServerResource {
 
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     protected Representation delete() {
         if (isTest) {
@@ -60,7 +61,8 @@ public class WorkflowRunIDsFilter extends ServerResource {
         }
     }
 
-    /** {@inheritDoc} */
+    /** {@inheritDoc}
+     * @return  */
     @Override
     protected Representation get() {
         if (isTest) {

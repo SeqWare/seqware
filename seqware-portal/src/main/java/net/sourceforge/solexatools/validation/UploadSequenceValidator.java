@@ -26,7 +26,10 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 		super();
 	}
 	
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param clazz
+     * @return  */
+        @Override
 	public boolean supports(Class clazz) {
 		return UploadSequence.class.equals(clazz);
 	}
@@ -35,7 +38,10 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 	 * {@inheritDoc}
 	 *
 	 * Validates the specified Object.
+     * @param obj
+     * @param errors
 	 */
+        @Override
 	public void validate(Object obj, Errors errors) {
 		UploadSequence comm = (UploadSequence) obj;
 		
@@ -142,7 +148,9 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 	}
 	
 	/* TODO: this needs to be made more flexible, there are multiple possible extensions for the same file type */
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @param errors
+     * @param fileTypeId */
 	public void validateExtension(MultipartFile fileOne, MultipartFile fileTwo, 
 			Integer fileTypeId, Errors errors)
 	{
@@ -204,11 +212,13 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 	 *
 	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
 	 */
+        @Override
 	public FileService getFileService() {
 		return fileService;
 	}
 
 	/** {@inheritDoc} */
+        @Override
 	public void setFileService(FileService fileService) {
 		this.fileService = fileService;
 	}
@@ -218,11 +228,13 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
 	 *
 	 * @return a {@link net.sourceforge.seqware.common.business.FileTypeService} object.
 	 */
+        @Override
 	public FileTypeService getFileTypeService() {
 		return fileTypeService;
 	}
 
 	/** {@inheritDoc} */
+        @Override
 	public void setFileTypeService(FileTypeService fileTypeService) {
 		this.fileTypeService = fileTypeService;
 	}

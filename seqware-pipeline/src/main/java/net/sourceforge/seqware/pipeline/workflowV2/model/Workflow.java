@@ -15,8 +15,8 @@ public class Workflow {
 
 	
 	public Workflow() {
-		this.jobs = new ArrayList<AbstractJob>();
-		this.tests = new ArrayList<String>();
+		this.jobs = new ArrayList<>();
+		this.tests = new ArrayList<>();
 	}
 	
 	/**
@@ -67,6 +67,12 @@ public class Workflow {
 		this.jobs.add(job);
 		return job;
 	}
+        
+        public JobBatch createJobBatch(String algo){
+            JobBatch job = new JobBatch(algo);
+            this.jobs.add(job);
+            return job;
+        }
 	
 	public Job createPerlJob(String algo, String script) {
 		AbstractJob job = new PerlJob(algo, "", script);

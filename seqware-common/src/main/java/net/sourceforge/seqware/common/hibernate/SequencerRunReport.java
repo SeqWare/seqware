@@ -41,8 +41,8 @@ public class SequencerRunReport {
     public String makeReport(String identity) {
 
         StringBuilder s = new StringBuilder();
-        Map<String, Row> rows = new HashMap<String, Row>();
-        SortedMap<String, String> workflows = new TreeMap<String, String>();
+        Map<String, Row> rows = new HashMap<>();
+        SortedMap<String, String> workflows = new TreeMap<>();
 
         SequencerRunService srs = BeanFactory.getSequencerRunServiceBean();
         List<SequencerRun> runs = srs.list();
@@ -118,7 +118,7 @@ public class SequencerRunReport {
         s.append(row.getSampleName()).append("\t");
         s.append(row.getSampleSwa()).append("\t");
 
-        SortedMap<String, String> w2 = new TreeMap<String, String>();
+        SortedMap<String, String> w2 = new TreeMap<>();
         for (String workflowSwa : workflows.keySet()) {
             w2.put(workflowSwa, "");
         }
@@ -191,7 +191,7 @@ public class SequencerRunReport {
         private String iusSwa;
         private String sampleName;
         private String sampleSwa;
-        private SortedMap<String, String> workflowsAndRuns = new TreeMap<String, String>();
+        private SortedMap<String, String> workflowsAndRuns = new TreeMap<>();
 
         public Row(Date date, String runName, String runSwa, String laneName, String laneSwa, String iusTag, String iusSwa,
                 String sampleName, String sampleSwa) {

@@ -39,7 +39,9 @@ public class UploadSequenceSetupController extends BaseCommandController{
 		setSupportedMethods(new String[] {METHOD_GET});
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc}
+     * @return
+     * @throws java.lang.Exception  */
 	@Override
 	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
 												 HttpServletResponse response)
@@ -50,7 +52,7 @@ public class UploadSequenceSetupController extends BaseCommandController{
 			return new ModelAndView("redirect:/login.htm");
 
 		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<String,Object>();
+		HashMap<String,Object>	model			= new HashMap<>();
 		Sample				sample		= getRequestedSample(request);
 		
 		UploadSequence uploadSequence = new UploadSequence();
