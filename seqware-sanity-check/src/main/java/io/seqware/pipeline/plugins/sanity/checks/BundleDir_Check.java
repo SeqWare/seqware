@@ -62,7 +62,7 @@ public class BundleDir_Check implements SanityCheckPluginInterface {
         }
 
         File bundleDir = new File(settings.get("SW_BUNDLE_DIR"));
-        File bundleRepoDir = new File("SW_BUNDLE_REPO_DIR");
+        File bundleRepoDir = new File(settings.get("SW_BUNDLE_REPO_DIR"));
         if (bundleDir.exists() && bundleRepoDir.exists()) {
             if (bundleDir.canRead() && bundleDir.canWrite() && bundleRepoDir.canRead() && bundleRepoDir.canWrite()) {
             } else {
