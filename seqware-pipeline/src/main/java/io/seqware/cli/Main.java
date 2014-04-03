@@ -1,5 +1,6 @@
 package io.seqware.cli;
 
+import com.google.common.collect.ObjectArrays;
 import io.seqware.Reports;
 import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
@@ -182,8 +183,12 @@ public class Main {
   }
 
   public static final AtomicBoolean DEBUG = new AtomicBoolean(false);
+  public static final AtomicBoolean VERBOSE = new AtomicBoolean(false);
 
   private static void run(String... args) {
+    if (VERBOSE.get()){
+        args = ObjectArrays.concat("--verbose", args);
+    }
     if (DEBUG.get()) {
       for (int i = 0; i < args.length; i++) {
         if (args[i].contains(" ")) {
@@ -1536,6 +1541,9 @@ public class Main {
     List<String> args = new ArrayList<>(Arrays.asList(argv));
     if (flag(args, "--debug")) {
       DEBUG.set(true);
+    }
+    if (flag(args, "--verbose")) {
+      VERBOSE.set(true);
     }
 
     if (isHelp(args, true)) {
