@@ -32,7 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
 public final class SanityCheck extends Plugin {
 
     public static final int NUMBER_TO_OUTPUT = 100;
-    private boolean masterMode = true;
+    private boolean masterMode = false;
     private boolean hasDBSettings = true;
 
     /**
