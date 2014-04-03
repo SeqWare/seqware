@@ -32,7 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
  * Checks to ensure that you are connected to hdfs by creating a file and
  * deleting it on exit
  *
- * @author rsuri
+ * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
 public class HDFS_Check implements SanityCheckPluginInterface {
