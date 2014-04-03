@@ -10,6 +10,28 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 -->
 
 
+## 1.0.13 (2014-04-03)
+
+This release contains mostly usability improvements. 
+Core fixes include a fix for batched file provision events attached to jobs and the introduction of order to columns in the file provenance report relating to sample parents. 
+
+### Defect
+* [SEQWARE-1372] - Emails in the registration table cannot have capital letters
+* [SEQWARE-1867] - Multiple values are delimited with the same key-value pair delimiter in the file provenance report
+* [SEQWARE-1874] - Inconsistent ordering of sample parent names in file provenance report
+
+### Improvement
+* [SEQWARE-1254] - Add new attributes into the file report
+* [SEQWARE-1431] - Tool to clean up installed workflows
+* [SEQWARE-1857] - Additional file-provenance report filter parameters
+
+### Task
+* [SEQWARE-789] - clean up processing table, remove all the orphan processing rows
+* [SEQWARE-1631] - Java workflows: Print a warning when more than one file is registered to the same name
+* [SEQWARE-1866] - Write descriptions for plugins and a plugin that parses this information
+* [SEQWARE-1868] - BasicDecider parent workflow accession filtering should be applied at file report level
+
+
 ## 1.0.12 (2014-03-19)
 
 Note that the fix for 1860 creates an update to the oozie-sge plugin (version 1.0.2). The fix for SEQWARE-1848 may also require some special care, previous versions of the 1.0.X workflow launcher would run steps in a workflow using system Java. 1.0.12 enforces that the bundled Java is used; this will cause problems for workflows bundled with 1.0.11 so either launch those with 1.0.11 or rebundle with Java 1.7. Older bundles should be unaffected.  
