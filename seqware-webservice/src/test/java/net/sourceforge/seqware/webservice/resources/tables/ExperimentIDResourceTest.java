@@ -28,7 +28,7 @@ public class ExperimentIDResourceTest extends DatabaseResourceIDTest {
 
 	public ExperimentIDResourceTest() {
         super("/experiments/6157");
-        jo = new JaxbObject<Experiment>();
+        jo = new JaxbObject<>();
         o = new Experiment();
     }
 

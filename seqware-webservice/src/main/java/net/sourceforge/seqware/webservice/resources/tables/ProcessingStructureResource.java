@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.webservice.resources.BasicResource;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 
 import org.apache.commons.dbutils.ResultSetHandler;
@@ -50,7 +49,7 @@ public class ProcessingStructureResource extends BasicRestlet {
             return;
         }
         String[] accessions = swAccession.trim().split(",");
-        List<Integer> accessionList = new ArrayList<Integer>();
+        List<Integer> accessionList = new ArrayList<>();
         for(String a: accessions) {
             try {
                 Integer i = parseClientInt(a);
@@ -74,7 +73,7 @@ public class ProcessingStructureResource extends BasicRestlet {
                 response.setStatus(Status.CLIENT_ERROR_BAD_REQUEST, "Invalid swAccession");
                 return;                   
             }
-            Set<String> cache = new HashSet<String>();
+            Set<String> cache = new HashSet<>();
             this.visitNode(root, sb, cache);
         }
         
@@ -128,7 +127,7 @@ public class ProcessingStructureResource extends BasicRestlet {
 		  children = DBAccess.get().executeQuery(sql, new ResultSetHandler<List<DotNode>>() {
         @Override
         public List<DotNode> handle(ResultSet rs) throws SQLException {
-          List<DotNode> children = new ArrayList<DotNode>();
+          List<DotNode> children = new ArrayList<>();
           while(rs.next()) {
             DotNode c = new DotNode(rs.getInt("child_id"));
             c.setAlgo(rs.getString("algorithm"));
@@ -157,7 +156,7 @@ public class ProcessingStructureResource extends BasicRestlet {
 		children = DBAccess.get().executeQuery(sql, new ResultSetHandler<List<DotNode>>(){
       @Override
       public List<DotNode> handle(ResultSet rs) throws SQLException {
-        List<DotNode> children = new ArrayList<DotNode>();
+        List<DotNode> children = new ArrayList<>();
         while(rs.next()) {
           DotNode c = new DotNode(rs.getInt("child_id"));
           c.setAlgo(rs.getString("algorithm"));
@@ -197,7 +196,7 @@ public class ProcessingStructureResource extends BasicRestlet {
                 private int swAccessionId;
 		
 		public DotNode(int pid) {
-			this.children = new ArrayList<DotNode>();
+			this.children = new ArrayList<>();
 			this.processingId = pid;
 		}
 		

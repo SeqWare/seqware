@@ -21,16 +21,12 @@ import java.util.List;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.LaneService;
-import net.sourceforge.seqware.common.business.PlatformService;
 import net.sourceforge.seqware.common.business.SampleService;
-import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
-import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.lists.IUSList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
@@ -76,13 +72,13 @@ public class IusResource extends DatabaseResource {
     if (queryValues.get("id") != null) {
       IUS p = (IUS) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
 
-      JaxbObject<IUS> jaxbTool = new JaxbObject<IUS>();
+      JaxbObject<IUS> jaxbTool = new JaxbObject<>();
       IUS dto = copier.hibernate2dto(IUS.class, p);
       line = XmlTools.marshalToDocument(jaxbTool, dto);
 
     } else {
 
-      JaxbObject<IUSList> jaxbTool = new JaxbObject<IUSList>();
+      JaxbObject<IUSList> jaxbTool = new JaxbObject<>();
       IUSList list = new IUSList();
       List<IUS> iuses = (List<IUS>) testIfNull(ss.list());
 
@@ -105,7 +101,7 @@ public class IusResource extends DatabaseResource {
   public void postJaxb(Representation entity) throws ResourceException {
     authenticate();
     try {
-      JaxbObject<IUS> jo = new JaxbObject<IUS>();
+      JaxbObject<IUS> jo = new JaxbObject<>();
       String text = entity.getText();
       IUS o = null;
       try {

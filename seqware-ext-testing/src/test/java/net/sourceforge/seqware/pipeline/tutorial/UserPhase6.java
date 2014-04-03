@@ -94,7 +94,7 @@ public class UserPhase6 {
         boolean runFound = false;
         String workflowRunSWID = null;
         for (String line : FileUtils.readLines(foundFile)) {
-            if (line.contains("completed")) {
+            if (line.contains("seqwarearchetypejavaworkflow")) {
                 runFound = true;
                 String[] parts = line.split("\t");
                 workflowRunSWID = parts[1];

@@ -34,7 +34,7 @@ public class LibrarySourceList{
      * <p>Constructor for LibrarySourceList.</p>
      */
     public LibrarySourceList() {
-        tList = new ArrayList<LibrarySource>();
+        tList = new ArrayList<>();
     }
 
     /**

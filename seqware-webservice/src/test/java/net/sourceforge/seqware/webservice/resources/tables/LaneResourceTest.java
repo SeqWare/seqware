@@ -16,15 +16,11 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.util.Date;
 import junit.framework.Assert;
-import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
-import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.w3c.dom.Document;
 
 /**

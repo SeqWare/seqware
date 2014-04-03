@@ -34,7 +34,7 @@ public class WorkflowRunList2{
      * <p>Constructor for WorkflowRunList2.</p>
      */
     public WorkflowRunList2() {
-        tList = new ArrayList<WorkflowRun>();
+        tList = new ArrayList<>();
     }
 
     /**

@@ -80,9 +80,9 @@ public class TestDatabaseCreator {
     /**
      * Convenient method to run a query against the test database, avoids unclosed connections.
      *
+     * @param <T>
      * @param h
      * @param query
-     * @param update the value of update
      * @param params
      * @return
      */
@@ -111,6 +111,7 @@ public class TestDatabaseCreator {
      * @param <T>
      * @param h
      * @param query
+     * @param update
      * @param params
      * @return
      */

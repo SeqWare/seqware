@@ -16,12 +16,9 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.SampleService;
@@ -33,7 +30,6 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.hibernate.Query;
-import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -81,7 +77,7 @@ public class SampleResource extends DatabaseResource {
         SampleService ss = BeanFactory.getSampleServiceBean();
 
         if (queryValues.get("title") != null) {
-            jaxbTool = new JaxbObject<Sample>();
+            jaxbTool = new JaxbObject<>();
             Sample sample = (Sample) testIfNull(ss.findByTitle(queryValues.get("title")));
             Sample dto = copier.hibernate2dto(Sample.class, sample);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
@@ -89,14 +85,14 @@ public class SampleResource extends DatabaseResource {
 
         } else if (queryValues.get("name") != null) {
 
-            jaxbTool = new JaxbObject<Sample>();
+            jaxbTool = new JaxbObject<>();
             Sample sample = (Sample) testIfNull(ss.findByName(queryValues.get("name")));
             Sample dto = copier.hibernate2dto(Sample.class, sample);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
 
         } else if (queryValues.get("matches") != null) {
-            jaxbTool = new JaxbObject<SampleList>();
+            jaxbTool = new JaxbObject<>();
             String name = queryValues.get("matches");
 
             List<Sample> samples = (List<Sample>) testIfNull(ss.matchName(name));
@@ -110,7 +106,7 @@ public class SampleResource extends DatabaseResource {
             Document line = XmlTools.marshalToDocument(jaxbTool, eList);
             getResponse().setEntity(XmlTools.getRepresentation(line));
         } else {
-            jaxbTool = new JaxbObject<SampleList>();
+            jaxbTool = new JaxbObject<>();
             List<Sample> samples = (List<Sample>) testIfNull(ss.list());
             SampleList eList = new SampleList();
             eList.setList(new ArrayList());
@@ -136,7 +132,7 @@ public class SampleResource extends DatabaseResource {
 
             authenticate();
 
-            JaxbObject<Sample> jo = new JaxbObject<Sample>();
+            JaxbObject<Sample> jo = new JaxbObject<>();
             String text = entity.getText();
             Sample o = null;
             try {
@@ -168,7 +164,7 @@ public class SampleResource extends DatabaseResource {
                 createExplicitRootSample = true;
             } else {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                HashSet<Sample> parents = new HashSet<Sample>();
+                HashSet<Sample> parents = new HashSet<>();
                 for (Sample s : o.getParents()) {
                     // leaving in this guard against these strange sample objects will all null fields 
                     if (s.getSampleId() != null){
@@ -179,7 +175,7 @@ public class SampleResource extends DatabaseResource {
             }
             if (null != o.getChildren()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                HashSet<Sample> children = new HashSet<Sample>();
+                HashSet<Sample> children = new HashSet<>();
                 for (Sample s : o.getChildren()) {
                         children.add(ss.findByID(s.getSampleId()));
                     }

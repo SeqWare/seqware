@@ -34,6 +34,14 @@ import ch.enterag.utils.zip.EntryInputStream;
 import ch.enterag.utils.zip.EntryOutputStream;
 import ch.enterag.utils.zip.FileEntry;
 import ch.enterag.utils.zip.Zip64File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.UserPrincipal;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import joptsimple.OptionSet;
@@ -71,7 +79,6 @@ public class FileTools {
     // read from file
     try {
       while (dis.read() > 0) {
-        continue;
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -119,7 +126,7 @@ public class FileTools {
     int numFiles = files.size();
     BufferedWriter currentFile = null;
     BufferedReader in = null;
-    ArrayList<BufferedWriter> fileOutputs = new ArrayList<BufferedWriter>();
+    ArrayList<BufferedWriter> fileOutputs = new ArrayList<>();
 
     // Open files
     try {
@@ -380,7 +387,7 @@ public class FileTools {
    */
   public static boolean zipDirectoryRecursive(File path, File zipFileName, String excludeRegEx, boolean relative,
           boolean compress) {
-    ArrayList<File> filesToZip = new ArrayList<File>();
+    ArrayList<File> filesToZip = new ArrayList<>();
     if (path.exists()) {
       File[] files = path.listFiles();
       for (int i = 0; i < files.length; i++) {
@@ -462,7 +469,7 @@ public class FileTools {
    */
   public static boolean zipDirectoryRecursiveOld(File path, File zipFileName, String excludeRegEx, boolean relative,
           boolean compress) {
-    ArrayList<File> filesToZip = new ArrayList<File>();
+    ArrayList<File> filesToZip = new ArrayList<>();
     if (path.exists()) {
       File[] files = path.listFiles();
       for (int i = 0; i < files.length; i++) {
@@ -659,7 +666,8 @@ public class FileTools {
           // since mostly binaries
           // and ZIP file doesn't preserve this
           File finalFile = new File(outputDir.getAbsolutePath() + File.separator + entry.getName());
-          finalFile.setExecutable(true);
+          // allow executable for others like mapred and oozie
+          finalFile.setExecutable(true,false);
           finalFile.setWritable(true);
           finalFile.setReadable(true);
         }
@@ -792,7 +800,7 @@ public class FileTools {
    * @return a {@link java.util.Map} object.
    */
   public static Map<String, String> getKeyValueFromFile(String path) {
-    Map<String, String> ret = new LinkedHashMap<String, String>();
+    Map<String, String> ret = new LinkedHashMap<>();
     File file = new File(path);
     BufferedReader freader;
     try {
@@ -822,48 +830,28 @@ public class FileTools {
    * @param path
    * @return
    */
-  public static boolean isFileOwner(String path) {
-
-    String programRunner = null;
-
-    programRunner = FileTools.whoAmI();
-
-    ArrayList<String> theCommand = new ArrayList<String>();
-    theCommand = new ArrayList<String>();
-    theCommand.add("bash");
-    theCommand.add("-lc");
-    theCommand.add("stat " + path);
-
-    ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
-
-    if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-
-      String stdout = ret.getStdout();
-      stdout = stdout.trim();
-      boolean result = false;
-      Pattern p = Pattern.compile(".*Uid:\\s*\\(\\s*\\d*\\s*/\\s*" + programRunner + "\\s*\\).*", Pattern.DOTALL);
-      Matcher m = p.matcher(stdout);
-      if (m.find()) {
-        result = true;
-      }
-      return (result);
-    } else {
-      Log.error("Can't figure out the file ownership " + ret.getStderr());
-      return (false);
+    public static boolean isFileOwner(String path) {
+        try {
+            String programRunner = FileTools.whoAmI();
+            Path nPath = Paths.get(path);
+            UserPrincipal owner = Files.getOwner(nPath);
+            boolean isFileOwner = owner.getName().equals(programRunner);
+            return isFileOwner;
+        } catch (IOException ex) {
+            Log.error("Can't figure out the file ownership");
+            return false;
+        }
     }
-
-  }
 
   /**
    * This tool uses the 'whoami' command to find the current user versus the
    * user.name method.
    *
-   * @param path
    * @return
    */
   public static String whoAmI() {
 
-    ArrayList<String> theCommand = new ArrayList<String>();
+    ArrayList<String> theCommand = new ArrayList<>();
     theCommand.add("bash");
     theCommand.add("-lc");
     theCommand.add("whoami");
@@ -875,30 +863,6 @@ public class FileTools {
       return (stdout);
     } else {
       Log.error("Can't figure out the username using 'whoami' " + ret.getStderr());
-      return (null);
-    }
-  }
-  
-    /**
-   * This tool uses the 'ls -al' command to find the current file permissions.
-   *
-   * @param path
-   * @return
-   */
-  public static String determineFilePermissions(String path) {
-
-    ArrayList<String> theCommand = new ArrayList<String>();
-    theCommand.add("bash");
-    theCommand.add("-lc");
-    theCommand.add("ls -al " + path);
-
-    ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
-    if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-      String stdout = ret.getStdout();
-      stdout = stdout.substring(0, 10);
-      return (stdout);
-    } else {
-      Log.error("Can't figure out file permissions using 'ls -al' " + ret.getStderr());
       return (null);
     }
   }

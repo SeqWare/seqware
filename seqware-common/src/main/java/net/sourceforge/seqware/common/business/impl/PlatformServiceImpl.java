@@ -35,16 +35,19 @@ public class PlatformServiceImpl implements PlatformService {
    * StudyTypeDAO. This method is called by the Spring framework at run time.
    * @see StudyTypeDAO
    */
+  @Override
   public void setPlatformDAO(PlatformDAO platformDAO) {
     this.platformDAO = platformDAO;
   }
 
   /** {@inheritDoc} */
+  @Override
   public List<Platform> list(Registration registration) {
     return platformDAO.list(registration);
   }
 
   /** {@inheritDoc} */
+  @Override
   public Platform findByID(Integer id) {
     Platform obj = null;
     if (id != null) {

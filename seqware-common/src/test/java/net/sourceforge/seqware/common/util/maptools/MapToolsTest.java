@@ -17,8 +17,6 @@
 
 package net.sourceforge.seqware.common.util.maptools;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -81,7 +79,7 @@ public class MapToolsTest {
     @Test
     public void testExpandVariables() throws Exception {
       String path = getClass().getResource("vars.ini").getPath();
-      Map<String, String> raw = new HashMap<String, String>();
+      Map<String, String> raw = new HashMap<>();
       MapTools.ini2Map(path, raw);
       Map<String, String> provided = MapTools.providedMap("/u/seqware/provisioned-bundles");
       Map<String, String> exp = MapTools.expandVariables(raw, provided);
@@ -111,7 +109,7 @@ public class MapToolsTest {
     @Test
     public void testNormalRichIni() throws Exception {
         String path = getClass().getResource("normal.ini").getPath();
-        Map<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> hm = new HashMap<>();
         MapTools.ini2RichMap(path, hm);
         Assert.assertTrue("normal ini2RichMap failed", hm.size() == 3);
         testNormalValues(hm);
@@ -124,7 +122,7 @@ public class MapToolsTest {
     @Test
     public void testRichIni_withBlanks() throws Exception {
         String path = getClass().getResource("normal_withBlanks.ini").getPath();
-        Map<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> hm = new HashMap<>();
         MapTools.ini2RichMap(path, hm);
         Assert.assertTrue("ini2RichMap with blanks failed", hm.size() == 7);
         testNormalValues(hm);
@@ -146,7 +144,7 @@ public class MapToolsTest {
     @Test 
     public void testIniString2MapWithNovoalign(){
         String path = getClass().getResource("novoalign.ini").getPath();
-        Map<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> hm = new HashMap<>();
         MapTools.ini2RichMap(path, hm);
         Assert.assertTrue("ini2RichMap with novoalign failed", hm.size() == 34);
         StringBuffer mapBuffer = createStringFromMap(hm);
@@ -159,7 +157,7 @@ public class MapToolsTest {
     @Test 
     public void testIniString2MapWithBlanks(){
         String path = getClass().getResource("normal_withBlanks.ini").getPath();
-        Map<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> hm = new HashMap<>();
         MapTools.ini2RichMap(path, hm);
         Assert.assertTrue("ini2RichMap with blanks failed", hm.size() == 7);
         testNormalValues(hm);
@@ -177,7 +175,7 @@ public class MapToolsTest {
     @Test
     public void testRichIni_valuesWithSpaces() throws Exception {
         String path = getClass().getResource("workflow_fromPDE_1444.ini").getPath();
-        Map<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> hm = new HashMap<>();
         MapTools.ini2RichMap(path, hm);
         Assert.assertTrue("ini2RichMap with spaced values failed", hm.size() == 5);
         
@@ -192,7 +190,7 @@ public class MapToolsTest {
     @Test
     public void testRichIni_valuesWithSpaces2() throws Exception {
         String path = getClass().getResource("workflow_fromPDE_1444_1.ini").getPath();
-        Map<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> hm = new HashMap<>();
         MapTools.ini2RichMap(path, hm);
         Assert.assertTrue("ini2RichMap with spaced values2 failed", hm.size() == 4);
         
@@ -207,7 +205,7 @@ public class MapToolsTest {
     @Test
     public void testRichIni_novoalign() throws Exception {
         String path = getClass().getResource("novoalign.ini").getPath();
-        Map<String, Map<String, String>> hm = new HashMap<String, Map<String, String>>();
+        Map<String, Map<String, String>> hm = new HashMap<>();
         MapTools.ini2RichMap(path, hm);
         Assert.assertTrue("ini2RichMap with spaced values2 failed", hm.size() == 34);  
     }

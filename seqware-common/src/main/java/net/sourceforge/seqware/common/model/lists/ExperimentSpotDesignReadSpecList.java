@@ -32,7 +32,7 @@ public class ExperimentSpotDesignReadSpecList{
      * <p>Constructor for ExperimentSpotDesignReadSpecList.</p>
      */
     public ExperimentSpotDesignReadSpecList() {
-        tList = new ArrayList<ExperimentSpotDesignReadSpec>();
+        tList = new ArrayList<>();
     }
 
     /**

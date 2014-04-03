@@ -28,7 +28,7 @@ public class FindChildUtil {
 	 * @return a {@link java.util.List} object.
 	 */
 	public static List<String> getNodeIds(Object node){
-		List<String> ids = new LinkedList<String>();
+		List<String> ids = new LinkedList<>();
 		
 		if(node instanceof Study){
 			Study study = (Study)node;
@@ -91,7 +91,7 @@ public class FindChildUtil {
 	}
 		
 	private static List<String> getIds(Study study){
-		List<String> ids = new LinkedList<String>();		
+		List<String> ids = new LinkedList<>();		
 		SortedSet<Experiment> experiments = study.getExperiments();
 		for (Experiment experiment : experiments) {
 			ids.add(Constant.EXPERIMENT_PREFIX + experiment.getExperimentId());
@@ -107,7 +107,7 @@ public class FindChildUtil {
 	}
 	
 	private static List<String> getIds(Experiment experiment){
-		List<String> ids = new LinkedList<String>();
+		List<String> ids = new LinkedList<>();
 		SortedSet<Sample> samples = experiment.getSamples();
 		for (Sample sample : samples) {
 			ids.add(Constant.SAMPLE_PREFIX + sample.getSampleId());
@@ -123,7 +123,7 @@ public class FindChildUtil {
 	}
 	
 	private static List<String> getIds(Sample sample){
-		List<String> ids = new LinkedList<String>();
+		List<String> ids = new LinkedList<>();
 		SortedSet<IUS> iuss = sample.getIUS();
 		for (IUS ius : iuss) {
 			ids.add(Constant.IUS_PREFIX + ius.getIusId());
@@ -151,7 +151,7 @@ public class FindChildUtil {
 	}
 	
 	private static List<String> getIds(IUS ius){
-		List<String> ids = new LinkedList<String>();
+		List<String> ids = new LinkedList<>();
 		Set<Processing> processings = ius.getProcessings();
 		for (Processing processing : processings) {
 			ids.add(Constant.PROCESSING_PREFIX +processing.getProcessingId());
@@ -174,7 +174,7 @@ public class FindChildUtil {
 	}
 */	
 	private static List<String> getIds(Processing processing){
-		List<String> ids = new LinkedList<String>();
+		List<String> ids = new LinkedList<>();
 		ids.addAll(getIds(processing.getFiles()));
 		
 		Set<Processing> processings = processing.getChildren();
@@ -202,7 +202,7 @@ public class FindChildUtil {
 	}
 	
 	private static List<String> getIds(Set<File> files){
-		List<String> ids = new LinkedList<String>();
+		List<String> ids = new LinkedList<>();
 		for (File file : files) {
 			ids.add(Constant.FILE_PREFIX + file.getFileId());
 		}
