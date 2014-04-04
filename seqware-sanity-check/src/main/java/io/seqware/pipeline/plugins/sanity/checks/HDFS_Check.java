@@ -60,8 +60,8 @@ public class HDFS_Check implements SanityCheckPluginInterface {
             return false;
         } else if (!settings.containsKey("FS.DEFAULTFS") || !settings.containsKey("FS.HDFS.IMPL")) {
             return false;
-//        } else if (!settings.containsKey("HBASE.ZOOKEEPER.QUORUM") || !settings.containsKey("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT") || !settings.containsKey("HBASE.MASTER") || !settings.containsKey("MAPRED.JOB.TRACKER")){
-//            return false;
+        } else if (!settings.containsKey("HBASE.ZOOKEEPER.QUORUM") || !settings.containsKey("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT") || !settings.containsKey("HBASE.MASTER") || !settings.containsKey("MAPRED.JOB.TRACKER")){
+            return false;
         }
 
         try {
@@ -69,6 +69,10 @@ public class HDFS_Check implements SanityCheckPluginInterface {
             Configuration conf = new Configuration();
             conf.set("fs.defaultfs", settings.get("FS.DEFAULTFS"));
             conf.set("fs.hdfs.impl", settings.get("FS.HDFS.IMPL"));
+            conf.set("HBASE.ZOOKEEPER.QUORUM".toLowerCase(), settings.get("HBASE.ZOOKEEPER.QUORUM"));
+            conf.set("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT".toLowerCase(), settings.get("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT"));
+            conf.set("HBASE.MASTER".toLowerCase(), settings.get("HBASE.MASTER"));
+            conf.set("MAPRED.JOB.TRACKER".toLowerCase(), settings.get("MAPRED.JOB.TRACKER"));
             FileSystem filesystem;
             filesystem = FileSystem.get(conf);
             filesystem.create(path);
