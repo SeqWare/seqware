@@ -77,6 +77,7 @@ public class HDFS_Check implements SanityCheckPluginInterface {
             conf.set("hbase.zookeeper.property.clientPort", settings.get("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT"));
             conf.set("hbase.master", settings.get("HBASE.MASTER"));
             conf.set("mapred.job.tracker", settings.get("MAPRED.JOB.TRACKER"));
+            conf.set("fs.default.name", settings.get("FS.DEFAULTFS"));
             conf.set("fs.defaultfs", settings.get("FS.DEFAULTFS"));
             conf.set("fs.hdfs.impl", settings.get("FS.HDFS.IMPL"));
             fileSystem = FileSystem.get(conf);
