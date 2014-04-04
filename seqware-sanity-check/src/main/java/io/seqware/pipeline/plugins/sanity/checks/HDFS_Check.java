@@ -66,8 +66,6 @@ public class HDFS_Check implements SanityCheckPluginInterface {
             return false;
         } else if (!settings.containsKey("HBASE.ZOOKEEPER.QUORUM") || !settings.containsKey("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT") || !settings.containsKey("HBASE.MASTER") || !settings.containsKey("MAPRED.JOB.TRACKER")) {
             return false;
-        } else if (!settings.containsKey("OOZIE_APP_ROOT")) {
-            return false;
         }
 
         try {
@@ -81,8 +79,9 @@ public class HDFS_Check implements SanityCheckPluginInterface {
             conf.set("fs.defaultfs", settings.get("FS.DEFAULTFS"));
             conf.set("fs.hdfs.impl", settings.get("FS.HDFS.IMPL"));
             fileSystem = FileSystem.get(conf);
-            Path path = new Path(settings.get("OOZIE_APP_ROOT") + "/" + "test");
+            Path path = new Path("test");
             fileSystem.mkdirs(path);
+            fileSystem.deleteOnExit(path);
             System.out.println(fileSystem.getFileStatus(path).getPath());
 
         } catch (IOException ex) {
