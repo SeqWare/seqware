@@ -104,6 +104,9 @@ public class ITUtility {
      */
     private static File searchForFullJar(File seqTargetDir) {
         File targetFullJar = null;
+        if (!seqTargetDir.exists()){
+            throw new RuntimeException(seqTargetDir.getAbsolutePath() + " does not exist!");
+        }
         for (File files : seqTargetDir.listFiles()) {
             if (files.getName().contains("full") && !files.getName().contains("-qe-")) {
                 targetFullJar = files;
@@ -217,8 +220,16 @@ public class ITUtility {
      * 
      * @return script file
      */
-    private static File retrieveCompiledSeqwareScript() {
+    public static File retrieveCompiledSeqwareScript() {
         String property = System.getProperty("cliPath");
+        if (property == null){
+            // try PATH
+            File p = new File(System.getProperty("user.home")+ "/bin", "seqware");
+            if (p.exists()){
+                return p;
+            }
+            throw new RuntimeException("Could not locate seqware script");
+        }
         File seqwareScript = new File(property);
         return seqwareScript;
     }
