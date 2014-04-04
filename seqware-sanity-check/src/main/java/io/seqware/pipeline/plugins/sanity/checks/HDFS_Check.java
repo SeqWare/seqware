@@ -72,12 +72,13 @@ public class HDFS_Check implements SanityCheckPluginInterface {
 
         try {
             Configuration conf = new Configuration();
+
+            conf.set("hbase.zookeeper.quorum", settings.get("HBASE.ZOOKEEPER.QUORUM"));
+            conf.set("hbase.zookeeper.property.clientPort", settings.get("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT"));
+            conf.set("hbase.master", settings.get("HBASE.MASTER"));
+            conf.set("mapred.job.tracker", settings.get("MAPRED.JOB.TRACKER"));
             conf.set("fs.defaultfs", settings.get("FS.DEFAULTFS"));
             conf.set("fs.hdfs.impl", settings.get("FS.HDFS.IMPL"));
-            conf.set("HBASE.ZOOKEEPER.QUORUM".toLowerCase(), settings.get("HBASE.ZOOKEEPER.QUORUM"));
-            conf.set("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT".toLowerCase(), settings.get("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT"));
-            conf.set("HBASE.MASTER".toLowerCase(), settings.get("HBASE.MASTER"));
-            conf.set("MAPRED.JOB.TRACKER".toLowerCase(), settings.get("MAPRED.JOB.TRACKER"));
             fileSystem = FileSystem.get(conf);
             Path path = new Path(settings.get("OOZIE_APP_ROOT") + "/" + "test");
             fileSystem.mkdirs(path);
