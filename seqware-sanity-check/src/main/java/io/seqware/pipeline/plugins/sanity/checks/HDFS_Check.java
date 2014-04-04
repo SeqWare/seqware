@@ -81,7 +81,7 @@ public class HDFS_Check implements SanityCheckPluginInterface {
             fileSystem = FileSystem.get(conf);
             Path path = new Path("test");
             fileSystem.mkdirs(path);
-            //fileSystem.deleteOnExit(path);
+            fileSystem.deleteOnExit(path);
 
         } catch (IOException ex) {
             System.err.println("Error connecting to hdfs" + ex.getMessage());
