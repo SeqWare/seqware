@@ -37,7 +37,7 @@ public class DB_WS_ConsistencyCheck implements SanityCheckPluginInterface {
 
     @Override
     public boolean isTutorialTest() {
-        return false;
+        return true;
     }
 
     @Override
