@@ -223,6 +223,10 @@ public final class SanityCheck extends Plugin {
         mp.setParams(Arrays.asList(args));
         mp.parse_parameters();
         ReturnValue do_run = mp.do_run();
+        if(do_run.getExitStatus() == ReturnValue.FAILURE){
+            System.err.println("One of the tests has failed. Exiting with a non-zero exit status");
+            System.exit(1);
+        }
     }
 
     @Override
