@@ -21,7 +21,10 @@ import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.sourceforge.seqware.common.metadata.Metadata;
+import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -54,18 +57,20 @@ public class HDFS_Check implements SanityCheckPluginInterface {
 
     @Override
     public boolean check(QueryRunner qRunner, Metadata metadataWS) throws SQLException {
+        FileSystem fileSystem = null;
 
         HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
         if (settings.isEmpty()) {
             return false;
         } else if (!settings.containsKey("FS.DEFAULTFS") || !settings.containsKey("FS.HDFS.IMPL")) {
             return false;
-        } else if (!settings.containsKey("HBASE.ZOOKEEPER.QUORUM") || !settings.containsKey("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT") || !settings.containsKey("HBASE.MASTER") || !settings.containsKey("MAPRED.JOB.TRACKER")){
+        } else if (!settings.containsKey("HBASE.ZOOKEEPER.QUORUM") || !settings.containsKey("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT") || !settings.containsKey("HBASE.MASTER") || !settings.containsKey("MAPRED.JOB.TRACKER")) {
+            return false;
+        } else if (!settings.containsKey("OOZIE_APP_ROOT")) {
             return false;
         }
 
         try {
-            Path path = new Path(System.getProperty("user.home") + "/" + "test");
             Configuration conf = new Configuration();
             conf.set("fs.defaultfs", settings.get("FS.DEFAULTFS"));
             conf.set("fs.hdfs.impl", settings.get("FS.HDFS.IMPL"));
@@ -73,14 +78,22 @@ public class HDFS_Check implements SanityCheckPluginInterface {
             conf.set("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT".toLowerCase(), settings.get("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT"));
             conf.set("HBASE.MASTER".toLowerCase(), settings.get("HBASE.MASTER"));
             conf.set("MAPRED.JOB.TRACKER".toLowerCase(), settings.get("MAPRED.JOB.TRACKER"));
-            FileSystem filesystem;
-            filesystem = FileSystem.get(conf);
-            filesystem.create(path);
-            filesystem.deleteOnExit(path);
+            fileSystem = FileSystem.get(conf);
+            Path path = new Path(settings.get("OOZIE_APP_ROOT") + "/" + "test");
+            fileSystem.mkdirs(path);
+            System.out.println(fileSystem.getFileStatus(path).getPath());
 
         } catch (IOException ex) {
             System.err.println("Error connecting to hdfs" + ex.getMessage());
             return false;
+        } finally {
+            try {
+                if (fileSystem != null) {
+                    fileSystem.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(HDFS_Check.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         return true;
