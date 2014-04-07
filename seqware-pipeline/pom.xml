@@ -41,7 +41,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <aspectj.version>1.6.11</aspectj.version>
-        <powermock.version>1.5</powermock.version>
+        <powermock.version>1.5.4</powermock.version>
     </properties>
     <repositories>
         <repository>
@@ -209,12 +209,12 @@
         <dependency>
             <groupId>org.apache.oozie</groupId>
             <artifactId>oozie-client</artifactId>
-            <version>3.2.0-cdh4.1.2 </version>
+            <version>3.3.2-cdh4.5.0 </version>
         </dependency>
         <dependency>
             <groupId>org.apache.oozie</groupId>
             <artifactId>oozie-tools</artifactId>
-            <version>3.2.0-cdh4.1.2 </version>
+            <version>3.3.2-cdh4.5.0</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
