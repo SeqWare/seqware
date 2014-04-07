@@ -34,6 +34,7 @@ public final class SanityCheck extends Plugin {
     public static final int NUMBER_TO_OUTPUT = 100;
     private boolean masterMode = false;
     private boolean hasDBSettings = true;
+    private boolean tutorialMode = false;
 
     /**
      * <p>
@@ -43,6 +44,7 @@ public final class SanityCheck extends Plugin {
         super();
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
         parser.acceptsAll(Arrays.asList("master", "m"), "To test on a master node");
+        parser.acceptsAll(Arrays.asList("tutorial", "t"), "Testing by running the tutorials as well");
     }
 
     /* (non-Javadoc)
@@ -114,8 +116,12 @@ public final class SanityCheck extends Plugin {
             System.out.println("Parameters:");
             System.out.println("--help, h, ?\t Provides this help message");
             System.out.println("--master, m \t Include this parameter to test if you are on a master node and not a user one");
+            System.out.println("--tutorial, t \t Include this parameter to test by going through the seqware tutorials ");
             ret.setExitStatus(ReturnValue.SUCCESS);
         } else {
+            if(options.has("tutorial") || options.has("t")){
+                tutorialMode = true;
+            }
             if (options.has("master") || options.has("m")) {
                 masterMode = true;
             }
@@ -196,7 +202,7 @@ public final class SanityCheck extends Plugin {
             if (!hasDBSettings && plugin.isDBTest()) {
                 pluginList.remove(i);
 
-            } else if (plugin.isTutorialTest()) {
+            } else if (plugin.isTutorialTest() && !tutorialMode) {
                 pluginList.remove(i);
             } else if (!masterMode && plugin.isMasterTest()) {
                 pluginList.remove(i);
