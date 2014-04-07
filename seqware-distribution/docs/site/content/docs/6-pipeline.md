@@ -130,7 +130,9 @@ Other useful tools used for import, export, and annotation of results.
 * [Database validation](/docs/24-checkdb/)
 : The underlying SeqWare MetaDB relies upon a certain number of conventions. This utility allows you to check that these are properly followed.  
 * [Batch Metadata Injector](/docs/19/)
-: The batch metadata injector is a testing/development tool used to create arbitrary metadata for testing workflows.  
+: The batch metadata injector is a testing/development tool used to create arbitrary metadata for testing workflows. 
+* [Sanity Check](/docs/25-sanity-check-tool/)
+: This tool checks whether a SeqWare environment is setup properly. It currently runs for user environments and master environments.
 
 ## Command Line Reference
 
