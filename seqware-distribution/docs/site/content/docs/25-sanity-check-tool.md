@@ -25,7 +25,7 @@ Command-line option</th>	<th>Description</th></tr>
 <tr><td>
 --master, -m</td>	<td>Master mode. Use this if you are running on a master node. Will do more admin testing if included.</td></tr><tr><td>
 --tutorial, -t</td><td>Runs through the seqware tutorial as well.</td></tr><tr><td>
---help, -h	</td>	<td>Displays this list of parameters.</td></tr><tr><td>
+--help, -h	</td>	<td>Displays this list of parameters.</td></tr>
 </table>
 
 
