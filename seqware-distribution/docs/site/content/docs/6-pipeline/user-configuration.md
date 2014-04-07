@@ -89,7 +89,8 @@ SW_BUNDLE_DIR=/home/seqware/SeqWare/provisioned-bundles
 
 # The directory containing bundle archives (into which a bundle archive is first copied during install)
 SW_BUNDLE_REPO_DIR=/home/seqware/SeqWare/released-bundles
-
+# Default is to use compression, this can be set to OFF to disable compression
+BUNDLE_COMPRESSION=ON
 
 # LAUNCH
 
