@@ -47,6 +47,7 @@ import org.openide.util.lookup.ServiceProvider;
  * <p>BatchImport class.</p>
  *
  * @author mtaschuk
+ * @author Raunaq Suri
  * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
@@ -179,7 +180,11 @@ public class BatchMetadataInjection extends Metadata {
                 }
                 Log.stdout("JSON sequencer run file is valid.");
                 return ret;
-            } else {
+            } else if((options.has("export-json-sequencer-run") && interactive) && !options.has("new")){
+                    parseFields();
+                    CreateFromScratch create = new CreateFromScratch(metadata, (Map<String, String>) fields.clone(), interactive);
+                    run = create.getRunInfo();
+            }else {
                 Log.stdout("Combination of parameters not recognized!");
                 Log.stdout(this.get_syntax());
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
