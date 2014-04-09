@@ -137,7 +137,6 @@ Then you would look at the site at: http://seqware.github.io/legacy.seqware.gith
 In order to publish to our current docs supporting the 1.0.x, checkout from develop and publish:
 
     git checkout develop 
-    cd seqware-distribution 
     mvn site-deploy
 
 Then you would look at the site at: http://seqware.github.io
