@@ -43,11 +43,11 @@ Next, you will need to download our current VM image which is linked below.
 Please make sure you are using the latest version, when we post a new one we
 will tweet about it so consider following us on Twitter.
 
-* [SeqWare-1.0.6.ova](https://s3.amazonaws.com/oicr.vm/public/SeqWare-1.0.6.ova)
+* [SeqWare-1.0.13.ova](https://s3.amazonaws.com/oicr.vm/public/Seqware_1.0.13_Bindle_1.2_pre-release.ova)
 
 Open VirtualBox and use the "Import Appliance" tool to create a new SeqWare VM
 on your system. Make sure you set the memory to the max you can afford, I
-recommend at least 4GB of memory for the VM.  You can then launch it and you
+recommend at least 12GB of memory for the VM.  You can then launch it and you
 will be presented with a fairly standard Linux desktop with links to the
 project's documentation to give you an idea of where to begin (the "Getting
 Started" guide here provides a walk-through of using this VM).
@@ -68,9 +68,15 @@ makes use of various virtualization extensions which most modern PCs support
 
 ### Logging In
 
-The login username is <kbd>seqware</kbd> and the password is <kbd>seqware</kbd>. If you need to become <kbd>root</kbd> the password is the same.
+The login username is <kbd>vagrant</kbd> and the password is <kbd>vagrant</kbd>. If you need to become <kbd>root</kbd> use <kbd>sudo bash</kbd>.
 
-By default the VM will open port 2222 for ssh. You can connect to the running VM from an external console using the following command: `ssh -p 2222 root@127.0.0.1`
+By default the VM will open port 2222 for ssh. You can connect to the running VM from an external console using the following command: <kbd>sshpass -p 'vagrant' ssh -p 2222 vagrant@localhost</kbd>
+
+
+<p class="warning"><strong>Note:</strong>
+Obviously, you will not want to run this VM anywhere that is network-accessible. If you do, make sure to disable the above login and use SSH keys.
+</p>
+
 
 ### What Can You Do With It?
 
@@ -110,11 +116,8 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 
 #### Stable Public AMI(s):
 
-* **ami-f54e1f9c**
-: 20131007, SeqWare-1.0.6
-
-* ~~ **ami-c386e8aa**
-: 20130531, SeqWare_v0.13.6.7rc_CentOS_GenericDevBox_v18, SeqWare Version 0.13.6.7. Make sure you launch in Virginia and select the instance type "CC1 Cluster Compute (cc1.4xlarge, 23GiB)" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance). ~~
+* ** ami-b1e9f4d8 **
+: 20140409 (SeqWare-1.0.13, Bindle 1.2 pre-release) Make sure you launch in Virginia and select the instance type "m1.xlarge" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
 
 An example of the launching wizard in the Amazon AWS console can be seen below:
 
