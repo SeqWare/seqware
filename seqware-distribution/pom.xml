@@ -136,7 +136,8 @@
 	        	    <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/seqware.github.com.git</pubScmUrl>	
                             <content>docs/site/output/</content>
                             <ignorePathsToDelete>
-                                <ignorePathToDelete>javadoc</ignorePathToDelete>
+                                <ignorePathToDelete>apidocs</ignorePathToDelete>
+                                <ignorePathToDelete>testapidocs</ignorePathToDelete>
                                 <ignorePathToDelete>manuals</ignorePathToDelete>
                                 <ignorePathToDelete>webservice-api</ignorePathToDelete>
                                 <ignorePathToDelete>metadb-schema</ignorePathToDelete>
