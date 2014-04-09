@@ -70,8 +70,9 @@ makes use of various virtualization extensions which most modern PCs support
 
 The login username is <kbd>vagrant</kbd> and the password is <kbd>vagrant</kbd>. If you need to become <kbd>root</kbd> use <kbd>sudo bash</kbd>.
 
-By default the VM will open port 2222 for ssh. You can connect to the running VM from an external console using the following command: <kbd>sshpass -p 'vagrant' ssh -p 2222 vagrant@localhost</kbd>
+By default the VM will open port 2222 for ssh. You can connect to the running VM from an external console using the following command: 
 
+    sshpass -p 'vagrant' ssh -p 2222 vagrant@localhost
 
 <p class="warning"><strong>Note:</strong>
 Obviously, you will not want to run this VM anywhere that is network-accessible. If you do, make sure to disable the above login and use SSH keys.
