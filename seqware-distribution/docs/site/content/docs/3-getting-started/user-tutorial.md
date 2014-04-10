@@ -252,9 +252,9 @@ takes:
 
     Created 'workflow.ini'.
 
-In this example the configurable parameters of workflow “HelloWorld” (SWID: 1)
- are listed in `workflow.ini` (you can specify the output file with the `--out` option).  The file conforms to the input you can use to
-parameterize and launch workflows:
+In this example the configurable parameters of workflow “HelloWorld” (SWID: 1) are listed in `workflow.ini` (you can specify the output file with the `--out` option). Ini files are based on [Java properties](http://docs.oracle.com/javase/6/docs/api/java/util/Properties.html#load%28java.io.Reader%29) file format.  
+
+The file conforms to the input you can use to parameterize and launch workflows:
 
     $ cat workflow.ini
 
