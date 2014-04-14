@@ -35,6 +35,8 @@ filled in for every deployment of SeqWare, just those using these tools. Also no
 settings file needs to have read and write permissions for only the owner for security reasons. 
 Our tools will abort and refuse to run if this is not set. 
 
+The format for the settings file is based on [Java properties files](http://docs.oracle.com/javase/6/docs/api/java/util/Properties.html#load%28java.io.Reader%29). 
+
 <pre><code>#!ini
 
 # SEQWARE PIPELINE SETTINGS
