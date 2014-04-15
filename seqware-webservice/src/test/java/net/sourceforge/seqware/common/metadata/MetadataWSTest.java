@@ -799,6 +799,7 @@ public class MetadataWSTest {
         wr = instance.getWorkflowRun(wr_sw_accession);
         Assert.assertTrue("updated  input file set  should be size 4, was " + wr.getInputFileAccessions().size(), wr.getInputFileAccessions().size() == 4);
     }
+    
 
     @Test
     public void getDirectFilesAssociatedWithWorkflowRuns() {
