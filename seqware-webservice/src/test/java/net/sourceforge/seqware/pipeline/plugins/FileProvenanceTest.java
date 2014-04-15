@@ -16,9 +16,11 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import com.google.common.collect.ImmutableList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.junit.*;
@@ -39,7 +41,7 @@ public class FileProvenanceTest extends ExtendedPluginTest {
     public FileProvenanceTest() {
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testFileProvenanceNormalFail() {
         List<Map<String, String>> fileProvenanceReport = metadata.fileProvenanceReport(new HashMap());
         Assert.assertTrue("report should be empty until triggered", fileProvenanceReport.isEmpty());
@@ -49,6 +51,28 @@ public class FileProvenanceTest extends ExtendedPluginTest {
     public void testFileProvenanceNormalPass(){
         metadata.fileProvenanceReportTrigger();
         List<Map<String, String>> fileProvenanceReport = metadata.fileProvenanceReport(new HashMap());
+        Assert.assertTrue("report should be filled in but was size " + fileProvenanceReport.size(), fileProvenanceReport.size() == 483);
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void testFileProvenanceFunkyNameFail(){
+        metadata.fileProvenanceReportTrigger();
+        Map map = new HashMap();
+        map.put(FileProvenanceParam.sample + "garbage", new ImmutableList.Builder<String>().add("1").build());
+        List<Map<String, String>> fileProvenanceReport = metadata.fileProvenanceReport(map);
+        Assert.assertTrue("report should be filled in but was size " + fileProvenanceReport.size(), fileProvenanceReport.size() == 483);
+    }
+    
+    @Test(expected = RuntimeException.class)
+    public void testFileProvenanceRequestOfInsaneSizeFail(){
+        metadata.fileProvenanceReportTrigger();
+        Map map = new HashMap();
+        ImmutableList.Builder<String> builder = new ImmutableList.Builder<>();
+        for(int i = 0; i < 10000; i++){
+            builder.add(Integer.toString(i));
+        }
+        map.put(FileProvenanceParam.sample, builder.build());
+        List<Map<String, String>> fileProvenanceReport = metadata.fileProvenanceReport(map);
         Assert.assertTrue("report should be filled in but was size " + fileProvenanceReport.size(), fileProvenanceReport.size() == 483);
     }
 }

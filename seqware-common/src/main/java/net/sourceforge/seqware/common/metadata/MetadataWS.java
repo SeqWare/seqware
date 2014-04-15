@@ -100,6 +100,7 @@ import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
@@ -3259,7 +3260,8 @@ public class MetadataWS implements Metadata {
                 text = result.getText();
 
             } catch (Exception ex) {
-                Log.error("MetadataWS.getString " + ex.getMessage());
+                Log.warn("MetadataWS.getString " + ex.getMessage());
+                Rethrow.rethrow(ex);
             } finally {
                 if (result != null) {
                     try {
