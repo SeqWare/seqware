@@ -172,12 +172,14 @@ public class WorkflowRunReporter extends Plugin {
   private void reportOnWorkflowRun(String workflowRunAccession) throws IOException {
     String title = "workflowrun_" + workflowRunAccession;
     initWriter(title);
-    String report = metadata.getWorkflowRunReport(Integer.parseInt(workflowRunAccession));
-    if (report == null){
-        println("Workflow run not found"); 
-	ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
-	return;
-    }
+    String report;
+      try {
+          report = metadata.getWorkflowRunReport(Integer.parseInt(workflowRunAccession));
+      } catch (RuntimeException e) {
+          println("Workflow run not found");
+          ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
+          return;
+      }
     if (options.has("human")){
         writer.write(TabExpansionUtil.expansion(report));
         return;
