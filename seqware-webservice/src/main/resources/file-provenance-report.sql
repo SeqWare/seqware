@@ -248,8 +248,8 @@ select p.update_tstmp as last_modified
      , translate(case when e.name is not null and e.name <> '' then e.name else e.title end , ' ', '_') as experiment_name
      , e.sw_accession as experiment_swa
      , ea.attrs as experiment_attrs
-     , r.root_accession as root_sample_swa
      , r.root_name as root_sample_name
+     , r.root_accession as root_sample_swa
      , translate(spn.parent_names, ' ', '_') as sample_parent_names
      , spn.parent_swas as sample_parent_swas
      , spn.parent_organism_ids as parent_organism_ids
