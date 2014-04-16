@@ -836,6 +836,7 @@ public class Main {
       out("Optional parameters:");
       out("  --out <file>                   The name of the output file");
       out("  --study-name <name>            Limit files to the specified study name. Can occur multiple times.");
+      out("  --root-sample-name <name>      Limit files to the specified root sample name. Can occur multiple times.");
       out("  --sample-name <name>           Limit files to the specified sample name. Can occur multiple times.");
       out("  --sequencer-run-name <name>    Limit files to the specified sequencer run name. Can occur multiple times.");
       out("  --ius-SWID <swid>              Limit files to the specified ius SWID. Can occur multiple times.");
@@ -844,6 +845,7 @@ public class Main {
     } else {
                 
       List<String> studies = optVals(args, "--study-name");
+      List<String> rootSamples = optVals(args, "--root-sample-name");
       List<String> samples = optVals(args, "--sample-name");
       List<String> sequencerRuns = optVals(args, "--sequencer-run-name");
       List<String> iusSWIDs = optVals(args, "--ius-SWID");
@@ -857,13 +859,17 @@ public class Main {
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.fileprovenance.FileProvenanceReporter");
       runnerArgs.add("--");
 
-        if (studies.isEmpty() && samples.isEmpty() && sequencerRuns.isEmpty() && iusSWIDs.isEmpty() && laneSWIDs.isEmpty()) {
+        if (studies.isEmpty() && rootSamples.isEmpty() && samples.isEmpty() && sequencerRuns.isEmpty() && iusSWIDs.isEmpty() && laneSWIDs.isEmpty()) {
             runnerArgs.add("-all");
         } else {
 
             for (String study : studies) {
                 runnerArgs.add("--study-name");
                 runnerArgs.add(study);
+            }
+            for (String rootSample : rootSamples) {
+                runnerArgs.add("--root-sample-name");
+                runnerArgs.add(rootSample);
             }
             for (String sample : samples) {
                 runnerArgs.add("--sample-name");
