@@ -40,36 +40,58 @@ import net.sourceforge.seqware.common.model.Study;
  * @author dyuen
  */
 public class ProvenanceUtility {
+    
+    public enum HumanProvenanceFilters {
 
-    private static final String AT_LEAST_ONE_OF = "At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. ";
-    public static final String LANE_SWID = "lane-SWID";
-    public static final String IUS_SWID = "ius-SWID";
-    public static final String STUDY_NAME = "study-name";
-    public static final String SAMPLE_NAME = "sample-name";
-    public static final String SEQUENCER_RUN_NAME = "sequencer-run-name";
+        LANE_SWID("lane-SWID","Lane sw_accession", true, FileProvenanceParam.lane),
+        IUS_SWID("ius-SWID","IUS sw_accession", true, FileProvenanceParam.ius),
+        STUDY_NAME("study-name","Full study name", false, FileProvenanceParam.study),
+        SAMPLE_NAME("sample-name","Full sample name", false, FileProvenanceParam.sample),
+        ROOT_SAMPLE_NAME("root-sample-name","Full root sample name", false, FileProvenanceParam.root_sample),
+        SEQUENCER_RUN_NAME("sequencer-run-name","Full sequencer run name", false, FileProvenanceParam.sequencer_run),
+        ORGANISM("organism","organism id", true, FileProvenanceParam.organism),
+        PROCESSING("processing-SWID", "processing sw_accession", true, FileProvenanceParam.processing);
+        
+        public final String human_str;
+        public final String desc;
+        public final boolean standard;
+        public final FileProvenanceParam mappedParam;
+
+        private HumanProvenanceFilters(String human_str, String desc, boolean standard, FileProvenanceParam mappedParam) {
+            this.human_str = human_str;
+            this.desc = desc;
+            this.standard = standard;
+            this.mappedParam = mappedParam;
+        }
+
+        @Override
+        public String toString() {
+            if (human_str == null) {
+                return super.toString();
+            }
+            return human_str;
+        }
+    }
+           
     public static final String ALL = "all";
+    private static final String AT_LEAST_ONE_OF = "At least one of "+Arrays.toString(HumanProvenanceFilters.values())+"  or "+ALL+" is required. ";
 
     public static Map<String, OptionSpec> configureFileProvenanceParams(OptionParser parser) {
         Map<String, OptionSpec> specMap = new HashMap<>();
-        ArgumentAcceptingOptionSpec<String> studyTitleSpec = parser.acceptsAll(Arrays.asList(STUDY_NAME), "Full study name. " + AT_LEAST_ONE_OF + "Specify multiple names by repeating --study-name").withRequiredArg().ofType(String.class);
-        specMap.put(STUDY_NAME, studyTitleSpec);
-        ArgumentAcceptingOptionSpec<String> sampleNameSpec = parser.acceptsAll(Arrays.asList(SAMPLE_NAME), "Full sample name. " + AT_LEAST_ONE_OF + " Specify multiple names by repeating --sample-name").withRequiredArg().ofType(String.class);
-        specMap.put(SAMPLE_NAME, sampleNameSpec);
-        ArgumentAcceptingOptionSpec<String> sequencerRunNameSpec = parser.acceptsAll(Arrays.asList(SEQUENCER_RUN_NAME), "Full sequencer run name. " + AT_LEAST_ONE_OF + " Specify multiple names by repeating --sequencer-run-name").withRequiredArg().ofType(String.class);
-        specMap.put(SEQUENCER_RUN_NAME, sequencerRunNameSpec);
-        // adding lane and ius
-        ArgumentAcceptingOptionSpec<Integer> laneSwaSpec = parser.acceptsAll(Arrays.asList(LANE_SWID), "Lane sw_accession. " + AT_LEAST_ONE_OF + " Specify multiple swas by repeating --lane-swa").withRequiredArg().ofType(Integer.class);
-        specMap.put(LANE_SWID, laneSwaSpec);
-        ArgumentAcceptingOptionSpec<Integer> iusSwaSpec = parser.acceptsAll(Arrays.asList(IUS_SWID), "IUS sw_accession. " + AT_LEAST_ONE_OF + " Specify multiple swas by repeating --ius-swa").withRequiredArg().ofType(Integer.class);
-        specMap.put(IUS_SWID, iusSwaSpec);
+        for (HumanProvenanceFilters filter : HumanProvenanceFilters.values()) {
+            ArgumentAcceptingOptionSpec<String> studyTitleSpec = parser.acceptsAll(Arrays.asList(filter.toString()), filter.toString()+". " + AT_LEAST_ONE_OF + "Specify multiple names by repeating --" + filter.toString()).withRequiredArg().ofType(String.class);
+            specMap.put(filter.toString(), studyTitleSpec);
+        }   
         parser.acceptsAll(Arrays.asList(ALL), "Operate across everything. " + AT_LEAST_ONE_OF);
         return specMap;
     }
     
     public static boolean checkForValidOptions(OptionSet set){
         boolean hasConstraint = false;
-        if (set.hasArgument(LANE_SWID) || set.hasArgument(IUS_SWID) || set.hasArgument(STUDY_NAME) || set.hasArgument(SAMPLE_NAME) || set.hasArgument(SEQUENCER_RUN_NAME)){
-            hasConstraint = true;
+        for (HumanProvenanceFilters filter : HumanProvenanceFilters.values()) {
+            if (set.hasArgument(filter.toString())){
+                hasConstraint = true;
+            }
         }
         boolean hasAll = false;
         if (set.hasArgument(ALL)){
@@ -85,51 +107,36 @@ public class ProvenanceUtility {
              * nothing special
              */
         } else {
-            if (options.has(STUDY_NAME)) {
-                List<String> studyNames = (List<String>) options.valuesOf(STUDY_NAME);
-                List<String> studySWAs = new ArrayList<>();
-                for (String studyName : studyNames) {
-                    Study studyByName = metadata.getStudyByName(studyName);
-                    studySWAs.add(String.valueOf(studyByName.getSwAccession()));
-                }
-                map.put(FileProvenanceParam.study, new ImmutableList.Builder<String>().addAll(studySWAs).build());
-            }
-            if (options.has(SAMPLE_NAME)) {
-                List<String> sampleNames = (List<String>) options.valuesOf(SAMPLE_NAME);
-                List<String> sampleSWAs = new ArrayList<>();
-
-                for (String sampleName : sampleNames) {
-                    List<Sample> samplesByName = metadata.getSampleByName(sampleName);
-                    for (Sample sample : samplesByName) {
-                        sampleSWAs.add(String.valueOf(sample.getSwAccession()));
+            for (HumanProvenanceFilters filter : HumanProvenanceFilters.values()) {
+                List<String> swa_strings = new ArrayList<>();
+                List<?> swa_values = options.valuesOf(filter.toString());
+                if (filter.standard){
+                    swa_strings = new ArrayList<>();
+                    for (Object swa : swa_values) {
+                        swa_strings.add(String.valueOf(swa));
                     }
+                } else if(filter == HumanProvenanceFilters.STUDY_NAME){
+                    for (String value : (List<String>)swa_values) {
+                        Study studyByName = metadata.getStudyByName(value);
+                        swa_strings.add(String.valueOf(studyByName.getSwAccession()));
+                    } 
+                } else if(filter == HumanProvenanceFilters.SAMPLE_NAME || filter == HumanProvenanceFilters.ROOT_SAMPLE_NAME){
+                    for (String value : (List<String>)swa_values) {
+                        List<Sample> samplesByName = metadata.getSampleByName(value);
+                        for (Sample sample : samplesByName) {
+                            swa_strings.add(String.valueOf(sample.getSwAccession()));
+                        }
+                    }
+                } else if(filter == HumanProvenanceFilters.SEQUENCER_RUN_NAME){
+                    for (String value : (List<String>)swa_values) {
+                        SequencerRun run = metadata.getSequencerRunByName(value);
+                        swa_strings.add(String.valueOf(run.getSwAccession()));
+                    }
+                } 
+                else {
+                    throw new RuntimeException("No handler for filter type");
                 }
-                map.put(FileProvenanceParam.sample, new ImmutableList.Builder<String>().addAll(sampleSWAs).build());
-            }
-            if (options.has(SEQUENCER_RUN_NAME)) {
-                List<String> sequencerRunNames = (List<String>) options.valuesOf(SEQUENCER_RUN_NAME);
-                List<String> sequencerRunSWAs = new ArrayList<>();
-                for (String sequencerRunName : sequencerRunNames) {
-                    SequencerRun run = metadata.getSequencerRunByName(sequencerRunName);
-                    sequencerRunSWAs.add(String.valueOf(run.getSwAccession()));
-                }
-                map.put(FileProvenanceParam.sequencer_run, new ImmutableList.Builder<String>().addAll(sequencerRunSWAs).build());
-            }
-            if (options.has(IUS_SWID)) {
-                List<?> swa_values = options.valuesOf(IUS_SWID);
-                List<String> swa_strings = new ArrayList<>();
-                for (Object swa : swa_values) {
-                    swa_strings.add(String.valueOf(swa));
-                }
-                map.put(FileProvenanceParam.ius, new ImmutableList.Builder<String>().addAll(swa_strings).build());
-            }
-            if (options.has(LANE_SWID)) {
-                List<?> swa_values = options.valuesOf(LANE_SWID);
-                List<String> swa_strings = new ArrayList<>();
-                for (Object swa : swa_values) {
-                    swa_strings.add(String.valueOf(swa));
-                }
-                map.put(FileProvenanceParam.lane, new ImmutableList.Builder<String>().addAll(swa_strings).build());
+                map.put(filter.mappedParam, new ImmutableList.Builder<String>().addAll(swa_strings).build());
             }
         }
         return map;
