@@ -214,8 +214,10 @@ public class WorkflowRunReporter extends Plugin {
       title += "to" + dateFormat.format(lateDate);
     }
     initWriter(title);
-    String report = metadata.getWorkflowRunReport(Integer.parseInt(workflowAccession), earlyDate, lateDate);
-    if (report == null){
+    String report;
+    try{
+        report = metadata.getWorkflowRunReport(Integer.parseInt(workflowAccession), earlyDate, lateDate);
+    } catch(RuntimeException e){
         println("Workflow not found"); 
 	ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
 	return;
@@ -236,8 +238,10 @@ public class WorkflowRunReporter extends Plugin {
       title += "to" + dateFormat.format(lateDate);
     }
     initWriter(title);
-    String report = metadata.getWorkflowRunReport(earlyDate, lateDate);
-    if (report == null){
+    String report;
+    try{
+     report = metadata.getWorkflowRunReport(earlyDate, lateDate);
+    }catch(RuntimeException e){
         println("No runs found in date range"); 
 	ret = new ReturnValue(ReturnValue.SUCCESS);
 	return;
