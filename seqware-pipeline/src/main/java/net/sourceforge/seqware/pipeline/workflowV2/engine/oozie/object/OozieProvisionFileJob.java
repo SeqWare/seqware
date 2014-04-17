@@ -19,8 +19,8 @@ public class OozieProvisionFileJob extends OozieJob {
   public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name, String oozie_working_dir, boolean useSge,
                                File seqwareJar, String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
     super(job, name, oozie_working_dir, useSge, seqwareJar, slotsSgeParamFormat, maxMemorySgeParamFormat);
-    // oozie provision file jobs should only require 2GB
-    job.setMaxMemory("2500");
+    // oozie provision file jobs should only require 2GB, leaving a margin of safety
+    job.setMaxMemory("3000");
     this.file = file;
   }
 
