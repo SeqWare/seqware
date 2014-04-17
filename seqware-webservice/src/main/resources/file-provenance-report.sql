@@ -215,6 +215,15 @@ union all
     group by anc.sample_id
 )
 
+, root_sample_swas_names as(
+    select anc.sample_id, s.sample_id as root_id, s.name as root_name, s.sw_accession as root_accession from sample s join sample_ancestors anc on 
+    s.sample_id = anc.ancestor_id join  
+    (select anc.sample_id, max(rank)
+    from sample_ancestors anc
+    group by anc.sample_id) max_ranks
+    on (max_ranks.sample_id = anc.sample_id and anc.rank = max_ranks.max) 
+)
+
 , sample_parent_attrs (sample_id, parent_attrs) as (
     select anc.sample_id
          , array_to_string(array_agg('parent_sample.'||tag||'.'||sw_accession||'='||vals order by rank), ';') as parent_attrs
@@ -239,6 +248,8 @@ select p.update_tstmp as last_modified
      , translate(case when e.name is not null and e.name <> '' then e.name else e.title end , ' ', '_') as experiment_name
      , e.sw_accession as experiment_swa
      , ea.attrs as experiment_attrs
+     , r.root_name as root_sample_name
+     , r.root_accession as root_sample_swa
      , translate(spn.parent_names, ' ', '_') as sample_parent_names
      , spn.parent_swas as sample_parent_swas
      , spn.parent_organism_ids as parent_organism_ids
@@ -287,6 +298,7 @@ join experiment e on e.experiment_id = ids.experiment_id
 left join experiment_attrs_str ea on ea.experiment_id = ids.experiment_id
 join processing p on p.processing_id = ids.processing_id
 left join processing_attrs_str pa on pa.processing_id = ids.processing_id
+left join root_sample_swas_names r on r.sample_id = ids.sample_id  
 left join sample_parent_swas_names spn on spn.sample_id = ids.sample_id
 left join sample_parent_attrs spa on spa.sample_id = ids.sample_id
 left join sample_parent_skip sps on sps.sample_id = ids.sample_id
