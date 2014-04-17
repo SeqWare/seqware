@@ -28,7 +28,9 @@
               "Study Attributes" 
               "Experiment Name" 
               "Experiment SWID" 
-              "Experiment Attributes" 
+              "Experiment Attributes"
+              "Root Sample Name" 
+              "Root Sample SWID"
               "Parent Sample Name" 
               "Parent Sample SWID" 
               "Parent Sample Organism IDs"
@@ -101,6 +103,7 @@
     "study"           (in "study_swa" (->ints values))
     "experiment"      (in "experiment_swa" (->ints values))
     "sample"          (in "sample_swa" (->ints values))
+    "root-sample"     (in "root_sample_swa" (->ints values))
     "organism"        (in "organism_id" (->ints values))
     "sample-ancestor" (like "sample_parent_swas" values)
     "sequencer-run"   (in "sequencer_run_swa" (->ints values))
