@@ -188,8 +188,8 @@ public class WorkflowApp {
       }
     }
     
-    // 2GB should be more than enough for start_0 based on metrics in PDE dev
-    abstractRootJob.setMaxMemory("2500");
+    // 2GB should be more than enough for start_0 based on metrics in PDE dev, leaving a margin of safety
+    abstractRootJob.setMaxMemory("3000");
     OozieJob oozieRootJob = new OozieBashJob(abstractRootJob, "start_" + this.jobs.size(), this.uniqueWorkingDir, this.useSge,
                                   this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
     oozieRootJob.setMetadataWriteback(metadatawriteback);
