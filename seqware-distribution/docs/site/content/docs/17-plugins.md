@@ -35,25 +35,28 @@ The decider from which all other deciders came
 
 | Command-line option | Description |
 |--------------------|--------------|
-|--all|Operate across everything. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. |
+|--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. |
 |--cf, --check-file-exists|Optional: only launch on the file if the file exists|
 |--check-wf-accessions|The comma-separated, no spaces, workflow accessions of the workflow that perform the same function (e.g. older versions). Any files that have been processed with these workflows will be skipped.|
 |--force-run-all|Forces the decider to run all matches regardless of whether they've been run before or not|
 |--group-by|Optional: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA. One of LANE_SWA or IUS_SWA.|
 |--ho, --host|Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host|
 |--ignore-skip-flag|Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.|
-|--ius-SWID|IUS sw_accession. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple swas by repeating --ius-swa|
-|--lane-SWID|Lane sw_accession. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple swas by repeating --lane-swa|
+|--ius-SWID|ius-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --ius-SWID|
+|--lane-SWID|lane-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --lane-SWID|
 |--launch-max|The maximum number of jobs to launch at once.|
 |--meta-types|The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.|
 |--no-meta-db, --no-metadata|Optional: a flag that prevents metadata writeback (which is done by default) by the Decider and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.|
+|--organism|organism. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --organism|
 |--parent-wf-accessions|The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.|
+|--processing-SWID|processing-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --processing-SWID|
 |--rerun-max|The maximum number of times to re-launch a workflowrun if failed.|
+|--root-sample-name|root-sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --root-sample-name|
 |--run|Run this workflow now. This is the default behaviour. See also: --schedule|
-|--sample-name|Full sample name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple names by repeating --sample-name|
+|--sample-name|sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --sample-name|
 |--schedule|Schedule this workflow to be run rather than running it immediately. See also: --run|
-|--sequencer-run-name|Full sequencer run name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple names by repeating --sequencer-run-name|
-|--study-name|Full study name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. Specify multiple names by repeating --study-name|
+|--sequencer-run-name|sequencer-run-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --sequencer-run-name|
+|--study-name|study-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --study-name|
 |--test|Testing mode. Prints the INI files to standard out and does not submit the workflow.|
 |--wf-accession|The workflow accession of the workflow|
 
@@ -155,13 +158,16 @@ Generates a tab-delimited report of all output files (and their relationships an
 
 | Command-line option | Description |
 |--------------------|--------------|
-|--all|Operate across everything. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. |
-|--ius-SWID|IUS sw_accession. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple swas by repeating --ius-swa|
-|--lane-SWID|Lane sw_accession. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple swas by repeating --lane-swa|
+|--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. |
+|--ius-SWID|ius-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --ius-SWID|
+|--lane-SWID|lane-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --lane-SWID|
+|--organism|organism. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --organism|
 |--out|The file into which the report will be written.|
-|--sample-name|Full sample name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple names by repeating --sample-name|
-|--sequencer-run-name|Full sequencer run name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required.  Specify multiple names by repeating --sequencer-run-name|
-|--study-name|Full study name. At least one of sample-name, study-name, sequencer-run-name, lane-swa, ius-swa or all is required. Specify multiple names by repeating --study-name|
+|--processing-SWID|processing-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --processing-SWID|
+|--root-sample-name|root-sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --root-sample-name|
+|--sample-name|sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --sample-name|
+|--sequencer-run-name|sequencer-run-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --sequencer-run-name|
+|--study-name|study-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --study-name|
 
 
 ##  HelloWorld
