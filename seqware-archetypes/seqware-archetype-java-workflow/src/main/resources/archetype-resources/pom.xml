@@ -19,7 +19,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <seqware-version>1.0.14-SNAPSHOT</seqware-version>
+        <seqware-version>1.0.14</seqware-version>
         <skipITs>true</skipITs>
         <workflow-full-name>Workflow_Bundle_${workflow-name}_${workflow-version}_SeqWare_${seqware-version}</workflow-full-name>
         <workflow-dir>${project.build.directory}/${workflow-full-name}/Workflow_Bundle_${workflow-name}/${workflow-version}</workflow-dir>
