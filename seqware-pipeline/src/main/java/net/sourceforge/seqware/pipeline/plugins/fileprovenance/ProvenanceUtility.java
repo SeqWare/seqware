@@ -94,7 +94,7 @@ public class ProvenanceUtility {
             }
         }
         boolean hasAll = false;
-        if (set.hasArgument(ALL)){
+        if (set.has(ALL)){
             hasAll = true;
         }
         return hasConstraint ^ hasAll;
