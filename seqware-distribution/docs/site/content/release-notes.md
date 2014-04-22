@@ -9,6 +9,26 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.0.14 (2014-04-21)
+
+This release contains mostly usability improvements. New features include the ability to target deciders by root samples and a sanity check tool that can run some basic checks to diagnose issues with SeqWare installs.
+
+## Defect
+* [SEQWARE-1880] - Seqware pipeline failure on sample wildcard with a large number of children
+
+## Improvement
+* [SEQWARE-1871] - Seqware compression control
+
+## Task
+* [SEQWARE-1794] - Sanity Check Tool
+* [SEQWARE-1827] - Create VirtualBox VM and update website with it
+* [SEQWARE-1864] - Expose --verbose in the CLI
+* [SEQWARE-1873] - Migrate (seqware jobs on) jenkins to CloudBindle
+* [SEQWARE-1878] - Hook up javadoc generation into mvn site-deploy
+
+## Technical task
+* [SEQWARE-1798] - verify oozie availability, able to write files to hdfs, connectivity
+* [SEQWARE-1799] - go through some checks from sqwref.hpc setup 
 
 ## 1.0.13 (2014-04-03)
 
