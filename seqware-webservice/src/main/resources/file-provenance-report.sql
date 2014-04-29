@@ -321,3 +321,8 @@ begin;
 drop table if exists file_provenance_report;
 create table file_provenance_report as (select * from file_provenance_report_temp);
 commit;
+
+--- Discard temporary tables for sure
+discard TEMPORARY;
+--- update statistics for query planner for the database
+VACUUM ANALYZE file_provenance_report;
