@@ -36,6 +36,8 @@ If you wish to use a different postgres database, edit the seqware_meta_db prope
 * deploy the web service ./asadmin deploy --name seqware-admin-webservice --contextroot seqware-admin-webservice   ~/seqware_github/seqware-admin-webservice/target/seqware-admin-webservice-1.0.7-SNAPSHOT.war 
 * browse to http://localhost:38080/seqware-admin-webservice/test-services.html
 
+For better and more up-to-date instructions including how to customize the database location, please refer to the Ansible playbook currently hosted at https://github.com/CloudBindle/Bindle/blob/feature/bindle2/ansible/seqware-admin-webservice-install.yml
+
 ## Running with embedded Glassfish with a maven target
 
 * mvn embedded-glassfish:run
