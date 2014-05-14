@@ -117,7 +117,9 @@ What makes Amazon's cloud so amazingly awesome is its excellent support for both
 
 #### Stable Public AMI(s):
 
-* ** ami-b1e9f4d8 **
+* ** ami-80af40e8 **
+: 20140514 (SeqWare-1.0.13, Bindle 1.2 pre-release) Make sure you launch in Virginia and select the instance type "m1.xlarge" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
+* ** ami-b1e9f4d8 DEPRECATED**
 : 20140409 (SeqWare-1.0.13, Bindle 1.2 pre-release) Make sure you launch in Virginia and select the instance type "m1.xlarge" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
 
 An example of the launching wizard in the Amazon AWS console can be seen below:
