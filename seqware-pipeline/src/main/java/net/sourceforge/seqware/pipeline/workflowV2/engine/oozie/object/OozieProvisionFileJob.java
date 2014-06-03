@@ -111,6 +111,10 @@ public class OozieProvisionFileJob extends OozieJob {
         args.add("--output-dir");
         args.add(metadataOutputPrefix + "/" + outputDir);
       }
+      
+      if (file.isSkipIfMissing()){
+        args.add("--skip-if-missing");
+      }
     }
 
     if (file.isForceCopy()) {
