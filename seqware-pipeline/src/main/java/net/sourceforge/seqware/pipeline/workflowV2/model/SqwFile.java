@@ -21,6 +21,7 @@ public class SqwFile {
 	private boolean forceCopy;
 	private String uniqueDir;
 	private List<String> parentAccessions;
+        private boolean skipIfMissing = false;
 	
 	public SqwFile() {
 		//need to create a random directory for later reference
@@ -148,5 +149,19 @@ public class SqwFile {
      */
     public void setAttached(boolean attached) {
         this.attached = attached;
+    }
+
+    /**
+     * @return the skipIfMissing
+     */
+    public boolean isSkipIfMissing() {
+        return skipIfMissing;
+    }
+
+    /**
+     * @param skipIfMissing the skipIfMissing to set
+     */
+    public void setSkipIfMissing(boolean skipIfMissing) {
+        this.skipIfMissing = skipIfMissing;
     }
 }
