@@ -159,7 +159,9 @@ public class SqwFile {
     }
 
     /**
-     * @param skipIfMissing the skipIfMissing to set
+     * @param skipIfMissing only relevant for provision output, this sets 
+     * the skip if missing parameter of the provision files module
+     * allowing for the additional of optional files
      */
     public void setSkipIfMissing(boolean skipIfMissing) {
         this.skipIfMissing = skipIfMissing;
