@@ -662,7 +662,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       }
 
       /* Load ini (thus ensuring it exists) prior to writing to the DB. */
-      String[] iniCompleteFilePaths = iniFilesStr.toString().split(",");
+      String[] iniCompleteFilePaths = iniFilesStr.toString().isEmpty() ? new String[]{} : iniFilesStr.toString().split(",");
       for (String currIniFile : iniCompleteFilePaths) {
         MapTools.ini2Map(currIniFile, map);
       }

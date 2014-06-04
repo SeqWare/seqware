@@ -1100,8 +1100,6 @@ public class Main {
       out("Required parameters:");
       out("  --accession <swid>         The SWID of the workflow to be run");
       out("  --host <host>              The host on which to launch the workflow run");
-      out("  --ini <ini-file>           An ini file to configure the workflow run ");
-      out("                             Repeat this parameter to provide multiple files");
       out("");
       out("Optional parameters:");
       out("  --engine <type>            The engine that will process the workflow run.");
@@ -1111,11 +1109,13 @@ public class Main {
       out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
       out("                             Repeat this parameter to provide multiple parents");
       out("  --override <key=value>     Override specific parameters from the workflow.ini");
+      out("  --ini <ini-file>           An ini file to configure the workflow run ");
+      out("                             Repeat this parameter to provide multiple files");
       out("");
     } else {
       String wfId = reqVal(args, "--accession");
       String host = reqVal(args, "--host");
-      List<String> iniFiles = reqVals(args, "--ini");
+      List<String> iniFiles = optVals(args, "--ini");
       String engine = optVal(args, "--engine", null);
       List<String> parentIds = optVals(args, "--parent-accession");
       List<String> override = optVals(args, "--override");
