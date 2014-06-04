@@ -317,7 +317,8 @@ public class WorkflowDataModelFactory {
             SortedSet<WorkflowParam> workflowParams = this.metadata
                     .getWorkflowParams(workflowAccession.toString());
             for (WorkflowParam param : workflowParams) {
-                map.put(param.getKey(), param.getDefaultValue());
+                // SEQWARE-1909 - for installed workflows, interpret a null default as blank
+                map.put(param.getKey(), param.getDefaultValue() == null ? "" :  param.getDefaultValue());
             }
 
             // FIXME: this needs to be implemented otherwise portal submitted won't
