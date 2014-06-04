@@ -1567,6 +1567,7 @@ public class Main {
       out("  workflow      Interact with workflows");
       out("  workflow-run  Interact with workflow runs");
       out("  checkdb       Check the seqware database for convention errors");
+      out("  check         Check the seqware environment for configuration issues");
       out("");
       out("Flags:");
       out("  --help        Print help out");
