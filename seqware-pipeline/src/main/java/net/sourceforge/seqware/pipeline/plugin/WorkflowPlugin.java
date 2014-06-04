@@ -249,7 +249,7 @@ public class WorkflowPlugin extends Plugin {
     Log.info("EXTRA OPTIONS: " + nonOptions.size());
 
     // THE MAIN ACTION HAPPENS HERE
-    if (options.has("workflow-accession") && options.has("ini-files")) {
+    if (options.has("workflow-accession") /** && options.has("ini-files") */) {
 
       // then you're scheduling a workflow that has been installed
       if (options.has(SCHEDULE)) {
