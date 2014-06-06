@@ -77,6 +77,10 @@ public class WorkflowClassFinder {
 		}
 		for(Resource resource: resources) {
 			try {
+                                //seqware-1904 ignore private classes 
+                                if (resource.getFilename().contains("$")){
+                                    continue;
+                                }
 				//get the path
 				String path = resource.getFile().getPath();
 				String qPath = path.substring(classPathWithoutClass.length(),path.length() 
