@@ -50,6 +50,11 @@ public abstract class OozieJob {
    */
   public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
 
+  /**
+   * Namespace of the Shell action xml node.
+   */
+  public static final Namespace SHELL_XMLNS = Namespace.getNamespace("uri:oozie:shell-action:0.1");
+  
   protected String okTo = "done";
   // private String errorTo; always to fail now
   protected String name;

@@ -29,9 +29,19 @@ public class BatchedOozieBashJob extends OozieJob {
     File runnerScript = emitRunnerScript();
     File optionsFile = emitOptionsFile();
 
-    Element sge = new Element("sge", SGE_XMLNS);
-    add(sge, "script", runnerScript.getAbsolutePath());
-    add(sge, "options-file", optionsFile.getAbsolutePath());
+    Element sge = new Element("shell", SHELL_XMLNS);
+    add(sge, "job-tracker", "${jobTracker}");
+    add(sge, "name-node", "${nameNode}");
+    
+    Element config = add(sge, "configuration");
+    addProp(config, "mapred.job.queue.name", "${queueName}");
+    
+    add(sge, "exec", "qsub");
+    add(sge, "argument", "-sync");
+    add(sge, "argument", "yes");
+    add(sge, "argument", "-@");
+    add(sge, "argument", optionsFile.getAbsolutePath());
+    add(sge, "argument", runnerScript.getAbsolutePath());
 
     return sge;
   }
