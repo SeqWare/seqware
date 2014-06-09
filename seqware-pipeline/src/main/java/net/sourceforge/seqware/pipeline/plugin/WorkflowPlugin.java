@@ -455,7 +455,7 @@ public class WorkflowPlugin extends Plugin {
     // launch all if accession not specified
     List<WorkflowRun> scheduledWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted);
 
-    Log.stdout("Number of submitted workflows: " + scheduledWorkflows.size());
+    Log.stdoutWithTime("Number of submitted workflows: " + scheduledWorkflows.size());
 
     for (WorkflowRun wr : scheduledWorkflows) {
       Log.stdout("Working Run: " + wr.getSwAccession());

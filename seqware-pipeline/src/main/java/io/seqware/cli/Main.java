@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+import net.sourceforge.seqware.common.util.Log;
 
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
@@ -916,6 +917,7 @@ public class Main {
       if ("report".equals(cmd)) {
         filesReport(args);
       } else if ("refresh".equals(cmd)){
+        Log.stdoutWithTime("Triggered provenance report" );
         Reports.triggerProvenanceReport();
       } else {
         invalid("files", cmd);
@@ -1360,6 +1362,7 @@ public class Main {
         runnerArgs.add(cdl(ids));
       }
 
+      Log.stdoutWithTime("Propagated workflow engine statuses" );
       run(runnerArgs);
     }
   }
