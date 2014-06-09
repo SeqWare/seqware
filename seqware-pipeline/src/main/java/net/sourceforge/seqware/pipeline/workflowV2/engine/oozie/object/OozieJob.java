@@ -292,7 +292,7 @@ public abstract class OozieJob {
   }
 
   protected void writeScript(String contents, File file){
-    StringBuilder sb = new StringBuilder("#!/usr/bin/env bash\n\nexport "+ConfigTools.SEQWARE_SETTINGS_PROPERTY+"=");
+    StringBuilder sb = new StringBuilder("#!/usr/bin/env bash\nset -o errexit\n\nexport "+ConfigTools.SEQWARE_SETTINGS_PROPERTY+"=");
     sb.append(ConfigTools.getSettingsFilePath());
     sb.append("\ncd ");
     sb.append(oozie_working_dir);
