@@ -16,6 +16,9 @@
  */
 package net.sourceforge.seqware.common.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -30,6 +33,7 @@ import org.apache.log4j.PatternLayout;
 public class Log {
     
     private static boolean verbose;
+    private final static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     /**
      * See {@link org.apache.log4j.Logger#debug(Object)}.
      *
@@ -205,6 +209,18 @@ public class Log {
      */
     public static void stdout(final String message) {
 	    System.out.println(message);
+    }
+    
+    /**
+     * Output to stdout with the time pre-pended
+     *
+     * @param message a {@link java.lang.String} object.
+     */
+    public static void stdoutWithTime(final String message) {
+        //get current date time with Date()
+	Date date = new Date();
+	System.out.print("[" + dateFormat.format(date) + "] | ");
+	System.out.println(message);
     }
     
     /**
