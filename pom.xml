@@ -36,7 +36,7 @@
         <commons-cli.version>1.2</commons-cli.version>
         <commons-exec.version>1.1</commons-exec.version>
         <postgresql.version>9.1-901.jdbc3</postgresql.version>
-        <guava.version>11.0.2</guava.version>
+        <guava.version>17.0</guava.version>
         <restlet.version>2.1-RC5</restlet.version>
         <opencsv.version>2.3</opencsv.version>
         <maven-assembly-plugin.version>2.4</maven-assembly-plugin.version>
