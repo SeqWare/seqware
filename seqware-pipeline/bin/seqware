@@ -40,7 +40,7 @@ if $cygwin; then
 fi
 
 export SEQWARE_JAR="$SEQWARE_HOME/self-installs/seqware-distribution-$SEQWARE_VERSION-full.jar"
-export SEQWARE_CHECK_JAR="$SEQWARE_HOME/self-installs/seqware-sanity-check-$SEQWARE_VERSION-jar-with-dependencies.jar"
+export SEQWARE_CHECK_JAR="$SEQWARE_HOME/self-installs/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
 export SEQWARE_SETTINGS="${SEQWARE_SETTINGS:-"$SEQWARE_HOME/settings"}"
 
 # normalize $0 on certain BSDs
@@ -188,12 +188,12 @@ elif [ "$1" = "self-check-install" ]; then
     mkdir -p "$(dirname "$SEQWARE_CHECK_JAR")"
     
     if [ $SNAPSHOT = "YES" ]; then
-        SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-with-dependencies.jar"
-    elif [ -r "/$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-with-dependencies.jar" ]; then
+        SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
+    elif [ -r "/$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar" ]; then
 	# for testing, if you have a local release version, just use it
-        SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-with-dependencies.jar"
+        SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
     else
-        SEQWARE_URL="http://wrench.res.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-with-dependencies.jar"
+        SEQWARE_URL="http://wrench.res.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
     fi
 
     $HTTP_CLIENT "$SEQWARE_CHECK_JAR.pending" "$SEQWARE_URL"
