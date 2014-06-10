@@ -231,7 +231,7 @@ public abstract class OozieJob {
       }
       args.add(threadsSgeParamFormat.replace(SGE_THREADS_PARAM_VARIABLE, Integer.toString(jobObj.getThreads())));
     }
-
+    
     write(concat(" ", args), file);
     return file;
 
@@ -298,6 +298,7 @@ public abstract class OozieJob {
     sb.append(oozie_working_dir);
     sb.append("\n");
     sb.append(contents);
+    sb.append("\n");
     write(sb.toString(), file);
   }
 
