@@ -187,10 +187,10 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
       copyFromLocal(fileSystem, nfsWorkDir + "/job.properties", hdfsWorkDir);
       copyFromLocal(fileSystem, nfsWorkDir + "/workflow.xml", hdfsWorkDir);
 
-      if (!useSge) {
+      //if (!useSge) {
         // copy lib
         copyFromLocal(fileSystem, seqwareJarPath(objectModel), pathlib);
-      }
+      //}
       System.out.println("Files copied to " + nfsWorkDir);
     } catch (RuntimeException e) {
       throw e;

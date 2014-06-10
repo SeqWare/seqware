@@ -24,20 +24,36 @@ public class OozieBashJob extends OozieJob {
   protected Element createSgeElement() {
     File runnerScript = emitRunnerScript();
     File optionsFile = emitOptionsFile();
-
-    Element sge = new Element("shell", SHELL_XMLNS);
+    
+    Element sge = new Element("java", WF_XMLNS);
     add(sge, "job-tracker", "${jobTracker}");
     add(sge, "name-node", "${nameNode}");
-    
+
     Element config = add(sge, "configuration");
     addProp(config, "mapred.job.queue.name", "${queueName}");
-    
-    add(sge, "exec", "qsub");
-    add(sge, "argument", "-sync");
-    add(sge, "argument", "yes");
-    add(sge, "argument", "-@");
-    add(sge, "argument", optionsFile.getAbsolutePath());
-    add(sge, "argument", runnerScript.getAbsolutePath());
+    addProp(config, "oozie.launcher.mapred.job.map.memory.mb", jobObj.getMaxMemory());
+    addProp(config, "oozie.launcher.mapred.job.reduce.memory.mb", jobObj.getMaxMemory());
+    addProp(config, "oozie.launcher.mapreduce.map.memory.physical.mb", jobObj.getMaxMemory());
+    addProp(config, "oozie.launcher.mapreduce.reduce.memory.physical.mb", jobObj.getMaxMemory());
+
+    add(sge, "main-class", "net.sourceforge.seqware.pipeline.runner.PluginRunner");
+    String settings = String.format("-D%s='%s'", ConfigTools.SEQWARE_SETTINGS_PROPERTY, ConfigTools.getSettingsFilePath());
+    add(sge, "java-opts", settings);
+    add(sge, "arg", "-p");
+    add(sge, "arg", "net.sourceforge.seqware.pipeline.plugins.ModuleRunner");
+    add(sge, "arg", "--");
+    add(sge, "arg", "--module");
+    add(sge, "arg", "net.sourceforge.seqware.pipeline.modules.GenericCommandRunner");
+    add(sge, "arg", "--no-metadata");
+    add(sge, "arg", "--");
+    add(sge, "arg", "--gcr-command");
+    // actual comment
+    add(sge, "arg", "qsub");
+    add(sge, "arg", "-sync");
+    add(sge, "arg", "yes");
+    add(sge, "arg", "-@");
+    add(sge, "arg", optionsFile.getAbsolutePath());
+    add(sge, "arg", runnerScript.getAbsolutePath());
 
     return sge;
   }
