@@ -1,9 +1,13 @@
 package net.sourceforge.seqware.common.util.iotools;
 
+import com.google.common.collect.EvictingQueue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>BufferedReaderThread class.</p>
@@ -14,7 +18,7 @@ import java.io.InputStreamReader;
 public class BufferedReaderThread extends Thread {
 
   BufferedReader reader = null;
-  StringBuffer output = new StringBuffer();
+  Collection<String> output = null;
   String error = null;
   
   /**
@@ -24,6 +28,22 @@ public class BufferedReaderThread extends Thread {
    */
   public BufferedReaderThread( InputStream input ) {
     reader = new BufferedReader(new InputStreamReader(input));
+    output = new ArrayList<>();
+  }  
+  
+  /**
+   * <p>Constructor for BufferedReaderThread.</p>
+   *
+   * @param input a {@link java.io.InputStream} object.
+   * @param lineCapacity set the capacity for the buffered reader, set to Integer.MAX_VALUE to store everything
+   */
+  public BufferedReaderThread( InputStream input, int lineCapacity ) {
+    reader = new BufferedReader(new InputStreamReader(input));
+    if (lineCapacity == Integer.MAX_VALUE){
+      output = new ArrayList<>();
+      return;  
+    } 
+    output = EvictingQueue.create(lineCapacity);
   }  
 
   
@@ -33,20 +53,16 @@ public class BufferedReaderThread extends Thread {
     String line = null;
     try {
       while((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
+          output.add(line);
       }
     } catch (IOException e) {
       error = e.getMessage();
     }
   }
 
-  /**
-   * <p>Getter for the field <code>output</code>.</p>
-   *
-   * @return a {@link java.lang.StringBuffer} object.
-   */
-  public StringBuffer getOutput() {
-    return output;
+
+  public String getOutput() {
+    return StringUtils.join(output, '\n');
   }
 
   /**
