@@ -52,10 +52,10 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class GenericCommandRunner extends Module {
-    public static final String GCRSTDOUT = "gcr-stdout";
-    public static final String GCRSTDERR = "gcr-stderr";
-    public static final String GCRSTDERRBUFFERSIZE = "gcr-stderr-buffer-size";
-    public static final String GCRSTDOUTBUFFERSIZE = "gcr-stdout-buffer-size";
+    public static final String GCR_STDOUT = "gcr-stdout";
+    public static final String GCR_STDERR = "gcr-stderr";
+    public static final String GCR_STDERR_BUFFERSIZE = "gcr-stderr-buffer-size";
+    public static final String GCR_STDOUT_BUFFERSIZE = "gcr-stdout-buffer-size";
 
     private OptionSet options = null;
     private File tempDir = null;
@@ -89,11 +89,11 @@ public class GenericCommandRunner extends Module {
                 "gcr-skip-if-missing",
                 "If the registered output files don't exist don't worry about it. Useful for workflows that can produce variable file outputs but also potentially dangerous.");
         parser.accepts("gcr-check-output-file", "Specify the path to the file.").withRequiredArg();
-        parser.accepts(GCRSTDOUTBUFFERSIZE, "Used if "+ GCRSTDOUT + " is not set. This sets the number of lines of stdout to report (Default is "+DEFAULT_QUEUE_LENGTH+"). ").withRequiredArg().ofType(Integer.class).describedAs("Optional").defaultsTo(DEFAULT_QUEUE_LENGTH);
-        parser.accepts(GCRSTDERRBUFFERSIZE, "Used if "+ GCRSTDERR+ " is not set. This sets the number of lines of stderr to report (Default is "+DEFAULT_QUEUE_LENGTH+"). ").withRequiredArg().ofType(Integer.class).describedAs("Optional").defaultsTo(DEFAULT_QUEUE_LENGTH);
+        parser.accepts(GCR_STDOUT_BUFFERSIZE, "Used if "+ GCR_STDOUT + " is not set. This sets the number of lines of stdout to report (Default is "+DEFAULT_QUEUE_LENGTH+"). ").withRequiredArg().ofType(Integer.class).describedAs("Optional").defaultsTo(DEFAULT_QUEUE_LENGTH);
+        parser.accepts(GCR_STDERR_BUFFERSIZE, "Used if "+ GCR_STDERR+ " is not set. This sets the number of lines of stderr to report (Default is "+DEFAULT_QUEUE_LENGTH+"). ").withRequiredArg().ofType(Integer.class).describedAs("Optional").defaultsTo(DEFAULT_QUEUE_LENGTH);
         // SEQWARE-1668 GCR needs the ability to output to stdout and stderr for debugging
-        parser.accepts(GCRSTDOUT, "Optional: Reports the full stdout (stdout of the command called is normally trimmed to "+GCRSTDOUTBUFFERSIZE+" lines");
-        parser.accepts(GCRSTDERR, "Optional: Returns the full stderr (stderr of the command called is normally trimmed to "+GCRSTDERRBUFFERSIZE+" lines");
+        parser.accepts(GCR_STDOUT, "Optional: Reports the full stdout (stdout of the command called is normally trimmed to "+GCR_STDOUT_BUFFERSIZE+" lines");
+        parser.accepts(GCR_STDERR, "Optional: Returns the full stderr (stderr of the command called is normally trimmed to "+GCR_STDERR_BUFFERSIZE+" lines");
         return (parser);
     }
 
@@ -159,7 +159,7 @@ public class GenericCommandRunner extends Module {
                 final String param = this.getParameters().get(i);
                 if (param.startsWith("--gcr-")) {
                     // except these ones!
-                    if (param.startsWith("--gcr-skip-if") || param.equals("--" + GenericCommandRunner.GCRSTDERR) || param.equals("--" + GenericCommandRunner.GCRSTDOUT)) {
+                    if (param.startsWith("--gcr-skip-if") || param.equals("--" + GenericCommandRunner.GCR_STDERR) || param.equals("--" + GenericCommandRunner.GCR_STDOUT)) {
                         myParameters.add(param);
                     } else {
                         myParameters.add(param);
@@ -173,12 +173,12 @@ public class GenericCommandRunner extends Module {
 
             options = parser.parse(myParameters.toArray(new String[0]));
 
-            stdoutQueueLength = Integer.valueOf(options.valueOf(GCRSTDOUTBUFFERSIZE).toString());
-            stderrQueueLength = Integer.valueOf(options.valueOf(GCRSTDERRBUFFERSIZE).toString());
-            if (options.has(GCRSTDOUT)) {
+            stdoutQueueLength = Integer.valueOf(options.valueOf(GCR_STDOUT_BUFFERSIZE).toString());
+            stderrQueueLength = Integer.valueOf(options.valueOf(GCR_STDERR_BUFFERSIZE).toString());
+            if (options.has(GCR_STDOUT)) {
                 stdoutQueueLength = Integer.MAX_VALUE;
             }
-            if (options.has(GCRSTDERR)) {
+            if (options.has(GCR_STDERR)) {
                 stderrQueueLength = Integer.MAX_VALUE;
             }
             
