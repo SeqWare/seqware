@@ -20,6 +20,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
+import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
@@ -442,26 +443,26 @@ public class WorkflowDataModelFactory {
         if (options.has("no-metadata") || options.has("no-meta-db") || options.has("status")) {
             metadataWriteback = false;
         }
-        map.put("metadata", Boolean.toString(metadataWriteback));
+        map.put(ReservedIniKeys.METADATA.getKey(), Boolean.toString(metadataWriteback));
         model.setMetadataWriteBack(metadataWriteback);
         //metadata-output-file-prefix
         if (options.has("metadata-output-file-prefix")) {
             model.setMetadata_output_file_prefix((String) options.valueOf("metadata-output-file-prefix"));
-        } else if (model.hasPropertyAndNotNull("output_prefix")) {
+        } else if (model.hasPropertyAndNotNull(ReservedIniKeys.OUTPUT_PREFIX.getKey())) {
             try {
-                model.setMetadata_output_file_prefix(model.getProperty("output_prefix"));
+                model.setMetadata_output_file_prefix(model.getProperty(ReservedIniKeys.OUTPUT_PREFIX.getKey()));
             } catch (Exception ex) {
                 Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            Log.error("You need to specify the output prefix for your workflow using either --metadata-output-file-prefix as a WorkflowLauncher param or in your workflow INI file as output_prefix!");
+            Log.error("You need to specify the output prefix for your workflow using either --metadata-output-file-prefix as a WorkflowLauncher param or in your workflow INI file as " + ReservedIniKeys.OUTPUT_PREFIX.getKey());
         }
         //metadata-output-dir
         if (options.has("metadata-output-dir")) {
             model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
-        } else if (model.hasPropertyAndNotNull("output_dir")) {
+        } else if (model.hasPropertyAndNotNull(ReservedIniKeys.OUTPUT_DIR.getKey())) {
             try {
-                model.setMetadata_output_dir(model.getProperty("output_dir"));
+                model.setMetadata_output_dir(model.getProperty(ReservedIniKeys.OUTPUT_DIR.getKey()));
             } catch (Exception ex) {
                 Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
             }

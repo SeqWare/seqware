@@ -7,6 +7,7 @@ import java.util.List;
 import org.jdom.Element;
 
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import net.sourceforge.seqware.pipeline.modules.GenericCommandRunner;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 
@@ -89,6 +90,13 @@ public class OozieBashJob extends OozieJob {
     if(cmd.getGcrOutputFile() != null){
       args.add("--gcr-output-file");
       args.add(cmd.getGcrOutputFile());
+    }
+    if (cmd.getOutputLineCapacity() != null){
+        // if we later decide to separately set stderr and stdout, this will need to be changed
+      args.add("--"+ GenericCommandRunner.GCR_STDERR_BUFFERSIZE);
+      args.add(String.valueOf(cmd.getOutputLineCapacity()));
+      args.add("--"+ GenericCommandRunner.GCR_STDOUT_BUFFERSIZE);
+      args.add(String.valueOf(cmd.getOutputLineCapacity()));
     }
 
     args.add("--gcr-algorithm");
