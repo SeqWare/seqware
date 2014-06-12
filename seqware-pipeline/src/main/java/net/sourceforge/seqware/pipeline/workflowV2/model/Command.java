@@ -10,6 +10,7 @@ public class Command {
 	private boolean gcrSkipIfMissing;
 	private boolean gcrSkipIfOutputExists;
 	private String gcrOutputFile;
+        private Integer outputLineCapacity = null;
 	
 	public Command() {
 		this.arguments = new ArrayList<>();
@@ -38,7 +39,7 @@ public class Command {
 		if(this.arguments.isEmpty() == false) {
 			sb.append(this.arguments.get(0));
 			for(int i=1; i<this.arguments.size(); i++) {
-				sb.append("\n"+this.arguments.get(i));
+				sb.append("\n").append(this.arguments.get(i));
 			}
 		}
 		return sb.toString();
@@ -79,4 +80,19 @@ public class Command {
 	public void setGcrOutputFile(String gcrOutputFile) {
 		this.gcrOutputFile = gcrOutputFile;
 	}
+
+    /**
+     * @return the outputLineCapacity, null when not defined
+     */
+    public Integer getOutputLineCapacity() {
+        return outputLineCapacity;
+    }
+
+    /**
+     * Set the number of lines of stdout and stderr to output
+     * @param outputLineCapacity the outputLineCapacity to set
+     */
+    public void setOutputLineCapacity(Integer outputLineCapacity) {
+        this.outputLineCapacity = outputLineCapacity;
+    }
 }
