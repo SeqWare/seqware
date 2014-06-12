@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.webservice.resources.filters;
 
 import junit.framework.Assert;
+import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.webservice.resources.AbstractResourceTest;
 import org.junit.Ignore;
 import org.restlet.representation.Representation;
@@ -74,10 +75,10 @@ public class WorkflowRunsFilterTest extends AbstractResourceTest {
             builder.append("# key=greeting:type=text:display=T:display_name=Greeting\n");
             builder.append("greeting=Testing\n");
             builder.append("# this is just a comment, the output directory is a conventions and used in many workflows to specify a relative output path\n");
-            builder.append("output_dir=seqware-results\n");
-            builder.append("# the output_prefix is a convension and used to specify the root of the absolute output path or an S3 bucket name\n");
+            builder.append(ReservedIniKeys.OUTPUT_DIR.getKey()).append("=seqware-results\n");
+            builder.append("# the ").append(ReservedIniKeys.OUTPUT_PREFIX.getKey()).append(" is a convension and used to specify the root of the absolute output path or an S3 bucket name\n");
             builder.append("# you should pick a path that is available on all custer nodes and can be written by your user\n");
-            builder.append("output_prefix=./\n");
+            builder.append("").append(ReservedIniKeys.OUTPUT_PREFIX.getKey()).append("=./\n");
 
             StringRepresentation myString = new StringRepresentation(builder.toString());
             Representation rep = resource.post(myString);
