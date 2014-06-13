@@ -912,11 +912,16 @@
                 <executions>
                     <execution>
                         <phase>
-                            site
+                            compile 
                         </phase>
                         <goals>
-                            <goal>checkstyle-aggregate</goal>
+                            <goal>check</goal>
                         </goals>
+                        <configuration>
+                            <enableFilesSummary>true</enableFilesSummary>
+                            <enableRulesSummary>true</enableRulesSummary>
+                            <consoleOutput>true</consoleOutput>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -943,6 +948,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.12.1</version>
                 <configuration>
                     <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>
