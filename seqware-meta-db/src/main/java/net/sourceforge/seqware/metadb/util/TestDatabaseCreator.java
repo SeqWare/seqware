@@ -224,8 +224,6 @@ public class TestDatabaseCreator {
             connection.createStatement().execute(getClassPathFileToString("seqware_meta_db_data.sql"));
             System.out.println("Loading testing data");
             connection.createStatement().execute(getClassPathFileToString("seqware_meta_db_testdata.sql"));
-	
-
         } catch (IOException e) {
             e.printStackTrace();
         }
