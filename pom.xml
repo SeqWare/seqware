@@ -776,8 +776,14 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>${maven-war-plugin.version}</version>
                 </plugin>
-      
-      
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>2.12.1</version>
+		    <configuration>                                                                         
+		        <configLocation>checkstyle.xml</configLocation>                                     
+		    </configuration>   
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -900,6 +906,20 @@
                     <skipDeploy>true</skipDeploy>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>
+                            site
+                        </phase>
+                        <goals>
+                            <goal>checkstyle-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <reporting>
@@ -918,6 +938,13 @@
                         <format>html</format>
                         <format>xml</format>
                     </formats>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
                 </configuration>
             </plugin>
         </plugins>
