@@ -66,12 +66,6 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
      * @param id
      * @param victims
      * @param targetClass
-     * @throws NamingException
-     * @throws NotSupportedException
-     * @throws SystemException
-     * @throws RollbackException
-     * @throws HeuristicMixedException
-     * @throws HeuristicRollbackException
      */
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @DELETE
