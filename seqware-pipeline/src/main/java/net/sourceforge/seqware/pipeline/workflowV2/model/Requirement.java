@@ -44,6 +44,5 @@ public class Requirement {
 	public void setNamespace(String namespace) {
 		this.namespace = namespace;
 	}
-	
-	
+		
 }
