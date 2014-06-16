@@ -209,8 +209,7 @@ public class LoadIndexPageController extends BaseCommandController {
 
         String contextPath = this.getServletContext().getContextPath();
 
-        String pathToTempStore = "webapps" + contextPath +
-        /* SEPARATOR +"WEB-INF" + */SEPARATOR + "temp";
+        String pathToTempStore = "webapps" + contextPath + SEPARATOR + "temp";
 
         // Log.info("Context path = " + contextPath);
         // Log.info("pathToTempStore = " + pathToTempStore);

@@ -194,9 +194,7 @@ public class NodeHtmlUtil {
                         "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
                         + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + END_HTML_EMPTY_NODE;
             } else {
-                fileHtml = "<li" + closeOpenHtml + fileId + "' >" + fileLinkHtml +
-                // " SWID: "+ swAccession +
-                        "</span> " + ownerHtml + END_HTML_EMPTY_NODE;
+                fileHtml = "<li" + closeOpenHtml + fileId + "' >" + fileLinkHtml + "</span> " + ownerHtml + END_HTML_EMPTY_NODE;
             }
             html = html + fileHtml;
         }
@@ -816,9 +814,7 @@ public class NodeHtmlUtil {
                         + " SWID: "
                         + swAccession
                         + "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
-                        + ownerHtml + "<span class='m-description'>Description: " + decs +
-                        // "</span>"+ htmlEmptyNode +"</li>";
-                        "</span>" + END_HTML_EMPTY_NODE;
+                        + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + END_HTML_EMPTY_NODE;
             } else {
                 expHtml = "<li id='liexp_" + expId + ">" + "<span id='exp_" + expId + "' >Experiment: " + name + " SWID: " + swAccession
                         + "</span>" + END_HTML_EMPTY_NODE;

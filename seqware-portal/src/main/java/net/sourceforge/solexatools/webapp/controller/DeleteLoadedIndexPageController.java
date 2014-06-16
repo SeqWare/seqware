@@ -49,8 +49,7 @@ public class DeleteLoadedIndexPageController extends BaseCommandController {
         /**
          * Pass registration so that we can filter the list if its appropriate to do so.
          */
-        String pathToTempStore = "webapps" + this.getServletContext().getContextPath() +
-        /* SEPARATOR +"WEB-INF" + */SEPARATOR + "temp";
+        String pathToTempStore = "webapps" + this.getServletContext().getContextPath() + SEPARATOR + "temp";
 
         String pathToUserTempStore = pathToTempStore + SEPARATOR + registration.getEmailAddress();
 

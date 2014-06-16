@@ -231,9 +231,7 @@ public class TreeNodeHtmlUtil {
                 + status
                 + ")"
                 + "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
-                + ownerHtml + "<span class='m-description'>Description: " + decs +
-                // "</span>"+ htmlEmptyNode +"</li>";
-                "</span>" + endHtmlEmptyNode;
+                + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + endHtmlEmptyNode;
 
         html = html + aeHtml;
 
@@ -325,9 +323,7 @@ public class TreeNodeHtmlUtil {
                     + swAccession
                     + statuses
                     + "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
-                    + ownerHtml + "<span class='m-description'>Description: " + decs +
-                    // "</span>"+ htmlEmptyNode +"</li>";
-                    "</span>" + endHtmlEmptyNode;
+                    + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + endHtmlEmptyNode;
 
             html = html + laneHtml;
 
@@ -369,9 +365,7 @@ public class TreeNodeHtmlUtil {
                     + " SWID: "
                     + swAccession
                     + "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
-                    + ownerHtml + "<span class='m-description'>Description: " + decs +
-                    // "</span>"+ htmlEmptyNode +"</li>";
-                    "</span>" + endHtmlEmptyNode;
+                    + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + endHtmlEmptyNode;
 
             html = html + sampleHtml;
         }
@@ -431,9 +425,7 @@ public class TreeNodeHtmlUtil {
                         + " SWID: "
                         + swAccession
                         + "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
-                        + ownerHtml + "<span class='m-description'>Description: " + decs +
-                        // "</span>"+ htmlEmptyNode +"</li>";
-                        "</span>" + endHtmlEmptyNode;
+                        + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + endHtmlEmptyNode;
             } else {
                 expHtml = "<li id='liexp_" + expId + "<span id='exp_" + expId + "' >Experiment: " + name + " SWID: " + swAccession
                         + "</span>" + ownerHtml + endHtmlEmptyNode;
