@@ -130,8 +130,8 @@ public class WorkflowTools {
 
         // TODO: first if I don't own this directory then I need to abort!
         File statusDirFile = new File(statusDir);
-        if (statusDirFile /** is not owned */
-        != null) {
+        /** is not owned */
+        if (statusDirFile != null) {
             /** abort! */
         }
 
