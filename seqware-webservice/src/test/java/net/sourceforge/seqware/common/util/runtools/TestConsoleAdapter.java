@@ -25,19 +25,18 @@ import java.util.Map;
 import junit.framework.Assert;
 
 /**
- * Allows us to test the interactive console. To use, instantiate the object and
- * call setLine(String) for each line that you want to read.
- *
+ * Allows us to test the interactive console. To use, instantiate the object and call setLine(String) for each line that you want to read.
+ * 
  * @author mtaschuk
  */
 public class TestConsoleAdapter extends ConsoleAdapter {
-    
+
     private Map<String, String> line;
     private Iterator<String> iterator;
 
     /**
      * Get the value of line
-     *
+     * 
      * @return the value of line
      */
     public Map<String, String> getLine() {
@@ -45,29 +44,29 @@ public class TestConsoleAdapter extends ConsoleAdapter {
     }
 
     /**
-     * Set the value of the line to return in the 'readLine' and 'readPassword'
-     * methods.
-     *
-     * @param line new value of line
+     * Set the value of the line to return in the 'readLine' and 'readPassword' methods.
+     * 
+     * @param line
+     *            new value of line
      */
     public void setLine(Map<String, String> line) {
         this.line = line;
     }
-    
+
     private String get(String field) {
         for (String key : line.keySet()) {
             if (field.contains(key)) {
                 return line.get(key);
             }
         }
-        Assert.fail("TestConsoleAdapter does not have a value for "+field);
+        Assert.fail("TestConsoleAdapter does not have a value for " + field);
         return null;
     }
-    
+
     @Override
     public void flush() {
     }
-    
+
     @Override
     /**
      * Returns null.
@@ -75,7 +74,7 @@ public class TestConsoleAdapter extends ConsoleAdapter {
     public Console format(String fmt, Object... args) {
         return null;
     }
-    
+
     @Override
     /**
      * Returns null.
@@ -83,27 +82,27 @@ public class TestConsoleAdapter extends ConsoleAdapter {
     public Console printf(String format, Object... args) {
         return null;
     }
-    
+
     @Override
     public String readLine() {
         return "";
     }
-    
+
     @Override
     public String readLine(String fmt, Object... args) {
         return get(fmt);
     }
-    
+
     @Override
     public char[] readPassword() {
         return "".toCharArray();
     }
-    
+
     @Override
     public char[] readPassword(String fmt, Object... args) {
         return get(fmt).toCharArray();
     }
-    
+
     @Override
     /**
      * Wraps System.in in an InputStreamReader.
@@ -111,7 +110,7 @@ public class TestConsoleAdapter extends ConsoleAdapter {
     public Reader reader() {
         return new InputStreamReader(System.in);
     }
-    
+
     @Override
     /**
      * Wraps System.out in a PrintWriter.
@@ -119,7 +118,7 @@ public class TestConsoleAdapter extends ConsoleAdapter {
     public PrintWriter writer() {
         return new PrintWriter(System.out);
     }
-    
+
     public static TestConsoleAdapter initializeTestInstance() {
         instance = new TestConsoleAdapter();
         return (TestConsoleAdapter) instance;

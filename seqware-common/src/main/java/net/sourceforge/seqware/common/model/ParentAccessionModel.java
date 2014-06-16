@@ -18,6 +18,7 @@ package net.sourceforge.seqware.common.model;
 
 /**
  * This links together all models that can be used to resolve a parent accession
+ * 
  * @author dyuen
  */
 public interface ParentAccessionModel {

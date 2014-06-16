@@ -36,24 +36,31 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>WorkflowParamResource class.</p>
- *
+ * <p>
+ * WorkflowParamResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowParamResource extends DatabaseResource {
 
     /**
-     * <p>Constructor for WorkflowParamResource.</p>
+     * <p>
+     * Constructor for WorkflowParamResource.
+     * </p>
      */
     public WorkflowParamResource() {
         super("WorkflowParams");
     }
 
     /**
-     * <p>postJaxb.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
      */
     @Post
     public void postJaxb(Representation entity) {
@@ -73,7 +80,7 @@ public class WorkflowParamResource extends DatabaseResource {
             w.givesPermission(registration);
             p.setWorkflow(w);
 
-            //persist p
+            // persist p
             WorkflowParamService ws = BeanFactory.getWorkflowParamServiceBean();
             Integer id = ws.insert(registration, p);
             WorkflowParam wp = (WorkflowParam) testIfNull(ws.findByID(id));
@@ -97,7 +104,9 @@ public class WorkflowParamResource extends DatabaseResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -121,7 +130,7 @@ public class WorkflowParamResource extends DatabaseResource {
             JaxbObject<WorkflowParam> jaxbTool = new JaxbObject<>();
             List<WorkflowParam> wps = (List<WorkflowParam>) testIfNull(ss.list());
             WorkflowParamList list = new WorkflowParamList();
-            for (WorkflowParam wp : wps ) {
+            for (WorkflowParam wp : wps) {
                 list.add(copier.hibernate2dto(WorkflowParam.class, wp));
             }
 

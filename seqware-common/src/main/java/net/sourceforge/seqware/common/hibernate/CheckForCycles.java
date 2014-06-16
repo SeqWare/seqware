@@ -27,8 +27,10 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 /**
- * <p>CheckForCycles class.</p>
- *
+ * <p>
+ * CheckForCycles class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -37,54 +39,61 @@ public class CheckForCycles {
     private StringBuilder results = new StringBuilder();
 
     /**
-     * <p>checkStudy.</p>
-     *
-     * @param studySwa a {@link java.lang.Integer} object.
+     * <p>
+     * checkStudy.
+     * </p>
+     * 
+     * @param studySwa
+     *            a {@link java.lang.Integer} object.
      * @return a {@link java.lang.String} object.
      */
     public String checkStudy(Integer studySwa) {
-            StudyService ss = BeanFactory.getStudyServiceBean();
-            Study study = ss.findBySWAccession(studySwa);
-            
-            if (study==null)
-            {
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "The study SWID does not exist "+studySwa);
-            }
-            
-            results.append("Study Name: ").append(study.getTitle()).append(" SWA: ").append(study.getSwAccession()).append("\n");
-            Set<Sample> samples = new TreeSet<>();
-            results.append("Number of experiments: ").append(study.getExperiments().size()).append("\n");
-            for (Experiment exp : study.getExperiments()) {
-                results.append("Experiment: ").append(exp.getName()).append(" SWID: ").append(exp.getSwAccession()).append("\n");
-                for (Sample s : exp.getSamples()) {
-                    samples.addAll(checkSample(s));
-                }
-            }
+        StudyService ss = BeanFactory.getStudyServiceBean();
+        Study study = ss.findBySWAccession(studySwa);
 
-            results.append("Number of unique samples: ").append(samples.size()).append("\n");
-            for (Sample sample : samples) {
-                results.append("Sample: ").append(sample.getName()).append(" SWID: ").append(sample.getSwAccession()).append("\n");
-                for (IUS ius : sample.getIUS()) {
-                    results.append("IUS: ").append(ius.getSwAccession()).append("\n");
-                    for (Processing processing : ius.getLane().getAllProcessings()) {
-                        results.append("Processing from lane: ").append(processing.getAlgorithm()).append(" SWID: ").append(processing.getSwAccession()).append("\n");
-                        checkProcessing(processing);
-                    }
-                    for (Processing processing : ius.getProcessings()) {
-                        results.append("Processing from IUS: ").append(processing.getAlgorithm()).append(" SWID: ").append(processing.getSwAccession()).append("\n");
-                        checkProcessing(processing);
-                    }
+        if (study == null) {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "The study SWID does not exist " + studySwa);
+        }
+
+        results.append("Study Name: ").append(study.getTitle()).append(" SWA: ").append(study.getSwAccession()).append("\n");
+        Set<Sample> samples = new TreeSet<>();
+        results.append("Number of experiments: ").append(study.getExperiments().size()).append("\n");
+        for (Experiment exp : study.getExperiments()) {
+            results.append("Experiment: ").append(exp.getName()).append(" SWID: ").append(exp.getSwAccession()).append("\n");
+            for (Sample s : exp.getSamples()) {
+                samples.addAll(checkSample(s));
+            }
+        }
+
+        results.append("Number of unique samples: ").append(samples.size()).append("\n");
+        for (Sample sample : samples) {
+            results.append("Sample: ").append(sample.getName()).append(" SWID: ").append(sample.getSwAccession()).append("\n");
+            for (IUS ius : sample.getIUS()) {
+                results.append("IUS: ").append(ius.getSwAccession()).append("\n");
+                for (Processing processing : ius.getLane().getAllProcessings()) {
+                    results.append("Processing from lane: ").append(processing.getAlgorithm()).append(" SWID: ")
+                            .append(processing.getSwAccession()).append("\n");
+                    checkProcessing(processing);
+                }
+                for (Processing processing : ius.getProcessings()) {
+                    results.append("Processing from IUS: ").append(processing.getAlgorithm()).append(" SWID: ")
+                            .append(processing.getSwAccession()).append("\n");
+                    checkProcessing(processing);
                 }
             }
-       
+        }
+
         return results.toString();
 
     }
 
     /**
-     * <p>checkSample.</p>
-     *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * <p>
+     * checkSample.
+     * </p>
+     * 
+     * @param sample
+     *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link java.util.Set} object.
      */
     public Set<Sample> checkSample(Sample sample) {
@@ -116,9 +125,12 @@ public class CheckForCycles {
     }
 
     /**
-     * <p>checkProcessing.</p>
-     *
-     * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+     * <p>
+     * checkProcessing.
+     * </p>
+     * 
+     * @param processing
+     *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
     public void checkProcessing(Processing processing) {
         List<Processing> processingPath = new ArrayList<>();

@@ -21,23 +21,29 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.Platform;
 
 /**
- * <p>PlatformList class.</p>
+ * <p>
+ * PlatformList class.
+ * </p>
  * 
  */
-public class PlatformList{
+public class PlatformList {
 
     protected List<Platform> tList;
 
     /**
-     * <p>Constructor for PlatformList.</p>
+     * <p>
+     * Constructor for PlatformList.
+     * </p>
      */
     public PlatformList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<Platform> getList() {
@@ -45,18 +51,24 @@ public class PlatformList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<Platform> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.Platform} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
     public void add(Platform ex) {
         tList.add(ex);

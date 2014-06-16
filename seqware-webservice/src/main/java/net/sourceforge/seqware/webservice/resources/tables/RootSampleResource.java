@@ -32,14 +32,16 @@ import org.w3c.dom.Document;
 
 /**
  * This resource should pull back only samples without parents
- *
+ * 
  * @author dyuen
  * @version $Id: $Id
  */
 public class RootSampleResource extends DatabaseResource {
 
     /**
-     * <p>Constructor for RootSampleResource.</p>
+     * <p>
+     * Constructor for RootSampleResource.
+     * </p>
      */
     public RootSampleResource() {
         super("sample");
@@ -52,7 +54,9 @@ public class RootSampleResource extends DatabaseResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {

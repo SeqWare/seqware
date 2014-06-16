@@ -21,25 +21,31 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.Processing;
 
 /**
- * <p>ProcessingList class.</p>
- *
+ * <p>
+ * ProcessingList class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class ProcessingList  {
+public class ProcessingList {
 
     protected List<Processing> tList;
 
     /**
-     * <p>Constructor for ProcessingList.</p>
+     * <p>
+     * Constructor for ProcessingList.
+     * </p>
      */
     public ProcessingList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<Processing> getList() {
@@ -47,18 +53,24 @@ public class ProcessingList  {
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<Processing> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.Processing} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
     public void add(Processing ex) {
         tList.add(ex);

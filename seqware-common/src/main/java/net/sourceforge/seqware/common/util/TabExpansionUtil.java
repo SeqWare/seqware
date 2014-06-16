@@ -21,24 +21,23 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * A series of utility methods that produce human friendly output from tabbed
- * output.
- *
+ * A series of utility methods that produce human friendly output from tabbed output.
+ * 
  * Not the most efficient, since we cannot stream Strings.
- *
+ * 
  * @author dyuen
  */
 public class TabExpansionUtil {
 
     /**
      * Produce output resembling Postgres with one "table" per record
-     *
+     * 
      * @param tabSeparated
      * @return
      */
     public static String expansion(String tabSeparated) {
         String[] lines = tabSeparated.split("\n");
-        // get headers 
+        // get headers
         String[] header = lines[0].split("\t");
         // determine maximum header length and other formatting
         int maxHeader = 0;
@@ -80,13 +79,13 @@ public class TabExpansionUtil {
 
     /**
      * Produce aligned output that lines up properly in the terminal
-     *
+     * 
      * @param tabSeparated
      * @return
      */
     public static String aligned(String tabSeparated) {
         String[] lines = tabSeparated.split("\n");
-        // get headers 
+        // get headers
         String[] header = lines[0].split("\t");
         // determine maximum header length and other formatting
         int[] maxContent = new int[header.length];
@@ -106,13 +105,13 @@ public class TabExpansionUtil {
             int j = 0;
             for (String col : records.get(i)) {
                 buff.append(col);
-                buff.append(StringUtils.repeat(" ", Math.max(0 , (maxContent[j] - col.length()))));
+                buff.append(StringUtils.repeat(" ", Math.max(0, (maxContent[j] - col.length()))));
                 buff.append("|");
                 j++;
             }
-            if (i == 0){
+            if (i == 0) {
                 buff.append("\n");
-                for(int c : maxContent){
+                for (int c : maxContent) {
                     buff.append(StringUtils.repeat("-", c));
                     buff.append("+");
                 }

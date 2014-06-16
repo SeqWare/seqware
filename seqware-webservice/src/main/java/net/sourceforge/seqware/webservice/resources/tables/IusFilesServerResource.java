@@ -18,92 +18,93 @@ import org.restlet.resource.ResourceException;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 
-
 /**
- * <p>IusFilesServerResource class.</p>
- *
+ * <p>
+ * IusFilesServerResource class.
+ * </p>
+ * 
  * @author morgantaschuk
  * @version $Id: $Id
  */
 public class IusFilesServerResource extends BasicResource implements IusFilesResource {
 
-  private static IUSService iusService;
-  
-  private Form form;
+    private static IUSService iusService;
 
-  /**
-   * <p>Constructor for IusFilesServerResource.</p>
-   */
-  public IusFilesServerResource() {
-    super();
-    IusFilesServerResource.initialiseIusService();
-  }
+    private Form form;
 
-  private static void initialiseIusService() {
-    if (IusFilesServerResource.iusService == null) {
-      IusFilesServerResource.iusService = BeanFactory.getIUSServiceBean();
+    /**
+     * <p>
+     * Constructor for IusFilesServerResource.
+     * </p>
+     */
+    public IusFilesServerResource() {
+        super();
+        IusFilesServerResource.initialiseIusService();
     }
-  }
-  
-  @VisibleForTesting
-  static void setIusService(IUSService iusService) {
-    IusFilesServerResource.iusService = iusService;
-  }
 
-  @VisibleForTesting
-  static void setRegistrationServiceForAuthentication(RegistrationService registrationService) {
-    BasicResource.setRegistrationService(registrationService);
-  }
-  
-  
-  
-  /** {@inheritDoc} */
-  @Override
-  protected void doInit() throws ResourceException {
-    super.doInit();
-    form = getRequest().getResourceRef().getQueryAsForm();
-  }
-  
-  private String getFirstQueryValue(String name) {
-    for (Parameter parameter : form) {
-      if(name.equals( parameter.getName())) {
-        return parameter.getValue();
-      }
+    private static void initialiseIusService() {
+        if (IusFilesServerResource.iusService == null) {
+            IusFilesServerResource.iusService = BeanFactory.getIUSServiceBean();
+        }
     }
-    return null;
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public List<FileDto> getIusFiles() {
-    authenticate();
-    
-    Integer iusId;
-    try {
-      iusId = parseClientInt("" + getRequestAttributes().get("id"));
-    } catch (NumberFormatException e) {
-      throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
+    @VisibleForTesting
+    static void setIusService(IUSService iusService) {
+        IusFilesServerResource.iusService = iusService;
     }
-    
-    String mimeType = getFirstQueryValue("mimeType");
-    List<File> files = Lists.newArrayList();
-    if(mimeType == null) {
-      files = iusService.getFiles(iusId);
-    } else {
-      files = iusService.getFiles(iusId, mimeType);
+
+    @VisibleForTesting
+    static void setRegistrationServiceForAuthentication(RegistrationService registrationService) {
+        BasicResource.setRegistrationService(registrationService);
     }
-    
-    if(files.size() == 0) {
-      throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
+
+    /** {@inheritDoc} */
+    @Override
+    protected void doInit() throws ResourceException {
+        super.doInit();
+        form = getRequest().getResourceRef().getQueryAsForm();
     }
-    List<FileDto> fileDtos = Lists.newArrayList();
-    String baseUrl = getRequest().getRootRef().toString();
-    for(File file : files) {
-      FileDto fileDto = Dtos.asDto(file);
-      fileDto.setUrl(baseUrl + "/files/" + file.getSwAccession() );
-      fileDtos.add(fileDto);
+
+    private String getFirstQueryValue(String name) {
+        for (Parameter parameter : form) {
+            if (name.equals(parameter.getName())) {
+                return parameter.getValue();
+            }
+        }
+        return null;
     }
-    return fileDtos;
-  }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<FileDto> getIusFiles() {
+        authenticate();
+
+        Integer iusId;
+        try {
+            iusId = parseClientInt("" + getRequestAttributes().get("id"));
+        } catch (NumberFormatException e) {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
+        }
+
+        String mimeType = getFirstQueryValue("mimeType");
+        List<File> files = Lists.newArrayList();
+        if (mimeType == null) {
+            files = iusService.getFiles(iusId);
+        } else {
+            files = iusService.getFiles(iusId, mimeType);
+        }
+
+        if (files.size() == 0) {
+            throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
+        }
+        List<FileDto> fileDtos = Lists.newArrayList();
+        String baseUrl = getRequest().getRootRef().toString();
+        for (File file : files) {
+            FileDto fileDto = Dtos.asDto(file);
+            fileDto.setUrl(baseUrl + "/files/" + file.getSwAccession());
+            fileDtos.add(fileDto);
+        }
+        return fileDtos;
+    }
 
 }

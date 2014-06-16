@@ -33,7 +33,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * A workflow run deletion tool for your SeqWare metadb
- *
+ * 
  * @author dyuen ProviderFor(PluginInterface.class)
  * @version $Id: $Id
  */
@@ -43,61 +43,70 @@ public final class DeletionDB extends Plugin {
     private OptionSpec<Integer> workflowRunSpec;
     private OptionSpec<String> inKeyFileSpec;
     private OptionSpec<String> outKeyFileSpec;
-    
+
     private Integer workflow_run_target = null;
     private File inKeyFile = null;
     private String adminUrl = null;
     private File outKeyFile = null;
 
     /**
-     * <p>Constructor for HelloWorld.</p>
+     * <p>
+     * Constructor for HelloWorld.
+     * </p>
      */
     public DeletionDB() {
         super();
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
-        workflowRunSpec = parser.acceptsAll(Arrays.asList("workflowrun", "r"),
-                "Give a sequencer run, lane, or workflow run SWID in order to determine which workflow runs (processings,files) should be deleted.")
+        workflowRunSpec = parser
+                .acceptsAll(Arrays.asList("workflowrun", "r"),
+                        "Give a sequencer run, lane, or workflow run SWID in order to determine which workflow runs (processings,files) should be deleted.")
                 .withRequiredArg().ofType(Integer.class).required();
-        inKeyFileSpec = parser.acceptsAll(Arrays.asList("key", "k"),
-                "An existing key file will be used to guide an actual deletion process")
-                .withRequiredArg().ofType(String.class);  
-        outKeyFileSpec = parser.acceptsAll(Arrays.asList("out", "o"),
-                "The filename of the output key file")
+        inKeyFileSpec = parser
+                .acceptsAll(Arrays.asList("key", "k"), "An existing key file will be used to guide an actual deletion process")
                 .withRequiredArg().ofType(String.class);
+        outKeyFileSpec = parser.acceptsAll(Arrays.asList("out", "o"), "The filename of the output key file").withRequiredArg()
+                .ofType(String.class);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public final ReturnValue init() {
-         try {
-          HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-          this.adminUrl = settings.get("SW_ADMIN_REST_URL");
+        try {
+            HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
+            this.adminUrl = settings.get("SW_ADMIN_REST_URL");
         } catch (Exception e) {
-          ReturnValue ret = new ReturnValue();
-          ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-          return (ret);
+            ReturnValue ret = new ReturnValue();
+            ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
+            return (ret);
         }
         if (this.adminUrl == null) {
             ReturnValue ret = new ReturnValue();
-            System.out.println("This utility requires access to the admin web service. Configure SW_ADMIN_REST_URL in your .seqware/setttings");
+            System.out
+                    .println("This utility requires access to the admin web service. Configure SW_ADMIN_REST_URL in your .seqware/setttings");
             ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
             return (ret);
         }
         return new ReturnValue();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_test() {
@@ -105,22 +114,25 @@ public final class DeletionDB extends Plugin {
         return new ReturnValue();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public final ReturnValue do_run() {
         workflow_run_target = options.valueOf(workflowRunSpec);
         if (options.has(inKeyFileSpec)) {
             inKeyFile = new File(options.valueOf(inKeyFileSpec));
-        } 
+        }
         if (options.has(outKeyFileSpec)) {
-           outKeyFile = new File(options.valueOf(outKeyFileSpec));
-        } 
+            outKeyFile = new File(options.valueOf(outKeyFileSpec));
+        }
         SeqWareWebServiceClient client = null;
         SeqWareWebServiceClient fileClient = null;
         try {
@@ -130,20 +142,21 @@ public final class DeletionDB extends Plugin {
             fileClient = new SeqWareWebServiceClient("file", adminUrl + "/webresources");
             if (inKeyFile == null) {
                 // create a key file
-                Set<ModelAccessionIDTuple> find_JSON_rdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()), String.valueOf(tuple.getId()));
+                Set<ModelAccessionIDTuple> find_JSON_rdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()),
+                        String.valueOf(tuple.getId()));
                 // add to a sorted set for easy viewing
                 SortedSet<ModelAccessionIDTuple> sortedSet = new TreeSet<>();
                 sortedSet.addAll(find_JSON_rdelete);
                 // output information for informational purposes
                 outputSummaryInformation(sortedSet, fileClient);
-                
+
                 ObjectMapper mapper = new ObjectMapper();
                 ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-                if (outKeyFile == null){
-                    outKeyFile = File.createTempFile("deletion",".keyFile");
-                } else{
+                if (outKeyFile == null) {
+                    outKeyFile = File.createTempFile("deletion", ".keyFile");
+                } else {
                     boolean createOutput = outKeyFile.createNewFile();
-                    if (!createOutput){
+                    if (!createOutput) {
                         ret.setExitStatus(ReturnValue.FILENOTWRITABLE);
                         return ret;
                     }
@@ -155,21 +168,22 @@ public final class DeletionDB extends Plugin {
                 Set<ModelAccessionIDTuple> matchSet;
                 Set<String> filesToBeDeleted = new HashSet<>();
                 try {
-                    matchSet = mapper.readValue(inKeyFile, new TypeReference<Set<ModelAccessionIDTuple>>(){});
+                    matchSet = mapper.readValue(inKeyFile, new TypeReference<Set<ModelAccessionIDTuple>>() {
+                    });
                     for (ModelAccessionIDTuple t : matchSet) {
                         if (t.getAdminModelClass().equals(io.seqware.webservice.generated.model.File.class.getName())) {
-                            io.seqware.webservice.generated.model.File file = fileClient.find_JSON(io.seqware.webservice.generated.model.File.class, String.valueOf(t.getId()));
+                            io.seqware.webservice.generated.model.File file = fileClient.find_JSON(
+                                    io.seqware.webservice.generated.model.File.class, String.valueOf(t.getId()));
                             filesToBeDeleted.add(file.getFilePath());
                         }
                     }
                     client.remove_rdelete(Class.forName(tuple.getAdminModelClass()), String.valueOf(tuple.getId()), matchSet);
                     client.close();
-                } catch(IOException ex){
+                } catch (IOException ex) {
                     System.out.println("Invalid data in provided key file");
                     ret.setExitStatus(ReturnValue.INVALIDFILE);
                     return ret;
-                } 
-                catch (UniformInterfaceException ex) {
+                } catch (UniformInterfaceException ex) {
                     if (ex.getResponse().getClientResponseStatus().equals(Status.NOT_FOUND)) {
                         System.out.println("Accession not found");
                         ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
@@ -188,7 +202,7 @@ public final class DeletionDB extends Plugin {
                 System.out.println("Successful deletion of entities listed in " + inKeyFile.getAbsolutePath());
                 // output files as candidates for deletion
                 File fileListing = File.createTempFile("file", ".listing");
-                for(String path : filesToBeDeleted){
+                for (String path : filesToBeDeleted) {
                     FileUtils.write(fileListing, path + '\n', true);
                 }
                 System.out.println("File records deleted for files listed in " + fileListing.getAbsolutePath());
@@ -217,23 +231,24 @@ public final class DeletionDB extends Plugin {
                 ret.setExitStatus(ReturnValue.FAILURE);
                 return ret;
             }
-        } catch (ClientHandlerException ex){
+        } catch (ClientHandlerException ex) {
             ReturnValue ret = new ReturnValue();
             System.out.println("Error connecting to admin web service, check that you have access to SW_ADMIN_REST_URL");
             ret.setExitStatus(ReturnValue.FAILURE);
             return (ret);
-        } 
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new RuntimeException("Client malfunction", ex);
-        } finally{
+        } finally {
             if (client != null) client.close();
             if (fileClient != null) fileClient.close();
         }
     }
 
     /**
-     * <p>get_description.</p>
-     *
+     * <p>
+     * get_description.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     @Override
@@ -258,7 +273,7 @@ public final class DeletionDB extends Plugin {
     private ModelAccessionIDTuple translateToID(int targetAccession) {
         SeqWareWebServiceClient client = new SeqWareWebServiceClient("workflowrun", adminUrl + "/webresources");
         ModelAccessionIDTuple tuple = client.findTupleByAccession(String.valueOf(targetAccession));
-        if (tuple != null){
+        if (tuple != null) {
             return tuple;
         }
         throw new RuntimeException("Could not locate target, please double-check your SWID");
@@ -266,11 +281,13 @@ public final class DeletionDB extends Plugin {
 
     /**
      * Output various convenient statistics and information on files for the end-user
+     * 
      * @param sortedSet
      * @param fileClient
-     * @throws UniformInterfaceException 
+     * @throws UniformInterfaceException
      */
-    private void outputSummaryInformation(SortedSet<ModelAccessionIDTuple> sortedSet, SeqWareWebServiceClient fileClient) throws UniformInterfaceException {
+    private void outputSummaryInformation(SortedSet<ModelAccessionIDTuple> sortedSet, SeqWareWebServiceClient fileClient)
+            throws UniformInterfaceException {
         // we can output some friendly summary statistics here
         int workflowRunCount = 0;
         Map<String, Integer> fileTypeCounts = new HashMap<>();
@@ -278,7 +295,8 @@ public final class DeletionDB extends Plugin {
             if (t.getAdminModelClass().equals(WorkflowRun.class.getName())) {
                 workflowRunCount++;
             } else if (t.getAdminModelClass().equals(io.seqware.webservice.generated.model.File.class.getName())) {
-                io.seqware.webservice.generated.model.File file = fileClient.find_JSON(io.seqware.webservice.generated.model.File.class, String.valueOf(t.getId()));
+                io.seqware.webservice.generated.model.File file = fileClient.find_JSON(io.seqware.webservice.generated.model.File.class,
+                        String.valueOf(t.getId()));
                 String metaType = file.getMetaType();
                 if (!fileTypeCounts.containsKey(metaType)) {
                     fileTypeCounts.put(metaType, 0);
@@ -294,7 +312,8 @@ public final class DeletionDB extends Plugin {
             System.out.println("File paths for files to be deleted: ");
             for (ModelAccessionIDTuple t : sortedSet) {
                 if (t.getAdminModelClass().equals(io.seqware.webservice.generated.model.File.class.getName())) {
-                    io.seqware.webservice.generated.model.File file = fileClient.find_JSON(io.seqware.webservice.generated.model.File.class, String.valueOf(t.getId()));
+                    io.seqware.webservice.generated.model.File file = fileClient.find_JSON(
+                            io.seqware.webservice.generated.model.File.class, String.valueOf(t.getId()));
                     System.out.println("\t" + file.getFilePath());
                 }
             }

@@ -24,53 +24,65 @@ import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
- * FIXME: this extends the plugin but really it should be a decider subclass. Doing this for testing now.
- * LEFT OFF WITH: left off with finding all files of a particular type
- *
+ * FIXME: this extends the plugin but really it should be a decider subclass. Doing this for testing now. LEFT OFF WITH: left off with
+ * finding all files of a particular type
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class AlignmentQualityReportDecider extends Plugin {
-  
-  ReturnValue ret = new ReturnValue(ReturnValue.NOTIMPLEMENTED);
 
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public ReturnValue init() {
-    return(ret);
-  }
+    ReturnValue ret = new ReturnValue(ReturnValue.NOTIMPLEMENTED);
 
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public ReturnValue do_test() {
-    return(ret);
-  }
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public ReturnValue init() {
+        return (ret);
+    }
 
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public ReturnValue do_run() {
-    
-    List<ReturnValue> returnValues = metadata.findFilesAssociatedWithAStudy("PCSI");
-    for (ReturnValue rv : returnValues) {
-      String workflowRunStatus = rv.getAttribute(FindAllTheFiles.WORKFLOW_RUN_STATUS);
-      for (FileMetadata fm : rv.getFiles()) {
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public ReturnValue do_test() {
+        return (ret);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public ReturnValue do_run() {
+
+        List<ReturnValue> returnValues = metadata.findFilesAssociatedWithAStudy("PCSI");
+        for (ReturnValue rv : returnValues) {
+            String workflowRunStatus = rv.getAttribute(FindAllTheFiles.WORKFLOW_RUN_STATUS);
+            for (FileMetadata fm : rv.getFiles()) {
                 if (fm.getMetaType().equals("application/bam")) {
-                    Log.info(workflowRunStatus+" "+fm.getFilePath());
+                    Log.info(workflowRunStatus + " " + fm.getFilePath());
                 }
             }
-    }
-    
-    return(new ReturnValue(ReturnValue.SUCCESS));
-  }
+        }
 
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public ReturnValue clean_up() {
-    return(ret);
-  }
-  
+        return (new ReturnValue(ReturnValue.SUCCESS));
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public ReturnValue clean_up() {
+        return (ret);
+    }
+
 }

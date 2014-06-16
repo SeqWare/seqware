@@ -54,28 +54,27 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- *
+ * 
  * @author dyuen
  */
-@PrepareForTest({WorkflowTools.class, FileTools.class, WorkflowStatusChecker.class})
+@PrepareForTest({ WorkflowTools.class, FileTools.class, WorkflowStatusChecker.class })
 @RunWith(PowerMockRunner.class)
-public class WorkflowStatusCheckerTest{
-   
-    
-    @Mock 
+public class WorkflowStatusCheckerTest {
+
+    @Mock
     private Map<String, String> config;
-    
+
     @Mock
     private OptionSet options;
-    
+
     @Mock
     private net.sourceforge.seqware.common.metadata.Metadata metadata;
-    
+
     @InjectMocks
     private WorkflowStatusChecker workflowStatusChecker;
-    
+
     @Before
-    public void initMocks() throws Exception{
+    public void initMocks() throws Exception {
         reset(config, options, metadata);
         workflowStatusChecker = new WorkflowStatusChecker(); // this is kind of hacky
         // apparantly testNG retains the state of mocks and statuschecker from test to test, so we need to rebuild everything
@@ -84,28 +83,28 @@ public class WorkflowStatusCheckerTest{
         when(options.valueOf("force-host")).thenReturn("localhost");
         when(config.get("SW_REST_USER")).thenReturn("user");
     }
-    
+
     @After
-    public void cleanMocks(){
+    public void cleanMocks() {
         RunLock.release();
     }
-    
+
     @Test
-    public void testShouldInjectMocks(){
+    public void testShouldInjectMocks() {
         Assert.assertNotNull(metadata);
         Assert.assertNotNull(workflowStatusChecker);
         Assert.assertNotNull(workflowStatusChecker.getMetadata());
     }
-    
+
     @Test(expected = RuntimeException.class)
-    public void testInitLocking(){
+    public void testInitLocking() {
         final ReturnValue ret1 = workflowStatusChecker.init();
         Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         workflowStatusChecker.init();
     }
-    
-    @Test 
-    public void testEmptyRun(){
+
+    @Test
+    public void testEmptyRun() {
         final ReturnValue ret1 = workflowStatusChecker.init();
         Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         final ReturnValue ret2 = workflowStatusChecker.do_run();
@@ -116,45 +115,46 @@ public class WorkflowStatusCheckerTest{
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry);
         verifyNoMoreInteractions(metadata);
     }
-    
-    @Test 
-    public void testNormalRun() throws Exception{       
+
+    @Test
+    public void testNormalRun() throws Exception {
         final ReturnValue ret1 = workflowStatusChecker.init();
         Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         mockupFakeRuns();
         final ReturnValue ret2 = workflowStatusChecker.do_run();
         verifyNormalRun(ret2);
     }
-    
-    @Test 
-    public void testDoubleThreadedRun() throws Exception{       
+
+    @Test
+    public void testDoubleThreadedRun() throws Exception {
         final ReturnValue ret1 = workflowStatusChecker.init();
         Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         mockupFakeRuns();
-        
+
         when(options.has("threads-in-thread-pool")).thenReturn(true);
         when(options.valueOf("threads-in-thread-pool")).thenReturn(2);
-        
+
         final ReturnValue ret2 = workflowStatusChecker.do_run();
         verifyNormalRun(ret2);
     }
-    
-    @Test 
-    public void testManyThreadedRun() throws Exception{       
+
+    @Test
+    public void testManyThreadedRun() throws Exception {
         final ReturnValue ret1 = workflowStatusChecker.init();
         Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
         mockupFakeRuns();
-        
+
         when(options.has("threads-in-thread-pool")).thenReturn(true);
         when(options.valueOf("threads-in-thread-pool")).thenReturn(100);
-        
+
         final ReturnValue ret2 = workflowStatusChecker.do_run();
         verifyNormalRun(ret2);
     }
 
     /**
      * For testing purposes, create some workflow runs and make our mocks aware of them
-     * @throws Exception 
+     * 
+     * @throws Exception
      */
     private void mockupFakeRuns() throws Exception {
         // mock up some fake workflow_runs so that their status can be checked
@@ -163,8 +163,8 @@ public class WorkflowStatusCheckerTest{
             WorkflowRun wr = new WorkflowRun();
             wr.setOwnerUserName("user");
             wr.setWorkflowAccession(42);
-            wr.setWorkflowRunId(42+i);
-            wr.setSwAccession(42+i);
+            wr.setWorkflowRunId(42 + i);
+            wr.setSwAccession(42 + i);
             wr.setCommand("dummyValue");
             wr.setTemplate("dummyValue");
             wr.setCurrentWorkingDir("dummyValue");
@@ -172,7 +172,7 @@ public class WorkflowStatusCheckerTest{
             wr.setIniFile("dummyValue");
             wr.setWorkflowEngine("dummyValue");
             wr.setHost("localhost");
-            wr.setStatusCmd("pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/FastqQualityReportAndFilter_0.10.0/run00" + 42+i);
+            wr.setStatusCmd("pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/FastqQualityReportAndFilter_0.10.0/run00" + 42 + i);
             wrList.add(wr);
         }
         PowerMockito.mockStatic(FileTools.class);
@@ -184,14 +184,15 @@ public class WorkflowStatusCheckerTest{
         ReturnValue fakeReturn = new ReturnValue(ReturnValue.SUCCESS);
         fakeReturn.setAttribute("currStep", "1");
         fakeReturn.setAttribute("totalSteps", "1");
-        
+
         when(workflowTools.watchWorkflow(anyString(), anyString(), anyInt())).thenReturn(fakeReturn);
         when(metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running)).thenReturn(wrList);
     }
 
     /**
      * Verify that the run returned normally and that the appropriate number of updates were make to the database
-     * @param ret2 
+     * 
+     * @param ret2
      */
     private void verifyNormalRun(final ReturnValue ret2) {
         Assert.assertTrue("workflowStatusChecker ran properly", ret2.getExitStatus() == ReturnValue.SUCCESS);
@@ -199,6 +200,7 @@ public class WorkflowStatusCheckerTest{
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.pending);
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel);
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry);
-        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), any(WorkflowRunStatus.class), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), (Set<Integer>) anyObject());
+        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), any(WorkflowRunStatus.class), anyString(),
+                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), (Set<Integer>) anyObject());
     }
 }

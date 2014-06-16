@@ -31,10 +31,9 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
 /**
- * Utility methods that have been refactored out.
- * These can hopefully be placed eventually in something like Workflow so that they 
- * can be re-used. 
- *
+ * Utility methods that have been refactored out. These can hopefully be placed eventually in something like Workflow so that they can be
+ * re-used.
+ * 
  * @author dyuen
  */
 public class WorkflowV2Utility {
@@ -44,15 +43,16 @@ public class WorkflowV2Utility {
 
     /**
      * Locate and parse metadata information and return a map representation
-     *
+     * 
      * @param bundle
      * @return map if the parse is successful, null if not
      */
     public static Map<String, String> parseMetaInfo(File bundle) {
         final String bundlePath = bundle.getAbsolutePath();
-        //parse metadata.xml to Map<String,String>
-        @SuppressWarnings("unchecked") //safe to use <File>
-        Iterator<File> it = FileUtils.iterateFiles(bundle, new String[]{"xml"}, true);
+        // parse metadata.xml to Map<String,String>
+        @SuppressWarnings("unchecked")
+        // safe to use <File>
+        Iterator<File> it = FileUtils.iterateFiles(bundle, new String[] { "xml" }, true);
         if (!it.hasNext()) {
             return null;
         }
@@ -74,14 +74,14 @@ public class WorkflowV2Utility {
 
     /**
      * Parse the metadata info
-     *
+     * 
      * @param file
      * @param bundleDir
      * @return
      */
     private static Map<String, String> parseMetadataInfo(File file, String bundleDir) {
         Map<String, String> ret = new HashMap<>();
-        //parse metadataFile
+        // parse metadataFile
         SAXBuilder builder = new SAXBuilder();
         try {
             Document document = (Document) builder.build(file);
@@ -93,10 +93,10 @@ public class WorkflowV2Utility {
             ret.put("seqware_version", wf.getAttributeValue("seqware_version"));
             ret.put("description", wf.getChildText("description"));
             String basedir = wf.getAttributeValue("basedir");
-            if(basedir!=null) {
-            	basedir = wf.getAttributeValue("basedir").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir);
-            	ret.put("basedir", basedir);
-                //parse the workflow_directory_name
+            if (basedir != null) {
+                basedir = wf.getAttributeValue("basedir").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir);
+                ret.put("basedir", basedir);
+                // parse the workflow_directory_name
                 String[] _arr = basedir.split("/");
                 if (_arr.length > 2) {
                     String tmp = _arr[1];
@@ -122,10 +122,10 @@ public class WorkflowV2Utility {
             if (config != null) {
                 ret.put("config", config.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
             }
-//            Element classes = wf.getChild("classes");
-//            if (classes != null) {
-//                ret.put("classes", classes.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
-//            }
+            // Element classes = wf.getChild("classes");
+            // if (classes != null) {
+            // ret.put("classes", classes.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
+            // }
             Element build = wf.getChild("build");
             if (build != null) {
                 ret.put("build", build.getAttributeValue("command").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
@@ -148,7 +148,7 @@ public class WorkflowV2Utility {
 
     /**
      * Determine the bundle path from the provided options
-     *
+     * 
      * @param options
      * @return bundlePath
      */
@@ -162,23 +162,24 @@ public class WorkflowV2Utility {
         }
         return bundlePath;
     }
-    
-    public static boolean requiresNewLauncher(Workflow workflow){
+
+    public static boolean requiresNewLauncher(Workflow workflow) {
         String workflowClass = workflow.getWorkflowClass();
         String workflowEngine = workflow.getWorkflowEngine();
         String workflowType = workflow.getWorkflowType();
         return requiresNewLauncher(workflowClass, workflowEngine, workflowType);
     }
-    
-    public static boolean requiresNewLauncher(String workflowClass, String workflowEngine, String workflowType){
-         // if we specify workflow_class, workflow_template_path and the hints in the requirements we should be 
+
+    public static boolean requiresNewLauncher(String workflowClass, String workflowEngine, String workflowType) {
+        // if we specify workflow_class, workflow_template_path and the hints in the requirements we should be
         // able to determine which actual launcher to delegate to
         // if we need a workflow_class, then we always use the new launcher
         if (workflowClass != null) {
             Log.debug("requiresNewLauncher - byClass " + workflowClass);
             return true;
         } // if Oozie is required or a if ftl2 is a requirement, we use the new launcher
-        else if ((workflowEngine!=null && workflowEngine.contains("Oozie") && !workflowEngine.contains("Pegasus")) || (workflowType !=null && workflowType.contains("ftl2"))) {
+        else if ((workflowEngine != null && workflowEngine.contains("Oozie") && !workflowEngine.contains("Pegasus"))
+                || (workflowType != null && workflowType.contains("ftl2"))) {
             Log.debug("requiresNewLauncher - byEngine or Type " + workflowEngine + " " + workflowType);
             return true;
         }
@@ -186,16 +187,16 @@ public class WorkflowV2Utility {
         // otherwise, we fall through to the old launcher
         return false;
     }
-    
+
     public static boolean requiresNewLauncher(OptionSet options) {
         final String bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
         final File bundle = new File(bundlePath);
         // determine whether we're really dealing with a new bundle or whether we should delegate to the old launcher
         final Map<String, String> parseMetaInfo = WorkflowV2Utility.parseMetaInfo(bundle);
-        
+
         String workflowClass = parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_CLASS);
         String workflowEngine = parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_ENGINE);
         String workflowType = parseMetaInfo.get(WorkflowV2Utility.WORKFLOW_TYPE);
-        return requiresNewLauncher(workflowClass, workflowEngine, workflowType); 
+        return requiresNewLauncher(workflowClass, workflowEngine, workflowType);
     }
 }

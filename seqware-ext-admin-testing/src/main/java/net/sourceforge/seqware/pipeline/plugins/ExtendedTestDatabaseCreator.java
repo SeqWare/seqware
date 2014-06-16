@@ -24,9 +24,9 @@ import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
 /**
  * This class controls configuration of the database used for extended integration tests.
  * 
- * If these keys are used in your .seqware/settings file, you can redirect your testing DB 
- * (which should match the REST URL that you require as well, otherwise you will be 
- * resetting a database completely different from your web service)
+ * If these keys are used in your .seqware/settings file, you can redirect your testing DB (which should match the REST URL that you require
+ * as well, otherwise you will be resetting a database completely different from your web service)
+ * 
  * @author dyuen
  */
 public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
@@ -50,7 +50,7 @@ public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getSEQWARE_DB() {
-        if (settings.containsKey(EXTENDED_TEST_DB_NAME_KEY)){
+        if (settings.containsKey(EXTENDED_TEST_DB_NAME_KEY)) {
             return settings.get(EXTENDED_TEST_DB_NAME_KEY);
         }
         Log.debug("Could not retrieve extended test db, using default from unit tests");
@@ -62,7 +62,7 @@ public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getSEQWARE_USER() {
-        if (settings.containsKey(EXTENDED_TEST_USERNAME_KEY)){
+        if (settings.containsKey(EXTENDED_TEST_USERNAME_KEY)) {
             return settings.get(EXTENDED_TEST_USERNAME_KEY);
         }
         Log.debug("Could not retrieve extended test db username, using default from unit tests");
@@ -74,28 +74,27 @@ public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getSEQWARE_PASSWORD() {
-        if (settings.containsKey(EXTENDED_TEST_PASSWORD_KEY)){
+        if (settings.containsKey(EXTENDED_TEST_PASSWORD_KEY)) {
             return settings.get(EXTENDED_TEST_PASSWORD_KEY);
         }
         Log.debug("Could not retrieve extended test db password, using default from unit tests");
         return super.getSEQWARE_PASSWORD();
     }
-    
+
     /**
      * @return the DEFAULT_DB_HOST
      */
     @Override
     protected String getDEFAULT_DB_HOST() {
-         if (settings.containsKey(EXTENDED_TEST_DB_HOST_KEY)){
+        if (settings.containsKey(EXTENDED_TEST_DB_HOST_KEY)) {
             return settings.get(EXTENDED_TEST_DB_HOST_KEY);
         }
         Log.debug("Could not retrieve extended test db host, using default from unit tests");
         return super.getDEFAULT_DB_HOST();
     }
-    
+
     /**
-     * Unfortunately, postgres does not allow the straight dropdb and createdb
-     * when tomcat is used (perhaps we leave open a connection)
+     * Unfortunately, postgres does not allow the straight dropdb and createdb when tomcat is used (perhaps we leave open a connection)
      */
     public static void resetDatabaseWithUsers() {
         ExtendedTestDatabaseCreator creator = new ExtendedTestDatabaseCreator();

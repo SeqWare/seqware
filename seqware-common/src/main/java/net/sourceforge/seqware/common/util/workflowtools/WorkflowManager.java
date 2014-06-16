@@ -39,202 +39,217 @@ import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import org.apache.commons.lang.NotImplementedException;
 
 /**
- * <p>WorkflowManager class.</p>
- *
+ * <p>
+ * WorkflowManager class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowManager {
 
-  private ReturnValue ret = new ReturnValue();
+    private ReturnValue ret = new ReturnValue();
 
-  // presume iniFiles, parentAccessions, parentsLinkedToWR, template are the
-  // full complete paths separated by commas
-  /**
-   * <p>runWorkflow.</p>
-   *
-   * @param wi a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
-   * @param workflowRunAccession a {@link java.lang.String} object.
-   * @param iniFilesStr a {@link java.lang.String} object.
-   * @param noMetadata a boolean.
-   * @param parentAccessionsStr a {@link java.lang.String} object.
-   * @param parentsLinkedToWR a {@link java.util.ArrayList} object.
-   * @param owner a {@link net.sourceforge.seqware.common.model.Registration} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  public ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, 
-          String iniFilesStr, boolean noMetadata, String parentAccessionsStr, 
-          ArrayList<String> parentsLinkedToWR, Registration owner) {
+    // presume iniFiles, parentAccessions, parentsLinkedToWR, template are the
+    // full complete paths separated by commas
+    /**
+     * <p>
+     * runWorkflow.
+     * </p>
+     * 
+     * @param wi
+     *            a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
+     * @param workflowRunAccession
+     *            a {@link java.lang.String} object.
+     * @param iniFilesStr
+     *            a {@link java.lang.String} object.
+     * @param noMetadata
+     *            a boolean.
+     * @param parentAccessionsStr
+     *            a {@link java.lang.String} object.
+     * @param parentsLinkedToWR
+     *            a {@link java.util.ArrayList} object.
+     * @param owner
+     *            a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+    public ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, String iniFilesStr, boolean noMetadata,
+            String parentAccessionsStr, ArrayList<String> parentsLinkedToWR, Registration owner) {
 
-    // keep this id handy
-    int accession = 0;
+        // keep this id handy
+        int accession = 0;
 
-    // Map<String, String> config = ConfigTools.getSettings();
+        // Map<String, String> config = ConfigTools.getSettings();
 
-    // will be handed off to the template layer
-    HashMap<String, String> map = new HashMap<>();
+        // will be handed off to the template layer
+        HashMap<String, String> map = new HashMap<>();
 
-    if (iniFilesStr != null) {
-      String[] lines = iniFilesStr.split("\n");
-      for (String line : lines) {
-        if (!line.trim().startsWith("#")) {
-          String[] splitLine = line.split("=");
-          if (splitLine.length >= 2) {
-            map.put(splitLine[0].trim(), splitLine[1].trim());
-          } // for the case in which we have "parameter=" in the ini file,
-          // meaning set it to nothing
-          else if (splitLine.length == 1) {
-            map.put(splitLine[0].trim(), "");
-          }
+        if (iniFilesStr != null) {
+            String[] lines = iniFilesStr.split("\n");
+            for (String line : lines) {
+                if (!line.trim().startsWith("#")) {
+                    String[] splitLine = line.split("=");
+                    if (splitLine.length >= 2) {
+                        map.put(splitLine[0].trim(), splitLine[1].trim());
+                    } // for the case in which we have "parameter=" in the ini file,
+                      // meaning set it to nothing
+                    else if (splitLine.length == 1) {
+                        map.put(splitLine[0].trim(), "");
+                    }
+                }
+            }
         }
-      }
-    }
 
-    map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
-    // starts with assumption of no metadata writeback
-    map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
-    map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
-    map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
-    // my new preferred variable name
-    map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
-    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
-    // my new preferred variable name
-    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
-    // have to pass in the cluster name
-    // map.put("seqware_cluster", config.get("SW_CLUSTER"));
+        map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
+        // starts with assumption of no metadata writeback
+        map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
+        map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
+        map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
+        // my new preferred variable name
+        map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
+        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
+        // my new preferred variable name
+        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
+        // have to pass in the cluster name
+        // map.put("seqware_cluster", config.get("SW_CLUSTER"));
 
-    // if we're doing metadata writeback will need to parameterize the workflow
-    // correctly
+        // if we're doing metadata writeback will need to parameterize the workflow
+        // correctly
 
-    if (noMetadata) {
-      ret.setStdout("Switching to no metadata writeback.");
-      Log.info(ret.getStdout());
-    } else if (parentAccessionsStr == null || parentsLinkedToWR == null || parentAccessionsStr.trim().isEmpty()
-        || parentsLinkedToWR.isEmpty()) {
-        if (!noMetadata)
-        {
+        if (noMetadata) {
+            ret.setStdout("Switching to no metadata writeback.");
+            Log.info(ret.getStdout());
+        } else if (parentAccessionsStr == null || parentsLinkedToWR == null || parentAccessionsStr.trim().isEmpty()
+                || parentsLinkedToWR.isEmpty()) {
+            if (!noMetadata) {
+                map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
+                map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
+                // my new preferred variable name
+                map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
+            } else {
+                ret.setStdout("No parent accessions. Switching to no metadata writeback.");
+            }
+            Log.info(ret.getStdout());
+        } else {
+            // tells the workflow it should save its metadata
             map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
+            map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
+            map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+            // my new preferred variable name
+            map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+
             map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
             // my new preferred variable name
             map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
         }
-        else
-        {
-            ret.setStdout("No parent accessions. Switching to no metadata writeback.");
+
+        StringBuilder iniBuffer = createINI(map);
+
+        WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
+        WorkflowService ws = BeanFactory.getWorkflowServiceBean();
+        if (workflowRunAccession == null) {
+            WorkflowRun run = new WorkflowRun();
+            run.setWorkflow(ws.findBySWAccession(wi.getWorkflowAccession()));
+            run.setName(wi.getName());
+            run.setCurrentWorkingDir(wi.getWorkflowDir());
+            run.setIniFile(iniBuffer.toString());
+            run.setCommand(wi.getCommand());
+            run.setTemplate(wi.getTemplatePath());
+            run.setStatus(WorkflowRunStatus.submitted);
+            run.setOwner(owner);
+            SortedSet<WorkflowRunParam> runParams = createWorkflowRunParameters(map);
+
+            Map<String, List<File>> files = new HashMap<>();
+
+            accession = wrs.insert(owner, run, runParams, files);
+            if (accession == 0) {
+                Log.error("Problem with inserting workflow run");
+                ret.setExitStatus(ReturnValue.FAILURE);
+                return ret;
+            }
+            Log.info("SW_ACCESSION: " + workflowRunAccession);
+
+            // need to link all the parents to this workflow run accession
+            for (String parentLinkedToWR : parentsLinkedToWR) {
+                try {
+                    linkWorkflowRunAndParent(run, Integer.parseInt(parentLinkedToWR));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                    ret.setDescription(e.getMessage());
+                    return ret;
+                }
+            }
+        } else {// if the workflow_run row exists get the workflow_run_id
+            // run = wrs.findBySWAccession(Integer.parseInt(workflowRunAccession));
+            // run.setStatus("pending");
+            throw new NotImplementedException("Restarted failed runs is not yet implemented in the webservice");
         }
-      Log.info(ret.getStdout());
-    } else {
-      // tells the workflow it should save its metadata
-      map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
-      map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
-      map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-      // my new preferred variable name
-      map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
 
-      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
-      // my new preferred variable name
-      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
+        ret.setReturnValue(accession);
+        return (ret);
     }
 
-    StringBuilder iniBuffer = createINI(map);
-
-    WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-    WorkflowService ws = BeanFactory.getWorkflowServiceBean();
-    if (workflowRunAccession == null) {
-      WorkflowRun run = new WorkflowRun();
-      run.setWorkflow(ws.findBySWAccession(wi.getWorkflowAccession()));
-      run.setName(wi.getName());
-      run.setCurrentWorkingDir(wi.getWorkflowDir());
-      run.setIniFile(iniBuffer.toString());
-      run.setCommand(wi.getCommand());
-      run.setTemplate(wi.getTemplatePath());
-      run.setStatus(WorkflowRunStatus.submitted);
-      run.setOwner(owner);
-      SortedSet<WorkflowRunParam> runParams = createWorkflowRunParameters(map);
-
-      Map<String, List<File>> files = new HashMap<>();
-
-      accession = wrs.insert(owner, run, runParams, files);
-      if (accession == 0) {
-        Log.error("Problem with inserting workflow run");
-        ret.setExitStatus(ReturnValue.FAILURE);
-        return ret;
-      }
-      Log.info("SW_ACCESSION: " + workflowRunAccession);
-
-      // need to link all the parents to this workflow run accession
-      for (String parentLinkedToWR : parentsLinkedToWR) {
-        try {
-          linkWorkflowRunAndParent(run, Integer.parseInt(parentLinkedToWR));
-        } catch (Exception e) {
-          e.printStackTrace();
-          ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-          ret.setDescription(e.getMessage());
-          return ret;
+    /**
+     * <p>
+     * createINI.
+     * </p>
+     * 
+     * @param map
+     *            a {@link java.util.HashMap} object.
+     * @return a {@link java.lang.StringBuilder} object.
+     */
+    public StringBuilder createINI(HashMap<String, String> map) {
+        // after running the daxGen.processTemplate above the map should be filled
+        // in with all the ini key/values
+        // save this and the DAX to the database
+        StringBuilder iniBuffer = new StringBuilder();
+        for (String key : map.keySet()) {
+            if (key != null) {
+                Log.info("KEY: " + key + " VALUE: " + map.get(key.toString()));
+                iniBuffer.append(key).append("=").append(map.get(key)).append("\t");
+            }
         }
-      }
-    } else {// if the workflow_run row exists get the workflow_run_id
-      // run = wrs.findBySWAccession(Integer.parseInt(workflowRunAccession));
-      // run.setStatus("pending");
-      throw new NotImplementedException("Restarted failed runs is not yet implemented in the webservice");
+        return iniBuffer;
     }
 
-    ret.setReturnValue(accession);
-    return (ret);
-  }
+    /**
+     * <p>
+     * linkWorkflowRunAndParent.
+     * </p>
+     * 
+     * @param wr
+     *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     * @param parentAccession
+     *            a int.
+     * @return a boolean.
+     * @throws java.sql.SQLException
+     *             if any.
+     */
+    public boolean linkWorkflowRunAndParent(WorkflowRun wr, int parentAccession) throws SQLException {
+        IUSService is = BeanFactory.getIUSServiceBean();
+        LaneService ls = BeanFactory.getLaneServiceBean();
+        WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
 
-  /**
-   * <p>createINI.</p>
-   *
-   * @param map a {@link java.util.HashMap} object.
-   * @return a {@link java.lang.StringBuilder} object.
-   */
-  public StringBuilder createINI(HashMap<String, String> map) {
-    // after running the daxGen.processTemplate above the map should be filled
-    // in with all the ini key/values
-    // save this and the DAX to the database
-    StringBuilder iniBuffer = new StringBuilder();
-    for (String key : map.keySet()) {
-      if (key != null) {
-        Log.info("KEY: " + key + " VALUE: " + map.get(key.toString()));
-        iniBuffer.append(key).append("=").append(map.get(key)).append("\t");
-      }
+        IUS ius = is.findBySWAccession(parentAccession);
+        Lane lane = ls.findBySWAccession(parentAccession);
+
+        if (ius != null) {
+            SortedSet<IUS> iuses = new TreeSet<>();
+            iuses.add(ius);
+            wr.setIus(iuses);
+        } else if (lane != null) {
+            SortedSet<Lane> lanes = new TreeSet<>();
+            lanes.add(lane);
+            wr.setLanes(lanes);
+        } else {
+            Log.error("ERROR: SW Accession is neither a lane nor an IUS: " + parentAccession);
+            return (false);
+        }
+        wrs.update(wr);
+
+        return (true);
     }
-    return iniBuffer;
-  }
-
-  /**
-   * <p>linkWorkflowRunAndParent.</p>
-   *
-   * @param wr a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
-   * @param parentAccession a int.
-   * @return a boolean.
-   * @throws java.sql.SQLException if any.
-   */
-  public boolean linkWorkflowRunAndParent(WorkflowRun wr, int parentAccession) throws SQLException {
-    IUSService is = BeanFactory.getIUSServiceBean();
-    LaneService ls = BeanFactory.getLaneServiceBean();
-    WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-
-    IUS ius = is.findBySWAccession(parentAccession);
-    Lane lane = ls.findBySWAccession(parentAccession);
-
-    if (ius != null) {
-      SortedSet<IUS> iuses = new TreeSet<>();
-      iuses.add(ius);
-      wr.setIus(iuses);
-    } else if (lane != null) {
-      SortedSet<Lane> lanes = new TreeSet<>();
-      lanes.add(lane);
-      wr.setLanes(lanes);
-    } else {
-      Log.error("ERROR: SW Accession is neither a lane nor an IUS: " + parentAccession);
-      return (false);
-    }
-    wrs.update(wr);
-
-    return (true);
-  }
 
     public static SortedSet<WorkflowRunParam> createWorkflowRunParameters(HashMap<String, String> map) throws NumberFormatException {
         // FIXME: Deal with workflow Run Params. I am not handling parent files
@@ -242,31 +257,32 @@ public class WorkflowManager {
         SortedSet<WorkflowRunParam> runParams = new TreeSet<>();
         for (String str : map.keySet()) {
 
-          if (map.get(str) != null) {
-            Log.info(str + " " + map.get(str));
-            if (str.equals(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey()) || str.equals(ReservedIniKeys.PARENT_ACCESSION.getKey()) || str.equals(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey())) {
-              String[] pAcc = map.get(str).split(",");
-              for (String parent : pAcc) {
-                WorkflowRunParam wrp = new WorkflowRunParam();
-                wrp.setKey(str);
-                wrp.setValue(parent);
-                wrp.setParentProcessingAccession(Integer.parseInt(parent));
-                wrp.setType("text");
-                runParams.add(wrp);
-              }
-            } else {
+            if (map.get(str) != null) {
+                Log.info(str + " " + map.get(str));
+                if (str.equals(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey())
+                        || str.equals(ReservedIniKeys.PARENT_ACCESSION.getKey())
+                        || str.equals(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey())) {
+                    String[] pAcc = map.get(str).split(",");
+                    for (String parent : pAcc) {
+                        WorkflowRunParam wrp = new WorkflowRunParam();
+                        wrp.setKey(str);
+                        wrp.setValue(parent);
+                        wrp.setParentProcessingAccession(Integer.parseInt(parent));
+                        wrp.setType("text");
+                        runParams.add(wrp);
+                    }
+                } else {
 
-              if (str.trim().isEmpty() && map.get(str).trim().isEmpty())
-                continue;
-              WorkflowRunParam wrp = new WorkflowRunParam();
-              wrp.setKey(str);
-              wrp.setValue(map.get(str));
-              wrp.setType("text");
-              runParams.add(wrp);
+                    if (str.trim().isEmpty() && map.get(str).trim().isEmpty()) continue;
+                    WorkflowRunParam wrp = new WorkflowRunParam();
+                    wrp.setKey(str);
+                    wrp.setValue(map.get(str));
+                    wrp.setType("text");
+                    runParams.add(wrp);
+                }
+            } else {
+                Log.info("Null: " + str + " " + map.get(str));
             }
-          } else {
-            Log.info("Null: " + str + " " + map.get(str));
-          }
         }
         return runParams;
     }

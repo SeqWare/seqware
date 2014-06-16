@@ -24,12 +24,10 @@ import net.sourceforge.seqware.pipeline.tutorial.AdminPhase1;
 
 /**
  * Do all tests that can be concurrently done in the admin tutorial
- *
+ * 
  * @author dyuen
  */
-public class CLIAdminPhase1 extends AdminPhase1{
-    
-    
+public class CLIAdminPhase1 extends AdminPhase1 {
 
     @Override
     protected String installBundle(File zippedBundle) throws IOException {

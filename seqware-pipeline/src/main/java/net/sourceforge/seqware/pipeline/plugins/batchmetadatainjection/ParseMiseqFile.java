@@ -29,7 +29,7 @@ import net.sourceforge.seqware.common.util.Log;
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class ParseMiseqFile extends BatchMetadataParser {
@@ -71,7 +71,7 @@ public class ParseMiseqFile extends BatchMetadataParser {
     public Set<LaneInfo> parseMiseqData(BufferedReader freader) throws IOException, Exception {
         Set<SampleInfo> samples = new HashSet<>();
 
-        //there is only one lane in Miseq
+        // there is only one lane in Miseq
         LaneInfo laneInfo = generateLaneInfo("1", 4);
         laneInfo.setSamples(samples);
 
@@ -107,10 +107,9 @@ public class ParseMiseqFile extends BatchMetadataParser {
                 Log.stdout("Cannot parse tissue type from " + prettyName);
             }
 
-            SampleInfo sample = generateSampleInfo(prettyName, projectName, individualNumber,
-                    librarySourceTemplateType, tissueOrigin, tissueType, libraryType,
-                    librarySizeCode, barcode, organismId, targetedResequencing,
-                    tissuePreparation, "", barcode, barcode);
+            SampleInfo sample = generateSampleInfo(prettyName, projectName, individualNumber, librarySourceTemplateType, tissueOrigin,
+                    tissueType, libraryType, librarySizeCode, barcode, organismId, targetedResequencing, tissuePreparation, "", barcode,
+                    barcode);
 
             String tissueRegion = sampleInfo[2].substring(0, 1);
             if (StringUtils.isNumeric(tissueRegion)) {
@@ -126,7 +125,7 @@ public class ParseMiseqFile extends BatchMetadataParser {
 
     public RunInfo parseMiseqHeader(BufferedReader freader, File file) throws IOException {
         String line = null;
-        
+
         Map<String, String> headerInfo = new HashMap<>();
         while (!(line = freader.readLine()).startsWith("[Data]")) {
             if (!line.startsWith("[")) {
@@ -140,13 +139,10 @@ public class ParseMiseqFile extends BatchMetadataParser {
         String runName = bits[bits.length - 2];
         String studyTitle = headerInfo.get("Project Name").split("_")[0];
         String experimentName = headerInfo.get("Experiment Name").split("_")[0];
-        RunInfo runInfo = super.generateRunInfo(runName, runName, 
-                studyTitle, studyTitle, "Ontario Institute for Cancer Research", 
-                studyTitle.replace(" ", ""), 
-                experimentName, experimentName, 
-                file.getParentFile().getAbsolutePath(), 26, -1, true, 
+        RunInfo runInfo = super.generateRunInfo(runName, runName, studyTitle, studyTitle, "Ontario Institute for Cancer Research",
+                studyTitle.replace(" ", ""), experimentName, experimentName, file.getParentFile().getAbsolutePath(), 26, -1, true,
                 headerInfo.get("Workflow"), headerInfo.get("Assay"));
-        
+
         return runInfo;
     }
 }

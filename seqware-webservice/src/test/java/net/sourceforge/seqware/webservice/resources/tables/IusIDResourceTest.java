@@ -21,7 +21,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class IusIDResourceTest extends DatabaseResourceIDTest {
@@ -31,12 +31,13 @@ public class IusIDResourceTest extends DatabaseResourceIDTest {
         jo = new JaxbObject<>();
         o = new IUS();
     }
-     @Override
+
+    @Override
     protected int testObject(Object o) {
         if (o instanceof IUS) {
             IUS e = (IUS) o;
             if (e.getSwAccession() != Integer.parseInt(id)) {
-                System.err.println("Actual ID: "+e.getSwAccession() + " and expected ID: " +Integer.parseInt(id));
+                System.err.println("Actual ID: " + e.getSwAccession() + " and expected ID: " + Integer.parseInt(id));
                 return ReturnValue.INVALIDFILE;
             }
 
@@ -49,9 +50,7 @@ public class IusIDResourceTest extends DatabaseResourceIDTest {
 
     @Override
     public void testPut() {
-        
+
     }
-     
-     
-     
+
 }

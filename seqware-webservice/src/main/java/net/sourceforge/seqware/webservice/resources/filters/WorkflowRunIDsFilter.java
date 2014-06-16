@@ -16,14 +16,13 @@
  */
 package net.sourceforge.seqware.webservice.resources.filters;
 
-
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ServerResource;
 
 /**
  * We presume there is either a runId or a testId, not both.
- *
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -45,30 +44,35 @@ public class WorkflowRunIDsFilter extends ServerResource {
         System.out.println("isTest " + isTest + " isRun " + isRun);
         System.out.println("Test...: Setting up tests");
 
-
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     protected Representation delete() {
         if (isTest) {
             StringRepresentation rep = new StringRepresentation("DELETE isTest " + testId);
             return rep;
-        } else {//isRun
+        } else {// isRun
             StringRepresentation rep = new StringRepresentation("DELETE isRun " + runId);
             return rep;
         }
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     protected Representation get() {
         if (isTest) {
             StringRepresentation rep = new StringRepresentation("GET isTest " + testId);
             return rep;
-        } else {//isRun
+        } else {// isRun
             StringRepresentation rep = new StringRepresentation("GET isRun " + runId);
             return rep;
         }

@@ -21,25 +21,24 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class WorkflowTest {
-    
-    @Test(expected=RuntimeException.class)
-    public void testDuplicateFileNames(){
+
+    @Test(expected = RuntimeException.class)
+    public void testDuplicateFileNames() {
         TestingWorkflow testingWorkflow = new TestingWorkflow();
         testingWorkflow.buildWorkflow();
     }
 
-
-    public class TestingWorkflow extends AbstractWorkflowDataModel{
+    public class TestingWorkflow extends AbstractWorkflowDataModel {
 
         @Override
         public void buildWorkflow() {
             this.createFile("bam_file_in");
             this.createFile("bam_file_in");
         }
-        
+
     }
 }

@@ -30,7 +30,7 @@ import org.restlet.data.Protocol;
 import org.restlet.resource.ClientResource;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class ClientResourceInstance {
@@ -44,7 +44,7 @@ public class ClientResourceInstance {
     public static ClientResource getChild(String relativeURL) {
         Map<String, String> settings = new HashMap<>();
         if (clientResource == null) {
-            String hostURL = "http://localhost:8889"; 
+            String hostURL = "http://localhost:8889";
             try {
                 settings = ConfigTools.getSettings();
             } catch (Exception e) {
@@ -59,7 +59,7 @@ public class ClientResourceInstance {
                 webservicePrefix = matcher.group(2);
                 Log.fatal("Detected overriden hostURL as: " + hostURL);
                 Log.fatal("Detected overriden webservicePrefix as: " + webservicePrefix);
-            } 
+            }
             clientResource = new ClientResource(hostURL);
             Client client = new Client(new Context(), Protocol.HTTP);
             client.getContext().getParameters().add("useForwardedForHeader", "false");

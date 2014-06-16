@@ -43,17 +43,22 @@ import org.restlet.representation.OutputRepresentation;
 import org.restlet.representation.StringRepresentation;
 
 /**
- * <p>StudyIdFilesTSVResource class.</p>
- *
+ * <p>
+ * StudyIdFilesTSVResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class StudyIdFilesTSVResource extends BasicRestlet {
 
     /**
-     * <p>Constructor for StudyIdFilesTSVResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for StudyIdFilesTSVResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public StudyIdFilesTSVResource(Context context) {
         super(context);
@@ -85,13 +90,13 @@ public class StudyIdFilesTSVResource extends BasicRestlet {
             @Override
             public void write(OutputStream out) throws IOException {
                 PrintWriter writer = new PrintWriter(out);
-                try{
-                for (Study study : studies) {
-                    if (handleStudy(study, writer, fatf, null)) {
-                        return;
+                try {
+                    for (Study study : studies) {
+                        if (handleStudy(study, writer, fatf, null)) {
+                            return;
+                        }
                     }
-                } 
-                } finally{
+                } finally {
                     writer.close();
                 }
             }
@@ -107,10 +112,10 @@ public class StudyIdFilesTSVResource extends BasicRestlet {
         if (queryValues.containsKey("show-input-files")) {
             fatf.setReportInputFiles(true);
         }
-        
+
         Study study = (Study) testIfNull(ss.findBySWAccession(parseClientInt(studySWA)));
         StringWriter writer = new StringWriter();
-        if (handleStudy(study, writer , fatf, null)) {
+        if (handleStudy(study, writer, fatf, null)) {
             return;
         }
         response.setEntity(new StringRepresentation(writer.toString(), MediaType.TEXT_TSV));
@@ -136,19 +141,20 @@ public class StudyIdFilesTSVResource extends BasicRestlet {
             reportInputFiles = true;
         }
         try {
-            returnValues = FindAllTheFiles.filterReturnValues(returnValues, study.getTitle(), fileType, duplicates, showFailedAndRunning, showStatus);
+            returnValues = FindAllTheFiles.filterReturnValues(returnValues, study.getTitle(), fileType, duplicates, showFailedAndRunning,
+                    showStatus);
             FindAllTheFiles.printTSVFile(out, showStatus, returnValues, study.getTitle(), reportInputFiles);
         } catch (IOException ex) {
-            if (response != null){
+            if (response != null) {
                 Log.error("Error writing to StringWriter.", ex);
                 response.setStatus(Status.SERVER_ERROR_INTERNAL, "Error writing to "
-                    + "StringWriter. The TSV file could not be created. Please "
-                    + "contact the SeqWare Helpdesk for assistance: seqware.jira@oicr.on.ca");
-            } else{
+                        + "StringWriter. The TSV file could not be created. Please "
+                        + "contact the SeqWare Helpdesk for assistance: seqware.jira@oicr.on.ca");
+            } else {
                 Log.error("Error writing to StringWriter.", ex);
-                //response.setStatus(Status.SERVER_ERROR_INTERNAL, "Error writing to "
-                //		+ "StringWriter. The TSV file could not be created. Please "
-                //		+ "contact the SeqWare Helpdesk for assistance: seqware.jira@oicr.on.ca");
+                // response.setStatus(Status.SERVER_ERROR_INTERNAL, "Error writing to "
+                // + "StringWriter. The TSV file could not be created. Please "
+                // + "contact the SeqWare Helpdesk for assistance: seqware.jira@oicr.on.ca");
                 return true;
             }
         }

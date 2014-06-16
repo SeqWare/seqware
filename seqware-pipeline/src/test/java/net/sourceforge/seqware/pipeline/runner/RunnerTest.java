@@ -18,9 +18,8 @@ import org.junit.runners.Parameterized.Parameters;
 /**
  * Testing the runner class.
  * <p/>
- * Created by IntelliJ IDEA. User: xiao Date: 7/21/11 Time: 3:22 PM To change
- * this template use File | Settings | File Templates.
- *
+ * Created by IntelliJ IDEA. User: xiao Date: 7/21/11 Time: 3:22 PM To change this template use File | Settings | File Templates.
+ * 
  * @author boconnor
  * @version $Id: $Id
  * @since 0.13.3
@@ -36,12 +35,12 @@ public class RunnerTest {
 
         @Override
         public void checkPermission(Permission permission) {
-            //allow anything
+            // allow anything
         }
 
         @Override
         public void checkPermission(Permission permission, Object o) {
-            //allow everything
+            // allow everything
         }
 
         @Override
@@ -62,7 +61,9 @@ public class RunnerTest {
     }
 
     /**
-     * <p>setUpClassProperty.</p>
+     * <p>
+     * setUpClassProperty.
+     * </p>
      */
     @BeforeClass
     public static void setUpClassProperty() {
@@ -70,7 +71,9 @@ public class RunnerTest {
     }
 
     /**
-     * <p>setup.</p>
+     * <p>
+     * setup.
+     * </p>
      */
     @Before
     public void setup() {
@@ -78,7 +81,9 @@ public class RunnerTest {
     }
 
     /**
-     * <p>teardown.</p>
+     * <p>
+     * teardown.
+     * </p>
      */
     @After
     public void teardown() {
@@ -86,8 +91,10 @@ public class RunnerTest {
     }
 
     /**
-     * <p>arguments.</p>
-     *
+     * <p>
+     * arguments.
+     * </p>
+     * 
      * @return an array of {@link java.lang.Object} objects.
      */
     @Parameters
@@ -98,17 +105,20 @@ public class RunnerTest {
         String basic = "--no-metadata --module net.sourceforge.seqware.pipeline.module.TestModule";
         Log.info("stdoutFile = " + stdoutFile);
         Log.info("stderrFile = " + stderrFile);
-        Object[][] data = new Object[][] {{basic, 0},
-            {basic + " --output " + stdoutFile, 0},
-            {basic + " --output " + stdoutFile + " --stderr " + stderrFile, 0}};
+        Object[][] data = new Object[][] { { basic, 0 }, { basic + " --output " + stdoutFile, 0 },
+                { basic + " --output " + stdoutFile + " --stderr " + stderrFile, 0 } };
         return Arrays.asList(data);
     }
 
     /**
-     * <p>testRunner.</p>
-     *
-     * @param args a {@link java.lang.String} object.
-     * @param expected a int.
+     * <p>
+     * testRunner.
+     * </p>
+     * 
+     * @param args
+     *            a {@link java.lang.String} object.
+     * @param expected
+     *            a int.
      */
     public RunnerTest(String args, int expected) {
         this.expected = expected;

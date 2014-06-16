@@ -38,20 +38,24 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 /**
- * <p>WorkflowRunReportResource class.</p>
- *
+ * <p>
+ * WorkflowRunReportResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class WorkflowRunReportResource
-        extends BasicRestlet {
+public class WorkflowRunReportResource extends BasicRestlet {
 
     private Logger logger = Logger.getLogger(WorkflowRunReportResource.class);
 
     /**
-     * <p>Constructor for WorkflowRunReportResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for WorkflowRunReportResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public WorkflowRunReportResource(Context context) {
         super(context);
@@ -67,25 +71,25 @@ public class WorkflowRunReportResource
         Object wrId = request.getAttributes().get("workflowRunId");
         Object wId = request.getAttributes().get("workflowId");
         String path = request.getResourceRef().getPath();
-        
+
         // checking if a user is requesting error log rather than summary report
         if (path.contains("stderr")) {
-          showStdErr = true;
+            showStdErr = true;
         } else if (path.contains("stdout")) {
-          showStdOut = true;
+            showStdOut = true;
         }
 
         Date earliestDate = new Date(0);
         Date latestDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         for (String key : queryValues.keySet()) {
-            logger.debug("queryValues: " + key+ " "+queryValues.get(key));
+            logger.debug("queryValues: " + key + " " + queryValues.get(key));
         }
         if (queryValues.containsKey("earliestDate")) {
             String dateString = queryValues.get("earliestDate").toString();
             try {
                 earliestDate = dateFormat.parse(dateString);
-                logger.debug("Earliest date: "+earliestDate.toString());
+                logger.debug("Earliest date: " + earliestDate.toString());
             } catch (ParseException ex) {
                 logger.error("Improperly formatted earliest date. Should be in the form yyyyMMdd");
                 throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
@@ -96,7 +100,7 @@ public class WorkflowRunReportResource
             String dateString = queryValues.get("latestDate").toString();
             try {
                 latestDate = dateFormat.parse(dateString);
-                logger.debug("Earliest date: "+latestDate.toString());
+                logger.debug("Earliest date: " + latestDate.toString());
             } catch (ParseException ex) {
                 logger.error("Improperly formatted latest date. Should be in the form yyyyMMdd");
                 throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,
@@ -118,17 +122,17 @@ public class WorkflowRunReportResource
                 WorkflowRunReportRow results = cfc.getSingleWorkflowRun(parseClientInt(wrId.toString()));
                 // check to see if we're just returning the stderr/out or full report
                 if (showStdErr) {
-                  builder = new StringBuilder();
-                  outputLogString(true, results, builder);  
+                    builder = new StringBuilder();
+                    outputLogString(true, results, builder);
                 } else if (showStdOut) {
-                  builder = new StringBuilder();
-                  outputLogString(false, results, builder);
+                    builder = new StringBuilder();
+                    outputLogString(false, results, builder);
                 } else { // full report
-                  toString(results, builder);
+                    toString(results, builder);
                 }
-            } else if(wId == null && wrId == null) {
+            } else if (wId == null && wrId == null) {
                 String errMsg = "Improperly format, you need to provide a workflow ID or workflowRun ID";
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST,errMsg);
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errMsg);
             } else {
                 Collection<WorkflowRunReportRow> rows = cfc.getAllRuns();
                 for (WorkflowRunReportRow results : rows) {
@@ -142,8 +146,10 @@ public class WorkflowRunReportResource
     }
 
     /**
-     * <p>getHeader.</p>
-     *
+     * <p>
+     * getHeader.
+     * </p>
+     * 
      * @return a {@link java.lang.StringBuilder} object.
      */
     public StringBuilder getHeader() {
@@ -176,42 +182,50 @@ public class WorkflowRunReportResource
     }
 
     /**
-     * <p>outputLogString.</p>
-     *
-     * @param stdErr a boolean.
-     * @param wrrr a {@link net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow} object.
-     * @param builder a {@link java.lang.StringBuilder} object.
+     * <p>
+     * outputLogString.
+     * </p>
+     * 
+     * @param stdErr
+     *            a boolean.
+     * @param wrrr
+     *            a {@link net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow} object.
+     * @param builder
+     *            a {@link java.lang.StringBuilder} object.
      * @return a {@link java.lang.String} object.
      */
     public String outputLogString(boolean stdErr, WorkflowRunReportRow wrrr, StringBuilder builder) {
-        if(stdErr) {
-          builder.append(wrrr.getWorkflowRun().getStdErr());
+        if (stdErr) {
+            builder.append(wrrr.getWorkflowRun().getStdErr());
         } else {
-          builder.append(wrrr.getWorkflowRun().getStdOut());
+            builder.append(wrrr.getWorkflowRun().getStdOut());
         }
         builder.append("\n");
         return builder.toString();
 
     }
-    
+
     /**
-     * <p>toString.</p>
-     *
-     * @param wrrr a {@link net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow} object.
-     * @param builder a {@link java.lang.StringBuilder} object.
+     * <p>
+     * toString.
+     * </p>
+     * 
+     * @param wrrr
+     *            a {@link net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow} object.
+     * @param builder
+     *            a {@link java.lang.StringBuilder} object.
      * @return a {@link java.lang.String} object.
      */
     public String toString(WorkflowRunReportRow wrrr, StringBuilder builder) {
-        builder.append(wrrr.getWorkflowRun().getWorkflow().getName()).append(" ").append(wrrr.getWorkflowRun().getWorkflow().getVersion()).append("\t");
+        builder.append(wrrr.getWorkflowRun().getWorkflow().getName()).append(" ").append(wrrr.getWorkflowRun().getWorkflow().getVersion())
+                .append("\t");
         builder.append(wrrr.getWorkflowRun().getSwAccession()).append("\t");
         builder.append(wrrr.getWorkflowRun().getStatus()).append("\t");
         builder.append(wrrr.getWorkflowRun().getCreateTimestamp().toString()).append("\t");
         builder.append(wrrr.getWorkflowRun().getHost()).append("\t");
-        if (wrrr.getWorkflowRun().getCurrentWorkingDir() != null)
-          builder.append(wrrr.getWorkflowRun().getCurrentWorkingDir());
+        if (wrrr.getWorkflowRun().getCurrentWorkingDir() != null) builder.append(wrrr.getWorkflowRun().getCurrentWorkingDir());
         builder.append("\t");
-        if (wrrr.getWorkflowRun().getStatusCmd() != null)
-          builder.append(wrrr.getWorkflowRun().getStatusCmd());
+        if (wrrr.getWorkflowRun().getStatusCmd() != null) builder.append(wrrr.getWorkflowRun().getStatusCmd());
         builder.append("\t");
 
         parseSamples(builder, wrrr.getLibrarySamples());
@@ -267,7 +281,6 @@ public class WorkflowRunReportResource
         builder.append(fileTypes.toString()).append("\t");
         builder.append(fileSWIDs.toString()).append("\t");
         builder.append(filePaths.toString()).append("\t");
-
 
     }
 }

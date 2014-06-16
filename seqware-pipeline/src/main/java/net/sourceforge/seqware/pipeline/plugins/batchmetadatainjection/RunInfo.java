@@ -28,28 +28,28 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import net.sourceforge.seqware.common.model.SequencerRunStatus;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class RunInfo {
 
-    //study
+    // study
     private String studyTitle;
     private String studyDescription;
     private String studyCenterName;
     private String studyCenterProject;
-    //study and lane
+    // study and lane
     private String studyType;
-    //Used for experiment and for sequencer run
+    // Used for experiment and for sequencer run
     private String platformId;
-    //sequencer_run
+    // sequencer_run
     private String runName;
-    //experiment
+    // experiment
     private String experimentName;
     private String workflowType;
     private String assayType;
-    //samples, lanes, barcodes
-    //private List<SampleInfo> samples = null;
+    // samples, lanes, barcodes
+    // private List<SampleInfo> samples = null;
     private Set<TagValueUnit> experimentAttributes;
     private Set<TagValueUnit> studyAttributes;
     private Set<TagValueUnit> runAttributes;
@@ -63,21 +63,26 @@ public class RunInfo {
 
     /**
      * Get the value of the sequencer run status
+     * 
      * @return the status. Complete or if not complete, then null
      */
-    public SequencerRunStatus getStatus(){
+    public SequencerRunStatus getStatus() {
         return status;
     }
+
     /**
      * Set the value of the sequencer run status
-     * @param status the status
+     * 
+     * @param status
+     *            the status
      */
-    public void setStatus(SequencerRunStatus status){
+    public void setStatus(SequencerRunStatus status) {
         this.status = status;
     }
+
     /**
      * Get the value of runFilePath
-     *
+     * 
      * @return the value of runFilePath
      */
     public String getRunFilePath() {
@@ -86,8 +91,9 @@ public class RunInfo {
 
     /**
      * Set the value of runFilePath
-     *
-     * @param runFilePath new value of runFilePath
+     * 
+     * @param runFilePath
+     *            new value of runFilePath
      */
     public void setRunFilePath(String runFilePath) {
         this.runFilePath = runFilePath;
@@ -95,7 +101,7 @@ public class RunInfo {
 
     /**
      * Get the value of experimentDescription
-     *
+     * 
      * @return the value of experimentDescription
      */
     public String getExperimentDescription() {
@@ -104,8 +110,9 @@ public class RunInfo {
 
     /**
      * Set the value of experimentDescription
-     *
-     * @param experimentDescription new value of experimentDescription
+     * 
+     * @param experimentDescription
+     *            new value of experimentDescription
      */
     public void setExperimentDescription(String experimentDescription) {
         this.experimentDescription = experimentDescription;
@@ -113,7 +120,7 @@ public class RunInfo {
 
     /**
      * Get the value of runDescription
-     *
+     * 
      * @return the value of runDescription
      */
     public String getRunDescription() {
@@ -122,8 +129,9 @@ public class RunInfo {
 
     /**
      * Set the value of runDescription
-     *
-     * @param runDescription new value of runDescription
+     * 
+     * @param runDescription
+     *            new value of runDescription
      */
     public void setRunDescription(String runDescription) {
         this.runDescription = runDescription;
@@ -131,7 +139,7 @@ public class RunInfo {
 
     /**
      * Get the value of pairedEnd
-     *
+     * 
      * @return the value of pairedEnd
      */
     public boolean isPairedEnd() {
@@ -140,8 +148,9 @@ public class RunInfo {
 
     /**
      * Set the value of pairedEnd
-     *
-     * @param pairedEnd new value of pairedEnd
+     * 
+     * @param pairedEnd
+     *            new value of pairedEnd
      */
     public void setPairedEnd(boolean pairedEnd) {
         this.pairedEnd = pairedEnd;
@@ -149,7 +158,7 @@ public class RunInfo {
 
     /**
      * Get the value of runSkip
-     *
+     * 
      * @return the value of runSkip
      */
     public boolean getRunSkip() {
@@ -158,8 +167,9 @@ public class RunInfo {
 
     /**
      * Set the value of runSkip
-     *
-     * @param runSkip new value of runSkip
+     * 
+     * @param runSkip
+     *            new value of runSkip
      */
     public void setRunSkip(boolean runSkip) {
         this.runSkip = runSkip;
@@ -167,7 +177,7 @@ public class RunInfo {
 
     /**
      * Get the value of lanes
-     *
+     * 
      * @return the value of lanes
      */
     public Set<LaneInfo> getLanes() {
@@ -179,8 +189,9 @@ public class RunInfo {
 
     /**
      * Set the value of lanes
-     *
-     * @param lanes new value of lanes
+     * 
+     * @param lanes
+     *            new value of lanes
      */
     public void setLanes(Set<LaneInfo> lanes) {
         this.lanes = lanes;
@@ -204,7 +215,7 @@ public class RunInfo {
 
     /**
      * Get the value of runAttributes
-     *
+     * 
      * @return the value of runAttributes
      */
     public Set<TagValueUnit> getRunAttributes() {
@@ -216,25 +227,27 @@ public class RunInfo {
 
     /**
      * Adds a new run attribute if the tag does not exist for this run, or changes the value of an existing run attribute.
-     *
-     * @param tag the key of the attribute
-     * @param value the value of the attribute
+     * 
+     * @param tag
+     *            the key of the attribute
+     * @param value
+     *            the value of the attribute
      */
     public void setRunAttribute(String tag, String value) {
         TagValueUnit sa = null;
-        //look for the existing attribute
+        // look for the existing attribute
         for (TagValueUnit s : getRunAttributes()) {
             if (s.getTag().equals(tag.trim())) {
                 sa = s;
                 break;
             }
         }
-        //if we are unsetting the run attribute, remove it from the list.
+        // if we are unsetting the run attribute, remove it from the list.
         if (value == null && sa != null) {
             getRunAttributes().remove(sa);
             return;
         }
-        //create a new attribute
+        // create a new attribute
         if (sa == null) {
             sa = new TagValueUnit();
             getRunAttributes().add(sa);
@@ -245,8 +258,9 @@ public class RunInfo {
 
     /**
      * Set the value of runAttributes
-     *
-     * @param runAttributes new value of runAttributes
+     * 
+     * @param runAttributes
+     *            new value of runAttributes
      */
     public void setRunAttributes(Set<TagValueUnit> runAttributes) {
         this.runAttributes = runAttributes;
@@ -254,7 +268,7 @@ public class RunInfo {
 
     /**
      * Get the value of studyAttributes
-     *
+     * 
      * @return the value of studyAttributes
      */
     public Set<TagValueUnit> getStudyAttributes() {
@@ -265,27 +279,28 @@ public class RunInfo {
     }
 
     /**
-     * Adds a new study attribute if the tag does not exist for this study, or
-     * changes the value of an existing study attribute.
-     *
-     * @param tag the key of the attribute
-     * @param value the value of the attribute
+     * Adds a new study attribute if the tag does not exist for this study, or changes the value of an existing study attribute.
+     * 
+     * @param tag
+     *            the key of the attribute
+     * @param value
+     *            the value of the attribute
      */
     public void setStudyAttribute(String tag, String value) {
         TagValueUnit sa = null;
-        //look for the existing attribute
+        // look for the existing attribute
         for (TagValueUnit s : getStudyAttributes()) {
             if (s.getTag().equals(tag.trim())) {
                 sa = s;
                 break;
             }
         }
-        //if we are unsetting the study attribute, remove it from the list.
+        // if we are unsetting the study attribute, remove it from the list.
         if (value == null && sa != null) {
             getStudyAttributes().remove(sa);
             return;
         }
-        //create a new attribute
+        // create a new attribute
         if (sa == null) {
             sa = new TagValueUnit();
             getStudyAttributes().add(sa);
@@ -296,8 +311,9 @@ public class RunInfo {
 
     /**
      * Set the value of studyAttributes
-     *
-     * @param studyAttributes new value of studyAttributes
+     * 
+     * @param studyAttributes
+     *            new value of studyAttributes
      */
     public void setStudyAttributes(Set<TagValueUnit> studyAttributes) {
         this.studyAttributes = studyAttributes;
@@ -305,7 +321,7 @@ public class RunInfo {
 
     /**
      * Get the value of experimentAttributes
-     *
+     * 
      * @return the value of experimentAttributes
      */
     public Set<TagValueUnit> getExperimentAttributes() {
@@ -317,8 +333,9 @@ public class RunInfo {
 
     /**
      * Set the value of experimentAttributes
-     *
-     * @param experimentAttributes new value of experimentAttributes
+     * 
+     * @param experimentAttributes
+     *            new value of experimentAttributes
      */
     public void setExperimentAttributes(Set<TagValueUnit> experimentAttributes) {
         this.experimentAttributes = experimentAttributes;
@@ -326,7 +343,7 @@ public class RunInfo {
 
     /**
      * Get the value of studyCenterProject
-     *
+     * 
      * @return the value of studyCenterProject
      */
     public String getStudyCenterProject() {
@@ -335,8 +352,9 @@ public class RunInfo {
 
     /**
      * Set the value of studyCenterProject
-     *
-     * @param studyCenterProject new value of studyCenterProject
+     * 
+     * @param studyCenterProject
+     *            new value of studyCenterProject
      */
     public void setStudyCenterProject(String studyCenterProject) {
         this.studyCenterProject = studyCenterProject;
@@ -344,7 +362,7 @@ public class RunInfo {
 
     /**
      * Get the value of studyCenterName
-     *
+     * 
      * @return the value of studyCenterName
      */
     public String getStudyCenterName() {
@@ -353,8 +371,9 @@ public class RunInfo {
 
     /**
      * Set the value of studyCenterName
-     *
-     * @param studyCenterName new value of studyCenterName
+     * 
+     * @param studyCenterName
+     *            new value of studyCenterName
      */
     public void setStudyCenterName(String studyCenterName) {
         this.studyCenterName = studyCenterName;
@@ -362,7 +381,7 @@ public class RunInfo {
 
     /**
      * Get the value of studyDescription
-     *
+     * 
      * @return the value of studyDescription
      */
     public String getStudyDescription() {
@@ -371,8 +390,9 @@ public class RunInfo {
 
     /**
      * Set the value of studyDescription
-     *
-     * @param studyDescription new value of studyDescription
+     * 
+     * @param studyDescription
+     *            new value of studyDescription
      */
     public void setStudyDescription(String studyDescription) {
         this.studyDescription = studyDescription;
@@ -380,7 +400,7 @@ public class RunInfo {
 
     /**
      * Get the value of assayType
-     *
+     * 
      * @return the value of assayType
      */
     public String getAssayType() {
@@ -389,8 +409,9 @@ public class RunInfo {
 
     /**
      * Set the value of assayType
-     *
-     * @param assayType new value of assayType
+     * 
+     * @param assayType
+     *            new value of assayType
      */
     public void setAssayType(String assayType) {
         this.assayType = assayType;
@@ -398,7 +419,7 @@ public class RunInfo {
 
     /**
      * Get the value of workflowType
-     *
+     * 
      * @return the value of workflowType
      */
     public String getWorkflowType() {
@@ -407,8 +428,9 @@ public class RunInfo {
 
     /**
      * Set the value of workflowType
-     *
-     * @param workflowType new value of workflowType
+     * 
+     * @param workflowType
+     *            new value of workflowType
      */
     public void setWorkflowType(String workflowType) {
         this.workflowType = workflowType;
@@ -416,7 +438,7 @@ public class RunInfo {
 
     /**
      * Get the value of experimentName
-     *
+     * 
      * @return the value of experimentName
      */
     public String getExperimentName() {
@@ -425,8 +447,9 @@ public class RunInfo {
 
     /**
      * Set the value of experimentName
-     *
-     * @param experimentName new value of experimentName
+     * 
+     * @param experimentName
+     *            new value of experimentName
      */
     public void setExperimentName(String experimentName) {
         this.experimentName = experimentName;
@@ -434,7 +457,7 @@ public class RunInfo {
 
     /**
      * Get the value of runName
-     *
+     * 
      * @return the value of runName
      */
     public String getRunName() {
@@ -443,8 +466,9 @@ public class RunInfo {
 
     /**
      * Set the value of runName
-     *
-     * @param runName new value of runName
+     * 
+     * @param runName
+     *            new value of runName
      */
     public void setRunName(String runName) {
         this.runName = runName;
@@ -452,7 +476,7 @@ public class RunInfo {
 
     /**
      * Get the value of studyTitle
-     *
+     * 
      * @return the value of studyTitle
      */
     public String getStudyTitle() {
@@ -461,54 +485,45 @@ public class RunInfo {
 
     /**
      * Set the value of studyTitle
-     *
-     * @param studyTitle new value of studyTitle
+     * 
+     * @param studyTitle
+     *            new value of studyTitle
      */
     public void setStudyTitle(String studyTitle) {
         this.studyTitle = studyTitle;
     }
 
-//    @Override
-//    public String toString() {
-//        String string = "RunInfo{" + "studyTitle=" + studyTitle+ "\n\t runName=" + runName;
-//        for (SampleInfo sample : samples) {
-//            string += sample.toString() + "\n";
-//        }
-//        string += '}';
-//        return string;
-//    }
+    // @Override
+    // public String toString() {
+    // String string = "RunInfo{" + "studyTitle=" + studyTitle+ "\n\t runName=" + runName;
+    // for (SampleInfo sample : samples) {
+    // string += sample.toString() + "\n";
+    // }
+    // string += '}';
+    // return string;
+    // }
 
     @Override
     public String toString() {
-        return "RunInfo{" + "studyTitle=" + studyTitle+ "\n\t studyDescription=" 
-                + studyDescription+ "\n\t studyCenterName=" 
-                + studyCenterName+ "\n\t studyCenterProject=" 
-                + studyCenterProject+ "\n\t studyType=" 
-                + studyType+ "\n\t platformId=" 
-                + platformId+ "\n\t runName=" 
-                + runName+ "\n\t experimentName=" 
-                + experimentName+ "\n\t workflowType=" 
-                + workflowType+ "\n\t assayType=" 
-                + assayType+ "\n\t runSkip=" 
-                + runSkip+ "\n\t pairedEnd=" 
-                + pairedEnd+ "\n\t runDescription=" 
-                + runDescription+ "\n\t runFilePath=" 
-                + runFilePath+ "\n\t experimentDescription=" 
-                + experimentDescription + '}';
+        return "RunInfo{" + "studyTitle=" + studyTitle + "\n\t studyDescription=" + studyDescription + "\n\t studyCenterName="
+                + studyCenterName + "\n\t studyCenterProject=" + studyCenterProject + "\n\t studyType=" + studyType + "\n\t platformId="
+                + platformId + "\n\t runName=" + runName + "\n\t experimentName=" + experimentName + "\n\t workflowType=" + workflowType
+                + "\n\t assayType=" + assayType + "\n\t runSkip=" + runSkip + "\n\t pairedEnd=" + pairedEnd + "\n\t runDescription="
+                + runDescription + "\n\t runFilePath=" + runFilePath + "\n\t experimentDescription=" + experimentDescription + '}';
     }
-    
+
     public void print(Appendable writer, Metadata metadata) throws IOException {
-        String platform="<null>";
-        if (platformId!=null && !platformId.trim().isEmpty() && StringUtils.isNumeric(platformId)) {
-            for (Platform p: metadata.getPlatforms()) {
+        String platform = "<null>";
+        if (platformId != null && !platformId.trim().isEmpty() && StringUtils.isNumeric(platformId)) {
+            for (Platform p : metadata.getPlatforms()) {
                 if (p.getPlatformId().equals(Integer.parseInt(platformId))) {
                     platform = p.getName();
                 }
             }
         }
         String studyTypeStr = "<null>";
-        if (studyType!=null && !studyType.trim().isEmpty() && StringUtils.isNumeric(studyType)) {
-            for (StudyType st: metadata.getStudyTypes()) {
+        if (studyType != null && !studyType.trim().isEmpty() && StringUtils.isNumeric(studyType)) {
+            for (StudyType st : metadata.getStudyTypes()) {
                 if (st.getStudyTypeId().equals(Integer.parseInt(studyType))) {
                     studyTypeStr = st.getName();
                 }
@@ -527,22 +542,21 @@ public class RunInfo {
         writer.append("\n\tplatform=").append(platform);
         writer.append("\n\tstudyType=").append(studyTypeStr);
         writer.append("\n\tskipRun=").append(String.valueOf(runSkip));
-        if (lanes!=null)
-        for (LaneInfo lane: lanes) {
+        if (lanes != null) for (LaneInfo lane : lanes) {
             lane.print(writer, metadata);
         }
         writer.append("\n\t}");
         writer.append("\n}");
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
-    
+
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
     }
-    
+
 }

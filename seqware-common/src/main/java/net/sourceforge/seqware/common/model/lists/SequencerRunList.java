@@ -21,25 +21,31 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.SequencerRun;
 
 /**
- * <p>SequencerRunList class.</p>
- *
+ * <p>
+ * SequencerRunList class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class SequencerRunList{
+public class SequencerRunList {
 
     protected List<SequencerRun> tList;
 
     /**
-     * <p>Constructor for SequencerRunList.</p>
+     * <p>
+     * Constructor for SequencerRunList.
+     * </p>
      */
     public SequencerRunList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<SequencerRun> getList() {
@@ -47,18 +53,24 @@ public class SequencerRunList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<SequencerRun> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
     public void add(SequencerRun ex) {
         tList.add(ex);

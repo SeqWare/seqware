@@ -33,22 +33,28 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>SampleIDResource class.</p>
- *
+ * <p>
+ * SampleIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class SampleIDResource extends DatabaseIDResource {
 
     /**
-     * <p>Constructor for SampleIDResource.</p>
+     * <p>
+     * Constructor for SampleIDResource.
+     * </p>
      */
     public SampleIDResource() {
         super("sampleId");
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -85,29 +91,32 @@ public class SampleIDResource extends DatabaseIDResource {
                 Log.info("Could not be found : ius");
             }
         }
-		if(fields.contains("attributes")) {
-			Set<SampleAttribute> sas = sample.getSampleAttributes();
-			if(sas!=null && !sas.isEmpty()) {
-				Set<SampleAttribute> newsas = new TreeSet<>();
-				for(SampleAttribute sa: sas) {
-					newsas.add(copier.hibernate2dto(SampleAttribute.class,sa));
-				}
-				dto.setSampleAttributes(newsas);
-			}
-		}
+        if (fields.contains("attributes")) {
+            Set<SampleAttribute> sas = sample.getSampleAttributes();
+            if (sas != null && !sas.isEmpty()) {
+                Set<SampleAttribute> newsas = new TreeSet<>();
+                for (SampleAttribute sa : sas) {
+                    newsas.add(copier.hibernate2dto(SampleAttribute.class, sa));
+                }
+                dto.setSampleAttributes(newsas);
+            }
+        }
 
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-	/** {@inheritDoc}
-     * @return  */
-	@Override
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
     @Put
     public Representation put(Representation entity) {
         authenticate();
         Representation representation = null;
-		try {
+        try {
             JaxbObject<Sample> jo = new JaxbObject<>();
             String text = entity.getText();
             Sample o = null;
@@ -117,74 +126,56 @@ public class SampleIDResource extends DatabaseIDResource {
                 throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, ex);
             }
 
-			SampleService service = BeanFactory.getSampleServiceBean();
-			Sample sample = (Sample) testIfNull(service.findByID(o.getSampleId()));
-			sample.givesPermission(registration);
+            SampleService service = BeanFactory.getSampleServiceBean();
+            Sample sample = (Sample) testIfNull(service.findByID(o.getSampleId()));
+            sample.givesPermission(registration);
 
-			String anonymizedName = o.getAnonymizedName();
-			String individualName = o.getIndividualName();
-			Integer swAccession = o.getSwAccession();
-			String name = o.getName();
-			String title = o.getTitle();
-			String alias = o.getAlias();
-			String description = o.getDescription();
-			String type = o.getType();
-			String tags = o.getTags();
-			String adapters = o.getAdapters();
-			String regions = o.getRegions();
-			Integer expectedNumRuns = o.getExpectedNumRuns();
-			Integer expectedNumSpots = o.getExpectedNumSpots();
-			Integer expectedNumReads = o.getExpectedNumReads();
-			Boolean skip = o.getSkip();
-			Boolean isSelected = o.getIsSelected();
-			Boolean isHasFile = o.getIsHasFile();
-			Integer countFile = o.getCountFile();
+            String anonymizedName = o.getAnonymizedName();
+            String individualName = o.getIndividualName();
+            Integer swAccession = o.getSwAccession();
+            String name = o.getName();
+            String title = o.getTitle();
+            String alias = o.getAlias();
+            String description = o.getDescription();
+            String type = o.getType();
+            String tags = o.getTags();
+            String adapters = o.getAdapters();
+            String regions = o.getRegions();
+            Integer expectedNumRuns = o.getExpectedNumRuns();
+            Integer expectedNumSpots = o.getExpectedNumSpots();
+            Integer expectedNumReads = o.getExpectedNumReads();
+            Boolean skip = o.getSkip();
+            Boolean isSelected = o.getIsSelected();
+            Boolean isHasFile = o.getIsHasFile();
+            Integer countFile = o.getCountFile();
 
-			if(null!=anonymizedName)
-				sample.setAnonymizedName(anonymizedName);
-			if(null!=individualName)
-				sample.setIndividualName(individualName);
-			if(null!=swAccession)
-				sample.setSwAccession(swAccession);
-			if(null!=name)
-				sample.setName(name);
-			if(null!=title)
-				sample.setTitle(title);
-			if(null!=alias)
-				sample.setAlias(alias);
-			if(null!=description)
-				sample.setDescription(description);
-			if(null!=type)
-				sample.setType(type);
-			if(null!=tags)
-				sample.setTags(tags);
-			if(null!=adapters)
-				sample.setAdapters(adapters);
-			if(null!=regions)
-				sample.setRegions(regions);
-			if(null!=expectedNumRuns)
-				sample.setExpectedNumRuns(expectedNumRuns);
-			if(null!=expectedNumSpots)
-				sample.setExpectedNumSpots(expectedNumSpots);
-			if(null!=expectedNumReads)
-				sample.setExpectedNumReads(expectedNumReads);
-			if(null!=skip)
-				sample.setSkip(skip);
-			if(null!=isSelected)
-				sample.setIsSelected(isSelected);
-			if(null!=isHasFile)
-				sample.setIsHasFile(isHasFile);
-			if(null!=countFile)
-				sample.setCountFile(countFile);
+            if (null != anonymizedName) sample.setAnonymizedName(anonymizedName);
+            if (null != individualName) sample.setIndividualName(individualName);
+            if (null != swAccession) sample.setSwAccession(swAccession);
+            if (null != name) sample.setName(name);
+            if (null != title) sample.setTitle(title);
+            if (null != alias) sample.setAlias(alias);
+            if (null != description) sample.setDescription(description);
+            if (null != type) sample.setType(type);
+            if (null != tags) sample.setTags(tags);
+            if (null != adapters) sample.setAdapters(adapters);
+            if (null != regions) sample.setRegions(regions);
+            if (null != expectedNumRuns) sample.setExpectedNumRuns(expectedNumRuns);
+            if (null != expectedNumSpots) sample.setExpectedNumSpots(expectedNumSpots);
+            if (null != expectedNumReads) sample.setExpectedNumReads(expectedNumReads);
+            if (null != skip) sample.setSkip(skip);
+            if (null != isSelected) sample.setIsSelected(isSelected);
+            if (null != isHasFile) sample.setIsHasFile(isHasFile);
+            if (null != countFile) sample.setCountFile(countFile);
 
-			if (null != o.getSampleAttributes()) {
-                        //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                        this.mergeAttributes(sample.getSampleAttributes(), o.getSampleAttributes(), sample);
-                    }
+            if (null != o.getSampleAttributes()) {
+                // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                this.mergeAttributes(sample.getSampleAttributes(), o.getSampleAttributes(), sample);
+            }
             if (null != o.getParents()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
                 Set<Sample> parents = new HashSet<>(sample.getParents());
-                for (Sample s: o.getParents()) {
+                for (Sample s : o.getParents()) {
                     parents.add(ss.findByID(s.getSampleId()));
                 }
                 sample.setParents(parents);
@@ -192,14 +183,14 @@ public class SampleIDResource extends DatabaseIDResource {
             if (null != o.getChildren()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
                 Set<Sample> children = new HashSet<>(sample.getChildren());
-                for (Sample s: o.getChildren()) {
+                for (Sample s : o.getChildren()) {
                     children.add(ss.findByID(s.getSampleId()));
                 }
                 sample.setChildren(children);
             }
-			service.update(sample);
+            service.update(sample);
 
-            //persist object
+            // persist object
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             Sample detachedSample = copier.hibernate2dto(Sample.class, sample);
 
@@ -214,7 +205,7 @@ public class SampleIDResource extends DatabaseIDResource {
             getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
         }
 
-		return representation;
-	}
+        return representation;
+    }
 
 }

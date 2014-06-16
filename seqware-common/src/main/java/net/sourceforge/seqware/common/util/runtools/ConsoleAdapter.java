@@ -22,7 +22,7 @@ import java.io.Reader;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class ConsoleAdapter {
