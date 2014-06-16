@@ -15,15 +15,19 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * <p>WorkflowParamDAOHibernate class.</p>
- *
+ * <p>
+ * WorkflowParamDAOHibernate class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements WorkflowParamDAO {
 
     /**
-     * <p>Constructor for WorkflowParamDAOHibernate.</p>
+     * <p>
+     * Constructor for WorkflowParamDAOHibernate.
+     * </p>
      */
     public WorkflowParamDAOHibernate() {
         super();
@@ -53,7 +57,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
     public WorkflowParam findByID(Integer id) {
         String query = "from WorkflowParam as workflowParam where workflowParam.workflowParamId = ?";
         WorkflowParam workflowParam = null;
-        Object[] parameters = {id};
+        Object[] parameters = { id };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             workflowParam = (WorkflowParam) list.get(0);
@@ -77,7 +81,8 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
         return null;
     }
 
-    private WorkflowParam reattachWorkflowParam(WorkflowParam workflowParam) throws IllegalStateException, DataAccessResourceFailureException {
+    private WorkflowParam reattachWorkflowParam(WorkflowParam workflowParam) throws IllegalStateException,
+            DataAccessResourceFailureException {
         WorkflowParam dbObject = workflowParam;
         if (!getSession().contains(workflowParam)) {
             dbObject = findByID(workflowParam.getWorkflowParamId());
@@ -108,8 +113,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
         Logger logger = Logger.getLogger(WorkflowParamDAOHibernate.class);
         if (registration == null) {
             logger.error("WorkflowParamDAOHibernate update: Registration is null - exiting");
-        } else if (registration.isLIMSAdmin()
-                || (workflowParam.givesPermission(registration) && dbObject.givesPermission(registration))) {
+        } else if (registration.isLIMSAdmin() || (workflowParam.givesPermission(registration) && dbObject.givesPermission(registration))) {
             logger.info("WorkflowParamDAOHibernate Updating workflow param object");
             update(workflowParam);
         } else {

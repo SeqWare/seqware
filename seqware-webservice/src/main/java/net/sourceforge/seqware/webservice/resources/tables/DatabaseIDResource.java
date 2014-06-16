@@ -28,8 +28,10 @@ import org.restlet.resource.Delete;
 import org.restlet.resource.Put;
 
 /**
- * <p>DatabaseIDResource class.</p>
- *
+ * <p>
+ * DatabaseIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -38,8 +40,10 @@ public class DatabaseIDResource extends BasicResource {
     private int id;
 
     /**
-     * <p>Getter for the field <code>attribute</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>attribute</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getAttribute() {
@@ -47,19 +51,25 @@ public class DatabaseIDResource extends BasicResource {
     }
 
     /**
-     * <p>Getter for the field <code>id</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>id</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public int getId() {
         return id;
     }
+
     protected String attribute;
 
     /**
-     * <p>Constructor for DatabaseIDResource.</p>
-     *
-     * @param attributeName a {@link java.lang.String} object.
+     * <p>
+     * Constructor for DatabaseIDResource.
+     * </p>
+     * 
+     * @param attributeName
+     *            a {@link java.lang.String} object.
      */
     public DatabaseIDResource(String attributeName) {
         this.attribute = attributeName;
@@ -73,18 +83,21 @@ public class DatabaseIDResource extends BasicResource {
         attribute += " " + id;
     }
 
-//    @Get
-//    @Override
-//    public Representation get() {
-//        String output = attribute;
-//        StringRepresentation repOutput = new StringRepresentation(output);
-//        repOutput.setMediaType(MediaType.TEXT_PLAIN);
-//        return repOutput;
-//    }
+    // @Get
+    // @Override
+    // public Representation get() {
+    // String output = attribute;
+    // StringRepresentation repOutput = new StringRepresentation(output);
+    // repOutput.setMediaType(MediaType.TEXT_PLAIN);
+    // return repOutput;
+    // }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @param rep
-     * @return  */
+     * @return
+     */
     @Put
     @Override
     public Representation put(Representation rep) {
@@ -94,8 +107,11 @@ public class DatabaseIDResource extends BasicResource {
         return repOutput;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Delete
     @Override
     public Representation delete() {
@@ -106,8 +122,8 @@ public class DatabaseIDResource extends BasicResource {
     }
 
     /**
-     * Merge attributes from a new set into an existing one while removing duplicates.
-     * Unfortunately, due to how duplicates work,
+     * Merge attributes from a new set into an existing one while removing duplicates. Unfortunately, due to how duplicates work,
+     * 
      * @param existingAttributeSet
      * @param newAttributeSet
      * @param parent
@@ -132,5 +148,5 @@ public class DatabaseIDResource extends BasicResource {
             // populate the child end of the relationship
             newAttr.setAttributeParent(parent);
         }
-    }  
+    }
 }

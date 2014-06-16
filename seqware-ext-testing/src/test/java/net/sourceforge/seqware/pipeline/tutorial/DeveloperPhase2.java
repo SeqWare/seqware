@@ -31,35 +31,37 @@ import org.junit.Test;
 
 /**
  * Build and install a bundle, used by both the User tutorial and the Developer tutorial
+ * 
  * @author dyuen
  */
 public class DeveloperPhase2 {
-    
+
     @Test
-    public void testTestingTheWorkflow() throws IOException{
+    public void testTestingTheWorkflow() throws IOException {
         testWorkflow();
     }
-    
-    @Test 
-    public void testPackagingWorkflow()throws IOException{
+
+    @Test
+    public void testPackagingWorkflow() throws IOException {
         File tempPackageDir = Files.createTempDir();
         packageBundle(tempPackageDir);
         FileUtils.deleteDirectory(tempPackageDir);
     }
-    
+
     @AfterClass
-    public static void cleanup() throws IOException{
+    public static void cleanup() throws IOException {
         FileUtils.deleteDirectory(DeveloperPhase1.BundleDir);
         PluginRunnerET.monitorAndClean(false);
     }
 
     protected void testWorkflow() throws IOException {
-        ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BuildDir.getAbsolutePath() + 
-               " -t --workflow seqwarearchetypejavaworkflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
+        ITUtility.runSeqWareJar(
+                "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BuildDir.getAbsolutePath()
+                        + " -t --workflow seqwarearchetypejavaworkflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
     }
 
     protected void packageBundle(File tempPackageDir) throws IOException {
-        ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + tempPackageDir.getAbsolutePath() + 
-               " -p " + DeveloperPhase1.BuildDir.getAbsolutePath() , ReturnValue.SUCCESS, null);
+        ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + tempPackageDir.getAbsolutePath()
+                + " -p " + DeveloperPhase1.BuildDir.getAbsolutePath(), ReturnValue.SUCCESS, null);
     }
 }

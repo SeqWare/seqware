@@ -4,8 +4,8 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 
 public class PegasusJavaSeqwareModuleJob extends PegasusJob {
 
-	public PegasusJavaSeqwareModuleJob(AbstractJob job, String basedir, String sqwVersion) {
-		super(job, basedir, sqwVersion);
-	}
-	
+    public PegasusJavaSeqwareModuleJob(AbstractJob job, String basedir, String sqwVersion) {
+        super(job, basedir, sqwVersion);
+    }
+
 }

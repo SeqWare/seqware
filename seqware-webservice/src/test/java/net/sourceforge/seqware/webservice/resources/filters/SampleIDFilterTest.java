@@ -30,7 +30,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class SampleIDFilterTest extends AbstractResourceTest {
@@ -121,8 +121,8 @@ public class SampleIDFilterTest extends AbstractResourceTest {
         }
     }
 
-    //1796 is leaf
-    //1792 is root
+    // 1796 is leaf
+    // 1792 is root
     private List<Sample> getSamples(String relativeURI) throws ResourceException, Exception {
         resource = ClientResourceInstance.getChild(relativeURI);
         Log.stdout(getRelativeURI() + " GET");

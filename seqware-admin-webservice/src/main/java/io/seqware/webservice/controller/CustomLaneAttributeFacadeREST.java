@@ -26,26 +26,25 @@ import javax.ws.rs.Path;
 @Path("io.seqware.webservice.model.laneattribute")
 public class CustomLaneAttributeFacadeREST extends LaneAttributeFacadeREST {
 
-   @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
-   private EntityManager em;
+    @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
+    private EntityManager em;
 
-   @EJB
-   private LaneFacadeREST laneFacadeRest;
+    @EJB
+    private LaneFacadeREST laneFacadeRest;
 
-   /**
-    * Create a new lane and a new lane attribute to associate with it in a
-    * single step. Both steps occur in a single transaction.
-    * 
-    * @param entity
-    *           The lane attribute with nested lane.
-    */
-   @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-   @POST
-   @Path("withbaseentity")
-   @Consumes({ "application/json", "application/xml" })
-   public void createWithBaseEntity(LaneAttribute entity) {
-      laneFacadeRest.create(entity.getLaneId());
-      em.flush();
-      super.create(entity);
-   }
+    /**
+     * Create a new lane and a new lane attribute to associate with it in a single step. Both steps occur in a single transaction.
+     * 
+     * @param entity
+     *            The lane attribute with nested lane.
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @POST
+    @Path("withbaseentity")
+    @Consumes({ "application/json", "application/xml" })
+    public void createWithBaseEntity(LaneAttribute entity) {
+        laneFacadeRest.create(entity.getLaneId());
+        em.flush();
+        super.create(entity);
+    }
 }

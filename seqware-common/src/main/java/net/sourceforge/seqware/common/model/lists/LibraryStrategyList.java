@@ -21,25 +21,31 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 
 /**
- * <p>LibraryStrategyList class.</p>
- *
+ * <p>
+ * LibraryStrategyList class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class LibraryStrategyList{
+public class LibraryStrategyList {
 
     protected List<LibraryStrategy> tList;
 
     /**
-     * <p>Constructor for LibraryStrategyList.</p>
+     * <p>
+     * Constructor for LibraryStrategyList.
+     * </p>
      */
     public LibraryStrategyList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<LibraryStrategy> getList() {
@@ -47,18 +53,24 @@ public class LibraryStrategyList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<LibraryStrategy> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.LibraryStrategy} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.LibraryStrategy} object.
      */
     public void add(LibraryStrategy ex) {
         tList.add(ex);

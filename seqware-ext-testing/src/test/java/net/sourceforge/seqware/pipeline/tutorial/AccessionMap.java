@@ -20,8 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Store some dependent information between test classes for the tutorial.
- * Somewhat bad form, but we want to maintain some information to to the tutorial steps in order
+ * Store some dependent information between test classes for the tutorial. Somewhat bad form, but we want to maintain some information to to
+ * the tutorial steps in order
+ * 
  * @author dyuen
  */
 public class AccessionMap {

@@ -1,6 +1,5 @@
 package net.sourceforge.seqware.webservice.resources.queries;
 
-
 import java.io.IOException;
 import java.sql.SQLException;
 import org.restlet.Context;

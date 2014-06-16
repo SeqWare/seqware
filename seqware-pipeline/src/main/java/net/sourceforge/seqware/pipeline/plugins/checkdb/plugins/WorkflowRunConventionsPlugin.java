@@ -41,63 +41,68 @@ import org.openide.util.lookup.ServiceProvider;
  * 
  * @author dyuen
  */
-@ServiceProvider(service=CheckDBPluginInterface.class)
+@ServiceProvider(service = CheckDBPluginInterface.class)
 public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
 
     @Override
     public void check(SelectQueryRunner qRunner, SortedMap<Level, Set<String>> result) throws SQLException {
         try {
             /**
-             * May not be true for downsteam workflow runs
-            * List<Integer> executeQuery = qRunner.executeQuery("select sw_accession from workflow_run WHERE workflow_run_id NOT IN (select workflow_run_id FROM ius_workflow_runs);", new ColumnListHandler<Integer>());
-            * CheckDB.processOutput(result, Level.TRIVIAL,  "Workflow runs not connected to an IUS via ius_workflow_runs: " , executeQuery);
-            **/
+             * May not be true for downsteam workflow runs List<Integer> executeQuery = qRunner.executeQuery(
+             * "select sw_accession from workflow_run WHERE workflow_run_id NOT IN (select workflow_run_id FROM ius_workflow_runs);", new
+             * ColumnListHandler<Integer>()); CheckDB.processOutput(result, Level.TRIVIAL,
+             * "Workflow runs not connected to an IUS via ius_workflow_runs: " , executeQuery);
+             **/
             // workflow runs not connected to a study
             String query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("workflow_runs_not_connected_to_study.sql"));
             List<Object[]> workflow_run_study_pairs = qRunner.executeQuery(query, new ArrayListHandler());
-            
+
             List<Integer> unreachableByStudy = new ArrayList<>();
             // number studies -> workflow runs
             SortedMap<Integer, SortedSet<Integer>> reachableByMultipleStudies = new TreeMap<>();
-            
-            for(Object[] pair : workflow_run_study_pairs){
+
+            for (Object[] pair : workflow_run_study_pairs) {
                 int studyCount = Integer.valueOf(pair[1].toString());
-                if (pair[0] == null){
+                if (pair[0] == null) {
                     continue;
                 }
                 int sw_accession = Integer.valueOf(pair[0].toString());
-                if (studyCount == 0){
+                if (studyCount == 0) {
                     unreachableByStudy.add(sw_accession);
-                } else if (studyCount > 1){
-                    if (!reachableByMultipleStudies.containsKey(studyCount)){
+                } else if (studyCount > 1) {
+                    if (!reachableByMultipleStudies.containsKey(studyCount)) {
                         reachableByMultipleStudies.put(studyCount, new TreeSet<Integer>());
                     }
                     reachableByMultipleStudies.get(studyCount).add(sw_accession);
                 }
             }
-            CheckDB.processOutput(result, Level.SEVERE,  "'Completed' Workflow runs not reachable by studies: " , unreachableByStudy);
+            CheckDB.processOutput(result, Level.SEVERE, "'Completed' Workflow runs not reachable by studies: ", unreachableByStudy);
             // workflow runs connected to more than one study
-            if (reachableByMultipleStudies.size() > 0){
-                for(Entry<Integer, SortedSet<Integer>> e : reachableByMultipleStudies.entrySet()){
-                    CheckDB.processOutput(result, Level.WARNING,  "'Completed' Workflow runs reachable by "+e.getKey()+" studies: " , new ArrayList<>(e.getValue()));
+            if (reachableByMultipleStudies.size() > 0) {
+                for (Entry<Integer, SortedSet<Integer>> e : reachableByMultipleStudies.entrySet()) {
+                    CheckDB.processOutput(result, Level.WARNING, "'Completed' Workflow runs reachable by " + e.getKey() + " studies: ",
+                            new ArrayList<>(e.getValue()));
                 }
             }
             query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("workflow_runs_not_connected_in_hierarchy.sql"));
             List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            CheckDB.processOutput(result, Level.SEVERE, "'Completed' Workflow runs reachable by ius_workflow_runs but not via the processing_hierarchy: " , executeQuery);
-                     
+            CheckDB.processOutput(result, Level.SEVERE,
+                    "'Completed' Workflow runs reachable by ius_workflow_runs but not via the processing_hierarchy: ", executeQuery);
+
             query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("new_input_files_versus_old.sql"));
             executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            CheckDB.processOutput(result, Level.TRIVIAL, "Workflow runs with input files via workflow_run_input_files but not via the processing hierarchy: " , executeQuery);
-            
+            CheckDB.processOutput(result, Level.TRIVIAL,
+                    "Workflow runs with input files via workflow_run_input_files but not via the processing hierarchy: ", executeQuery);
+
             query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("old_input_files_versus_new.sql"));
             executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            CheckDB.processOutput(result, Level.TRIVIAL, "Workflow runs with input files via the processing hierarchy but not via workflow_run_input_files: " , executeQuery);            
-            
+            CheckDB.processOutput(result, Level.TRIVIAL,
+                    "Workflow runs with input files via the processing hierarchy but not via workflow_run_input_files: ", executeQuery);
+
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-       
+
     }
-    
+
 }

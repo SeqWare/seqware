@@ -33,95 +33,93 @@ import org.restlet.test.RestletTestCase;
 @RunWith(MockitoJUnitRunner.class)
 public class FileAttributeServerResourceTest extends RestletTestCase {
 
-  @Mock
-  FileAttributeService mockFileAttributeService;
+    @Mock
+    FileAttributeService mockFileAttributeService;
 
-  @Mock
-  RegistrationService mockRegistrationService;
+    @Mock
+    RegistrationService mockRegistrationService;
 
-  private static class TestApplication extends Application {
+    private static class TestApplication extends Application {
 
-    @Override
-    public Restlet createInboundRoot() {
-      Router router = new Router(getContext());
-      router.attach("/file/{swa}/attribute", FileAttributeServerResource.class);
-      router.attach("/file/{swa}/attribute/{id}", FileAttributeServerResource.class);
+        @Override
+        public Restlet createInboundRoot() {
+            Router router = new Router(getContext());
+            router.attach("/file/{swa}/attribute", FileAttributeServerResource.class);
+            router.attach("/file/{swa}/attribute/{id}", FileAttributeServerResource.class);
 
-      return router;
+            return router;
+        }
+
     }
 
-  }
+    private Component c;
 
-  private Component c;
+    private Client client;
 
-  private Client client;
-  
+    private String uri;
 
-  private String uri;
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        Engine.getInstance().getRegisteredConverters().clear();
+        Engine.getInstance().registerDefaultConverters();
+        Engine.getInstance().getRegisteredConverters().add(new JacksonConverter());
+        c = new Component();
+        final Server server = c.getServers().add(Protocol.HTTP, 0);
+        c.getDefaultHost().attach(new TestApplication());
+        c.start();
 
-  @Before
-  @Override
-  public void setUp() throws Exception {
-    super.setUp();
-    Engine.getInstance().getRegisteredConverters().clear();
-    Engine.getInstance().registerDefaultConverters();
-    Engine.getInstance().getRegisteredConverters().add(new JacksonConverter());
-    c = new Component();
-    final Server server = c.getServers().add(Protocol.HTTP, 0);
-    c.getDefaultHost().attach(new TestApplication());
-    c.start();
+        client = new Client(Protocol.HTTP);
 
-    client = new Client(Protocol.HTTP);
-    
+        uri = "http://localhost:" + server.getEphemeralPort();
 
-    uri = "http://localhost:" + server.getEphemeralPort();
-    
-    FileAttributeServerResource.setFileAttributeService(mockFileAttributeService);
-    FileAttributeServerResource.setRegistrationServiceForAuthentication(mockRegistrationService);
+        FileAttributeServerResource.setFileAttributeService(mockFileAttributeService);
+        FileAttributeServerResource.setRegistrationServiceForAuthentication(mockRegistrationService);
 
-    FileAttributesServerResource.setFileAttributeService(mockFileAttributeService);
-    FileAttributesServerResource.setRegistrationServiceForAuthentication(mockRegistrationService);
-    when(mockRegistrationService.findByEmailAddress(anyString())).thenReturn(getAdminRegistrationDto());
-  }
+        FileAttributesServerResource.setFileAttributeService(mockFileAttributeService);
+        FileAttributesServerResource.setRegistrationServiceForAuthentication(mockRegistrationService);
+        when(mockRegistrationService.findByEmailAddress(anyString())).thenReturn(getAdminRegistrationDto());
+    }
 
-  @After
-  @Override
-  public void tearDown() throws Exception {
-    c.stop();
-    c = null;
-    client.stop();
-    client = null;
-    super.tearDown();
-  }
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        c.stop();
+        c = null;
+        client.stop();
+        client = null;
+        super.tearDown();
+    }
 
-  @Test
-  public void test_get_attribute_exists() throws Exception {
-    File file = new File();
-    file.setSwAccession(1);
-    FileAttribute fileAttribute = getFileAttribute();
-    fileAttribute.setFile(file);
-    when(mockFileAttributeService.get(1, 2)).thenReturn(fileAttribute);
-    ClientResource clientResource = new ClientResource(uri + "/file/1/attribute/2");
-    FileAttributeResource fileAttributeResource = clientResource.wrap(FileAttributeResource.class);
-    AttributeDto attributeDto = fileAttributeResource.getAttribute();
-    assertThat(clientResource.getStatus(), is(Status.SUCCESS_OK));
-    assertThat(attributeDto.getName(), is("drink"));
-  }
-  
-  private static FileAttribute getFileAttribute() {
-    FileAttribute fileAttribute = new FileAttribute();
-    fileAttribute.setTag("drink");
-    fileAttribute.setValue("coffee");
-    fileAttribute.setUnit("ml");
-    fileAttribute.setFile(new File());
-    return fileAttribute;
-  }
-  
-  private static RegistrationDTO getAdminRegistrationDto() {
-    RegistrationDTO registrationDto = new RegistrationDTO();
-    registrationDto.setEmailAddress("admin@admin.com");
-    registrationDto.setPassword("admin");
-    return registrationDto;
-  }
+    @Test
+    public void test_get_attribute_exists() throws Exception {
+        File file = new File();
+        file.setSwAccession(1);
+        FileAttribute fileAttribute = getFileAttribute();
+        fileAttribute.setFile(file);
+        when(mockFileAttributeService.get(1, 2)).thenReturn(fileAttribute);
+        ClientResource clientResource = new ClientResource(uri + "/file/1/attribute/2");
+        FileAttributeResource fileAttributeResource = clientResource.wrap(FileAttributeResource.class);
+        AttributeDto attributeDto = fileAttributeResource.getAttribute();
+        assertThat(clientResource.getStatus(), is(Status.SUCCESS_OK));
+        assertThat(attributeDto.getName(), is("drink"));
+    }
+
+    private static FileAttribute getFileAttribute() {
+        FileAttribute fileAttribute = new FileAttribute();
+        fileAttribute.setTag("drink");
+        fileAttribute.setValue("coffee");
+        fileAttribute.setUnit("ml");
+        fileAttribute.setFile(new File());
+        return fileAttribute;
+    }
+
+    private static RegistrationDTO getAdminRegistrationDto() {
+        RegistrationDTO registrationDto = new RegistrationDTO();
+        registrationDto.setEmailAddress("admin@admin.com");
+        registrationDto.setPassword("admin");
+        return registrationDto;
+    }
 
 }

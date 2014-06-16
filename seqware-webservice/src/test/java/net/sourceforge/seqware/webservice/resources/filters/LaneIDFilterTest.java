@@ -30,7 +30,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class LaneIDFilterTest extends AbstractResourceTest {
@@ -65,7 +65,7 @@ public class LaneIDFilterTest extends AbstractResourceTest {
     public void testGetFromIUS() throws Exception {
         List<Lane> lanes = getLanes("/ius/4765/lane");
         Assert.assertFalse(lanes.isEmpty());
-        Assert.assertTrue(lanes.size()==1);
+        Assert.assertTrue(lanes.size() == 1);
     }
 
     @Test
@@ -80,18 +80,18 @@ public class LaneIDFilterTest extends AbstractResourceTest {
         }
     }
 
-//    @Test
-//    public void testGetFromSequencerRunNoLanes() throws Exception {
-//        try {
-//            getLanes("/sequencerruns/6052/lanes");
-//            Assert.fail("This sequencer run should not have lanes, and should show a 404 Not Found");
-//        } catch (ResourceException ex) {
-//            if (!ex.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
-//                throw ex;
-//            }
-//        }
-//    }
-    
+    // @Test
+    // public void testGetFromSequencerRunNoLanes() throws Exception {
+    // try {
+    // getLanes("/sequencerruns/6052/lanes");
+    // Assert.fail("This sequencer run should not have lanes, and should show a 404 Not Found");
+    // } catch (ResourceException ex) {
+    // if (!ex.getStatus().equals(Status.CLIENT_ERROR_NOT_FOUND)) {
+    // throw ex;
+    // }
+    // }
+    // }
+
     private List<Lane> getLanes(String relativeURI) throws ResourceException, Exception {
         resource = ClientResourceInstance.getChild(relativeURI);
         Log.stdout(getRelativeURI() + " GET");

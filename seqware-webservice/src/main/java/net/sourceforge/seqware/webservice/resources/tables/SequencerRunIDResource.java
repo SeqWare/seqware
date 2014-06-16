@@ -38,8 +38,10 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>SequencerRunIDResource class.</p>
- *
+ * <p>
+ * SequencerRunIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -48,7 +50,9 @@ public class SequencerRunIDResource extends DatabaseIDResource {
     private Logger logger;
 
     /**
-     * <p>Constructor for SequencerRunIDResource.</p>
+     * <p>
+     * Constructor for SequencerRunIDResource.
+     * </p>
      */
     public SequencerRunIDResource() {
         super("sequencerRunId");
@@ -56,7 +60,9 @@ public class SequencerRunIDResource extends DatabaseIDResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -67,7 +73,6 @@ public class SequencerRunIDResource extends DatabaseIDResource {
 
         SequencerRun run = (SequencerRun) testIfNull(ss.findBySWAccession(getId()));
         SequencerRun dto = copier.hibernate2dto(SequencerRun.class, run);
-
 
         if (fields.contains("lanes")) {
             SortedSet<Lane> laneList = new TreeSet<>();
@@ -81,26 +86,29 @@ public class SequencerRunIDResource extends DatabaseIDResource {
                 Log.info("Could not be found: lanes");
             }
         }
-		if(fields.contains("attributes")) {
-			Set<SequencerRunAttribute> sras = run.getSequencerRunAttributes();
-			if(sras!=null && !sras.isEmpty()) {
-				Set<SequencerRunAttribute> newsras = new TreeSet<>();
-				for(SequencerRunAttribute sra: sras) {
-					newsras.add(copier.hibernate2dto(SequencerRunAttribute.class, sra));
-				}
-				dto.setSequencerRunAttributes(newsras);
-			}
-		}
+        if (fields.contains("attributes")) {
+            Set<SequencerRunAttribute> sras = run.getSequencerRunAttributes();
+            if (sras != null && !sras.isEmpty()) {
+                Set<SequencerRunAttribute> newsras = new TreeSet<>();
+                for (SequencerRunAttribute sra : sras) {
+                    newsras.add(copier.hibernate2dto(SequencerRunAttribute.class, sra));
+                }
+                dto.setSequencerRunAttributes(newsras);
+            }
+        }
 
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
 
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
-	@Put
+    @Put
     public Representation put(Representation entity) {
         authenticate();
         Representation representation = null;
@@ -121,12 +129,12 @@ public class SequencerRunIDResource extends DatabaseIDResource {
             SequencerRunWizardDTO sequencerRun = (SequencerRunWizardDTO) testIfNull(srs.findByID(newSequencerRun.getSequencerRunId()));
             sequencerRun.givesPermission(registration);
 
-            //simple types
+            // simple types
             String name = newSequencerRun.getName();
             String desc = newSequencerRun.getDescription();
             Boolean skip = newSequencerRun.getSkip();
 
-            //foreign keys
+            // foreign keys
             Registration owner = newSequencerRun.getOwner();
             Platform platform = newSequencerRun.getPlatform();
             Set<SequencerRunAttribute> newAttributes = newSequencerRun.getSequencerRunAttributes();
@@ -157,13 +165,12 @@ public class SequencerRunIDResource extends DatabaseIDResource {
             }
 
             if (newAttributes != null) {
-                //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
                 this.mergeAttributes(sequencerRun.getSequencerRunAttributes(), newAttributes, sequencerRun);
             }
             srs.update(registration, sequencerRun);
 
             Log.debug("Skip is " + sequencerRun.getSkip());
-
 
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             SequencerRun detachedSequencerRun = copier.hibernate2dto(SequencerRun.class, sequencerRun);

@@ -21,47 +21,61 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
- * <p>WorkflowReportTest class.</p>
- *
+ * <p>
+ * WorkflowReportTest class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  * @since 0.13.3
  */
 public class WorkflowReportTest {
-    
+
     /**
-     * <p>Constructor for WorkflowReportTest.</p>
+     * <p>
+     * Constructor for WorkflowReportTest.
+     * </p>
      */
     public WorkflowReportTest() {
     }
 
     /**
-     * <p>setUpClass.</p>
-     *
-     * @throws java.lang.Exception if any.
+     * <p>
+     * setUpClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
      */
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
 
     /**
-     * <p>tearDownClass.</p>
-     *
-     * @throws java.lang.Exception if any.
+     * <p>
+     * tearDownClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
      */
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     /**
-     * <p>setUp.</p>
+     * <p>
+     * setUp.
+     * </p>
      */
     @Before
     public void setUp() {
     }
-    
+
     /**
-     * <p>tearDown.</p>
+     * <p>
+     * tearDown.
+     * </p>
      */
     @After
     public void tearDown() {

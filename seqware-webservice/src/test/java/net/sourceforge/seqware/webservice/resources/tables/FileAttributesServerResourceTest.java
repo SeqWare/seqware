@@ -45,192 +45,192 @@ import com.google.common.collect.Sets;
 @RunWith(MockitoJUnitRunner.class)
 public class FileAttributesServerResourceTest extends RestletTestCase {
 
-  @Mock
-  FileAttributeService mockFileAttributeService;
+    @Mock
+    FileAttributeService mockFileAttributeService;
 
-  @Mock
-  RegistrationService mockRegistrationService;
+    @Mock
+    RegistrationService mockRegistrationService;
 
-  private static class TestApplication extends Application {
+    private static class TestApplication extends Application {
 
-    @Override
-    public Restlet createInboundRoot() {
-      Router router = new Router(getContext());
-      router.attach("/file/{swa}/attributes", FileAttributesServerResource.class);
+        @Override
+        public Restlet createInboundRoot() {
+            Router router = new Router(getContext());
+            router.attach("/file/{swa}/attributes", FileAttributesServerResource.class);
 
-      return router;
+            return router;
+        }
+
     }
 
-  }
+    private Component c;
 
-  private Component c;
+    private Client client;
 
-  private Client client;
+    private String uri;
 
-  private String uri;
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        Engine.getInstance().getRegisteredConverters().clear();
+        Engine.getInstance().registerDefaultConverters();
+        c = new Component();
+        final Server server = c.getServers().add(Protocol.HTTP, 0);
+        c.getDefaultHost().attach(new TestApplication());
+        c.start();
 
-  @Before
-  @Override
-  public void setUp() throws Exception {
-    super.setUp();
-    Engine.getInstance().getRegisteredConverters().clear();
-    Engine.getInstance().registerDefaultConverters();
-    c = new Component();
-    final Server server = c.getServers().add(Protocol.HTTP, 0);
-    c.getDefaultHost().attach(new TestApplication());
-    c.start();
+        client = new Client(Protocol.HTTP);
 
-    client = new Client(Protocol.HTTP);
+        uri = "http://localhost:" + server.getEphemeralPort();
 
-    uri = "http://localhost:" + server.getEphemeralPort();
+        FileAttributesServerResource.setFileAttributeService(mockFileAttributeService);
+        FileAttributesServerResource.setRegistrationServiceForAuthentication(mockRegistrationService);
+        when(mockRegistrationService.findByEmailAddress(anyString())).thenReturn(getAdminRegistrationDto());
+    }
 
-    FileAttributesServerResource.setFileAttributeService(mockFileAttributeService);
-    FileAttributesServerResource.setRegistrationServiceForAuthentication(mockRegistrationService);
-    when(mockRegistrationService.findByEmailAddress(anyString())).thenReturn(getAdminRegistrationDto());
-  }
+    @After
+    @Override
+    public void tearDown() throws Exception {
+        c.stop();
+        c = null;
+        client.stop();
+        client = null;
+        super.tearDown();
+    }
 
-  @After
-  @Override
-  public void tearDown() throws Exception {
-    c.stop();
-    c = null;
-    client.stop();
-    client = null;
-    super.tearDown();
-  }
+    @Test
+    public void test_get_files_attributes_list_is_empty() throws Exception {
+        when(mockFileAttributeService.getFileAttributes(1)).thenReturn(Sets.<FileAttribute> newHashSet());
 
-  @Test
-  public void test_get_files_attributes_list_is_empty() throws Exception {
-    when(mockFileAttributeService.getFileAttributes(1)).thenReturn(Sets.<FileAttribute> newHashSet());
+        client = new Client(Protocol.HTTP);
+        Request request = new Request(Method.GET, uri + "/file/1/attributes");
+        request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
+        Response response = client.handle(request);
 
-    client = new Client(Protocol.HTTP);
-    Request request = new Request(Method.GET, uri + "/file/1/attributes");
-    request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
-    Response response = client.handle(request);
+        assertThat(response.getStatus(), is(Status.CLIENT_ERROR_NOT_FOUND));
+        assertThat(response.getEntity().getText(), containsString("Not Found"));
+        response.getEntity().release();
+    }
 
-    assertThat(response.getStatus(), is(Status.CLIENT_ERROR_NOT_FOUND));
-    assertThat(response.getEntity().getText(), containsString("Not Found"));
-    response.getEntity().release();
-  }
+    @Test
+    public void test_get_files_attributes_list_contain_one_item_json() throws Exception {
+        Set<FileAttribute> fileAttributes = Sets.newHashSet();
+        fileAttributes.add(getFileAttribute(3));
+        when(mockFileAttributeService.getFileAttributes(1)).thenReturn(fileAttributes);
 
-  @Test
-  public void test_get_files_attributes_list_contain_one_item_json() throws Exception {
-    Set<FileAttribute> fileAttributes = Sets.newHashSet();
-    fileAttributes.add(getFileAttribute(3));
-    when(mockFileAttributeService.getFileAttributes(1)).thenReturn(fileAttributes);
+        client = new Client(Protocol.HTTP);
+        Request request = new Request(Method.GET, uri + "/file/1/attributes");
+        List<Preference<MediaType>> m = new ArrayList<>();
+        m.add(new Preference<>(MediaType.APPLICATION_JSON));
+        request.getClientInfo().setAcceptedMediaTypes(m);
+        request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
+        Response response = client.handle(request);
 
-    client = new Client(Protocol.HTTP);
-    Request request = new Request(Method.GET, uri + "/file/1/attributes");
-    List<Preference<MediaType>> m = new ArrayList<>();
-    m.add(new Preference<>(MediaType.APPLICATION_JSON));
-    request.getClientInfo().setAcceptedMediaTypes(m);
-    request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
-    Response response = client.handle(request);
+        assertThat(response.getStatus(), is(Status.SUCCESS_OK));
+        response.getEntity().release();
+    }
 
-    assertThat(response.getStatus(), is(Status.SUCCESS_OK)); 
-    response.getEntity().release();
-  }
-  
-  @Test
-  public void test_get_files_attributes_list_contain_one_item_xml() throws Exception {
-    Set<FileAttribute> fileAttributes = Sets.newHashSet();
-    fileAttributes.add(getFileAttribute(3));
-    when(mockFileAttributeService.getFileAttributes(1)).thenReturn(fileAttributes);
+    @Test
+    public void test_get_files_attributes_list_contain_one_item_xml() throws Exception {
+        Set<FileAttribute> fileAttributes = Sets.newHashSet();
+        fileAttributes.add(getFileAttribute(3));
+        when(mockFileAttributeService.getFileAttributes(1)).thenReturn(fileAttributes);
 
-    client = new Client(Protocol.HTTP);
-    Request request = new Request(Method.GET, uri + "/file/1/attributes");
-    request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
-    List<Preference<MediaType>> m = new ArrayList<>();
-    m.add(new Preference<>(MediaType.APPLICATION_XML));
-    request.getClientInfo().setAcceptedMediaTypes(m);
-    Response response = client.handle(request);
+        client = new Client(Protocol.HTTP);
+        Request request = new Request(Method.GET, uri + "/file/1/attributes");
+        request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
+        List<Preference<MediaType>> m = new ArrayList<>();
+        m.add(new Preference<>(MediaType.APPLICATION_XML));
+        request.getClientInfo().setAcceptedMediaTypes(m);
+        Response response = client.handle(request);
 
-    assertThat(response.getStatus(), is(Status.SUCCESS_OK));   
-    response.getEntity().release();
-  }
-  
-  @Test
-  public void test_get_files_attributes_list_contain_two_item() throws Exception {
-    Set<FileAttribute> fileAttributes = Sets.newHashSet();
-    fileAttributes.add(getFileAttribute(3));
-    fileAttributes.add(getFileAttributeTwo(4));
-    when(mockFileAttributeService.getFileAttributes(1)).thenReturn(fileAttributes);
+        assertThat(response.getStatus(), is(Status.SUCCESS_OK));
+        response.getEntity().release();
+    }
 
-    client = new Client(Protocol.HTTP);
-    Request request = new Request(Method.GET, uri + "/file/1/attributes");
-    request.setEntity("", MediaType.APPLICATION_XML);
-    request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
-    List<Preference<MediaType>> m = new ArrayList<>();
-    m.add(new Preference<>(MediaType.APPLICATION_XML));
-    request.getClientInfo().setAcceptedMediaTypes(m);
-    
-    Response response = client.handle(request);
-    assertThat(response.getEntity().getMediaType().getName(), is("application/x-java-serialized-object"));
-    
-    response.getEntity().release();
-  }
+    @Test
+    public void test_get_files_attributes_list_contain_two_item() throws Exception {
+        Set<FileAttribute> fileAttributes = Sets.newHashSet();
+        fileAttributes.add(getFileAttribute(3));
+        fileAttributes.add(getFileAttributeTwo(4));
+        when(mockFileAttributeService.getFileAttributes(1)).thenReturn(fileAttributes);
 
-  @Test
-  public void test_get_files_attributes_list_for_file_that_does_not_exist() throws Exception {
-    when(mockFileAttributeService.getFileAttributes(99)).thenReturn(null);
+        client = new Client(Protocol.HTTP);
+        Request request = new Request(Method.GET, uri + "/file/1/attributes");
+        request.setEntity("", MediaType.APPLICATION_XML);
+        request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
+        List<Preference<MediaType>> m = new ArrayList<>();
+        m.add(new Preference<>(MediaType.APPLICATION_XML));
+        request.getClientInfo().setAcceptedMediaTypes(m);
 
-    client = new Client(Protocol.HTTP);
-    Request request = new Request(Method.GET, uri + "/file/99/attributes");
-    request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
-    Response response = client.handle(request);
+        Response response = client.handle(request);
+        assertThat(response.getEntity().getMediaType().getName(), is("application/x-java-serialized-object"));
 
-    assertThat(response.getStatus(), is(Status.CLIENT_ERROR_NOT_FOUND));
-    assertThat(response.getEntity().getText(), containsString("Not Found"));
-    response.getEntity().release();
-  }
+        response.getEntity().release();
+    }
 
-  @Test
-  public void test_get_files_attributes_list_for_swa_larger_than_integer() throws Exception {
-    client = new Client(Protocol.HTTP);
-    Request request = new Request(Method.GET, uri + "/file/999999999999999/attributes");
-    request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
-    Response response = client.handle(request);
+    @Test
+    public void test_get_files_attributes_list_for_file_that_does_not_exist() throws Exception {
+        when(mockFileAttributeService.getFileAttributes(99)).thenReturn(null);
 
-    assertThat(response.getStatus(), is(Status.CLIENT_ERROR_BAD_REQUEST));
-    assertThat(response.getEntity().getText(), containsString("Bad Request"));
-    response.getEntity().release();
-  }
+        client = new Client(Protocol.HTTP);
+        Request request = new Request(Method.GET, uri + "/file/99/attributes");
+        request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
+        Response response = client.handle(request);
 
-  @Test
-  public void test_get_files_attributes_list_for_malformed_swa() throws Exception {
-    client = new Client(Protocol.HTTP);
-    Request request = new Request(Method.GET, uri + "/file/this_swa_is_malformed/attributes");
-    request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
-    Response response = client.handle(request);
+        assertThat(response.getStatus(), is(Status.CLIENT_ERROR_NOT_FOUND));
+        assertThat(response.getEntity().getText(), containsString("Not Found"));
+        response.getEntity().release();
+    }
 
-    assertThat(response.getStatus(), is(Status.CLIENT_ERROR_BAD_REQUEST));
-    assertThat(response.getEntity().getText(), containsString("Bad Request"));
-    response.getEntity().release();
-  }
+    @Test
+    public void test_get_files_attributes_list_for_swa_larger_than_integer() throws Exception {
+        client = new Client(Protocol.HTTP);
+        Request request = new Request(Method.GET, uri + "/file/999999999999999/attributes");
+        request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
+        Response response = client.handle(request);
 
-  private static FileAttribute getFileAttribute(Integer id) {
-    FileAttribute fileAttribute = new FileAttribute(id);
-    fileAttribute.setTag("drink");
-    fileAttribute.setValue("coffee");
-    fileAttribute.setUnit("ml");
-    fileAttribute.setFile(new File());
-    return fileAttribute;
-  }
-  
-  private static FileAttribute getFileAttributeTwo(Integer id) {
-    FileAttribute fileAttribute = new FileAttribute(id);
-    fileAttribute.setTag("height");
-    fileAttribute.setValue("22");
-    fileAttribute.setUnit("m");
-    fileAttribute.setFile(new File());
-    return fileAttribute;
-  }
+        assertThat(response.getStatus(), is(Status.CLIENT_ERROR_BAD_REQUEST));
+        assertThat(response.getEntity().getText(), containsString("Bad Request"));
+        response.getEntity().release();
+    }
 
-  private static RegistrationDTO getAdminRegistrationDto() {
-    RegistrationDTO registrationDto = new RegistrationDTO();
-    registrationDto.setEmailAddress("admin@admin.com");
-    registrationDto.setPassword("admin");
-    return registrationDto;
-  }
+    @Test
+    public void test_get_files_attributes_list_for_malformed_swa() throws Exception {
+        client = new Client(Protocol.HTTP);
+        Request request = new Request(Method.GET, uri + "/file/this_swa_is_malformed/attributes");
+        request.setChallengeResponse(new ChallengeResponse(ChallengeScheme.HTTP_BASIC, "admin@admin.com", "admin"));
+        Response response = client.handle(request);
+
+        assertThat(response.getStatus(), is(Status.CLIENT_ERROR_BAD_REQUEST));
+        assertThat(response.getEntity().getText(), containsString("Bad Request"));
+        response.getEntity().release();
+    }
+
+    private static FileAttribute getFileAttribute(Integer id) {
+        FileAttribute fileAttribute = new FileAttribute(id);
+        fileAttribute.setTag("drink");
+        fileAttribute.setValue("coffee");
+        fileAttribute.setUnit("ml");
+        fileAttribute.setFile(new File());
+        return fileAttribute;
+    }
+
+    private static FileAttribute getFileAttributeTwo(Integer id) {
+        FileAttribute fileAttribute = new FileAttribute(id);
+        fileAttribute.setTag("height");
+        fileAttribute.setValue("22");
+        fileAttribute.setUnit("m");
+        fileAttribute.setFile(new File());
+        return fileAttribute;
+    }
+
+    private static RegistrationDTO getAdminRegistrationDto() {
+        RegistrationDTO registrationDto = new RegistrationDTO();
+        registrationDto.setEmailAddress("admin@admin.com");
+        registrationDto.setPassword("admin");
+        return registrationDto;
+    }
 
 }

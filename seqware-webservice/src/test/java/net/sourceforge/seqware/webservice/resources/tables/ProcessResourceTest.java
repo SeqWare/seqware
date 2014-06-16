@@ -24,7 +24,7 @@ import org.restlet.representation.Representation;
 import org.w3c.dom.Document;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class ProcessResourceTest extends DatabaseResourceTest {
@@ -33,14 +33,13 @@ public class ProcessResourceTest extends DatabaseResourceTest {
         super("/processes");
     }
 
-
     @Override
     public void testPost() {
         System.out.println(getRelativeURI() + " POST");
         Representation rep = null;
         try {
             Processing processing = new Processing();
-            processing.setAlgorithm("test test "+ System.currentTimeMillis());
+            processing.setAlgorithm("test test " + System.currentTimeMillis());
 
             Document doc = XmlTools.marshalToDocument(new JaxbObject<Processing>(), processing);
             rep = resource.post(XmlTools.getRepresentation(doc));

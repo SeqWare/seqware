@@ -27,7 +27,7 @@ import static net.sourceforge.seqware.pipeline.tools.SetOperations.union;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class SetOperationsTest {
@@ -60,7 +60,6 @@ public class SetOperationsTest {
         System.out.println("Symmetric Difference: " + symDifference(set1, set2));
         Assert.assertTrue("Symmetric size wrong", symDifference(set1, set2).size() == 4);
 
-
         TreeSet<Character> set3 = new TreeSet<>(set1);
 
         set3.remove('D');
@@ -73,7 +72,7 @@ public class SetOperationsTest {
         Assert.assertTrue(isSubset(set3, set1) == true);
         System.out.println("Is set3 a superset of set1? " + isSuperset(set3, set1));
         Assert.assertTrue(isSuperset(set3, set1) == false);
-        
+
         // same set is both subset and superset
         Assert.assertTrue(isSuperset(set1, set1) && isSubset(set1, set1));
     }

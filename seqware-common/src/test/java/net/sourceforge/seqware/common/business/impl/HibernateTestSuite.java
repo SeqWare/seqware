@@ -28,63 +28,76 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * <p>HibernateTestSuite class.</p>
- *
+ * <p>
+ * HibernateTestSuite class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  * @since 0.13.3
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ net.sourceforge.seqware.common.business.impl.IusServiceImplTest.class,
-    net.sourceforge.seqware.common.business.impl.LaneServiceImplTest.class,
-    net.sourceforge.seqware.common.business.impl.StudyServiceImplTest.class,
-    net.sourceforge.seqware.common.business.impl.SampleServiceImplTest.class,
-    net.sourceforge.seqware.common.business.impl.SequencerRunServiceImplTest.class,
-    net.sourceforge.seqware.common.business.impl.ExperimentServiceImplTest.class,
-    net.sourceforge.seqware.common.business.impl.FileServiceImplTest.class,
-    net.sourceforge.seqware.common.business.impl.WorkflowRunServiceImplTest.class,
-    net.sourceforge.seqware.common.business.impl.SampleReportServiceImplTest.class,
-    net.sourceforge.seqware.database.QueryTest.class })
+        net.sourceforge.seqware.common.business.impl.LaneServiceImplTest.class,
+        net.sourceforge.seqware.common.business.impl.StudyServiceImplTest.class,
+        net.sourceforge.seqware.common.business.impl.SampleServiceImplTest.class,
+        net.sourceforge.seqware.common.business.impl.SequencerRunServiceImplTest.class,
+        net.sourceforge.seqware.common.business.impl.ExperimentServiceImplTest.class,
+        net.sourceforge.seqware.common.business.impl.FileServiceImplTest.class,
+        net.sourceforge.seqware.common.business.impl.WorkflowRunServiceImplTest.class,
+        net.sourceforge.seqware.common.business.impl.SampleReportServiceImplTest.class, net.sourceforge.seqware.database.QueryTest.class })
 public class HibernateTestSuite extends TestCase {
 
-  /**
-   * <p>setUpClass.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @BeforeClass
-  public static void setUpClass() throws Exception {
-    BasicTestDatabaseCreatorWrapper.createDatabase();
-    JndiDatasourceCreator.create();
-  }
+    /**
+     * <p>
+     * setUpClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        BasicTestDatabaseCreatorWrapper.createDatabase();
+        JndiDatasourceCreator.create();
+    }
 
-  /**
-   * <p>tearDownClass.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @AfterClass
-  public static void tearDownClass() throws Exception {
-    BasicTestDatabaseCreatorWrapper.dropDatabase();
-  }
+    /**
+     * <p>
+     * tearDownClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+        BasicTestDatabaseCreatorWrapper.dropDatabase();
+    }
 
-  /**
-   * <p>setUp.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @Before
-  @Override
-  public void setUp() throws Exception {
-  }
+    /**
+     * <p>
+     * setUp.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @Before
+    @Override
+    public void setUp() throws Exception {
+    }
 
-  /**
-   * <p>tearDown.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @After
-  @Override
-  public void tearDown() throws Exception {
-  }
+    /**
+     * <p>
+     * tearDown.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @After
+    @Override
+    public void tearDown() throws Exception {
+    }
 }

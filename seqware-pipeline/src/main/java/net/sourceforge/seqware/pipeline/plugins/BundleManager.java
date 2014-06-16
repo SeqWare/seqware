@@ -23,14 +23,16 @@ import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * <p>BundleManager class.</p>
- *
+ * <p>
+ * BundleManager class.
+ * </p>
+ * 
  * @author boconnor
- *
- * ProviderFor(PluginInterface.class)
- *
- * TODO: improve the use of workflow-accession, see https://jira.oicr.on.ca/browse/SEQWARE-539
- * TODO: the param listing won't currently work for a local provisioned directory
+ * 
+ *         ProviderFor(PluginInterface.class)
+ * 
+ *         TODO: improve the use of workflow-accession, see https://jira.oicr.on.ca/browse/SEQWARE-539 TODO: the param listing won't
+ *         currently work for a local provisioned directory
  * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
@@ -39,62 +41,104 @@ public class BundleManager extends Plugin {
     ReturnValue ret = new ReturnValue();
 
     /**
-     * <p>Constructor for BundleManager.</p>
+     * <p>
+     * Constructor for BundleManager.
+     * </p>
      */
     public BundleManager() {
         super();
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Optional: Provides this help message.");
-        parser.acceptsAll(Arrays.asList("bundle", "b"), "The path to a bundle zip file, can specify this or the workflow-run-accession of an already-installed bundle.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("bundle", "b"),
+                "The path to a bundle zip file, can specify this or the workflow-run-accession of an already-installed bundle.")
+                .withRequiredArg();
         parser.acceptsAll(Arrays.asList("list", "l"), "Optional: List the workflows contained in this bundle.");
-        parser.acceptsAll(Arrays.asList("list-installed", "list-install"), "Optional: List the workflows contained in this bundle. The database/webservice must be enabled in your .seqware/settings for this option to work.");
-        parser.acceptsAll(Arrays.asList("workflow-accession", "wa"), "Optional: The sw_accession of the workflow. Specify this or the workflow, version, and bundle. Currently used in conjunction with the list-workflow-params for now.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("list-workflow-params", "list-params"), "Optional: List the parameters for a given workflow and version. You need to supply a workflow accession and you need a database/webservice enabled in your .seqware/settings for this option to work.");
+        parser.acceptsAll(
+                Arrays.asList("list-installed", "list-install"),
+                "Optional: List the workflows contained in this bundle. The database/webservice must be enabled in your .seqware/settings for this option to work.");
+        parser.acceptsAll(
+                Arrays.asList("workflow-accession", "wa"),
+                "Optional: The sw_accession of the workflow. Specify this or the workflow, version, and bundle. Currently used in conjunction with the list-workflow-params for now.")
+                .withRequiredArg();
+        parser.acceptsAll(
+                Arrays.asList("list-workflow-params", "list-params"),
+                "Optional: List the parameters for a given workflow and version. You need to supply a workflow accession and you need a database/webservice enabled in your .seqware/settings for this option to work.");
         parser.acceptsAll(Arrays.asList("validate", "v"), "Optional: Run a light basic validation on this bundle.");
         parser.acceptsAll(Arrays.asList("test", "t"), "Optional: This will trigger the test setup in the metadata.xml within this bundle.");
-        parser.acceptsAll(Arrays.asList("install", "i"), "Optional: if the --bundle param points to a .zip file then the install process will first unzip into the directory specified by the directory defined by SW_BUNDLE_DIR in the .seqware/settings file (skipping files that already exit).  It will then copy the whole zip file to the SW_BUNDLE_REPO_DIR which can be a directory or S3 prefix (the copy will be skipped if the file is already at this location). It will finish this process by installing this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location.  If the --bundle param point to a directory then this will first create a zip of the bundle and place it in SW_BUNDLE_REPO_DIR. It will then install this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location. The method (direct database or web service) and server location of the SeqWare  MetaDB is controlled via the .seqware/settings file.");
-        parser.acceptsAll(Arrays.asList("install-zip-only", "izo"), "Optional: This will suppress the unzipping of a zip file, it is only valid if the --bundle points to a zip file and not a directory. It will take a workflow bundle zip file, copy it to the SW_BUNDLE_REPO_DIR location, and then installs that workflow into the database.  Only the permanent_bundle_location location will be defined, the current_working_dir will be null. (PROBLEM: can't read the metadata.xml if the workflow zip isn't unzipped!)");
-        parser.acceptsAll(Arrays.asList("install-dir-only", "ido"), "Optional: This will suppress the creation of a zip file from a workflow bundle directory. It will simply install the workflow into the database and set the current_working_dir but leave permanent_bundle_location null.");
-        parser.acceptsAll(Arrays.asList("path-to-package", "p"), "Optional: When combined with a bundle zip file specified via --bundle this option specifies an input directory to zip to create a bundle output file.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("workflow", "w"), "The name of the workflow to be used. This must be used in conjunction with a version and bundle. Will restrict action to this workflow and version if specified.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("version", "workflow-version"), "The workflow version to be used. This must be used in conjunction with a version and bundle. Will restrict action to this workflow and version if specified.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("download"), "Downloads a workflow bundle zip. This must be used in conjunction with a workflow name and version.");
-        parser.acceptsAll(Arrays.asList("download-url"), "Downloads a workflow bundle zip from a URL to the local directory.").withRequiredArg();
+        parser.acceptsAll(
+                Arrays.asList("install", "i"),
+                "Optional: if the --bundle param points to a .zip file then the install process will first unzip into the directory specified by the directory defined by SW_BUNDLE_DIR in the .seqware/settings file (skipping files that already exit).  It will then copy the whole zip file to the SW_BUNDLE_REPO_DIR which can be a directory or S3 prefix (the copy will be skipped if the file is already at this location). It will finish this process by installing this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location.  If the --bundle param point to a directory then this will first create a zip of the bundle and place it in SW_BUNDLE_REPO_DIR. It will then install this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location. The method (direct database or web service) and server location of the SeqWare  MetaDB is controlled via the .seqware/settings file.");
+        parser.acceptsAll(
+                Arrays.asList("install-zip-only", "izo"),
+                "Optional: This will suppress the unzipping of a zip file, it is only valid if the --bundle points to a zip file and not a directory. It will take a workflow bundle zip file, copy it to the SW_BUNDLE_REPO_DIR location, and then installs that workflow into the database.  Only the permanent_bundle_location location will be defined, the current_working_dir will be null. (PROBLEM: can't read the metadata.xml if the workflow zip isn't unzipped!)");
+        parser.acceptsAll(
+                Arrays.asList("install-dir-only", "ido"),
+                "Optional: This will suppress the creation of a zip file from a workflow bundle directory. It will simply install the workflow into the database and set the current_working_dir but leave permanent_bundle_location null.");
+        parser.acceptsAll(
+                Arrays.asList("path-to-package", "p"),
+                "Optional: When combined with a bundle zip file specified via --bundle this option specifies an input directory to zip to create a bundle output file.")
+                .withRequiredArg();
+        parser.acceptsAll(
+                Arrays.asList("workflow", "w"),
+                "The name of the workflow to be used. This must be used in conjunction with a version and bundle. Will restrict action to this workflow and version if specified.")
+                .withRequiredArg();
+        parser.acceptsAll(
+                Arrays.asList("version", "workflow-version"),
+                "The workflow version to be used. This must be used in conjunction with a version and bundle. Will restrict action to this workflow and version if specified.")
+                .withRequiredArg();
+        parser.acceptsAll(Arrays.asList("download"),
+                "Downloads a workflow bundle zip. This must be used in conjunction with a workflow name and version.");
+        parser.acceptsAll(Arrays.asList("download-url"), "Downloads a workflow bundle zip from a URL to the local directory.")
+                .withRequiredArg();
         parser.acceptsAll(Arrays.asList("metadata", "m"), "Specify the path to the metadata.xml file.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("human-expanded", "he"), "Optional: will print output in expanded human friendly format");
         parser.acceptsAll(Arrays.asList("human-aligned", "ha"), "Optional: will print output in aligned human friendly format");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue init() {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue do_test() {
         // TODO Auto-generated method stub
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue do_run() {
-        
+
         if (options.has("install") && options.has("install-dir-only")) {
             println("Combination of both install and install-dir-only not recognized");
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
@@ -103,11 +147,13 @@ public class BundleManager extends Plugin {
 
         // setup bundle object
         Bundle b = new Bundle(metadata, config);
-        
+
         // metadata file to use if provided
-        String specificMetadataStr = (String)options.valueOf("metadata");
+        String specificMetadataStr = (String) options.valueOf("metadata");
         File specificMetadataFile = null;
-        if (specificMetadataStr != null) { specificMetadataFile = new File(specificMetadataStr); }
+        if (specificMetadataStr != null) {
+            specificMetadataFile = new File(specificMetadataStr);
+        }
 
         // list the contents of the bundle
         if (options.has("bundle") && (options.has("list") || options.has("help"))) {
@@ -123,12 +169,11 @@ public class BundleManager extends Plugin {
                 println("  Name: " + wi.getName());
                 println("  Version: " + wi.getVersion());
                 println("  Description: " + wi.getDescription());
-                if (wi.getTemplatePath() != null)
-                  println("  Template Path: " + wi.getTemplatePath());
-                if (wi.getWorkflowClass() != null)
-                  println("  Workflow Class: " + wi.getWorkflowClass());
+                if (wi.getTemplatePath() != null) println("  Template Path: " + wi.getTemplatePath());
+                if (wi.getWorkflowClass() != null) println("  Workflow Class: " + wi.getWorkflowClass());
                 println("  Config Path: " + wi.getConfigPath());
-                println("  Requirements Compute: " + wi.getComputeReq() + " Memory: " + wi.getMemReq() + " Network: " + wi.getNetworkReq() + "\n");
+                println("  Requirements Compute: " + wi.getComputeReq() + " Memory: " + wi.getMemReq() + " Network: " + wi.getNetworkReq()
+                        + "\n");
 
             }
         } else if (options.has("bundle") && options.has("validate")) {
@@ -140,42 +185,43 @@ public class BundleManager extends Plugin {
                 println("Bundle Validates!");
             }
         } else if (options.has("bundle") && options.has("test")) {
-          println("Validating Bundle structure");
-          String bundlePath = (String) options.valueOf("bundle");
-          File bundle = new File(bundlePath);
-          ret = b.validateBundle(bundle);
-          if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-              println("Bundle Validates!");
-              println("Testing Bundle");
-              if (options.has("workflow") && options.has("version")) {
-                  // then just run the test for a particular workflow and version
-                  ret = b.testBundle(bundle, specificMetadataFile, (String) options.valueOf("workflow"), (String) options.valueOf("version"));
-              } else {
-                  ret = b.testBundle(bundle, specificMetadataFile);
-              }
-              if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-                  println("Bundle Passed Test!");
-              }
-          }
+            println("Validating Bundle structure");
+            String bundlePath = (String) options.valueOf("bundle");
+            File bundle = new File(bundlePath);
+            ret = b.validateBundle(bundle);
+            if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+                println("Bundle Validates!");
+                println("Testing Bundle");
+                if (options.has("workflow") && options.has("version")) {
+                    // then just run the test for a particular workflow and version
+                    ret = b.testBundle(bundle, specificMetadataFile, (String) options.valueOf("workflow"),
+                            (String) options.valueOf("version"));
+                } else {
+                    ret = b.testBundle(bundle, specificMetadataFile);
+                }
+                if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+                    println("Bundle Passed Test!");
+                }
+            }
 
         } else if (options.has("bundle") && options.has("path-to-package")) {
-          println("Validating Bundle structure");
-          File bundleDir = new File((String) options.valueOf("path-to-package"));
-          File bundleZip = new File((String) options.valueOf("bundle"));
-          ret = b.validateBundle(bundleDir);
-          if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-            println("Packaging Bundle");
-            ret = b.packageBundle(bundleDir, bundleZip);
+            println("Validating Bundle structure");
+            File bundleDir = new File((String) options.valueOf("path-to-package"));
+            File bundleZip = new File((String) options.valueOf("bundle"));
+            ret = b.validateBundle(bundleDir);
             if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-                println("Bundle has been packaged to " + bundleZip.getAbsolutePath());
+                println("Packaging Bundle");
+                ret = b.packageBundle(bundleDir, bundleZip);
+                if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+                    println("Bundle has been packaged to " + bundleZip.getAbsolutePath());
+                }
             }
-          }
         } else if (options.has("bundle") && options.has("install")) {
-            
+
             if (killIfDirectDB()) {
                 return ret;
             }
-            
+
             println("Installing Bundle");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
@@ -184,55 +230,56 @@ public class BundleManager extends Plugin {
                 println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
             }
         } else if (options.has("bundle") && options.has("install-zip-only")) {
-            
+
             if (killIfDirectDB()) {
                 return ret;
             }
-            
+
             println("Installing Bundle (Zip Bundle Archive Only)");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
             if (bundleFile.endsWith(".zip")) {
-              ret = b.installBundleZipOnly(new File(bundleFile), specificMetadataFile);
-              if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-                  println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
-              }
+                ret = b.installBundleZipOnly(new File(bundleFile), specificMetadataFile);
+                if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+                    println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
+                }
             } else {
-              Log.error("Attempting to install a workflow bundle zip file but the bundle does not end in .zip! "+bundleFile);
-              ret.setExitStatus(ret.FAILURE);
+                Log.error("Attempting to install a workflow bundle zip file but the bundle does not end in .zip! " + bundleFile);
+                ret.setExitStatus(ret.FAILURE);
             }
         } else if (options.has("bundle") && options.has("install-dir-only")) {
-            
+
             if (killIfDirectDB()) {
                 return ret;
             }
-            
+
             println("Installing Bundle (Working Directory Only)");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
             File bundleDir = new File(bundleFile);
             if (bundleDir.exists() && bundleDir.isDirectory()) {
-              ret = b.installBundleDirOnly(bundleDir, specificMetadataFile);
-              if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-                println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
-              }
+                ret = b.installBundleDirOnly(bundleDir, specificMetadataFile);
+                if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+                    println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
+                }
             } else {
-              Log.error("Attempting to install a workflow bundle from an unzipped bundle directory but the bundle does not exit or point to a directory! "+bundleFile);
-              ret.setExitStatus(ret.FAILURE);
+                Log.error("Attempting to install a workflow bundle from an unzipped bundle directory but the bundle does not exit or point to a directory! "
+                        + bundleFile);
+                ret.setExitStatus(ret.FAILURE);
             }
-        } else if (options.has("list-installed")) {            
+        } else if (options.has("list-installed")) {
             String params = metadata.listInstalledWorkflows();
             final String nameVersionCreation_DateSeqWare_Accession = "Name\tVersion\tCreation Date\tSeqWare Accession\tDescription\tCurrent Working Directory\tBundle Location";
             if (options.has("human-expanded")) {
-                params = nameVersionCreation_DateSeqWare_Accession+"\n" + params;
+                params = nameVersionCreation_DateSeqWare_Accession + "\n" + params;
                 params = TabExpansionUtil.expansion(params);
-                if (params.trim().equals("")){
-                  println("No workflows installed.");
+                if (params.trim().equals("")) {
+                    println("No workflows installed.");
                 } else {
-                  println(params);
+                    println(params);
                 }
-            } else if (options.has("human-aligned")){
-                params = nameVersionCreation_DateSeqWare_Accession+"\n" + params;
+            } else if (options.has("human-aligned")) {
+                params = nameVersionCreation_DateSeqWare_Accession + "\n" + params;
                 params = TabExpansionUtil.aligned(params);
                 println(params);
             } else {
@@ -244,9 +291,9 @@ public class BundleManager extends Plugin {
                 println(params);
                 println("-----------------------------------------------------");
             }
-        // ((options.has("workflow") && options.has("version") && options.has("bundle")) || options.has("workflow-accession"))
+            // ((options.has("workflow") && options.has("version") && options.has("bundle")) || options.has("workflow-accession"))
         } else if (options.has("list-workflow-params") && options.has("workflow-accession")) {
-            String params = metadata.listInstalledWorkflowParams((String)options.valueOf("workflow-accession"));
+            String params = metadata.listInstalledWorkflowParams((String) options.valueOf("workflow-accession"));
             println(params);
         } else if (options.has("workflow") && options.has("version") && options.has("download")) {
             println("Downloading Bundle");
@@ -265,18 +312,15 @@ public class BundleManager extends Plugin {
             if (ret.getExitStatus() == ReturnValue.SUCCESS) {
                 println("Bundle has been copied to the current directory");
             }
-        } 
-        else if (options.has("download-url"))
-        {
+        } else if (options.has("download-url")) {
             String sourceFile = (String) options.valueOf("download-url");
             String targetDir = new File(".").getAbsolutePath();
             ret = b.copyBundle(sourceFile, targetDir);
             if (ret.getExitStatus() == ReturnValue.SUCCESS) {
                 println("Bundle has been copied to the current directory");
             }
-            
-        }
-        else {
+
+        } else {
             println("Combination of parameters not recognized!");
             println(this.get_syntax());
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
@@ -285,11 +329,16 @@ public class BundleManager extends Plugin {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
      */
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue clean_up() {
         // TODO Auto-generated method stub
@@ -297,8 +346,10 @@ public class BundleManager extends Plugin {
     }
 
     /**
-     * <p>get_description.</p>
-     *
+     * <p>
+     * get_description.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     @Override

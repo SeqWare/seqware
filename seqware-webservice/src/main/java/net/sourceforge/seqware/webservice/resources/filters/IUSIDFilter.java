@@ -34,34 +34,38 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
- * <p>IUSIDFilter class.</p>
- *
+ * <p>
+ * IUSIDFilter class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class IUSIDFilter extends BasicResource {
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
-        //String path = getRequest().getResourceRef().getPath();getAttribute();
+        // String path = getRequest().getResourceRef().getPath();getAttribute();
         Collection<IUS> iuss = null;
         Map<String, Object> requestAttributes = getRequestAttributes();
         if (requestAttributes.containsKey("laneId")) {
             Object val = requestAttributes.get("laneId");
             if (val != null) {
                 LaneService ss = BeanFactory.getLaneServiceBean();
-                Lane s = (Lane)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
+                Lane s = (Lane) testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
                 iuss = (SortedSet<IUS>) testIfNull(s.getIUS());
             }
         } else if (requestAttributes.containsKey("sampleId")) {
             Object val = requestAttributes.get("sampleId");
             if (val != null) {
                 SampleService ss = BeanFactory.getSampleServiceBean();
-                Sample s = (Sample)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
-                iuss = (SortedSet<IUS>)testIfNull(s.getIUS());
+                Sample s = (Sample) testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
+                iuss = (SortedSet<IUS>) testIfNull(s.getIUS());
             }
         } else {
             StringBuilder sb = new StringBuilder();

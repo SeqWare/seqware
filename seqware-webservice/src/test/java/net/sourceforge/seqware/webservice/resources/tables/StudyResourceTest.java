@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class StudyResourceTest extends DatabaseResourceTest {
@@ -26,11 +26,9 @@ public class StudyResourceTest extends DatabaseResourceTest {
         super("/studies");
     }
 
-  @Override
-  public void testPost() {
-    // TODO
-  }
-    
-    
+    @Override
+    public void testPost() {
+        // TODO
+    }
 
 }

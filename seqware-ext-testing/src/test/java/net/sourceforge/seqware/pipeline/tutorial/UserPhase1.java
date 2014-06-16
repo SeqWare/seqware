@@ -24,18 +24,21 @@ import org.junit.Test;
 
 /**
  * Do all tests that can be concurrently done in the user tutorial
- *
+ * 
  * @author dyuen
  */
 public class UserPhase1 {
 
     public static final String STUDY = "study";
-    
+
     @Test
     public void testMetadataListTables() throws IOException {
         String output = runListTables();
         Assert.assertTrue("output should include table names", output.contains("study") && output.contains("experiment"));
-        Assert.assertTrue("output should include table names", output.contains("sample") && (output.contains("sequencer_run") || output.contains("sequencer-run")) && output.contains("ius") && output.contains("lane"));
+        Assert.assertTrue(
+                "output should include table names",
+                output.contains("sample") && (output.contains("sequencer_run") || output.contains("sequencer-run"))
+                        && output.contains("ius") && output.contains("lane"));
     }
 
     @Test
@@ -53,17 +56,22 @@ public class UserPhase1 {
     }
 
     protected String runListTables() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables", ReturnValue.SUCCESS, null);
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --list-tables",
+                ReturnValue.SUCCESS, null);
         return output;
     }
 
     protected String runListFields() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --list-fields", ReturnValue.SUCCESS, null);
+        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --list-fields",
+                ReturnValue.SUCCESS, null);
         return output;
     }
 
     protected String runStudyCreation() throws IOException {
-        String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field title::New Test Study --field description::This is a test description --field accession::InternalID123 --field center_name::SeqWare --field center_project_name::SeqWare Test Project --field study_type::4", ReturnValue.SUCCESS, null);
+        String output = ITUtility
+                .runSeqWareJar(
+                        " -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table study --create --field title::New Test Study --field description::This is a test description --field accession::InternalID123 --field center_name::SeqWare --field center_project_name::SeqWare Test Project --field study_type::4",
+                        ReturnValue.SUCCESS, null);
         return output;
     }
 }

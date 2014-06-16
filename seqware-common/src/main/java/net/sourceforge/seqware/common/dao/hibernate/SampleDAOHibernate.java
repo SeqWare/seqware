@@ -18,8 +18,10 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * <p>SampleDAOHibernate class.</p>
- *
+ * <p>
+ * SampleDAOHibernate class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -28,7 +30,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     private Logger logger;
 
     /**
-     * <p>Constructor for SampleDAOHibernate.</p>
+     * <p>
+     * Constructor for SampleDAOHibernate.
+     * </p>
      */
     public SampleDAOHibernate() {
         super();
@@ -37,7 +41,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Inserts an instance of Sample into the database.
      */
     @Override
@@ -49,7 +53,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Updates an instance of Sample in the database.
      */
     @Override
@@ -61,10 +65,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     /**
      * {@inheritDoc}
-     *
-     * This deletion will result in just the sample being deleted but the IUS will remain.
-     * This will potentially cause orphans which is not really at all good.  A better solution 
-     * is to never delete but just use a deletion attribute.
+     * 
+     * This deletion will result in just the sample being deleted but the IUS will remain. This will potentially cause orphans which is not
+     * really at all good. A better solution is to never delete but just use a deletion attribute.
      */
     @Override
     public void delete(Sample sample) {
@@ -72,20 +75,20 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         sample.getExperiment().getSamples().remove(sample);
         // clear IUS
         for (IUS i : sample.getIUS()) {
-          for (Processing p : i.getProcessings()) {
-            p.getIUS().remove(i);
-            this.getHibernateTemplate().update(p);
-          }
-          i.setProcessings(null);
-          for (WorkflowRun wr : i.getWorkflowRuns()) {
-            wr.getIus().remove(i);
-            this.getHibernateTemplate().update(wr);
-          }
-          i.setWorkflowRuns(null);
+            for (Processing p : i.getProcessings()) {
+                p.getIUS().remove(i);
+                this.getHibernateTemplate().update(p);
+            }
+            i.setProcessings(null);
+            for (WorkflowRun wr : i.getWorkflowRuns()) {
+                wr.getIus().remove(i);
+                this.getHibernateTemplate().update(wr);
+            }
+            i.setWorkflowRuns(null);
         }
         // don't remove processings
         for (Processing p : sample.getProcessings()) {
-          p.getSamples().remove(sample);
+            p.getSamples().remove(sample);
         }
         sample.setProcessings(null);
         // flush
@@ -168,14 +171,16 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
                 + "and pr_i.ius_id = i.ius_id and pf.processing_id = pr_i.processing_id ) "
                 + // nested samples processing_samples, first files
                 "UNION ( " + "WITH RECURSIVE sample_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT s_rec.child_id as child_id, s_rec.parent_id FROM sample_relationship s_rec "
-                + "where s_rec.parent_id = ? " + "UNION ALL " + "SELECT s_rec.child_id, s_rl.parent_id "
-                + "FROM sample_root_to_leaf s_rl, sample_relationship s_rec " + "WHERE s_rec.parent_id = s_rl.child_id ) "
+                + "SELECT s_rec.child_id as child_id, s_rec.parent_id FROM sample_relationship s_rec " + "where s_rec.parent_id = ? "
+                + "UNION ALL " + "SELECT s_rec.child_id, s_rl.parent_id " + "FROM sample_root_to_leaf s_rl, sample_relationship s_rec "
+                + "WHERE s_rec.parent_id = s_rl.child_id ) "
                 + "select distinct pf.file_id from sample_root_to_leaf s_rec, processing_samples p_sam, processing_files pf "
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) )";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, sampleId).setInteger(1, sampleId).setInteger(2, sampleId).setInteger(3, sampleId).setInteger(4, sampleId).setInteger(5, sampleId).setInteger(6, sampleId).setInteger(7, sampleId).list();
+        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, sampleId).setInteger(1, sampleId)
+                .setInteger(2, sampleId).setInteger(3, sampleId).setInteger(4, sampleId).setInteger(5, sampleId).setInteger(6, sampleId)
+                .setInteger(7, sampleId).list();
 
         for (Object file : list) {
             File fl = (File) file;
@@ -192,27 +197,17 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     public boolean isHasFile(Integer sampleId) {
         boolean isHasFile = false;
         /*
-         * String query = "WITH RECURSIVE processing_root_to_leaf (child_id,
-         * parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id " +
-         * "FROM processing_relationship p inner join processing_ius pr_i on
-         * (pr_i.processing_id = p.parent_id) " + "inner join ius i on (i.ius_id
-         * = pr_i.ius_id) " + "where i.sample_id = ? " + "UNION " + "SELECT
-         * p.child_id as child_id, p.parent_id " + "FROM processing_relationship
-         * p inner join processing_samples p_sam on (p_sam.processing_id =
-         * p.parent_id) " + "where p_sam.sample_id = ? " + "UNION ALL " +
-         * "SELECT p.child_id, rl.parent_id " + "FROM processing_root_to_leaf
-         * rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
-         * + "select * from File myfile where myfile.file_id in( " + "select
-         * distinct file_id from processing_root_to_leaf p, processing_files pf
-         * " + "where p.parent_id = processing_id " + "UNION ALL " + "select
-         * distinct file_id from processing_root_to_leaf p, processing_files pf
-         * " + "where p.child_id = processing_id " + "UNION ALL " + "select
-         * distinct file_id from processing_files pf inner join processing_ius
-         * pr_i " + "on (pr_i.processing_id = pf.processing_id) " + "inner join
-         * ius i on (i.ius_id = pr_i.ius_id) " + "where i.sample_id = ? " +
-         * "UNION " + "select distinct file_id from processing_files pf inner
-         * join processing_samples p_sam " + "on (p_sam.processing_id =
-         * pf.processing_id) " + "where p_sam.sample_id = ? ) LIMIT 1";
+         * String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id
+         * " + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) " + "inner join ius i on
+         * (i.ius_id = pr_i.ius_id) " + "where i.sample_id = ? " + "UNION " + "SELECT p.child_id as child_id, p.parent_id " + "FROM
+         * processing_relationship p inner join processing_samples p_sam on (p_sam.processing_id = p.parent_id) " + "where p_sam.sample_id =
+         * ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id " + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE
+         * p.parent_id = rl.child_id) " + "select * from File myfile where myfile.file_id in( " + "select distinct file_id from
+         * processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id " + "UNION ALL " + "select distinct file_id
+         * from processing_root_to_leaf p, processing_files pf " + "where p.child_id = processing_id " + "UNION ALL " + "select distinct
+         * file_id from processing_files pf inner join processing_ius pr_i " + "on (pr_i.processing_id = pf.processing_id) " + "inner join
+         * ius i on (i.ius_id = pr_i.ius_id) " + "where i.sample_id = ? " + "UNION " + "select distinct file_id from processing_files pf
+         * inner join processing_samples p_sam " + "on (p_sam.processing_id = pf.processing_id) " + "where p_sam.sample_id = ? ) LIMIT 1";
          */
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id "
@@ -280,14 +275,16 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
                 + "and pr_i.ius_id = i.ius_id and pf.processing_id = pr_i.processing_id ) "
                 + // nested samples processing_samples, first files
                 "UNION ( " + "WITH RECURSIVE sample_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT s_rec.child_id as child_id, s_rec.parent_id FROM sample_relationship s_rec "
-                + "where s_rec.parent_id = ? " + "UNION ALL " + "SELECT s_rec.child_id, s_rl.parent_id "
-                + "FROM sample_root_to_leaf s_rl, sample_relationship s_rec " + "WHERE s_rec.parent_id = s_rl.child_id ) "
+                + "SELECT s_rec.child_id as child_id, s_rec.parent_id FROM sample_relationship s_rec " + "where s_rec.parent_id = ? "
+                + "UNION ALL " + "SELECT s_rec.child_id, s_rl.parent_id " + "FROM sample_root_to_leaf s_rl, sample_relationship s_rec "
+                + "WHERE s_rec.parent_id = s_rl.child_id ) "
                 + "select distinct pf.file_id from sample_root_to_leaf s_rec, processing_samples p_sam, processing_files pf "
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, sampleId).setInteger(1, sampleId).setInteger(2, sampleId).setInteger(3, sampleId).setInteger(4, sampleId).setInteger(5, sampleId).setInteger(6, sampleId).setInteger(7, sampleId).list();
+        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, sampleId).setInteger(1, sampleId)
+                .setInteger(2, sampleId).setInteger(3, sampleId).setInteger(4, sampleId).setInteger(5, sampleId).setInteger(6, sampleId)
+                .setInteger(7, sampleId).list();
 
         isHasFile = (list.size() > 0) ? true : false;
 
@@ -301,28 +298,18 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     public List<File> getFiles(Integer sampleId, String metaType) {
         List<File> files = new ArrayList<>();
         /*
-         * String query = "WITH RECURSIVE processing_root_to_leaf (child_id,
-         * parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id " +
-         * "FROM processing_relationship p inner join processing_ius pr_i on
-         * (pr_i.processing_id = p.parent_id) " + "inner join ius i on (i.ius_id
-         * = pr_i.ius_id) " + "where i.sample_id = ? " + "UNION " + "SELECT
-         * p.child_id as child_id, p.parent_id " + "FROM processing_relationship
-         * p inner join processing_samples p_sam on (p_sam.processing_id =
-         * p.parent_id) " + "where p_sam.sample_id = ? " + "UNION ALL " +
-         * "SELECT p.child_id, rl.parent_id " + "FROM processing_root_to_leaf
-         * rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
-         * + "select * from File myfile where myfile.meta_type=? and
-         * myfile.file_id in( " + "select distinct file_id from
-         * processing_root_to_leaf p, processing_files pf " + "where p.parent_id
-         * = processing_id " + "UNION ALL " + "select distinct file_id from
-         * processing_root_to_leaf p, processing_files pf " + "where p.child_id
-         * = processing_id " + "UNION ALL " + "select distinct file_id from
-         * processing_files pf inner join processing_ius pr_i " + "on
-         * (pr_i.processing_id = pf.processing_id) " + "inner join ius i on
-         * (i.ius_id = pr_i.ius_id) " + "where i.sample_id = ? " + "UNION " +
-         * "select distinct file_id from processing_files pf inner join
-         * processing_samples p_sam " + "on (p_sam.processing_id =
-         * pf.processing_id) " + "where p_sam.sample_id = ? )";
+         * String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id
+         * " + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) " + "inner join ius i on
+         * (i.ius_id = pr_i.ius_id) " + "where i.sample_id = ? " + "UNION " + "SELECT p.child_id as child_id, p.parent_id " + "FROM
+         * processing_relationship p inner join processing_samples p_sam on (p_sam.processing_id = p.parent_id) " + "where p_sam.sample_id =
+         * ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id " + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE
+         * p.parent_id = rl.child_id) " + "select * from File myfile where myfile.meta_type=? and myfile.file_id in( " + "select distinct
+         * file_id from processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id " + "UNION ALL " + "select
+         * distinct file_id from processing_root_to_leaf p, processing_files pf " + "where p.child_id = processing_id " + "UNION ALL
+         * " + "select distinct file_id from processing_files pf inner join processing_ius pr_i " + "on (pr_i.processing_id =
+         * pf.processing_id) " + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "where i.sample_id = ? " + "UNION " + "select distinct
+         * file_id from processing_files pf inner join processing_samples p_sam " + "on (p_sam.processing_id = pf.processing_id) " + "where
+         * p_sam.sample_id = ? )";
          */
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id "
@@ -390,9 +377,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
                 + "and pr_i.ius_id = i.ius_id and pf.processing_id = pr_i.processing_id ) "
                 + // nested samples processing_samples, first files
                 "UNION ( " + "WITH RECURSIVE sample_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT s_rec.child_id as child_id, s_rec.parent_id FROM sample_relationship s_rec "
-                + "where s_rec.parent_id = ? " + "UNION ALL " + "SELECT s_rec.child_id, s_rl.parent_id "
-                + "FROM sample_root_to_leaf s_rl, sample_relationship s_rec " + "WHERE s_rec.parent_id = s_rl.child_id ) "
+                + "SELECT s_rec.child_id as child_id, s_rec.parent_id FROM sample_relationship s_rec " + "where s_rec.parent_id = ? "
+                + "UNION ALL " + "SELECT s_rec.child_id, s_rl.parent_id " + "FROM sample_root_to_leaf s_rl, sample_relationship s_rec "
+                + "WHERE s_rec.parent_id = s_rl.child_id ) "
                 + "select distinct pf.file_id from sample_root_to_leaf s_rec, processing_samples p_sam, processing_files pf "
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) )";
@@ -400,7 +387,9 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         // "select * from File myfile where myfile.meta_type=? and myfile.file_id in( "
         // +
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, sampleId).setInteger(1, sampleId).setInteger(2, sampleId).setInteger(3, sampleId).setString(4, metaType).setInteger(5, sampleId).setInteger(6, sampleId).setInteger(7, sampleId).setInteger(8, sampleId).list();
+        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, sampleId).setInteger(1, sampleId)
+                .setInteger(2, sampleId).setInteger(3, sampleId).setString(4, metaType).setInteger(5, sampleId).setInteger(6, sampleId)
+                .setInteger(7, sampleId).setInteger(8, sampleId).list();
 
         for (Object file : list) {
             File fl = (File) file;
@@ -482,14 +471,16 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
                 + "and pr_i.ius_id = i.ius_id and pf.processing_id = pr_i.processing_id ) "
                 + // nested samples processing_samples, first files
                 "UNION ( " + "WITH RECURSIVE sample_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT s_rec.child_id as child_id, s_rec.parent_id FROM sample_relationship s_rec "
-                + "where s_rec.parent_id = ? " + "UNION ALL " + "SELECT s_rec.child_id, s_rl.parent_id "
-                + "FROM sample_root_to_leaf s_rl, sample_relationship s_rec " + "WHERE s_rec.parent_id = s_rl.child_id ) "
+                + "SELECT s_rec.child_id as child_id, s_rec.parent_id FROM sample_relationship s_rec " + "where s_rec.parent_id = ? "
+                + "UNION ALL " + "SELECT s_rec.child_id, s_rl.parent_id " + "FROM sample_root_to_leaf s_rl, sample_relationship s_rec "
+                + "WHERE s_rec.parent_id = s_rl.child_id ) "
                 + "select distinct pf.file_id from sample_root_to_leaf s_rec, processing_samples p_sam, processing_files pf "
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, sampleId).setInteger(1, sampleId).setInteger(2, sampleId).setInteger(3, sampleId).setString(4, metaType).setInteger(5, sampleId).setInteger(6, sampleId).setInteger(7, sampleId).setInteger(8, sampleId).list();
+        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, sampleId).setInteger(1, sampleId)
+                .setInteger(2, sampleId).setInteger(3, sampleId).setString(4, metaType).setInteger(5, sampleId).setInteger(6, sampleId)
+                .setInteger(7, sampleId).setInteger(8, sampleId).list();
 
         isHasFile = (list.size() > 0) ? true : false;
 
@@ -497,36 +488,25 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     }
 
     /*
-     * public List<Sample> listWithUIData(Integer expId){ List<Sample> samples =
-     * new ArrayList<Sample>(); String query = "WITH RECURSIVE
-     * processing_root_to_leaf (child_id, parent_id, sample_id) AS ( " + "SELECT
-     * p.child_id as child_id, p.parent_id, s.sample_id " + "FROM
-     * processing_relationship p inner join processing_lanes l on
-     * (l.processing_id = p.parent_id) " + "inner join lane ln on (ln.lane_id =
-     * l.lane_id) " + "inner join sample s on (s.sample_id = ln.sample_id) " +
-     * "where s.experiment_id = ? " +
-     *
-     * "UNION ALL " + "SELECT p.child_id, rl.parent_id, rl.sample_id " + "FROM
-     * processing_root_to_leaf rl, processing_relationship p " + "WHERE
-     * p.parent_id = rl.child_id) " +
-     *
-     * "select s1.sample_id, count(f) from Sample s1 left join ( " + "select
-     * file_id f, p.sample_id sam from processing_root_to_leaf p, " +
+     * public List<Sample> listWithUIData(Integer expId){ List<Sample> samples = new ArrayList<Sample>(); String query = "WITH RECURSIVE
+     * processing_root_to_leaf (child_id, parent_id, sample_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id, s.sample_id " + "FROM
+     * processing_relationship p inner join processing_lanes l on (l.processing_id = p.parent_id) " + "inner join lane ln on (ln.lane_id =
+     * l.lane_id) " + "inner join sample s on (s.sample_id = ln.sample_id) " + "where s.experiment_id = ? " +
+     * 
+     * "UNION ALL " + "SELECT p.child_id, rl.parent_id, rl.sample_id " + "FROM processing_root_to_leaf rl, processing_relationship p
+     * " + "WHERE p.parent_id = rl.child_id) " +
+     * 
+     * "select s1.sample_id, count(f) from Sample s1 left join ( " + "select file_id f, p.sample_id sam from processing_root_to_leaf p, " +
      * "processing_files pf where p.parent_id = processing_id " + "UNION ALL " +
-     * "select file_id f, p.sample_id sam from processing_root_to_leaf p, " +
-     * "processing_files pf where p.child_id = processing_id " + "UNION ALL " +
-     * "select file_id f, s.sample_id sam from processing_files pf inner join
-     * processing_lanes l " + "on (l.processing_id = pf.processing_id) " +
-     * "inner join lane ln on (ln.lane_id = l.lane_id) " + "inner join sample s
-     * on (s.sample_id = ln.sample_id) " + "where s.experiment_id = 2) q on
-     * q.sam=s1.sample_id where s1.experiment_id = ? group by s1.sample_id" ;
-     *
-     * List list =
-     * this.getSession().createSQLQuery(query).addEntity(Sample.class)
-     * .setInteger(0, expId).setInteger(1, expId).list();
-     *
+     * "select file_id f, p.sample_id sam from processing_root_to_leaf p, " + "processing_files pf where p.child_id = processing_id " +
+     * "UNION ALL " + "select file_id f, s.sample_id sam from processing_files pf inner join processing_lanes l " + "on (l.processing_id =
+     * pf.processing_id) " + "inner join lane ln on (ln.lane_id = l.lane_id) " + "inner join sample s on (s.sample_id = ln.sample_id)
+     * " + "where s.experiment_id = 2) q on q.sam=s1.sample_id where s1.experiment_id = ? group by s1.sample_id" ;
+     * 
+     * List list = this.getSession().createSQLQuery(query).addEntity(Sample.class) .setInteger(0, expId).setInteger(1, expId).list();
+     * 
      * for (Object sample : list) { samples.add((Sample)sample); }
-     *
+     * 
      * return samples; }
      */
     /**
@@ -538,8 +518,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
                 + "SELECT p.child_id as child_id, p.parent_id, s.sample_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join sample s on (s.sample_id = i.sample_id) "
-                + "where s.experiment_id = ? "
-                + "UNION ALL " + "SELECT p.child_id, rl.parent_id, rl.sample_id "
+                + "where s.experiment_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id, rl.sample_id "
                 + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
                 + "select s1.sample_id, count(f) as countFile from Sample s1 left join ( "
                 + "select file_id f, p.sample_id sam from processing_root_to_leaf p, "
@@ -588,20 +567,18 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
                 + "select s1.sample_id, count(F) from Sample s1 left join ( "
                 + "select pf.file_id f, p.sample_id sam from processing_root_to_leaf p, "
                 + "processing_files pf, file where p.parent_id = processing_id and  file.file_id = pf.file_id  "
-                + "and file.meta_type = ? " + "UNION ALL "
-                + "select pf.file_id f, p.sample_id sam from processing_root_to_leaf p, "
-                + "processing_files pf, file where p.child_id = processing_id and  file.file_id = pf.file_id  "
-                + "and file.meta_type = ? " + "UNION ALL "
-                + "select pf.file_id f, s.sample_id sam from processing_files pf inner join processing_ius pr_i "
+                + "and file.meta_type = ? " + "UNION ALL " + "select pf.file_id f, p.sample_id sam from processing_root_to_leaf p, "
+                + "processing_files pf, file where p.child_id = processing_id and  file.file_id = pf.file_id  " + "and file.meta_type = ? "
+                + "UNION ALL " + "select pf.file_id f, s.sample_id sam from processing_files pf inner join processing_ius pr_i "
                 + "on (pr_i.processing_id = pf.processing_id) " + "inner join ius i on (i.ius_id = pr_i.ius_id) "
-                + "inner join sample s on (s.sample_id = i.sample_id) "
-                + "inner join file file on (file.file_id = pf.file_id) "
+                + "inner join sample s on (s.sample_id = i.sample_id) " + "inner join file file on (file.file_id = pf.file_id) "
                 + "where file.meta_type = ? and s.experiment_id = ? )  "
                 + "q on q.sam=s1.sample_id where s1.experiment_id = ?  group by s1.sample_id";
 
         // , count(f) as countFile
 
-        List list = this.getSession().createSQLQuery(query).setInteger(0, expId).setString(1, metaType).setString(2, metaType).setString(3, metaType).setInteger(4, expId).setInteger(5, expId).list();
+        List list = this.getSession().createSQLQuery(query).setInteger(0, expId).setString(1, metaType).setString(2, metaType)
+                .setString(3, metaType).setInteger(4, expId).setInteger(5, expId).list();
 
         Map<Integer, Integer> countFiles = new HashMap<>();
         for (Object resSet : list) {
@@ -619,14 +596,14 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Finds an instance of Sample in the database by the Experiment name.
      */
     @Override
     public Sample findByTitle(String title) {
         String query = "from Sample as sample where lower(sample.title) = ?";
         Sample sample = null;
-        Object[] parameters = {title.toLowerCase()};
+        Object[] parameters = { title.toLowerCase() };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             sample = (Sample) list.get(0);
@@ -636,14 +613,14 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Finds an instance of Sample in the database by the Sample emailAddress.
      */
     @Override
     public Sample findByName(String name) {
         String query = "from Sample as sample where sample.name = ?";
         Sample sample = null;
-        Object[] parameters = {name};
+        Object[] parameters = { name };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             sample = (Sample) list.get(0);
@@ -653,28 +630,29 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Finds an instance of Sample in the database by the Sample emailAddress.
      */
     @Override
     public List<Sample> matchName(String name) {
         String query = "from Sample as sample where sample.name like ?";
-        Object[] parameters = {name};
+        Object[] parameters = { name };
         List list = this.getHibernateTemplate().find(query, parameters);
-        return (List<Sample>)list;
+        return (List<Sample>) list;
     }
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Finds an instance of Sample in the database by the Sample ID.
+     * 
      * @param id
      */
     @Override
     public Sample findByID(Integer id) {
         String query = "from Sample as sample where sample.sampleId = ?";
         Sample sample = null;
-        Object[] parameters = {id};
+        Object[] parameters = { id };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             sample = (Sample) list.get(0);
@@ -690,7 +668,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     public Sample findBySWAccession(Integer swAccession) {
         String query = "from Sample as sample where sample.swAccession = ?";
         Sample sample = null;
-        Object[] parameters = {swAccession};
+        Object[] parameters = { swAccession };
         List<Sample> list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             sample = (Sample) list.get(0);
@@ -705,7 +683,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     @Override
     public List<Sample> findByOwnerID(Integer registrationId) {
         String query = "from Sample as sample where sample.owner.registrationId = ?";
-        Object[] parameters = {registrationId};
+        Object[] parameters = { registrationId };
         return this.getHibernateTemplate().find(query, parameters);
     }
 
@@ -716,13 +694,10 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     @Override
     public List<Sample> findByCriteria(String criteria, boolean isCaseSens) {
         String queryStringCase = "from Sample as s where s.title like :title " + " or s.description like :description "
-                + " or cast(s.swAccession as string) like :sw "
-                + " or s.name like :name order by s.title, s.name, s.description";
-        String queryStringICase = "from Sample as s where lower(s.title) like :title "
-                + " or lower(s.description) like :description " + " or cast(s.swAccession as string) like :sw "
-                + " or lower(s.name) like :name order by s.title, s.name, s.description";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(
-                queryStringICase);
+                + " or cast(s.swAccession as string) like :sw " + " or s.name like :name order by s.title, s.name, s.description";
+        String queryStringICase = "from Sample as s where lower(s.title) like :title " + " or lower(s.description) like :description "
+                + " or cast(s.swAccession as string) like :sw " + " or lower(s.name) like :name order by s.title, s.name, s.description";
+        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -736,8 +711,10 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     }
 
     /**
-     * <p>listComplete.</p>
-     *
+     * <p>
+     * listComplete.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -752,8 +729,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
             Log.stderr("Curr sample: " + sample);
             Log.stderr("sample lanes: " + sample.getLanes());
             Log.stderr("sample expected num runs: " + sample.getExpectedNumRuns());
-            if (sample.getLanes() != null && sample.getExpectedNumRuns() != null
-                    && sample.getLanes().size() >= sample.getExpectedNumRuns()) {
+            if (sample.getLanes() != null && sample.getExpectedNumRuns() != null && sample.getLanes().size() >= sample.getExpectedNumRuns()) {
                 filteredList.add(sample);
             }
         }
@@ -761,8 +737,10 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     }
 
     /**
-     * <p>listIncomplete.</p>
-     *
+     * <p>
+     * listIncomplete.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -773,8 +751,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         Object[] parameters = {};
         list = this.getHibernateTemplate().find(query, parameters);
         for (Sample sample : list) {
-            if (sample.getLanes() == null || sample.getExpectedNumRuns() == null
-                    || sample.getLanes().size() < sample.getExpectedNumRuns()) {
+            if (sample.getLanes() == null || sample.getExpectedNumRuns() == null || sample.getLanes().size() < sample.getExpectedNumRuns()) {
                 filteredList.add(sample);
             }
         }
@@ -783,6 +760,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
     /**
      * {@inheritDoc}
+     * 
      * @param registaration
      */
     @SuppressWarnings("unchecked")
@@ -791,7 +769,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         Integer ownerId = registaration.getRegistrationId();
         List<Sample> list = null;
         String query = "from Sample as sample where sample.owner.registrationId = ?";
-        Object[] parameters = {ownerId};
+        Object[] parameters = { ownerId };
 
         if (registaration.isLIMSAdmin()) {
             query = "from Sample as sample";
@@ -822,8 +800,8 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     public Sample getRootSample(Sample sample) {
         Sample upSample = sample;
         while (!upSample.getParents().isEmpty() /*
-                 * == null
-                 */) {
+                                                 * == null
+                                                 */) {
             upSample = upSample.getParents().iterator().next();
         }
         // String query = "WITH RECURSIVE child_to_root(parent_id, child_id) AS ("
@@ -907,8 +885,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
         Logger logger = Logger.getLogger(SampleDAOHibernate.class);
         if (registration == null) {
             logger.error("SampleDAOHibernate update registration is null");
-        } else if (registration.isLIMSAdmin()
-                || (sample.givesPermission(registration) && dbObject.givesPermission(registration))) {
+        } else if (registration.isLIMSAdmin() || (sample.givesPermission(registration) && dbObject.givesPermission(registration))) {
             logger.info("updating sample object");
             update(sample);
         } else {

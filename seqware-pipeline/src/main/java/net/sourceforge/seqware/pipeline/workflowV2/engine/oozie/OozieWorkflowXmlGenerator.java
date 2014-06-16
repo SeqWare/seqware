@@ -16,36 +16,35 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 public class OozieWorkflowXmlGenerator {
-  /**
-   * generate a dax file from the object model
-   * 
-   * @param wfdm
-   * @param output
+    /**
+     * generate a dax file from the object model
+     * 
+     * @param wfdm
+     * @param output
      * @param maxMemorySgeParamFormat
      * @param threadsSgeParamFormat
-   * @return
-   */
-  public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String nfsWorkDir, Path hdfsWorkDir, boolean useSge,
-                                         File seqwareJar, String threadsSgeParamFormat,
-                                         String maxMemorySgeParamFormat) {
-    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    File dax = new File(output);
-    // write to dax
-    Document doc = new Document();
-    try {
-      OutputStream out = new FileOutputStream(dax);
-      XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-      WorkflowApp adag = new WorkflowApp(wfdm, nfsWorkDir, hdfsWorkDir, useSge, seqwareJar, threadsSgeParamFormat,
-                                         maxMemorySgeParamFormat);
-      doc.setRootElement(adag.serializeXML());
-      serializer.output(doc, out);
+     * @return
+     */
+    public ReturnValue generateWorkflowXml(AbstractWorkflowDataModel wfdm, String output, String nfsWorkDir, Path hdfsWorkDir,
+            boolean useSge, File seqwareJar, String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
+        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+        File dax = new File(output);
+        // write to dax
+        Document doc = new Document();
+        try {
+            OutputStream out = new FileOutputStream(dax);
+            XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
+            WorkflowApp adag = new WorkflowApp(wfdm, nfsWorkDir, hdfsWorkDir, useSge, seqwareJar, threadsSgeParamFormat,
+                    maxMemorySgeParamFormat);
+            doc.setRootElement(adag.serializeXML());
+            serializer.output(doc, out);
 
-      out.flush();
-      out.close();
-    } catch (IOException e) {
-      Log.error(e);
-      ret.setExitStatus(ReturnValue.FAILURE);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            Log.error(e);
+            ret.setExitStatus(ReturnValue.FAILURE);
+        }
+        return ret;
     }
-    return ret;
-  }
 }

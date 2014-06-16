@@ -51,32 +51,35 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
- * This resource will pull back the workflow runs that are generated from a
- * particular file.
- *
- * In order: a) Workflow runs found via processing, processing_relationship,
- * workflow_run b) Workflow runs found via the IUS, ius_workflow_runs c)
- * Workflow runs found via the lane, lane_workflow_runs
- *
+ * This resource will pull back the workflow runs that are generated from a particular file.
+ * 
+ * In order: a) Workflow runs found via processing, processing_relationship, workflow_run b) Workflow runs found via the IUS,
+ * ius_workflow_runs c) Workflow runs found via the lane, lane_workflow_runs
+ * 
  * @author dyuen
  * @version $Id: $Id
  */
 public class FileChildWorkflowRunsResource extends DatabaseResource {
     /**
-     * A direct search uses the workflow_run_input_files table rather than 
-     * attempting a search via the ius_workflow_run and lane_workflow_run and processing hierarchy
+     * A direct search uses the workflow_run_input_files table rather than attempting a search via the ius_workflow_run and
+     * lane_workflow_run and processing hierarchy
      */
     public static final String DIRECT_SEARCH = "DIRECT_SEARCH";
 
     /**
-     * <p>Constructor for FileChildWorkflowRunsResource.</p>
+     * <p>
+     * Constructor for FileChildWorkflowRunsResource.
+     * </p>
      */
     public FileChildWorkflowRunsResource() {
         super("file");
     }
-    
+
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
+     * 
      * @throws java.sql.SQLException
      */
     @Get
@@ -90,8 +93,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
             handleDirectGetXML();
             return;
         }
-        
-        
+
         FileService fs = BeanFactory.getFileServiceBean();
         Set<File> files = new HashSet<>();
         SEARCH_TYPE searchType = SEARCH_TYPE.CHILDREN_VIA_PROCESSING_RELATIONSHIP;
@@ -127,11 +129,11 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
         // the logic here is, we consider first workflow_run children found via the children of the processing
         // if that is empty, then we consider workflow_run found via the IUS (ius_workflow_run table)
         // if that is empty, then we consider workflow_run found via the lane (lane_workflow_run table)
-        if (searchType == SEARCH_TYPE.CHILDREN_VIA_PROCESSING_RELATIONSHIP){
+        if (searchType == SEARCH_TYPE.CHILDREN_VIA_PROCESSING_RELATIONSHIP) {
             eList = handleWorkflowRunsViaChild(files, copier);
-        } else if (searchType == SEARCH_TYPE.CHILDREN_VIA_IUS_WORKFLOW_RUN){
+        } else if (searchType == SEARCH_TYPE.CHILDREN_VIA_IUS_WORKFLOW_RUN) {
             eList = handleWorkflowRunsViaIUS(files, copier);
-        } else if (searchType == SEARCH_TYPE.CHILDREN_VIA_LANE_WORKFLOW_RUN){
+        } else if (searchType == SEARCH_TYPE.CHILDREN_VIA_LANE_WORKFLOW_RUN) {
             eList = handleWorkflowRunsViaLane(files, copier);
         }
         final Document line = XmlTools.marshalToDocument(jaxbTool, eList);
@@ -142,7 +144,7 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
     protected WorkflowRunList2 handleWorkflowRunsViaChild(final Set<File> files, final Hibernate3DtoCopier copier) {
         final WorkflowRunList2 results = new WorkflowRunList2();
         for (File file : files) {
-            //1) check if we have children in the processing tree that are relevant
+            // 1) check if we have children in the processing tree that are relevant
             for (Processing p : file.getProcessings()) {
                 for (Processing c : p.getChildren()) {
                     if (c.getWorkflowRun() == null) {
@@ -165,10 +167,10 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
         WorkflowRunList2 result = new WorkflowRunList2();
         Set<WorkflowRun> parentWorkflowRuns = new HashSet<>();
         for (File file : files) {
-            //2) check if we have children in the ius_workflow_runs that are relevant
+            // 2) check if we have children in the ius_workflow_runs that are relevant
             for (Processing p : file.getProcessings()) {
                 WorkflowRun parentRun = p.getWorkflowRun();
-                if (parentRun == null){
+                if (parentRun == null) {
                     parentRun = p.getWorkflowRunByAncestorWorkflowRunId();
                 }
                 if (parentRun == null) {
@@ -196,10 +198,10 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
         final WorkflowRunList2 result = new WorkflowRunList2();
         Set<WorkflowRun> parentWorkflowRuns = new HashSet<>();
         for (File file : files) {
-            //3) check if we have children in the lane_workflow_runs that are relevant
+            // 3) check if we have children in the lane_workflow_runs that are relevant
             for (Processing p : file.getProcessings()) {
                 WorkflowRun parentRun = p.getWorkflowRun();
-                if (parentRun == null){
+                if (parentRun == null) {
                     parentRun = p.getWorkflowRunByAncestorWorkflowRunId();
                 }
                 if (parentRun == null) {
@@ -225,9 +227,10 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
 
     /**
      * Disallows a workflow run if it should not be considered since it is properly attached to the processing hierarchy
+     * 
      * @param parentWorkflowRuns
      * @param anyRun
-     * @return 
+     * @return
      */
     private boolean isWorkflowRunAttached(Set<WorkflowRun> parentWorkflowRuns, WorkflowRun anyRun) {
         if (parentWorkflowRuns.contains(anyRun)) {
@@ -247,14 +250,16 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
     }
 
     /**
-     * Use SQL to directly retrieve relevant workflows runs (defined as any workflow runs that 
-     * include one or more files in the set we were given)
+     * Use SQL to directly retrieve relevant workflows runs (defined as any workflow runs that include one or more files in the set we were
+     * given)
+     * 
      * @param files
      * @param interestingWorkflows
      * @return
-     * @throws SQLException 
+     * @throws SQLException
      */
-    protected static WorkflowRunList2 directRetrieveWorkflowRuns(List<Integer> files, List<Integer> interestingWorkflows) throws SQLException {
+    protected static WorkflowRunList2 directRetrieveWorkflowRuns(List<Integer> files, List<Integer> interestingWorkflows)
+            throws SQLException {
         final Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         final WorkflowRunList2 runs = new WorkflowRunList2();
         runs.setList(new ArrayList());
@@ -267,48 +272,47 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
                 StringBuilder query = new StringBuilder();
                 query.append("select distinct r.sw_accession from workflow_run r, workflow w, ");
                 query.append("workflow_run_input_files rf, file f WHERE r.workflow_run_id = rf.workflow_run_id "
-                        + "AND rf.file_id = f.file_id "
-                        + "AND w.workflow_id = r.workflow_id "
-                        + "AND (");
+                        + "AND rf.file_id = f.file_id " + "AND w.workflow_id = r.workflow_id " + "AND (");
                 // handle file accessions
-                for(int i = 0; i < files.size() - 1; i++){
+                for (int i = 0; i < files.size() - 1; i++) {
                     Integer fInt = files.get(i);
                     query.append(" f.sw_accession = ").append(fInt).append(" OR");
                 }
-                Integer fInt = files.get(files.size() -1);
+                Integer fInt = files.get(files.size() - 1);
                 query.append(" f.sw_accession = ").append(fInt).append(")");
                 // handle interesting workflow accessions
-                if (interestingWorkflows.size() > 0){
+                if (interestingWorkflows.size() > 0) {
                     query.append(" AND (");
-                     for (int i = 0; i < interestingWorkflows.size() - 1; i++) {
+                    for (int i = 0; i < interestingWorkflows.size() - 1; i++) {
                         Integer wInt = interestingWorkflows.get(i);
                         query.append(" w.sw_accession = ").append(wInt).append(" OR");
                     }
                     Integer wInt = interestingWorkflows.get(interestingWorkflows.size() - 1);
                     query.append(" w.sw_accession = ").append(wInt).append(")");
                 }
-                
-                
+
                 query.append(" ORDER BY sw_accession");
-                
+
                 Log.info("Executing query: " + query);
                 mdb = DBAccess.get();
-                
-                List<Integer> workflowSWIDs = mdb.executeQuery(query.toString(), new ResultSetHandler<List<Integer>>(){
-                  @Override
-                  public List<Integer> handle(ResultSet rs) throws SQLException {
-                    List<Integer> ids = new ArrayList<>();
-                    while (rs.next()) {
-                      ids.add(rs.getInt("sw_accession"));
+
+                List<Integer> workflowSWIDs = mdb.executeQuery(query.toString(), new ResultSetHandler<List<Integer>>() {
+                    @Override
+                    public List<Integer> handle(ResultSet rs) throws SQLException {
+                        List<Integer> ids = new ArrayList<>();
+                        while (rs.next()) {
+                            ids.add(rs.getInt("sw_accession"));
+                        }
+                        return ids;
                     }
-                    return ids;
-                  }
                 });
-                
-                for(int workflowSWID : workflowSWIDs) {
+
+                for (int workflowSWID : workflowSWIDs) {
                     WorkflowRun workflowRun = (WorkflowRun) testIfNull(ss.findBySWAccession(workflowSWID));
-                    CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(WorkflowRun.class, new String[]{"inputFileAccessions"});
-                    WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
+                    CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName
+                            .createCollectionPropertyNames(WorkflowRun.class, new String[] { "inputFileAccessions" });
+                    WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun, ArrayUtils.EMPTY_CLASS_ARRAY,
+                            createCollectionPropertyNames);
                     runs.add(dto);
                 }
             } finally {
@@ -347,8 +351,6 @@ public class FileChildWorkflowRunsResource extends DatabaseResource {
     }
 
     public enum SEARCH_TYPE {
-        CHILDREN_VIA_PROCESSING_RELATIONSHIP,
-        CHILDREN_VIA_IUS_WORKFLOW_RUN,
-        CHILDREN_VIA_LANE_WORKFLOW_RUN
+        CHILDREN_VIA_PROCESSING_RELATIONSHIP, CHILDREN_VIA_IUS_WORKFLOW_RUN, CHILDREN_VIA_LANE_WORKFLOW_RUN
     }
 }

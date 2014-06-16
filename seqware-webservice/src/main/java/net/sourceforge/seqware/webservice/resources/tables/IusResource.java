@@ -40,122 +40,133 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>IusResource class.</p>
- *
+ * <p>
+ * IusResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class IusResource extends DatabaseResource {
 
-  private Logger logger;
+    private Logger logger;
 
-  /**
-   * <p>Constructor for IusResource.</p>
-   */
-  public IusResource() {
-    super("ius");
-    logger = Logger.getLogger(IUS.class);
-  }
-
-  /**
-   * <p>getXml.</p>
-   *
-   * @throws java.io.IOException if any.
-   */
-  @Get
-  public void getXml() throws IOException {
-    authenticate();
-    IUSService ss = BeanFactory.getIUSServiceBean();
-    Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-
-    Document line;
-    if (queryValues.get("id") != null) {
-      IUS p = (IUS) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
-
-      JaxbObject<IUS> jaxbTool = new JaxbObject<>();
-      IUS dto = copier.hibernate2dto(IUS.class, p);
-      line = XmlTools.marshalToDocument(jaxbTool, dto);
-
-    } else {
-
-      JaxbObject<IUSList> jaxbTool = new JaxbObject<>();
-      IUSList list = new IUSList();
-      List<IUS> iuses = (List<IUS>) testIfNull(ss.list());
-
-      for (IUS i : iuses) {
-        list.add(copier.hibernate2dto(IUS.class, i));
-      }
-      line = XmlTools.marshalToDocument(jaxbTool, list);
-
-    }
-    getResponse().setEntity(XmlTools.getRepresentation(line));
-  }
-  
     /**
-   * <p>postJaxb.</p>
-   *
-   * @param entity a {@link org.restlet.representation.Representation} object.
-   * @throws org.restlet.resource.ResourceException if any.
-   */
-  @Post("xml")
-  public void postJaxb(Representation entity) throws ResourceException {
-    authenticate();
-    try {
-      JaxbObject<IUS> jo = new JaxbObject<>();
-      String text = entity.getText();
-      IUS o = null;
-      try {
-        o = (IUS) XmlTools.unMarshal(jo, new IUS(), text);
-      } catch (SAXException ex) {
-        throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, ex);
-      }
-
-      if (o.getOwner() == null) {
-        o.setOwner(registration);
-      } else {
-        Registration reg = BeanFactory.getRegistrationServiceBean().findByEmailAddress(o.getOwner().getEmailAddress());
-        if (reg != null) {
-          o.setOwner(reg);
-        } else {
-          logger.info("Could not be found: " + o.getOwner());
-        }
-      }
-      
-      // attempt to save foreign keys, I guess this is replacing an empty object with a fully populated one?
-      if (o.getLane() != null) {
-        LaneService ps = BeanFactory.getLaneServiceBean();
-        Lane lane = (Lane) testIfNull(ps.findByID(o.getLane().getLaneId()));
-        o.setLane(lane);
-      }
-
-      // attempt to save foreign keys, I guess this is replacing an empty object with a fully populated one?
-      if (o.getSample() != null) {
-        SampleService ps = BeanFactory.getSampleServiceBean();
-        Sample sample = (Sample) testIfNull(ps.findByID(o.getSample().getSampleId()));
-        o.setSample(sample);
-      }
-
-      //persist object
-      IUSService service = BeanFactory.getIUSServiceBean();
-      Integer swAccession = service.insert(registration, o);
-
-      IUS obj = (IUS) testIfNull(service.findBySWAccession(swAccession));
-      Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-      IUS detachedIUS = copier.hibernate2dto(IUS.class, obj);
-
-      Document line = XmlTools.marshalToDocument(jo, detachedIUS);
-      getResponse().setEntity(XmlTools.getRepresentation(line));
-      getResponse().setLocationRef(getRequest().getRootRef() + "/ius/" + detachedIUS.getSwAccession());
-      getResponse().setStatus(Status.SUCCESS_CREATED);
-    } catch (SecurityException e) {
-      getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN, e.getMessage());
-    } catch (IOException e) {
-      e.printStackTrace();
-      getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-    } catch (Exception e) {
-      e.printStackTrace();
-      getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e.getMessage());
+     * <p>
+     * Constructor for IusResource.
+     * </p>
+     */
+    public IusResource() {
+        super("ius");
+        logger = Logger.getLogger(IUS.class);
     }
 
-  }
+    /**
+     * <p>
+     * getXml.
+     * </p>
+     * 
+     * @throws java.io.IOException
+     *             if any.
+     */
+    @Get
+    public void getXml() throws IOException {
+        authenticate();
+        IUSService ss = BeanFactory.getIUSServiceBean();
+        Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
+
+        Document line;
+        if (queryValues.get("id") != null) {
+            IUS p = (IUS) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
+
+            JaxbObject<IUS> jaxbTool = new JaxbObject<>();
+            IUS dto = copier.hibernate2dto(IUS.class, p);
+            line = XmlTools.marshalToDocument(jaxbTool, dto);
+
+        } else {
+
+            JaxbObject<IUSList> jaxbTool = new JaxbObject<>();
+            IUSList list = new IUSList();
+            List<IUS> iuses = (List<IUS>) testIfNull(ss.list());
+
+            for (IUS i : iuses) {
+                list.add(copier.hibernate2dto(IUS.class, i));
+            }
+            line = XmlTools.marshalToDocument(jaxbTool, list);
+
+        }
+        getResponse().setEntity(XmlTools.getRepresentation(line));
+    }
+
+    /**
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
+     * @throws org.restlet.resource.ResourceException
+     *             if any.
+     */
+    @Post("xml")
+    public void postJaxb(Representation entity) throws ResourceException {
+        authenticate();
+        try {
+            JaxbObject<IUS> jo = new JaxbObject<>();
+            String text = entity.getText();
+            IUS o = null;
+            try {
+                o = (IUS) XmlTools.unMarshal(jo, new IUS(), text);
+            } catch (SAXException ex) {
+                throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, ex);
+            }
+
+            if (o.getOwner() == null) {
+                o.setOwner(registration);
+            } else {
+                Registration reg = BeanFactory.getRegistrationServiceBean().findByEmailAddress(o.getOwner().getEmailAddress());
+                if (reg != null) {
+                    o.setOwner(reg);
+                } else {
+                    logger.info("Could not be found: " + o.getOwner());
+                }
+            }
+
+            // attempt to save foreign keys, I guess this is replacing an empty object with a fully populated one?
+            if (o.getLane() != null) {
+                LaneService ps = BeanFactory.getLaneServiceBean();
+                Lane lane = (Lane) testIfNull(ps.findByID(o.getLane().getLaneId()));
+                o.setLane(lane);
+            }
+
+            // attempt to save foreign keys, I guess this is replacing an empty object with a fully populated one?
+            if (o.getSample() != null) {
+                SampleService ps = BeanFactory.getSampleServiceBean();
+                Sample sample = (Sample) testIfNull(ps.findByID(o.getSample().getSampleId()));
+                o.setSample(sample);
+            }
+
+            // persist object
+            IUSService service = BeanFactory.getIUSServiceBean();
+            Integer swAccession = service.insert(registration, o);
+
+            IUS obj = (IUS) testIfNull(service.findBySWAccession(swAccession));
+            Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
+            IUS detachedIUS = copier.hibernate2dto(IUS.class, obj);
+
+            Document line = XmlTools.marshalToDocument(jo, detachedIUS);
+            getResponse().setEntity(XmlTools.getRepresentation(line));
+            getResponse().setLocationRef(getRequest().getRootRef() + "/ius/" + detachedIUS.getSwAccession());
+            getResponse().setStatus(Status.SUCCESS_CREATED);
+        } catch (SecurityException e) {
+            getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN, e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+            getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e.getMessage());
+        }
+
+    }
 }

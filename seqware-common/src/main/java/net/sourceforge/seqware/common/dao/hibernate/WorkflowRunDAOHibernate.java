@@ -14,8 +14,10 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * <p>WorkflowRunDAOHibernate class.</p>
- *
+ * <p>
+ * WorkflowRunDAOHibernate class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -24,7 +26,9 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     private Logger logger;
 
     /**
-     * <p>Constructor for WorkflowRunDAOHibernate.</p>
+     * <p>
+     * Constructor for WorkflowRunDAOHibernate.
+     * </p>
      */
     public WorkflowRunDAOHibernate() {
         super();
@@ -53,10 +57,14 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     }
 
     /**
-     * <p>update.</p>
-     *
-     * @param workflowRun a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
-     * @param laneIds a {@link java.util.List} object.
+     * <p>
+     * update.
+     * </p>
+     * 
+     * @param workflowRun
+     *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     * @param laneIds
+     *            a {@link java.util.List} object.
      */
     @Override
     public void update(WorkflowRun workflowRun, List<Integer> laneIds) {
@@ -81,8 +89,10 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     }
 
     /**
-     * <p>list.</p>
-     *
+     * <p>
+     * list.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -98,42 +108,35 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
                 + "username,  create_tstmp,  update_tstmp,  sw_accession, stderr, stdout, workflow_engine from workflow_run");
         sqlquery.addEntity(WorkflowRun.class);
         List list = sqlquery.list();
-        for(Object obj: list) {
+        for (Object obj : list) {
             WorkflowRun run = (WorkflowRun) obj;
             workflowRuns.add(run);
             s.clear();
         }
 
-
-        
         return workflowRuns;
     }
 
-    
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> list(Registration registration, Boolean isAsc) {
         ArrayList<WorkflowRun> workflowRuns = new ArrayList<>();
         logger.debug("Get WFR LIST. " + registration.getEmailAddress());
         /*
-         * Criteria criteria = this.getSession().createCriteria(Study.class);
-         * criteria.add(Expression.eq("owner_id",
-         * registration.getRegistrationId()));
-         * criteria.addOrder(Order.asc("create_tstmp"));
-         * criteria.setFirstResult(100); criteria.setMaxResults(50); List
-         * pageResults=criteria.list();
+         * Criteria criteria = this.getSession().createCriteria(Study.class); criteria.add(Expression.eq("owner_id",
+         * registration.getRegistrationId())); criteria.addOrder(Order.asc("create_tstmp")); criteria.setFirstResult(100);
+         * criteria.setMaxResults(50); List pageResults=criteria.list();
          */
         String query = "";
-        Object[] parameters = {registration.getRegistrationId()};
+        Object[] parameters = { registration.getRegistrationId() };
         String sortValue = (!isAsc) ? "asc" : "desc";
         // Limit the workflows to those owned by the user
         if (registration.isLIMSAdmin()) {
-            query = "from WorkflowRun as workflowRun " + "where workflowRun.status='completed' "
-                    + "order by workflowRun.createTimestamp " + sortValue;
+            query = "from WorkflowRun as workflowRun " + "where workflowRun.status='completed' " + "order by workflowRun.createTimestamp "
+                    + sortValue;
             parameters = null;
         } else {
-            query = "from WorkflowRun as workflowRun "
-                    + "where workflowRun.owner.registrationId=? and workflowRun.status='completed' "
+            query = "from WorkflowRun as workflowRun " + "where workflowRun.owner.registrationId=? and workflowRun.status='completed' "
                     + "order by workflowRun.createTimestamp " + sortValue;
         }
 
@@ -149,7 +152,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     @Override
     public List<Workflow> listRelatedWorkflows(Registration registration) {
         String querySQL = "select distinct wr.workflow from WorkflowRun as wr where wr.owner.registrationId = ?";
-        Object[] parameters = {registration.getRegistrationId()};
+        Object[] parameters = { registration.getRegistrationId() };
         List list = this.getHibernateTemplate().find(querySQL, parameters);
         List<Workflow> workflows = new ArrayList<>();
         for (Object workflow : list) {
@@ -166,7 +169,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         String sortValue = (!isAsc) ? "asc" : "desc";
         String query = "from WorkflowRun as workflowRun where workflowRun.owner.registrationId=? "
                 + "and workflowRun.sharedWorkflowRuns.size > 0 " + "order by workflowRun.createTimestamp " + sortValue;
-        Object[] parameters = {registration.getRegistrationId()};
+        Object[] parameters = { registration.getRegistrationId() };
         List list = this.getHibernateTemplate().find(query, parameters);
 
         for (Object workflowRun : list) {
@@ -185,10 +188,9 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         }
 
         String sortValue = (!isAsc) ? "asc" : "desc";
-        String query = "select workflowRun from WorkflowRun as workflowRun "
-                + "inner join workflowRun.sharedWorkflowRuns as runs " + "where runs.registration.registrationId = ? "
-                + "order by workflowRun.createTimestamp " + sortValue;
-        Object[] parameters = {registration.getRegistrationId()};
+        String query = "select workflowRun from WorkflowRun as workflowRun " + "inner join workflowRun.sharedWorkflowRuns as runs "
+                + "where runs.registration.registrationId = ? " + "order by workflowRun.createTimestamp " + sortValue;
+        Object[] parameters = { registration.getRegistrationId() };
         List list = this.getHibernateTemplate().find(query, parameters);
 
         for (Object workflowRun : list) {
@@ -202,15 +204,14 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     public List<WorkflowRun> listRunning(Registration registration, Boolean isAsc) {
         List<WorkflowRun> runningWorkflowRuns = new ArrayList<>();
         String query = "";
-        Object[] parameters = {registration.getRegistrationId()};
+        Object[] parameters = { registration.getRegistrationId() };
         String sortValue = (!isAsc) ? "asc" : "desc";
         if (registration.isLIMSAdmin()) {
-            query = "from WorkflowRun as workflowRun " + "where workflowRun.status<>'completed' "
-                    + "order by workflowRun.createTimestamp " + sortValue;
+            query = "from WorkflowRun as workflowRun " + "where workflowRun.status<>'completed' " + "order by workflowRun.createTimestamp "
+                    + sortValue;
             parameters = null;
         } else {
-            query = "from WorkflowRun as workflowRun "
-                    + "where workflowRun.owner.registrationId=? and workflowRun.status<>'completed' "
+            query = "from WorkflowRun as workflowRun " + "where workflowRun.owner.registrationId=? and workflowRun.status<>'completed' "
                     + "order by workflowRun.createTimestamp " + sortValue;
         }
         List list = this.getHibernateTemplate().find(query, parameters);
@@ -226,7 +227,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     public WorkflowRun findByName(String name) {
         String query = "from WorkflowRun as workflowRun where workflowRun.name = ?";
         WorkflowRun workflowRun = null;
-        Object[] parameters = {name};
+        Object[] parameters = { name };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             workflowRun = (WorkflowRun) list.get(0);
@@ -239,7 +240,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     public WorkflowRun findByID(Integer wfrID) {
         String query = "from WorkflowRun as workflowRun where workflowRun.workflowRunId = ?";
         WorkflowRun workflowRun = null;
-        Object[] parameters = {wfrID};
+        Object[] parameters = { wfrID };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             workflowRun = (WorkflowRun) list.get(0);
@@ -253,7 +254,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     public WorkflowRun findBySWAccession(Integer swAccession) {
         String query = "from WorkflowRun as workflowRun where workflowRun.swAccession = ?";
         WorkflowRun workflowRun = null;
-        Object[] parameters = {swAccession};
+        Object[] parameters = { swAccession };
         List<WorkflowRun> list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             workflowRun = (WorkflowRun) list.get(0);
@@ -266,7 +267,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     @Override
     public List<WorkflowRun> findByOwnerID(Integer registrationID) {
         String query = "from WorkflowRun as workflowRun where workflowRun.owner.registrationId = ?";
-        Object[] parameters = {registrationID};
+        Object[] parameters = { registrationID };
         return this.getHibernateTemplate().find(query, parameters);
     }
 
@@ -278,8 +279,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
                 + " or wr.name like :name order by wr.name";
         String queryStringICase = "from WorkflowRun as wr where cast(wr.swAccession as string) like :sw "
                 + " or lower(wr.name) like :name order by wr.name";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(
-                queryStringICase);
+        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -303,15 +303,15 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         // wfRuns.addAll(workflowRunFromProcessing(processing));
         // }
 
-        String query = "WITH RECURSIVE Rec(pid, id) AS (" + " SELECT pr.parent_id, pr.child_id"
-                + " FROM processing_relationship pr" + " JOIN processing_ius pi" + " ON (pr.parent_id = pi.processing_id)"
-                + " WHERE pi.ius_id = ?" + " UNION" + " SELECT null, pi.processing_id" + " FROM processing_ius pi"
-                + " WHERE pi.ius_id = ?" + " UNION" + " SELECT r.pid, sr.child_id FROM Rec r"
-                + " JOIN processing_relationship sr" + " ON (r.id = sr.parent_id)" + ")" + " SELECT wr.* FROM Rec r"
-                + " JOIN processing p" + " ON (p.processing_id = r.id)"
+        String query = "WITH RECURSIVE Rec(pid, id) AS (" + " SELECT pr.parent_id, pr.child_id" + " FROM processing_relationship pr"
+                + " JOIN processing_ius pi" + " ON (pr.parent_id = pi.processing_id)" + " WHERE pi.ius_id = ?" + " UNION"
+                + " SELECT null, pi.processing_id" + " FROM processing_ius pi" + " WHERE pi.ius_id = ?" + " UNION"
+                + " SELECT r.pid, sr.child_id FROM Rec r" + " JOIN processing_relationship sr" + " ON (r.id = sr.parent_id)" + ")"
+                + " SELECT wr.* FROM Rec r" + " JOIN processing p" + " ON (p.processing_id = r.id)"
                 + " JOIN workflow_run wr ON (p.workflow_run_id = wr.workflow_run_id)";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(WorkflowRun.class).setInteger(0, ius.getIusId()).setInteger(1, ius.getIusId()).list();
+        List list = this.getSession().createSQLQuery(query).addEntity(WorkflowRun.class).setInteger(0, ius.getIusId())
+                .setInteger(1, ius.getIusId()).list();
 
         for (Object wfRunObj : list) {
             WorkflowRun wfRun = (WorkflowRun) wfRunObj;
@@ -353,15 +353,16 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> findByCriteria(String criteria) {
-        
-        /* Not sure why this doesn't work but I think the :sw sub is only good for a value and not an HQL phrase 
-        String queryStringCase = "from WorkflowRun as wr where :sw";
-        Query query = this.getSession().createQuery(queryStringCase);
-        query.setString("sw", criteria);*/
-        
+
+        /*
+         * Not sure why this doesn't work but I think the :sw sub is only good for a value and not an HQL phrase String queryStringCase =
+         * "from WorkflowRun as wr where :sw"; Query query = this.getSession().createQuery(queryStringCase); query.setString("sw",
+         * criteria);
+         */
+
         String queryStringCase = "from WorkflowRun as wr where ";
-        Query query = this.getSession().createQuery(queryStringCase+" "+criteria);
-        
+        Query query = this.getSession().createQuery(queryStringCase + " " + criteria);
+
         return query.list();
     }
 
@@ -372,8 +373,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         Logger logger = Logger.getLogger(WorkflowRunDAOHibernate.class);
         if (registration == null) {
             logger.error("WorkflowRunDAOHibernate update registration is null");
-        } else if (registration.isLIMSAdmin()
-                || (dbWf.givesPermission(registration) && workflowRun.givesPermission(registration))) {
+        } else if (registration.isLIMSAdmin() || (dbWf.givesPermission(registration) && workflowRun.givesPermission(registration))) {
             logger.info("Updating workflow run object");
             update(workflowRun);
         } else {
@@ -411,8 +411,8 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         }
         return null;
     }
-    
-        private WorkflowRun reattachWorkflowRun(WorkflowRun workflowRun) throws IllegalStateException, DataAccessResourceFailureException {
+
+    private WorkflowRun reattachWorkflowRun(WorkflowRun workflowRun) throws IllegalStateException, DataAccessResourceFailureException {
         WorkflowRun dbObject = workflowRun;
         if (!getSession().contains(workflowRun)) {
             dbObject = findByID(workflowRun.getWorkflowRunId());

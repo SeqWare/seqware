@@ -43,15 +43,15 @@ public class AttributePlugin implements CheckDBPluginInterface {
         try {
             String query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("duplicate_attribute_keys.sql"));
             List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            CheckDB.processOutput(result, Level.SEVERE,  "Entities with duplicate attribute keys in non-sample tables: " , executeQuery);
+            CheckDB.processOutput(result, Level.SEVERE, "Entities with duplicate attribute keys in non-sample tables: ", executeQuery);
             query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("duplicate_sample_attribute_keys.sql"));
             executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-            CheckDB.processOutput(result, Level.SEVERE,  "Samples with duplicate attribute keys: " , executeQuery);
-            
+            CheckDB.processOutput(result, Level.SEVERE, "Samples with duplicate attribute keys: ", executeQuery);
+
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
 
     }
-    
+
 }

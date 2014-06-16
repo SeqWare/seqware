@@ -5,29 +5,34 @@ import net.sourceforge.seqware.common.model.File;
 import org.springframework.validation.Errors;
 
 /**
- * <p>FileValidator class.</p>
- *
+ * <p>
+ * FileValidator class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
-public class FileValidator extends LoginValidator{
-	
-	/**
-	 * <p>Constructor for FileValidator.</p>
-	 */
-	public FileValidator () {
-		super();
-	}
+public class FileValidator extends LoginValidator {
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * Validates the specified Object.
+    /**
+     * <p>
+     * Constructor for FileValidator.
+     * </p>
+     */
+    public FileValidator() {
+        super();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * Validates the specified Object.
+     * 
      * @param obj
      * @param errors
-	 */
-        @Override
-	public void validate(Object obj, Errors errors) {
-		File file = (File) obj;
-	}
+     */
+    @Override
+    public void validate(Object obj, Errors errors) {
+        File file = (File) obj;
+    }
 }

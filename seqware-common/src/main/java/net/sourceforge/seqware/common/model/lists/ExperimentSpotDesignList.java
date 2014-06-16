@@ -21,23 +21,29 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 
 /**
- * <p>ExperimentSpotDesignList class.</p>
+ * <p>
+ * ExperimentSpotDesignList class.
+ * </p>
  * 
  */
-public class ExperimentSpotDesignList{
+public class ExperimentSpotDesignList {
 
     protected List<ExperimentSpotDesign> tList;
 
     /**
-     * <p>Constructor for ExperimentSpotDesignList.</p>
+     * <p>
+     * Constructor for ExperimentSpotDesignList.
+     * </p>
      */
     public ExperimentSpotDesignList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<ExperimentSpotDesign> getList() {
@@ -45,18 +51,24 @@ public class ExperimentSpotDesignList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<ExperimentSpotDesign> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
     public void add(ExperimentSpotDesign ex) {
         tList.add(ex);

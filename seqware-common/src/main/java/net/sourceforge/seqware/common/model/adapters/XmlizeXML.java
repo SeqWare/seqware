@@ -20,32 +20,40 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import org.apache.commons.lang.StringEscapeUtils;
 
 /**
- * <p>XmlizeXML class.</p>
- *
+ * <p>
+ * XmlizeXML class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class XmlizeXML extends XmlAdapter<String, String> {
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
+     * @throws java.lang.Exception
+     */
     @Override
     public String unmarshal(String vt) throws Exception {
-//        String out = vt.replace("&amp;", "&");
-         String out = StringEscapeUtils.unescapeXml(vt);
-	 out = StringEscapeUtils.unescapeJavaScript(out);
+        // String out = vt.replace("&amp;", "&");
+        String out = StringEscapeUtils.unescapeXml(vt);
+        out = StringEscapeUtils.unescapeJavaScript(out);
 
         return out;
     }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
+     * @throws java.lang.Exception
+     */
     @Override
     public String marshal(String bt) throws Exception {
-        String out = StringEscapeUtils.escapeXml(bt);	
-	out = StringEscapeUtils.escapeJavaScript(out);
+        String out = StringEscapeUtils.escapeXml(bt);
+        out = StringEscapeUtils.escapeJavaScript(out);
         return out;
     }
 }

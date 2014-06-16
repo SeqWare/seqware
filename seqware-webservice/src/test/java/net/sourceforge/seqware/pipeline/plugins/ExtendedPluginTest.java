@@ -37,7 +37,7 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class ExtendedPluginTest extends PluginTest {
@@ -49,7 +49,7 @@ public class ExtendedPluginTest extends PluginTest {
     protected PrintStream systemOut = System.out;
     @Rule
     public TestRule watchman = new TestWatcher() {
-        //This doesn't catch logs that are sent to Log4J
+        // This doesn't catch logs that are sent to Log4J
         @Override
         protected void succeeded(Description d) {
             // do not fail on tests that intend on failing
@@ -67,7 +67,7 @@ public class ExtendedPluginTest extends PluginTest {
         Matcher matcher = errorPattern.matcher(s);
         systemErr.println("~~~~~~~~~~" + s);
         Assert.assertFalse("Output contains errors:" + s, matcher.find());
-        //        systemErr.println("~~~~~~~~~~"+matcher.group());
+        // systemErr.println("~~~~~~~~~~"+matcher.group());
     }
 
     /**
@@ -97,7 +97,7 @@ public class ExtendedPluginTest extends PluginTest {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
     protected String getAndCheckSwid(String s) throws NumberFormatException {
         Matcher match = swidPattern.matcher(s);
         Assert.assertTrue("SWID not found in output.", match.find());
@@ -124,7 +124,7 @@ public class ExtendedPluginTest extends PluginTest {
             String s = r.readLine();
             while (s != null) {
                 s = s.trim();
-                //remove any blank lines
+                // remove any blank lines
                 if (s.isEmpty()) {
                     s = r.readLine();
                     continue;
@@ -165,13 +165,13 @@ public class ExtendedPluginTest extends PluginTest {
         PrintStream pse = new PrintStream(errStream) {
             @Override
             public PrintStream append(CharSequence csq) {
-                //                systemErr.append(csq);
+                // systemErr.append(csq);
                 return super.append(csq);
             }
 
             @Override
             public void print(String s) {
-                //                systemErr.print(s);
+                // systemErr.print(s);
                 super.print(s);
             }
         };
@@ -186,7 +186,9 @@ public class ExtendedPluginTest extends PluginTest {
 
     @Test
     public void testMatcher() {
-        String string = "[SeqWare Pipeline] ERROR [2012/11/01 15:53:51] | " + "MetadataWS.findObject with search string /288023 encountered error " + "Internal Server Error\nExperiment: null\nSWID: 6740";
+        String string = "[SeqWare Pipeline] ERROR [2012/11/01 15:53:51] | "
+                + "MetadataWS.findObject with search string /288023 encountered error "
+                + "Internal Server Error\nExperiment: null\nSWID: 6740";
         Matcher match = swidPattern.matcher(string);
         Assert.assertTrue(match.find());
         Assert.assertEquals("6740", match.group(1));
@@ -194,5 +196,5 @@ public class ExtendedPluginTest extends PluginTest {
         Assert.assertTrue(match.find());
         Assert.assertEquals("ERROR", match.group(0));
     }
-    
+
 }

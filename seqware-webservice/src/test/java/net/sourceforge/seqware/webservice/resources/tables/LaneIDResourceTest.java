@@ -21,7 +21,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class LaneIDResourceTest extends DatabaseResourceIDTest {
@@ -34,11 +34,9 @@ public class LaneIDResourceTest extends DatabaseResourceIDTest {
 
     @Override
     public void testPut() {
-        
+
     }
 
-    
-    
     @Override
     protected int testObject(Object o) {
         if (o instanceof Lane) {

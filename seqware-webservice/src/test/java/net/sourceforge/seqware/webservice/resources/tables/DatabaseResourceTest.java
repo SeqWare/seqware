@@ -22,7 +22,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public abstract class DatabaseResourceTest extends AbstractResourceTest {
@@ -49,29 +49,28 @@ public abstract class DatabaseResourceTest extends AbstractResourceTest {
         }
     }
 
-    
-//    /**
-//     * Test of post method, of class WorkflowResource.
-//     */
-//    @Override
-//    public void testPost() {
-//        System.out.println(getRelativeURI() + " POST");
-//        Representation rep = null;
-//        try {
-//            StringRepresentation myString = new StringRepresentation("Test test test");
-//            rep = resource.post(myString);
-//            String result = rep.getText();
-//            rep.exhaust();
-//            rep.release();
-//            Assert.assertTrue(result.contains("Test test test"));
-//        } catch (Exception e) {
-//            Assert.fail(e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
+    // /**
+    // * Test of post method, of class WorkflowResource.
+    // */
+    // @Override
+    // public void testPost() {
+    // System.out.println(getRelativeURI() + " POST");
+    // Representation rep = null;
+    // try {
+    // StringRepresentation myString = new StringRepresentation("Test test test");
+    // rep = resource.post(myString);
+    // String result = rep.getText();
+    // rep.exhaust();
+    // rep.release();
+    // Assert.assertTrue(result.contains("Test test test"));
+    // } catch (Exception e) {
+    // Assert.fail(e.getMessage());
+    // e.printStackTrace();
+    // }
+    // }
 
     @Override
-        public void testPost() {
+    public void testPost() {
         System.out.println(getRelativeURI() + " POST");
         Representation rep = null;
         try {
@@ -84,8 +83,7 @@ public abstract class DatabaseResourceTest extends AbstractResourceTest {
             Assert.assertEquals("Method Not Allowed", e.getMessage());
         }
     }
-    
-    
+
     @Override
     public void testPut() {
         System.out.println(getRelativeURI() + " PUT");

@@ -3,13 +3,14 @@
  */
 package net.sourceforge.seqware.queryengine.webservice.controller;
 
-
 import org.restlet.Component;
 import org.restlet.data.Protocol;
 
 /**
- * <p>SeqWareWebServiceMain class.</p>
- *
+ * <p>
+ * SeqWareWebServiceMain class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -20,14 +21,14 @@ public class SeqWareWebServiceMain {
     private SeqWareWebServiceMain() throws Exception {
         // Create a new Component.
         component = new Component();
-//        JndiDatasourceCreator.create();
+        // JndiDatasourceCreator.create();
         // Add a new HTTP server listening on port 8181.
-//            String port = EnvUtil.getProperty("port");
-//            if (port != null && !"".equals(port)) {
-//                component.getServers().add(Protocol.HTTP, Integer.parseInt(port));
-//            } else {
+        // String port = EnvUtil.getProperty("port");
+        // if (port != null && !"".equals(port)) {
+        // component.getServers().add(Protocol.HTTP, Integer.parseInt(port));
+        // } else {
         component.getServers().add(Protocol.HTTP, 8183);
-//            }
+        // }
         component.getClients().add(Protocol.WAR);
         component.getClients().add(Protocol.FILE);
         component.getClients().add(Protocol.CLAP);
@@ -39,9 +40,12 @@ public class SeqWareWebServiceMain {
     }
 
     /**
-     * <p>stop.</p>
-     *
-     * @throws java.lang.Exception if any.
+     * <p>
+     * stop.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
      */
     public static void stop() throws Exception {
         component.stop();
@@ -51,9 +55,12 @@ public class SeqWareWebServiceMain {
     }
 
     /**
-     * <p>main.</p>
-     *
-     * @param args an array of {@link java.lang.String} objects.
+     * <p>
+     * main.
+     * </p>
+     * 
+     * @param args
+     *            an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         try {

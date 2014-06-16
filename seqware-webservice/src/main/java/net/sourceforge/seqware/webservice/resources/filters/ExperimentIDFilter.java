@@ -32,26 +32,30 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
- * <p>ExperimentIDFilter class.</p>
- *
+ * <p>
+ * ExperimentIDFilter class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class ExperimentIDFilter extends BasicResource {
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
-        //String path = getRequest().getResourceRef().getPath();getAttribute();
+        // String path = getRequest().getResourceRef().getPath();getAttribute();
         Collection<Experiment> experiments = null;
         Map<String, Object> requestAttributes = getRequestAttributes();
         if (requestAttributes.containsKey("studyId")) {
             Object val = requestAttributes.get("studyId");
             if (val != null) {
                 StudyService ss = BeanFactory.getStudyServiceBean();
-                Study s = (Study)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
+                Study s = (Study) testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
                 experiments = (SortedSet<Experiment>) testIfNull(s.getExperiments());
             }
         } else {

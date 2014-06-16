@@ -37,24 +37,31 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>FileResource class.</p>
- *
+ * <p>
+ * FileResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class FileResource extends DatabaseResource {
 
     /**
-     * <p>Constructor for FileResource.</p>
+     * <p>
+     * Constructor for FileResource.
+     * </p>
      */
     public FileResource() {
         super("file");
     }
 
     /**
-     * <p>getXml.</p>
-     *
-     * @throws java.io.IOException if any.
+     * <p>
+     * getXml.
+     * </p>
+     * 
+     * @throws java.io.IOException
+     *             if any.
      */
     @Get
     public void getXml() throws IOException {
@@ -92,9 +99,12 @@ public class FileResource extends DatabaseResource {
     }
 
     /**
-     * <p>postJaxb.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
      */
     @Post("xml")
     public void postJaxb(Representation entity) {
@@ -120,7 +130,7 @@ public class FileResource extends DatabaseResource {
                     Log.info("Could not be found: " + p.getOwner());
                 }
             }
-            //persist p
+            // persist p
             FileService fileService = BeanFactory.getFileServiceBean();
             fileService.insert(registration, p);
             File file = (File) testIfNull(fileService.findByPath(p.getFilePath()));
@@ -137,10 +147,10 @@ public class FileResource extends DatabaseResource {
             e.printStackTrace();
             getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST, e);
         }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//            getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
-//        }
+        // catch (Exception e) {
+        // e.printStackTrace();
+        // getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
+        // }
 
     }
 }
