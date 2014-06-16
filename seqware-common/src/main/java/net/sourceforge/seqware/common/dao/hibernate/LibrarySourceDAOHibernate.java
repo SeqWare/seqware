@@ -13,75 +13,81 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * <p>LibrarySourceDAOHibernate class.</p>
- *
+ * <p>
+ * LibrarySourceDAOHibernate class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements LibrarySourceDAO {
 
-  /**
-   * <p>Constructor for LibrarySourceDAOHibernate.</p>
-   */
-  public LibrarySourceDAOHibernate() {
-    super();
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<LibrarySource> list(Registration registration) {
-    if (registration == null) { return(null); }
-    return (list());
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public LibrarySource findByID(Integer id) {
-    String query = "from LibrarySource as l where l.librarySourceId = ?";
-    LibrarySource obj = null;
-    Object[] parameters = {id};
-    List list = this.getHibernateTemplate().find(query, parameters);
-    if (list.size() > 0) {
-      obj = (LibrarySource) list.get(0);
+    /**
+     * <p>
+     * Constructor for LibrarySourceDAOHibernate.
+     * </p>
+     */
+    public LibrarySourceDAOHibernate() {
+        super();
     }
-    return obj;
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public LibrarySource updateDetached(LibrarySource librarySource) {
-    LibrarySource dbObject = findByID(librarySource.getLibrarySourceId());
-    try {
-      BeanUtilsBean beanUtils = new NullBeanUtils();
-      beanUtils.copyProperties(dbObject, librarySource);
-      return (LibrarySource) this.getHibernateTemplate().merge(dbObject);
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<LibrarySource> list(Registration registration) {
+        if (registration == null) {
+            return (null);
+        }
+        return (list());
     }
-    return null;
-  }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public List<LibrarySource> list() {
-    ArrayList<LibrarySource> objects = new ArrayList<>();
-
-    List expmts = this.getHibernateTemplate().find("from LibrarySource as ls order by ls.librarySourceId asc" // desc
-            );
-
-    for (Object object : expmts) {
-      objects.add((LibrarySource) object);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public LibrarySource findByID(Integer id) {
+        String query = "from LibrarySource as l where l.librarySourceId = ?";
+        LibrarySource obj = null;
+        Object[] parameters = { id };
+        List list = this.getHibernateTemplate().find(query, parameters);
+        if (list.size() > 0) {
+            obj = (LibrarySource) list.get(0);
+        }
+        return obj;
     }
-    return objects;
-  }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public LibrarySource updateDetached(LibrarySource librarySource) {
+        LibrarySource dbObject = findByID(librarySource.getLibrarySourceId());
+        try {
+            BeanUtilsBean beanUtils = new NullBeanUtils();
+            beanUtils.copyProperties(dbObject, librarySource);
+            return (LibrarySource) this.getHibernateTemplate().merge(dbObject);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<LibrarySource> list() {
+        ArrayList<LibrarySource> objects = new ArrayList<>();
+
+        List expmts = this.getHibernateTemplate().find("from LibrarySource as ls order by ls.librarySourceId asc" // desc
+        );
+
+        for (Object object : expmts) {
+            objects.add((LibrarySource) object);
+        }
+        return objects;
+    }
 }

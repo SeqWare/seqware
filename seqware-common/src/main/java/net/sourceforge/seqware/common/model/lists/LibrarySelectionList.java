@@ -21,25 +21,31 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.LibrarySelection;
 
 /**
- * <p>LibrarySelectionList class.</p>
- *
+ * <p>
+ * LibrarySelectionList class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class LibrarySelectionList{
+public class LibrarySelectionList {
 
     protected List<LibrarySelection> tList;
 
     /**
-     * <p>Constructor for LibrarySelectionList.</p>
+     * <p>
+     * Constructor for LibrarySelectionList.
+     * </p>
      */
     public LibrarySelectionList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<LibrarySelection> getList() {
@@ -47,18 +53,24 @@ public class LibrarySelectionList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<LibrarySelection> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.LibrarySelection} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.LibrarySelection} object.
      */
     public void add(LibrarySelection ex) {
         tList.add(ex);

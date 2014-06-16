@@ -30,12 +30,13 @@ import org.junit.Test;
 
 /**
  * Build and install a bundle, used by both the User tutorial and the Developer tutorial
+ * 
  * @author dyuen
  */
 public class UserPhase5 {
-    
+
     public static final String WORKFLOW = "Workflow";
-    
+
     @Test
     public void testListAvailableWorkflowsAndTheirParameters() throws IOException {
         PluginRunnerET pit = new PluginRunnerET();
@@ -46,21 +47,22 @@ public class UserPhase5 {
         Log.info("SeqWare version detected as: " + SEQWARE_VERSION);
 
         // for all tests, we're going to need to create and install our basic archetypes
-        String[] archetypes = {"java-workflow"};
+        String[] archetypes = { "java-workflow" };
         PluginRunnerET.buildAndInstallArchetypes(archetypes, SEQWARE_VERSION, false, false);
 
-        //list workflows and ensure that the workflow is installed
+        // list workflows and ensure that the workflow is installed
         List<Integer> accessions = new ArrayList<>();
         accessions.addAll(PluginRunnerET.getInstalledWorkflows().values());
         Assert.assertTrue("one accession expected", accessions.size() == 1);
         AccessionMap.accessionMap.put(WORKFLOW, accessions.get(0).toString());
         File exportINIFile = exportINI(pit, accessions);
-        
+
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to launch with wait on host: " + localhost);
         // launch, slightly unlike the tutorial, I'm going to wait to ensure that we have results to export in the next phase
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + exportINIFile.getAbsolutePath() + " --workflow-accession " + accessions.get(0)
-                + " --parent-accessions " + AccessionMap.accessionMap.get(UserPhase4.FILE) + " --wait --host " + localhost;
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files "
+                + exportINIFile.getAbsolutePath() + " --workflow-accession " + accessions.get(0) + " --parent-accessions "
+                + AccessionMap.accessionMap.get(UserPhase4.FILE) + " --wait --host " + localhost;
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
     }

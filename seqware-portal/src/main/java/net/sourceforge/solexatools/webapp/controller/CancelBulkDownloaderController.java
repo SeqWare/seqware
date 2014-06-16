@@ -10,41 +10,45 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
- * <p>CancelBulkDownloaderController class.</p>
- *
+ * <p>
+ * CancelBulkDownloaderController class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class CancelBulkDownloaderController extends BaseCommandController {
-    
-	/**
-	 * <p>Constructor for CancelBulkDownloaderController.</p>
-	 */
-	public CancelBulkDownloaderController() {
-		super();
-		setSupportedMethods(new String[] {METHOD_GET});
-	}
 
-	/** {@inheritDoc}
+    /**
+     * <p>
+     * Constructor for CancelBulkDownloaderController.
+     * </p>
+     */
+    public CancelBulkDownloaderController() {
+        super();
+        setSupportedMethods(new String[] { METHOD_GET });
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
-												 HttpServletResponse response)
-		throws Exception {
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
 
-		request.getSession(false).removeAttribute("bulkDownloadFiles");
-		request.getSession(false).removeAttribute("analysisBulkDownloadFiles");
-		request.getSession(false).removeAttribute("selectedIds");
-		request.getSession(false).removeAttribute("selectedNodes");
-		request.getSession(false).removeAttribute("analysisSelectedNodes");//analisysSelectedNodes
-		
-//		request.getSession(false).removeAttribute("rootStudyId");
-//		request.getSession(false).removeAttribute("objectId");		
-		return null;
-	}
+        request.getSession(false).removeAttribute("bulkDownloadFiles");
+        request.getSession(false).removeAttribute("analysisBulkDownloadFiles");
+        request.getSession(false).removeAttribute("selectedIds");
+        request.getSession(false).removeAttribute("selectedNodes");
+        request.getSession(false).removeAttribute("analysisSelectedNodes");// analisysSelectedNodes
+
+        // request.getSession(false).removeAttribute("rootStudyId");
+        // request.getSession(false).removeAttribute("objectId");
+        return null;
+    }
 }

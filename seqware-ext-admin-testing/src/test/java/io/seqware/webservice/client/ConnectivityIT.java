@@ -28,25 +28,26 @@ import org.junit.Test;
 
 /**
  * Tests for the admin web service
+ * 
  * @author dyuen
  */
 public class ConnectivityIT {
-    
+
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
-    
+
     @Test
-    public void testOrganismConnectivity(){
+    public void testOrganismConnectivity() {
 
-      // some testing for workflow_runs
-      SeqWareWebserviceClient client = new SeqWareWebserviceClient("organism");
-      ClientResponse response = client.findRange_XML(ClientResponse.class, "1", "5");
-      GenericType<List<Organism>> genericType = new GenericType<List<Organism>>() {
-      };
-      List<Organism> data = response.getEntity(genericType);
-      Assert.assertTrue("no organisms found", data.size() > 0);
+        // some testing for workflow_runs
+        SeqWareWebserviceClient client = new SeqWareWebserviceClient("organism");
+        ClientResponse response = client.findRange_XML(ClientResponse.class, "1", "5");
+        GenericType<List<Organism>> genericType = new GenericType<List<Organism>>() {
+        };
+        List<Organism> data = response.getEntity(genericType);
+        Assert.assertTrue("no organisms found", data.size() > 0);
 
-   }
+    }
 }

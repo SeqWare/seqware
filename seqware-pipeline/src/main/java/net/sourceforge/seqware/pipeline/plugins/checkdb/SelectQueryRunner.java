@@ -21,17 +21,17 @@ import net.sourceforge.seqware.common.metadata.MetadataDB;
 import org.apache.commons.dbutils.ResultSetHandler;
 
 /**
- * A class that allows plugin writers to only do select queries
- * without any risk of leaving open connections or other unfriendliness
+ * A class that allows plugin writers to only do select queries without any risk of leaving open connections or other unfriendliness
+ * 
  * @author dyuen
  */
 public final class SelectQueryRunner {
     private final MetadataDB mdb;
-    
-    protected SelectQueryRunner(MetadataDB mdb){
+
+    protected SelectQueryRunner(MetadataDB mdb) {
         this.mdb = mdb;
     }
-    
+
     public final <T> T executeQuery(String s, ResultSetHandler<T> h) throws SQLException {
         return this.mdb.executeQuery(s, h);
     }

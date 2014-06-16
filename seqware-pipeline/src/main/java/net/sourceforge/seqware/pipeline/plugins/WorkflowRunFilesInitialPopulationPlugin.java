@@ -30,9 +30,10 @@ import org.apache.commons.lang.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * <p>This plugin does the initial population of workflow run files in order to
- * track input files</p>
- *
+ * <p>
+ * This plugin does the initial population of workflow run files in order to track input files
+ * </p>
+ * 
  * @author dyuen ProviderFor(PluginInterface.class)
  * @version $Id: $Id
  */
@@ -42,7 +43,9 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
     private ReturnValue ret = new ReturnValue();
 
     /**
-     * <p>Constructor for HelloWorld.</p>
+     * <p>
+     * Constructor for HelloWorld.
+     * </p>
      */
     public WorkflowRunFilesInitialPopulationPlugin() {
         super();
@@ -52,11 +55,14 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setConfig(java.util.Map)
      */
     /**
      * {@inheritDoc}
+     * 
      * @param config
      */
     @Override
@@ -66,11 +72,14 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
          */
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setParams(java.util.List)
      */
     /**
      * {@inheritDoc}
+     * 
      * @param params
      */
     @Override
@@ -78,25 +87,31 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         this.params = params.toArray(new String[0]);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setMetadata(net.sourceforge.seqware.pipeline.metadata.Metadata)
      */
     /**
      * {@inheritDoc}
+     * 
      * @param metadata
      */
     @Override
     public void setMetadata(Metadata metadata) {
-        //println("Setting Metadata: " + metadata);
+        // println("Setting Metadata: " + metadata);
         this.metadata = metadata;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#get_syntax()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public String get_syntax() {
@@ -110,12 +125,15 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         return ("");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#parse_parameters()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue parse_parameters() {
@@ -129,24 +147,30 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue init() {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_test() {
@@ -154,12 +178,15 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_run() {
@@ -167,41 +194,42 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         MetadataDB mdb = null;
         try {
             String query = new StringBuilder()
-            .append("select w.sw_accession, w.workflow_run_id, w.status, f.* FROM workflow_run w LEFT OUTER JOIN workflow_run_input_files f ")
-            .append("ON w.workflow_run_id = f.workflow_run_id WHERE (status = 'completed' OR status= 'failed') AND ")
-            .append("f.workflow_run_id IS NULL ORDER BY w.sw_accession;").toString();
+                    .append("select w.sw_accession, w.workflow_run_id, w.status, f.* FROM workflow_run w LEFT OUTER JOIN workflow_run_input_files f ")
+                    .append("ON w.workflow_run_id = f.workflow_run_id WHERE (status = 'completed' OR status= 'failed') AND ")
+                    .append("f.workflow_run_id IS NULL ORDER BY w.sw_accession;").toString();
 
             Log.info("Executing query: " + query);
             mdb = DBAccess.get();
-            
-            List<int[]> ids = mdb.executeQuery(query, new ResultSetHandler<List<int[]>>(){
-              @Override
-              public List<int[]> handle(ResultSet rs) throws SQLException {
-                List<int[]> ids = new ArrayList<>();
-                while(rs.next()){
-                  ids.add(new int[]{rs.getInt("sw_accession"), rs.getInt("workflow_run_id")});
-                }
-                return ids;
-              }
-            });
-            
-            mdb.getDb().setAutoCommit(false);
-            PreparedStatement prepareStatement = mdb.getDb().prepareStatement("INSERT INTO workflow_run_input_files (workflow_run_id, file_id) VALUES(?,?)");
-            for (int[] i : ids){
-              int workflowSWID = i[0];
-              int workflowRunID = i[1];
-              Log.stdout("Working on workflow_run " + workflowSWID);
 
-              // populate input files
-              List<Integer> listOfFiles = this.getListOfFiles(workflowSWID);
-              Log.stdout("Found " + listOfFiles.size() + " input files for workflow_run " + workflowSWID);
-              // insert into new workflow_run_input_files table
-              for (Integer fSWID : listOfFiles) {
-                  Integer file_id = this.metadata.getFile(fSWID).getFileId();
-                  prepareStatement.setInt(1, workflowRunID);
-                  prepareStatement.setInt(2, file_id);
-                  prepareStatement.executeUpdate();
-              }
+            List<int[]> ids = mdb.executeQuery(query, new ResultSetHandler<List<int[]>>() {
+                @Override
+                public List<int[]> handle(ResultSet rs) throws SQLException {
+                    List<int[]> ids = new ArrayList<>();
+                    while (rs.next()) {
+                        ids.add(new int[] { rs.getInt("sw_accession"), rs.getInt("workflow_run_id") });
+                    }
+                    return ids;
+                }
+            });
+
+            mdb.getDb().setAutoCommit(false);
+            PreparedStatement prepareStatement = mdb.getDb().prepareStatement(
+                    "INSERT INTO workflow_run_input_files (workflow_run_id, file_id) VALUES(?,?)");
+            for (int[] i : ids) {
+                int workflowSWID = i[0];
+                int workflowRunID = i[1];
+                Log.stdout("Working on workflow_run " + workflowSWID);
+
+                // populate input files
+                List<Integer> listOfFiles = this.getListOfFiles(workflowSWID);
+                Log.stdout("Found " + listOfFiles.size() + " input files for workflow_run " + workflowSWID);
+                // insert into new workflow_run_input_files table
+                for (Integer fSWID : listOfFiles) {
+                    Integer file_id = this.metadata.getFile(fSWID).getFileId();
+                    prepareStatement.setInt(1, workflowRunID);
+                    prepareStatement.setInt(2, file_id);
+                    prepareStatement.executeUpdate();
+                }
             }
             Log.stdout("Success!");
             mdb.getDb().commit();
@@ -221,11 +249,10 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
     }
 
     /**
-     * Given a workflowRunAcc returns a list of file paths that were used in
-     * that run using effectively, the workflow run reporter.
-     *
+     * Given a workflowRunAcc returns a list of file paths that were used in that run using effectively, the workflow run reporter.
+     * 
      * Hopefully, this is the last we'll use this approach!
-     *
+     * 
      * @param workflowRunAcc
      * @param filesToRun
      * @return
@@ -233,11 +260,11 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
     private List<Integer> getListOfFiles(int workflowRunAcc) {
         Map<String, String> map = generateWorkflowRunMap(workflowRunAcc);
         List<Integer> ranOnList = new ArrayList<>();
-        if (map.isEmpty()){
+        if (map.isEmpty()) {
             return ranOnList;
         }
         String ranOnString = map.get("Immediate Input File SWIDs");
-        if (ranOnString == null){
+        if (ranOnString == null) {
             return ranOnList;
         }
         String[] ranOnArr = ranOnString.split(",");
@@ -254,7 +281,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
 
     /**
      * Report an actual launch of a workflow for testing purpose
-     *
+     * 
      * @return false iff we don't actually want to launch
      */
     protected boolean reportLaunch() {
@@ -264,7 +291,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
     private Map<String, String> generateWorkflowRunMap(int workflowRunAcc) {
         String report = metadata.getWorkflowRunReport(workflowRunAcc);
         Map<String, String> map = new TreeMap<>();
-        if (report == null){
+        if (report == null) {
             return map;
         }
         String[] lines = report.split("\n");
@@ -276,13 +303,15 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         return map;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue clean_up() {
@@ -291,8 +320,10 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
     }
 
     /**
-     * <p>get_description.</p>
-     *
+     * <p>
+     * get_description.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     @Override

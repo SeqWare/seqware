@@ -24,7 +24,7 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class WorkflowRunsFilterTest extends AbstractResourceTest {
@@ -76,7 +76,8 @@ public class WorkflowRunsFilterTest extends AbstractResourceTest {
             builder.append("greeting=Testing\n");
             builder.append("# this is just a comment, the output directory is a conventions and used in many workflows to specify a relative output path\n");
             builder.append(ReservedIniKeys.OUTPUT_DIR.getKey()).append("=seqware-results\n");
-            builder.append("# the ").append(ReservedIniKeys.OUTPUT_PREFIX.getKey()).append(" is a convension and used to specify the root of the absolute output path or an S3 bucket name\n");
+            builder.append("# the ").append(ReservedIniKeys.OUTPUT_PREFIX.getKey())
+                    .append(" is a convension and used to specify the root of the absolute output path or an S3 bucket name\n");
             builder.append("# you should pick a path that is available on all custer nodes and can be written by your user\n");
             builder.append("").append(ReservedIniKeys.OUTPUT_PREFIX.getKey()).append("=./\n");
 

@@ -7,42 +7,49 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
- * <p>WorkflowParamValidator class.</p>
- *
+ * <p>
+ * WorkflowParamValidator class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowParamValidator implements Validator{
-	
-	/**
-	 * <p>Constructor for WorkflowParamValidator.</p>
-	 */
-	public WorkflowParamValidator () {
-		super();
-	}
-	
-	/** {@inheritDoc}
-     * @param clazz
-     * @return  */
-        @Override
-	public boolean supports(Class clazz) {
-		return WorkflowParam.class.equals(clazz);
-	}
+public class WorkflowParamValidator implements Validator {
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * Validates the specified Object.
+    /**
+     * <p>
+     * Constructor for WorkflowParamValidator.
+     * </p>
+     */
+    public WorkflowParamValidator() {
+        super();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @param clazz
+     * @return
+     */
+    @Override
+    public boolean supports(Class clazz) {
+        return WorkflowParam.class.equals(clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * Validates the specified Object.
+     * 
      * @param obj
      * @param errors
-	 */
-        @Override
-	public void validate(Object obj, Errors errors) {
-	//	Workflow workflow = (Workflow) obj;
-		ValidationUtils.rejectIfEmpty(errors, "type", "error.workflowParam.required.type");
-		ValidationUtils.rejectIfEmpty(errors, "key", "error.workflowParam.required.key");
-		ValidationUtils.rejectIfEmpty(errors, "displayName", "error.workflowParam.required.displayName");
-	}
+     */
+    @Override
+    public void validate(Object obj, Errors errors) {
+        // Workflow workflow = (Workflow) obj;
+        ValidationUtils.rejectIfEmpty(errors, "type", "error.workflowParam.required.type");
+        ValidationUtils.rejectIfEmpty(errors, "key", "error.workflowParam.required.key");
+        ValidationUtils.rejectIfEmpty(errors, "displayName", "error.workflowParam.required.displayName");
+    }
 
 }
-

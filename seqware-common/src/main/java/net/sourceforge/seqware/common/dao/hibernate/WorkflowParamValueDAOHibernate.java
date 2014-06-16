@@ -15,15 +15,19 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * <p>WorkflowParamValueDAOHibernate class.</p>
- *
+ * <p>
+ * WorkflowParamValueDAOHibernate class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implements WorkflowParamValueDAO {
 
     /**
-     * <p>Constructor for WorkflowParamValueDAOHibernate.</p>
+     * <p>
+     * Constructor for WorkflowParamValueDAOHibernate.
+     * </p>
      */
     public WorkflowParamValueDAOHibernate() {
         super();
@@ -54,7 +58,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
     public WorkflowParamValue findByID(Integer id) {
         String query = "from WorkflowParamValue as workflowParamValue where workflowParamValue.workflowParamValueId = ?";
         WorkflowParamValue workflowParamValue = null;
-        Object[] parameters = {id};
+        Object[] parameters = { id };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             workflowParamValue = (WorkflowParamValue) list.get(0);
@@ -101,13 +105,12 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
         Logger logger = Logger.getLogger(WorkflowParamValueDAOHibernate.class);
         if (registration == null) {
             logger.error("WorkflowParamValueDAOHibernate update: registration is null");
-        } else if (registration.isLIMSAdmin() || 
-                (workflowParamValue.givesPermission(registration) && dbObject.givesPermission(registration))) {
+        } else if (registration.isLIMSAdmin()
+                || (workflowParamValue.givesPermission(registration) && dbObject.givesPermission(registration))) {
             logger.info("Updating workflow param value object");
             update(workflowParamValue);
-        }
-        else
-             logger.error("WorkflowParamValueDAOHibernate update not authorized");
+        } else
+            logger.error("WorkflowParamValueDAOHibernate update not authorized");
     }
 
     /** {@inheritDoc} */
@@ -119,9 +122,8 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
         } else if (registration.isLIMSAdmin() || workflowParamValue.givesPermission(registration)) {
             logger.info("insert workflow param value object");
             return insert(workflowParamValue);
-        }
-        else
-             logger.error("WorkflowParamValueDAOHibernate insert not authorized");
+        } else
+            logger.error("WorkflowParamValueDAOHibernate insert not authorized");
         return null;
     }
 
@@ -135,18 +137,18 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
             logger.info("updateDetached workflow param value object");
             return updateDetached(workflowParamValue);
-        }
-        else
-             logger.error("WorkflowParamValueDAOHibernate updateDetached not authorized");
+        } else
+            logger.error("WorkflowParamValueDAOHibernate updateDetached not authorized");
         return null;
     }
-    
-        private WorkflowParamValue reattachWorkflowParamValue(WorkflowParamValue workflowParam) throws IllegalStateException, DataAccessResourceFailureException {
+
+    private WorkflowParamValue reattachWorkflowParamValue(WorkflowParamValue workflowParam) throws IllegalStateException,
+            DataAccessResourceFailureException {
         WorkflowParamValue dbObject = workflowParam;
         if (!getSession().contains(workflowParam)) {
             dbObject = findByID(workflowParam.getWorkflowParamValueId());
         }
         return dbObject;
     }
-    
+
 }

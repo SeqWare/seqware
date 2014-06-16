@@ -11,57 +11,62 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <p>WorkflowRunParamServiceImpl class.</p>
- *
+ * <p>
+ * WorkflowRunParamServiceImpl class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class WorkflowRunParamServiceImpl implements WorkflowRunParamService {
-  private WorkflowRunParamDAO workflowRunParamDAO = null;
-  private static final Log log = LogFactory.getLog(WorkflowRunParamServiceImpl.class);
+    private WorkflowRunParamDAO workflowRunParamDAO = null;
+    private static final Log log = LogFactory.getLog(WorkflowRunParamServiceImpl.class);
 
-  /**
-   * <p>Constructor for WorkflowRunParamServiceImpl.</p>
-   */
-  public WorkflowRunParamServiceImpl() {
-    super();
-  }
+    /**
+     * <p>
+     * Constructor for WorkflowRunParamServiceImpl.
+     * </p>
+     */
+    public WorkflowRunParamServiceImpl() {
+        super();
+    }
 
-  /**
-   * {@inheritDoc}
-   *
-   * Sets a private member variable with an instance of an implementation of
-   * WorkflowRunDAO. This method is called by the Spring framework at run time.
-   * @see WorkflowRunDAO
-   */
-  @Override
-  public void setWorkflowRunParamDAO(WorkflowRunParamDAO workflowRunParamDAO) {
-    this.workflowRunParamDAO = workflowRunParamDAO;
-  }
+    /**
+     * {@inheritDoc}
+     * 
+     * Sets a private member variable with an instance of an implementation of WorkflowRunDAO. This method is called by the Spring framework
+     * at run time.
+     * 
+     * @see WorkflowRunDAO
+     */
+    @Override
+    public void setWorkflowRunParamDAO(WorkflowRunParamDAO workflowRunParamDAO) {
+        this.workflowRunParamDAO = workflowRunParamDAO;
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public void insert(WorkflowRunParam workflowRunParam) {
-    workflowRunParamDAO.insert(workflowRunParam);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public void insert(WorkflowRunParam workflowRunParam) {
+        workflowRunParamDAO.insert(workflowRunParam);
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public void update(WorkflowRunParam workflowRunParam) {
-    workflowRunParamDAO.update(workflowRunParam);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public void update(WorkflowRunParam workflowRunParam) {
+        workflowRunParamDAO.update(workflowRunParam);
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public void delete(WorkflowRunParam workflowRunParam) {
-    workflowRunParamDAO.delete(workflowRunParam);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public void delete(WorkflowRunParam workflowRunParam) {
+        workflowRunParamDAO.delete(workflowRunParam);
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public WorkflowRunParam updateDetached(WorkflowRunParam workflowRunParam) {
-    return workflowRunParamDAO.updateDetached(workflowRunParam);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public WorkflowRunParam updateDetached(WorkflowRunParam workflowRunParam) {
+        return workflowRunParamDAO.updateDetached(workflowRunParam);
+    }
 
     /** {@inheritDoc} */
     @Override

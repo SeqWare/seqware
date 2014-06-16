@@ -29,13 +29,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * These tests support command-line tools found in the SeqWare User Tutorial,
- * in this case, GenericCommandRunner
- *
+ * These tests support command-line tools found in the SeqWare User Tutorial, in this case, GenericCommandRunner
+ * 
  * @author dyuen
  */
 public class GenericCommandRunnerET {
-    
+
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
@@ -52,15 +51,15 @@ public class GenericCommandRunnerET {
                 + "--  --gcr-algorithm test --gcr-command ls";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         Splitter splitter = Splitter.on(System.getProperty("line.separator")).trimResults();
-        for(String line : splitter.split(listOutput)){
-            if (line.equals("bash -lc ls")){
+        for (String line : splitter.split(listOutput)) {
+            if (line.equals("bash -lc ls")) {
                 /** success, found the command */
                 return;
             }
         }
         Assert.assertTrue("did not find command in output", false);
     }
-    
+
     @Test
     public void testGCRStdout() throws IOException {
         File createTempDir = Files.createTempDir();
@@ -72,17 +71,17 @@ public class GenericCommandRunnerET {
                 + "--  --gcr-algorithm test --gcr-command echo Hello World --gcr-stdout";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         Splitter splitter = Splitter.on(System.getProperty("line.separator")).trimResults();
-        for(String line : splitter.split(listOutput)){
-            if (line.equals("Hello World")){
+        for (String line : splitter.split(listOutput)) {
+            if (line.equals("Hello World")) {
                 /** success, found the expected output */
                 return;
             }
         }
-        
+
         Assert.assertTrue("did not find expected output in output", false);
-        
+
     }
-     
+
     @Test
     public void testGCRStderr() throws IOException {
         File createTempDir = Files.createTempDir();
@@ -94,18 +93,15 @@ public class GenericCommandRunnerET {
                 + "--  --gcr-algorithm test --gcr-command ls /home/abcdef --gcr-stderr";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.PROGRAMFAILED, createTempDir);
         Splitter splitter = Splitter.on(System.getProperty("line.separator")).trimResults();
-        for(String line : splitter.split(listOutput)){
-            if (line.contains("cannot access")){
+        for (String line : splitter.split(listOutput)) {
+            if (line.contains("cannot access")) {
                 /** success, found the expected error output */
                 return;
             }
         }
-        
+
         Assert.assertTrue("did not find expected error in output", false);
-        
+
     }
 
-   
-    
-    
 }

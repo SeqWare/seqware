@@ -15,71 +15,77 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
- * <p>FileSetupController class.</p>
- *
+ * <p>
+ * FileSetupController class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class FileSetupController extends BaseCommandController {
 
-	private FileService fileService;
+    private FileService fileService;
 
-	/**
-	 * <p>Getter for the field <code>fileService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
-	 */
-	public FileService getFileService() {
-		return fileService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>fileService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+     */
+    public FileService getFileService() {
+        return fileService;
+    }
 
-	/**
-	 * <p>Setter for the field <code>fileService</code>.</p>
-	 *
-	 * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
-	 */
-	public void setFileService(FileService fileService) {
-		this.fileService = fileService;
-	}
-	
-	/** {@inheritDoc}
+    /**
+     * <p>
+     * Setter for the field <code>fileService</code>.
+     * </p>
+     * 
+     * @param fileService
+     *            a {@link net.sourceforge.seqware.common.business.FileService} object.
+     */
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		ModelAndView modelAndView = null;
-		HashMap <String,String> model = new HashMap<>();
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
 
-		File file = figureOutFile(request);
+        ModelAndView modelAndView = null;
+        HashMap<String, String> model = new HashMap<>();
 
-		if (file != null) {
-			request.setAttribute(getCommandName(), file);
-			model.put("strategy", "update");
-			modelAndView = new ModelAndView("File", model);
-		} 
+        File file = figureOutFile(request);
 
-		return modelAndView;
-	}
-	
-	private File figureOutFile(HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		File file = null;
+        if (file != null) {
+            request.setAttribute(getCommandName(), file);
+            model.put("strategy", "update");
+            modelAndView = new ModelAndView("File", model);
+        }
 
-		String id = (String)request.getParameter("fileID");
-		if (id != null) {
-			file	= fileService.findByID(Integer.parseInt(id));
-			session.setAttribute("file", file);
-		}
+        return modelAndView;
+    }
 
-		return file;
-	}
+    private File figureOutFile(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        File file = null;
 
+        String id = (String) request.getParameter("fileID");
+        if (id != null) {
+            file = fileService.findByID(Integer.parseInt(id));
+            session.setAttribute("file", file);
+        }
+
+        return file;
+    }
 
 }

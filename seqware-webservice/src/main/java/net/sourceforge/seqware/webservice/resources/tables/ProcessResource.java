@@ -38,29 +38,38 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>ProcessResource class.</p>
- *
+ * <p>
+ * ProcessResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class ProcessResource extends DatabaseResource {
 
     /**
-     * <p>Constructor for ProcessResource.</p>
+     * <p>
+     * Constructor for ProcessResource.
+     * </p>
      */
     public ProcessResource() {
         super("processing");
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public Representation post(Representation entity) {
         return super.post(entity);
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -102,9 +111,12 @@ public class ProcessResource extends DatabaseResource {
     }
 
     /**
-     * <p>postJaxb.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
      */
     @Post("xml")
     public void postJaxb(Representation entity) {
@@ -123,7 +135,7 @@ public class ProcessResource extends DatabaseResource {
             } else {
                 p.setOwner(registration);
             }
-            //persist p
+            // persist p
             ProcessingService ps = BeanFactory.getProcessingServiceBean();
             Integer id = ps.insert(registration, p);
             Processing newProcessing = (Processing) testIfNull(ps.findBySWAccession(id));

@@ -23,13 +23,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * This runs all the tests needed to test the User Tutorials. The test suite
- * actually enforces order for us.
- *
+ * This runs all the tests needed to test the User Tutorials. The test suite actually enforces order for us.
+ * 
  * @author dyuen
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class , CLIUserPhase4.class , CLIUserPhase5.class, CLIUserPhase6.class})
+@Suite.SuiteClasses(value = { CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class, CLIUserPhase4.class, CLIUserPhase5.class,
+        CLIUserPhase6.class })
 public class CLIUserTutorialSuiteET extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {

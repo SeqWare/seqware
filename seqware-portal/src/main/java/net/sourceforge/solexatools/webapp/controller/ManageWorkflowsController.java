@@ -13,60 +13,69 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
- * <p>ManageWorkflowsController class.</p>
- *
+ * <p>
+ * ManageWorkflowsController class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
-public class ManageWorkflowsController  extends BaseCommandController {
+public class ManageWorkflowsController extends BaseCommandController {
 
-	public WorkflowService workflowService;
-	
-	/**
-	 * <p>Constructor for ManageWorkflowsController.</p>
-	 */
-	public ManageWorkflowsController() {
-		super();
-		setSupportedMethods(new String[] {METHOD_GET});
-	}
+    public WorkflowService workflowService;
 
-	/** {@inheritDoc}
+    /**
+     * <p>
+     * Constructor for ManageWorkflowsController.
+     * </p>
+     */
+    public ManageWorkflowsController() {
+        super();
+        setSupportedMethods(new String[] { METHOD_GET });
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
-												 HttpServletResponse response)
-		throws Exception {
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
 
-		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
+        ModelAndView modelAndView = null;
+        HashMap<String, Object> model = new HashMap<>();
 
-		model.put("workflowList", getWorkflowService().list(registration));
+        model.put("workflowList", getWorkflowService().list(registration));
 
-		modelAndView = new ModelAndView("ManageWorkflows", model);
-		
-		return modelAndView;
-	}
+        modelAndView = new ModelAndView("ManageWorkflows", model);
 
-	/**
-	 * <p>Getter for the field <code>workflowService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
-	 */
-	public WorkflowService getWorkflowService() {
-		return workflowService;
-	}
+        return modelAndView;
+    }
 
-	/**
-	 * <p>Setter for the field <code>workflowService</code>.</p>
-	 *
-	 * @param workflowService a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
-	 */
-	public void setWorkflowService(WorkflowService workflowService) {
-		this.workflowService = workflowService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>workflowService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+     */
+    public WorkflowService getWorkflowService() {
+        return workflowService;
+    }
+
+    /**
+     * <p>
+     * Setter for the field <code>workflowService</code>.
+     * </p>
+     * 
+     * @param workflowService
+     *            a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+     */
+    public void setWorkflowService(WorkflowService workflowService) {
+        this.workflowService = workflowService;
+    }
 }

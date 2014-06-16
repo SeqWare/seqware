@@ -22,7 +22,7 @@ import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.tutorial.UserPhase1;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class CLIUserPhase1 extends UserPhase1 {
@@ -41,8 +41,11 @@ public class CLIUserPhase1 extends UserPhase1 {
 
     @Override
     protected String runStudyCreation() throws IOException {
-        String output = ITUtility.runSeqwareCLI("  create study --title 'New Test Study' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4", ReturnValue.SUCCESS, null);
+        String output = ITUtility
+                .runSeqwareCLI(
+                        "  create study --title 'New Test Study' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4",
+                        ReturnValue.SUCCESS, null);
         return output;
     }
-    
+
 }

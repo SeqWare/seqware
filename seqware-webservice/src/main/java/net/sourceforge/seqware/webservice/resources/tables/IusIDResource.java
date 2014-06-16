@@ -40,8 +40,10 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>IusIDResource class.</p>
- *
+ * <p>
+ * IusIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -50,7 +52,9 @@ public class IusIDResource extends DatabaseIDResource {
     private Logger logger;
 
     /**
-     * <p>Constructor for IusIDResource.</p>
+     * <p>
+     * Constructor for IusIDResource.
+     * </p>
      */
     public IusIDResource() {
         super("iusId");
@@ -58,7 +62,9 @@ public class IusIDResource extends DatabaseIDResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -70,22 +76,25 @@ public class IusIDResource extends DatabaseIDResource {
 
         IUS dto = copier.hibernate2dto(IUS.class, ius);
 
-		if(fields.contains("attributes")) {
-			Set<IUSAttribute> ias = ius.getIusAttributes();
-			if(ias!=null && !ias.isEmpty()) {
-				Set<IUSAttribute> newias = new TreeSet<>();
-				for(IUSAttribute ia: ias) {
-					newias.add(copier.hibernate2dto(IUSAttribute.class,ia));
-				}
-				dto.setIusAttributes(newias);
-			}
-		}
+        if (fields.contains("attributes")) {
+            Set<IUSAttribute> ias = ius.getIusAttributes();
+            if (ias != null && !ias.isEmpty()) {
+                Set<IUSAttribute> newias = new TreeSet<>();
+                for (IUSAttribute ia : ias) {
+                    newias.add(copier.hibernate2dto(IUSAttribute.class, ia));
+                }
+                dto.setIusAttributes(newias);
+            }
+        }
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public Representation put(Representation entity) {
         authenticate();
@@ -106,13 +115,13 @@ public class IusIDResource extends DatabaseIDResource {
             IUSService fs = BeanFactory.getIUSServiceBean();
             IUS ius = (IUS) testIfNull(fs.findByID(newIUS.getIusId()));
             ius.givesPermission(registration);
-            //simple types
+            // simple types
             String name = newIUS.getName();
             String desc = newIUS.getDescription();
             String tags = newIUS.getTag();
             Boolean skip = newIUS.getSkip();
 
-            //foreign keys
+            // foreign keys
             Sample sample = newIUS.getSample();
             Registration owner = newIUS.getOwner();
 
@@ -128,10 +137,8 @@ public class IusIDResource extends DatabaseIDResource {
                 Sample newSample = ss.findByID(sample.getSampleId());
                 if (newSample != null && newSample.givesPermission(registration)) {
                     ius.setSample(newSample);
-                }
-                else if (newSample==null)
-                {
-                    Log.info("Could not be found "+sample);
+                } else if (newSample == null) {
+                    Log.info("Could not be found " + sample);
                 }
             }
 
@@ -147,7 +154,7 @@ public class IusIDResource extends DatabaseIDResource {
                 ius.setOwner(registration);
             }
             if (newAttributes != null) {
-                //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
                 this.mergeAttributes(ius.getIusAttributes(), newAttributes, ius);
             }
 

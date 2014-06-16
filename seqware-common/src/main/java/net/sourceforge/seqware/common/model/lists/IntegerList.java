@@ -21,12 +21,15 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * <p>List of integers.</p>
+ * <p>
+ * List of integers.
+ * </p>
  * 
- * Silly wrapper class, seriously? 
- * http://howtodoinjava.com/2013/07/30/solved-javax-xml-bind-jaxbexception-class-java-util-arraylist-nor-any-of-its-super-class-is-known-to-this-context/
+ * Silly wrapper class, seriously?
+ * http://howtodoinjava.com/2013/07/30/solved-javax-xml-bind-jaxbexception-class-java-util-arraylist-nor-any-
+ * of-its-super-class-is-known-to-this-context/
  * 
- *
+ * 
  * @author dyuen
  * @version $Id: $Id
  */
@@ -36,15 +39,19 @@ public class IntegerList {
     protected List<Integer> tList;
 
     /**
-     * <p>Constructor for FileList.</p>
+     * <p>
+     * Constructor for FileList.
+     * </p>
      */
     public IntegerList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<Integer> getList() {
@@ -52,18 +59,24 @@ public class IntegerList {
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<Integer> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.File} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
     public void add(Integer ex) {
         tList.add(ex);

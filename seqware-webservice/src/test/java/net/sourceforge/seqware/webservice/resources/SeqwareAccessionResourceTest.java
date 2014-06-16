@@ -20,7 +20,7 @@ import junit.framework.Assert;
 import org.restlet.representation.Representation;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class SeqwareAccessionResourceTest extends AbstractResourceTest {
@@ -42,7 +42,7 @@ public class SeqwareAccessionResourceTest extends AbstractResourceTest {
             rep.release();
             Assert.fail("No Puts on " + getRelativeURI());
         } catch (Exception e) {
-            System.out.println("SeqwareAccessionResourceTest.put "+ e.getMessage());
+            System.out.println("SeqwareAccessionResourceTest.put " + e.getMessage());
         } finally {
             resource.release();
         }
@@ -80,7 +80,7 @@ public class SeqwareAccessionResourceTest extends AbstractResourceTest {
         }
     }
 
-//    @Override
+    // @Override
     @Override
     public void testDelete() {
         System.out.println(getRelativeURI() + " DELETE");

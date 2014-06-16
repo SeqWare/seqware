@@ -1,4 +1,4 @@
-package	net.sourceforge.solexatools.webapp.controller;
+package net.sourceforge.solexatools.webapp.controller;
 
 import java.util.HashMap;
 
@@ -16,105 +16,112 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
- * RegistrationSetupController
- * This is invoked upon entry to Registration.jsp or RegistrationUpdate.jsp
- *
+ * RegistrationSetupController This is invoked upon entry to Registration.jsp or RegistrationUpdate.jsp
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class SignUpController extends BaseCommandController {
-	
-  private RegistrationService registrationService = null;
-  
-  /**
-   * <p>Constructor for SignUpController.</p>
-   */
-  public SignUpController() {
-		super();
-		setSupportedMethods(new String[] {METHOD_GET});
-	}
 
-	/** {@inheritDoc}
+    private RegistrationService registrationService = null;
+
+    /**
+     * <p>
+     * Constructor for SignUpController.
+     * </p>
+     */
+    public SignUpController() {
+        super();
+        setSupportedMethods(new String[] { METHOD_GET });
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-												 HttpServletResponse response)
-		throws Exception {
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		Registration registration = Security.getRegistration(request);
-		ModelAndView modelAndView;
-		HashMap<String,Object>  model     = new HashMap<>();
+        Registration registration = Security.getRegistration(request);
+        ModelAndView modelAndView;
+        HashMap<String, Object> model = new HashMap<>();
 
-		Debug.put(": request.requestURI = " + request.getRequestURI());
-		
-		// used to specify the authentication module if not using the default
-		ServletContext context = this.getServletContext();
-//		String authStr = context.getInitParameter("authenticator");
-		 
-		String isInvitationCode = context.getInitParameter("invitation.code");
+        Debug.put(": request.requestURI = " + request.getRequestURI());
 
-		/* If they are already logged-in, use the request URI to figure out what to do  */
-		if (registration != null && request.getRequestURI().contains("Edit")) {
-			/* assume they are updating their info */
-			RegistrationDTO		dto	= registrationService.findByEmailAddress(registration.getEmailAddress());
-			dto.setDomainObject(registration);
-			model.put("strategy", "update");
-			request.setAttribute(getCommandName(), dto);
-			modelAndView = new ModelAndView("RegistrationUpdate", model);
-		} else {
-			/* else they are creating a new registration */
-			RegistrationDTO registationDTO = null;
-			
-			/* if invitation code id on then find registration*/			
-			if("true".equals(isInvitationCode)){
-				String email = request.getParameter("email");
-				String code = request.getParameter("code");
-			//	Log.info("Sign Up email = " + email);
-				if(email != null && !"".equals(email)){
-					registationDTO = getRegistrationService().findByEmailAddress(email);
-					// check invitation code with link
-					if(code == null || registationDTO == null || !code.equals(registationDTO.getInvitationCode())){
-						registationDTO = new RegistrationDTO();
-					}
-		//			request.getSession(false).setAttribute("registration", registationDTO);
-				}
-			}
-			if("false".equals(isInvitationCode)){
-				String email = request.getParameter("email");
-				if(email != null && !"".equals(email)){
-					registationDTO = getRegistrationService().findByEmailAddress(email);
-				}
-			}
-			
-			// if reg not found then creating a new registration 
-			if(registationDTO == null){
-				registationDTO = new RegistrationDTO();
-			}
+        // used to specify the authentication module if not using the default
+        ServletContext context = this.getServletContext();
+        // String authStr = context.getInitParameter("authenticator");
 
-			request.setAttribute(getCommandName(), registationDTO);			
-			model.put("strategy", "submit");
-			model.put("isInvitationCode", isInvitationCode);
-			modelAndView = new ModelAndView("SignUp", model);
-		}
-		return modelAndView;
-	}
+        String isInvitationCode = context.getInitParameter("invitation.code");
 
-  /**
-   * <p>Getter for the field <code>registrationService</code>.</p>
-   *
-   * @return a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
-   */
-  public RegistrationService getRegistrationService() {
-    return registrationService;
-  }
+        /* If they are already logged-in, use the request URI to figure out what to do */
+        if (registration != null && request.getRequestURI().contains("Edit")) {
+            /* assume they are updating their info */
+            RegistrationDTO dto = registrationService.findByEmailAddress(registration.getEmailAddress());
+            dto.setDomainObject(registration);
+            model.put("strategy", "update");
+            request.setAttribute(getCommandName(), dto);
+            modelAndView = new ModelAndView("RegistrationUpdate", model);
+        } else {
+            /* else they are creating a new registration */
+            RegistrationDTO registationDTO = null;
 
-  /**
-   * <p>Setter for the field <code>registrationService</code>.</p>
-   *
-   * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
-   */
-  public void setRegistrationService(RegistrationService registrationService) {
-    this.registrationService = registrationService;
-  }
+            /* if invitation code id on then find registration */
+            if ("true".equals(isInvitationCode)) {
+                String email = request.getParameter("email");
+                String code = request.getParameter("code");
+                // Log.info("Sign Up email = " + email);
+                if (email != null && !"".equals(email)) {
+                    registationDTO = getRegistrationService().findByEmailAddress(email);
+                    // check invitation code with link
+                    if (code == null || registationDTO == null || !code.equals(registationDTO.getInvitationCode())) {
+                        registationDTO = new RegistrationDTO();
+                    }
+                    // request.getSession(false).setAttribute("registration", registationDTO);
+                }
+            }
+            if ("false".equals(isInvitationCode)) {
+                String email = request.getParameter("email");
+                if (email != null && !"".equals(email)) {
+                    registationDTO = getRegistrationService().findByEmailAddress(email);
+                }
+            }
+
+            // if reg not found then creating a new registration
+            if (registationDTO == null) {
+                registationDTO = new RegistrationDTO();
+            }
+
+            request.setAttribute(getCommandName(), registationDTO);
+            model.put("strategy", "submit");
+            model.put("isInvitationCode", isInvitationCode);
+            modelAndView = new ModelAndView("SignUp", model);
+        }
+        return modelAndView;
+    }
+
+    /**
+     * <p>
+     * Getter for the field <code>registrationService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+     */
+    public RegistrationService getRegistrationService() {
+        return registrationService;
+    }
+
+    /**
+     * <p>
+     * Setter for the field <code>registrationService</code>.
+     * </p>
+     * 
+     * @param registrationService
+     *            a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+     */
+    public void setRegistrationService(RegistrationService registrationService) {
+        this.registrationService = registrationService;
+    }
 }

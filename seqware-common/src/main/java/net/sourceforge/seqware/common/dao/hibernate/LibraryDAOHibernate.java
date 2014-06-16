@@ -25,72 +25,72 @@ import com.google.common.collect.Maps;
  */
 public class LibraryDAOHibernate implements LibraryDAO {
 
-  @Autowired
-  private SessionFactory sessionFactory;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-  private Session currentSession() {
-    return sessionFactory.getCurrentSession();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public Sample findBySWAccession(Long swAccession) {
-    String queryStringCase = "from Sample as s where s.swAccession = :swAccession";
-    Query query = currentSession().createQuery(queryStringCase);
-    query.setLong("swAccession", swAccession);
-
-    return (Sample) query.uniqueResult();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public List<Sample> getLibraries(String attributeName, String attributeValue) {
-    String queryString = "select distinct sample from Sample as sample inner join sample.sampleAttributes as attribute where attribute.tag like :attributeName and attribute.value like :attributeValue";
-    Query query = currentSession().createQuery(queryString);
-    query.setString("attributeName", attributeName);
-    query.setString("attributeValue", attributeValue);
-
-    @SuppressWarnings("unchecked")
-    List<Sample> records = query.list();
-
-    Map<Sample, Sample> tmp = Maps.newHashMap();
-    for (Sample sample : records) {
-      findChildLibraries(tmp, sample);
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
 
-    List<Sample> result = Lists.newArrayList(tmp.values());
+    /** {@inheritDoc} */
+    @Override
+    public Sample findBySWAccession(Long swAccession) {
+        String queryStringCase = "from Sample as s where s.swAccession = :swAccession";
+        Query query = currentSession().createQuery(queryStringCase);
+        query.setLong("swAccession", swAccession);
 
-    return result;
-  }
-
-  private void findChildLibraries(Map<Sample, Sample> libraries, Sample node) {
-    if (isLibrary(node)) {
-      libraries.put(node, node);
+        return (Sample) query.uniqueResult();
     }
-    for (Sample sample : node.getChildren()) {
-      findChildLibraries(libraries, sample);
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Sample> getLibraries(String attributeName, String attributeValue) {
+        String queryString = "select distinct sample from Sample as sample inner join sample.sampleAttributes as attribute where attribute.tag like :attributeName and attribute.value like :attributeValue";
+        Query query = currentSession().createQuery(queryString);
+        query.setString("attributeName", attributeName);
+        query.setString("attributeValue", attributeValue);
+
+        @SuppressWarnings("unchecked")
+        List<Sample> records = query.list();
+
+        Map<Sample, Sample> tmp = Maps.newHashMap();
+        for (Sample sample : records) {
+            findChildLibraries(tmp, sample);
+        }
+
+        List<Sample> result = Lists.newArrayList(tmp.values());
+
+        return result;
     }
-  }
 
-  private boolean isLibrary(Sample sample) {
-    for (SampleAttribute sampleAttribute : sample.getSampleAttributes()) {
-      if (sampleAttribute.getTag().equals(Sample.GEO_REACTION_ID_ATTR_TAG)) {
-        return true;
-      }
+    private void findChildLibraries(Map<Sample, Sample> libraries, Sample node) {
+        if (isLibrary(node)) {
+            libraries.put(node, node);
+        }
+        for (Sample sample : node.getChildren()) {
+            findChildLibraries(libraries, sample);
+        }
     }
-    return false;
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public List<Sample> getLibraries() {
-    String queryStringCase = "select distinct sample from Sample as sample inner join fetch sample.sampleAttributes as attribute where attribute.tag like 'geo_reaction_id'";
+    private boolean isLibrary(Sample sample) {
+        for (SampleAttribute sampleAttribute : sample.getSampleAttributes()) {
+            if (sampleAttribute.getTag().equals(Sample.GEO_REACTION_ID_ATTR_TAG)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-    Query query = currentSession().createQuery(queryStringCase);
+    /** {@inheritDoc} */
+    @Override
+    public List<Sample> getLibraries() {
+        String queryStringCase = "select distinct sample from Sample as sample inner join fetch sample.sampleAttributes as attribute where attribute.tag like 'geo_reaction_id'";
 
-    @SuppressWarnings("unchecked")
-    List<Sample> records = query.list();
+        Query query = currentSession().createQuery(queryStringCase);
 
-    return records;
-  }
+        @SuppressWarnings("unchecked")
+        List<Sample> records = query.list();
+
+        return records;
+    }
 }

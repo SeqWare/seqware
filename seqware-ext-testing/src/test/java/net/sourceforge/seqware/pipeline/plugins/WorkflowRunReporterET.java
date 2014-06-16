@@ -29,25 +29,24 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * These tests support command-line tools found in the SeqWare User Tutorial,
- * in this case, SequencerRunReporter
- *
+ * These tests support command-line tools found in the SeqWare User Tutorial, in this case, SequencerRunReporter
+ * 
  * @author dyuen
  */
 public class WorkflowRunReporterET {
-    
+
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
-    
+
     @Test
     public void runWorkflowRunReporter() throws IOException {
         File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
         File testOutFile = new File(createTempDir, randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
-                + "-- --output-filename " + testOutFile.getName() + " --workflow-run-accession 6698"; 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
+                + testOutFile.getName() + " --workflow-run-accession 6698";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         Log.info(listOutput);
         File retrievedFile = new File(createTempDir, testOutFile.getName());
@@ -55,7 +54,7 @@ public class WorkflowRunReporterET {
         List<String> readLines = FileUtils.readLines(testOutFile);
         Assert.assertTrue("incorrect number of lines", readLines.size() == 2);
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
-        Assert.assertTrue("incorrect output checksum" + checksumCRC32 , checksumCRC32 == 255117433L);
+        Assert.assertTrue("incorrect output checksum" + checksumCRC32, checksumCRC32 == 255117433L);
     }
 
     @Test
@@ -63,25 +62,25 @@ public class WorkflowRunReporterET {
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
                 + "-- --boogly parameters --workflow-run-accession 6698";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
-        
+
     }
-    
+
     @Test
     public void runInvalidIO() throws IOException {
         File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
-                + "-- --output-filename " + createTempDir.getAbsolutePath() + " --workflow-run-accession 6698";  
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
+                + createTempDir.getAbsolutePath() + " --workflow-run-accession 6698";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.FILENOTREADABLE, null);
     }
-    
+
     @Test
     public void runFirstDate() throws IOException {
         File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
         File testOutFile = new File(createTempDir, randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
-                + "-- --output-filename " + testOutFile.getName() + " --workflow-accession 2861 --time-period 2012-01-01 "; 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
+                + testOutFile.getName() + " --workflow-accession 2861 --time-period 2012-01-01 ";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         Log.info(listOutput);
         File retrievedFile = new File(createTempDir, testOutFile.getName());
@@ -91,14 +90,14 @@ public class WorkflowRunReporterET {
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
         Assert.assertTrue("incorrect output checksum " + checksumCRC32, checksumCRC32 == 2196935470L);
     }
-    
+
     @Test
     public void runBothDates() throws IOException {
         File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
         File testOutFile = new File(createTempDir, randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
-                + "-- --output-filename " + testOutFile.getName() + " --workflow-accession 2861 --time-period 2012-01-01:2012-01-15 "; 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
+                + testOutFile.getName() + " --workflow-accession 2861 --time-period 2012-01-01:2012-01-15 ";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         Log.info(listOutput);
         File retrievedFile = new File(createTempDir, testOutFile.getName());
@@ -108,15 +107,15 @@ public class WorkflowRunReporterET {
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
         Assert.assertTrue("incorrect output checksum " + checksumCRC32, checksumCRC32 == 4072825873L);
     }
-    
+
     @Test
     public void noWorkflowSpecified() throws IOException {
         // SEQWARE-1674
         File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
         File testOutFile = new File(createTempDir, randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
-                + "-- --output-filename " + testOutFile.getName() + " --time-period 2012-01-01:2012-01-15 "; 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
+                + testOutFile.getName() + " --time-period 2012-01-01:2012-01-15 ";
         ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, createTempDir);
     }
 
@@ -125,8 +124,8 @@ public class WorkflowRunReporterET {
         File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
         File testOutFile = new File(createTempDir, randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
-                + "-- --output-filename " + testOutFile.getName() + " --workflow-accession 10000 "; 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
+                + testOutFile.getName() + " --workflow-accession 10000 ";
         ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, createTempDir);
     }
 
@@ -135,28 +134,28 @@ public class WorkflowRunReporterET {
         File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
         File testOutFile = new File(createTempDir, randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
-                + "-- --output-filename " + testOutFile.getName() + " --workflow-run-accession 10000 "; 
-        ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, createTempDir);
-    }
-
-    @Test 
-    public void invalidDateRange() throws IOException{
-        File createTempDir = Files.createTempDir();
-        String randomString = UUID.randomUUID().toString();
-        File testOutFile = new File(createTempDir, randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
-                + "-- --output-filename " + testOutFile.getName() + " --workflow-run-accession 2861 --time-period 2013:01:01 "; 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
+                + testOutFile.getName() + " --workflow-run-accession 10000 ";
         ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, createTempDir);
     }
 
     @Test
-    public void emptyDateRange() throws IOException{
+    public void invalidDateRange() throws IOException {
         File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
         File testOutFile = new File(createTempDir, randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
-                + "-- --output-filename " + testOutFile.getName() + " --workflow-accession 2861 --time-period 2014-01-01"; 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
+                + testOutFile.getName() + " --workflow-run-accession 2861 --time-period 2013:01:01 ";
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, createTempDir);
+    }
+
+    @Test
+    public void emptyDateRange() throws IOException {
+        File createTempDir = Files.createTempDir();
+        String randomString = UUID.randomUUID().toString();
+        File testOutFile = new File(createTempDir, randomString + ".txt");
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
+                + testOutFile.getName() + " --workflow-accession 2861 --time-period 2014-01-01";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         File retrievedFile = new File(createTempDir, testOutFile.getName());
         Assert.assertTrue("output file does not exist", retrievedFile.exists());
@@ -167,8 +166,8 @@ public class WorkflowRunReporterET {
     }
 
     @Test
-    public void stdOutAndstdErrSameTime() throws IOException{
-        //SEQWARE-1527
+    public void stdOutAndstdErrSameTime() throws IOException {
+        // SEQWARE-1527
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter "
                 + "-- --wr-stderr --wr-stdout --workflow-run-accession 6698";
         ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, null);

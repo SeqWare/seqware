@@ -21,7 +21,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class WorkflowIDResourceTest extends DatabaseResourceIDTest {
@@ -32,12 +32,12 @@ public class WorkflowIDResourceTest extends DatabaseResourceIDTest {
         o = new Workflow();
     }
 
-     @Override
+    @Override
     protected int testObject(Object o) {
         if (o instanceof Workflow) {
             Workflow e = (Workflow) o;
             if (e.getSwAccession() != Integer.parseInt(id)) {
-                System.err.println("Actual ID: "+e.getSwAccession() + " and expected ID: " +Integer.parseInt(id));
+                System.err.println("Actual ID: " + e.getSwAccession() + " and expected ID: " + Integer.parseInt(id));
                 return ReturnValue.INVALIDFILE;
             }
 
@@ -50,9 +50,7 @@ public class WorkflowIDResourceTest extends DatabaseResourceIDTest {
 
     @Override
     public void testPut() {
-        
+
     }
-     
-     
-     
+
 }

@@ -17,15 +17,19 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 /**
- * <p>WorkflowParamValueIDResource class.</p>
- *
+ * <p>
+ * WorkflowParamValueIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowParamValueIDResource extends DatabaseIDResource {
 
     /**
-     * <p>Constructor for WorkflowParamValueIDResource.</p>
+     * <p>
+     * Constructor for WorkflowParamValueIDResource.
+     * </p>
      */
     public WorkflowParamValueIDResource() {
         super("workflowParamValueId");

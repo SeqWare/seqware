@@ -28,7 +28,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
@@ -74,7 +74,8 @@ public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
         try {
             String iniFile = "one=true\ntwo=my_shoe\nthree=yippee";
 
-            ClientResource childResource = resource.getChild("?parent-accessions=4765,4707&link-workflow-run-to-parents=4765,4707&wait=false");
+            ClientResource childResource = resource
+                    .getChild("?parent-accessions=4765,4707&link-workflow-run-to-parents=4765,4707&wait=false");
             rep = childResource.post(iniFile, MediaType.TEXT_ALL);
             String text = rep.getText();
             System.out.println(text);
@@ -110,7 +111,8 @@ public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
         try {
             String iniFile = "one=true\ntwo=my_shoe\nthree=yippee";
 
-            ClientResource childResource = resource.getChild("?no-metadata=true&parent-accessions=4765,4707&link-workflow-run-to-parents=4765,4707&wait=false");
+            ClientResource childResource = resource
+                    .getChild("?no-metadata=true&parent-accessions=4765,4707&link-workflow-run-to-parents=4765,4707&wait=false");
             rep = childResource.post(iniFile, MediaType.TEXT_ALL);
             String text = rep.getText();
             System.out.println(text);
@@ -136,16 +138,15 @@ public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
 
         }
     }
-    
-    
+
     @Override
     public void testDelete() {
-//        super.testDelete();
+        // super.testDelete();
     }
 
     @Override
     public void testPut() {
-//        super.testPut();
+        // super.testPut();
     }
 
     @Override

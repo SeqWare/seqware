@@ -21,25 +21,31 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.StudyType;
 
 /**
- * <p>StudyTypeList class.</p>
- *
+ * <p>
+ * StudyTypeList class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class StudyTypeList{
+public class StudyTypeList {
 
     protected List<StudyType> tList;
 
     /**
-     * <p>Constructor for StudyTypeList.</p>
+     * <p>
+     * Constructor for StudyTypeList.
+     * </p>
      */
     public StudyTypeList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<StudyType> getList() {
@@ -47,18 +53,24 @@ public class StudyTypeList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<StudyType> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.StudyType} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
     public void add(StudyType ex) {
         tList.add(ex);

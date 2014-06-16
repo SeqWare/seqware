@@ -25,8 +25,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * <p>MD5GeneratorTest class.</p>
- *
+ * <p>
+ * MD5GeneratorTest class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  * @since 0.13.3
@@ -34,48 +36,62 @@ import static org.junit.Assert.*;
 public class MD5GeneratorTest {
 
     /**
-     * <p>Constructor for MD5GeneratorTest.</p>
+     * <p>
+     * Constructor for MD5GeneratorTest.
+     * </p>
      */
     public MD5GeneratorTest() {
     }
 
     /**
-     * <p>setUpClass.</p>
-     *
-     * @throws java.lang.Exception if any.
+     * <p>
+     * setUpClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
      */
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
 
     /**
-     * <p>tearDownClass.</p>
-     *
-     * @throws java.lang.Exception if any.
+     * <p>
+     * tearDownClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
      */
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
 
     /**
-     * <p>setUp.</p>
+     * <p>
+     * setUp.
+     * </p>
      */
     @Before
     public void setUp() {
     }
 
     /**
-     * <p>tearDown.</p>
+     * <p>
+     * tearDown.
+     * </p>
      */
     @After
     public void tearDown() {
     }
 
-
     /**
-     * <p>testMd5sum.</p>
-     *
-     * @throws java.lang.Exception if any.
+     * <p>
+     * testMd5sum.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
      */
     @Test
     public void testMd5sum() throws Exception {
@@ -85,9 +101,12 @@ public class MD5GeneratorTest {
     }
 
     /**
-     * <p>testMd5sum_leadingZero.</p>
-     *
-     * @throws java.lang.Exception if any.
+     * <p>
+     * testMd5sum_leadingZero.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
      */
     @Test
     public void testMd5sum_leadingZero() throws Exception {

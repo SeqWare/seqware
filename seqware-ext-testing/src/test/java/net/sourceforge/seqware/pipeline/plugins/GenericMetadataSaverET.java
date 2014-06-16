@@ -27,29 +27,27 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * These tests support command-line tools found in the SeqWare User Tutorial,
- * in this case, GenericMetadataSaver
- *
+ * These tests support command-line tools found in the SeqWare User Tutorial, in this case, GenericMetadataSaver
+ * 
  * @author dyuen
  */
 public class GenericMetadataSaverET {
-    
+
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     /**
-     * This tests saves generic metadata for a file on the local VM instead of
-     * provisioning it.
-     *
+     * This tests saves generic metadata for a file on the local VM instead of provisioning it.
+     * 
      * @throws IOException
      */
     @Test
     public void testGenericMetadataSaverOldCLI() throws IOException {
         saveGenericMetadataFileForSample("10", false);
     }
-    
+
     @Test
     public void testGenericMetadataSaverNewCLI() throws IOException {
         saveGenericMetadataFileForSample("10", true);
@@ -57,35 +55,34 @@ public class GenericMetadataSaverET {
 
     public String saveGenericMetadataFileForSample(String sampleAccession, boolean cli) throws IOException {
         File createTempDir = Files.createTempDir();
-        // create a random new file and check that the file we want to save metadata about exists 
+        // create a random new file and check that the file we want to save metadata about exists
         File inputFile = File.createTempFile("input", "out");
         final String content = "This is a funky funky test file";
         FileUtils.write(inputFile, content);
 
         Random generator = new Random();
         String random = String.valueOf(generator.nextInt());
-        String listOutput = cli ? runNewCommand(sampleAccession, inputFile, createTempDir) : runOldCommand(sampleAccession, inputFile, createTempDir);
+        String listOutput = cli ? runNewCommand(sampleAccession, inputFile, createTempDir) : runOldCommand(sampleAccession, inputFile,
+                createTempDir);
         Log.info(listOutput);
         return listOutput;
     }
 
     protected String runOldCommand(String sampleAccession, File inputFile, File createTempDir) throws IOException {
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver "
-                + " --metadata-parent-accession  "+sampleAccession
-                + " -- --gms-output-file text::text/plain::" + inputFile.getAbsolutePath()
-                + " --gms-algorithm UploadText --gms-suppress-output-file-check";
+                + " --metadata-parent-accession  "
+                + sampleAccession
+                + " -- --gms-output-file text::text/plain::"
+                + inputFile.getAbsolutePath() + " --gms-algorithm UploadText --gms-suppress-output-file-check";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         return listOutput;
     }
 
     protected String runNewCommand(String sampleAccession, File inputFile, File createTempDir) throws IOException {
-        String listCommand = " create file "
-                + " --parent-accession  " + sampleAccession
-                + " --meta-type text/plain "
-                + " --file " + inputFile.getAbsolutePath();
+        String listCommand = " create file " + " --parent-accession  " + sampleAccession + " --meta-type text/plain " + " --file "
+                + inputFile.getAbsolutePath();
         String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, createTempDir);
         return listOutput;
     }
 
-    
 }

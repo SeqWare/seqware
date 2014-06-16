@@ -21,7 +21,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class WorkflowRunIDResourceTest extends DatabaseResourceIDTest {
@@ -37,8 +37,6 @@ public class WorkflowRunIDResourceTest extends DatabaseResourceIDTest {
 
     }
 
-    
-    
     @Override
     protected int testObject(Object o) {
         if (o instanceof WorkflowRun) {

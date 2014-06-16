@@ -34,7 +34,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Lightweight wrapper for file provenance report
- *
+ * 
  * @author dyuen
  */
 @ServiceProvider(service = PluginInterface.class)
@@ -52,6 +52,7 @@ public class FileProvenanceReporter extends Plugin {
         return "Generates a tab-delimited report of all output files "
                 + "(and their relationships and metadata) from a specified study or from all studies.";
     }
+
     private File outfile = null;
     private Writer out = null;
 

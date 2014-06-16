@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import org.junit.*;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class MetadataDBTest extends MetadataWSTest {
@@ -46,11 +46,11 @@ public class MetadataDBTest extends MetadataWSTest {
     @Before
     @Override
     public void setUp() {
-        //This method needs to be called before every method because the methods 
-        //inside might close the statement after finishing
+        // This method needs to be called before every method because the methods
+        // inside might close the statement after finishing
         instance = DBAccess.get();
     }
-    
+
     @Test
     @Override
     public void testUpdate_workflow_run() {
@@ -67,10 +67,10 @@ public class MetadataDBTest extends MetadataWSTest {
         String host = "localhost";
         String workflowEngine = "test engine";
         int expResult = 0;
-        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, null, null, workflowEngine, null);
+        ReturnValue result = instance.update_workflow_run(workflowRunId, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory,
+                dax, ini, host, null, null, workflowEngine, null);
         Assert.assertEquals(expResult, result.getReturnValue());
-        testTimestamp("select update_tstmp from workflow_run "
-                + "where workflow_run_id=32;", "update_tstmp", beforeDate);
+        testTimestamp("select update_tstmp from workflow_run " + "where workflow_run_id=32;", "update_tstmp", beforeDate);
     }
 
     @Test
@@ -92,17 +92,17 @@ public class MetadataDBTest extends MetadataWSTest {
 
     @Override
     public void testGetAllSequencerRuns() {
-        
+
     }
 
     @Override
     public void testGetChildSamplesFrom() {
-        
+
     }
 
     @Override
     public void testGetExperimentsFrom() {
-        
+
     }
 
     @Override
@@ -123,19 +123,17 @@ public class MetadataDBTest extends MetadataWSTest {
 
     @Override
     public void testGetSamplesFromExperiment() {
-        
+
     }
-    
-    
-    
+
     @Override
     public void testAddWorkflow() {
     }
-        
+
     @Override
     public void testAddNovoAlignWorkflow() {
     }
-    
+
     @Test
     @Override
     public void testGetWorkflowRunsRelatedToFile_basic() {
@@ -147,29 +145,28 @@ public class MetadataDBTest extends MetadataWSTest {
     public void testGetWorkflowRunsRelatedToFile_multipleFiles() {
         /** test not supported in direct DB mode */
     }
-    
-    
+
     @Test
     @Override
     public void testGetWorkflowRunsRelatedToFile_viaIUS() {
         /** test not supported in direct DB mode */
     }
-    
+
     @Test
     @Override
     public void testGetWorkflowRunsRelatedToFile_viaLane() {
         /** test not supported in direct DB mode */
     }
-    
-    @Test 
+
+    @Test
     @Override
-    public void testUpdateWorkflowRunWithInputFiles(){
+    public void testUpdateWorkflowRunWithInputFiles() {
         /** test not supported in direct DB mode */
     }
-    
-     @Test
+
+    @Test
     @Override
     public void getDirectFilesAssociatedWithWorkflowRuns() {
-         /** test not supported in direct DB mode */
-     }
+        /** test not supported in direct DB mode */
+    }
 }

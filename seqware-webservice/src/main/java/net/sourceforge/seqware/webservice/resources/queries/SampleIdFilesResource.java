@@ -37,17 +37,22 @@ import org.restlet.Response;
 import org.w3c.dom.Document;
 
 /**
- * <p>SampleIdFilesResource class.</p>
- *
+ * <p>
+ * SampleIdFilesResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class SampleIdFilesResource extends BasicRestlet {
 
     /**
-     * <p>Constructor for SampleIdFilesResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for SampleIdFilesResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public SampleIdFilesResource(Context context) {
         super(context);
@@ -64,8 +69,8 @@ public class SampleIdFilesResource extends BasicRestlet {
         SampleService ss = BeanFactory.getSampleServiceBean();
         Sample sample = (Sample) testIfNull(ss.findBySWAccession(parseClientInt(id)));
         FindAllTheFiles fatf = new FindAllTheFiles();
-        
-        if (this.getQueryValue("requireFiles") != null){
+
+        if (this.getQueryValue("requireFiles") != null) {
             boolean requireFiles = Boolean.valueOf(this.getQueryValue("requireFiles"));
             fatf.setRequireFiles(requireFiles);
         }

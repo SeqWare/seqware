@@ -34,34 +34,38 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
- * <p>LaneIDFilter class.</p>
- *
+ * <p>
+ * LaneIDFilter class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class LaneIDFilter extends BasicResource {
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
-        //String path = getRequest().getResourceRef().getPath();getAttribute();
+        // String path = getRequest().getResourceRef().getPath();getAttribute();
         Collection<Lane> lanes = null;
         Map<String, Object> requestAttributes = getRequestAttributes();
         if (requestAttributes.containsKey("sequencerRunId")) {
             Object val = requestAttributes.get("sequencerRunId");
             if (val != null) {
                 SequencerRunService ss = BeanFactory.getSequencerRunServiceBean();
-                SequencerRun s = (SequencerRun)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
+                SequencerRun s = (SequencerRun) testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
                 lanes = (SortedSet<Lane>) testIfNull(s.getLanes());
             }
         } else if (requestAttributes.containsKey("iusId")) {
             Object val = requestAttributes.get("iusId");
             if (val != null) {
                 IUSService ss = BeanFactory.getIUSServiceBean();
-                IUS s = (IUS)testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
-                Lane lane = (Lane)testIfNull(s.getLane());
+                IUS s = (IUS) testIfNull(ss.findBySWAccession(parseClientInt(val.toString())));
+                Lane lane = (Lane) testIfNull(s.getLane());
                 lanes = new ArrayList<>();
                 lanes.add(lane);
             }

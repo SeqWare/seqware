@@ -20,40 +20,40 @@ import org.springframework.stereotype.Repository;
  */
 public class SampleSearchDAOHibernate implements SampleSearchDAO {
 
-  @Autowired
-  private SessionFactory sessionFactory;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-  private Session currentSession() {
-    return sessionFactory.getCurrentSession();
-  }
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public List<SampleSearch> list() {
-    String queryStringCase = "from SampleSearch";
+    /** {@inheritDoc} */
+    @Override
+    public List<SampleSearch> list() {
+        String queryStringCase = "from SampleSearch";
 
-    Query query = currentSession().createQuery(queryStringCase);
+        Query query = currentSession().createQuery(queryStringCase);
 
-    @SuppressWarnings("unchecked")
-    List<SampleSearch> records = query.list();
+        @SuppressWarnings("unchecked")
+        List<SampleSearch> records = query.list();
 
-    return records;
-  }
+        return records;
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public SampleSearch findById(Integer id) {
-    String queryStringCase = "from SampleSearch as s where s.sampleSearchId = :id";
-    Query query = currentSession().createQuery(queryStringCase);
-    query.setLong("id", id);
+    /** {@inheritDoc} */
+    @Override
+    public SampleSearch findById(Integer id) {
+        String queryStringCase = "from SampleSearch as s where s.sampleSearchId = :id";
+        Query query = currentSession().createQuery(queryStringCase);
+        query.setLong("id", id);
 
-    return (SampleSearch) query.uniqueResult();
-  }
+        return (SampleSearch) query.uniqueResult();
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public Integer create(SampleSearch sampleSearch) {
-    return (Integer) currentSession().save(sampleSearch);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public Integer create(SampleSearch sampleSearch) {
+        return (Integer) currentSession().save(sampleSearch);
+    }
 
 }
