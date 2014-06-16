@@ -226,7 +226,7 @@ public class S3ListFiles extends Module {
             AmazonS3 s3 = new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey));
 
             boolean first = true;
-            long allSize = 0l;
+            long allSize = 0L;
             for (Bucket bucket : s3.listBuckets()) {
                 if (first) {
                     first = false;
@@ -234,7 +234,7 @@ public class S3ListFiles extends Module {
                 }
                 System.out.print(" - " + bucket.getName());
                 ObjectListing objectListing = s3.listObjects(new ListObjectsRequest().withBucketName(bucket.getName()));
-                long totalSize = 0l;
+                long totalSize = 0L;
                 do {
                     for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
                         totalSize += objectSummary.getSize();
@@ -259,7 +259,7 @@ public class S3ListFiles extends Module {
         }
 
         // now loop across every S3 bucket
-        long allSize = 0l;
+        long allSize = 0L;
         List<String> inputs = (List<String>) options.valuesOf("s3-url");
         for (String input : inputs) {
 
@@ -314,7 +314,7 @@ public class S3ListFiles extends Module {
                     }
 
                     ObjectListing objectListing = s3.listObjects(new ListObjectsRequest().withBucketName(bucket).withPrefix(key));
-                    long totalSize = 0l;
+                    long totalSize = 0L;
                     boolean first = true;
                     do {
                         for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
