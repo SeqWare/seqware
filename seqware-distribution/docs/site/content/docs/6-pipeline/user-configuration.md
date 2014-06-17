@@ -140,9 +140,24 @@ SW_ADMIN_REST_URL=http://localhost:38080/seqware-admin-webservice
 
 ## Oozie Workflow Engine Configuration
 
-The alternative, Oozie (Hadoop) workflow engine only uses configurations in the
-users ~/.seqware/settings file.  No other configuration is required on the user
-side.
+In addition to the the user's ~/.seqware/settings file the only other configuration is that required for 
+automatic retry. Like the Pegasus workflow engine, it is possible to control the number of attempts
+that should be made before a job is considered failed in a workflow. 
+
+Edit the Oozie site XML and add and/or add to the error codes that are listed. 
+
+        <property>
+            <name>oozie.service.LiteWorkflowStoreService.user.retry.error.code.ext</name>
+            <value>SGE137</value>
+        </property>
+        <property>
+            <name>oozie.service.LiteWorkflowStoreService.user.retry.max</name>
+            <value>30</value>
+        </property>
+
+After restarting Oozie, Oozie will use the listed error codes in combination with the OOZIE_RETRY_MAX parameter to determine how many times steps will 
+be retried in case of a specific error. For example, in the above jobs that return with an SGE error code of SGE137 will automatically be retried 30 or 
+OOZIE_RETRY_MAX times, whatever is higher. 
 
 ## Pegasus Workflow Engine Configuration
 
