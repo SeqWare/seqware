@@ -31,6 +31,61 @@
 -->
 
 <module name="Checker">
+
+     <!--
+  
+      SUPPRESSION FILTERS
+      
+  -->
+  
+  <!-- Toggle Checkstyle on/off
+  
+      // @Checkstyle:off
+      ... ignored
+      // @Checkstyle:on
+  
+  -->
+  <module name="SuppressionCommentFilter">
+    <property name="offCommentFormat" value="@Checkstyle:off" />
+    <property name="onCommentFormat" value="@Checkstyle:on" />
+  </module>
+  
+  <!--  Instruct Checkstyle to ignore a specific check for a whole file
+  
+      // @Checkstyle:ignore AvoidNestedBlocks
+  
+  -->
+  <module name="SuppressWithNearbyCommentFilter">
+    <property name="commentFormat" value="@Checkstyle:ignore ([\w\|]+)"/>
+    <property name="checkFormat" value="$1"/>
+    <property name="influenceFormat" value="1000000" />
+  </module>
+  
+  <!--  Instruct Checkstyle to ignore next line
+  
+      // @Checkstyle:ignore
+      ... ignored
+      ... checked
+  
+  -->
+  <module name="SuppressWithNearbyCommentFilter">
+    <property name="commentFormat" value="@Checkstyle:ignore" />
+    <property name="influenceFormat" value="1" />
+  </module>
+
+  <!--  Instruct Checkstyle to ignore next N lines (-ve means previous lines)
+  
+      // @Checkstyle:ignoreFor 2
+      ... ignored
+      ... ignored
+      ... checked
+  
+  -->
+  <module name="SuppressWithNearbyCommentFilter">
+    <property name="commentFormat" value="@Checkstyle:ignoreFor (\d+)" />
+    <property name="influenceFormat" value="$1" />
+  </module>
+
     <!--
         If you set the basedir property below, then all reported file
         names will be relative to the specified directory. See
@@ -75,13 +130,14 @@
 
     <module name="TreeWalker">
         <property name="tabWidth" value="4"/>
+        <module name="FileContentsHolder"/>
 
 
         <!-- Checks identation.                               -->
-        <!-- Enable when edge cases are fixed                 -->
-	<!--
-	<module name="Indentation">
+        <!-- Enable when edge cases are fixed                 
+	    <module name="Indentation">
             <property name="caseIndent" value="0"/>
+            <property name="throwsIndent" value="8"/>
         </module>
 	-->
 
