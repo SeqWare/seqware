@@ -25,24 +25,52 @@ This release contains changes in order to address mainly issues for workflow/dec
 * [SEQWARE-1928] - BasicDecider: change --force-run-all to --ignore-previous-runs and fix finalCheck behaviour
 
 
+## 1.0.16 (2014-06-17)
+
+This release contains changes in order to address two main areas in addition to various usability improvements. First, the Java workflow API and the GCR have been improved in order to control of the amount of stdout and stderr that is stored in the metadb. Second, various ini issues having to do with the installation and launching of workflows have been addressed. 
+
+### Defect
+* [SEQWARE-1897] - A workflow run with missing provisioned out files completed successfully
+* [SEQWARE-1909] - Error launching workflow run when workflow has a parameter with a default blank value
+
+### Improvement
+* [SEQWARE-1884] - Expose ProvisionFiles (module) "skip-if-missing" in seqware java api
+* [SEQWARE-1901] - INI file shouldn't be required when scheduling workflows
+
+### Task
+* [SEQWARE-1758] - Buffer last 1000 lines of output in successful jobs
+* [SEQWARE-1886] - Integrate Seqware Check tool into seqware bash script
+* [SEQWARE-1892] - Add date to daemon output
+* [SEQWARE-1893] - Workflow run update fails when std out/err has special characters
+* [SEQWARE-1895] - Generic command runner out out memory error when large amount of standard error output
+* [SEQWARE-1904] - Java workflows can't have private classes
+* [SEQWARE-1911] - Can't escape = in SeqWare INI files
+* [SEQWARE-1913] - End generated scripts with a newline already
+* [SEQWARE-1915] - Expose stdout/stderr line control to Java API
+
+
+## 1.0.15 (2014-05-05)
+
+This release contained only one change in order to explicitly clean-up temporary tables in Postgres that back the file provenance report. 
+
 ## 1.0.14 (2014-04-21)
 
 This release contains mostly usability improvements. New features include the ability to target deciders by root samples and a sanity check tool that can run some basic checks to diagnose issues with SeqWare installs.
 
-## Defect
+### Defect
 * [SEQWARE-1880] - Seqware pipeline failure on sample wildcard with a large number of children
 
-## Improvement
+### Improvement
 * [SEQWARE-1871] - Seqware compression control
 
-## Task
+### Task
 * [SEQWARE-1794] - Sanity Check Tool
 * [SEQWARE-1827] - Create VirtualBox VM and update website with it
 * [SEQWARE-1864] - Expose --verbose in the CLI
 * [SEQWARE-1873] - Migrate (seqware jobs on) jenkins to CloudBindle
 * [SEQWARE-1878] - Hook up javadoc generation into mvn site-deploy
 
-## Technical task
+### Technical task
 * [SEQWARE-1798] - verify oozie availability, able to write files to hdfs, connectivity
 * [SEQWARE-1799] - go through some checks from sqwref.hpc setup 
 
