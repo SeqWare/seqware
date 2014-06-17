@@ -33,8 +33,8 @@ TOKEN=$3
 git checkout develop
 git merge release/$VERSION
 mvn versions:set -DnewVersion=$NEXT_VERSION-SNAPSHOT
-find . -name "pom.xml" -type f -exec  sed -i "s/<seqware-version>$VERSION-SNAPSHOT<\/seqware-version>/<seqware-version>$NEXT_VERSION-SNAPSHOT<\/seqware-version>/g" {} \;
+find . -name "pom.xml" -type f -exec  sed -i "s/<seqware-version>$VERSION<\/seqware-version>/<seqware-version>$NEXT_VERSION-SNAPSHOT<\/seqware-version>/g" {} \;
 git add pom.xml \*/pom.xml
 git commit -m "Iterate version numbers to $NEXT_VERSION"
 git push
-# git push origin --delete release/$VERSION
+git push origin --delete release/$VERSION
