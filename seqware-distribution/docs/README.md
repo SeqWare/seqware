@@ -46,32 +46,6 @@ To run checks for broken links:
 
 Modify the index.html so the logo points to /seqware/ and the css points to /seqware/style.css
 
-### Update Web Documentation 
-
-Push to github (gh-pages):
-
-    mvn site-deploy
-
-In order to publish to seqware.github.com, checkout our current hotfix and publish our site:
-
-    git checkout hotfix/0.13.6.7
-    cd seqware-distribution 
-    mvn site-deploy
-
-Then you would look at the site at: http://seqware.github.io
-
-In order to publish to our unstable docs supporting the development of 1.0.0, checkout from develop and publish:
-
-    git checkout develop 
-    cd seqware-distribution 
-    mvn site-deploy
-
-If doing this in succession, you will see a git checkout error.  Until we fix the maven pom, you will need to:
-
-    rm -Rf target/scmpublish-checkout/
-
-Then you would look at the site at: http://seqware.github.io/unstable.seqware.github.com/
-
 ### Update Metadb Schema
 
 The seqware.github.com repo acts as the only store of the generated schema documentation. 
@@ -143,5 +117,3 @@ Ran into this message:
 Which requires this fix:
 
     sudo gem uninstall yajl-ruby --version 1.2.0
-
-
