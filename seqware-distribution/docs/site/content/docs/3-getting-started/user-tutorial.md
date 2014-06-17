@@ -408,6 +408,15 @@ the workflows you are interested in.  Since the report produces a simple
 tab-delimited file you can easily automate the downloading of results by
 looping over the output files.
 
+First, you need to populate the file provenance report. You may wish to add
+the following command to a cron on an interval depending on the size 
+of your database and the number of workflows that you run. 
+    
+	seqware files refresh 
+
+Then you can download the report. Note that while this example filters by
+study name, there are a large number of filters that can be used. 
+
 	seqware files report --study-name 'New Test Study'
 
 The output is a Comma-Separated Values file that contains a line for
