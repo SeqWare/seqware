@@ -246,6 +246,20 @@ public class BasicDeciderTest extends PluginTest {
         Assert.assertTrue("output 2 does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 34);
     }
     
+    @Test
+    public void testSEQWARE1918RerunMax0() {
+        String[] params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "10", "--test"};
+        launchAndCaptureOutput(params);
+        TestingDecider decider = (TestingDecider) instance;
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 47);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 36);
+        
+        params = new String[]{"--sample", "", "--wf-accession", "4773", "--meta-types", "application/bam,text/vcf-4,chemical/seq-na-fastq-gzip", "--rerun-max", "0", "--test"};
+        launchAndCaptureOutput(params);
+        Assert.assertTrue("output 2 does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 47);
+        Assert.assertTrue("output 2 does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 34);
+    }
+    
     @Test 
     public void testDecidingWithAttributes(){
          // swap out the decider
