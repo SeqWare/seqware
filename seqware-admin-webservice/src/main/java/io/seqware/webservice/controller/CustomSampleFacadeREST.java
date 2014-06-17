@@ -33,7 +33,7 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
      * @param id
      * @return 
      */
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     @PUT
     @Path("{id}/createNullHierarchy")
     @Consumes({"application/xml", "application/json"})
