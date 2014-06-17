@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/4360/SeqWare/seqware.png)](http://dx.doi.org/10.5281/zenodo.10549)
+
 ## Introduction 
 
 This README is just a quick overview of building SeqWare. See our
