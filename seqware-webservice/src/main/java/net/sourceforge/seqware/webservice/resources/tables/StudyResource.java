@@ -38,15 +38,19 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>StudyResource class.</p>
- *
+ * <p>
+ * StudyResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class StudyResource extends DatabaseResource {
 
     /**
-     * <p>Constructor for StudyResource.</p>
+     * <p>
+     * Constructor for StudyResource.
+     * </p>
      */
     public StudyResource() {
         super("study");
@@ -59,8 +63,11 @@ public class StudyResource extends DatabaseResource {
         authenticate();
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public Representation get() {
         getXML();
@@ -68,7 +75,9 @@ public class StudyResource extends DatabaseResource {
     }
 
     /**
-     * <p>getXML.</p>
+     * <p>
+     * getXML.
+     * </p>
      */
     @Get
     public void getXML() {
@@ -89,8 +98,9 @@ public class StudyResource extends DatabaseResource {
             eList.setList(new ArrayList());
 
             for (Study study : studies) {
-                CollectionPropertyName<Study>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(Study.class, new String[]{"existingType"});
-                Study dto = copier.hibernate2dto(Study.class, study, new Class[]{StudyType.class}, createCollectionPropertyNames);
+                CollectionPropertyName<Study>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(
+                        Study.class, new String[] { "existingType" });
+                Study dto = copier.hibernate2dto(Study.class, study, new Class[] { StudyType.class }, createCollectionPropertyNames);
                 eList.add(dto);
             }
             Document line = XmlTools.marshalToDocument(jaxbTool, eList);
@@ -100,10 +110,14 @@ public class StudyResource extends DatabaseResource {
     }
 
     /**
-     * <p>postJaxb.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
-     * @throws org.restlet.resource.ResourceException if any.
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
+     * @throws org.restlet.resource.ResourceException
+     *             if any.
      */
     @Post("xml")
     public void postJaxb(Representation entity) throws ResourceException {
@@ -121,7 +135,7 @@ public class StudyResource extends DatabaseResource {
                 p.setOwner(registration);
             }
 
-            //persist object
+            // persist object
             StudyService service = BeanFactory.getStudyServiceBean();
             Integer swAccession = service.insert(registration, p);
             Study study = (Study) testIfNull(service.findBySWAccession(swAccession));

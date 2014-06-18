@@ -21,25 +21,31 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.LibrarySource;
 
 /**
- * <p>LibrarySourceList class.</p>
- *
+ * <p>
+ * LibrarySourceList class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class LibrarySourceList{
+public class LibrarySourceList {
 
     protected List<LibrarySource> tList;
 
     /**
-     * <p>Constructor for LibrarySourceList.</p>
+     * <p>
+     * Constructor for LibrarySourceList.
+     * </p>
      */
     public LibrarySourceList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<LibrarySource> getList() {
@@ -47,18 +53,24 @@ public class LibrarySourceList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<LibrarySource> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.LibrarySource} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.LibrarySource} object.
      */
     public void add(LibrarySource ex) {
         tList.add(ex);

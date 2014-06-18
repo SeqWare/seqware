@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class FileChildWorkflowRunsResourceTest extends DatabaseResourceTest {
@@ -26,7 +26,4 @@ public class FileChildWorkflowRunsResourceTest extends DatabaseResourceTest {
         super("/reports/fileworkflowruns");
     }
 
-
-    
-    
 }

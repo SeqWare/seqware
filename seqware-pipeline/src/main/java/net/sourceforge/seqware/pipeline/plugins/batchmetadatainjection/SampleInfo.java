@@ -26,31 +26,31 @@ import net.sourceforge.seqware.common.model.SampleAttribute;
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class SampleInfo implements Comparable<SampleInfo> {
 
     private String blank = "";
-    //sample required
+    // sample required
     private String projectCode = blank;
     private String individualNumber = blank;
     private String name = blank;
     private String tissueType = blank;
     private String tissueOrigin = blank;
-//    private String templateType = blank;
+    // private String templateType = blank;
     private String librarySizeCode;
     private String organismId;
     private String librarySourceTemplateType;
     private String parentSample = blank;
-    //required: determine pairedEnd from libraryType
+    // required: determine pairedEnd from libraryType
     private String libraryType = blank;
     private Boolean pairedEnd;
-    //sample optional
+    // sample optional
     private String tissuePreparation = blank;
     private String targetedResequencing = blank;
     private String sampleDescription;
-    //ius    
+    // ius
     private String barcode = blank;
     private String iusName;
     private String iusDescription;
@@ -76,7 +76,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of iusSkip
-     *
+     * 
      * @return the value of iusSkip
      */
     public boolean getIusSkip() {
@@ -85,8 +85,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of iusSkip
-     *
-     * @param iusSkip new value of iusSkip
+     * 
+     * @param iusSkip
+     *            new value of iusSkip
      */
     public void setIusSkip(boolean iusSkip) {
         this.iusSkip = iusSkip;
@@ -94,7 +95,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of iusDescription
-     *
+     * 
      * @return the value of iusDescription
      */
     public String getIusDescription() {
@@ -103,8 +104,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of iusDescription
-     *
-     * @param iusDescription new value of iusDescription
+     * 
+     * @param iusDescription
+     *            new value of iusDescription
      */
     public void setIusDescription(String iusDescription) {
         this.iusDescription = iusDescription;
@@ -112,7 +114,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of iusName
-     *
+     * 
      * @return the value of iusName
      */
     public String getIusName() {
@@ -121,8 +123,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of iusName
-     *
-     * @param iusName new value of iusName
+     * 
+     * @param iusName
+     *            new value of iusName
      */
     public void setIusName(String iusName) {
         this.iusName = iusName;
@@ -130,7 +133,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of sampleDescription
-     *
+     * 
      * @return the value of sampleDescription
      */
     public String getSampleDescription() {
@@ -139,8 +142,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of sampleDescription
-     *
-     * @param sampleDescription new value of sampleDescription
+     * 
+     * @param sampleDescription
+     *            new value of sampleDescription
      */
     public void setSampleDescription(String sampleDescription) {
         this.sampleDescription = sampleDescription;
@@ -148,7 +152,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of librarySourceTemplateType
-     *
+     * 
      * @return the value of librarySourceTemplateType
      */
     public String getLibrarySourceTemplateType() {
@@ -156,10 +160,10 @@ public class SampleInfo implements Comparable<SampleInfo> {
     }
 
     /**
-     * Set the value of librarySourceTemplateType sets the
-     * 'geo_library_source_template_type' attribute.
-     *
-     * @param librarySourceTemplateType new value of librarySourceTemplateType
+     * Set the value of librarySourceTemplateType sets the 'geo_library_source_template_type' attribute.
+     * 
+     * @param librarySourceTemplateType
+     *            new value of librarySourceTemplateType
      */
     public void setLibrarySourceTemplateType(String librarySourceTemplateType) {
         setSampleAttribute("geo_library_source_template_type", librarySourceTemplateType);
@@ -171,9 +175,8 @@ public class SampleInfo implements Comparable<SampleInfo> {
     }
 
     /**
-     * Sets the library size code and sets the 'geo_library_size_code'
-     * attribute.
-     *
+     * Sets the library size code and sets the 'geo_library_size_code' attribute.
+     * 
      * @param librarySizeCode
      */
     public void setLibrarySizeCode(String librarySizeCode) {
@@ -187,7 +190,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Sets the library type and sets the 'geo_library_type' attribute .
-     *
+     * 
      * @param libraryType
      */
     public void setLibraryType(String libraryType) {
@@ -201,7 +204,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Sets the organismId, as long as the organism id is over 0.
-     *
+     * 
      * @param organismId
      */
     public void setOrganismId(int organismId) {
@@ -220,7 +223,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of iusAttributes
-     *
+     * 
      * @return the value of iusAttributes
      */
     public Set<TagValueUnit> getIusAttributes() {
@@ -231,27 +234,28 @@ public class SampleInfo implements Comparable<SampleInfo> {
     }
 
     /**
-     * Adds a new ius attribute if the tag does not exist for this ius, or
-     * changes the value of an existing ius attribute.
-     *
-     * @param tag the key of the attribute
-     * @param value the value of the attribute
+     * Adds a new ius attribute if the tag does not exist for this ius, or changes the value of an existing ius attribute.
+     * 
+     * @param tag
+     *            the key of the attribute
+     * @param value
+     *            the value of the attribute
      */
     public void setIusAttribute(String tag, String value) {
         TagValueUnit sa = null;
-        //look for the existing attribute
+        // look for the existing attribute
         for (TagValueUnit s : getIusAttributes()) {
             if (s.getTag().equals(tag.trim())) {
                 sa = s;
                 break;
             }
         }
-        //if we are unsetting the sample attribute, remove it from the list.
+        // if we are unsetting the sample attribute, remove it from the list.
         if (value == null && sa != null) {
             getIusAttributes().remove(sa);
             return;
         }
-        //create a new one if it doesn't exist
+        // create a new one if it doesn't exist
         if (sa == null) {
             sa = new TagValueUnit();
             getIusAttributes().add(sa);
@@ -262,8 +266,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of iusAttributes
-     *
-     * @param iusAttributes new value of iusAttributes
+     * 
+     * @param iusAttributes
+     *            new value of iusAttributes
      */
     public void setIusAttributes(Set<TagValueUnit> iusAttributes) {
         this.iusAttributes = iusAttributes;
@@ -271,7 +276,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of sampleAttributes
-     *
+     * 
      * @return the value of sampleAttributes
      */
     public Set<TagValueUnit> getSampleAttributes() {
@@ -282,22 +287,23 @@ public class SampleInfo implements Comparable<SampleInfo> {
     }
 
     /**
-     * Adds a new sample attribute if the tag does not exist for this sample, or
-     * changes the value of an existing sample attribute.
-     *
-     * @param tag the key of the attribute
-     * @param value the value of the attribute
+     * Adds a new sample attribute if the tag does not exist for this sample, or changes the value of an existing sample attribute.
+     * 
+     * @param tag
+     *            the key of the attribute
+     * @param value
+     *            the value of the attribute
      */
     public void setSampleAttribute(String tag, String value) {
         TagValueUnit sa = null;
-        //look for the existing attribute
+        // look for the existing attribute
         for (TagValueUnit s : getSampleAttributes()) {
             if (s.getTag().equals(tag.trim())) {
                 sa = s;
                 break;
             }
         }
-        //if we are unsetting the sample attribute, remove it from the list.
+        // if we are unsetting the sample attribute, remove it from the list.
         if (value == null) {
             if (sa != null) {
                 getSampleAttributes().remove(sa);
@@ -314,8 +320,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of sampleAttributes
-     *
-     * @param sampleAttributes new value of sampleAttributes
+     * 
+     * @param sampleAttributes
+     *            new value of sampleAttributes
      */
     public void setSampleAttributes(Set<TagValueUnit> sampleAttributes) {
         this.sampleAttributes = sampleAttributes;
@@ -326,24 +333,24 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of parentSample
-     *
+     * 
      * @return the value of parentSample
      */
     public String getParentSample() {
         return new StringBuilder().append(projectCode).append("_").append(individualNumber).toString();
     }
 
-//    /**
-//     * Set the value of parentSample
-//     *
-//     * @param parentSample new value of parentSample
-//     */
-//    public void setParentSample(String parentSample) {
-//        this.parentSample = parentSample;
-//    }
+    // /**
+    // * Set the value of parentSample
+    // *
+    // * @param parentSample new value of parentSample
+    // */
+    // public void setParentSample(String parentSample) {
+    // this.parentSample = parentSample;
+    // }
     /**
      * Get the value of barcode
-     *
+     * 
      * @return the value of barcode
      */
     public String getBarcode() {
@@ -352,8 +359,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of barcode
-     *
-     * @param barcode new value of barcode
+     * 
+     * @param barcode
+     *            new value of barcode
      */
     public void setBarcode(String barcode) {
         this.barcode = barcode;
@@ -361,7 +369,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of targetedResequencing
-     *
+     * 
      * @return the value of targetedResequencing
      */
     public String getTargetedResequencing() {
@@ -369,10 +377,10 @@ public class SampleInfo implements Comparable<SampleInfo> {
     }
 
     /**
-     * Set the value of targetedResequencing and sets the
-     * 'geo_targeted_resequencing' attribute.
-     *
-     * @param targetedResequencing new value of targetedResequencing
+     * Set the value of targetedResequencing and sets the 'geo_targeted_resequencing' attribute.
+     * 
+     * @param targetedResequencing
+     *            new value of targetedResequencing
      */
     public void setTargetedResequencing(String targetedResequencing) {
         setSampleAttribute("geo_targeted_resequencing", targetedResequencing);
@@ -381,7 +389,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of tissuePreparation
-     *
+     * 
      * @return the value of tissuePreparation
      */
     public String getTissuePreparation() {
@@ -389,10 +397,10 @@ public class SampleInfo implements Comparable<SampleInfo> {
     }
 
     /**
-     * Set the value of tissuePreparation, and sets the 'geo_tissue_preparation'
-     * attribute.
-     *
-     * @param tissuePreparation new value of tissuePreparation
+     * Set the value of tissuePreparation, and sets the 'geo_tissue_preparation' attribute.
+     * 
+     * @param tissuePreparation
+     *            new value of tissuePreparation
      */
     public void setTissuePreparation(String tissuePreparation) {
         setSampleAttribute("geo_tissue_preparation", tissuePreparation);
@@ -401,7 +409,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of tissueOrigin
-     *
+     * 
      * @return the value of tissueOrigin
      */
     public String getTissueOrigin() {
@@ -410,8 +418,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of tissueOrigin and sets the 'geo_tissue_origin' attribute.
-     *
-     * @param tissueOrigin new value of tissueOrigin
+     * 
+     * @param tissueOrigin
+     *            new value of tissueOrigin
      */
     public void setTissueOrigin(String tissueOrigin) {
         setSampleAttribute("geo_tissue_origin", tissueOrigin);
@@ -420,7 +429,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of tissueType
-     *
+     * 
      * @return the value of tissueType
      */
     public String getTissueType() {
@@ -429,8 +438,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of tissueType and sets the 'geo_tissue_type' attribute.
-     *
-     * @param tissueType new value of tissueType
+     * 
+     * @param tissueType
+     *            new value of tissueType
      */
     public void setTissueType(String tissueType) {
         setSampleAttribute("geo_tissue_type", tissueType);
@@ -439,7 +449,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Get the value of name
-     *
+     * 
      * @return the value of name
      */
     public String getName() {
@@ -448,8 +458,9 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     /**
      * Set the value of name
-     *
-     * @param name new value of name
+     * 
+     * @param name
+     *            new value of name
      */
     public void setName(String name) {
         this.name = name;
@@ -457,26 +468,13 @@ public class SampleInfo implements Comparable<SampleInfo> {
 
     @Override
     public String toString() {
-        return "SampleInfo{" + "projectCode=" + projectCode
-                + "\n\t individualNumber=" + individualNumber
-                + "\n\t name=" + name
-                + "\n\t tissueType=" + tissueType
-                + "\n\t tissueOrigin=" + tissueOrigin
-                + "\n\t librarySizeCode=" + librarySizeCode
-                + "\n\t organismId=" + organismId
-                + "\n\t librarySourceTemplateType=" + librarySourceTemplateType
-                + "\n\t parentSample=" + parentSample
-                + "\n\t libraryType=" + libraryType
-                + "\n\t pairedEnd=" + pairedEnd
-                + "\n\t tissuePreparation=" + tissuePreparation
-                + "\n\t targetedResequencing=" + targetedResequencing
-                + "\n\t sampleDescription=" + sampleDescription
-                + "\n\t barcode=" + barcode
-                + "\n\t iusName=" + iusName
-                + "\n\t iusDescription=" + iusDescription
-                + "\n\t iusSkip=" + iusSkip
-                + "\n\t sampleAttributes=" + sampleAttributes
-                + "\n\t iusAttributes=" + iusAttributes + '}';
+        return "SampleInfo{" + "projectCode=" + projectCode + "\n\t individualNumber=" + individualNumber + "\n\t name=" + name
+                + "\n\t tissueType=" + tissueType + "\n\t tissueOrigin=" + tissueOrigin + "\n\t librarySizeCode=" + librarySizeCode
+                + "\n\t organismId=" + organismId + "\n\t librarySourceTemplateType=" + librarySourceTemplateType + "\n\t parentSample="
+                + parentSample + "\n\t libraryType=" + libraryType + "\n\t pairedEnd=" + pairedEnd + "\n\t tissuePreparation="
+                + tissuePreparation + "\n\t targetedResequencing=" + targetedResequencing + "\n\t sampleDescription=" + sampleDescription
+                + "\n\t barcode=" + barcode + "\n\t iusName=" + iusName + "\n\t iusDescription=" + iusDescription + "\n\t iusSkip="
+                + iusSkip + "\n\t sampleAttributes=" + sampleAttributes + "\n\t iusAttributes=" + iusAttributes + '}';
     }
 
     public void print(Appendable writer, Metadata metadata) throws IOException {

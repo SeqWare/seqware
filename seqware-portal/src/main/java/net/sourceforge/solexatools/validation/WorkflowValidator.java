@@ -7,39 +7,48 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
- * <p>WorkflowValidator class.</p>
- *
+ * <p>
+ * WorkflowValidator class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowValidator implements Validator{
-	
-	/**
-	 * <p>Constructor for WorkflowValidator.</p>
-	 */
-	public WorkflowValidator () {
-		super();
-	}
-	
-	/** {@inheritDoc}
+public class WorkflowValidator implements Validator {
+
+    /**
+     * <p>
+     * Constructor for WorkflowValidator.
+     * </p>
+     */
+    public WorkflowValidator() {
+        super();
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @param clazz
-     * @return  */
-        @Override
-	public boolean supports(Class clazz) {
-		return Workflow.class.equals(clazz);
-	}
-	/**
-	 * {@inheritDoc}
-	 *
-	 * Validates the specified Object.
+     * @return
+     */
+    @Override
+    public boolean supports(Class clazz) {
+        return Workflow.class.equals(clazz);
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * Validates the specified Object.
+     * 
      * @param obj
      * @param errors
-	 */
-        @Override
-	public void validate(Object obj, Errors errors) {
-	//	Workflow workflow = (Workflow) obj;
-		ValidationUtils.rejectIfEmpty(errors, "name", "workflow.required.name");
-			
-	}
+     */
+    @Override
+    public void validate(Object obj, Errors errors) {
+        // Workflow workflow = (Workflow) obj;
+        ValidationUtils.rejectIfEmpty(errors, "name", "workflow.required.name");
+
+    }
 
 }

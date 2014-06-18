@@ -21,8 +21,10 @@ import java.util.List;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
 /**
- * <p>ReturnValueList class.</p>
- *
+ * <p>
+ * ReturnValueList class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -31,15 +33,19 @@ public class ReturnValueList {
     protected List<ReturnValue> tList;
 
     /**
-     * <p>Constructor for ReturnValueList.</p>
+     * <p>
+     * Constructor for ReturnValueList.
+     * </p>
      */
     public ReturnValueList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<ReturnValue> getList() {
@@ -47,18 +53,24 @@ public class ReturnValueList {
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<ReturnValue> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public void add(ReturnValue ex) {
         tList.add(ex);

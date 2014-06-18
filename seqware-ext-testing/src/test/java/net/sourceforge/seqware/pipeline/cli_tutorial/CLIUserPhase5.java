@@ -24,10 +24,10 @@ import net.sourceforge.seqware.pipeline.tutorial.UserPhase5;
 
 /**
  * Build and install a bundle, used by both the User tutorial and the Developer tutorial
+ * 
  * @author dyuen
  */
 public class CLIUserPhase5 extends UserPhase5 {
-    
 
     @Override
     protected File exportINI(PluginRunnerET pit, List<Integer> accessions) throws IOException {

@@ -28,18 +28,22 @@ import org.restlet.data.Method;
 import org.restlet.data.Status;
 
 /**
- * <p>CycleCheckResource class.</p>
- *
+ * <p>
+ * CycleCheckResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class CycleCheckResource
-        extends BasicRestlet {
+public class CycleCheckResource extends BasicRestlet {
 
     /**
-     * <p>Constructor for CycleCheckResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for CycleCheckResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public CycleCheckResource(Context context) {
         super(context);

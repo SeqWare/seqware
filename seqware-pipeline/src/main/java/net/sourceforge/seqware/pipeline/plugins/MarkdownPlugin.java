@@ -36,9 +36,10 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * <p>This plugin outputs documentation for our plugins and modules in markdown
- * format</p>
- *
+ * <p>
+ * This plugin outputs documentation for our plugins and modules in markdown format
+ * </p>
+ * 
  * @author dyuen ProviderFor(PluginInterface.class)
  * @version $Id: $Id
  */
@@ -48,7 +49,9 @@ public class MarkdownPlugin extends Plugin {
     private ReturnValue ret = new ReturnValue();
 
     /**
-     * <p>Constructor for HelloWorld.</p>
+     * <p>
+     * Constructor for HelloWorld.
+     * </p>
      */
     public MarkdownPlugin() {
         super();
@@ -58,11 +61,14 @@ public class MarkdownPlugin extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setConfig(java.util.Map)
      */
     /**
      * {@inheritDoc}
+     * 
      * @param config
      */
     @Override
@@ -72,11 +78,14 @@ public class MarkdownPlugin extends Plugin {
          */
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setParams(java.util.List)
      */
     /**
      * {@inheritDoc}
+     * 
      * @param params
      */
     @Override
@@ -84,25 +93,31 @@ public class MarkdownPlugin extends Plugin {
         this.params = params.toArray(new String[0]);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#setMetadata(net.sourceforge.seqware.pipeline.metadata.Metadata)
      */
     /**
      * {@inheritDoc}
+     * 
      * @param metadata
      */
     @Override
     public void setMetadata(Metadata metadata) {
-        //println("Setting Metadata: " + metadata);
+        // println("Setting Metadata: " + metadata);
         this.metadata = metadata;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#get_syntax()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public String get_syntax() {
@@ -116,12 +131,15 @@ public class MarkdownPlugin extends Plugin {
         return ("");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#parse_parameters()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue parse_parameters() {
@@ -135,24 +153,30 @@ public class MarkdownPlugin extends Plugin {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue init() {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_test() {
@@ -160,12 +184,15 @@ public class MarkdownPlugin extends Plugin {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_run() {
@@ -176,7 +203,7 @@ public class MarkdownPlugin extends Plugin {
             String[] vals = valueOf.toString().split(",");
             toSkip.addAll(Arrays.asList(vals));
         }
-        
+
         if (options.has("modules")) {
             Collection<ModuleInterface> mods;
             mods = (Collection<ModuleInterface>) Lookup.getDefault().lookupAll(ModuleInterface.class);
@@ -209,12 +236,15 @@ public class MarkdownPlugin extends Plugin {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue clean_up() {
@@ -223,8 +253,10 @@ public class MarkdownPlugin extends Plugin {
     }
 
     /**
-     * <p>get_description.</p>
-     *
+     * <p>
+     * get_description.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     @Override
@@ -282,13 +314,14 @@ public class MarkdownPlugin extends Plugin {
         }
     }
 
-    private void writePluginDescription(BufferedWriter bufferedWriter, Object plug, Set<String> skip) throws IllegalAccessException, SecurityException, IOException, IllegalArgumentException, NoSuchFieldException {
-        // check for skipping 
+    private void writePluginDescription(BufferedWriter bufferedWriter, Object plug, Set<String> skip) throws IllegalAccessException,
+            SecurityException, IOException, IllegalArgumentException, NoSuchFieldException {
+        // check for skipping
         final String simpleName = plug.getClass().getSimpleName();
         if (skip.contains(simpleName)) {
             return;
         }
-            
+
         bufferedWriter.newLine();
         bufferedWriter.append("##  " + simpleName);
         bufferedWriter.newLine();
@@ -306,7 +339,8 @@ public class MarkdownPlugin extends Plugin {
         get.printHelpOn(bufferedWriter);
     }
 
-    private void writeModuleDescription(Object plug, BufferedWriter bufferedWriter) throws SecurityException, IllegalAccessException, IOException, IllegalArgumentException {
+    private void writeModuleDescription(Object plug, BufferedWriter bufferedWriter) throws SecurityException, IllegalAccessException,
+            IOException, IllegalArgumentException {
         Module mod = (Module) plug;
         bufferedWriter.newLine();
         bufferedWriter.append("##  " + plug.getClass().getSimpleName());
@@ -329,7 +363,7 @@ public class MarkdownPlugin extends Plugin {
         try {
             Method getOptionParserMethod = myClass.getDeclaredMethod("getOptionParser");
             getOptionParserMethod.setAccessible(true);
-            Object invoke = getOptionParserMethod.invoke(plug, new Object[]{});
+            Object invoke = getOptionParserMethod.invoke(plug, new Object[] {});
             OptionParser get = (OptionParser) invoke;
             get.formatHelpWith(new MarkDownFormatter());
             get.printHelpOn(bufferedWriter);

@@ -38,7 +38,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- *
+ * 
  * @author dyuen
  */
 @Stateless
@@ -49,26 +49,25 @@ public class UtilityREST {
     private EntityManager em;
 
     /**
-     * Returns a tuple describing the class and accession given only an
-     * accession
-     *
+     * Returns a tuple describing the class and accession given only an accession
+     * 
      * @param accession
      * @return
      */
     @GET
     @Path("translateSWID/{accession}")
-    @Produces({"application/json"})
+    @Produces({ "application/json" })
     public ModelAccessionIDTuple find(@PathParam("accession") Integer accession) {
         Object target;
         try {
-            target = em.createQuery("select wr from WorkflowRun wr WHERE wr.swAccession = " + accession, WorkflowRun.class).getSingleResult();
+            target = em.createQuery("select wr from WorkflowRun wr WHERE wr.swAccession = " + accession, WorkflowRun.class)
+                    .getSingleResult();
             if (target != null) {
                 return new ModelAccessionIDTuple(accession, ((WorkflowRun) target).getWorkflowRunId(), target.getClass().getName());
             }
         } catch (NoResultException ex) {
             /**
-             * ignore, does the JPA API really have no way of checking whether a
-             * result is available except by exception?
+             * ignore, does the JPA API really have no way of checking whether a result is available except by exception?
              */
         }
         try {
@@ -107,7 +106,8 @@ public class UtilityREST {
         } catch (NoResultException ex) {
         }
         try {
-            target = em.createQuery("select sr from SequencerRun sr WHERE sr.swAccession = " + accession, SequencerRun.class).getSingleResult();
+            target = em.createQuery("select sr from SequencerRun sr WHERE sr.swAccession = " + accession, SequencerRun.class)
+                    .getSingleResult();
             if (target != null) {
                 return new ModelAccessionIDTuple(accession, ((SequencerRun) target).getSequencerRunId(), target.getClass().getName());
             }
@@ -125,6 +125,7 @@ public class UtilityREST {
     }
 
     protected static WebApplicationException throwExceptionWithMessage(String message) {
-        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(message).build());
+        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).entity(message)
+                .build());
     }
 }

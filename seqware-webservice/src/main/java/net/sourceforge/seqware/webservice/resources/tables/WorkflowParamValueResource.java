@@ -34,24 +34,31 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>WorkflowParamValueResource class.</p>
- *
+ * <p>
+ * WorkflowParamValueResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowParamValueResource extends DatabaseResource {
 
     /**
-     * <p>Constructor for WorkflowParamValueResource.</p>
+     * <p>
+     * Constructor for WorkflowParamValueResource.
+     * </p>
      */
     public WorkflowParamValueResource() {
         super("WorkflowParamValue");
     }
 
     /**
-     * <p>postJaxb.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
      */
     @Post("xml")
     public void postJaxb(Representation entity) {
@@ -66,7 +73,7 @@ public class WorkflowParamValueResource extends DatabaseResource {
                 throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, ex);
             }
 
-            //persist p
+            // persist p
             WorkflowParamValueService wpvs = BeanFactory.getWorkflowParamValueServiceBean();
             Integer id = wpvs.insert(registration, p);
             WorkflowParamValue wpv = (WorkflowParamValue) testIfNull(wpvs.findByID(id));
@@ -89,7 +96,9 @@ public class WorkflowParamValueResource extends DatabaseResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {

@@ -41,937 +41,927 @@ import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
  */
 public abstract class BasicWorkflow implements WorkflowEngine {
 
-  protected ReturnValue ret = new ReturnValue();
-  protected Metadata metadata = null;
-  protected Map<String, String> config = null;
-  protected String outputDir = null;
-  protected ArrayList<File> filesArray = new ArrayList<>();
-  protected Bundle bundleUtil = null;
-  protected int totalSteps = 0;
-  protected int currStep = 0;
-  protected int percentage = 0;
-  protected WorkflowTools workflowTools = null;
+    protected ReturnValue ret = new ReturnValue();
+    protected Metadata metadata = null;
+    protected Map<String, String> config = null;
+    protected String outputDir = null;
+    protected ArrayList<File> filesArray = new ArrayList<>();
+    protected Bundle bundleUtil = null;
+    protected int totalSteps = 0;
+    protected int currStep = 0;
+    protected int percentage = 0;
+    protected WorkflowTools workflowTools = null;
 
-  public static ReturnValue gridProxyInit() {
-    // initialize globus authentication proxy
-    ArrayList<String> theCommand = new ArrayList<>();
-    theCommand.add("bash");
-    theCommand.add("-lc");
-    theCommand.add("grid-proxy-init -valid 480:00");
-    ReturnValue retProxy = RunTools.runCommand(theCommand.toArray(new String[0]));
-    return retProxy;
-  }
-
-  protected enum Job {
-
-    setup, prejob, mainjob, postjob, cleanup, statcall, data;
-  }
-
-  /**
-   * <p>
-   * Constructor for BasicWorkflow.
-   * </p>
-   * 
-   * @param metadata
-   *          a {@link net.sourceforge.seqware.common.metadata.Metadata} object.
-   * @param config
-   *          a {@link java.util.Map} object.
-   */
-  public BasicWorkflow(Metadata metadata, Map<String, String> config) {
-    super();
-    this.metadata = metadata;
-    this.config = config;
-    this.bundleUtil = new Bundle(metadata, config);
-  }
-
-  private ReturnValue setup() {
-
-    workflowTools = new WorkflowTools();
-    ReturnValue retVal = new ReturnValue(ReturnValue.SUCCESS);
-
-    ReturnValue retProxy = gridProxyInit();
-    if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
-      Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
-      return (retProxy);
+    public static ReturnValue gridProxyInit() {
+        // initialize globus authentication proxy
+        ArrayList<String> theCommand = new ArrayList<>();
+        theCommand.add("bash");
+        theCommand.add("-lc");
+        theCommand.add("grid-proxy-init -valid 480:00");
+        ReturnValue retProxy = RunTools.runCommand(theCommand.toArray(new String[0]));
+        return retProxy;
     }
 
-    return (retVal);
-  }
+    protected enum Job {
+
+        setup, prejob, mainjob, postjob, cleanup, statcall, data;
+    }
 
     /**
-     * {@inheritDoc}
-     *
-     * This method just needs a sw_accession value from the workflow table and an
-     * ini file(s) in order to launch a workflow. All needed info is pulled from
-     * the workflow table which was populated when the workflow was installed.
-     *
-     * @param inputFiles the value of inputFiles
+     * <p>
+     * Constructor for BasicWorkflow.
+     * </p>
+     * 
+     * @param metadata
+     *            a {@link net.sourceforge.seqware.common.metadata.Metadata} object.
+     * @param config
+     *            a {@link java.util.Map} object.
      */
-    
-  @Override
-  public ReturnValue launchInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, Set<Integer> inputFiles) {
-
-    // do basic common setup tasks
-    ReturnValue setupRet = setup();
-    if (setupRet.getReturnValue() != ReturnValue.SUCCESS) {
-      return (setupRet);
+    public BasicWorkflow(Metadata metadata, Map<String, String> config) {
+        super();
+        this.metadata = metadata;
+        this.config = config;
+        this.bundleUtil = new Bundle(metadata, config);
     }
 
-    Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
-    WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
+    private ReturnValue setup() {
 
-    return (runWorkflow(wi, workflowRunAccession, iniFiles, new HashMap<String, String>(), metadataWriteback,
-                        parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, inputFiles));
+        workflowTools = new WorkflowTools();
+        ReturnValue retVal = new ReturnValue(ReturnValue.SUCCESS);
 
-  }
+        ReturnValue retProxy = gridProxyInit();
+        if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
+            Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
+            return (retProxy);
+        }
 
-  /**
-   * {@inheritDoc}
-   * 
-   * This method just needs a sw_accession value from the workflow table and an
-   * ini file(s) in order to schedule a workflow. All needed info is pulled from
-   * the workflow table which was populated when the workflow was installed.
-   * Keep in mind this does not actually trigger anything, it just schedules the
-   * workflow to run by adding to the workflow_run table. This lets you run
-   * workflows on a different host from where this command line tool is run but
-   * requires an external process to launch workflows that have been scheduled.
-   * 
-   */
-  @Override
-  public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,
-                                             ArrayList<String> iniFiles, boolean metadataWriteback,
-                                             ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR,
-                                             boolean wait, List<String> cmdLineOptions) {
+        return (retVal);
+    }
 
-    return scheduleInstalledBundle(workflowAccession, workflowRunAccession, iniFiles, metadataWriteback,
-                                   parentAccessions, parentsLinkedToWR, wait, cmdLineOptions, null, null, null);
-  }
-
-  // Yes, adding workflowEngine as a param makes no sense given that this class *is* a
-  // WorkflowEngine, but since this method is being called directly from WorkflowPlugin.doOldRun(), and
-  // *isn't* in the WorkflowEngine interface, I'm disinclined to begin fixing
-  // things to conform to what I can only guess is the design of these
-  // interfaces/classes.
     /**
      * {@inheritDoc}
-     *
-     * This method just needs a sw_accession value from the workflow table and an
-     * ini file(s) in order to schedule a workflow. All needed info is pulled from
-     * the workflow table which was populated when the workflow was installed.
-     * Keep in mind this does not actually trigger anything, it just schedules the
-     * workflow to run by adding to the workflow_run table. This lets you run
-     * workflows on a different host from where this command line tool is run but
-     * requires an external process to launch workflows that have been scheduled.
-     *
+     * 
+     * This method just needs a sw_accession value from the workflow table and an ini file(s) in order to launch a workflow. All needed info
+     * is pulled from the workflow table which was populated when the workflow was installed.
+     * 
+     * @param inputFiles
+     *            the value of inputFiles
+     */
+
+    @Override
+    public ReturnValue launchInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles,
+            boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait,
+            List<String> cmdLineOptions, Set<Integer> inputFiles) {
+
+        // do basic common setup tasks
+        ReturnValue setupRet = setup();
+        if (setupRet.getReturnValue() != ReturnValue.SUCCESS) {
+            return (setupRet);
+        }
+
+        Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
+        WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
+
+        return (runWorkflow(wi, workflowRunAccession, iniFiles, new HashMap<String, String>(), metadataWriteback, parentAccessions,
+                parentsLinkedToWR, wait, cmdLineOptions, inputFiles));
+
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
+     * This method just needs a sw_accession value from the workflow table and an ini file(s) in order to schedule a workflow. All needed
+     * info is pulled from the workflow table which was populated when the workflow was installed. Keep in mind this does not actually
+     * trigger anything, it just schedules the workflow to run by adding to the workflow_run table. This lets you run workflows on a
+     * different host from where this command line tool is run but requires an external process to launch workflows that have been
+     * scheduled.
+     * 
+     */
+    @Override
+    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles,
+            boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait,
+            List<String> cmdLineOptions) {
+
+        return scheduleInstalledBundle(workflowAccession, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions,
+                parentsLinkedToWR, wait, cmdLineOptions, null, null, null);
+    }
+
+    // Yes, adding workflowEngine as a param makes no sense given that this class *is* a
+    // WorkflowEngine, but since this method is being called directly from WorkflowPlugin.doOldRun(), and
+    // *isn't* in the WorkflowEngine interface, I'm disinclined to begin fixing
+    // things to conform to what I can only guess is the design of these
+    // interfaces/classes.
+    /**
+     * {@inheritDoc}
+     * 
+     * This method just needs a sw_accession value from the workflow table and an ini file(s) in order to schedule a workflow. All needed
+     * info is pulled from the workflow table which was populated when the workflow was installed. Keep in mind this does not actually
+     * trigger anything, it just schedules the workflow to run by adding to the workflow_run table. This lets you run workflows on a
+     * different host from where this command line tool is run but requires an external process to launch workflows that have been
+     * scheduled.
+     * 
      * @param workflowAccession
      * @param workflowRunAccession
      * @param iniFiles
      * @param metadataWriteback
      * @param parentAccessions
      * @param parentsLinkedToWR
-     * @param inputFiles the value of inputFiles
+     * @param inputFiles
+     *            the value of inputFiles
      * @param workflowEngine
      * @param scheduledHost
      * @param cmdLineOptions
      * @param wait
-     * @return 
+     * @return
      */
-      public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,
-        ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
-    ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
+    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles,
+            boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait,
+            List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
+        ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
-    Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
-    WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
-    scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, wait,
-                     cmdLineOptions, scheduledHost, workflowEngine, inputFiles);
+        Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
+        WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
+        scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, wait, cmdLineOptions,
+                scheduledHost, workflowEngine, inputFiles);
 
-    return localRet;
-  }
-
-    /**
-     * {@inheritDoc}
-     *
-     * This method just needs a sw_accession value from the workflow_run table to
-     * launch a workflow. All needed info is pulled from the workflow_run table
-     * which was populated when the workflow was scheduled.
-     *
-     */
-    
-  @Override
-  public ReturnValue launchScheduledBundle(String workflowAccession, String workflowRunAccession, boolean metadataWriteback, boolean wait) {
-
-    // do basic common setup tasks
-    ReturnValue setupRet = setup();
-    if (setupRet.getReturnValue() != ReturnValue.SUCCESS) {
-      return (setupRet);
+        return localRet;
     }
 
-    // not sure if the workflow can be accessed via workflow_run, is it
-    // defined?
-    WorkflowRun wr = this.metadata.getWorkflowRunWithWorkflow(workflowRunAccession);
-    Log.stdout("Workflow Run " + wr.getSwAccession());
-    Log.stdout("Workflow: " + wr.getWorkflow().getSwAccession());
-    Map<String, String> workflowMetadata = this.metadata.get_workflow_info(wr.getWorkflow().getSwAccession());
-    WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
+    /**
+     * {@inheritDoc}
+     * 
+     * This method just needs a sw_accession value from the workflow_run table to launch a workflow. All needed info is pulled from the
+     * workflow_run table which was populated when the workflow was scheduled.
+     * 
+     */
 
-    return (runScheduledWorkflow(wi, workflowRunAccession, metadataWriteback, wait));
+    @Override
+    public ReturnValue launchScheduledBundle(String workflowAccession, String workflowRunAccession, boolean metadataWriteback, boolean wait) {
 
-  }
+        // do basic common setup tasks
+        ReturnValue setupRet = setup();
+        if (setupRet.getReturnValue() != ReturnValue.SUCCESS) {
+            return (setupRet);
+        }
+
+        // not sure if the workflow can be accessed via workflow_run, is it
+        // defined?
+        WorkflowRun wr = this.metadata.getWorkflowRunWithWorkflow(workflowRunAccession);
+        Log.stdout("Workflow Run " + wr.getSwAccession());
+        Log.stdout("Workflow: " + wr.getWorkflow().getSwAccession());
+        Map<String, String> workflowMetadata = this.metadata.get_workflow_info(wr.getWorkflow().getSwAccession());
+        WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
+
+        return (runScheduledWorkflow(wi, workflowRunAccession, metadataWriteback, wait));
+
+    }
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * FIXME: need to add metadata writeback
-     *
-     * @param inputFiles the value of inputFiles
+     * 
+     * @param inputFiles
+     *            the value of inputFiles
      */
-    
-  @Override
-  public ReturnValue launchBundle(String workflow, String version, String metadataFile, String bundle, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, Set<Integer> inputFiles) {
 
-    // do basic common setup tasks
-    ReturnValue setupRet = setup();
-    if (setupRet.getReturnValue() != ReturnValue.SUCCESS) {
-      return (setupRet);
-    }
+    @Override
+    public ReturnValue launchBundle(String workflow, String version, String metadataFile, String bundle, ArrayList<String> iniFiles,
+            boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait,
+            List<String> cmdLineOptions, Set<Integer> inputFiles) {
 
-    File metadataFileObj = null;
-    if (metadataFile != null) {
-      metadataFileObj = new File(metadataFile);
-    }
-    // pull back information from metadata
-    Log.info("Bundle: " + bundle);
-    BundleInfo bundleInfo = bundleUtil.getBundleInfo(new File(bundle), metadataFileObj);
+        // do basic common setup tasks
+        ReturnValue setupRet = setup();
+        if (setupRet.getReturnValue() != ReturnValue.SUCCESS) {
+            return (setupRet);
+        }
 
-    boolean found = false;
+        File metadataFileObj = null;
+        if (metadataFile != null) {
+            metadataFileObj = new File(metadataFile);
+        }
+        // pull back information from metadata
+        Log.info("Bundle: " + bundle);
+        BundleInfo bundleInfo = bundleUtil.getBundleInfo(new File(bundle), metadataFileObj);
 
-    for (WorkflowInfo wi : bundleInfo.getWorkflowInfo()) {
+        boolean found = false;
 
-      Log.info("Workflow: " + wi.getName() + " Version: " + wi.getVersion());
+        for (WorkflowInfo wi : bundleInfo.getWorkflowInfo()) {
 
-      if (wi.getName().equals(workflow) && wi.getVersion().equals(version)) {
+            Log.info("Workflow: " + wi.getName() + " Version: " + wi.getVersion());
 
-        Log.info("Match!");
-        found = true;
+            if (wi.getName().equals(workflow) && wi.getVersion().equals(version)) {
 
-        try {
+                Log.info("Match!");
+                found = true;
 
-          // then this is the workflow we need to run
-          String bundlePath = bundleUtil.getOutputDir();
+                try {
 
-          wi.setWorkflowDir(bundlePath);
+                    // then this is the workflow we need to run
+                    String bundlePath = bundleUtil.getOutputDir();
 
-          ret = runWorkflow(wi, null, iniFiles, new HashMap<String, String>(), metadataWriteback, parentAccessions,
+                    wi.setWorkflowDir(bundlePath);
+
+                    ret = runWorkflow(wi, null, iniFiles, new HashMap<String, String>(), metadataWriteback, parentAccessions,
                             parentsLinkedToWR, wait, cmdLineOptions, inputFiles);
 
-        } catch (Exception e) {
-          Log.error(e.getMessage(), e);
+                } catch (Exception e) {
+                    Log.error(e.getMessage(), e);
+                }
+
+                break;
+            }
         }
 
-        break;
-      }
+        if (!found) {
+            Log.error("Couldn't find a workflow matching " + workflow + " and version " + version);
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        }
+
+        return (ret);
     }
-
-    if (!found) {
-      Log.error("Couldn't find a workflow matching " + workflow + " and version " + version);
-      ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-    }
-
-    return (ret);
-  }
-
-  /**
-   * The chief goal of this method is to take all the ini info that's stored in
-   * the db, correctly aggregate it, and then trigger the workflow
-   * programmatically.
-   * 
-   * TODO - wi object needs to have perm location added to it
-   * 
-   * @param wi
-   * @param workflowRunAccession
-   * @param metadataWriteback
-   * @param wait
-   * @return
-   */
-  private ReturnValue runScheduledWorkflow(WorkflowInfo wi, String workflowRunAccession, boolean metadataWriteback,
-                                           boolean wait) {
-
-    // get the workflow run
-    WorkflowRun wr = this.metadata.getWorkflowRunWithWorkflow(workflowRunAccession);
-
-    // the map
-    HashMap<String, String> map = new HashMap<>();
-
-    // iterate over all the generic default params
-    // these params are created when a workflow is installed
-    SortedSet<WorkflowParam> workflowParams = this.metadata.getWorkflowParams(wr.getWorkflow().getSwAccession().toString());
-    for (WorkflowParam param : workflowParams) {
-      map.put(param.getKey(), param.getValue());
-    }
-
-    // FIXME: this needs to be implemented otherwise portal submitted won't
-    // work!
-    // now iterate over the params specific for this workflow run
-    // this is where the SeqWare Portal will populate parameters for
-    // a scheduled workflow
-    /*
-     * workflowParams =
-     * this.metadata.getWorkflowRunParams(workflowRunAccession);
-     * for(WorkflowParam param : workflowParams) { map.put(param.getKey(),
-     * param.getValue()); }
-     */
-
-    // Workflow Runs that are scheduled by the web service don't populate
-    // their
-    // params into the workflow_run_params table but, instead, directly
-    // write
-    // to the ini field.
-    // FIXME: the web service should just use the same approach as the
-    // Portal
-    // and this will make it more robust to pass in the
-    // parent_processing_accession
-    // via the DB rather than ini_file field
-    map.putAll(MapTools.iniString2Map(wr.getIniFile()));
-
-    // will need to pull out the parent accessions since these have already
-    // been set
-    // and if they aren't passed in specifically they are reset
-    // FIXME: going in and out of a metadata file is messy and error prone
-    ArrayList<String> parentAccessions = parseParentAccessions(map);
-
-    // don't need to pass these in since they were already updated in the DB
-    // at schedule time
-    // ArrayList<String> parentsLinkedToWR = parseParentsLinkedToWR(map);
-
-    ReturnValue localRet = runWorkflow(wi, workflowRunAccession, new ArrayList<String>(), map, metadataWriteback, parentAccessions,
-                      new ArrayList<String>(), wait, new ArrayList<String>(), wr.getInputFileAccessions());
-
-    return localRet;
-  }
 
     /**
-     * This method needs to ensure the workflow has been downloaded, if not, it
-     * needs to provision it it also should take a map object too so it doesn't
-     * need to read ini files in order to work.
-     *
-     * TODO: make sure all workflow_bundle_dir subs happen
-     *
-     * @param inputFiles the value of inputFiles
+     * The chief goal of this method is to take all the ini info that's stored in the db, correctly aggregate it, and then trigger the
+     * workflow programmatically.
+     * 
+     * TODO - wi object needs to have perm location added to it
+     * 
+     * @param wi
+     * @param workflowRunAccession
+     * @param metadataWriteback
+     * @param wait
+     * @return
      */
-  private ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles, HashMap<String, String> preParsedIni, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, Set<Integer> inputFiles) {
+    private ReturnValue runScheduledWorkflow(WorkflowInfo wi, String workflowRunAccession, boolean metadataWriteback, boolean wait) {
 
-    // keep this id handy
-    int workflowRunId = 0;
-    int workflowRunAccessionInt = 0;
+        // get the workflow run
+        WorkflowRun wr = this.metadata.getWorkflowRunWithWorkflow(workflowRunAccession);
 
-    // the return value to use
-    ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
-    boolean first = true;
-    StringBuilder iniFilesStr = new StringBuilder();
-    for (String iniFile : iniFiles) {
-      String newIniFile = replaceWBD(iniFile, wi.getWorkflowDir());
-      if (first) {
-        first = false;
-        iniFilesStr.append(newIniFile);
-      } else {
-        iniFilesStr.append(",").append(newIniFile);
-      }
-    }
-    // this method takes the wi object, checks to see if the workflow is
-    // available and, if not, sets it up from the archive location
-    // it will also be responsible for correctly setting the
-    // workflow_bundle_dir in the wi object if it has changed
-    // and it will go through each field and update the
-    // ${workflow_bundle_dir} variable to be a real path (which
-    // makes some of the calls below to replaceWBD redundant but harmless
-    if (provisionBundleAndUpdateWorkflowInfo(wi).getExitStatus() != ReturnValue.SUCCESS) {
-      localRet.setExitStatus(ReturnValue.FAILURE);
-      Log.error("Problem getting workflow bundle");
-      return (localRet);
-    }
+        // the map
+        HashMap<String, String> map = new HashMap<>();
 
-    // if we're doing metadata writeback will need to parameterize the
-    // workflow correctly
-    if (metadataWriteback) {
-
-      // need to figure out workflow_run_accession
-      int workflowAccession = wi.getWorkflowAccession();
-      // create the workflow_run row if it doesn't exist
-      if (workflowRunAccession == null) {
-        workflowRunId = this.metadata.add_workflow_run(workflowAccession);
-        workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
-        workflowRunAccession = new Integer(workflowRunAccessionInt).toString();
-      } else { // if the workflow_run row exists get the workflow_run_id
-        workflowRunId = this.metadata.get_workflow_run_id(Integer.parseInt(workflowRunAccession));
-        workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
-      }
-
-      // need to link all the parents to this workflow run accession
-      for (String parentLinkedToWR : parentsLinkedToWR) {
-        try {
-          this.metadata.linkWorkflowRunAndParent(workflowRunId, Integer.parseInt(parentLinkedToWR));
-        } catch (Exception e) {
-          Log.error(e.getMessage(), e);
-        }
-      }
-
-    } else // no metadata connection, probably not needed!
-    {
-      Log.info("Toggling to use no metadata connection");
-      metadata.clean_up();
-      metadata = new MetadataNoConnection();
-    }
-
-    // done with metadata writeback variables
-
-    // pull back the template ftl file for this workflow and version
-    String template = wi.getTemplatePath();
-    template = replaceWBD(template, wi.getWorkflowDir());
-    Log.stdout("TEMPLATE FILE: " + template);
-
-    // pass in ini files and run the dax process
-    Log.stdout("INI FILES: " + iniFilesStr.toString());
-
-    // now create the DAX
-    File dax;
-
-    try {
-      dax = FileTools.createFileWithUniqueName(new File("/tmp"), "dax");
-    } catch (IOException e) {
-      Log.error(e.getMessage());
-      localRet.setExitStatus(ReturnValue.FAILURE);
-      localRet.setStderr("Can't write DAX file! " + e.getMessage());
-      return (localRet);
-    }
-
-    Map<String, String> map = this.prepareData(wi, workflowRunAccession, iniFiles, preParsedIni, metadataWriteback,
-                                               parentAccessions);
-
-    Log.stdout("CREATING DAX IN: " + dax.getAbsolutePath());
-
-    ReturnValue daxReturn = this.generateDaxFile(wi, dax, iniFilesStr.toString(), map, cmdLineOptions);
-
-    if (daxReturn.getExitStatus() != ReturnValue.SUCCESS) {
-      localRet.setExitStatus(daxReturn.getExitStatus());
-      return (localRet);
-    }
-    StringBuilder mapBuffer = new StringBuilder();
-    for (String key : map.keySet()) {
-      if (key != null && map.get(key.toString()) != null) {
-        Log.stdout("  KEY: " + key + " VALUE: " + map.get(key.toString()).toString());
-      }
-      mapBuffer.append(key).append("=").append(map.get(key)).append("\n");
-    }
-    StringBuilder daxBuffer = new StringBuilder();
-    try {
-      BufferedReader daxReader = new BufferedReader(new FileReader(dax));
-      String line = daxReader.readLine();
-      while (line != null) {
-        daxBuffer.append(line);
-        daxBuffer.append("\n");
-        line = daxReader.readLine();
-      }
-      daxReader.close();
-    } catch (Exception e) {
-      Log.error(e.getMessage(), e);
-      localRet.setExitStatus(ReturnValue.FAILURE);
-      localRet.setStderr("ERROR: Can't read DAX file! " + e.getMessage());
-      return (localRet);
-    }
-
-    // create the submission of the DAX to Pegasus
-    String pegasusCmd = "pegasus-plan -Dpegasus.user.properties=" + config.get("SW_PEGASUS_CONFIG_DIR")
-        + "/properties --dax " + dax.getAbsolutePath() + " --dir " + config.get("SW_DAX_DIR") + " -o "
-        + config.get("SW_CLUSTER") + " --force --submit -s " + config.get("SW_CLUSTER");
-
-    // run the pegasus submission
-    Log.stdout("SUBMITTING TO PEGASUS: " + pegasusCmd);
-    ArrayList<String> theCommand = new ArrayList<>();
-    theCommand.add("bash");
-    theCommand.add("-lc");
-    theCommand.add(pegasusCmd);
-    ReturnValue retPegasus = RunTools.runCommand(theCommand.toArray(new String[0]));
-
-    // figure out the status command
-    String stdOut = retPegasus.getStdout();
-    Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
-    Matcher m = p.matcher(stdOut);
-    String statusCmd = null;
-    if (m.find()) {
-      statusCmd = m.group(1);
-    }
-
-    // look for the status directory
-    p = Pattern.compile("pegasus-status -l (\\S+)");
-    m = p.matcher(stdOut);
-    String statusDir = null;
-    if (m.find()) {
-      statusDir = m.group(1);
-    }
-
-    // need to pull back the workflow run object since some fields may
-    // already be set
-    // and we need to use their values before writing back to the DB!
-    WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccessionInt);
-    // merge in any input files that may be fed in when launching bundles directly
-    wr.getInputFileAccessions().addAll(inputFiles);
-
-    // return if not successful
-    if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || statusCmd == null) {
-      // then something went wrong trying to call pegasus
-      if (metadataWriteback) {
-        metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.failed, statusCmd,
-                                     wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                     retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-      }
-      return (retPegasus);
-    }
-
-    // now save to the DB
-    if (metadataWriteback) {
-      metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.pending, statusCmd,
-                                   wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                   retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-    }
-
-    Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
-
-    // if the user passes in --wait then hang around until the workflow
-    // finishes or fails
-    // periodically checking the status in a robust way
-    boolean success = true;
-    if (wait) {
-      success = false;
-
-      // now parse out the return status from the pegasus tool
-      ReturnValue watchedResult = null;
-      if (statusCmd != null && statusDir != null) {
-        watchedResult = this.workflowTools.watchWorkflow(statusCmd, statusDir);
-      }
-
-      if (watchedResult.getExitStatus() == ReturnValue.SUCCESS) {
-        success = true;
-        if (metadataWriteback) {
-          metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.completed, statusCmd,
-                                       wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                       retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
+        // iterate over all the generic default params
+        // these params are created when a workflow is installed
+        SortedSet<WorkflowParam> workflowParams = this.metadata.getWorkflowParams(wr.getWorkflow().getSwAccession().toString());
+        for (WorkflowParam param : workflowParams) {
+            map.put(param.getKey(), param.getValue());
         }
 
-      } else if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
-        Log.error("ERROR: problems watching workflow");
-        // need to save back to the DB if watching
-        if (metadataWriteback) {
-          metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.failed, statusCmd,
-                                       wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
-                                       watchedResult.getStderr(), watchedResult.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-        }
-        localRet.setExitStatus(ReturnValue.FAILURE);
+        // FIXME: this needs to be implemented otherwise portal submitted won't
+        // work!
+        // now iterate over the params specific for this workflow run
+        // this is where the SeqWare Portal will populate parameters for
+        // a scheduled workflow
+        /*
+         * workflowParams = this.metadata.getWorkflowRunParams(workflowRunAccession); for(WorkflowParam param : workflowParams) {
+         * map.put(param.getKey(), param.getValue()); }
+         */
+
+        // Workflow Runs that are scheduled by the web service don't populate
+        // their
+        // params into the workflow_run_params table but, instead, directly
+        // write
+        // to the ini field.
+        // FIXME: the web service should just use the same approach as the
+        // Portal
+        // and this will make it more robust to pass in the
+        // parent_processing_accession
+        // via the DB rather than ini_file field
+        map.putAll(MapTools.iniString2Map(wr.getIniFile()));
+
+        // will need to pull out the parent accessions since these have already
+        // been set
+        // and if they aren't passed in specifically they are reset
+        // FIXME: going in and out of a metadata file is messy and error prone
+        ArrayList<String> parentAccessions = parseParentAccessions(map);
+
+        // don't need to pass these in since they were already updated in the DB
+        // at schedule time
+        // ArrayList<String> parentsLinkedToWR = parseParentsLinkedToWR(map);
+
+        ReturnValue localRet = runWorkflow(wi, workflowRunAccession, new ArrayList<String>(), map, metadataWriteback, parentAccessions,
+                new ArrayList<String>(), wait, new ArrayList<String>(), wr.getInputFileAccessions());
+
         return localRet;
-      }
     }
 
-    if (retPegasus.getExitStatus() != ReturnValue.SUCCESS || !success) {
-      Log.error("ERROR: failure with running the pegasus command");
-      // I previously saved this state to the DB so no need to do that
-      // here
-      localRet.setExitStatus(ReturnValue.FAILURE);
-      return localRet;
-    }
+    /**
+     * This method needs to ensure the workflow has been downloaded, if not, it needs to provision it it also should take a map object too
+     * so it doesn't need to read ini files in order to work.
+     * 
+     * TODO: make sure all workflow_bundle_dir subs happen
+     * 
+     * @param inputFiles
+     *            the value of inputFiles
+     */
+    private ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
+            HashMap<String, String> preParsedIni, boolean metadataWriteback, ArrayList<String> parentAccessions,
+            ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, Set<Integer> inputFiles) {
 
-    return localRet;
-  }
+        // keep this id handy
+        int workflowRunId = 0;
+        int workflowRunAccessionInt = 0;
 
-  /**
-   * 
-   * @param wi
-   * @param workflowRunAccession
-   * @param iniFiles
-   * @param metadataWriteback
-   * @param parentAccessions
-   * @param parentsLinkedToWR
-   * @param wait
-   * @param cmdLineOptions
-   * @param scheduledHost
-   * @param workflowEngine
-   * @param inputFiles
-   * @return 
-   */
-  private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
-
-    // keep this id handy
-    int workflowRunId = 0;
-
-    // will be handed off to the template layer
-    HashMap<String, String> map = new HashMap<>();
-
-    // replace the workflow bundle dir in the file paths of ini files
-    boolean first = true;
-    StringBuilder iniFilesStr = new StringBuilder();
-    for (String iniFile : iniFiles) {
-      String newIniFiles = iniFile.replaceAll("\\$\\{workflow_bundle_dir\\}", wi.getWorkflowDir());
-      if (first) {
-        first = false;
-        iniFilesStr.append(newIniFiles);
-      } else {
-        iniFilesStr.append(",").append(newIniFiles);
-      }
-    }
-
-    map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
-    //int workflowAccession = 0;
-    StringBuilder parentAccessionsStr = new StringBuilder();
-
-    // starts with assumption of no metadata writeback
-    map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
-    map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
-    map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
-    // my new preferred variable name
-    map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
-    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
-    // my new preferred variable name
-    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
-
-    // if we're doing metadata writeback will need to parameterize the
-    // workflow correctly
-    if (metadataWriteback) {
-
-      // tells the workflow it should save its metadata
-      map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
-
-      first = true;
-
-      // make parent accession string
-      Log.info("ARRAY SIZE: " + parentAccessions.size());
-      for (String id : parentAccessions) {
-        if (first) {
-          first = false;
-          parentAccessionsStr.append(id);
-        } else {
-          parentAccessionsStr.append(",").append(id);
+        // the return value to use
+        ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
+        boolean first = true;
+        StringBuilder iniFilesStr = new StringBuilder();
+        for (String iniFile : iniFiles) {
+            String newIniFile = replaceWBD(iniFile, wi.getWorkflowDir());
+            if (first) {
+                first = false;
+                iniFilesStr.append(newIniFile);
+            } else {
+                iniFilesStr.append(",").append(newIniFile);
+            }
         }
-      }
+        // this method takes the wi object, checks to see if the workflow is
+        // available and, if not, sets it up from the archive location
+        // it will also be responsible for correctly setting the
+        // workflow_bundle_dir in the wi object if it has changed
+        // and it will go through each field and update the
+        // ${workflow_bundle_dir} variable to be a real path (which
+        // makes some of the calls below to replaceWBD redundant but harmless
+        if (provisionBundleAndUpdateWorkflowInfo(wi).getExitStatus() != ReturnValue.SUCCESS) {
+            localRet.setExitStatus(ReturnValue.FAILURE);
+            Log.error("Problem getting workflow bundle");
+            return (localRet);
+        }
 
-      // check to make sure it contains something, save under various
-      // names
-      if (parentAccessionsStr.length() > 0) {
-        map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
-        map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-        // my new preferred variable name
-        map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-      }
+        // if we're doing metadata writeback will need to parameterize the
+        // workflow correctly
+        if (metadataWriteback) {
 
-      /* Load ini (thus ensuring it exists) prior to writing to the DB. */
-      String[] iniCompleteFilePaths = iniFilesStr.toString().isEmpty() ? new String[]{} : iniFilesStr.toString().split(",");
-      for (String currIniFile : iniCompleteFilePaths) {
-        MapTools.ini2Map(currIniFile, map);
-      }
-      MapTools.cli2Map(cmdLineOptions.toArray(new String[0]), map);
-      StringBuilder mapBuffer = new StringBuilder();
-      for (String key : map.keySet()) {
-        Log.info("KEY: " + key + " VALUE: " + map.get(key));
-        // Log.error(key+"="+map.get(key));
-        mapBuffer.append(key).append("=").append(map.get(key)).append("\n");
-      }
+            // need to figure out workflow_run_accession
+            int workflowAccession = wi.getWorkflowAccession();
+            // create the workflow_run row if it doesn't exist
+            if (workflowRunAccession == null) {
+                workflowRunId = this.metadata.add_workflow_run(workflowAccession);
+                workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
+                workflowRunAccession = new Integer(workflowRunAccessionInt).toString();
+            } else { // if the workflow_run row exists get the workflow_run_id
+                workflowRunId = this.metadata.get_workflow_run_id(Integer.parseInt(workflowRunAccession));
+                workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
+            }
 
-      // need to figure out workflow_run_accession
-      int workflowAccession = wi.getWorkflowAccession();
-      // create the workflow_run row if it doesn't exist
-      if (workflowRunAccession == null) {
-        workflowRunId = this.metadata.add_workflow_run(workflowAccession);
-        int workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
-        workflowRunAccession = new Integer(workflowRunAccessionInt).toString();
-      } else { // if the workflow_run row exists get the workflow_run_id
-        workflowRunId = this.metadata.get_workflow_run_id(Integer.parseInt(workflowRunAccession));
-      }
-      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
-      // my new preferred variable name
-      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
-      Log.stdout("Created workflow run with SWID: " + workflowRunAccession);
+            // need to link all the parents to this workflow run accession
+            for (String parentLinkedToWR : parentsLinkedToWR) {
+                try {
+                    this.metadata.linkWorkflowRunAndParent(workflowRunId, Integer.parseInt(parentLinkedToWR));
+                } catch (Exception e) {
+                    Log.error(e.getMessage(), e);
+                }
+            }
 
-      // need to link all the parents to this workflow run accession
-      // this is actually linking them in the DB
-      for (String parentLinkedToWR : parentsLinkedToWR) {
+        } else // no metadata connection, probably not needed!
+        {
+            Log.info("Toggling to use no metadata connection");
+            metadata.clean_up();
+            metadata = new MetadataNoConnection();
+        }
+
+        // done with metadata writeback variables
+
+        // pull back the template ftl file for this workflow and version
+        String template = wi.getTemplatePath();
+        template = replaceWBD(template, wi.getWorkflowDir());
+        Log.stdout("TEMPLATE FILE: " + template);
+
+        // pass in ini files and run the dax process
+        Log.stdout("INI FILES: " + iniFilesStr.toString());
+
+        // now create the DAX
+        File dax;
+
         try {
-          this.metadata.linkWorkflowRunAndParent(workflowRunId, Integer.parseInt(parentLinkedToWR));
+            dax = FileTools.createFileWithUniqueName(new File("/tmp"), "dax");
+        } catch (IOException e) {
+            Log.error(e.getMessage());
+            localRet.setExitStatus(ReturnValue.FAILURE);
+            localRet.setStderr("Can't write DAX file! " + e.getMessage());
+            return (localRet);
+        }
+
+        Map<String, String> map = this.prepareData(wi, workflowRunAccession, iniFiles, preParsedIni, metadataWriteback, parentAccessions);
+
+        Log.stdout("CREATING DAX IN: " + dax.getAbsolutePath());
+
+        ReturnValue daxReturn = this.generateDaxFile(wi, dax, iniFilesStr.toString(), map, cmdLineOptions);
+
+        if (daxReturn.getExitStatus() != ReturnValue.SUCCESS) {
+            localRet.setExitStatus(daxReturn.getExitStatus());
+            return (localRet);
+        }
+        StringBuilder mapBuffer = new StringBuilder();
+        for (String key : map.keySet()) {
+            if (key != null && map.get(key.toString()) != null) {
+                Log.stdout("  KEY: " + key + " VALUE: " + map.get(key.toString()).toString());
+            }
+            mapBuffer.append(key).append("=").append(map.get(key)).append("\n");
+        }
+        StringBuilder daxBuffer = new StringBuilder();
+        try {
+            BufferedReader daxReader = new BufferedReader(new FileReader(dax));
+            String line = daxReader.readLine();
+            while (line != null) {
+                daxBuffer.append(line);
+                daxBuffer.append("\n");
+                line = daxReader.readLine();
+            }
+            daxReader.close();
         } catch (Exception e) {
-          Log.error(e.getMessage());
+            Log.error(e.getMessage(), e);
+            localRet.setExitStatus(ReturnValue.FAILURE);
+            localRet.setStderr("ERROR: Can't read DAX file! " + e.getMessage());
+            return (localRet);
         }
-      }
 
-      this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.submitted, null,
-                                        null, null, mapBuffer.toString(), scheduledHost, null,
-                                        null, workflowEngine, inputFiles);
+        // create the submission of the DAX to Pegasus
+        String pegasusCmd = "pegasus-plan -Dpegasus.user.properties=" + config.get("SW_PEGASUS_CONFIG_DIR") + "/properties --dax "
+                + dax.getAbsolutePath() + " --dir " + config.get("SW_DAX_DIR") + " -o " + config.get("SW_CLUSTER")
+                + " --force --submit -s " + config.get("SW_CLUSTER");
 
-    } else {
-      Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
-      ret.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
-    }
+        // run the pegasus submission
+        Log.stdout("SUBMITTING TO PEGASUS: " + pegasusCmd);
+        ArrayList<String> theCommand = new ArrayList<>();
+        theCommand.add("bash");
+        theCommand.add("-lc");
+        theCommand.add(pegasusCmd);
+        ReturnValue retPegasus = RunTools.runCommand(theCommand.toArray(new String[0]));
 
-    return ret;
+        // figure out the status command
+        String stdOut = retPegasus.getStdout();
+        Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
+        Matcher m = p.matcher(stdOut);
+        String statusCmd = null;
+        if (m.find()) {
+            statusCmd = m.group(1);
+        }
 
-  }
+        // look for the status directory
+        p = Pattern.compile("pegasus-status -l (\\S+)");
+        m = p.matcher(stdOut);
+        String statusDir = null;
+        if (m.find()) {
+            statusDir = m.group(1);
+        }
 
-  /**
-   * Turns a simple hash into a WorkflowInfo object, making it easier to use
-   * with a common workflow launcher
-   * 
-   * @param workflowMetadata
-   * @return
-   */
-  private WorkflowInfo parseWorkflowMetadata(Map<String, String> m) {
-    WorkflowInfo wi = new WorkflowInfo();
-    wi.setCommand(m.get("cmd"));
-    wi.setName(m.get("name"));
-    wi.setDescription(m.get("description"));
-    wi.setVersion(m.get("version"));
-    wi.setConfigPath(m.get("base_ini_file"));
-    wi.setWorkflowDir(m.get("current_working_dir"));
-    wi.setTemplatePath(m.get("workflow_template"));
-    wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
-    wi.setPermBundleLocation(m.get("permanent_bundle_location"));
-    wi.setWorkflowClass(m.get("workflow_class"));
-    wi.setWorkflowEngine(m.get("workflow_engine"));
-    wi.setWorkflowType(m.get("workflow_type"));
-    return (wi);
-  }
+        // need to pull back the workflow run object since some fields may
+        // already be set
+        // and we need to use their values before writing back to the DB!
+        WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccessionInt);
+        // merge in any input files that may be fed in when launching bundles directly
+        wr.getInputFileAccessions().addAll(inputFiles);
 
-  /**
-   * a simple method to replace the ${workflow_bundle_dir} variable
-   * 
-   * @param input
-   * @param wbd
-   * @return
-   */
-  private String replaceWBD(String input, String wbd) {
-    return (input.replaceAll("\\$\\{workflow_bundle_dir\\}", wbd));
-  }
+        // return if not successful
+        if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || statusCmd == null) {
+            // then something went wrong trying to call pegasus
+            if (metadataWriteback) {
+                metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.failed, statusCmd,
+                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(), retPegasus.getStderr(),
+                        retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
+            }
+            return (retPegasus);
+        }
 
-  /**
-   * This is a pretty key method. It takes the wi object, checks to see if the
-   * workflow is available and, if not, sets it up from the archive location it
-   * will also be responsible for correctly setting the workflow_bundle_dir in
-   * the wi object if it has changed and it will go through each field and
-   * update the ${workflow_bundle_dir} variable to be a real path (which makes
-   * some of the calls elsewhere to replaceWBD redundant but harmless).
-   * 
-   * @param wi
-   */
-  private ReturnValue provisionBundleAndUpdateWorkflowInfo(WorkflowInfo wi) {
+        // now save to the DB
+        if (metadataWriteback) {
+            metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.pending, statusCmd,
+                    wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(), retPegasus.getStderr(),
+                    retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
+        }
 
-    ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
+        Log.stdout("PEGASUS STATUS COMMAND: " + statusCmd);
 
-    // first, see if the workflow bundle dir is actually there, I'm assuming
-    // if it is then I don't need to provision it
-    // FIXME: in the future we should do a more robust check
-    File workflowBundleDir = null;
-    if (wi.getWorkflowDir() != null) {
-      workflowBundleDir = new File(wi.getWorkflowDir());
-    }
+        // if the user passes in --wait then hang around until the workflow
+        // finishes or fails
+        // periodically checking the status in a robust way
+        boolean success = true;
+        if (wait) {
+            success = false;
 
-    // if any of these are true then need to reprovision workflow
-    if (workflowBundleDir == null || !workflowBundleDir.exists() || !workflowBundleDir.isDirectory()
-        || !workflowBundleDir.canRead()) {
+            // now parse out the return status from the pegasus tool
+            ReturnValue watchedResult = null;
+            if (statusCmd != null && statusDir != null) {
+                watchedResult = this.workflowTools.watchWorkflow(statusCmd, statusDir);
+            }
 
-      // find the perm loc
-      String permLoc = wi.getPermBundleLocation();
-      String newWorkflowBundleDir = getAndProvisionBundle(permLoc);
+            if (watchedResult.getExitStatus() == ReturnValue.SUCCESS) {
+                success = true;
+                if (metadataWriteback) {
+                    metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.completed,
+                            statusCmd, wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
+                            retPegasus.getStderr(), retPegasus.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
+                }
 
-      // if its null then something went wrong
-      if (newWorkflowBundleDir == null) {
-        localRet.setExitStatus(ReturnValue.FAILURE);
-        Log.error("Unable to provision the bundle from: " + permLoc);
+            } else if (watchedResult.getExitStatus() == ReturnValue.FAILURE) {
+                Log.error("ERROR: problems watching workflow");
+                // need to save back to the DB if watching
+                if (metadataWriteback) {
+                    metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.failed, statusCmd,
+                            wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(), watchedResult.getStderr(),
+                            watchedResult.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
+                }
+                localRet.setExitStatus(ReturnValue.FAILURE);
+                return localRet;
+            }
+        }
+
+        if (retPegasus.getExitStatus() != ReturnValue.SUCCESS || !success) {
+            Log.error("ERROR: failure with running the pegasus command");
+            // I previously saved this state to the DB so no need to do that
+            // here
+            localRet.setExitStatus(ReturnValue.FAILURE);
+            return localRet;
+        }
+
         return localRet;
-      }
-
-      // now update the variables to replace ${workflow_bundle_dir}
-      wi.setWorkflowDir(newWorkflowBundleDir);
-      wi.setConfigPath(replaceWBD(wi.getConfigPath(), newWorkflowBundleDir));
-      wi.setTemplatePath(replaceWBD(wi.getTemplatePath(), newWorkflowBundleDir));
     }
 
-    return localRet;
-  }
+    /**
+     * 
+     * @param wi
+     * @param workflowRunAccession
+     * @param iniFiles
+     * @param metadataWriteback
+     * @param parentAccessions
+     * @param parentsLinkedToWR
+     * @param wait
+     * @param cmdLineOptions
+     * @param scheduledHost
+     * @param workflowEngine
+     * @param inputFiles
+     * @return
+     */
+    private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
+            boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait,
+            List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
 
-  /**
-   * will either copy or download from S3, unzip, and return unzip location
-   * 
-   * @param permLoc
-   * @return
-   */
-  private String getAndProvisionBundle(String permLoc) {
-    String result = null;
-    Bundle bundle = new Bundle(this.metadata, this.config);
-    ReturnValue localRet;
-    if (permLoc.startsWith("s3://")) {
-      localRet = bundle.unpackageBundleFromS3(permLoc);
-    } else {
-      localRet = bundle.unpackageBundle(new File(permLoc));
-    }
-    if (localRet != null) {
-      return localRet.getAttribute("outputDir");
-    }
-    return result;
-  }
+        // keep this id handy
+        int workflowRunId = 0;
 
-  /**
-   * reads a map and tries to find the parent accessions, the result is
-   * de-duplicated.
-   * 
-   * @param map
-   * @return
-   */
-  public static ArrayList<String> parseParentAccessions(Map<String, String> map) {
-    ArrayList<String> results = new ArrayList<>();
-    HashMap<String, String> resultsDeDup = new HashMap<>();
+        // will be handed off to the template layer
+        HashMap<String, String> map = new HashMap<>();
 
-    for (String key : map.keySet()) {
-      if (ReservedIniKeys.PARENT_ACCESSION.getKey().equals(key) || ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey().equals(key) || ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey().equals(key)) {
-        resultsDeDup.put(map.get(key), "null");
-      }
-    }
-
-    for (String accession : resultsDeDup.keySet()) {
-      results.add(accession);
-    }
-
-    // for hotfix 0.13.6.3
-    // GATK reveals an issue where parent_accession is setup with a correct list
-    // of accessions while parent-accessions and parent_accessions are set to 0
-    // when the three are mushed together, the rogue zero is transferred to
-    // parent_accession and causes it to crash the workflow
-    // I'm going to allow a single 0 in case (god forbid) some workflow relies
-    // upon this, but otherwise a 0 should not occur in a list of valid
-    // parent_accessions
-    if (results.contains("0") && results.size() > 1) {
-      results.remove("0");
-    }
-
-    return (results);
-  }
-
-  /**
-   * <p>
-   * prepareData.
-   * </p>
-   * 
-   * @param wi
-   *          a
-   *          {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo}
-   *          object.
-   * @param workflowRunAccession
-   *          a {@link java.lang.String} object.
-   * @param iniFiles
-   *          a {@link java.util.ArrayList} object.
-   * @param preParsedIni
-   *          a {@link java.util.Map} object.
-   * @param metadataWriteback
-   *          a boolean.
-   * @param parentAccessions
-   *          a {@link java.util.ArrayList} object.
-   * @return a {@link java.util.Map} object.
-   */
-  protected Map<String, String> prepareData(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
-                                            Map<String, String> preParsedIni, boolean metadataWriteback,
-                                            ArrayList<String> parentAccessions) {
-    Map<String, String> map = new HashMap<>();
-    StringBuilder parentAccessionsStr = new StringBuilder();
-    // merge what came into this program to the map object
-    if (preParsedIni != null && !preParsedIni.isEmpty()) {
-      map.putAll(preParsedIni);
-    }
-    // update this in the map
-    map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
-    // starts with assumption of no metadata writeback
-    // GOTCHA: this is why you always need to specify the parentAccessions
-    // array
-    map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
-    map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
-    map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
-    // my new preferred variable name
-    map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
-    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
-    // my new preferred variable name
-    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
-    // if we're doing metadata writeback will need to parameterize the
-    // workflow correctly
-    // corrects the file paths for all the iniFiles
-    //boolean first = true;
-
-    if (metadataWriteback) {
-
-      // tells the workflow it should save its metadata
-      map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
-
-      // figure out the unique list of parent accessions that were passed
-      // in
-      boolean first = true;
-      Log.info("ARRAY SIZE: " + parentAccessions.size());
-      HashMap<String, String> uniqParentAccessions = new HashMap<>();
-      for (String id : parentAccessions) {
-        uniqParentAccessions.put(id, "null");
-      }
-      for (String id : uniqParentAccessions.keySet()) {
-        if (first) {
-          first = false;
-          parentAccessionsStr.append(id);
-        } else {
-          parentAccessionsStr.append(",").append(id);
+        // replace the workflow bundle dir in the file paths of ini files
+        boolean first = true;
+        StringBuilder iniFilesStr = new StringBuilder();
+        for (String iniFile : iniFiles) {
+            String newIniFiles = iniFile.replaceAll("\\$\\{workflow_bundle_dir\\}", wi.getWorkflowDir());
+            if (first) {
+                first = false;
+                iniFilesStr.append(newIniFiles);
+            } else {
+                iniFilesStr.append(",").append(newIniFiles);
+            }
         }
-      }
 
-      // if this contains something override the value of "0"
-      if (parentAccessionsStr.length() > 0) {
-        Log.stdout("PARENT ACCESSIONS: " + parentAccessionsStr);
-        map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
-        map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+        map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
+        // int workflowAccession = 0;
+        StringBuilder parentAccessionsStr = new StringBuilder();
+
+        // starts with assumption of no metadata writeback
+        map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
+        map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
+        map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
         // my new preferred variable name
-        map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-      }
+        map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
+        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
+        // my new preferred variable name
+        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
 
-      // need to figure out workflow_run_accession
-      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
-      // my new preferred variable name
-      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
+        // if we're doing metadata writeback will need to parameterize the
+        // workflow correctly
+        if (metadataWriteback) {
+
+            // tells the workflow it should save its metadata
+            map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
+
+            first = true;
+
+            // make parent accession string
+            Log.info("ARRAY SIZE: " + parentAccessions.size());
+            for (String id : parentAccessions) {
+                if (first) {
+                    first = false;
+                    parentAccessionsStr.append(id);
+                } else {
+                    parentAccessionsStr.append(",").append(id);
+                }
+            }
+
+            // check to make sure it contains something, save under various
+            // names
+            if (parentAccessionsStr.length() > 0) {
+                map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
+                map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+                // my new preferred variable name
+                map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+            }
+
+            /* Load ini (thus ensuring it exists) prior to writing to the DB. */
+            String[] iniCompleteFilePaths = iniFilesStr.toString().isEmpty() ? new String[] {} : iniFilesStr.toString().split(",");
+            for (String currIniFile : iniCompleteFilePaths) {
+                MapTools.ini2Map(currIniFile, map);
+            }
+            MapTools.cli2Map(cmdLineOptions.toArray(new String[0]), map);
+            StringBuilder mapBuffer = new StringBuilder();
+            for (String key : map.keySet()) {
+                Log.info("KEY: " + key + " VALUE: " + map.get(key));
+                // Log.error(key+"="+map.get(key));
+                mapBuffer.append(key).append("=").append(map.get(key)).append("\n");
+            }
+
+            // need to figure out workflow_run_accession
+            int workflowAccession = wi.getWorkflowAccession();
+            // create the workflow_run row if it doesn't exist
+            if (workflowRunAccession == null) {
+                workflowRunId = this.metadata.add_workflow_run(workflowAccession);
+                int workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
+                workflowRunAccession = new Integer(workflowRunAccessionInt).toString();
+            } else { // if the workflow_run row exists get the workflow_run_id
+                workflowRunId = this.metadata.get_workflow_run_id(Integer.parseInt(workflowRunAccession));
+            }
+            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
+            // my new preferred variable name
+            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
+            Log.stdout("Created workflow run with SWID: " + workflowRunAccession);
+
+            // need to link all the parents to this workflow run accession
+            // this is actually linking them in the DB
+            for (String parentLinkedToWR : parentsLinkedToWR) {
+                try {
+                    this.metadata.linkWorkflowRunAndParent(workflowRunId, Integer.parseInt(parentLinkedToWR));
+                } catch (Exception e) {
+                    Log.error(e.getMessage());
+                }
+            }
+
+            this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.submitted, null,
+                    null, null, mapBuffer.toString(), scheduledHost, null, null, workflowEngine, inputFiles);
+
+        } else {
+            Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
+            ret.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
+        }
+
+        return ret;
 
     }
-    // done with metadata writeback variables
 
-    // have to pass in the cluster name
-    map.put("seqware_cluster", config.get("SW_CLUSTER"));
+    /**
+     * Turns a simple hash into a WorkflowInfo object, making it easier to use with a common workflow launcher
+     * 
+     * @param workflowMetadata
+     * @return
+     */
+    private WorkflowInfo parseWorkflowMetadata(Map<String, String> m) {
+        WorkflowInfo wi = new WorkflowInfo();
+        wi.setCommand(m.get("cmd"));
+        wi.setName(m.get("name"));
+        wi.setDescription(m.get("description"));
+        wi.setVersion(m.get("version"));
+        wi.setConfigPath(m.get("base_ini_file"));
+        wi.setWorkflowDir(m.get("current_working_dir"));
+        wi.setTemplatePath(m.get("workflow_template"));
+        wi.setWorkflowAccession(Integer.parseInt(m.get("workflow_accession")));
+        wi.setPermBundleLocation(m.get("permanent_bundle_location"));
+        wi.setWorkflowClass(m.get("workflow_class"));
+        wi.setWorkflowEngine(m.get("workflow_engine"));
+        wi.setWorkflowType(m.get("workflow_type"));
+        return (wi);
+    }
 
-    return map;
-  }
+    /**
+     * a simple method to replace the ${workflow_bundle_dir} variable
+     * 
+     * @param input
+     * @param wbd
+     * @return
+     */
+    private String replaceWBD(String input, String wbd) {
+        return (input.replaceAll("\\$\\{workflow_bundle_dir\\}", wbd));
+    }
 
-  /**
-   * <p>
-   * generateDaxFile.
-   * </p>
-   * 
-   * @param wi
-   *          a
-   *          {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo}
-   *          object.
-   * @param dax
-   *          a {@link java.io.File} object.
-   * @param iniFilesStr
-   *          a {@link java.lang.String} object.
-   * @param map
-   *          a {@link java.util.Map} object.
-   * @param cmdLineOptions
-   *          a {@link java.util.List} object.
-   * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-   */
-  protected ReturnValue generateDaxFile(WorkflowInfo wi, File dax, String iniFilesStr, Map<String, String> map,
-                                        List<String> cmdLineOptions) {
-    Daxgenerator daxGen = new Daxgenerator();
-    String template = wi.getTemplatePath();
-    template = replaceWBD(template, wi.getWorkflowDir());
-    Log.stdout("TEMPLATE FILE: " + template);
+    /**
+     * This is a pretty key method. It takes the wi object, checks to see if the workflow is available and, if not, sets it up from the
+     * archive location it will also be responsible for correctly setting the workflow_bundle_dir in the wi object if it has changed and it
+     * will go through each field and update the ${workflow_bundle_dir} variable to be a real path (which makes some of the calls elsewhere
+     * to replaceWBD redundant but harmless).
+     * 
+     * @param wi
+     */
+    private ReturnValue provisionBundleAndUpdateWorkflowInfo(WorkflowInfo wi) {
 
-    Log.stdout("CREATING DAX IN: " + dax.getAbsolutePath());
-    ReturnValue daxReturn = daxGen.processTemplate(iniFilesStr.toString().split(","), template, dax.getAbsolutePath(),
-                                                   map, cmdLineOptions.toArray(new String[0]));
+        ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
-    return daxReturn;
-  }
+        // first, see if the workflow bundle dir is actually there, I'm assuming
+        // if it is then I don't need to provision it
+        // FIXME: in the future we should do a more robust check
+        File workflowBundleDir = null;
+        if (wi.getWorkflowDir() != null) {
+            workflowBundleDir = new File(wi.getWorkflowDir());
+        }
+
+        // if any of these are true then need to reprovision workflow
+        if (workflowBundleDir == null || !workflowBundleDir.exists() || !workflowBundleDir.isDirectory() || !workflowBundleDir.canRead()) {
+
+            // find the perm loc
+            String permLoc = wi.getPermBundleLocation();
+            String newWorkflowBundleDir = getAndProvisionBundle(permLoc);
+
+            // if its null then something went wrong
+            if (newWorkflowBundleDir == null) {
+                localRet.setExitStatus(ReturnValue.FAILURE);
+                Log.error("Unable to provision the bundle from: " + permLoc);
+                return localRet;
+            }
+
+            // now update the variables to replace ${workflow_bundle_dir}
+            wi.setWorkflowDir(newWorkflowBundleDir);
+            wi.setConfigPath(replaceWBD(wi.getConfigPath(), newWorkflowBundleDir));
+            wi.setTemplatePath(replaceWBD(wi.getTemplatePath(), newWorkflowBundleDir));
+        }
+
+        return localRet;
+    }
+
+    /**
+     * will either copy or download from S3, unzip, and return unzip location
+     * 
+     * @param permLoc
+     * @return
+     */
+    private String getAndProvisionBundle(String permLoc) {
+        String result = null;
+        Bundle bundle = new Bundle(this.metadata, this.config);
+        ReturnValue localRet;
+        if (permLoc.startsWith("s3://")) {
+            localRet = bundle.unpackageBundleFromS3(permLoc);
+        } else {
+            localRet = bundle.unpackageBundle(new File(permLoc));
+        }
+        if (localRet != null) {
+            return localRet.getAttribute("outputDir");
+        }
+        return result;
+    }
+
+    /**
+     * reads a map and tries to find the parent accessions, the result is de-duplicated.
+     * 
+     * @param map
+     * @return
+     */
+    public static ArrayList<String> parseParentAccessions(Map<String, String> map) {
+        ArrayList<String> results = new ArrayList<>();
+        HashMap<String, String> resultsDeDup = new HashMap<>();
+
+        for (String key : map.keySet()) {
+            if (ReservedIniKeys.PARENT_ACCESSION.getKey().equals(key) || ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey().equals(key)
+                    || ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey().equals(key)) {
+                resultsDeDup.put(map.get(key), "null");
+            }
+        }
+
+        for (String accession : resultsDeDup.keySet()) {
+            results.add(accession);
+        }
+
+        // for hotfix 0.13.6.3
+        // GATK reveals an issue where parent_accession is setup with a correct list
+        // of accessions while parent-accessions and parent_accessions are set to 0
+        // when the three are mushed together, the rogue zero is transferred to
+        // parent_accession and causes it to crash the workflow
+        // I'm going to allow a single 0 in case (god forbid) some workflow relies
+        // upon this, but otherwise a 0 should not occur in a list of valid
+        // parent_accessions
+        if (results.contains("0") && results.size() > 1) {
+            results.remove("0");
+        }
+
+        return (results);
+    }
+
+    /**
+     * <p>
+     * prepareData.
+     * </p>
+     * 
+     * @param wi
+     *            a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
+     * @param workflowRunAccession
+     *            a {@link java.lang.String} object.
+     * @param iniFiles
+     *            a {@link java.util.ArrayList} object.
+     * @param preParsedIni
+     *            a {@link java.util.Map} object.
+     * @param metadataWriteback
+     *            a boolean.
+     * @param parentAccessions
+     *            a {@link java.util.ArrayList} object.
+     * @return a {@link java.util.Map} object.
+     */
+    protected Map<String, String> prepareData(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
+            Map<String, String> preParsedIni, boolean metadataWriteback, ArrayList<String> parentAccessions) {
+        Map<String, String> map = new HashMap<>();
+        StringBuilder parentAccessionsStr = new StringBuilder();
+        // merge what came into this program to the map object
+        if (preParsedIni != null && !preParsedIni.isEmpty()) {
+            map.putAll(preParsedIni);
+        }
+        // update this in the map
+        map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
+        // starts with assumption of no metadata writeback
+        // GOTCHA: this is why you always need to specify the parentAccessions
+        // array
+        map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
+        map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
+        map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
+        // my new preferred variable name
+        map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
+        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
+        // my new preferred variable name
+        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
+        // if we're doing metadata writeback will need to parameterize the
+        // workflow correctly
+        // corrects the file paths for all the iniFiles
+        // boolean first = true;
+
+        if (metadataWriteback) {
+
+            // tells the workflow it should save its metadata
+            map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
+
+            // figure out the unique list of parent accessions that were passed
+            // in
+            boolean first = true;
+            Log.info("ARRAY SIZE: " + parentAccessions.size());
+            HashMap<String, String> uniqParentAccessions = new HashMap<>();
+            for (String id : parentAccessions) {
+                uniqParentAccessions.put(id, "null");
+            }
+            for (String id : uniqParentAccessions.keySet()) {
+                if (first) {
+                    first = false;
+                    parentAccessionsStr.append(id);
+                } else {
+                    parentAccessionsStr.append(",").append(id);
+                }
+            }
+
+            // if this contains something override the value of "0"
+            if (parentAccessionsStr.length() > 0) {
+                Log.stdout("PARENT ACCESSIONS: " + parentAccessionsStr);
+                map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
+                map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+                // my new preferred variable name
+                map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+            }
+
+            // need to figure out workflow_run_accession
+            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
+            // my new preferred variable name
+            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
+
+        }
+        // done with metadata writeback variables
+
+        // have to pass in the cluster name
+        map.put("seqware_cluster", config.get("SW_CLUSTER"));
+
+        return map;
+    }
+
+    /**
+     * <p>
+     * generateDaxFile.
+     * </p>
+     * 
+     * @param wi
+     *            a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
+     * @param dax
+     *            a {@link java.io.File} object.
+     * @param iniFilesStr
+     *            a {@link java.lang.String} object.
+     * @param map
+     *            a {@link java.util.Map} object.
+     * @param cmdLineOptions
+     *            a {@link java.util.List} object.
+     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
+     */
+    protected ReturnValue generateDaxFile(WorkflowInfo wi, File dax, String iniFilesStr, Map<String, String> map,
+            List<String> cmdLineOptions) {
+        Daxgenerator daxGen = new Daxgenerator();
+        String template = wi.getTemplatePath();
+        template = replaceWBD(template, wi.getWorkflowDir());
+        Log.stdout("TEMPLATE FILE: " + template);
+
+        Log.stdout("CREATING DAX IN: " + dax.getAbsolutePath());
+        ReturnValue daxReturn = daxGen.processTemplate(iniFilesStr.toString().split(","), template, dax.getAbsolutePath(), map,
+                cmdLineOptions.toArray(new String[0]));
+
+        return daxReturn;
+    }
 }

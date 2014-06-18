@@ -39,8 +39,10 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>LaneIDResource class.</p>
- *
+ * <p>
+ * LaneIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -49,7 +51,9 @@ public class LaneIDResource extends DatabaseIDResource {
     private Logger logger;
 
     /**
-     * <p>Constructor for LaneIDResource.</p>
+     * <p>
+     * Constructor for LaneIDResource.
+     * </p>
      */
     public LaneIDResource() {
         super("laneId");
@@ -57,7 +61,9 @@ public class LaneIDResource extends DatabaseIDResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -69,7 +75,8 @@ public class LaneIDResource extends DatabaseIDResource {
 
         LaneService ss = BeanFactory.getLaneServiceBean();
         Lane lane = (Lane) testIfNull(ss.findBySWAccession(getId()));
-        dto = copier.hibernate2dto(Lane.class, lane, new Class<?>[]{LibraryStrategy.class, LibrarySource.class, LibrarySelection.class}, new CollectionPropertyName<?>[]{});
+        dto = copier.hibernate2dto(Lane.class, lane, new Class<?>[] { LibraryStrategy.class, LibrarySource.class, LibrarySelection.class },
+                new CollectionPropertyName<?>[] {});
 
         if (fields.contains("sequencerRun")) {
             SequencerRun sr = lane.getSequencerRun();
@@ -80,23 +87,26 @@ public class LaneIDResource extends DatabaseIDResource {
                 Log.info("Could not be found sequencer run");
             }
         }
-		if (fields.contains("attributes")) {
-			Set<LaneAttribute> las = lane.getLaneAttributes();
-			if(las!=null && !las.isEmpty()) {
-				Set<LaneAttribute> newlas = new TreeSet<>();
-				for(LaneAttribute la: las) {
-					newlas.add(copier.hibernate2dto(LaneAttribute.class,la));
-				}
-				dto.setLaneAttributes(newlas);
-			}
-		}
+        if (fields.contains("attributes")) {
+            Set<LaneAttribute> las = lane.getLaneAttributes();
+            if (las != null && !las.isEmpty()) {
+                Set<LaneAttribute> newlas = new TreeSet<>();
+                for (LaneAttribute la : las) {
+                    newlas.add(copier.hibernate2dto(LaneAttribute.class, la));
+                }
+                dto.setLaneAttributes(newlas);
+            }
+        }
 
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     @Put
     public Representation put(Representation entity) {
@@ -119,7 +129,7 @@ public class LaneIDResource extends DatabaseIDResource {
             LaneService fs = BeanFactory.getLaneServiceBean();
             Lane lane = (Lane) testIfNull(fs.findByID(newLane.getLaneId()));
             lane.givesPermission(registration);
-            //simple types
+            // simple types
             String name = newLane.getName();
             String desc = newLane.getDescription();
             Integer laneIndex = newLane.getLaneIndex();
@@ -127,7 +137,7 @@ public class LaneIDResource extends DatabaseIDResource {
             Boolean skip = newLane.getSkip();
             String tags = newLane.getTags();
             String regions = newLane.getRegions();
-            //foreign keys
+            // foreign keys
             Sample sample = newLane.getSample();
             Registration owner = newLane.getOwner();
 
@@ -178,7 +188,7 @@ public class LaneIDResource extends DatabaseIDResource {
             }
             logger.debug("newAttributes: " + newAttributes);
             if (newAttributes != null) {
-                //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating            
+                // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
                 this.mergeAttributes(lane.getLaneAttributes(), newAttributes, lane);
             }
 
@@ -186,7 +196,8 @@ public class LaneIDResource extends DatabaseIDResource {
 
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
 
-            Lane detachedLane = copier.hibernate2dto(Lane.class, lane, new Class<?>[]{LibraryStrategy.class, LibrarySource.class, LibrarySelection.class}, new CollectionPropertyName<?>[]{});
+            Lane detachedLane = copier.hibernate2dto(Lane.class, lane, new Class<?>[] { LibraryStrategy.class, LibrarySource.class,
+                    LibrarySelection.class }, new CollectionPropertyName<?>[] {});
 
             Document line = XmlTools.marshalToDocument(jo, detachedLane);
             representation = XmlTools.getRepresentation(line);

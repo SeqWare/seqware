@@ -17,9 +17,9 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 public class FileProvenanceResource extends BasicRestlet {
-  public FileProvenanceResource(Context context) {
-    super(context);
-  }
+    public FileProvenanceResource(Context context) {
+        super(context);
+    }
 
     @Override
     public void handle(final Request request, final Response response) {

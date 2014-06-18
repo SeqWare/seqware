@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
- *
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -24,90 +24,91 @@ public class AnalisysTableController extends BaseCommandController {
     private WorkflowRunService workflowRunService;
 
     /**
-     * <p>Constructor for AnalisysListController.</p>
+     * <p>
+     * Constructor for AnalisysListController.
+     * </p>
      */
     public AnalisysTableController() {
-	super();
-	setSupportedMethods(new String[]{METHOD_GET});
+        super();
+        setSupportedMethods(new String[] { METHOD_GET });
     }
 
     /**
      * {@inheritDoc}
-     * @return 
-     * @throws java.lang.Exception 
+     * 
+     * @return
+     * @throws java.lang.Exception
      */
     @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest request,
-	    HttpServletResponse response)
-	    throws Exception {
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-	//Registration registration = Security.requireRegistration(request, response);
-	Registration registration = Security.getRegistration(request);
-	if (registration == null) {
-	    return new ModelAndView("redirect:/login.htm");
-	}
+        // Registration registration = Security.requireRegistration(request, response);
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) {
+            return new ModelAndView("redirect:/login.htm");
+        }
 
-	initSortingTreeAttr(request);
+        initSortingTreeAttr(request);
 
-	ModelAndView modelAndView = new ModelAndView("AnalisysTable");
-	modelAndView.addObject("registration", registration);
+        ModelAndView modelAndView = new ModelAndView("AnalisysTable");
+        modelAndView.addObject("registration", registration);
 
-	return modelAndView;
+        return modelAndView;
     }
 
     private void initSortingTreeAttr(HttpServletRequest request) {
-	HttpSession session = request.getSession(false);
-	if (session.getAttribute("ascMyListAnalysis") == null) {
-	    session.setAttribute("ascMyListAnalysis", true);
-	    session.setAttribute("ascMySharedAnalysises", true);
-	    session.setAttribute("ascAnalysisesSharedWithMe", true);
-	    session.setAttribute("ascMyRunningListAnalysis", true);
-	}
+        HttpSession session = request.getSession(false);
+        if (session.getAttribute("ascMyListAnalysis") == null) {
+            session.setAttribute("ascMyListAnalysis", true);
+            session.setAttribute("ascMySharedAnalysises", true);
+            session.setAttribute("ascAnalysisesSharedWithMe", true);
+            session.setAttribute("ascMyRunningListAnalysis", true);
+        }
     }
 
     /**
-     * <p>Getter for the field
-     * <code>workflowService</code>.</p>
-     *
-     * @return a {@link net.sourceforge.seqware.common.business.WorkflowService}
-     * object.
+     * <p>
+     * Getter for the field <code>workflowService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
      */
     public WorkflowService getWorkflowService() {
-	return workflowService;
+        return workflowService;
     }
 
     /**
-     * <p>Setter for the field
-     * <code>workflowService</code>.</p>
-     *
-     * @param workflowService a
-     * {@link net.sourceforge.seqware.common.business.WorkflowService} object.
+     * <p>
+     * Setter for the field <code>workflowService</code>.
+     * </p>
+     * 
+     * @param workflowService
+     *            a {@link net.sourceforge.seqware.common.business.WorkflowService} object.
      */
     public void setWorkflowService(WorkflowService workflowService) {
-	this.workflowService = workflowService;
+        this.workflowService = workflowService;
     }
 
     /**
-     * <p>Getter for the field
-     * <code>workflowRunService</code>.</p>
-     *
-     * @return a
-     * {@link net.sourceforge.seqware.common.business.WorkflowRunService}
-     * object.
+     * <p>
+     * Getter for the field <code>workflowRunService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
      */
     public WorkflowRunService getWorkflowRunService() {
-	return workflowRunService;
+        return workflowRunService;
     }
 
     /**
-     * <p>Setter for the field
-     * <code>workflowRunService</code>.</p>
-     *
-     * @param workflowRunService a
-     * {@link net.sourceforge.seqware.common.business.WorkflowRunService}
-     * object.
+     * <p>
+     * Setter for the field <code>workflowRunService</code>.
+     * </p>
+     * 
+     * @param workflowRunService
+     *            a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
      */
     public void setWorkflowRunService(WorkflowRunService workflowRunService) {
-	this.workflowRunService = workflowRunService;
+        this.workflowRunService = workflowRunService;
     }
 }

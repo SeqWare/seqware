@@ -37,29 +37,34 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>WorkflowResource class.</p>
- *
+ * <p>
+ * WorkflowResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowResource extends DatabaseResource {
 
     /**
-     * <p>Constructor for WorkflowResource.</p>
+     * <p>
+     * Constructor for WorkflowResource.
+     * </p>
      */
     public WorkflowResource() {
         super("Workflows");
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
         authenticate();
         WorkflowService ss = BeanFactory.getWorkflowServiceBean();
         Document line = null;
-
 
         if (queryValues.get("id") != null) {
             Workflow p = (Workflow) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
@@ -110,9 +115,12 @@ public class WorkflowResource extends DatabaseResource {
     }
 
     /**
-     * <p>postJaxb.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
      */
     @Post("xml")
     public void postJaxb(Representation entity) {
@@ -131,12 +139,12 @@ public class WorkflowResource extends DatabaseResource {
                 if (r != null) {
                     p.setOwner(r);
                 } else {
-                Log.info("Could not be found: owner" + p.getOwner());
-            }
+                    Log.info("Could not be found: owner" + p.getOwner());
+                }
             } else {
                 p.setOwner(registration);
             }
-            //persist p
+            // persist p
             WorkflowService ws = BeanFactory.getWorkflowServiceBean();
             Integer id = ws.insert(registration, p);
             Workflow w = (Workflow) testIfNull(ws.findBySWAccession(id));

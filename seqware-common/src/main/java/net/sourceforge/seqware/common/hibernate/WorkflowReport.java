@@ -25,17 +25,22 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 /**
- * <p>WorkflowReport class.</p>
- *
+ * <p>
+ * WorkflowReport class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowReport {
 
     /**
-     * <p>fromWorkflow.</p>
-     *
-     * @param workflowSWA a {@link java.lang.Integer} object.
+     * <p>
+     * fromWorkflow.
+     * </p>
+     * 
+     * @param workflowSWA
+     *            a {@link java.lang.Integer} object.
      * @return a {@link java.lang.String} object.
      */
     public String fromWorkflow(Integer workflowSWA) {
@@ -43,17 +48,18 @@ public class WorkflowReport {
         WorkflowService ws = BeanFactory.getWorkflowServiceBean();
         Workflow workflow = ws.findBySWAccession(workflowSWA);
 
-        if (workflow == null)
-        {
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "The workflow does not exist: "+workflowSWA);
+        if (workflow == null) {
+            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "The workflow does not exist: " + workflowSWA);
         }
-        
-        result.append("Workflow: ").append(workflow.getName()).append("\tVersion ").append(workflow.getVersion()).append("\tSWID: ").append(workflow.getSwAccession()).append("\n");
+
+        result.append("Workflow: ").append(workflow.getName()).append("\tVersion ").append(workflow.getVersion()).append("\tSWID: ")
+                .append(workflow.getSwAccession()).append("\n");
 
         for (WorkflowRun run : workflow.getWorkflowRuns()) {
 
             long time = run.getUpdateTimestamp().getTime() - run.getCreateTimestamp().getTime();
-            result.append("\tRun: ").append(run.getStatus()).append("\tStart Date: ").append(run.getCreateTimestamp()).append("\tRunning time: ").append(getTime(time)).append("\tSWID: ").append(run.getSwAccession()).append("\n");
+            result.append("\tRun: ").append(run.getStatus()).append("\tStart Date: ").append(run.getCreateTimestamp())
+                    .append("\tRunning time: ").append(getTime(time)).append("\tSWID: ").append(run.getSwAccession()).append("\n");
             for (Processing processing : run.getProcessings()) {
                 calcProcessing(processing, result);
             }
@@ -79,6 +85,8 @@ public class WorkflowReport {
 
     private void calcProcessing(Processing processing, StringBuilder result) {
         long time = processing.getUpdateTimestamp().getTime() - processing.getCreateTimestamp().getTime();
-        result.append("\t\tProcessing: ").append(processing.getAlgorithm()).append("\n\t\t\tRunning time: ").append(getTime(time)).append("\n\t\t\tSWID: ").append(processing.getSwAccession()).append("\n\t\t\tNumber of files: ").append(processing.getFiles().size()).append("\n");
+        result.append("\t\tProcessing: ").append(processing.getAlgorithm()).append("\n\t\t\tRunning time: ").append(getTime(time))
+                .append("\n\t\t\tSWID: ").append(processing.getSwAccession()).append("\n\t\t\tNumber of files: ")
+                .append(processing.getFiles().size()).append("\n");
     }
 }

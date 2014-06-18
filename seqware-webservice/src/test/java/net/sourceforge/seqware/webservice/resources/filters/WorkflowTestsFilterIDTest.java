@@ -19,7 +19,7 @@ package net.sourceforge.seqware.webservice.resources.filters;
 import net.sourceforge.seqware.webservice.resources.AbstractResourceTest;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class WorkflowTestsFilterIDTest extends AbstractResourceTest {
@@ -36,47 +36,47 @@ public class WorkflowTestsFilterIDTest extends AbstractResourceTest {
     @Override
     public void testPut() {
         System.out.println(getRelativeURI() + " PUT");
-//        try {
-//            resource.put(null).write(System.out);
-//            Assert.fail("No PUT on " + getRelativeURI());
-//        } catch (Exception e) {
-//            Assert.assertEquals("Method Not Allowed", e.getMessage());
-//        }
+        // try {
+        // resource.put(null).write(System.out);
+        // Assert.fail("No PUT on " + getRelativeURI());
+        // } catch (Exception e) {
+        // Assert.assertEquals("Method Not Allowed", e.getMessage());
+        // }
     }
 
     @Override
     public void testGet() {
         System.out.println(getRelativeURI() + " GET");
-//        try {
-//            String result = resource.get().getText();
-//            Assert.assertTrue("workflowId is not in representation:" + result, result.contains(workflowId));
-//            Assert.assertTrue("testId is not in representation:" + result, result.contains(testId));
-//        } catch (Exception e) {
-//            Assert.fail(e.getMessage());
-//            e.printStackTrace();
-//        }
+        // try {
+        // String result = resource.get().getText();
+        // Assert.assertTrue("workflowId is not in representation:" + result, result.contains(workflowId));
+        // Assert.assertTrue("testId is not in representation:" + result, result.contains(testId));
+        // } catch (Exception e) {
+        // Assert.fail(e.getMessage());
+        // e.printStackTrace();
+        // }
     }
 
     @Override
     public void testPost() {
         System.out.println(getRelativeURI() + " POST");
-//        try {
-//            resource.post(null).write(System.out);
-//            Assert.fail("No POST on " + getRelativeURI());
-//        } catch (Exception e) {
-//            Assert.assertEquals("Method Not Allowed", e.getMessage());
-//        }
+        // try {
+        // resource.post(null).write(System.out);
+        // Assert.fail("No POST on " + getRelativeURI());
+        // } catch (Exception e) {
+        // Assert.assertEquals("Method Not Allowed", e.getMessage());
+        // }
     }
 
     @Override
     public void testDelete() {
         System.out.println(getRelativeURI() + " DELETE");
-//        try {
-//            String result = resource.delete().getText();
-//            Assert.assertTrue("workflowId is not in representation:" + result, result.contains(workflowId));
-//            Assert.assertTrue("runId is not in representation:" + result, result.contains(testId));
-//        } catch (Exception e) {
-//            Assert.fail(e.getMessage());
-//        }
+        // try {
+        // String result = resource.delete().getText();
+        // Assert.assertTrue("workflowId is not in representation:" + result, result.contains(workflowId));
+        // Assert.assertTrue("runId is not in representation:" + result, result.contains(testId));
+        // } catch (Exception e) {
+        // Assert.fail(e.getMessage());
+        // }
     }
 }

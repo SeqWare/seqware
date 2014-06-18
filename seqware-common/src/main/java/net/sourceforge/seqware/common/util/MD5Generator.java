@@ -9,24 +9,25 @@ import java.security.MessageDigest;
 
 /**
  * Utility class for calculating MD5 hash on a file's contents.
- *
+ * 
  * @author lmose
  * @version $Id: $Id
  */
 public class MD5Generator {
 
     /**
-     * Returns a 32 character representation of the MD5 hash of the specified
-     * file's content.  Leading zeros are preserved.
-     *
-     * @param filename a {@link java.lang.String} object.
+     * Returns a 32 character representation of the MD5 hash of the specified file's content. Leading zeros are preserved.
+     * 
+     * @param filename
+     *            a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
-     * @throws java.lang.Exception if any.
+     * @throws java.lang.Exception
+     *             if any.
      */
     public String md5sum(String filename) throws Exception {
         String result = "ERROR";
 
-        //TODO: Attempt to run native md5sum implementation first.
+        // TODO: Attempt to run native md5sum implementation first.
         InputStream is = null;
         InputStream dis = null;
         InputStream bis = null;
@@ -34,14 +35,15 @@ public class MD5Generator {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             is = new FileInputStream(filename);
-            dis =  new DigestInputStream(is, md);
+            dis = new DigestInputStream(is, md);
             bis = new BufferedInputStream(dis);
-            
-            // Read the file and calculate the md5 hash 
+
+            // Read the file and calculate the md5 hash
             byte[] buffer = new byte[8192];
-            while (bis.read(buffer) > -1);
+            while (bis.read(buffer) > -1)
+                ;
             byte[] md5sum = md.digest();
-            
+
             // Convert the hash to a string.
             BigInteger bigInt = new BigInteger(1, md5sum);
             result = String.format("%032x", bigInt);

@@ -26,26 +26,25 @@ import javax.ws.rs.Path;
 @Path("io.seqware.webservice.model.studyattribute")
 public class CustomStudyAttributeFacadeREST extends StudyAttributeFacadeREST {
 
-   @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
-   private EntityManager em;
+    @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
+    private EntityManager em;
 
-   @EJB
-   private StudyFacadeREST studyFacadeRest;
+    @EJB
+    private StudyFacadeREST studyFacadeRest;
 
-   /**
-    * Create a new study and a new study attribute to associate with it in a
-    * single step. Both steps occur in a single transaction.
-    * 
-    * @param entity
-    *           The study attribute with nested study.
-    */
-   @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-   @POST
-   @Path("withbaseentity")
-   @Consumes({ "application/json", "application/xml" })
-   public void createWithBaseEntity(StudyAttribute entity) {
-      studyFacadeRest.create(entity.getStudyId());
-      em.flush();
-      super.create(entity);
-   }
+    /**
+     * Create a new study and a new study attribute to associate with it in a single step. Both steps occur in a single transaction.
+     * 
+     * @param entity
+     *            The study attribute with nested study.
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @POST
+    @Path("withbaseentity")
+    @Consumes({ "application/json", "application/xml" })
+    public void createWithBaseEntity(StudyAttribute entity) {
+        studyFacadeRest.create(entity.getStudyId());
+        em.flush();
+        super.create(entity);
+    }
 }

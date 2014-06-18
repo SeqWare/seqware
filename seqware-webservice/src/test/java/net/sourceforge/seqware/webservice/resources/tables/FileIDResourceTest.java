@@ -27,31 +27,31 @@ import org.junit.Ignore;
  * @author mtaschuk
  */
 public class FileIDResourceTest extends DatabaseResourceIDTest {
-  public FileIDResourceTest() {
-    super("/files/1963");
-    jo = new JaxbObject<>();
-    o = new File();
-  }
-
-  @Override
-  protected int testObject(Object o) {
-    if (o instanceof File) {
-      File e = (File) o;
-      if (e.getSwAccession() != Integer.parseInt(id)) {
-        System.err.println("Actual ID: " + e.getSwAccession() + " and expected ID: " + Integer.parseInt(id));
-        return ReturnValue.INVALIDFILE;
-      }
-    } else {
-      System.err.println("Object is not an instance of File");
-      return ReturnValue.FILENOTREADABLE;
+    public FileIDResourceTest() {
+        super("/files/1963");
+        jo = new JaxbObject<>();
+        o = new File();
     }
-    return ReturnValue.SUCCESS;
-  }
 
-  @Ignore("Temporarily ignored. TODO: Implement test.")
-  @Override
-  public void testPut() {
+    @Override
+    protected int testObject(Object o) {
+        if (o instanceof File) {
+            File e = (File) o;
+            if (e.getSwAccession() != Integer.parseInt(id)) {
+                System.err.println("Actual ID: " + e.getSwAccession() + " and expected ID: " + Integer.parseInt(id));
+                return ReturnValue.INVALIDFILE;
+            }
+        } else {
+            System.err.println("Object is not an instance of File");
+            return ReturnValue.FILENOTREADABLE;
+        }
+        return ReturnValue.SUCCESS;
+    }
 
-  }
+    @Ignore("Temporarily ignored. TODO: Implement test.")
+    @Override
+    public void testPut() {
+
+    }
 
 }

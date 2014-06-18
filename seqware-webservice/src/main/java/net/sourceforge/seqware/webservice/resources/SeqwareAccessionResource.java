@@ -22,15 +22,20 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 
 /**
- * <p>SeqwareAccessionResource class.</p>
- *
+ * <p>
+ * SeqwareAccessionResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class SeqwareAccessionResource extends BasicResource {
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Get
     @Override
     public Representation get() {

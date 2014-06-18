@@ -12,63 +12,69 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * <p>FileTypeDAOHibernate class.</p>
- *
+ * <p>
+ * FileTypeDAOHibernate class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class FileTypeDAOHibernate extends HibernateDaoSupport implements FileTypeDAO {
-  /**
-   * <p>Constructor for FileTypeDAOHibernate.</p>
-   */
-  public FileTypeDAOHibernate() {
-    super();
-  }
-
-  /**
-   * <p>list.</p>
-   *
-   * @return a {@link java.util.List} object.
-   */
-  @Override
-  public List<FileType> list() {
-    ArrayList<FileType> fileTypes = new ArrayList<>();
-
-    List expmts = this.getHibernateTemplate().find("from FileType as fileType order by fileType.fileTypeId asc" // desc
-    );
-
-    for (Object fileType : expmts) {
-      fileTypes.add((FileType) fileType);
+    /**
+     * <p>
+     * Constructor for FileTypeDAOHibernate.
+     * </p>
+     */
+    public FileTypeDAOHibernate() {
+        super();
     }
-    return fileTypes;
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public FileType findByID(Integer id) {
-    String query = "from FileType as fileType where fileType.fileTypeId = ?";
-    FileType obj = null;
-    Object[] parameters = { id };
-    List list = this.getHibernateTemplate().find(query, parameters);
-    if (list.size() > 0) {
-      obj = (FileType) list.get(0);
-    }
-    return obj;
-  }
+    /**
+     * <p>
+     * list.
+     * </p>
+     * 
+     * @return a {@link java.util.List} object.
+     */
+    @Override
+    public List<FileType> list() {
+        ArrayList<FileType> fileTypes = new ArrayList<>();
 
-  /** {@inheritDoc} */
-  @Override
-  public FileType updateDetached(FileType fileType) {
-    FileType dbObject = findByID(fileType.getFileTypeId());
-    try {
-      BeanUtilsBean beanUtils = new NullBeanUtils();
-      beanUtils.copyProperties(dbObject, fileType);
-      return (FileType) this.getHibernateTemplate().merge(dbObject);
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
-    } catch (InvocationTargetException e) {
-      e.printStackTrace();
+        List expmts = this.getHibernateTemplate().find("from FileType as fileType order by fileType.fileTypeId asc" // desc
+        );
+
+        for (Object fileType : expmts) {
+            fileTypes.add((FileType) fileType);
+        }
+        return fileTypes;
     }
-    return null;
-  }
+
+    /** {@inheritDoc} */
+    @Override
+    public FileType findByID(Integer id) {
+        String query = "from FileType as fileType where fileType.fileTypeId = ?";
+        FileType obj = null;
+        Object[] parameters = { id };
+        List list = this.getHibernateTemplate().find(query, parameters);
+        if (list.size() > 0) {
+            obj = (FileType) list.get(0);
+        }
+        return obj;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public FileType updateDetached(FileType fileType) {
+        FileType dbObject = findByID(fileType.getFileTypeId());
+        try {
+            BeanUtilsBean beanUtils = new NullBeanUtils();
+            beanUtils.copyProperties(dbObject, fileType);
+            return (FileType) this.getHibernateTemplate().merge(dbObject);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

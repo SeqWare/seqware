@@ -23,11 +23,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class WorkflowManagerTest {
-    
+
     public WorkflowManagerTest() {
     }
 
@@ -38,50 +38,53 @@ public class WorkflowManagerTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
 
     /**
      * Test of runWorkflow method, of class WorkflowManager.
+     * 
      * @throws java.lang.Exception
      */
     @Test
     public void testRunWorkflow() throws Exception {
-//        System.out.println("runWorkflow");
-//
-//        String workflowRunAccession = "";
-//        String iniFilesStr = "";
-//        boolean metadataWriteback = false;
-//        String parentAccessionsStr = "";
-//        ArrayList<String> parentsLinkedToWR = null;
-//        boolean wait = false;
-//        List<String> cmdLineOptions = null;
-//        WorkflowManager instance = new WorkflowManager();
-//        ReturnValue expResult = null;
-//        ReturnValue result = instance.runWorkflow(wi, workflowRunAccession, iniFilesStr, metadataWriteback, parentAccessionsStr, parentsLinkedToWR, wait, cmdLineOptions);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
+        // System.out.println("runWorkflow");
+        //
+        // String workflowRunAccession = "";
+        // String iniFilesStr = "";
+        // boolean metadataWriteback = false;
+        // String parentAccessionsStr = "";
+        // ArrayList<String> parentsLinkedToWR = null;
+        // boolean wait = false;
+        // List<String> cmdLineOptions = null;
+        // WorkflowManager instance = new WorkflowManager();
+        // ReturnValue expResult = null;
+        // ReturnValue result = instance.runWorkflow(wi, workflowRunAccession, iniFilesStr, metadataWriteback, parentAccessionsStr,
+        // parentsLinkedToWR, wait, cmdLineOptions);
+        // assertEquals(expResult, result);
+        // // TODO review the generated test code and remove the default call to fail.
+        // fail("The test case is a prototype.");
     }
 
     /**
      * Test of linkWorkflowRunAndParent method, of class WorkflowManager.
+     * 
      * @throws java.lang.Exception
      */
     @Test
     public void testLinkWorkflowRunAndParent() throws Exception {
-//        System.out.println("linkWorkflowRunAndParent");
-//        int workflowRunId = 24;
-//        int parentAccession = 4789;
-//        WorkflowManager instance = new WorkflowManager();
-//        boolean expResult = true;
-//        boolean result = instance.linkWorkflowRunAndParent(workflowRunId, parentAccession);
-//        assertEquals(expResult, result);
+        // System.out.println("linkWorkflowRunAndParent");
+        // int workflowRunId = 24;
+        // int parentAccession = 4789;
+        // WorkflowManager instance = new WorkflowManager();
+        // boolean expResult = true;
+        // boolean result = instance.linkWorkflowRunAndParent(workflowRunId, parentAccession);
+        // assertEquals(expResult, result);
     }
 }

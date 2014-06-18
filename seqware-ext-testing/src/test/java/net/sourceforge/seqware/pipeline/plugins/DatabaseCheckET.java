@@ -28,11 +28,11 @@ import org.junit.Test;
 
 /**
  * These tests support the database check utility.
- *
+ * 
  * @author dyuen
  */
 public class DatabaseCheckET {
-    
+
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
@@ -40,16 +40,16 @@ public class DatabaseCheckET {
 
     @Test
     public void runDatabaseCheck() throws IOException {
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB"; 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDB";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
         String[] split = listOutput.split("Printed report to ");
-        File report = new File(split[split.length-1].trim());
-        String readFileToString = FileUtils.readFileToString(report, (Charset)null);
+        File report = new File(split[split.length - 1].trim());
+        String readFileToString = FileUtils.readFileToString(report, (Charset) null);
         Assert.assertTrue("report empty", readFileToString.length() > 0);
         Assert.assertTrue("report does not contain report", readFileToString.contains("CheckDB Report"));
         Assert.assertTrue("report contains exceptions", !readFileToString.contains("Exception"));
         FileUtils.deleteQuietly(report);
     }
-    
+
 }

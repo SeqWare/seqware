@@ -26,9 +26,8 @@ import org.restlet.data.Form;
 import org.restlet.resource.ResourceException;
 
 /**
- * See
- * https://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_extend_the_web_service#Basic_Resource
- *
+ * See https://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_extend_the_web_service#Basic_Resource
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -39,17 +38,24 @@ public class BasicRestlet extends Restlet {
     protected Registration registration;
 
     /**
-     * <p>Constructor for BasicRestlet.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for BasicRestlet.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public BasicRestlet(Context context) {
         super(context);
     }
+
     /**
-     * <p>init.</p>
-     *
-     * @param request a {@link org.restlet.Request} object.
+     * <p>
+     * init.
+     * </p>
+     * 
+     * @param request
+     *            a {@link org.restlet.Request} object.
      */
     protected void init(Request request) {
         Form form = request.getResourceRef().getQueryAsForm();
@@ -66,39 +72,42 @@ public class BasicRestlet extends Restlet {
     }
 
     public static Map<String, String[]> queryMap(Request req) {
-      Map<String, String[]> m = new HashMap<>();
-      Form f = req.getResourceRef().getQueryAsForm();
-      for (String name : f.getNames()){
-        m.put(name, f.getValuesArray(name));
-      }
-      return m;
+        Map<String, String[]> m = new HashMap<>();
+        Form f = req.getResourceRef().getQueryAsForm();
+        for (String name : f.getNames()) {
+            m.put(name, f.getValuesArray(name));
+        }
+        return m;
     }
 
     /**
-     * <p>authenticate.</p>
-     *
-     * @param identifier a {@link java.lang.String} object.
-     * @throws org.restlet.resource.ResourceException if any.
+     * <p>
+     * authenticate.
+     * </p>
+     * 
+     * @param identifier
+     *            a {@link java.lang.String} object.
+     * @throws org.restlet.resource.ResourceException
+     *             if any.
      */
     protected void authenticate(String identifier) throws ResourceException {
-        registration = BeanFactory.getRegistrationServiceBean().
-                findByEmailAddress(identifier);
+        registration = BeanFactory.getRegistrationServiceBean().findByEmailAddress(identifier);
     }
-    
-    protected String getQueryValue(String key){  
+
+    protected String getQueryValue(String key) {
         if (queryValues != null && queryValues.get(key) != null) {
             return queryValues.get(key);
-        } 
+        }
         return null;
     }
 
-//    protected Session getSession() {
-//        SessionFactory sessionFactory = (SessionFactory) ctx.getBean("sessionFactory");
-//        Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-//        return session;
-//    }
-//
-//    protected void removeSession(Session session) {
-//        session.close();
-//    }
+    // protected Session getSession() {
+    // SessionFactory sessionFactory = (SessionFactory) ctx.getBean("sessionFactory");
+    // Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+    // return session;
+    // }
+    //
+    // protected void removeSession(Session session) {
+    // session.close();
+    // }
 }

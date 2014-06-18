@@ -10,86 +10,99 @@ import java.util.Collection;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * <p>BufferedReaderThread class.</p>
- *
+ * <p>
+ * BufferedReaderThread class.
+ * </p>
+ * 
  * @author jmendler
  * @version $Id: $Id
  */
 public class BufferedReaderThread extends Thread {
 
-  BufferedReader reader = null;
-  Collection<String> output = null;
-  String error = null;
-  
-  /**
-   * <p>Constructor for BufferedReaderThread.</p>
-   *
-   * @param input a {@link java.io.InputStream} object.
-   */
-  public BufferedReaderThread( InputStream input ) {
-    reader = new BufferedReader(new InputStreamReader(input));
-    output = new ArrayList<>();
-  }  
-  
-  /**
-   * <p>Constructor for BufferedReaderThread.</p>
-   *
-   * @param input a {@link java.io.InputStream} object.
-   * @param lineCapacity set the capacity for the buffered reader, set to Integer.MAX_VALUE to store everything
-   */
-  public BufferedReaderThread( InputStream input, int lineCapacity ) {
-    reader = new BufferedReader(new InputStreamReader(input));
-    if (lineCapacity == Integer.MAX_VALUE){
-      output = new ArrayList<>();
-      return;  
-    } 
-    output = EvictingQueue.create(lineCapacity);
-  }  
+    BufferedReader reader = null;
+    Collection<String> output = null;
+    String error = null;
 
-  
+    /**
+     * <p>
+     * Constructor for BufferedReaderThread.
+     * </p>
+     * 
+     * @param input
+     *            a {@link java.io.InputStream} object.
+     */
+    public BufferedReaderThread(InputStream input) {
+        reader = new BufferedReader(new InputStreamReader(input));
+        output = new ArrayList<>();
+    }
+
+    /**
+     * <p>
+     * Constructor for BufferedReaderThread.
+     * </p>
+     * 
+     * @param input
+     *            a {@link java.io.InputStream} object.
+     * @param lineCapacity
+     *            set the capacity for the buffered reader, set to Integer.MAX_VALUE to store everything
+     */
+    public BufferedReaderThread(InputStream input, int lineCapacity) {
+        reader = new BufferedReader(new InputStreamReader(input));
+        if (lineCapacity == Integer.MAX_VALUE) {
+            output = new ArrayList<>();
+            return;
+        }
+        output = EvictingQueue.create(lineCapacity);
+    }
+
     /** {@inheritDoc} */
     @Override
-  public void run() {
-    String line = null;
-    try {
-      while((line = reader.readLine()) != null) {
-          output.add(line);
-      }
-    } catch (IOException e) {
-      error = e.getMessage();
+    public void run() {
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                output.add(line);
+            }
+        } catch (IOException e) {
+            error = e.getMessage();
+        }
     }
-  }
 
+    public String getOutput() {
+        return StringUtils.join(output, '\n');
+    }
 
-  public String getOutput() {
-    return StringUtils.join(output, '\n');
-  }
+    /**
+     * <p>
+     * Getter for the field <code>error</code>.
+     * </p>
+     * 
+     * @return a {@link java.lang.String} object.
+     */
+    public String getError() {
+        return error;
+    }
 
-  /**
-   * <p>Getter for the field <code>error</code>.</p>
-   *
-   * @return a {@link java.lang.String} object.
-   */
-  public String getError() {
-    return error;
-  }
+    /**
+     * <p>
+     * Getter for the field <code>reader</code>.
+     * </p>
+     * 
+     * @return a {@link java.io.BufferedReader} object.
+     */
+    public BufferedReader getReader() {
+        return reader;
+    }
 
-  /**
-   * <p>Getter for the field <code>reader</code>.</p>
-   *
-   * @return a {@link java.io.BufferedReader} object.
-   */
-  public BufferedReader getReader() {
-    return reader;
-  }
-
-  /**
-   * <p>Setter for the field <code>reader</code>.</p>
-   *
-   * @param reader a {@link java.io.BufferedReader} object.
-   */
-  public void setReader(BufferedReader reader) {
-    this.reader = reader;
-  }
+    /**
+     * <p>
+     * Setter for the field <code>reader</code>.
+     * </p>
+     * 
+     * @param reader
+     *            a {@link java.io.BufferedReader} object.
+     */
+    public void setReader(BufferedReader reader) {
+        this.reader = reader;
+    }
 }
-

@@ -28,6 +28,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Checks the metadb for issues specifically with the sample hierarchy.
+ * 
  * @author dyuen
  */
 @ServiceProvider(service = CheckDBPluginInterface.class)
@@ -36,14 +37,11 @@ public class SampleHierarchyPlugin implements CheckDBPluginInterface {
     @Override
     public void check(SelectQueryRunner qRunner, SortedMap<Level, Set<String>> result) throws SQLException {
         String query = "WITH sample_parent_count AS (\n"
-                + "  select sample_id, count(parent_id) AS parent_count from sample_hierarchy GROUP BY sample_id\n"
-                + ")\n"
-                + "SELECT * from sample s \n"
-                + "JOIN sample_parent_count spc ON s.sample_id=spc.sample_id \n"
-                + "WHERE parent_count > 1;";
+                + "  select sample_id, count(parent_id) AS parent_count from sample_hierarchy GROUP BY sample_id\n" + ")\n"
+                + "SELECT * from sample s \n" + "JOIN sample_parent_count spc ON s.sample_id=spc.sample_id \n" + "WHERE parent_count > 1;";
 
         List<Integer> executeQuery = qRunner.executeQuery(query, new ColumnListHandler<Integer>());
-        CheckDB.processOutput(result, Level.SEVERE,  "Samples with more than one parent: " , executeQuery);
+        CheckDB.processOutput(result, Level.SEVERE, "Samples with more than one parent: ", executeQuery);
     }
-    
+
 }

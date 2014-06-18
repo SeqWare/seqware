@@ -29,63 +29,67 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
 /**
- * <p>DBAccess class.</p>
- *
+ * <p>
+ * DBAccess class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class DBAccess {
-  
-  private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<>();
 
-  public static MetadataDB get() {
-    MetadataDB mdb = metadataDBWrapper.get();
+    private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<>();
 
-    if (mdb == null){
-      mdb = create();
-      metadataDBWrapper.set(mdb);
-      return mdb;
+    public static MetadataDB get() {
+        MetadataDB mdb = metadataDBWrapper.get();
+
+        if (mdb == null) {
+            mdb = create();
+            metadataDBWrapper.set(mdb);
+            return mdb;
+        }
+
+        boolean cleanup = true;
+        try {
+            cleanup = mdb.getDb().isClosed();
+        } catch (SQLException e) {
+        }
+
+        if (cleanup) {
+            close();
+            return get();
+        } else {
+            return mdb;
+        }
     }
 
-    boolean cleanup = true;
-    try {
-      cleanup = mdb.getDb().isClosed();
-    } catch (SQLException e) {
-    }
+    private static MetadataDB create() {
+        DataSource ds = null;
+        try {
+            InitialContext initCtx = new InitialContext();
+            ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/SeqWareMetaDB");
+        } catch (NamingException ex) {
+            Log.info("Could not lookup database via context", ex);
+        }
 
-    if (cleanup) {
-      close();
-      return get();
-    } else {
-      return mdb;
+        if (ds != null) {
+            Log.debug("Instantiate MetadataDB via datasource " + ds.getClass());
+            try {
+                return new MetadataDB(ds);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            Log.debug("Obtain MetadataDB via MetadataFactory");
+            Map<String, String> settings = ConfigTools.getSettings();
+            return MetadataFactory.getDB(settings);
+        }
     }
-  }
-
-  private static MetadataDB create(){
-    DataSource ds = null;
-    try {
-      InitialContext initCtx = new InitialContext();
-      ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/SeqWareMetaDB");
-    } catch (NamingException ex) {
-      Log.info("Could not lookup database via context", ex);
-    }
-
-    if (ds != null) {
-      Log.debug("Instantiate MetadataDB via datasource " + ds.getClass());
-      try {
-        return new MetadataDB(ds);
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
-    } else {
-      Log.debug("Obtain MetadataDB via MetadataFactory");
-      Map<String, String> settings = ConfigTools.getSettings();
-      return MetadataFactory.getDB(settings);
-    }
-  }
 
     /**
-     * <p>close.</p>
+     * <p>
+     * close.
+     * </p>
      */
     public synchronized static void close() {
         MetadataDB mdb = metadataDBWrapper.get();

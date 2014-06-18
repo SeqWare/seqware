@@ -13,15 +13,19 @@ import java.io.File;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
- * <p>Daxgenerator class.</p>
- *
+ * <p>
+ * Daxgenerator class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class Daxgenerator {
 
     /**
-     * <p>getSyntax.</p>
+     * <p>
+     * getSyntax.
+     * </p>
      */
     public static void getSyntax() {
         Log.stdout("Syntax: java DAXGenerator [path_to_config/config1.ini [path_to_config/config2.ini] ...] [--key_to_override=value ...] path_to_template/template.ftl path_for_dax/output.dax");
@@ -46,13 +50,20 @@ public class Daxgenerator {
     }
 
     /**
-     * <p>processTemplate.</p>
-     *
-     * @param iniFiles an array of {@link java.lang.String} objects.
-     * @param template a {@link java.lang.String} object.
-     * @param output a {@link java.lang.String} object.
-     * @param argMap a {@link java.util.Map} object.
-     * @param extraArgs an array of {@link java.lang.String} objects.
+     * <p>
+     * processTemplate.
+     * </p>
+     * 
+     * @param iniFiles
+     *            an array of {@link java.lang.String} objects.
+     * @param template
+     *            a {@link java.lang.String} object.
+     * @param output
+     *            a {@link java.lang.String} object.
+     * @param argMap
+     *            a {@link java.util.Map} object.
+     * @param extraArgs
+     *            an array of {@link java.lang.String} objects.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue processTemplate(String[] iniFiles, String template, String output, Map<String, String> argMap, String[] extraArgs) {
@@ -70,9 +81,9 @@ public class Daxgenerator {
         // empty hash map
         if (iniFiles != null && iniFiles.length > 0) {
             for (int i = 0; i < iniFiles.length; i++) {
-                Log.debug("  INI FILE: "+iniFiles[i]);
+                Log.debug("  INI FILE: " + iniFiles[i]);
                 if ((new File(iniFiles[i])).exists()) {
-                  MapTools.ini2Map(iniFiles[i], map);
+                    MapTools.ini2Map(iniFiles[i], map);
                 }
             }
         }
@@ -88,7 +99,7 @@ public class Daxgenerator {
             } else {
                 Log.info(" VALUE: null");
             }
-            //Log.error(key+"="+map.get(key));
+            // Log.error(key+"="+map.get(key));
         }
 
         // Expand variables in the map
@@ -108,31 +119,32 @@ public class Daxgenerator {
             }
         } catch (IOException e) {
             Log.error("IOException", e);
-            //System.exit(ReturnValue.PROGRAMFAILED);
+            // System.exit(ReturnValue.PROGRAMFAILED);
             ret.setExitStatus(ReturnValue.PROGRAMFAILED);
             return ret;
         } catch (TemplateException e) {
             // If we caught a template exception, warn and exit
             Log.error("Freemarker threw an exception: " + e.getMessage());
-            //System.exit(ReturnValue.FREEMARKEREXCEPTION);
+            // System.exit(ReturnValue.FREEMARKEREXCEPTION);
             ret.setExitStatus(ReturnValue.FREEMARKEREXCEPTION);
             return ret;
         }
-
 
         // FIXME: Should add a last pass through the DAX to:
         // Reformat XML, so indentations and all are proper, so make DAX easy to read
         // XmlTools.prettyPrint( output );
         // (2) Make sure it valid XML/DAX
 
-
         return (ret);
     }
 
     /**
-     * <p>main.</p>
-     *
-     * @param args an array of {@link java.lang.String} objects.
+     * <p>
+     * main.
+     * </p>
+     * 
+     * @param args
+     *            an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         String template = null;

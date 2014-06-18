@@ -5,22 +5,25 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.beanutils.BeanUtilsBean;
 
 /**
- * <p>NullBeanUtils class.</p>
- *
+ * <p>
+ * NullBeanUtils class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class NullBeanUtils extends BeanUtilsBean {
 
-  /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @throws java.lang.IllegalAccessException
-     * @throws java.lang.reflect.InvocationTargetException */
-  @Override
-  public void copyProperty(Object dest, String name, Object value) throws IllegalAccessException,
-      InvocationTargetException {
-    if (value == null)
-      return;
-    super.copyProperty(dest, name, value);
-  }
+     * @throws java.lang.reflect.InvocationTargetException
+     */
+    @Override
+    public void copyProperty(Object dest, String name, Object value) throws IllegalAccessException, InvocationTargetException {
+        if (value == null) return;
+        super.copyProperty(dest, name, value);
+    }
 
 }

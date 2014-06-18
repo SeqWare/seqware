@@ -12,61 +12,66 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <p>OrganismServiceImpl class.</p>
- *
+ * <p>
+ * OrganismServiceImpl class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class OrganismServiceImpl implements OrganismService {
-  private OrganismDAO organismDAO = null;
-  private static final Log log = LogFactory.getLog(OrganismServiceImpl.class);
+    private OrganismDAO organismDAO = null;
+    private static final Log log = LogFactory.getLog(OrganismServiceImpl.class);
 
-  /**
-   * <p>Constructor for OrganismServiceImpl.</p>
-   */
-  public OrganismServiceImpl() {
-    super();
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * Sets a private member variable with an instance of an implementation of
-   * StudyTypeDAO. This method is called by the Spring framework at run time.
-     * @param organismDAO
-   * @see StudyTypeDAO
-   */
-  @Override
-  public void setOrganismDAO(OrganismDAO organismDAO) {
-    this.organismDAO = organismDAO;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public List<Organism> list(Registration registration) {
-    return organismDAO.list(registration);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public Organism findByID(Integer id) {
-    Organism obj = null;
-    if (id != null) {
-      try {
-        obj = organismDAO.findByID(id);
-      } catch (Exception exception) {
-        log.error("Cannot find Organism by id " + id);
-        log.error(exception.getMessage());
-      }
+    /**
+     * <p>
+     * Constructor for OrganismServiceImpl.
+     * </p>
+     */
+    public OrganismServiceImpl() {
+        super();
     }
-    return obj;
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public Organism updateDetached(Organism organism) {
-    return organismDAO.updateDetached(organism);
-  }
+    /**
+     * {@inheritDoc}
+     * 
+     * Sets a private member variable with an instance of an implementation of StudyTypeDAO. This method is called by the Spring framework
+     * at run time.
+     * 
+     * @param organismDAO
+     * @see StudyTypeDAO
+     */
+    @Override
+    public void setOrganismDAO(OrganismDAO organismDAO) {
+        this.organismDAO = organismDAO;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Organism> list(Registration registration) {
+        return organismDAO.list(registration);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Organism findByID(Integer id) {
+        Organism obj = null;
+        if (id != null) {
+            try {
+                obj = organismDAO.findByID(id);
+            } catch (Exception exception) {
+                log.error("Cannot find Organism by id " + id);
+                log.error(exception.getMessage());
+            }
+        }
+        return obj;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Organism updateDetached(Organism organism) {
+        return organismDAO.updateDetached(organism);
+    }
 
     /** {@inheritDoc} */
     @Override

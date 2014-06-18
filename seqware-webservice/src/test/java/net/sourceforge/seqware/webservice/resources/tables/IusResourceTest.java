@@ -27,7 +27,7 @@ import org.restlet.representation.Representation;
 import org.w3c.dom.Document;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class IusResourceTest extends DatabaseResourceTest {
@@ -35,7 +35,7 @@ public class IusResourceTest extends DatabaseResourceTest {
     public IusResourceTest() {
         super("/ius");
     }
-    
+
     @Override
     public void testPost() {
         System.out.println(getRelativeURI() + " POST");
@@ -51,7 +51,7 @@ public class IusResourceTest extends DatabaseResourceTest {
             s.setSampleId(10);
             ius.setSample(s);
             ius.setLane(l);
-            
+
             Document doc = XmlTools.marshalToDocument(new JaxbObject<IUS>(), ius);
             rep = resource.post(XmlTools.getRepresentation(doc));
             rep.exhaust();

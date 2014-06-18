@@ -31,8 +31,10 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
- * <p>ExperimentSpotDesignReadSpecResource class.</p>
- *
+ * <p>
+ * ExperimentSpotDesignReadSpecResource class.
+ * </p>
+ * 
  * @author dyuen
  * @version $Id: $Id
  */
@@ -41,7 +43,9 @@ public class ExperimentSpotDesignReadSpecResource extends DatabaseResource {
     private Logger logger;
 
     /**
-     * <p>Constructor for ExperimentResource.</p>
+     * <p>
+     * Constructor for ExperimentResource.
+     * </p>
      */
     public ExperimentSpotDesignReadSpecResource() {
         super("experiment_spot_design_read_spec");
@@ -56,7 +60,9 @@ public class ExperimentSpotDesignReadSpecResource extends DatabaseResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -81,5 +87,4 @@ public class ExperimentSpotDesignReadSpecResource extends DatabaseResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    
 }

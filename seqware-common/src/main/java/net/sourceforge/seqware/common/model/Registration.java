@@ -10,15 +10,17 @@ import org.apache.log4j.Logger;
 
 /**
  * Registration
- *
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class Registration extends PermissionsAware implements Serializable, Comparable<Registration> {
 
     /**
-     * <p>Getter for the field <code>institution</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>institution</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getInstitution() {
@@ -26,13 +28,17 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>institution</code>.</p>
-     *
-     * @param institution a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>institution</code>.
+     * </p>
+     * 
+     * @param institution
+     *            a {@link java.lang.String} object.
      */
     public void setInstitution(String institution) {
         this.institution = institution;
     }
+
     private static final long serialVersionUID = -6290711918776330816L;
     private Integer registrationId;
     private String emailAddress;
@@ -50,8 +56,10 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     private boolean joinDevelopersMailingList;
 
     /**
-     * <p>isJoinDevelopersMailingList.</p>
-     *
+     * <p>
+     * isJoinDevelopersMailingList.
+     * </p>
+     * 
      * @return a boolean.
      */
     public boolean isJoinDevelopersMailingList() {
@@ -59,8 +67,10 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Getter for the field <code>joinDevelopersMailingList</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>joinDevelopersMailingList</code>.
+     * </p>
+     * 
      * @return a boolean.
      */
     public boolean getJoinDevelopersMailingList() {
@@ -68,17 +78,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>joinDevelopersMailingList</code>.</p>
-     *
-     * @param b a boolean.
+     * <p>
+     * Setter for the field <code>joinDevelopersMailingList</code>.
+     * </p>
+     * 
+     * @param b
+     *            a boolean.
      */
     public void setJoinDevelopersMailingList(boolean b) {
         this.joinDevelopersMailingList = b;
     }
 
     /**
-     * <p>isJoinUsersMailingList.</p>
-     *
+     * <p>
+     * isJoinUsersMailingList.
+     * </p>
+     * 
      * @return a boolean.
      */
     public boolean isJoinUsersMailingList() {
@@ -86,8 +101,10 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Getter for the field <code>joinUsersMailingList</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>joinUsersMailingList</code>.
+     * </p>
+     * 
      * @return a boolean.
      */
     public boolean getJoinUsersMailingList() {
@@ -95,37 +112,43 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>joinUsersMailingList</code>.</p>
-     *
-     * @param b a boolean.
+     * <p>
+     * Setter for the field <code>joinUsersMailingList</code>.
+     * </p>
+     * 
+     * @param b
+     *            a boolean.
      */
     public void setJoinUsersMailingList(boolean b) {
         this.joinUsersMailingList = b;
     }
 
     /**
-     * <p>Constructor for Registration.</p>
+     * <p>
+     * Constructor for Registration.
+     * </p>
      */
     public Registration() {
         super();
     }
 
-//    public boolean equals(Object other) {
-//        if ((this == other)) {
-//            return true;
-//        }
-//        if (!(other instanceof Registration)) {
-//            return false;
-//        }
-//        boolean result = false;
-//        Registration castOther = (Registration) other;
-//        if (this.getRegistrationId().equals(castOther.getRegistrationId())) {
-//            result = true;
-//        } else if (new EqualsBuilder().append(this.getEmailAddress(), castOther.getEmailAddress()).append(this.getPassword(), castOther.getPassword()).isEquals()) {
-//            result = true;
-//        }
-//        return (result);
-//    }
+    // public boolean equals(Object other) {
+    // if ((this == other)) {
+    // return true;
+    // }
+    // if (!(other instanceof Registration)) {
+    // return false;
+    // }
+    // boolean result = false;
+    // Registration castOther = (Registration) other;
+    // if (this.getRegistrationId().equals(castOther.getRegistrationId())) {
+    // result = true;
+    // } else if (new EqualsBuilder().append(this.getEmailAddress(), castOther.getEmailAddress()).append(this.getPassword(),
+    // castOther.getPassword()).isEquals()) {
+    // result = true;
+    // }
+    // return (result);
+    // }
     /** {@inheritDoc} */
     @Override
     public boolean equals(Object obj) {
@@ -133,7 +156,7 @@ public class Registration extends PermissionsAware implements Serializable, Comp
             Logger.getLogger(Registration.class).warn("Compared-to object is null");
             return false;
         }
-        if  (!(obj instanceof Registration)) {
+        if (!(obj instanceof Registration)) {
             Logger.getLogger(Registration.class).warn("Compared-to object is different class");
             return false;
         }
@@ -146,16 +169,21 @@ public class Registration extends PermissionsAware implements Serializable, Comp
         return true;
     }
 
-    /** {@inheritDoc}
-     * @param t */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param t
+     */
     @Override
     public int compareTo(Registration t) {
         return emailAddress.compareTo(t.getEmailAddress());
     }
 
     /**
-     * <p>hashCode.</p>
-     *
+     * <p>
+     * hashCode.
+     * </p>
+     * 
      * @return a int.
      */
     @Override
@@ -164,24 +192,26 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /*
-     * public boolean equals(Object other) { if (this == other)	return true; if
-     * (!(other instanceof Registration))	return false; Registration castOther =
-     * (Registration) other; return
-     * this.getEmailAddress().equals(castOther.getEmailAddress()) &&
+     * public boolean equals(Object other) { if (this == other) return true; if (!(other instanceof Registration)) return false;
+     * Registration castOther = (Registration) other; return this.getEmailAddress().equals(castOther.getEmailAddress()) &&
      * this.getPassword().equals(castOther.getPassword()); }
-     *
-     * public int hashCode() { return	getEmailAddress().hashCode() ^
-     * getPassword().hashCode(); }
+     * 
+     * public int hashCode() { return getEmailAddress().hashCode() ^ getPassword().hashCode(); }
      */
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Registration{" + "registrationId=" + registrationId + ", emailAddress=" + emailAddress + ", passwordHint=" + passwordHint + ", firstName=" + firstName + ", lastName=" + lastName + ", institution=" + institution + ", limsAdmin=" + limsAdmin + ", createTimestamp=" + createTimestamp + ", updateTimestamp=" + updateTimestamp + ", invitationCode=" + invitationCode + ", joinUsersMailingList=" + joinUsersMailingList + ", joinDevelopersMailingList=" + joinDevelopersMailingList + '}';
+        return "Registration{" + "registrationId=" + registrationId + ", emailAddress=" + emailAddress + ", passwordHint=" + passwordHint
+                + ", firstName=" + firstName + ", lastName=" + lastName + ", institution=" + institution + ", limsAdmin=" + limsAdmin
+                + ", createTimestamp=" + createTimestamp + ", updateTimestamp=" + updateTimestamp + ", invitationCode=" + invitationCode
+                + ", joinUsersMailingList=" + joinUsersMailingList + ", joinDevelopersMailingList=" + joinDevelopersMailingList + '}';
     }
 
     /**
-     * <p>Getter for the field <code>createTimestamp</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>createTimestamp</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -189,17 +219,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>createTimestamp</code>.</p>
-     *
-     * @param createTimestamp a {@link java.util.Date} object.
+     * <p>
+     * Setter for the field <code>createTimestamp</code>.
+     * </p>
+     * 
+     * @param createTimestamp
+     *            a {@link java.util.Date} object.
      */
     public void setCreateTimestamp(Date createTimestamp) {
         this.createTimestamp = createTimestamp;
     }
 
     /**
-     * <p>Getter for the field <code>emailAddress</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>emailAddress</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getEmailAddress() {
@@ -207,17 +242,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>emailAddress</code>.</p>
-     *
-     * @param emailAddress a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>emailAddress</code>.
+     * </p>
+     * 
+     * @param emailAddress
+     *            a {@link java.lang.String} object.
      */
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
 
     /**
-     * <p>Getter for the field <code>firstName</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>firstName</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getFirstName() {
@@ -225,17 +265,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>firstName</code>.</p>
-     *
-     * @param firstName a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>firstName</code>.
+     * </p>
+     * 
+     * @param firstName
+     *            a {@link java.lang.String} object.
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
     /**
-     * <p>Getter for the field <code>lastName</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>lastName</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getLastName() {
@@ -243,17 +288,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>lastName</code>.</p>
-     *
-     * @param lastName a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>lastName</code>.
+     * </p>
+     * 
+     * @param lastName
+     *            a {@link java.lang.String} object.
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
     /**
-     * <p>Getter for the field <code>password</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>password</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getPassword() {
@@ -261,17 +311,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>password</code>.</p>
-     *
-     * @param password a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>password</code>.
+     * </p>
+     * 
+     * @param password
+     *            a {@link java.lang.String} object.
      */
     public void setPassword(String password) {
         this.password = password;
     }
 
     /**
-     * <p>Getter for the field <code>passwordHint</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>passwordHint</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getPasswordHint() {
@@ -279,17 +334,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>passwordHint</code>.</p>
-     *
-     * @param passwordHint a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>passwordHint</code>.
+     * </p>
+     * 
+     * @param passwordHint
+     *            a {@link java.lang.String} object.
      */
     public void setPasswordHint(String passwordHint) {
         this.passwordHint = passwordHint;
     }
 
     /**
-     * <p>Getter for the field <code>registrationId</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>registrationId</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getRegistrationId() {
@@ -297,17 +357,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>registrationId</code>.</p>
-     *
-     * @param registrationId a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>registrationId</code>.
+     * </p>
+     * 
+     * @param registrationId
+     *            a {@link java.lang.Integer} object.
      */
     public void setRegistrationId(Integer registrationId) {
         this.registrationId = registrationId;
     }
 
     /**
-     * <p>Getter for the field <code>updateTimestamp</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>updateTimestamp</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -315,17 +380,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>updateTimestamp</code>.</p>
-     *
-     * @param updateTimestamp a {@link java.util.Date} object.
+     * <p>
+     * Setter for the field <code>updateTimestamp</code>.
+     * </p>
+     * 
+     * @param updateTimestamp
+     *            a {@link java.util.Date} object.
      */
     public void setUpdateTimestamp(Date updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
     }
 
     /**
-     * <p>isLIMSAdmin.</p>
-     *
+     * <p>
+     * isLIMSAdmin.
+     * </p>
+     * 
      * @return a boolean.
      */
     public boolean isLIMSAdmin() {
@@ -333,17 +403,22 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>setLIMSAdmin.</p>
-     *
-     * @param b a boolean.
+     * <p>
+     * setLIMSAdmin.
+     * </p>
+     * 
+     * @param b
+     *            a boolean.
      */
     public void setLIMSAdmin(boolean b) {
         this.limsAdmin = b;
     }
 
     /**
-     * <p>Getter for the field <code>invitationCode</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>invitationCode</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getInvitationCode() {
@@ -351,25 +426,33 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>invitationCode</code>.</p>
-     *
-     * @param invitationCode a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>invitationCode</code>.
+     * </p>
+     * 
+     * @param invitationCode
+     *            a {@link java.lang.String} object.
      */
     public void setInvitationCode(String invitationCode) {
         this.invitationCode = invitationCode;
     }
 
     /**
-     * <p>isTechnician.</p>
-     *
+     * <p>
+     * isTechnician.
+     * </p>
+     * 
      * @return a boolean.
      */
     public boolean isTechnician() {
         return false;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = false;
@@ -382,15 +465,18 @@ public class Registration extends PermissionsAware implements Serializable, Comp
         }
         if (!hasPermission) {
             Logger.getLogger(Registration.class).info("Registration does not give permission");
-            throw new SecurityException("User " + registration.getEmailAddress() + " not permitted to modify the account of " + this.getEmailAddress());
+            throw new SecurityException("User " + registration.getEmailAddress() + " not permitted to modify the account of "
+                    + this.getEmailAddress());
         }
         return hasPermission;
 
     }
 
     /**
-     * <p>isPayee.</p>
-     *
+     * <p>
+     * isPayee.
+     * </p>
+     * 
      * @return a boolean.
      */
     public boolean isPayee() {
@@ -398,13 +484,15 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>payee</code>.</p>
-     *
-     * @param payee a boolean.
+     * <p>
+     * Setter for the field <code>payee</code>.
+     * </p>
+     * 
+     * @param payee
+     *            a boolean.
      */
     public void setPayee(boolean payee) {
         this.payee = payee;
     }
-    
-    
+
 }
