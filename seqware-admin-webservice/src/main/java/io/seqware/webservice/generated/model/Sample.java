@@ -545,7 +545,7 @@ public class Sample implements Serializable, CycleRecoverable {
         Logger.getLogger(Sample.class).info(this.getSampleId() + ": Attempting to find root sample flag");
         EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU");
         EntityManager em = emFactory.createEntityManager();
-        Query query = createSelectNullParentCountQuery(em, this.getSampleId());
+        Query query = selectNullParentCountQuery(em, this.getSampleId());
         Long firstResult = (Long) query.getSingleResult();
         if (firstResult != null && firstResult > 0){
             Logger.getLogger(Sample.class).info(this.getSampleId() + ": Found root sample flag");
@@ -555,7 +555,7 @@ public class Sample implements Serializable, CycleRecoverable {
         Logger.getLogger(Sample.class).info(this.getSampleId() + ": Did not find root sample flag");
     }
 
-    public static Query createSelectNullParentCountQuery(EntityManager em, int id) {
+    public static Query selectNullParentCountQuery(EntityManager em, int id) {
         Query query = em.createNativeQuery("select count(*) from sample_hierarchy where sample_id = "+id+" and parent_id IS NULL;");
         return query;
     }
