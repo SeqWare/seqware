@@ -455,6 +455,10 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+        if (registration.isLIMSAdmin()) {
+            Log.debug("Skipping permissions admin on IUS object " + swAccession);
+            return true;
+        }
         boolean consideredBefore = considered.contains(this.getSwAccession());
         if (!consideredBefore) {
             considered.add(this.getSwAccession());
