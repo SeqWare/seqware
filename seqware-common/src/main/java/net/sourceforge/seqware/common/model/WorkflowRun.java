@@ -792,6 +792,10 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
      * @return  */
   @Override
   public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+      if (registration.isLIMSAdmin()) {
+          Log.debug("Skipping permissions admin on Workflow Run object " + swAccession);
+          return true;
+      }
     boolean consideredBefore = considered.contains(this.getSwAccession());
       if (!consideredBefore) {
           considered.add(this.getSwAccession());
