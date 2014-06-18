@@ -526,6 +526,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             Log.debug("This workflow has failed to launch based on workflow runs found via direct search");
             return rerun;
         }
+        // special case, when rerun max is 0, we still want to launch even if there are 0 failures
+        if (failures.isEmpty() && this.rerunMax == 0){
+            return rerun;
+        }
         if (failures.size() >= this.rerunMax) {
             Log.debug("This workflow has failed " + rerunMax + " times: not running");
             rerun = false;
