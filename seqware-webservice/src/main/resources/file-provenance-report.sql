@@ -280,6 +280,7 @@ select p.update_tstmp as last_modified
      , p.algorithm as processing_algorithm
      , p.sw_accession as processing_swa
      , pa.attrs as processing_attrs
+     , p.status as processing_status
      , f.meta_type as file_meta_type
      , f.sw_accession as file_swa
      , fa.attrs as file_attrs
