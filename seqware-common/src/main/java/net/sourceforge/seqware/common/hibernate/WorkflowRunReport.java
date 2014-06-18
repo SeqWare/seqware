@@ -27,10 +27,9 @@ import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
 /**
- * Reports on workflow run metadata, returning either all workflow runs, all
- * runs of a particular workflow, or a specific workflow run. The results can be
- * filtered according to Date on the WorkflowRun's createTimestamp.
- *
+ * Reports on workflow run metadata, returning either all workflow runs, all runs of a particular workflow, or a specific workflow run. The
+ * results can be filtered according to Date on the WorkflowRun's createTimestamp.
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -41,68 +40,66 @@ public class WorkflowRunReport {
     private Date latestDate = new Date();
 
     /**
-     * Set the value of latestDate. This date must be set prior to calling other
-     * methods in order to filter collections of workflow runs.
-     *
-     * @param latestDate new value of latestDate
+     * Set the value of latestDate. This date must be set prior to calling other methods in order to filter collections of workflow runs.
+     * 
+     * @param latestDate
+     *            new value of latestDate
      */
     public void setLatestDate(Date latestDate) {
         this.latestDate = latestDate;
     }
 
     /**
-     * Set the value of earliestDate. This date must be set prior to calling
-     * other methods in order to filter collections of workflow runs.
-     *
-     * @param earliestDate new value of earliestDate
+     * Set the value of earliestDate. This date must be set prior to calling other methods in order to filter collections of workflow runs.
+     * 
+     * @param earliestDate
+     *            new value of earliestDate
      */
     public void setEarliestDate(Date earliestDate) {
         this.earliestDate = earliestDate;
     }
 
     /**
-     * Find all of the workflow runs, and report on each of the workflow runs
-     * the files, samples and processing events associated with each. If the
-     * latest date and earliest date have been set in this class, the workflow
-     * runs will be filtered according to the createTimestamp.
-     *
+     * Find all of the workflow runs, and report on each of the workflow runs the files, samples and processing events associated with each.
+     * If the latest date and earliest date have been set in this class, the workflow runs will be filtered according to the
+     * createTimestamp.
+     * 
      * @return a collection of workflow run reports
      */
     public Collection<WorkflowRunReportRow> getAllRuns() {
         WorkflowRunService ws = BeanFactory.getWorkflowRunServiceBean();
-        List<WorkflowRun> workflowRuns = (List<WorkflowRun>)testIfNull(ws.list());
+        List<WorkflowRun> workflowRuns = (List<WorkflowRun>) testIfNull(ws.list());
         Collection<WorkflowRunReportRow> rows = runThroughWorkflowRuns(workflowRuns);
         return rows;
     }
 
     /**
-     * Using a workflow run SWID, report on the files, samples and processing
-     * events associated with the run. Setting the earliest and latest date has
-     * no effect on this method.
-     *
+     * Using a workflow run SWID, report on the files, samples and processing events associated with the run. Setting the earliest and
+     * latest date has no effect on this method.
+     * 
      * @return a workflow run report
-     * @param workflowRunSWID a {@link java.lang.Integer} object.
+     * @param workflowRunSWID
+     *            a {@link java.lang.Integer} object.
      */
     public WorkflowRunReportRow getSingleWorkflowRun(Integer workflowRunSWID) {
         WorkflowRunService ws = BeanFactory.getWorkflowRunServiceBean();
-        WorkflowRun workflowRun = (WorkflowRun)testIfNull(ws.findBySWAccession(workflowRunSWID));
+        WorkflowRun workflowRun = (WorkflowRun) testIfNull(ws.findBySWAccession(workflowRunSWID));
         logger.debug("Found workflow run: " + workflowRun.getSwAccession());
         return fromWorkflowRun(workflowRun);
     }
 
     /**
-     * Using a workflow SWID, find all of the workflow runs, and report on each
-     * of the workflow runs the files, samples and processing events associated
-     * with each. If the latest date and earliest date have been set in this
-     * class, the workflow runs will be filtered according to the
-     * createTimestamp.
-     *
-     * @param workflowSWID the SWID of the workflow
+     * Using a workflow SWID, find all of the workflow runs, and report on each of the workflow runs the files, samples and processing
+     * events associated with each. If the latest date and earliest date have been set in this class, the workflow runs will be filtered
+     * according to the createTimestamp.
+     * 
+     * @param workflowSWID
+     *            the SWID of the workflow
      * @return a collection of workflow run reports
      */
     public Collection<WorkflowRunReportRow> getRunsFromWorkflow(Integer workflowSWID) {
         WorkflowService ws = BeanFactory.getWorkflowServiceBean();
-        Workflow w = (Workflow)testIfNull(ws.findBySWAccession(workflowSWID));
+        Workflow w = (Workflow) testIfNull(ws.findBySWAccession(workflowSWID));
         Collection<WorkflowRunReportRow> rows = runThroughWorkflowRuns(w.getWorkflowRuns());
         return rows;
     }
@@ -168,7 +165,7 @@ public class WorkflowRunReport {
     protected Collection<Processing> collectProcessings(WorkflowRun wr) {
         List<Processing> processings = new ArrayList<>();
 
-        WorkflowRun newwr =  BeanFactory.getWorkflowRunServiceBean().findByID(wr.getWorkflowRunId());
+        WorkflowRun newwr = BeanFactory.getWorkflowRunServiceBean().findByID(wr.getWorkflowRunId());
 
         logger.debug(newwr.getProcessings().size() + " Processings in direct links");
         logger.debug(newwr.getOffspringProcessings().size() + " Processings in ancestor links");
@@ -179,15 +176,17 @@ public class WorkflowRunReport {
     }
 
     /**
-     * <p>calculateTotalTime.</p>
-     *
-     * @param processings a {@link java.util.Collection} object.
+     * <p>
+     * calculateTotalTime.
+     * </p>
+     * 
+     * @param processings
+     *            a {@link java.util.Collection} object.
      * @return a {@link java.lang.String} object.
      */
     public String calculateTotalTime(Collection<Processing> processings) {
-      if (processings.isEmpty())
-        return "";
-      
+        if (processings.isEmpty()) return "";
+
         Date earlyDate = new Date(Long.MAX_VALUE), lateDate = new Date(0);
 
         for (Processing p : processings) {
@@ -243,8 +242,7 @@ public class WorkflowRunReport {
         return files;
     }
 
-    protected Collection<Processing> findParents(Collection<Processing> processings, int workflowRunSWID,
-                                                 boolean findImmediateOnly) {
+    protected Collection<Processing> findParents(Collection<Processing> processings, int workflowRunSWID, boolean findImmediateOnly) {
         Set<Integer> seenPs = new TreeSet<>();
 
         List<Processing> allParentProcs = new ArrayList<>();
@@ -254,7 +252,7 @@ public class WorkflowRunReport {
         while (!queue.isEmpty()) {
             Processing processing = queue.poll();
             for (Processing p : processing.getParents()) {
-                //get the workflow run
+                // get the workflow run
                 WorkflowRun wr = p.getWorkflowRun();
                 if (wr == null) {
                     wr = p.getWorkflowRunByAncestorWorkflowRunId();
@@ -263,7 +261,7 @@ public class WorkflowRunReport {
                     // Add parent processing to queue only if we are traversing the entire tree.
                     if (!findImmediateOnly) queue.offer(p);
                     seenPs.add(p.getSwAccession());
-                    //only add to the parent procs if it's not from the current workflow run
+                    // only add to the parent procs if it's not from the current workflow run
                     if (wr != null && wr.getSwAccession() != workflowRunSWID) {
                         logger.debug("Adding parent processing: " + p.getSwAccession());
                         allParentProcs.add(p);
@@ -280,10 +278,10 @@ public class WorkflowRunReport {
 
     private Collection<Sample> findIdentitySamples(Processing processing) {
         Set<IUS> iuses = processing.getIUS();
-//        Set<Lane> lanes = processing.getLanes();
+        // Set<Lane> lanes = processing.getLanes();
         Set<Sample> samples = processing.getSamples();
 
-//        logger.debug("iuses: " + iuses.size() + " lanes: " + lanes.size() + " samples: " + samples.size());
+        // logger.debug("iuses: " + iuses.size() + " lanes: " + lanes.size() + " samples: " + samples.size());
         logger.debug("iuses: " + iuses.size() + " samples: " + samples.size());
 
         List<Sample> allIdentitySamples = new ArrayList<>();
@@ -294,15 +292,15 @@ public class WorkflowRunReport {
             }
         }
 
-//        if (lanes != null) {
-//            for (Lane l : lanes) {
-//                if (l.getIUS() != null) {
-//                    for (IUS i : l.getIUS()) {
-//                        allIdentitySamples.add(i.getSample());
-//                    }
-//                }
-//            }
-//        }
+        // if (lanes != null) {
+        // for (Lane l : lanes) {
+        // if (l.getIUS() != null) {
+        // for (IUS i : l.getIUS()) {
+        // allIdentitySamples.add(i.getSample());
+        // }
+        // }
+        // }
+        // }
 
         if (samples != null) {
             allIdentitySamples.addAll(samples);
@@ -323,11 +321,11 @@ public class WorkflowRunReport {
         while (!queue.isEmpty()) {
             Sample sample = queue.poll();
             for (Sample p : sample.getParents()) {
-                //add to the queue if we haven't seen it before
+                // add to the queue if we haven't seen it before
                 if (!seenSams.contains(p.getSwAccession())) {
                     queue.offer(p);
                     seenSams.add(p.getSwAccession());
-                    //only add to the library samples if it is a root node
+                    // only add to the library samples if it is a root node
                     if (p.getParents() == null || p.getParents().isEmpty()) {
                         logger.debug("Adding library sample: " + p.toString());
                         allLibrarySamples.add(p);
@@ -340,9 +338,12 @@ public class WorkflowRunReport {
     }
 
     /**
-     * <p>testIfNull.</p>
-     *
-     * @param o a {@link java.lang.Object} object.
+     * <p>
+     * testIfNull.
+     * </p>
+     * 
+     * @param o
+     *            a {@link java.lang.Object} object.
      * @return a {@link java.lang.Object} object.
      */
     protected Object testIfNull(Object o) {

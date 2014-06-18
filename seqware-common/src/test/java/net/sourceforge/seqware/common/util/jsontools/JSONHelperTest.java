@@ -6,7 +6,7 @@ import org.junit.Test;
 
 /**
  * Unit tests
- *
+ * 
  * @author Raunaq Suri
  */
 public class JSONHelperTest {
@@ -25,8 +25,7 @@ public class JSONHelperTest {
     }
 
     /**
-     * Checks to make sure that there are configurations for the tests in the
-     * JSON
+     * Checks to make sure that there are configurations for the tests in the JSON
      */
     @Test
     public void noTestConfig() {
@@ -37,21 +36,21 @@ public class JSONHelperTest {
     }
 
     /**
-     * Checks to make sure that a null pointer exception is thrown if the files
-     * don't exist
+     * Checks to make sure that a null pointer exception is thrown if the files don't exist
      */
     @Test(expected = NullPointerException.class)
     public void badResourceNames() {
         InputStream schema = this.getClass().getClassLoader().getResourceAsStream("schema.json");
         InputStream data = this.getClass().getClassLoader().getResourceAsStream("data.json");
-        Assert.assertNull("ERROR: Schema should be null as the file doesn't exist", jman.isJSONValid(this.getClass().getClassLoader().getResourceAsStream("Raunaq.json"), data));
-        Assert.assertNull("ERROR: Data should be null as the file doesn't exist", jman.isJSONValid(schema, this.getClass().getClassLoader().getResourceAsStream("Suri.json")));
+        Assert.assertNull("ERROR: Schema should be null as the file doesn't exist",
+                jman.isJSONValid(this.getClass().getClassLoader().getResourceAsStream("Raunaq.json"), data));
+        Assert.assertNull("ERROR: Data should be null as the file doesn't exist",
+                jman.isJSONValid(schema, this.getClass().getClassLoader().getResourceAsStream("Suri.json")));
 
     }
 
     /**
-     * Checks to make sure that if the environment data is not written properly,
-     * a false is returned
+     * Checks to make sure that if the environment data is not written properly, a false is returned
      */
     @Test
     public void environmentDataMalformed() {

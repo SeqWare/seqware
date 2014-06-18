@@ -15,70 +15,77 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
- * <p>IUSSetupController class.</p>
- *
+ * <p>
+ * IUSSetupController class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class IUSSetupController extends BaseCommandController {
-	
-	private IUSService iusService;
 
-	/**
-	 * <p>Getter for the field <code>iusService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
-	 */
-	public IUSService getIusService() {
-		return iusService;
-	}
+    private IUSService iusService;
 
-	/**
-	 * <p>Setter for the field <code>iusService</code>.</p>
-	 *
-	 * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
-	 */
-	public void setIusService(IUSService iusService) {
-		this.iusService = iusService;
-	}
-	
-	/** {@inheritDoc}
+    /**
+     * <p>
+     * Getter for the field <code>iusService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+     */
+    public IUSService getIusService() {
+        return iusService;
+    }
+
+    /**
+     * <p>
+     * Setter for the field <code>iusService</code>.
+     * </p>
+     * 
+     * @param iusService
+     *            a {@link net.sourceforge.seqware.common.business.IUSService} object.
+     */
+    public void setIusService(IUSService iusService) {
+        this.iusService = iusService;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		ModelAndView modelAndView = null;
-		HashMap <String,String> model = new HashMap<>();
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
 
-		IUS ius = figureOutIUS(request);
+        ModelAndView modelAndView = null;
+        HashMap<String, String> model = new HashMap<>();
 
-		if (ius != null) {
-			request.setAttribute(getCommandName(), ius);
-			model.put("strategy", "update");
-			modelAndView = new ModelAndView("IUS", model);
-		} 
+        IUS ius = figureOutIUS(request);
 
-		return modelAndView;
-	}
+        if (ius != null) {
+            request.setAttribute(getCommandName(), ius);
+            model.put("strategy", "update");
+            modelAndView = new ModelAndView("IUS", model);
+        }
 
-	private IUS figureOutIUS(HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		IUS ius = null;
+        return modelAndView;
+    }
 
-		String id = (String)request.getParameter("iusID");
-		if (id != null) {
-			ius	= iusService.findByID(Integer.parseInt(id));
-			session.setAttribute("ius", ius);
-		}
+    private IUS figureOutIUS(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        IUS ius = null;
 
-		return ius;
-	}
+        String id = (String) request.getParameter("iusID");
+        if (id != null) {
+            ius = iusService.findByID(Integer.parseInt(id));
+            session.setAttribute("ius", ius);
+        }
+
+        return ius;
+    }
 
 }

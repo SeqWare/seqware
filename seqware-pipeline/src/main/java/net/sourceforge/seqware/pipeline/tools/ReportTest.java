@@ -17,56 +17,64 @@
 package net.sourceforge.seqware.pipeline.tools;
 
 /**
- * <p>ReportTest class.</p>
- *
+ * <p>
+ * ReportTest class.
+ * </p>
+ * 
  * @author yongliang
  * @version $Id: $Id
  */
 public class ReportTest {
     /**
-     * <p>main.</p>
-     *
-     * @param args an array of {@link java.lang.String} objects.
+     * <p>
+     * main.
+     * </p>
+     * 
+     * @param args
+     *            an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         ReportTest t = new ReportTest();
         t.test(args);
     }
-    
+
     /**
-     * <p>test.</p>
-     *
-     * @param args an array of {@link java.lang.String} objects.
+     * <p>
+     * test.
+     * </p>
+     * 
+     * @param args
+     *            an array of {@link java.lang.String} objects.
      */
     public void test(String[] args) {
-                
-        for(int i=0; i<1; i++) {
+
+        for (int i = 0; i < 1; i++) {
             String[] tmp = new String[args.length];
             TestThread t = new TestThread();
-            for(int j=0; j<args.length; j++) {
+            for (int j = 0; j < args.length; j++) {
                 tmp[j] = args[j];
             }
-            //tmp[args.length] = "foo"+i+".txt";
+            // tmp[args.length] = "foo"+i+".txt";
             t.setArgs(tmp);
             (new Thread(t)).start();
         }
-        
+
     }
-    
+
     public class TestThread implements Runnable {
 
         String[] args;
-        
+
         public void setArgs(String[] as) {
             args = as;
-        } 
-        
+        }
+
         @Override
         public void run() {
             net.sourceforge.seqware.pipeline.runner.PluginRunner runner = new net.sourceforge.seqware.pipeline.runner.PluginRunner();
             runner.run(args);
         }
-        
+
     }
 
 }

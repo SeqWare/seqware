@@ -22,13 +22,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * This runs all the tests needed to test the Admin Tutorials. The test suite
- * actually enforces order for us. 
- *
+ * This runs all the tests needed to test the Admin Tutorials. The test suite actually enforces order for us.
+ * 
  * @author dyuen
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {AdminPhase1.class})
+@Suite.SuiteClasses(value = { AdminPhase1.class })
 public class OldAdminTutorialSuiteET extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {

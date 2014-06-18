@@ -44,10 +44,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- *
+ * 
  * @author dyuen
  */
-@PrepareForTest({WorkflowTools.class, FileTools.class, AttributeAnnotator.class})
+@PrepareForTest({ WorkflowTools.class, FileTools.class, AttributeAnnotator.class })
 @RunWith(PowerMockRunner.class)
 public class AttributeAnnotatorTest {
 
@@ -99,7 +99,8 @@ public class AttributeAnnotatorTest {
         ReturnValue ret = attributeAnnotator.init();
         Assert.assertTrue("attributeAnnotator could not init", ret.getExitStatus() == ReturnValue.SUCCESS);
 
-        String[] types = {"sequencer-run", "lane", "ius", "experiment", "processing", "sample", "study", "workflow", "workflow-run", "file"};
+        String[] types = { "sequencer-run", "lane", "ius", "experiment", "processing", "sample", "study", "workflow", "workflow-run",
+                "file" };
         for (String type : types) {
             createSimpleAnnotation();
             when(options.has(type + "-accession")).thenReturn(true);
@@ -120,7 +121,7 @@ public class AttributeAnnotatorTest {
         verify(metadata).annotateFile(eq(1), isA(FileAttribute.class), anyBoolean());
         verifyNoMoreInteractions(metadata);
     }
-    
+
     @Test
     public void testBulkInsert() {
         ReturnValue ret = attributeAnnotator.init();
@@ -128,10 +129,10 @@ public class AttributeAnnotatorTest {
         String path = AttributeAnnotatorTest.class.getResource("attributeAnnotator.csv").getPath();
         when(options.has("file")).thenReturn(true);
         when(options.valueOf("file")).thenReturn(path);
-        
+
         ret = attributeAnnotator.do_run();
         Assert.assertTrue("attributeAnnotator did not complete successfully", ret.getExitStatus() == ReturnValue.SUCCESS);
-  
+
         verify(metadata).annotateSequencerRun(anyInt(), isA(Set.class));
         verify(metadata).annotateLane(anyInt(), isA(Set.class));
         verify(metadata).annotateIUS(anyInt(), isA(Set.class));
@@ -148,8 +149,7 @@ public class AttributeAnnotatorTest {
         when(options.has("value")).thenReturn(true);
         when(options.valueOf("value")).thenReturn("Marvin");
         when(options.has("skip")).thenReturn(false);
-        //when(options.valueOf("skip")).thenReturn("false");
+        // when(options.valueOf("skip")).thenReturn("false");
     }
-    
-    
+
 }

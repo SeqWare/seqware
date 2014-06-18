@@ -39,8 +39,10 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>ExperimentResource class.</p>
- *
+ * <p>
+ * ExperimentResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -49,7 +51,9 @@ public class ExperimentResource extends DatabaseResource {
     private Logger logger;
 
     /**
-     * <p>Constructor for ExperimentResource.</p>
+     * <p>
+     * Constructor for ExperimentResource.
+     * </p>
      */
     public ExperimentResource() {
         super("experiment");
@@ -64,7 +68,9 @@ public class ExperimentResource extends DatabaseResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -90,10 +96,14 @@ public class ExperimentResource extends DatabaseResource {
     }
 
     /**
-     * <p>postJaxb.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
-     * @throws org.restlet.resource.ResourceException if any.
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
+     * @throws org.restlet.resource.ResourceException
+     *             if any.
      */
     @Post("xml")
     public void postJaxb(Representation entity) throws ResourceException {
@@ -115,9 +125,8 @@ public class ExperimentResource extends DatabaseResource {
                 Registration reg = BeanFactory.getRegistrationServiceBean().findByEmailAddress(testIfNull(o.getOwner().getEmailAddress()));
                 if (reg != null) {
                     o.setOwner(reg);
-                } else
-                {
-                    logger.info("Could not be found: "+o.getOwner());
+                } else {
+                    logger.info("Could not be found: " + o.getOwner());
                 }
             }
 
@@ -127,8 +136,7 @@ public class ExperimentResource extends DatabaseResource {
                 o.setStudy(newStudy);
             }
 
-
-            //persist object
+            // persist object
             ExperimentService service = BeanFactory.getExperimentServiceBean();
             Integer swAccession = service.insert(registration, o);
 

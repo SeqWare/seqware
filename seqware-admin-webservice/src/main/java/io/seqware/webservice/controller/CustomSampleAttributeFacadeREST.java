@@ -26,26 +26,25 @@ import javax.ws.rs.Path;
 @Path("io.seqware.webservice.model.sampleattribute")
 public class CustomSampleAttributeFacadeREST extends SampleAttributeFacadeREST {
 
-   @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
-   private EntityManager em;
+    @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
+    private EntityManager em;
 
-   @EJB
-   private SampleFacadeREST sampleFacadeRest;
+    @EJB
+    private SampleFacadeREST sampleFacadeRest;
 
-   /**
-    * Create a new sample and a new sample attribute to associate with it in a
-    * single step. Both steps occur in a single transaction.
-    * 
-    * @param entity
-    *           The sample attribute with nested sample.
-    */
-   @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-   @POST
-   @Path("withbaseentity")
-   @Consumes({ "application/json", "application/xml" })
-   public void createWithBaseEntity(SampleAttribute entity) {
-      sampleFacadeRest.create(entity.getSampleId());
-      em.flush();
-      super.create(entity);
-   }
+    /**
+     * Create a new sample and a new sample attribute to associate with it in a single step. Both steps occur in a single transaction.
+     * 
+     * @param entity
+     *            The sample attribute with nested sample.
+     */
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @POST
+    @Path("withbaseentity")
+    @Consumes({ "application/json", "application/xml" })
+    public void createWithBaseEntity(SampleAttribute entity) {
+        sampleFacadeRest.create(entity.getSampleId());
+        em.flush();
+        super.create(entity);
+    }
 }

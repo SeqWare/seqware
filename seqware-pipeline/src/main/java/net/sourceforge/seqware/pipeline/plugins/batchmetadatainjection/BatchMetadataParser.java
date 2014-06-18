@@ -29,31 +29,26 @@ import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public abstract class BatchMetadataParser {
 
     public enum Field {
 
-        study_type, platform_id, organism_id, study_name, experiment_name,
-        sequencer_run_name, library_strategy_accession, library_source_accession,
-        library_selection_accession, library_source_template_type, tissue_origin,
-        tissue_type, library_type, library_size_code, targeted_resequencing,
-        tissue_preparation, run_file_path, barcode, number_of_lanes, study_center_project, study_center_name
+        study_type, platform_id, organism_id, study_name, experiment_name, sequencer_run_name, library_strategy_accession, library_source_accession, library_selection_accession, library_source_template_type, tissue_origin, tissue_type, library_type, library_size_code, targeted_resequencing, tissue_preparation, run_file_path, barcode, number_of_lanes, study_center_project, study_center_name
     }
-    private static String[] librarySourceTemplateTypeList = new String[]{"CH", "EX", "MR", "SM", "TR", "TS", "WG", "WT", "Other"};
-    private static String[] targetedResequencingList = new String[]{"Agilent SureSelect 244k Array",
-        "Agilent SureSelect All Exon G3362", "Agilent SureSelect ICGC/Sanger Exon",
-        "AmpliSeq Cancer Panel v1", "AmpliSeq Comprehensive Cancer Panel",
-        "Illumina TruSeq Exome", "Ion AmpliSeq Cancer Panel v1", "Nimblegen 2.1M Human Exome (21191)",
-        "Nimblegen Human Exome v2.0", "Nimblegen ICGC Beta", "Nimblegen OICR Test (13668)",
-        "TruSeq Amplicon - Cancer Panel", "Other"};
-    private static String[] tissueOriginList = new String[]{"Br", "Cb", "Ep", "Ki", "Li", "Lu",
-        "Lv", "Lx", "Ly", "Nk", "nn", "Oc", "Ov", "Pa", "Pr", "Sg", "Sp", "St", "Ta", "Tr", "Wm", "Other"};
-    private static String[] tissuePreparationList = new String[]{"Blood", "FFPE", "Fresh Frozen", "Other"};
-    private static String[] tissueTypeList = new String[]{"C", "M", "n", "P", "R", "X", "Other"};
-    private static String[] libraryTypeList = new String[]{"SE", "PE", "MP", "Other"};
+
+    private static String[] librarySourceTemplateTypeList = new String[] { "CH", "EX", "MR", "SM", "TR", "TS", "WG", "WT", "Other" };
+    private static String[] targetedResequencingList = new String[] { "Agilent SureSelect 244k Array", "Agilent SureSelect All Exon G3362",
+            "Agilent SureSelect ICGC/Sanger Exon", "AmpliSeq Cancer Panel v1", "AmpliSeq Comprehensive Cancer Panel",
+            "Illumina TruSeq Exome", "Ion AmpliSeq Cancer Panel v1", "Nimblegen 2.1M Human Exome (21191)", "Nimblegen Human Exome v2.0",
+            "Nimblegen ICGC Beta", "Nimblegen OICR Test (13668)", "TruSeq Amplicon - Cancer Panel", "Other" };
+    private static String[] tissueOriginList = new String[] { "Br", "Cb", "Ep", "Ki", "Li", "Lu", "Lv", "Lx", "Ly", "Nk", "nn", "Oc", "Ov",
+            "Pa", "Pr", "Sg", "Sp", "St", "Ta", "Tr", "Wm", "Other" };
+    private static String[] tissuePreparationList = new String[] { "Blood", "FFPE", "Fresh Frozen", "Other" };
+    private static String[] tissueTypeList = new String[] { "C", "M", "n", "P", "R", "X", "Other" };
+    private static String[] libraryTypeList = new String[] { "SE", "PE", "MP", "Other" };
     private String lstety = "";
     private String tare = "";
     private String tior = "";
@@ -68,12 +63,15 @@ public abstract class BatchMetadataParser {
 
     /**
      * Handles prompting for a choice out of a list of choices using integers.
-     *
-     * @param sampleName the sample name used for the prompting message
-     * @param title the name of the field that is being set
-     * @param choices the list of choices for the value of 'title'
-     * @param deflt the default choice to fall back on, which can be one of the
-     * list of 'choices'. This is the string value, not the integer.
+     * 
+     * @param sampleName
+     *            the sample name used for the prompting message
+     * @param title
+     *            the name of the field that is being set
+     * @param choices
+     *            the list of choices for the value of 'title'
+     * @param deflt
+     *            the default choice to fall back on, which can be one of the list of 'choices'. This is the string value, not the integer.
      * @return
      */
     protected String choiceOf(String sampleName, String title, String[] choices, String deflt) {
@@ -88,7 +86,7 @@ public abstract class BatchMetadataParser {
         }
         while (choice == null) {
             choiceInt = promptPositiveInteger(title, choiceInt, null, 1, choices.length);
-            if (choiceInt == 0) { //no selection
+            if (choiceInt == 0) { // no selection
                 break;
             } else if (choiceInt == choices.length) {
                 choice = ConsoleAdapter.getInstance().promptString("Please specify", null);
@@ -118,9 +116,8 @@ public abstract class BatchMetadataParser {
     }
 
     /**
-     * Generates a RunInfo object with the given parameters. All fields are
-     * optional.
-     *
+     * Generates a RunInfo object with the given parameters. All fields are optional.
+     * 
      * @param runName
      * @param studyTitle
      * @param experimentName
@@ -131,13 +128,11 @@ public abstract class BatchMetadataParser {
      * @param workflowType
      * @return
      */
-    protected RunInfo generateRunInfo(String runName, String runDescription,
-            String studyTitle, String studyDescription, String studyCenterName,
-            String studyCenterProject, String experimentName,
-            String experimentDescription, String filePath, int platformId,
-            int studyType, boolean isPairedEnd, String workflowType, String assayType) {
+    protected RunInfo generateRunInfo(String runName, String runDescription, String studyTitle, String studyDescription,
+            String studyCenterName, String studyCenterProject, String experimentName, String experimentDescription, String filePath,
+            int platformId, int studyType, boolean isPairedEnd, String workflowType, String assayType) {
         RunInfo runInfo = new RunInfo();
-        //Study
+        // Study
         KeyVal[] list = getKeyVals(metadata.getStudyTypes());
 
         runInfo.setStudyTitle(promptString("Study Title", studyTitle, Field.study_name));
@@ -149,8 +144,7 @@ public abstract class BatchMetadataParser {
         runInfo.setStudyCenterProject(promptString("Study Center Project", studyCenterProject, Field.study_center_project));
         runInfo.setStudyType(promptAccession("Study Type Accession", studyType, list, Field.study_type));
 
-
-        //Sequencer run
+        // Sequencer run
         list = getKeyVals(metadata.getPlatforms());
 
         runInfo.setRunName(promptString("Sequencer Run Name", runName, Field.sequencer_run_name));
@@ -163,30 +157,27 @@ public abstract class BatchMetadataParser {
         runInfo.setPairedEnd(isPairedEnd);
         runInfo.setRunSkip(false);
 
-
-        //experiment
+        // experiment
         runInfo.setExperimentName(promptString("Experiment Name", experimentName, Field.experiment_name));
         runInfo.setExperimentDescription(experimentDescription);
         if (experimentDescription == null) {
             runInfo.setExperimentDescription(runInfo.getExperimentName());
         }
-        
-        if (workflowType!=null) {
+
+        if (workflowType != null) {
             runInfo.setWorkflowType(workflowType);
         }
-        
-        if (assayType!=null) {
+
+        if (assayType != null) {
             runInfo.setAssayType(assayType);
         }
-        
 
         return runInfo;
     }
 
     /**
-     * Generates lane info with the given parameters. Lane number needs to be
-     * given. Everything else can be null or less than 0.
-     *
+     * Generates lane info with the given parameters. Lane number needs to be given. Everything else can be null or less than 0.
+     * 
      * @param laneNumber
      * @param studyTypeAccession
      * @return
@@ -206,7 +197,7 @@ public abstract class BatchMetadataParser {
             KeyVal[] list = getKeyVals(metadata.getStudyTypes());
             laneInfo.setStudyTypeAcc(promptAccession("Study Type Accession", studyTypeAccession, list, Field.study_type));
         }
-        //See https://jira.oicr.on.ca/browse/SEQWARE-1561. Uncomment when fixed.
+        // See https://jira.oicr.on.ca/browse/SEQWARE-1561. Uncomment when fixed.
 
         KeyVal[] list = getKeyVals(metadata.getLibraryStrategies());
         laneInfo.setLibraryStrategyAcc(promptAccession("Library Strategy Accession", 1, list, Field.library_strategy_accession));
@@ -216,13 +207,11 @@ public abstract class BatchMetadataParser {
         list = getKeyVals(metadata.getLibrarySource());
         laneInfo.setLibrarySourceAcc(promptAccession("Library Source Accession", 1, list, Field.library_source_accession));
 
-
         return laneInfo;
     }
 
     private KeyVal[] getKeyVals(List list) {
-        if (list==null || list.size()<=0)
-            return null;
+        if (list == null || list.size() <= 0) return null;
         KeyVal[] libs = new KeyVal[list.size()];
         int i = 0;
         for (Object o : list) {
@@ -269,10 +258,9 @@ public abstract class BatchMetadataParser {
     }
 
     /**
-     * Generates a sample info object given the fields, and prompts for null
-     * fields if the interactive flag is on. The individualNumber and
+     * Generates a sample info object given the fields, and prompts for null fields if the interactive flag is on. The individualNumber and
      * projectCode are required. Everything else can be null or less than 0.
-     *
+     * 
      * @param prettyName
      * @param projectCode
      * @param individualNumber
@@ -290,17 +278,15 @@ public abstract class BatchMetadataParser {
      * @return
      * @throws Exception
      */
-    protected SampleInfo generateSampleInfo(String prettyName, String projectCode,
-            String individualNumber, String librarySourceTemplateType,
-            String tissueOrigin, String tissueType, String libraryType,
-            String librarySizeCode, String barcode, int organismId,
-            String targetedResequencing, String tissuePreparation, String sampleDescription,
+    protected SampleInfo generateSampleInfo(String prettyName, String projectCode, String individualNumber,
+            String librarySourceTemplateType, String tissueOrigin, String tissueType, String libraryType, String librarySizeCode,
+            String barcode, int organismId, String targetedResequencing, String tissuePreparation, String sampleDescription,
             String iusName, String iusDescription) throws Exception {
 
-
-        //Sample
+        // Sample
         if (individualNumber == null || individualNumber.isEmpty() || projectCode == null || projectCode.isEmpty()) {
-            throw new Exception("Every sample needs a project code and individual number: You gave me " + projectCode + " and " + individualNumber);
+            throw new Exception("Every sample needs a project code and individual number: You gave me " + projectCode + " and "
+                    + individualNumber);
         }
         SampleInfo sa = new SampleInfo();
         sa.setIndividualNumber(individualNumber);
@@ -313,13 +299,15 @@ public abstract class BatchMetadataParser {
         sa.setLibraryType(libraryType);
 
         if (librarySourceTemplateType == null || librarySourceTemplateType.isEmpty()) {
-            librarySourceTemplateType = promptString(prettyName, "Library Source Template Type", librarySourceTemplateTypeList, this.lstety, Field.library_source_template_type);
+            librarySourceTemplateType = promptString(prettyName, "Library Source Template Type", librarySourceTemplateTypeList,
+                    this.lstety, Field.library_source_template_type);
             this.lstety = librarySourceTemplateType;
         }
         sa.setLibrarySourceTemplateType(librarySourceTemplateType);
 
         if (targetedResequencing == null || targetedResequencing.isEmpty()) {
-            targetedResequencing = promptString(prettyName, "Targeted Resequencing Type", targetedResequencingList, this.tare, Field.targeted_resequencing);
+            targetedResequencing = promptString(prettyName, "Targeted Resequencing Type", targetedResequencingList, this.tare,
+                    Field.targeted_resequencing);
             this.tare = targetedResequencing;
         }
         sa.setTargetedResequencing(targetedResequencing);
@@ -333,7 +321,6 @@ public abstract class BatchMetadataParser {
             }
         }
         sa.setTissueOrigin(tissueOrigin);
-
 
         if (tissuePreparation == null || tissuePreparation.isEmpty()) {
             tissuePreparation = promptString(prettyName, "Tissue Preparation", tissuePreparationList, this.tipr, Field.tissue_preparation);
@@ -352,7 +339,9 @@ public abstract class BatchMetadataParser {
         sa.setTissueType(tissueType);
 
         if (librarySizeCode == null || librarySizeCode.isEmpty() || !StringUtils.isNumeric(librarySizeCode)) {
-            Integer libSize = promptInteger("Library Size Code - a number code indicating the size of the band cut from the gel in base pairs", this.lSize, Field.library_size_code);
+            Integer libSize = promptInteger(
+                    "Library Size Code - a number code indicating the size of the band cut from the gel in base pairs", this.lSize,
+                    Field.library_size_code);
             if (libSize <= 0) {
                 librarySizeCode = "nn";
             } else {
@@ -388,8 +377,7 @@ public abstract class BatchMetadataParser {
         }
         sa.setOrganismId(organismId);
 
-
-        //IUS
+        // IUS
         if (barcode == null || barcode.isEmpty()) {
             barcode = promptString("Barcode", "NoIndex", Field.barcode);
         }
@@ -412,7 +400,6 @@ public abstract class BatchMetadataParser {
         sa.setIusDescription(iusDescription);
         sa.setIusSkip(false);
 
-
         return sa;
     }
 
@@ -423,10 +410,10 @@ public abstract class BatchMetadataParser {
         if (StringUtils.isNumeric(d)) {
             deflt = Integer.parseInt(d);
         }
-        //not using interactive input
+        // not using interactive input
         if (!interactive) {
             return Integer.parseInt(returnDefault((deflt > 0), String.valueOf(deflt), description, fieldName));
-        } //interactively work with the user to determine the choice
+        } // interactively work with the user to determine the choice
         else {
             Integer i = ConsoleAdapter.getInstance().promptInteger(description, deflt);
             if (fieldName != null) {
@@ -443,10 +430,10 @@ public abstract class BatchMetadataParser {
         if (StringUtils.isNumeric(d)) {
             deflt = Integer.parseInt(d);
         }
-        //not using interactive input
+        // not using interactive input
         if (!interactive) {
             return Integer.parseInt(returnDefault((deflt > 0), String.valueOf(deflt), description, fieldName));
-        } //interactively work with the user to determine the choice
+        } // interactively work with the user to determine the choice
         else {
             for (int i = 1; i <= values.length; i++) {
                 Log.stdout(i + " : " + values[i - 1].toString());
@@ -462,10 +449,10 @@ public abstract class BatchMetadataParser {
     protected String promptString(String description, String deflt, Field fieldName) throws OptionException {
         Log.debug("checking for field '" + description + "'");
         deflt = extractDefault(fieldName, deflt);
-        //not using interactive input
+        // not using interactive input
         if (!interactive) {
             return returnDefault((deflt != null && !deflt.trim().isEmpty()), deflt, description, fieldName);
-        } //interactively work with the user to determine the choice
+        } // interactively work with the user to determine the choice
         else {
             String s = ConsoleAdapter.getInstance().promptString(description, deflt);
             if (fieldName != null) {
@@ -476,23 +463,25 @@ public abstract class BatchMetadataParser {
     }
 
     /**
-     * Determine a value for a field 'title' of sample 'sampleName'. This method
-     * has different functionality depending on whether the Field is set (can be
-     * null), or the 'interactive' option is on.
-     *
-     * @param sampleName the sample name used for prompting
-     * @param title the name of the field being set
-     * @param choices the list of choices (Strings) that the user can select
-     * from in interactive mode
-     * @param deflt the default string if everything else fails
-     * @param fieldName the Field that is used for command-line defaults.
-     * @return the choice for the field, or an OptionException if other methods
-     * fail. This method can return null.
+     * Determine a value for a field 'title' of sample 'sampleName'. This method has different functionality depending on whether the Field
+     * is set (can be null), or the 'interactive' option is on.
+     * 
+     * @param sampleName
+     *            the sample name used for prompting
+     * @param title
+     *            the name of the field being set
+     * @param choices
+     *            the list of choices (Strings) that the user can select from in interactive mode
+     * @param deflt
+     *            the default string if everything else fails
+     * @param fieldName
+     *            the Field that is used for command-line defaults.
+     * @return the choice for the field, or an OptionException if other methods fail. This method can return null.
      */
     protected String promptString(String sampleName, String title, String[] choices, String deflt, Field fieldName) {
         Log.debug("checking for field '" + sampleName + "'");
         deflt = extractDefault(fieldName, deflt);
-        //not using interactive input
+        // not using interactive input
         if (!interactive) {
             return returnDefault(((deflt != null && !deflt.trim().isEmpty())), deflt, title, fieldName);
         } else {
@@ -526,8 +515,8 @@ public abstract class BatchMetadataParser {
         if (useDefault) {
             return deflt;
         } else {
-            Exception e = new Exception("A value must be provided for " + title
-                    + ", using --field " + (fieldName == null ? "No field known" : fieldName.toString()));
+            Exception e = new Exception("A value must be provided for " + title + ", using --field "
+                    + (fieldName == null ? "No field known" : fieldName.toString()));
             throw new OptionException(fields.keySet(), e) {
             };
         }
@@ -535,7 +524,7 @@ public abstract class BatchMetadataParser {
 
     protected int promptPositiveInteger(String description, int deflt, Field fieldName, int lowNum, int highNum) {
         int value = -1;
-        while ((value > highNum || value < lowNum) && value !=0) {
+        while ((value > highNum || value < lowNum) && value != 0) {
             value = promptInteger(description, deflt, fieldName);
         }
         return value;

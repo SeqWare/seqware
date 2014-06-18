@@ -25,31 +25,33 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
 /**
- * <p>Log class.</p>
- *
+ * <p>
+ * Log class.
+ * </p>
+ * 
  * @author yongliang
  * @version $Id: $Id
  */
 public class Log {
-    
+
     private static boolean verbose;
     private final static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
     /**
      * See {@link org.apache.log4j.Logger#debug(Object)}.
-     *
+     * 
      * @param message
      *            the message to log.
      */
     public static void trace(final Object message) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.trace(message);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#debug(Object,Throwable)}.
-     *
+     * 
      * @param message
      *            the message to log.
      * @param t
@@ -57,27 +59,25 @@ public class Log {
      */
     public static void trace(final Object message, final Throwable t) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
-        logger.trace(message,t);
+        if (verbose) setVerboseLogger(logger);
+        logger.trace(message, t);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#debug(Object)}.
-     *
+     * 
      * @param message
      *            the message to log.
      */
     public static void debug(final Object message) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.debug(message);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#debug(Object,Throwable)}.
-     *
+     * 
      * @param message
      *            the message to log.
      * @param t
@@ -85,27 +85,25 @@ public class Log {
      */
     public static void debug(final Object message, final Throwable t) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
-        logger.debug(message,t);
+        if (verbose) setVerboseLogger(logger);
+        logger.debug(message, t);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#info(Object)}.
-     *
+     * 
      * @param message
      *            the message to log.
      */
     public static void info(final Object message) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.info(message);
-   }
+    }
 
     /**
      * See {@link org.apache.log4j.Logger#info(Object,Throwable)}.
-     *
+     * 
      * @param message
      *            the message to log.
      * @param t
@@ -113,27 +111,25 @@ public class Log {
      */
     public static void info(final Object message, final Throwable t) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.info(message, t);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#warn(Object)}.
-     *
+     * 
      * @param message
      *            the message to log.
      */
     public static void warn(final Object message) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.warn(message);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#warn(Object,Throwable)}.
-     *
+     * 
      * @param message
      *            the message to log.
      * @param t
@@ -141,27 +137,25 @@ public class Log {
      */
     public static void warn(final Object message, final Throwable t) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.warn(message, t);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#error(Object)}.
-     *
+     * 
      * @param message
      *            the message to log.
      */
     public static void error(final Object message) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.error(message);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#error(Object,Throwable)}.
-     *
+     * 
      * @param message
      *            the message to log.
      * @param t
@@ -169,27 +163,25 @@ public class Log {
      */
     public static void error(final Object message, final Throwable t) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.error(message, t);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#fatal(Object)}.
-     *
+     * 
      * @param message
      *            the message to log.
      */
     public static void fatal(final Object message) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.fatal(message);
     }
 
     /**
      * See {@link org.apache.log4j.Logger#fatal(Object,Throwable)}.
-     *
+     * 
      * @param message
      *            the message to log.
      * @param t
@@ -197,45 +189,52 @@ public class Log {
      */
     public static void fatal(final Object message, final Throwable t) {
         Logger logger = Logger.getLogger(getCallerClassName());
-        if(verbose)
-            setVerboseLogger(logger);
+        if (verbose) setVerboseLogger(logger);
         logger.fatal(message, t);
     }
-    
+
     /**
-     * <p>stdout.</p>
-     *
-     * @param message a {@link java.lang.String} object.
+     * <p>
+     * stdout.
+     * </p>
+     * 
+     * @param message
+     *            a {@link java.lang.String} object.
      */
     public static void stdout(final String message) {
-	    System.out.println(message);
+        System.out.println(message);
     }
-    
+
     /**
      * Output to stdout with the time pre-pended
-     *
-     * @param message a {@link java.lang.String} object.
+     * 
+     * @param message
+     *            a {@link java.lang.String} object.
      */
     public static void stdoutWithTime(final String message) {
-        //get current date time with Date()
-	Date date = new Date();
-	System.out.print("[" + dateFormat.format(date) + "] | ");
-	System.out.println(message);
+        // get current date time with Date()
+        Date date = new Date();
+        System.out.print("[" + dateFormat.format(date) + "] | ");
+        System.out.println(message);
     }
-    
+
     /**
-     * <p>stderr.</p>
-     *
-     * @param message a {@link java.lang.String} object.
+     * <p>
+     * stderr.
+     * </p>
+     * 
+     * @param message
+     *            a {@link java.lang.String} object.
      */
     public static void stderr(final String message) {
-	    System.err.println(message);
-    } 
-    
+        System.err.println(message);
+    }
+
     /**
      * override the log4j.properties
-     *
-     * @param b a boolean.
+     * 
+     * @param b
+     *            a boolean.
      */
     public static void setVerbose(boolean b) {
         Log.verbose = b;
@@ -245,7 +244,7 @@ public class Log {
     private Log() {
     }
 
-       /**
+    /**
      * Info about the logger caller
      */
     private static class CallInfo {

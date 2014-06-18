@@ -34,24 +34,30 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>StudyIDResource class.</p>
- *
+ * <p>
+ * StudyIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class StudyIDResource extends DatabaseIDResource {
 
     /**
-     * <p>Constructor for StudyIDResource.</p>
+     * <p>
+     * Constructor for StudyIDResource.
+     * </p>
      */
     public StudyIDResource() {
         super("studyId");
     }
 
-        /**
-         * <p>getXml.</p>
-         */
-        @Get
+    /**
+     * <p>
+     * getXml.
+     * </p>
+     */
+    @Get
     public void getXml() {
         authenticate();
         StudyService ss = BeanFactory.getStudyServiceBean();
@@ -61,27 +67,30 @@ public class StudyIDResource extends DatabaseIDResource {
 
         Study dto = copier.hibernate2dto(Study.class, study);
 
-		if(fields.contains("attributes")) {
-			Set<StudyAttribute> sas = study.getStudyAttributes();
-			Set<StudyAttribute> newsas = new TreeSet<>();
-			if(sas!=null && !sas.isEmpty()) {
-				for(StudyAttribute sa: sas) {
-					newsas.add(copier.hibernate2dto(StudyAttribute.class,sa));
-				}
-				dto.setStudyAttributes(newsas);
-			}
-		}
+        if (fields.contains("attributes")) {
+            Set<StudyAttribute> sas = study.getStudyAttributes();
+            Set<StudyAttribute> newsas = new TreeSet<>();
+            if (sas != null && !sas.isEmpty()) {
+                for (StudyAttribute sa : sas) {
+                    newsas.add(copier.hibernate2dto(StudyAttribute.class, sa));
+                }
+                dto.setStudyAttributes(newsas);
+            }
+        }
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-	/** {@inheritDoc}
-     * @return  */
-	@Override
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
     @Put
     public Representation put(Representation entity) {
-		Representation representation = null;
-		try {
+        Representation representation = null;
+        try {
             JaxbObject<Study> jo = new JaxbObject<>();
             String text = entity.getText();
             Study p = null;
@@ -95,79 +104,79 @@ public class StudyIDResource extends DatabaseIDResource {
                 p.setOwner(registration);
             }
 
-            //persist object
+            // persist object
             StudyService service = BeanFactory.getStudyServiceBean();
             Study study = (Study) testIfNull(service.findByID(p.getStudyId()));
 
-	            if (null != p.getStudyAttributes()) {
-                    //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                        this.mergeAttributes(study.getStudyAttributes(), p.getStudyAttributes(), study);
-                    }
+            if (null != p.getStudyAttributes()) {
+                // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                this.mergeAttributes(study.getStudyAttributes(), p.getStudyAttributes(), study);
+            }
 
-			String title = p.getTitle();
-			String description = p.getDescription();
-			String alias = p.getAlias();
-			String accession = p.getAccession();
-			String status = p.getStatus();
-			String abstractStr = p.getAbstractStr();
-			String newType = p.getNewType();
-			String centerName = p.getCenterName();
-			String centerProjectName = p.getCenterProjectName();
-			Integer projectId = p.getProjectId();
-			Boolean isSelected = p.getIsSelected();
-			Boolean isHasFile = p.getIsHasFile();
-			String html = p.getHtml();
-			Integer existingTypeInt = p.getExistingTypeInt();
+            String title = p.getTitle();
+            String description = p.getDescription();
+            String alias = p.getAlias();
+            String accession = p.getAccession();
+            String status = p.getStatus();
+            String abstractStr = p.getAbstractStr();
+            String newType = p.getNewType();
+            String centerName = p.getCenterName();
+            String centerProjectName = p.getCenterProjectName();
+            Integer projectId = p.getProjectId();
+            Boolean isSelected = p.getIsSelected();
+            Boolean isHasFile = p.getIsHasFile();
+            String html = p.getHtml();
+            Integer existingTypeInt = p.getExistingTypeInt();
 
-			if(null!=title) {
-				study.setTitle(title);
-			}
-			if(null!=description) {
-				study.setDescription(description);
-			}
-			if(null!=alias) {
-				study.setAlias(alias);
-			}
-			if(null!=accession) {
-				study.setAccession(accession);
-			}
-			if(null!=status) {
-				study.setStatus(status);
-			}
-			if(null!=abstractStr) {
-				study.setAbstractStr(abstractStr);
-			}
-			if(null!=newType) {
-				study.setNewType(newType);
-			}
-			if(null!=centerName) {
-				study.setCenterName(centerName);
-			}
-			if(null!=centerProjectName) {
-				study.setCenterProjectName(centerProjectName);
-			}
-			if(null!=projectId) {
-				study.setProjectId(projectId);
-			}
-			if(null!=isSelected) {
-				study.setIsSelected(isSelected);
-			}
-			if(null!=isHasFile) {
-				study.setIsHasFile(isHasFile);
-			}
-			if(null!=html) {
-				study.setHtml(html);
-			}
-			if(null!=existingTypeInt) {
-				study.setExistingTypeInt(existingTypeInt);
-			}
-			service.update(study);
+            if (null != title) {
+                study.setTitle(title);
+            }
+            if (null != description) {
+                study.setDescription(description);
+            }
+            if (null != alias) {
+                study.setAlias(alias);
+            }
+            if (null != accession) {
+                study.setAccession(accession);
+            }
+            if (null != status) {
+                study.setStatus(status);
+            }
+            if (null != abstractStr) {
+                study.setAbstractStr(abstractStr);
+            }
+            if (null != newType) {
+                study.setNewType(newType);
+            }
+            if (null != centerName) {
+                study.setCenterName(centerName);
+            }
+            if (null != centerProjectName) {
+                study.setCenterProjectName(centerProjectName);
+            }
+            if (null != projectId) {
+                study.setProjectId(projectId);
+            }
+            if (null != isSelected) {
+                study.setIsSelected(isSelected);
+            }
+            if (null != isHasFile) {
+                study.setIsHasFile(isHasFile);
+            }
+            if (null != html) {
+                study.setHtml(html);
+            }
+            if (null != existingTypeInt) {
+                study.setExistingTypeInt(existingTypeInt);
+            }
+            service.update(study);
 
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             Study detachedStudy = copier.hibernate2dto(Study.class, study);
 
             Document line = XmlTools.marshalToDocument(jo, detachedStudy);
-			representation = XmlTools.getRepresentation(line);
+            representation = XmlTools.getRepresentation(line);
             getResponse().setEntity(representation);
             getResponse().setLocationRef(getRequest().getRootRef() + "/studies/" + detachedStudy.getSwAccession());
             getResponse().setStatus(Status.SUCCESS_CREATED);
@@ -177,6 +186,6 @@ public class StudyIDResource extends DatabaseIDResource {
             e.printStackTrace();
             getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
         }
-		return representation;
-	}
+        return representation;
+    }
 }

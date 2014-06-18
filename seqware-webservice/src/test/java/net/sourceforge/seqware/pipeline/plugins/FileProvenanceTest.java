@@ -27,17 +27,18 @@ import org.junit.*;
 
 /**
  * Runs the tests for the FileLinker
+ * 
  * @author dyuen
  */
 public class FileProvenanceTest extends ExtendedPluginTest {
-    
+
     @Before
     @Override
     public void setUp() {
         super.setUp();
         BasicTestDatabaseCreator.resetDatabaseWithUsers();
     }
-    
+
     public FileProvenanceTest() {
     }
 
@@ -46,29 +47,29 @@ public class FileProvenanceTest extends ExtendedPluginTest {
         List<Map<String, String>> fileProvenanceReport = metadata.fileProvenanceReport(new HashMap());
         Assert.assertTrue("report should be empty until triggered", fileProvenanceReport.isEmpty());
     }
-    
+
     @Test
-    public void testFileProvenanceNormalPass(){
+    public void testFileProvenanceNormalPass() {
         metadata.fileProvenanceReportTrigger();
         List<Map<String, String>> fileProvenanceReport = metadata.fileProvenanceReport(new HashMap());
         Assert.assertTrue("report should be filled in but was size " + fileProvenanceReport.size(), fileProvenanceReport.size() == 483);
     }
-    
+
     @Test(expected = RuntimeException.class)
-    public void testFileProvenanceFunkyNameFail(){
+    public void testFileProvenanceFunkyNameFail() {
         metadata.fileProvenanceReportTrigger();
         Map map = new HashMap();
         map.put(FileProvenanceParam.sample + "garbage", new ImmutableList.Builder<String>().add("1").build());
         List<Map<String, String>> fileProvenanceReport = metadata.fileProvenanceReport(map);
         Assert.assertTrue("report should be filled in but was size " + fileProvenanceReport.size(), fileProvenanceReport.size() == 483);
     }
-    
+
     @Test(expected = RuntimeException.class)
-    public void testFileProvenanceRequestOfInsaneSizeFail(){
+    public void testFileProvenanceRequestOfInsaneSizeFail() {
         metadata.fileProvenanceReportTrigger();
         Map map = new HashMap();
         ImmutableList.Builder<String> builder = new ImmutableList.Builder<>();
-        for(int i = 0; i < 10000; i++){
+        for (int i = 0; i < 10000; i++) {
             builder.add(Integer.toString(i));
         }
         map.put(FileProvenanceParam.sample, builder.build());

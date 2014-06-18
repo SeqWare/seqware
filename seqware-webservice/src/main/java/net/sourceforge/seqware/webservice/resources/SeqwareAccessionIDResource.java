@@ -24,8 +24,10 @@ import org.restlet.resource.Put;
 import org.restlet.resource.Delete;
 
 /**
- * <p>SeqwareAccessionIDResource class.</p>
- *
+ * <p>
+ * SeqwareAccessionIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -39,8 +41,11 @@ public class SeqwareAccessionIDResource extends BasicResource {
         this.swa = (String) getRequestAttributes().get("SWA");
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Get
     @Override
     public Representation get() {
@@ -50,9 +55,12 @@ public class SeqwareAccessionIDResource extends BasicResource {
         return repOutput;
     }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @param rep
-     * @return  */
+     * @return
+     */
     @Put
     @Override
     public Representation put(Representation rep) {
@@ -62,8 +70,11 @@ public class SeqwareAccessionIDResource extends BasicResource {
         return repOutput;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Delete
     @Override
     public Representation delete() {

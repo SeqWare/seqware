@@ -43,15 +43,19 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>WorkflowRunIDResource class.</p>
- *
+ * <p>
+ * WorkflowRunIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowRunIDResource extends DatabaseIDResource {
 
     /**
-     * <p>Constructor for WorkflowRunIDResource.</p>
+     * <p>
+     * Constructor for WorkflowRunIDResource.
+     * </p>
      */
     public WorkflowRunIDResource() {
         super("workflowRunId");
@@ -59,7 +63,9 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -70,10 +76,11 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
         WorkflowRun workflowRun = getWorkflowRun(ss);
         // specify that we want the input file set to be copied along, if this works, we should clean up the manual copying below
-        CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(WorkflowRun.class, new String[]{"inputFileAccessions"});
+        CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(
+                WorkflowRun.class, new String[] { "inputFileAccessions" });
         WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
-        //Log.debug("getXML() Workflow run contains " + workflowRun.getInputFileAccessions().size()  + " input files");
-        //dto.setInputFileAccessions(workflowRun.getInputFileAccessions());
+        // Log.debug("getXML() Workflow run contains " + workflowRun.getInputFileAccessions().size() + " input files");
+        // dto.setInputFileAccessions(workflowRun.getInputFileAccessions());
 
         if (fields.contains("lanes")) {
 
@@ -124,37 +131,41 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
                 Log.info("Could not be found: offspring processings");
             }
         }
-		if (fields.contains("attributes")) {
-			Set<WorkflowRunAttribute> wras = workflowRun.getWorkflowRunAttributes();
-			if(wras!=null && !wras.isEmpty()) {
-				Set<WorkflowRunAttribute> newwras = new TreeSet<>();
-				for(WorkflowRunAttribute wra: wras) {
-					newwras.add(copier.hibernate2dto(WorkflowRunAttribute.class, wra));
-				}
-				dto.setWorkflowRunAttributes(newwras);
-			}
-		}
+        if (fields.contains("attributes")) {
+            Set<WorkflowRunAttribute> wras = workflowRun.getWorkflowRunAttributes();
+            if (wras != null && !wras.isEmpty()) {
+                Set<WorkflowRunAttribute> newwras = new TreeSet<>();
+                for (WorkflowRunAttribute wra : wras) {
+                    newwras.add(copier.hibernate2dto(WorkflowRunAttribute.class, wra));
+                }
+                dto.setWorkflowRunAttributes(newwras);
+            }
+        }
 
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
 
-
     }
 
     /**
-     * <p>updateWorkflowRun.</p>
-     *
-     * @param newWR a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     * <p>
+     * updateWorkflowRun.
+     * </p>
+     * 
+     * @param newWR
+     *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
-     * @throws org.restlet.resource.ResourceException if any.
-     * @throws java.sql.SQLException if any.
+     * @throws org.restlet.resource.ResourceException
+     *             if any.
+     * @throws java.sql.SQLException
+     *             if any.
      */
     public WorkflowRun updateWorkflowRun(WorkflowRun newWR) throws ResourceException, SQLException {
         authenticate();
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
         WorkflowRun wr = (WorkflowRun) testIfNull(wrs.findBySWAccession(newWR.getSwAccession()));
         wr.givesPermission(registration);
-        //ius_workflow_runs
+        // ius_workflow_runs
         if (newWR.getIus() != null) {
             SortedSet<IUS> iuses = newWR.getIus();
             if (iuses != null) {
@@ -170,7 +181,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
                 Log.info("Could not be found: iuses");
             }
         }
-        //lane_workflow_runs
+        // lane_workflow_runs
         if (newWR.getLanes() != null) {
             SortedSet<Lane> lanes = newWR.getLanes();
             if (lanes != null) {
@@ -187,7 +198,6 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
             }
         }
 
-
         wr.setCommand(newWR.getCommand());
         wr.setCurrentWorkingDir(newWR.getCurrentWorkingDir());
         wr.setDax(newWR.getDax());
@@ -203,18 +213,18 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         wr.setStdErr(newWR.getStdErr());
         wr.setStdOut(newWR.getStdOut());
         wr.setWorkflowEngine(newWR.getWorkflowEngine());
-        if (newWR.getInputFileAccessions() != null){
+        if (newWR.getInputFileAccessions() != null) {
             Log.debug("Saving " + wr.getInputFileAccessions().size() + " input files");
             wr.getInputFileAccessions().addAll(newWR.getInputFileAccessions());
         }
-        
+
         if (newWR.getWorkflow() != null) {
             WorkflowService ws = BeanFactory.getWorkflowServiceBean();
             Workflow w = ws.findByID(newWR.getWorkflow().getWorkflowId());
             if (w != null) {
                 wr.setWorkflow(w);
             } else {
-                Log.info("Could not be found: workflow "+newWR.getWorkflow());
+                Log.info("Could not be found: workflow " + newWR.getWorkflow());
             }
         }
         if (newWR.getOwner() != null) {
@@ -222,17 +232,17 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
             if (reg != null) {
                 wr.setOwner(reg);
             } else {
-                Log.info("Could not be found: "+newWR.getOwner());
+                Log.info("Could not be found: " + newWR.getOwner());
             }
         } else if (wr.getOwner() == null) {
             wr.setOwner(registration);
         }
-        
+
         if (newWR.getWorkflowRunAttributes() != null) {
             this.mergeAttributes(wr.getWorkflowRunAttributes(), newWR.getWorkflowRunAttributes(), wr);
         }
         // SEQWARE-1778 - try to properly create parameters in the workflow_run_param table as well
-        //convert ini file parameters into expected format
+        // convert ini file parameters into expected format
         HashMap<String, String> map = new HashMap<>();
         if (wr.getIniFile() != null && !wr.getIniFile().isEmpty()) {
             // just skip if previous ini file params detected
@@ -258,7 +268,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         }
         wrs.update(registration, wr);
 
-        //direct DB calls
+        // direct DB calls
         if (newWR.getIus() != null) {
             addNewIUSes(newWR, wr);
         }
@@ -275,8 +285,11 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         return workflowRun;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public Representation put(Representation entity) {
         Representation toreturn = null;
@@ -291,12 +304,11 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
             } catch (SAXException ex) {
                 ex.printStackTrace();
                 throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
-            }catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
                 throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
             }
             try {
-
 
                 WorkflowRun wr = updateWorkflowRun(newWR);
 
@@ -349,10 +361,10 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
         for (int swa : newIUSswa) {
             IUS ius = is.findBySWAccession(swa);
-            if (ius !=null && ius.givesPermission(registration)) {
+            if (ius != null && ius.givesPermission(registration)) {
                 currentWR.getIus().add(ius);
             } else if (ius == null) {
-                Log.info("Could not be found: ius "+swa);
+                Log.info("Could not be found: ius " + swa);
             }
         }
     }
@@ -371,10 +383,10 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         LaneService ls = BeanFactory.getLaneServiceBean();
         for (int swa : newLaneSWA) {
             Lane l = ls.findBySWAccession(swa);
-            if (l !=null && l.givesPermission(registration)) {
+            if (l != null && l.givesPermission(registration)) {
                 currentWR.getLanes().add(l);
             } else if (lanes == null) {
-                Log.info("Could not be found: ius "+swa);
+                Log.info("Could not be found: ius " + swa);
             }
         }
     }

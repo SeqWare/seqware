@@ -20,17 +20,21 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * <p>LaneDAOHibernate class.</p>
- *
+ * <p>
+ * LaneDAOHibernate class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
-    
+
     private Logger logger;
-    
+
     /**
-     * <p>Constructor for LaneDAOHibernate.</p>
+     * <p>
+     * Constructor for LaneDAOHibernate.
+     * </p>
      */
     public LaneDAOHibernate() {
         super();
@@ -39,20 +43,21 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Inserts an instance of Lane into the database.
-     * @return 
+     * 
+     * @return
      */
     @Override
     public Integer insert(Lane lane) {
         this.getHibernateTemplate().save(lane);
         getSession().flush();
-        return(lane.getSwAccession());
+        return (lane.getSwAccession());
     }
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Updates an instance of Lane in the database.
      */
     @Override
@@ -63,7 +68,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Deletes an instance of Lane in the database.
      */
     @Override
@@ -77,187 +82,190 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         // and then
         this.getHibernateTemplate().delete(lane);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public List<File> getFiles(Integer laneId) {
         List<File> files = new ArrayList<>();
-        
-        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id "
+
+        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id)  "
                 + "where ln.lane_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
                 + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id ) "
                 + "select * from File myfile where myfile.file_id in( "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
-                + "where p.parent_id = processing_id " + "UNION ALL "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
+                + "select distinct file_id from processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id "
+                + "UNION ALL " + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
                 + "where p.child_id = processing_id " + "UNION ALL " + "select distinct file_id from processing_files pf "
                 + "inner join processing_ius pr_i on (pr_i.processing_id = pf.processing_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id)  "
                 + "where ln.lane_id = ? )";
-        
+
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setInteger(1, laneId).list();
-        
+
         for (Object file : list) {
             File fl = (File) file;
             files.add(fl);
         }
-        
+
         return files;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer laneId) {
         boolean isHasFile = false;
-        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id "
+        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id) "
                 + "where ln.lane_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
                 + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id ) "
                 + "select * from File myfile where myfile.file_id in( "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
-                + "where p.parent_id = processing_id " + "UNION ALL "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
+                + "select distinct file_id from processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id "
+                + "UNION ALL " + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
                 + "where p.child_id = processing_id " + "UNION ALL " + "select distinct file_id from processing_files pf "
                 + "inner join processing_ius pr_i on (pr_i.processing_id = pf.processing_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id)  "
                 + "where ln.lane_id = ? ) LIMIT 1";
-        
+
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setInteger(1, laneId).list();
-        
+
         isHasFile = (list.size() > 0) ? true : false;
-        
+
         return isHasFile;
     }
-    
-    /** {@inheritDoc}
-     * @param laneId */
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @param laneId
+     */
     @Override
     public List<File> getFiles(Integer laneId, String metaType) {
         List<File> files = new ArrayList<>();
-        
-        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id "
+
+        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id) "
                 + "where ln.lane_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
                 + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id ) "
                 + "select * from File myfile where myfile.meta_type=? and myfile.file_id in( "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
-                + "where p.parent_id = processing_id " + "UNION ALL "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
+                + "select distinct file_id from processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id "
+                + "UNION ALL " + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
                 + "where p.child_id = processing_id " + "UNION ALL " + "select distinct file_id from processing_files pf "
                 + "inner join processing_ius pr_i on (pr_i.processing_id = pf.processing_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id)  "
                 + "where ln.lane_id = ? )";
-        
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setString(1, metaType).setInteger(2, laneId).list();
-        
+
+        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setString(1, metaType)
+                .setInteger(2, laneId).list();
+
         for (Object file : list) {
             File fl = (File) file;
             files.add(fl);
         }
-        
+
         return files;
     }
-    
-    /** {@inheritDoc}
-     * @param laneId */
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @param laneId
+     */
     @Override
     public boolean isHasFile(Integer laneId, String metaType) {
         boolean isHasFile = false;
-        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id "
+        String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id) "
                 + "where ln.lane_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
                 + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id ) "
                 + "select * from File myfile where myfile.meta_type=? and myfile.file_id in( "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
-                + "where p.parent_id = processing_id " + "UNION ALL "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
+                + "select distinct file_id from processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id "
+                + "UNION ALL " + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
                 + "where p.child_id = processing_id " + "UNION ALL " + "select distinct file_id from processing_files pf "
                 + "inner join processing_ius pr_i on (pr_i.processing_id = pf.processing_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id)  "
                 + "where ln.lane_id = ? ) LIMIT 1";
-        
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setString(1, metaType).setInteger(2, laneId).list();
-        
+
+        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setString(1, metaType)
+                .setInteger(2, laneId).list();
+
         isHasFile = (list.size() > 0) ? true : false;
-        
+
         return isHasFile;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public List<Lane> list(List<Integer> laneIds) {
         List<Lane> lanes = new ArrayList<>();
-        
+
         String paramQuery = "";
         for (int i = 0; i < laneIds.size() - 1; i++) {
             paramQuery = paramQuery + "?,";
         }
         paramQuery = paramQuery + "?";
-        
+
         String query = "SELECT * FROM Lane as l where l.lane_id in (" + paramQuery + ")";
-        
+
         SQLQuery sql = this.getSession().createSQLQuery(query).addEntity(Lane.class);
-        
+
         for (int i = 0; i < laneIds.size(); i++) {
             sql.setInteger(i, laneIds.get(i));
         }
-        
+
         List list = sql.list();
-        
+
         for (Object lane : list) {
             Lane ln = (Lane) lane;
             lanes.add(ln);
         }
-        
+
         return lanes;
     }
 
     // delete Only lane, without CASCADE delete processig
     /**
-     * <p>delete.</p>
-     *
-     * @param lanes a {@link java.util.SortedSet} object.
+     * <p>
+     * delete.
+     * </p>
+     * 
+     * @param lanes
+     *            a {@link java.util.SortedSet} object.
      */
     @Override
     public void delete(SortedSet<Lane> lanes) {
         if (lanes == null || lanes.size() == 0) {
             return;
         }
-        
+
         for (Lane lane : lanes) {
             this.getSession().evict(lane.getSequencerRun());
             this.getSession().evict(lane.getSample());
-            
+
             Set<Processing> processings = lane.getProcessings();
             for (Processing processing : processings) {
                 this.getSession().evict(processing);
             }
             this.getSession().evict(lane);
         }
-        
+
         String paramQuery = "";
         for (int i = 0; i < lanes.size() - 1; i++) {
             paramQuery = paramQuery + "?,";
         }
-        
+
         paramQuery = paramQuery + "?";
         logger.debug("Delete lanes:");
         logger.debug(paramQuery);
 
         // delete processing_lanes
         String query = "DELETE FROM processing_lanes as pl where pl.lane_id in (" + paramQuery + ")";
-        
+
         SQLQuery sql = this.getSession().createSQLQuery(query);
-        
+
         int iter = 0;
         for (Lane lane : lanes) {
             logger.debug("iter: " + iter + "; laneId = " + lane.getLaneId());
@@ -340,67 +348,69 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Finds an instance of Lane in the database by the Lane emailAddress.
      */
     @Override
     public Lane findByName(String name) {
         String query = "from lane as lane where lane.name = ?";
         Lane lane = null;
-        Object[] parameters = {name};
+        Object[] parameters = { name };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             lane = (Lane) list.get(0);
         }
         return lane;
     }
-    
-    /** {@inheritDoc}
-     * @param expID */
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @param expID
+     */
     @Override
     public Lane findByID(Integer expID) {
         String query = "from Lane as lane where lane.laneId = ?";
         Lane lane = null;
-        Object[] parameters = {expID};
+        Object[] parameters = { expID };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             lane = (Lane) list.get(0);
         }
         return lane;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Lane findBySWAccession(Integer swAccession) {
         String query = "from Lane as lane where lane.swAccession = ?";
         Lane lane = null;
-        Object[] parameters = {swAccession};
+        Object[] parameters = { swAccession };
         List<Lane> list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             lane = (Lane) list.get(0);
         }
         return lane;
     }
-    
+
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<Lane> findByOwnerID(Integer registrationId) {
         String query = "from Lane as lane where lane.owner.registrationId = ?";
-        Object[] parameters = {registrationId};
+        Object[] parameters = { registrationId };
         return this.getHibernateTemplate().find(query, parameters);
     }
-    
+
     /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Override
     public List<Lane> findByCriteria(String criteria, boolean isCaseSens) {
-        String queryStringCase = "from Lane as l where  l.description like :description "
-                + " or cast(l.swAccession as string) like :sw " + " or l.name like :name order by l.name, l.description";
+        String queryStringCase = "from Lane as l where  l.description like :description " + " or cast(l.swAccession as string) like :sw "
+                + " or l.name like :name order by l.name, l.description";
         String queryStringICase = "from Lane as l where  lower(l.description) like :description "
                 + " or cast(l.swAccession as string) like :sw " + " or lower(l.name) like :name order by l.name, l.description";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(
-                queryStringICase);
+        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -408,10 +418,10 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         query.setString("description", criteria);
         query.setString("sw", criteria);
         query.setString("name", criteria);
-        
+
         return query.list();
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Lane updateDetached(Lane lane) {
@@ -427,7 +437,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         }
         return null;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public List<ReturnValue> findFiles(Integer swAccession) {
@@ -440,23 +450,23 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         getSessionFactory().getCurrentSession().clear();
         return list;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public List<Lane> list() {
         ArrayList<Lane> l = new ArrayList<>();
-        
+
         String query = "from Lane";
-        
+
         List list = this.getHibernateTemplate().find(query);
-        
+
         for (Object e : list) {
             l.add((Lane) e);
         }
-        
+
         return l;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void update(Registration registration, Lane lane) {
@@ -464,17 +474,19 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         Logger logger = Logger.getLogger(LaneDAOHibernate.class);
         if (registration == null) {
             logger.error("LaneDAOHibernate update registration is null");
-        } else if (registration.isLIMSAdmin() || 
-                (lane.givesPermission(registration) && dbObject.givesPermission(registration))) {
+        } else if (registration.isLIMSAdmin() || (lane.givesPermission(registration) && dbObject.givesPermission(registration))) {
             logger.info("updating Lane object");
             update(lane);
         } else {
             logger.error("LaneDAOHibernate update not authorized");
         }
     }
-    
-    /** {@inheritDoc}
-     * @return  */
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public Integer insert(Registration registration, Lane lane) {
         Logger logger = Logger.getLogger(LaneDAOHibernate.class);
@@ -483,13 +495,13 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         } else if (registration.isLIMSAdmin() || lane.givesPermission(registration)) {
             logger.info("insert Lane object");
             insert(lane);
-            return(lane.getSwAccession());
+            return (lane.getSwAccession());
         } else {
             logger.error("LaneDAOHibernate insert not authorized");
         }
-        return(null);
+        return (null);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public Lane updateDetached(Registration registration, Lane lane) {
@@ -505,8 +517,8 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         }
         return null;
     }
-    
-        private Lane reattachLane(Lane lane) throws IllegalStateException, DataAccessResourceFailureException {
+
+    private Lane reattachLane(Lane lane) throws IllegalStateException, DataAccessResourceFailureException {
         Lane dbObject = lane;
         if (!getSession().contains(lane)) {
             dbObject = findByID(lane.getLaneId());

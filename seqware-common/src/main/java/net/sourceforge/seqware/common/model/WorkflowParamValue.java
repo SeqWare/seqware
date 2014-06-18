@@ -10,8 +10,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
 /**
- * <p>WorkflowParamValue class.</p>
- *
+ * <p>
+ * WorkflowParamValue class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -25,14 +27,19 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     private WorkflowParam workflowParam;
 
     /**
-     * <p>Constructor for WorkflowParamValue.</p>
+     * <p>
+     * Constructor for WorkflowParamValue.
+     * </p>
      */
     public WorkflowParamValue() {
         super();
     }
 
-    /** {@inheritDoc}
-     * @param that */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param that
+     */
     @Override
     public int compareTo(WorkflowParamValue that) {
         if (that == null) {
@@ -45,7 +52,7 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         }
 
         if (that.getWorkflowParamValueId() == null) {
-            return -1;							// when only the other name is null
+            return -1; // when only the other name is null
         }
         return (that.getWorkflowParamValueId().compareTo(this.getWorkflowParamValueId()));
     }
@@ -56,8 +63,11 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         return new ToStringBuilder(this).append("value", getValue()).toString();
     }
 
-    /** {@inheritDoc}
-     * @param other */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param other
+     */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -77,8 +87,10 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     }
 
     /**
-     * <p>Getter for the field <code>workflowParamValueId</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>workflowParamValueId</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getWorkflowParamValueId() {
@@ -86,17 +98,22 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     }
 
     /**
-     * <p>Setter for the field <code>workflowParamValueId</code>.</p>
-     *
-     * @param workflowParamValueId a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>workflowParamValueId</code>.
+     * </p>
+     * 
+     * @param workflowParamValueId
+     *            a {@link java.lang.Integer} object.
      */
     public void setWorkflowParamValueId(Integer workflowParamValueId) {
         this.workflowParamValueId = workflowParamValueId;
     }
 
     /**
-     * <p>Getter for the field <code>workflowParamId</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>workflowParamId</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getWorkflowParamId() {
@@ -104,17 +121,22 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     }
 
     /**
-     * <p>Setter for the field <code>workflowParamId</code>.</p>
-     *
-     * @param workflowParamId a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>workflowParamId</code>.
+     * </p>
+     * 
+     * @param workflowParamId
+     *            a {@link java.lang.Integer} object.
      */
     public void setWorkflowParamId(Integer workflowParamId) {
         this.workflowParamId = workflowParamId;
     }
 
     /**
-     * <p>getJsonEscapeDisplayName.</p>
-     *
+     * <p>
+     * getJsonEscapeDisplayName.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDisplayName() {
@@ -122,8 +144,10 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     }
 
     /**
-     * <p>Getter for the field <code>displayName</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>displayName</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getDisplayName() {
@@ -131,17 +155,22 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     }
 
     /**
-     * <p>Setter for the field <code>displayName</code>.</p>
-     *
-     * @param displayName a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>displayName</code>.
+     * </p>
+     * 
+     * @param displayName
+     *            a {@link java.lang.String} object.
      */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
     /**
-     * <p>getJsonEscapeValue.</p>
-     *
+     * <p>
+     * getJsonEscapeValue.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeValue() {
@@ -149,8 +178,10 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     }
 
     /**
-     * <p>Getter for the field <code>value</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>value</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getValue() {
@@ -158,17 +189,22 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     }
 
     /**
-     * <p>Setter for the field <code>value</code>.</p>
-     *
-     * @param value a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>value</code>.
+     * </p>
+     * 
+     * @param value
+     *            a {@link java.lang.String} object.
      */
     public void setValue(String value) {
         this.value = value;
     }
 
     /**
-     * <p>Getter for the field <code>workflowParam</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>workflowParam</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowParam} object.
      */
     public WorkflowParam getWorkflowParam() {
@@ -176,16 +212,22 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     }
 
     /**
-     * <p>Setter for the field <code>workflowParam</code>.</p>
-     *
-     * @param workflowParam a {@link net.sourceforge.seqware.common.model.WorkflowParam} object.
+     * <p>
+     * Setter for the field <code>workflowParam</code>.
+     * </p>
+     * 
+     * @param workflowParam
+     *            a {@link net.sourceforge.seqware.common.model.WorkflowParam} object.
      */
     public void setWorkflowParam(WorkflowParam workflowParam) {
         this.workflowParam = workflowParam;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public WorkflowParamValue clone() {
         WorkflowParamValue wp = this;
@@ -200,14 +242,17 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         return wp;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = true;
         if (workflowParam != null) {
             hasPermission = workflowParam.givesPermission(registration, considered);
-        } else {//orphaned WorkflowParamValue
+        } else {// orphaned WorkflowParamValue
             if (registration.isLIMSAdmin()) {
                 Logger.getLogger(WorkflowParamValue.class).warn("Modifying Orphan WorkflowParamValue: " + this.getDisplayName());
                 hasPermission = true;
@@ -218,7 +263,8 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         }
         if (!hasPermission) {
             Logger.getLogger(WorkflowParamValue.class).info("WorkflowParamValue does not give permission");
-            throw new SecurityException("User "+registration.getEmailAddress()+" does not have permission to modify "+this.getDisplayName());
+            throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify "
+                    + this.getDisplayName());
         }
         return hasPermission;
     }

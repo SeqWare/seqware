@@ -21,25 +21,31 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.Organism;
 
 /**
- * <p>OrganismList class.</p>
- *
+ * <p>
+ * OrganismList class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class OrganismList{
+public class OrganismList {
 
     protected List<Organism> tList;
 
     /**
-     * <p>Constructor for OrganismList.</p>
+     * <p>
+     * Constructor for OrganismList.
+     * </p>
      */
     public OrganismList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<Organism> getList() {
@@ -47,18 +53,24 @@ public class OrganismList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<Organism> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.Organism} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.Organism} object.
      */
     public void add(Organism ex) {
         tList.add(ex);

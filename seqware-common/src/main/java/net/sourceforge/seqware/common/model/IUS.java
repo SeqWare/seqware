@@ -48,14 +48,19 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     private Boolean isSelected = false;
 
     /**
-     * <p>Constructor for IUS.</p>
+     * <p>
+     * Constructor for IUS.
+     * </p>
      */
     public IUS() {
         super();
     }
 
-    /** {@inheritDoc}
-     * @param that */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param that
+     */
     @Override
     public int compareTo(IUS that) {
         if (that == null) {
@@ -80,14 +85,17 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "IUS{" + "iusId=" + iusId + ", lane=" + lane + ", owner=" + owner + ", name=" + name + ", alias=" + alias
-                + ", description=" + description + ", tag=" + tag + ", swAccession=" + swAccession + ", createTimestamp="
-                + createTimestamp + ", updateTimestamp=" + updateTimestamp + ", skip=" + skip + ", isHasFile=" + isHasFile
-                + ", isSelected=" + isSelected + '}';
+        return "IUS{" + "iusId=" + iusId + ", lane=" + lane + ", owner=" + owner + ", name=" + name + ", alias=" + alias + ", description="
+                + description + ", tag=" + tag + ", swAccession=" + swAccession + ", createTimestamp=" + createTimestamp
+                + ", updateTimestamp=" + updateTimestamp + ", skip=" + skip + ", isHasFile=" + isHasFile + ", isSelected=" + isSelected
+                + '}';
     }
 
-    /** {@inheritDoc}
-     * @param other */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param other
+     */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -107,8 +115,10 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Getter for the field <code>owner</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>owner</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -116,17 +126,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>owner</code>.</p>
-     *
-     * @param owner a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * <p>
+     * Setter for the field <code>owner</code>.
+     * </p>
+     * 
+     * @param owner
+     *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public void setOwner(Registration owner) {
         this.owner = owner;
     }
 
     /**
-     * <p>Getter for the field <code>iusId</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>iusId</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getIusId() {
@@ -134,17 +149,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>iusId</code>.</p>
-     *
-     * @param iusId a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>iusId</code>.
+     * </p>
+     * 
+     * @param iusId
+     *            a {@link java.lang.Integer} object.
      */
     public void setIusId(Integer iusId) {
         this.iusId = iusId;
     }
 
     /**
-     * <p>Getter for the field <code>lane</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>lane</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
     public Lane getLane() {
@@ -152,17 +172,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>lane</code>.</p>
-     *
-     * @param lane a {@link net.sourceforge.seqware.common.model.Lane} object.
+     * <p>
+     * Setter for the field <code>lane</code>.
+     * </p>
+     * 
+     * @param lane
+     *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
     public void setLane(Lane lane) {
         this.lane = lane;
     }
 
     /**
-     * <p>Getter for the field <code>sample</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>sample</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public Sample getSample() {
@@ -170,17 +195,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>sample</code>.</p>
-     *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * <p>
+     * Setter for the field <code>sample</code>.
+     * </p>
+     * 
+     * @param sample
+     *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public void setSample(Sample sample) {
         this.sample = sample;
     }
 
     /**
-     * <p>getJsonEscapeName.</p>
-     *
+     * <p>
+     * getJsonEscapeName.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeName() {
@@ -188,8 +218,10 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Getter for the field <code>name</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>name</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getName() {
@@ -197,17 +229,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>name</code>.</p>
-     *
-     * @param name a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>name</code>.
+     * </p>
+     * 
+     * @param name
+     *            a {@link java.lang.String} object.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * <p>Getter for the field <code>alias</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>alias</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
@@ -215,17 +252,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>alias</code>.</p>
-     *
-     * @param alias a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>alias</code>.
+     * </p>
+     * 
+     * @param alias
+     *            a {@link java.lang.String} object.
      */
     public void setAlias(String alias) {
         this.alias = alias;
     }
 
     /**
-     * <p>getJsonEscapeDescription.</p>
-     *
+     * <p>
+     * getJsonEscapeDescription.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -233,8 +275,10 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Getter for the field <code>description</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>description</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -242,17 +286,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>description</code>.</p>
-     *
-     * @param description a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>description</code>.
+     * </p>
+     * 
+     * @param description
+     *            a {@link java.lang.String} object.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * <p>Getter for the field <code>tag</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>tag</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getTag() {
@@ -260,17 +309,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>tag</code>.</p>
-     *
-     * @param tag a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>tag</code>.
+     * </p>
+     * 
+     * @param tag
+     *            a {@link java.lang.String} object.
      */
     public void setTag(String tag) {
         this.tag = tag;
     }
 
     /**
-     * <p>Getter for the field <code>swAccession</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>swAccession</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -278,17 +332,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>swAccession</code>.</p>
-     *
-     * @param swAccession a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>swAccession</code>.
+     * </p>
+     * 
+     * @param swAccession
+     *            a {@link java.lang.Integer} object.
      */
     public void setSwAccession(Integer swAccession) {
         this.swAccession = swAccession;
     }
 
     /**
-     * <p>Getter for the field <code>createTimestamp</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>createTimestamp</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -296,17 +355,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>createTimestamp</code>.</p>
-     *
-     * @param createTimestamp a {@link java.util.Date} object.
+     * <p>
+     * Setter for the field <code>createTimestamp</code>.
+     * </p>
+     * 
+     * @param createTimestamp
+     *            a {@link java.util.Date} object.
      */
     public void setCreateTimestamp(Date createTimestamp) {
         this.createTimestamp = createTimestamp;
     }
 
     /**
-     * <p>Getter for the field <code>updateTimestamp</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>updateTimestamp</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -314,17 +378,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>updateTimestamp</code>.</p>
-     *
-     * @param updateTimestamp a {@link java.util.Date} object.
+     * <p>
+     * Setter for the field <code>updateTimestamp</code>.
+     * </p>
+     * 
+     * @param updateTimestamp
+     *            a {@link java.util.Date} object.
      */
     public void setUpdateTimestamp(Date updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
     }
 
     /**
-     * <p>Getter for the field <code>processings</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>processings</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getProcessings() {
@@ -332,17 +401,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>processings</code>.</p>
-     *
-     * @param processings a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>processings</code>.
+     * </p>
+     * 
+     * @param processings
+     *            a {@link java.util.Set} object.
      */
     public void setProcessings(Set<Processing> processings) {
         this.processings = processings;
     }
 
     /**
-     * <p>Getter for the field <code>workflowRuns</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>workflowRuns</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     public Set<WorkflowRun> getWorkflowRuns() {
@@ -350,17 +424,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>workflowRuns</code>.</p>
-     *
-     * @param workflowRuns a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>workflowRuns</code>.
+     * </p>
+     * 
+     * @param workflowRuns
+     *            a {@link java.util.Set} object.
      */
     public void setWorkflowRuns(Set<WorkflowRun> workflowRuns) {
         this.workflowRuns = workflowRuns;
     }
 
     /**
-     * <p>Getter for the field <code>isHasFile</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>isHasFile</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsHasFile() {
@@ -368,17 +447,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>isHasFile</code>.</p>
-     *
-     * @param isHasFile a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>isHasFile</code>.
+     * </p>
+     * 
+     * @param isHasFile
+     *            a {@link java.lang.Boolean} object.
      */
     public void setIsHasFile(Boolean isHasFile) {
         this.isHasFile = isHasFile;
     }
 
     /**
-     * <p>Getter for the field <code>isSelected</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>isSelected</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsSelected() {
@@ -386,17 +470,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>isSelected</code>.</p>
-     *
-     * @param isSelected a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>isSelected</code>.
+     * </p>
+     * 
+     * @param isSelected
+     *            a {@link java.lang.Boolean} object.
      */
     public void setIsSelected(Boolean isSelected) {
         this.isSelected = isSelected;
     }
 
     /**
-     * <p>Getter for the field <code>iusAttributes</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>iusAttributes</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     @XmlElementWrapper(name = "IUSAttributes")
@@ -406,17 +495,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>iusAttributes</code>.</p>
-     *
-     * @param iusAttributes a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>iusAttributes</code>.
+     * </p>
+     * 
+     * @param iusAttributes
+     *            a {@link java.util.Set} object.
      */
     public void setIusAttributes(Set<IUSAttribute> iusAttributes) {
         this.iusAttributes = iusAttributes;
     }
 
     /**
-     * <p>Getter for the field <code>iusLinks</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>iusLinks</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     public Set<IUSLink> getIusLinks() {
@@ -424,17 +518,22 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>iusLinks</code>.</p>
-     *
-     * @param iusLinks a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>iusLinks</code>.
+     * </p>
+     * 
+     * @param iusLinks
+     *            a {@link java.util.Set} object.
      */
     public void setIusLinks(Set<IUSLink> iusLinks) {
         this.iusLinks = iusLinks;
     }
 
     /**
-     * <p>Getter for the field <code>skip</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>skip</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getSkip() {
@@ -442,17 +541,20 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     }
 
     /**
-     * <p>Setter for the field <code>skip</code>.</p>
-     *
-     * @param skip a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>skip</code>.
+     * </p>
+     * 
+     * @param skip
+     *            a {@link java.lang.Boolean} object.
      */
     public void setSkip(Boolean skip) {
-        if (skip != null && this.skip!=skip) {
+        if (skip != null && this.skip != skip) {
             Log.debug("Skipping ius " + getSwAccession());
             this.skip = skip;
         }
     }
-    
+
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean consideredBefore = considered.contains(this.getSwAccession());
@@ -463,7 +565,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
             Log.debug("Skipping permissions for IUS object " + swAccession + " , checked before");
             return true;
         }
-        
+
         boolean hasPermission = true;
         if (sample != null) {
             hasPermission = sample.givesPermission(registration, considered);
@@ -481,8 +583,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
         }
         if (!hasPermission) {
             Logger.getLogger(IUS.class).info("IUS does not give permission");
-            throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify "
-                    + this.getTag());
+            throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.getTag());
         }
         return hasPermission;
     }

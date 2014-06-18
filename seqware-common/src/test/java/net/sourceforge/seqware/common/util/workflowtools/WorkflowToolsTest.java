@@ -22,89 +22,102 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 /**
- * <p>WorkflowToolsTest class.</p>
- *
+ * <p>
+ * WorkflowToolsTest class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  * @since 0.13.3
  */
 public class WorkflowToolsTest {
-  
-  /**
-   * <p>Constructor for WorkflowToolsTest.</p>
-   */
-  public WorkflowToolsTest() {
-  }
 
-  /**
-   * <p>setUpClass.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @BeforeClass
-  public static void setUpClass() throws Exception {
-  }
-
-  /**
-   * <p>tearDownClass.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @AfterClass
-  public static void tearDownClass() throws Exception {
-  }
-  
-  /**
-   * <p>setUp.</p>
-   */
-  @Before
-  public void setUp() {
-  }
-  
-  /**
-   * <p>tearDown.</p>
-   */
-  @After
-  public void tearDown() {
-  }
-
-  /**
-   * Test of getFailedJobsInfo method, of class Workflow.
-   */
-  @Test
-  public void testGetFailedJobsInfo() {
-    System.out.println("getFailedJobsInfo: ");
-    File statusDirFile = new File(".");
-    System.out.println("Current Dir: "+statusDirFile.getAbsolutePath());
-    String statusDir = "src/test/resources";
-    WorkflowTools workflowTools = new WorkflowTools();
-    ReturnValue[] results = workflowTools.getFailedJobsInfo(statusDir);
-    for (ReturnValue result : results) {
-      //System.out.println("Result: "+result);
-      //System.out.println("Result: stdout\n"+result.getStdout());
-      //System.out.println("Result: stderr\n"+result.getStderr());
-      assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
-      assertFalse(result.getStdout().contains("INCORRECT_FILE"));
+    /**
+     * <p>
+     * Constructor for WorkflowToolsTest.
+     * </p>
+     */
+    public WorkflowToolsTest() {
     }
-  }
-  
-  /**
-   * Test of parsePegasusStatus method, of class Workflow.
-   */
-  @Test
-  public void testParsePegasusStatus() {
-    
-    WorkflowTools workflowTools = new WorkflowTools();
-    String testStatus = "HelloWorld-0.dag is running.\n"
-            + "06/24/12 02:54:32  Done     Pre   Queued    Post   Ready   Un-Ready   Failed\n"
-            + "06/24/12 02:54:32   ===     ===      ===     ===     ===        ===      ===\n"
-            + "06/24/12 02:54:32     1       0        1       0       0          5        0\n"
-            + "\n"
-            + "WORKFLOW STATUS : RUNNING | 1/7 ( 14% ) | (condor processing workflow)\n";
 
-    String result = workflowTools.parsePegasusStatus(testStatus);
-    assertTrue(result.contains("RUNNING: step "));
-    
-  }
-  
+    /**
+     * <p>
+     * setUpClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    /**
+     * <p>
+     * tearDownClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    /**
+     * <p>
+     * setUp.
+     * </p>
+     */
+    @Before
+    public void setUp() {
+    }
+
+    /**
+     * <p>
+     * tearDown.
+     * </p>
+     */
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * Test of getFailedJobsInfo method, of class Workflow.
+     */
+    @Test
+    public void testGetFailedJobsInfo() {
+        System.out.println("getFailedJobsInfo: ");
+        File statusDirFile = new File(".");
+        System.out.println("Current Dir: " + statusDirFile.getAbsolutePath());
+        String statusDir = "src/test/resources";
+        WorkflowTools workflowTools = new WorkflowTools();
+        ReturnValue[] results = workflowTools.getFailedJobsInfo(statusDir);
+        for (ReturnValue result : results) {
+            // System.out.println("Result: "+result);
+            // System.out.println("Result: stdout\n"+result.getStdout());
+            // System.out.println("Result: stderr\n"+result.getStderr());
+            assertTrue(result.getStdout().contains("UNIT_TEST_TOKEN"));
+            assertFalse(result.getStdout().contains("INCORRECT_FILE"));
+        }
+    }
+
+    /**
+     * Test of parsePegasusStatus method, of class Workflow.
+     */
+    @Test
+    public void testParsePegasusStatus() {
+
+        WorkflowTools workflowTools = new WorkflowTools();
+        String testStatus = "HelloWorld-0.dag is running.\n"
+                + "06/24/12 02:54:32  Done     Pre   Queued    Post   Ready   Un-Ready   Failed\n"
+                + "06/24/12 02:54:32   ===     ===      ===     ===     ===        ===      ===\n"
+                + "06/24/12 02:54:32     1       0        1       0       0          5        0\n" + "\n"
+                + "WORKFLOW STATUS : RUNNING | 1/7 ( 14% ) | (condor processing workflow)\n";
+
+        String result = workflowTools.parsePegasusStatus(testStatus);
+        assertTrue(result.contains("RUNNING: step "));
+
+    }
+
 }

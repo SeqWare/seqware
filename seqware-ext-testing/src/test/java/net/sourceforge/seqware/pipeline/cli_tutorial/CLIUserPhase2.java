@@ -24,15 +24,16 @@ import net.sourceforge.seqware.pipeline.tutorial.UserPhase1;
 import net.sourceforge.seqware.pipeline.tutorial.UserPhase2;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class CLIUserPhase2 extends UserPhase2 {
 
     @Override
     protected String runCreateExperimentAndLinkStudy() throws IOException {
-        String output = ITUtility.runSeqwareCLI(" create experiment --title 'New Test Experiment' --description 'This is a test description' --platform-id 26 --study-accession " + AccessionMap.accessionMap.get(UserPhase1.STUDY),
-                ReturnValue.SUCCESS, null);
+        String output = ITUtility.runSeqwareCLI(
+                " create experiment --title 'New Test Experiment' --description 'This is a test description' --platform-id 26 --study-accession "
+                        + AccessionMap.accessionMap.get(UserPhase1.STUDY), ReturnValue.SUCCESS, null);
         return output;
     }
 }

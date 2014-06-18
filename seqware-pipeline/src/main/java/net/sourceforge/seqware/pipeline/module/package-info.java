@@ -13,3 +13,4 @@
  * illustrative example.
  */
 package net.sourceforge.seqware.pipeline.module;
+

@@ -21,14 +21,15 @@ import com.google.common.collect.ComparisonChain;
 
 /**
  * Holds information for the recursive deletion tool
+ * 
  * @author dyuen
  */
-public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple>{
+public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple> {
     private int accession;
     private int id;
     private String adminModelClass;
-    
-     public ModelAccessionIDTuple() {
+
+    public ModelAccessionIDTuple() {
     }
 
     public ModelAccessionIDTuple(int accession, int id, String adminModelClass) {
@@ -45,7 +46,8 @@ public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple>{
     }
 
     /**
-     * @param accession the accession to set
+     * @param accession
+     *            the accession to set
      */
     public void setAccession(int accession) {
         this.accession = accession;
@@ -59,7 +61,8 @@ public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple>{
     }
 
     /**
-     * @param id the id to set
+     * @param id
+     *            the id to set
      */
     public void setId(int id) {
         this.id = id;
@@ -73,12 +76,13 @@ public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple>{
     }
 
     /**
-     * @param adminModelClass the adminModelClass to set
+     * @param adminModelClass
+     *            the adminModelClass to set
      */
     public void setAdminModelClass(String adminModelClass) {
         this.adminModelClass = adminModelClass;
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hashCode(accession, id, adminModelClass);
@@ -88,20 +92,16 @@ public class ModelAccessionIDTuple implements Comparable<ModelAccessionIDTuple>{
     public boolean equals(final Object obj) {
         if (obj instanceof ModelAccessionIDTuple) {
             final ModelAccessionIDTuple other = (ModelAccessionIDTuple) obj;
-            return Objects.equal(accession, other.accession)
-                    && id == other.id // special handling for primitives
+            return Objects.equal(accession, other.accession) && id == other.id // special handling for primitives
                     && Objects.equal(adminModelClass, other.adminModelClass);
         } else {
             return false;
         }
     }
-    
+
     @Override
     public int compareTo(ModelAccessionIDTuple that) {
-        return ComparisonChain.start()
-                .compare(this.id, that.id)
-                .compare(this.adminModelClass, that.adminModelClass)
-                .compare(this.accession, that.accession)
-                .result();
+        return ComparisonChain.start().compare(this.id, that.id).compare(this.adminModelClass, that.adminModelClass)
+                .compare(this.accession, that.accession).result();
     }
 }

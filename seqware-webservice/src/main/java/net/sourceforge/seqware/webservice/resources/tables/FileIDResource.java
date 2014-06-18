@@ -36,22 +36,28 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>FileIDResource class.</p>
- *
+ * <p>
+ * FileIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class FileIDResource extends DatabaseIDResource {
 
     /**
-     * <p>Constructor for FileIDResource.</p>
+     * <p>
+     * Constructor for FileIDResource.
+     * </p>
      */
     public FileIDResource() {
         super("fileId");
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -67,8 +73,11 @@ public class FileIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     @Put
     public Representation put(Representation entity) {
@@ -87,8 +96,8 @@ public class FileIDResource extends DatabaseIDResource {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         }
         try {
-            // SEQWARE-1548 
-            newFile = testIfNull(newFile); 
+            // SEQWARE-1548
+            newFile = testIfNull(newFile);
             // persist
             FileService fs = BeanFactory.getFileServiceBean();
             File file = (File) testIfNull(fs.findByID(newFile.getFileId()));
@@ -113,13 +122,13 @@ public class FileIDResource extends DatabaseIDResource {
             file.setUrl(newFile.getUrl());
             file.setUrlLabel(newFile.getUrlLabel());
             file.setSkip(newFile.getSkip());
-            
+
             Set<FileAttribute> newAttributes = newFile.getFileAttributes();
             if (newAttributes != null) {
-                //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
                 this.mergeAttributes(file.getFileAttributes(), newAttributes, file);
             }
-			
+
             fs.update(registration, file);
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             File detachedFile = copier.hibernate2dto(File.class, file);
@@ -131,8 +140,7 @@ public class FileIDResource extends DatabaseIDResource {
             getResponse().setStatus(Status.SUCCESS_CREATED);
         } catch (SecurityException e) {
             getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN, e);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
         }

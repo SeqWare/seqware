@@ -25,6 +25,7 @@ import org.restlet.representation.Representation;
 
 /**
  * Stupid hack, first test fails when tomcat is used after glassfish
+ * 
  * @author dyuen
  */
 public class DummyExperimentIDResourceTest extends DatabaseResourceIDTest {
@@ -59,30 +60,24 @@ public class DummyExperimentIDResourceTest extends DatabaseResourceIDTest {
 
     @Override
     public void testPut() {
-        /*        Representation rep = null;
-         String test = "<Experiment><accession/><baseCaller/><centerName/><createTimestamp>2012-02-04T21:27:06.752-05:00</createTimestamp>"
-         + "<description/><experimentId>14</experimentId><isHasFile>false</isHasFile>"
-         + "<isSelected>false</isSelected><name>ExomeTest1</name><qualityType>phred</qualityType>"
-         + "<sequenceSpace>Base Space</sequenceSpace><swAccession>6157</swAccession>"
-         + "<title>ExomeTest1kkk</title><updateTimestamp>2012-02-04T21:27:06.752-05:00</updateTimestamp>"
-         + "<experimentAttributes><experimentid>14</experimentid><tag>ttk2</tag><value>tttm1</value>"
-         + "</experimentAttributes><experimentAttributes><experimentid>14</experimentid><tag>ttk3</tag>"
-         + "<value>tttm1111</value></experimentAttributes></Experiment>";
-         try {
-         rep = resource.put(test);
-         String result = rep.getText();
-         rep.exhaust();
-         rep.release();
-         System.out.println("id = " + id);
-         System.out.println(result);
-         Assert.assertTrue("ID is not in representation:" + result, result.contains(id));
-         } catch (Exception e) {
-         e.printStackTrace();
-         Assert.fail(e.getMessage());
-
-         }*/
+        /*
+         * Representation rep = null; String test =
+         * "<Experiment><accession/><baseCaller/><centerName/><createTimestamp>2012-02-04T21:27:06.752-05:00</createTimestamp>" +
+         * "<description/><experimentId>14</experimentId><isHasFile>false</isHasFile>" +
+         * "<isSelected>false</isSelected><name>ExomeTest1</name><qualityType>phred</qualityType>" +
+         * "<sequenceSpace>Base Space</sequenceSpace><swAccession>6157</swAccession>" +
+         * "<title>ExomeTest1kkk</title><updateTimestamp>2012-02-04T21:27:06.752-05:00</updateTimestamp>" +
+         * "<experimentAttributes><experimentid>14</experimentid><tag>ttk2</tag><value>tttm1</value>" +
+         * "</experimentAttributes><experimentAttributes><experimentid>14</experimentid><tag>ttk3</tag>" +
+         * "<value>tttm1111</value></experimentAttributes></Experiment>"; try { rep = resource.put(test); String result = rep.getText();
+         * rep.exhaust(); rep.release(); System.out.println("id = " + id); System.out.println(result);
+         * Assert.assertTrue("ID is not in representation:" + result, result.contains(id)); } catch (Exception e) { e.printStackTrace();
+         * Assert.fail(e.getMessage());
+         * 
+         * }
+         */
     }
-    
+
     @Override
     public void testPost() {
         Representation rep = null;
@@ -109,7 +104,7 @@ public class DummyExperimentIDResourceTest extends DatabaseResourceIDTest {
         }
         return ReturnValue.SUCCESS;
     }
-    
+
     @Override
     public void testDelete() {
         Representation rep = null;

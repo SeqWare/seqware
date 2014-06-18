@@ -29,20 +29,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * These tests support command-line tools found in the SeqWare User Tutorial,
- * in this case, ProvisionFiles
- *
+ * These tests support command-line tools found in the SeqWare User Tutorial, in this case, ProvisionFiles
+ * 
  * @author dyuen
  */
 public class ProvisionFilesET {
-    
+
     public static final String SETTINGS_PREFIX_KEY = "IT_DATASTORE_PREFIX";
     public static final String DEFAULT_DATASTORE_PREFIX = "/datastore/";
-    
+
     private static String getDatastorePrefix() {
         try {
             Map<String, String> settings = ConfigTools.getSettings();
-            if (settings.containsKey(SETTINGS_PREFIX_KEY)){
+            if (settings.containsKey(SETTINGS_PREFIX_KEY)) {
                 return settings.get(SETTINGS_PREFIX_KEY);
             }
         } catch (Exception e) {
@@ -50,16 +49,15 @@ public class ProvisionFilesET {
         }
         return DEFAULT_DATASTORE_PREFIX;
     }
-    
+
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     /**
-     * This test provisions a file in with random input and checks on the
-     * accession writing
-     *
+     * This test provisions a file in with random input and checks on the accession writing
+     * 
      * @throws IOException
      */
     @Test
@@ -69,27 +67,28 @@ public class ProvisionFilesET {
 
     /**
      * Provision a file into SeqWare and then provision it back out
-     * @throws IOException 
+     * 
+     * @throws IOException
      */
     @Test
     public void provisionInAndOut() throws IOException {
         File provisionedFile = this.provisionFileWithRandomInput("10");
         File tempDir = FileUtils.getTempDirectory();
-        
+
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles "
-                + " --no-metadata "
-                + " -- -i" + provisionedFile.getAbsolutePath()
-                + " -o " + tempDir.getAbsolutePath(); 
+                + " --no-metadata " + " -- -i" + provisionedFile.getAbsolutePath() + " -o " + tempDir.getAbsolutePath();
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
-        File retrievedFile = new File(tempDir.getAbsoluteFile() , provisionedFile.getName());
-        
-        Assert.assertTrue("file locations do not differ: " + retrievedFile.getAbsolutePath()+"vs" + provisionedFile.getAbsolutePath(), !retrievedFile.getAbsolutePath().equals(provisionedFile.getAbsolutePath()));
-        Assert.assertTrue("file contents not the same", FileUtils.readFileToString(retrievedFile).equals(FileUtils.readFileToString(provisionedFile)));
+        File retrievedFile = new File(tempDir.getAbsoluteFile(), provisionedFile.getName());
+
+        Assert.assertTrue("file locations do not differ: " + retrievedFile.getAbsolutePath() + "vs" + provisionedFile.getAbsolutePath(),
+                !retrievedFile.getAbsolutePath().equals(provisionedFile.getAbsolutePath()));
+        Assert.assertTrue("file contents not the same",
+                FileUtils.readFileToString(retrievedFile).equals(FileUtils.readFileToString(provisionedFile)));
     }
 
     public File provisionFileWithRandomInput(String sampleAccession) throws IOException {
-        // create a random new file and check that the file we want to provision exists 
+        // create a random new file and check that the file we want to provision exists
         File inputFile = File.createTempFile("input", "out");
         final String content = "This is a funky funky test file";
         FileUtils.write(inputFile, content);
@@ -99,9 +98,14 @@ public class ProvisionFilesET {
         Random generator = new Random();
         String random = String.valueOf(generator.nextInt());
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles "
-                + "--metadata-output-file-prefix " + getDatastorePrefix()
-                + " --metadata-parent-accession "+sampleAccession+" --metadata-processing-accession-file  " + metadataFile.getAbsolutePath()
-                + " -- -im text::text/plain::" + inputFile.getAbsolutePath() + " -o "+getDatastorePrefix()+" --force-copy";
+                + "--metadata-output-file-prefix "
+                + getDatastorePrefix()
+                + " --metadata-parent-accession "
+                + sampleAccession
+                + " --metadata-processing-accession-file  "
+                + metadataFile.getAbsolutePath()
+                + " -- -im text::text/plain::"
+                + inputFile.getAbsolutePath() + " -o " + getDatastorePrefix() + " --force-copy";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
         // check that file was ended up being provisioned correctly
@@ -121,6 +125,4 @@ public class ProvisionFilesET {
         return provisioned;
     }
 
-    
-    
 }

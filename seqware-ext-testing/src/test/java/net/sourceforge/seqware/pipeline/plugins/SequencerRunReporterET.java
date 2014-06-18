@@ -29,13 +29,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * These tests support command-line tools found in the SeqWare User Tutorial,
- * in this case, SequencerRunReporter
- *
+ * These tests support command-line tools found in the SeqWare User Tutorial, in this case, SequencerRunReporter
+ * 
  * @author dyuen
  */
 public class SequencerRunReporterET {
-    
+
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
@@ -46,8 +45,8 @@ public class SequencerRunReporterET {
         File createTempDir = Files.createTempDir();
         String randomString = UUID.randomUUID().toString();
         File testOutFile = new File(createTempDir, randomString + ".txt");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter "
-                + "-- --output-filename " + testOutFile.getName(); 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter " + "-- --output-filename "
+                + testOutFile.getName();
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         Log.info(listOutput);
         File retrievedFile = new File(createTempDir, testOutFile.getName());
@@ -60,18 +59,17 @@ public class SequencerRunReporterET {
 
     @Test
     public void runInvalidParameters() throws IOException {
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter "
-                + "-- --workflow-run-accession 6698";
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter " + "-- --workflow-run-accession 6698";
         ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
 
     }
-    
+
     @Test
     public void runInvalidIO() throws IOException {
         File createTempDir = Files.createTempDir();
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter "
-                + "-- --output-filename " + createTempDir.getAbsolutePath(); 
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter " + "-- --output-filename "
+                + createTempDir.getAbsolutePath();
         ITUtility.runSeqWareJar(listCommand, ReturnValue.FILENOTWRITABLE, null);
     }
-    
+
 }

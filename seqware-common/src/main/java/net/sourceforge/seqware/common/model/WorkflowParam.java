@@ -14,8 +14,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 
 /**
- * <p>WorkflowParam class.</p>
- *
+ * <p>
+ * WorkflowParam class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -36,19 +38,24 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     private String value;
     private String displayValue;
     private SortedSet<WorkflowParamValue> values;
-    // none persistents(for Summary Launch Workflow Page) 
+    // none persistents(for Summary Launch Workflow Page)
     private Sample sample;
     private List<File> files;
 
     /**
-     * <p>Constructor for WorkflowParam.</p>
+     * <p>
+     * Constructor for WorkflowParam.
+     * </p>
      */
     public WorkflowParam() {
         super();
     }
 
-    /** {@inheritDoc}
-     * @param that */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param that
+     */
     @Override
     public int compareTo(WorkflowParam that) {
         if (that == null) {
@@ -61,7 +68,7 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
         }
 
         if (that.getWorkflowParamId() == null) {
-            return -1;							// when only the other name is null
+            return -1; // when only the other name is null
         }
         return (that.getWorkflowParamId().compareTo(this.getWorkflowParamId()));
     }
@@ -72,8 +79,11 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
         return new ToStringBuilder(this).append("swAccession", getWorkflowParamId()).toString();
     }
 
-    /** {@inheritDoc}
-     * @param other */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param other
+     */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -93,8 +103,10 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Getter for the field <code>workflowParamId</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>workflowParamId</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getWorkflowParamId() {
@@ -102,17 +114,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>workflowParamId</code>.</p>
-     *
-     * @param workflowParamId a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>workflowParamId</code>.
+     * </p>
+     * 
+     * @param workflowParamId
+     *            a {@link java.lang.Integer} object.
      */
     public void setWorkflowParamId(Integer workflowParamId) {
         this.workflowParamId = workflowParamId;
     }
 
     /**
-     * <p>Getter for the field <code>workflow</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>workflow</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
     public Workflow getWorkflow() {
@@ -120,17 +137,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>workflow</code>.</p>
-     *
-     * @param workflow a {@link net.sourceforge.seqware.common.model.Workflow} object.
+     * <p>
+     * Setter for the field <code>workflow</code>.
+     * </p>
+     * 
+     * @param workflow
+     *            a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
     public void setWorkflow(Workflow workflow) {
         this.workflow = workflow;
     }
 
     /**
-     * <p>Getter for the field <code>type</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>type</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getType() {
@@ -138,8 +160,10 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>getJsonEscapeType.</p>
-     *
+     * <p>
+     * getJsonEscapeType.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeType() {
@@ -147,17 +171,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>type</code>.</p>
-     *
-     * @param type a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>type</code>.
+     * </p>
+     * 
+     * @param type
+     *            a {@link java.lang.String} object.
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     * <p>Getter for the field <code>key</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>key</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getKey() {
@@ -165,8 +194,10 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>getJsonEscapeKey.</p>
-     *
+     * <p>
+     * getJsonEscapeKey.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeKey() {
@@ -174,17 +205,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>key</code>.</p>
-     *
-     * @param key a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>key</code>.
+     * </p>
+     * 
+     * @param key
+     *            a {@link java.lang.String} object.
      */
     public void setKey(String key) {
         this.key = key;
     }
 
     /**
-     * <p>getJsonEscapeDefaultValue.</p>
-     *
+     * <p>
+     * getJsonEscapeDefaultValue.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDefaultValue() {
@@ -192,8 +228,10 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Getter for the field <code>defaultValue</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>defaultValue</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getDefaultValue() {
@@ -201,17 +239,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>defaultValue</code>.</p>
-     *
-     * @param defaultValue a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>defaultValue</code>.
+     * </p>
+     * 
+     * @param defaultValue
+     *            a {@link java.lang.String} object.
      */
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
     /**
-     * <p>isDisplay.</p>
-     *
+     * <p>
+     * isDisplay.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean isDisplay() {
@@ -219,8 +262,10 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Getter for the field <code>display</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>display</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getDisplay() {
@@ -228,17 +273,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>display</code>.</p>
-     *
-     * @param display a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>display</code>.
+     * </p>
+     * 
+     * @param display
+     *            a {@link java.lang.Boolean} object.
      */
     public void setDisplay(Boolean display) {
         this.display = display;
     }
 
     /**
-     * <p>Getter for the field <code>fileMetaType</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>fileMetaType</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getFileMetaType() {
@@ -246,17 +296,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>fileMetaType</code>.</p>
-     *
-     * @param fileMetaType a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>fileMetaType</code>.
+     * </p>
+     * 
+     * @param fileMetaType
+     *            a {@link java.lang.String} object.
      */
     public void setFileMetaType(String fileMetaType) {
         this.fileMetaType = fileMetaType;
     }
 
     /**
-     * <p>getJsonEscapeDisplayName.</p>
-     *
+     * <p>
+     * getJsonEscapeDisplayName.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDisplayName() {
@@ -264,8 +319,10 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Getter for the field <code>displayName</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>displayName</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getDisplayName() {
@@ -273,17 +330,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>displayName</code>.</p>
-     *
-     * @param displayName a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>displayName</code>.
+     * </p>
+     * 
+     * @param displayName
+     *            a {@link java.lang.String} object.
      */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
     /**
-     * <p>Getter for the field <code>values</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>values</code>.
+     * </p>
+     * 
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<WorkflowParamValue> getValues() {
@@ -291,17 +353,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>values</code>.</p>
-     *
-     * @param values a {@link java.util.SortedSet} object.
+     * <p>
+     * Setter for the field <code>values</code>.
+     * </p>
+     * 
+     * @param values
+     *            a {@link java.util.SortedSet} object.
      */
     public void setValues(SortedSet<WorkflowParamValue> values) {
         this.values = values;
     }
 
     /**
-     * <p>getJsonEscapeValue.</p>
-     *
+     * <p>
+     * getJsonEscapeValue.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeValue() {
@@ -309,8 +376,10 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Getter for the field <code>value</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>value</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getValue() {
@@ -318,17 +387,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>value</code>.</p>
-     *
-     * @param value a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>value</code>.
+     * </p>
+     * 
+     * @param value
+     *            a {@link java.lang.String} object.
      */
     public void setValue(String value) {
         this.value = value;
     }
 
     /**
-     * <p>Getter for the field <code>displayValue</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>displayValue</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getDisplayValue() {
@@ -336,17 +410,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>displayValue</code>.</p>
-     *
-     * @param displayValue a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>displayValue</code>.
+     * </p>
+     * 
+     * @param displayValue
+     *            a {@link java.lang.String} object.
      */
     public void setDisplayValue(String displayValue) {
         this.displayValue = displayValue;
     }
 
     /**
-     * <p>Getter for the field <code>sample</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>sample</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public Sample getSample() {
@@ -354,17 +433,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>sample</code>.</p>
-     *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * <p>
+     * Setter for the field <code>sample</code>.
+     * </p>
+     * 
+     * @param sample
+     *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public void setSample(Sample sample) {
         this.sample = sample;
     }
 
     /**
-     * <p>Getter for the field <code>files</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>files</code>.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<File> getFiles() {
@@ -372,17 +456,23 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     }
 
     /**
-     * <p>Setter for the field <code>files</code>.</p>
-     *
-     * @param files a {@link java.util.List} object.
+     * <p>
+     * Setter for the field <code>files</code>.
+     * </p>
+     * 
+     * @param files
+     *            a {@link java.util.List} object.
      */
     public void setFiles(List<File> files) {
         this.files = files;
     }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.CloneNotSupportedException  */
+     * @throws java.lang.CloneNotSupportedException
+     */
     @Override
     public WorkflowParam clone() throws CloneNotSupportedException {
         WorkflowParam wp = (WorkflowParam) super.clone();
@@ -393,16 +483,19 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
         wp.setValues(newValues);
         return wp;
     }
-    
-    /** {@inheritDoc}
-     * @return  */
+
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         boolean hasPermission = true;
 
         if (workflow != null) {
             hasPermission = workflow.givesPermission(registration, considered);
-        } else {//orphaned WorkflowParam
+        } else {// orphaned WorkflowParam
             if (registration.isLIMSAdmin()) {
                 Logger.getLogger(WorkflowParam.class).warn("Modifying Orphan WorkflowParam: " + this.getDisplayName());
                 hasPermission = true;
@@ -414,7 +507,8 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
 
         if (!hasPermission) {
             Logger.getLogger(WorkflowParam.class).info("WorkflowParam does not give permission");
-            throw new SecurityException("User "+registration.getEmailAddress()+" does not have permission to modify "+this.getDisplayName());
+            throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify "
+                    + this.getDisplayName());
         }
         return hasPermission;
 
