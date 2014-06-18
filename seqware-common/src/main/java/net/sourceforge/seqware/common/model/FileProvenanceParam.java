@@ -7,6 +7,7 @@ public enum FileProvenanceParam {
   root_sample("root-sample"),
   organism,
   processing,
+  processing_status("processing-status"),
   sample_ancestor("sample-ancestor"),
   sequencer_run("sequencer-run"),
   lane,
