@@ -22,19 +22,19 @@ import net.sourceforge.seqware.pipeline.plugins.ProvisionFilesET;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class UserPhase4 {
-        
+
     public static final String FILE = "File";
-    
+
     @Test
     public void testProvisionFileInAndAssociateWithSample() throws IOException {
         ProvisionFilesET it = new ProvisionFilesET();
         it.provisionFileWithRandomInput(AccessionMap.accessionMap.get(UserPhase3.SAMPLE));
     }
-    
+
     @Test
     public void testExistingFileInAndAssociateWithSample() throws IOException {
         GenericMetadataSaverET it = new GenericMetadataSaverET();

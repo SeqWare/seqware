@@ -37,17 +37,22 @@ import org.restlet.Response;
 import org.w3c.dom.Document;
 
 /**
- * <p>StudyIdFilesResource class.</p>
- *
+ * <p>
+ * StudyIdFilesResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class StudyIdFilesResource extends BasicRestlet {
 
     /**
-     * <p>Constructor for StudyIdFilesResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for StudyIdFilesResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public StudyIdFilesResource(Context context) {
         super(context);
@@ -71,16 +76,19 @@ public class StudyIdFilesResource extends BasicRestlet {
     }
 
     /**
-     * <p>hello.</p>
-     *
-     * @param studySWA a int.
+     * <p>
+     * hello.
+     * </p>
+     * 
+     * @param studySWA
+     *            a int.
      * @return a {@link java.util.List} object.
      */
     public List<ReturnValue> hello(int studySWA) {
 
         StudyService ss = BeanFactory.getStudyServiceBean();
         FindAllTheFiles fatf = new FindAllTheFiles();
-        if (this.getQueryValue("requireFiles") != null){
+        if (this.getQueryValue("requireFiles") != null) {
             boolean requireFiles = Boolean.valueOf(this.getQueryValue("requireFiles"));
             fatf.setRequireFiles(requireFiles);
         }

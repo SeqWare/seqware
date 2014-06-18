@@ -36,15 +36,17 @@ import java.util.Set;
 
 /**
  * Separate custom code from base client that would be destroyed during a regeneration
+ * 
  * @author dyuen
  */
 public class SeqWareWebServiceClient extends io.seqware.webservice.generated.client.SeqWareWebserviceClient {
-    
+
     private String baseUri = null;
 
     /**
      * Constructor that uses default baseURI
-     * @param modelName 
+     * 
+     * @param modelName
      */
     public SeqWareWebServiceClient(String modelName) {
         super(modelName);
@@ -52,11 +54,11 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
 
     /**
      * Constructs a SeqWare web service client for the given resource and url.
-     *
-     * @param modelName Lowercase resource name. (e.g. study, registration,
-     * sample)
-     * @param baseUri Url for the webservice in the form
-     * {@code http://localhost:38080/seqware-admin-webservice/webresources}.
+     * 
+     * @param modelName
+     *            Lowercase resource name. (e.g. study, registration, sample)
+     * @param baseUri
+     *            Url for the webservice in the form {@code http://localhost:38080/seqware-admin-webservice/webresources}.
      */
     public SeqWareWebServiceClient(String modelName, String baseUri) {
         this.baseUri = baseUri;
@@ -75,55 +77,57 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
     }
 
     public void remove_rdelete(Class targetType, String id, Set<ModelAccessionIDTuple> matchSet) throws UniformInterfaceException {
-        super.getWebResource().path(java.text.MessageFormat.format("{0}/rdelete/{1}", id, targetType.getSimpleName())).type(javax.ws.rs.core.MediaType.APPLICATION_JSON).header("X-HTTP-Method-Override", "DELETE").post(matchSet);
+        super.getWebResource().path(java.text.MessageFormat.format("{0}/rdelete/{1}", id, targetType.getSimpleName()))
+                .type(javax.ws.rs.core.MediaType.APPLICATION_JSON).header("X-HTTP-Method-Override", "DELETE").post(matchSet);
     }
-    
+
     public ModelAccessionIDTuple findTupleByAccession(String id) throws UniformInterfaceException {
         WebResource resource = getClient().resource(baseUri);
         resource = resource.path(java.text.MessageFormat.format("utility/translateSWID/{0}", id));
         return resource.accept(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(ModelAccessionIDTuple.class);
     }
-    
+
     /**
      * Example for using the client
+     * 
      * @param args
-     * @throws UniformInterfaceException 
+     * @throws UniformInterfaceException
      */
     public static void main(String args[]) throws UniformInterfaceException {
 
-      // some testing for workflow_runs
-      SeqWareWebserviceClient processingClient = new SeqWareWebserviceClient("processing");
-      SeqWareWebserviceClient client1 = new SeqWareWebserviceClient("workflowrun");
-      ClientResponse response = client1.findRange_XML(ClientResponse.class, "1", "5");
-      GenericType<List<WorkflowRun>> genericType = new GenericType<List<WorkflowRun>>() {
-      };
-      List<WorkflowRun> data = response.getEntity(genericType);
-      for (WorkflowRun obj : data) {
-         System.out.println("WORKFLOWRUN: " + obj.getWorkflowRunId() + " WORKFLOW NAME: " + obj.getWorkflowId().getName()
-               + " WORKFLOW VERSION: " + obj.getWorkflowId().getVersion());
-         Collection<Processing> procs = obj.getProcessingCollection1();
-         if (procs != null) {
-            for (Processing currProc : procs) {
-               System.out.println("  PROC: " + currProc.getStatus() + " ACCESSION: " + currProc.getSwAccession() + " FILES: ");
-               Collection<ProcessingFiles> procFiles = currProc.getProcessingFilesCollection();
-               if (procFiles != null) {
-                  for (ProcessingFiles procFile : procFiles) {
-                     System.out.println("  PROC FILE: " + procFile.getFileId() + " PATH: " + procFile.getFileId().getFilePath());
-                  }
-               } else {
-                  System.out.println("  Can't get proc files for processing ID: " + currProc.getProcessingId());
-                  ClientResponse procRes = processingClient.find_XML(ClientResponse.class, currProc.getProcessingId().toString());
-                  Processing procData = procRes.getEntity(new GenericType<Processing>() {
-                  });
-                  if (procData != null) {
-                     System.out.println("   PROC FILE2: " + procData.getProcessingFilesCollection());
-                  }
-               }
+        // some testing for workflow_runs
+        SeqWareWebserviceClient processingClient = new SeqWareWebserviceClient("processing");
+        SeqWareWebserviceClient client1 = new SeqWareWebserviceClient("workflowrun");
+        ClientResponse response = client1.findRange_XML(ClientResponse.class, "1", "5");
+        GenericType<List<WorkflowRun>> genericType = new GenericType<List<WorkflowRun>>() {
+        };
+        List<WorkflowRun> data = response.getEntity(genericType);
+        for (WorkflowRun obj : data) {
+            System.out.println("WORKFLOWRUN: " + obj.getWorkflowRunId() + " WORKFLOW NAME: " + obj.getWorkflowId().getName()
+                    + " WORKFLOW VERSION: " + obj.getWorkflowId().getVersion());
+            Collection<Processing> procs = obj.getProcessingCollection1();
+            if (procs != null) {
+                for (Processing currProc : procs) {
+                    System.out.println("  PROC: " + currProc.getStatus() + " ACCESSION: " + currProc.getSwAccession() + " FILES: ");
+                    Collection<ProcessingFiles> procFiles = currProc.getProcessingFilesCollection();
+                    if (procFiles != null) {
+                        for (ProcessingFiles procFile : procFiles) {
+                            System.out.println("  PROC FILE: " + procFile.getFileId() + " PATH: " + procFile.getFileId().getFilePath());
+                        }
+                    } else {
+                        System.out.println("  Can't get proc files for processing ID: " + currProc.getProcessingId());
+                        ClientResponse procRes = processingClient.find_XML(ClientResponse.class, currProc.getProcessingId().toString());
+                        Processing procData = procRes.getEntity(new GenericType<Processing>() {
+                        });
+                        if (procData != null) {
+                            System.out.println("   PROC FILE2: " + procData.getProcessingFilesCollection());
+                        }
+                    }
+                }
+            } else {
+                System.out.println(" NULL: " + obj.getProcessingCollection1() + " " + obj.getProcessingCollection());
             }
-         } else {
-            System.out.println(" NULL: " + obj.getProcessingCollection1() + " " + obj.getProcessingCollection());
-         }
-      }
+        }
 
-   }
+    }
 }

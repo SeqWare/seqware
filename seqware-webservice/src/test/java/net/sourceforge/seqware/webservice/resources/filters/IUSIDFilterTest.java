@@ -30,7 +30,7 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class IUSIDFilterTest extends AbstractResourceTest {
@@ -91,7 +91,7 @@ public class IUSIDFilterTest extends AbstractResourceTest {
         }
     }
 
-        @Test
+    @Test
     public void testGetFromSampleNoIUSes() throws Exception {
         try {
             getIUSs("/samples/6560/ius");
@@ -102,7 +102,7 @@ public class IUSIDFilterTest extends AbstractResourceTest {
             }
         }
     }
-    
+
     private List<IUS> getIUSs(String relativeURI) throws ResourceException, Exception {
         resource = ClientResourceInstance.getChild(relativeURI);
         Log.stdout(getRelativeURI() + " GET");

@@ -58,17 +58,21 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     private LibraryStrategy libraryStrategy;
     private LibrarySelection librarySelection;
     private LibrarySource librarySource;
-    
 
     /**
-     * <p>Constructor for Lane.</p>
+     * <p>
+     * Constructor for Lane.
+     * </p>
      */
     public Lane() {
         super();
     }
 
-    /** {@inheritDoc}
-     * @param that */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param that
+     */
     @Override
     public int compareTo(Lane that) {
         if (that == null || getLaneId() == null) {
@@ -89,16 +93,18 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     /** {@inheritDoc} */
     @Override
     public String toString() {
-        return "Lane{" + "laneId=" + laneId + ", laneIndex=" + laneIndex + ", sequencerRun=" + sequencerRun + ", sample="
-                + sample + ", name=" + name + ", cycleDescriptor=" + cycleDescriptor + ", sampleCode=" + sampleCode
-                + ", description=" + description + ", organism=" + organism + ", sampleType=" + sampleType + ", tags=" + tags
-                + ", regions=" + regions + ", skipTxt=" + skipTxt + ", skip=" + skip + ", owner=" + owner
-                + ", createTimestamp=" + createTimestamp + ", updateTimestamp=" + updateTimestamp + ", swAccession="
-                + swAccession + ", isSelected=" + isSelected + ", isHasFile=" + isHasFile + '}';
+        return "Lane{" + "laneId=" + laneId + ", laneIndex=" + laneIndex + ", sequencerRun=" + sequencerRun + ", sample=" + sample
+                + ", name=" + name + ", cycleDescriptor=" + cycleDescriptor + ", sampleCode=" + sampleCode + ", description=" + description
+                + ", organism=" + organism + ", sampleType=" + sampleType + ", tags=" + tags + ", regions=" + regions + ", skipTxt="
+                + skipTxt + ", skip=" + skip + ", owner=" + owner + ", createTimestamp=" + createTimestamp + ", updateTimestamp="
+                + updateTimestamp + ", swAccession=" + swAccession + ", isSelected=" + isSelected + ", isHasFile=" + isHasFile + '}';
     }
 
-    /** {@inheritDoc}
-     * @param other */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param other
+     */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -118,31 +124,26 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /*
-     * public int compareTo(Lane that) { if(that == null || getSwAccession() ==
-     * null) return -1;
-     *
-     * if(that.getSwAccession() == this.getSwAccession()) // when both names are
-     * null return 0;
-     *
-     * if(that.getSwAccession() == null) return -1; // when only the other name
-     * is null
-     *
+     * public int compareTo(Lane that) { if(that == null || getSwAccession() == null) return -1;
+     * 
+     * if(that.getSwAccession() == this.getSwAccession()) // when both names are null return 0;
+     * 
+     * if(that.getSwAccession() == null) return -1; // when only the other name is null
+     * 
      * return(that.getSwAccession().compareTo(this.getSwAccession())); }
-     *
-     * public String toString() { return new ToStringBuilder(this)
-     * .append("laneId", getLaneId()) .toString(); }
-     *
-     * public boolean equals(Object other) { if ( (this == other ) ) return
-     * true; if ( !(other instanceof Lane) ) return false; Lane castOther =
-     * (Lane) other; return new EqualsBuilder() .append(this.getSwAccession(),
-     * castOther.getSwAccession()) .isEquals(); }
-     *
-     * public int hashCode() { return new HashCodeBuilder()
-     * .append(getSwAccession()) .toHashCode(); }
+     * 
+     * public String toString() { return new ToStringBuilder(this) .append("laneId", getLaneId()) .toString(); }
+     * 
+     * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Lane) ) return false; Lane
+     * castOther = (Lane) other; return new EqualsBuilder() .append(this.getSwAccession(), castOther.getSwAccession()) .isEquals(); }
+     * 
+     * public int hashCode() { return new HashCodeBuilder() .append(getSwAccession()) .toHashCode(); }
      */
     /**
-     * <p>getErrorCnt.</p>
-     *
+     * <p>
+     * getErrorCnt.
+     * </p>
+     * 
      * @return a int.
      */
     public int getErrorCnt() {
@@ -165,8 +166,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>getProcessingCnt.</p>
-     *
+     * <p>
+     * getProcessingCnt.
+     * </p>
+     * 
      * @return a int.
      */
     public int getProcessingCnt() {
@@ -179,8 +182,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     private int recursiveCountProcRunning(Processing proc) {
         int runCnt = 0;
-        if (proc != null
-                && (proc.getStatus() == ProcessingStatus.running || proc.getStatus() == ProcessingStatus.pending)) {
+        if (proc != null && (proc.getStatus() == ProcessingStatus.running || proc.getStatus() == ProcessingStatus.pending)) {
             runCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -190,8 +192,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>getProcessedCnt.</p>
-     *
+     * <p>
+     * getProcessedCnt.
+     * </p>
+     * 
      * @return a int.
      */
     public int getProcessedCnt() {
@@ -203,8 +207,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>getAllProcessings.</p>
-     *
+     * <p>
+     * getAllProcessings.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getAllProcessings() {
@@ -230,8 +236,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Getter for the field <code>ius</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>ius</code>.
+     * </p>
+     * 
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<IUS> getIus() {
@@ -239,8 +247,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>getIUS.</p>
-     *
+     * <p>
+     * getIUS.
+     * </p>
+     * 
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<IUS> getIUS() {
@@ -248,17 +258,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>setIUS.</p>
-     *
-     * @param ius a {@link java.util.SortedSet} object.
+     * <p>
+     * setIUS.
+     * </p>
+     * 
+     * @param ius
+     *            a {@link java.util.SortedSet} object.
      */
     public void setIUS(SortedSet<IUS> ius) {
         this.ius = ius;
     }
 
     /**
-     * <p>Getter for the field <code>laneIndex</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>laneIndex</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getLaneIndex() {
@@ -266,17 +281,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>laneIndex</code>.</p>
-     *
-     * @param laneIndex a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>laneIndex</code>.
+     * </p>
+     * 
+     * @param laneIndex
+     *            a {@link java.lang.Integer} object.
      */
     public void setLaneIndex(Integer laneIndex) {
         this.laneIndex = laneIndex;
     }
 
     /**
-     * <p>Getter for the field <code>cycleDescriptor</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>cycleDescriptor</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getCycleDescriptor() {
@@ -284,17 +304,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>cycleDescriptor</code>.</p>
-     *
-     * @param cycleDescriptor a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>cycleDescriptor</code>.
+     * </p>
+     * 
+     * @param cycleDescriptor
+     *            a {@link java.lang.String} object.
      */
     public void setCycleDescriptor(String cycleDescriptor) {
         this.cycleDescriptor = cycleDescriptor;
     }
 
     /**
-     * <p>Getter for the field <code>swAccession</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>swAccession</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -302,41 +327,51 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>swAccession</code>.</p>
-     *
-     * @param swAccession a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>swAccession</code>.
+     * </p>
+     * 
+     * @param swAccession
+     *            a {@link java.lang.Integer} object.
      */
     public void setSwAccession(Integer swAccession) {
         this.swAccession = swAccession;
     }
 
     /**
-     * <p>Getter for the field <code>processings</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>processings</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getProcessings() {
         /*
-         * Set<Processing> pr = new TreeSet<Processing>(); SortedSet<IUS> setIUS
-         * = getIUS(); for (IUS ius : setIUS) { pr.addAll(ius.getProcessings());
-         * } return pr;
+         * Set<Processing> pr = new TreeSet<Processing>(); SortedSet<IUS> setIUS = getIUS(); for (IUS ius : setIUS) {
+         * pr.addAll(ius.getProcessings()); } return pr;
          */
         return processings;
     }
 
     /**
-     * <p>Setter for the field <code>processings</code>.</p>
-     *
-     * @param processings a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>processings</code>.
+     * </p>
+     * 
+     * @param processings
+     *            a {@link java.util.Set} object.
      */
     public void setProcessings(Set<Processing> processings) {
         this.processings = processings;
     }
 
     /**
-     * <p>setProcessingsForView.</p>
-     *
-     * @param processings a {@link java.util.Set} object.
+     * <p>
+     * setProcessingsForView.
+     * </p>
+     * 
+     * @param processings
+     *            a {@link java.util.Set} object.
      */
     public void setProcessingsForView(Set<Processing> processings) {
         IUS newIUS = new IUS();
@@ -348,9 +383,12 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>addProcessing.</p>
-     *
-     * @param processing a {@link net.sourceforge.seqware.common.model.Processing} object.
+     * <p>
+     * addProcessing.
+     * </p>
+     * 
+     * @param processing
+     *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
     public void addProcessing(Processing processing) {
         this.getProcessings().add(processing);
@@ -358,8 +396,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>getSamples.</p>
-     *
+     * <p>
+     * getSamples.
+     * </p>
+     * 
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<Sample> getSamples() {
@@ -374,8 +414,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Getter for the field <code>sample</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>sample</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public Sample getSample() {
@@ -392,17 +434,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>sample</code>.</p>
-     *
-     * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * <p>
+     * Setter for the field <code>sample</code>.
+     * </p>
+     * 
+     * @param sample
+     *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public void setSample(Sample sample) {
         this.sample = sample;
     }
 
     /**
-     * <p>Getter for the field <code>createTimestamp</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>createTimestamp</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -410,17 +457,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>createTimestamp</code>.</p>
-     *
-     * @param createTimestamp a {@link java.util.Date} object.
+     * <p>
+     * Setter for the field <code>createTimestamp</code>.
+     * </p>
+     * 
+     * @param createTimestamp
+     *            a {@link java.util.Date} object.
      */
     public void setCreateTimestamp(Date createTimestamp) {
         this.createTimestamp = createTimestamp;
     }
 
     /**
-     * <p>Getter for the field <code>updateTimestamp</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>updateTimestamp</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -428,17 +480,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>updateTimestamp</code>.</p>
-     *
-     * @param updateTimestamp a {@link java.util.Date} object.
+     * <p>
+     * Setter for the field <code>updateTimestamp</code>.
+     * </p>
+     * 
+     * @param updateTimestamp
+     *            a {@link java.util.Date} object.
      */
     public void setUpdateTimestamp(Date updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
     }
 
     /**
-     * <p>Getter for the field <code>serialVersionUID</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>serialVersionUID</code>.
+     * </p>
+     * 
      * @return a long.
      */
     public static long getSerialVersionUID() {
@@ -446,8 +503,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>getJsonEscapeDescription.</p>
-     *
+     * <p>
+     * getJsonEscapeDescription.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -455,8 +514,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Getter for the field <code>description</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>description</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -464,17 +525,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>description</code>.</p>
-     *
-     * @param description a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>description</code>.
+     * </p>
+     * 
+     * @param description
+     *            a {@link java.lang.String} object.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * <p>Getter for the field <code>tags</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>tags</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getTags() {
@@ -482,17 +548,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>tags</code>.</p>
-     *
-     * @param tags a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>tags</code>.
+     * </p>
+     * 
+     * @param tags
+     *            a {@link java.lang.String} object.
      */
     public void setTags(String tags) {
         this.tags = tags;
     }
 
     /**
-     * <p>Getter for the field <code>regions</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>regions</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getRegions() {
@@ -500,17 +571,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>regions</code>.</p>
-     *
-     * @param regions a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>regions</code>.
+     * </p>
+     * 
+     * @param regions
+     *            a {@link java.lang.String} object.
      */
     public void setRegions(String regions) {
         this.regions = regions;
     }
 
     /**
-     * <p>Getter for the field <code>laneId</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>laneId</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getLaneId() {
@@ -518,17 +594,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>laneId</code>.</p>
-     *
-     * @param laneId a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>laneId</code>.
+     * </p>
+     * 
+     * @param laneId
+     *            a {@link java.lang.Integer} object.
      */
     public void setLaneId(Integer laneId) {
         this.laneId = laneId;
     }
 
     /**
-     * <p>Getter for the field <code>name</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>name</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getName() {
@@ -536,8 +617,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>getJsonEscapeName.</p>
-     *
+     * <p>
+     * getJsonEscapeName.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeName() {
@@ -545,17 +628,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>name</code>.</p>
-     *
-     * @param name a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>name</code>.
+     * </p>
+     * 
+     * @param name
+     *            a {@link java.lang.String} object.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * <p>Getter for the field <code>organism</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>organism</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getOrganism() {
@@ -563,17 +651,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>organism</code>.</p>
-     *
-     * @param organism a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>organism</code>.
+     * </p>
+     * 
+     * @param organism
+     *            a {@link java.lang.String} object.
      */
     public void setOrganism(String organism) {
         this.organism = organism;
     }
 
     /**
-     * <p>Getter for the field <code>sampleType</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>sampleType</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getSampleType() {
@@ -581,9 +674,12 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>sampleType</code>.</p>
-     *
-     * @param sampleType a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>sampleType</code>.
+     * </p>
+     * 
+     * @param sampleType
+     *            a {@link java.lang.String} object.
      */
     public void setSampleType(String sampleType) {
         this.sampleType = sampleType;
@@ -591,13 +687,14 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     /*
      * public String getSampleName() { return sampleName; }
-     *
-     * public void setSampleName(String sampleName) { this.sampleName =
-     * sampleName; }
+     * 
+     * public void setSampleName(String sampleName) { this.sampleName = sampleName; }
      */
     /**
-     * <p>Getter for the field <code>sampleCode</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>sampleCode</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getSampleCode() {
@@ -605,18 +702,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>sampleCode</code>.</p>
-     *
-     * @param sampleCode a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>sampleCode</code>.
+     * </p>
+     * 
+     * @param sampleCode
+     *            a {@link java.lang.String} object.
      */
     public void setSampleCode(String sampleCode) {
         this.sampleCode = sampleCode;
     }
 
-
     /**
-     * <p>Getter for the field <code>skip</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>skip</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getSkip() {
@@ -624,12 +725,15 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>skip</code>.</p>
-     *
-     * @param skip a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>skip</code>.
+     * </p>
+     * 
+     * @param skip
+     *            a {@link java.lang.Boolean} object.
      */
     public void setSkip(Boolean skip) {
-        if (skip != null && this.skip!=skip) {
+        if (skip != null && this.skip != skip) {
             Log.debug("Skipping lane " + getSwAccession());
             this.skip = skip;
             if (ius != null) {
@@ -641,8 +745,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Getter for the field <code>sequencerRun</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>sequencerRun</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
     public SequencerRun getSequencerRun() {
@@ -650,17 +756,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>sequencerRun</code>.</p>
-     *
-     * @param sequencerRun a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
+     * <p>
+     * Setter for the field <code>sequencerRun</code>.
+     * </p>
+     * 
+     * @param sequencerRun
+     *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
     public void setSequencerRun(SequencerRun sequencerRun) {
         this.sequencerRun = sequencerRun;
     }
 
     /**
-     * <p>Getter for the field <code>owner</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>owner</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -668,17 +779,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>owner</code>.</p>
-     *
-     * @param owner a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * <p>
+     * Setter for the field <code>owner</code>.
+     * </p>
+     * 
+     * @param owner
+     *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public void setOwner(Registration owner) {
         this.owner = owner;
     }
 
     /**
-     * <p>Getter for the field <code>isSelected</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>isSelected</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsSelected() {
@@ -686,17 +802,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>isSelected</code>.</p>
-     *
-     * @param isSelected a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>isSelected</code>.
+     * </p>
+     * 
+     * @param isSelected
+     *            a {@link java.lang.Boolean} object.
      */
     public void setIsSelected(Boolean isSelected) {
         this.isSelected = isSelected;
     }
 
     /**
-     * <p>Getter for the field <code>isHasFile</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>isHasFile</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsHasFile() {
@@ -704,17 +825,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>isHasFile</code>.</p>
-     *
-     * @param isHasFile a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>isHasFile</code>.
+     * </p>
+     * 
+     * @param isHasFile
+     *            a {@link java.lang.Boolean} object.
      */
     public void setIsHasFile(Boolean isHasFile) {
         this.isHasFile = isHasFile;
     }
 
     /**
-     * <p>Getter for the field <code>workflowRuns</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>workflowRuns</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     public Set<WorkflowRun> getWorkflowRuns() {
@@ -722,17 +848,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>workflowRuns</code>.</p>
-     *
-     * @param workflowRuns a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>workflowRuns</code>.
+     * </p>
+     * 
+     * @param workflowRuns
+     *            a {@link java.util.Set} object.
      */
     public void setWorkflowRuns(Set<WorkflowRun> workflowRuns) {
         this.workflowRuns = workflowRuns;
     }
 
     /**
-     * <p>Getter for the field <code>laneLinks</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>laneLinks</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     public Set<LaneLink> getLaneLinks() {
@@ -740,17 +871,22 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>laneLinks</code>.</p>
-     *
-     * @param laneLinks a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>laneLinks</code>.
+     * </p>
+     * 
+     * @param laneLinks
+     *            a {@link java.util.Set} object.
      */
     public void setLaneLinks(Set<LaneLink> laneLinks) {
         this.laneLinks = laneLinks;
     }
 
     /**
-     * <p>Getter for the field <code>laneAttributes</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>laneAttributes</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     @XmlElementWrapper(name = "LaneAttributes")
@@ -760,9 +896,12 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     }
 
     /**
-     * <p>Setter for the field <code>laneAttributes</code>.</p>
-     *
-     * @param laneAttributes a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>laneAttributes</code>.
+     * </p>
+     * 
+     * @param laneAttributes
+     *            a {@link java.util.Set} object.
      */
     public void setLaneAttributes(Set<LaneAttribute> laneAttributes) {
         this.laneAttributes = laneAttributes;
@@ -770,7 +909,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      boolean consideredBefore = considered.contains(this.getSwAccession());
+        boolean consideredBefore = considered.contains(this.getSwAccession());
         if (!consideredBefore) {
             considered.add(this.getSwAccession());
             Log.debug("Checking permissions for Lane object " + swAccession);
@@ -778,7 +917,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
             Log.debug("Skipping permissions for Lane object " + swAccession + " , checked before");
             return true;
         }
-        
+
         boolean hasPermission = true;
 
         if (sample != null) {
@@ -811,44 +950,42 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
         if (!hasPermission) {
             Logger.getLogger(Lane.class).info("Lane does not give permission");
-            throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify "
-                    + toString());
+            throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + toString());
         }
         return hasPermission;
 
     }
 
-  public StudyType getStudyType() {
-    return studyType;
-  }
+    public StudyType getStudyType() {
+        return studyType;
+    }
 
-  public void setStudyType(StudyType studyType) {
-    this.studyType = studyType;
-  }
+    public void setStudyType(StudyType studyType) {
+        this.studyType = studyType;
+    }
 
-  public LibraryStrategy getLibraryStrategy() {
-    return libraryStrategy;
-  }
+    public LibraryStrategy getLibraryStrategy() {
+        return libraryStrategy;
+    }
 
-  public void setLibraryStrategy(LibraryStrategy libraryStrategy) {
-    this.libraryStrategy = libraryStrategy;
-  }
+    public void setLibraryStrategy(LibraryStrategy libraryStrategy) {
+        this.libraryStrategy = libraryStrategy;
+    }
 
-  public LibrarySelection getLibrarySelection() {
-    return librarySelection;
-  }
+    public LibrarySelection getLibrarySelection() {
+        return librarySelection;
+    }
 
-  public void setLibrarySelection(LibrarySelection librarySelection) {
-    this.librarySelection = librarySelection;
-  }
+    public void setLibrarySelection(LibrarySelection librarySelection) {
+        this.librarySelection = librarySelection;
+    }
 
-  public LibrarySource getLibrarySource() {
-    return librarySource;
-  }
+    public LibrarySource getLibrarySource() {
+        return librarySource;
+    }
 
-  public void setLibrarySource(LibrarySource librarySource) {
-    this.librarySource = librarySource;
-  }
-    
-    
+    public void setLibrarySource(LibrarySource librarySource) {
+        this.librarySource = librarySource;
+    }
+
 }

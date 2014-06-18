@@ -52,360 +52,396 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class StudyListDetailsFlatController extends ApplicationObjectSupport {
 
-  private static int BAR_WIDTH = 170;
-  private static int BAR_HEIGHT = 22;
+    private static int BAR_WIDTH = 170;
+    private static int BAR_HEIGHT = 22;
 
-  @Autowired
-  private StudyService studyService;
-  @Autowired
-  private ExperimentService experimentService;
-  @Autowired
-  private SampleService sampleService;
-  @Autowired
-  private LaneService laneService;
-  @Autowired
-  private ProcessingService processingService;
-  @Autowired
-  @Qualifier("IUSService")
-  private IUSService iusService;
-  @Autowired
-  private WorkflowRunService workflowRunService;
+    @Autowired
+    private StudyService studyService;
+    @Autowired
+    private ExperimentService experimentService;
+    @Autowired
+    private SampleService sampleService;
+    @Autowired
+    private LaneService laneService;
+    @Autowired
+    private ProcessingService processingService;
+    @Autowired
+    @Qualifier("IUSService")
+    private IUSService iusService;
+    @Autowired
+    private WorkflowRunService workflowRunService;
 
-  private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = Logger.getLogger(this.getClass());
 
-  /**
-   * <p>doRetrieveListElements.</p>
-   *
-   * @param request a {@link javax.servlet.http.HttpServletRequest} object.
-   * @param response a {@link javax.servlet.http.HttpServletResponse} object.
-   * @return a {@link org.springframework.web.servlet.ModelAndView} object.
-   * @throws java.io.IOException if any.
-   */
-  @RequestMapping("/studyListDetailsFlat.htm")
-  public ModelAndView doRetrieveListElements(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
-    Registration registration = Security.getRegistration(request);
-    if (registration == null) {
-      // return new ModelAndView("redirect:/login.htm");
-      return new ModelAndView("StudyListRoot");
-    }
-
-    Study s = null;
-    Experiment exp = new Experiment();
-    Sample sam = new Sample();
-    IUS ius = new IUS();
-    Processing proc = new Processing();
-    WorkflowRun workflowRun = new WorkflowRun();
-
-    PageInfo pageInfo = null;
-    Boolean isHasError = false;
-    String errorMessage = "";
-
-    List<Study> listAll = new ArrayList<>();
-    List<Study> listView = new ArrayList<>();
-
-    ModelAndView modelAndView;
-
-    String root = (String) request.getParameter("root");
-    log.debug("ROOT: " + root);
-
-    int itemsPerPage = 20;
-    try {
-      itemsPerPage = Integer.parseInt(request.getParameter("pi"));
-    } catch (NumberFormatException e) {
-      log.warn("No items per page is provided. This is ok for the Tree view");
-    }
-
-    if (root == null || "".equals(root) || "source".equals(root)) {
-      MessageSourceAccessor ma = this.getMessageSourceAccessor();
-      String nameOneItem = "study.list.pagination.nameOneItem";
-      String nameLotOfItem = "study.list.pagination.nameLotOfItem";
-      String typeList = ControllerUtil.getRequestedTypeList(request);
-
-      if (typeList.equals("mylist")) {
-        Boolean isAsc = ControllerUtil.saveAscInSession(request, "ascMyListStudyFlat");
-        listAll = getStudyService().list(registration, isAsc);
-        listView = PaginationUtil.subList(request, "myStudiesPageFlat", itemsPerPage, listAll);
-        pageInfo = PaginationUtil.getPageInfo(request, "myStudiesPageFlat", listView, listAll, nameOneItem,
-            nameLotOfItem, ma);
-
-        // set error if want
-        if (listAll.size() == 0) {
-          isHasError = true;
-          errorMessage = this.getMessageSourceAccessor().getMessage("study.list.required.one.item");
+    /**
+     * <p>
+     * doRetrieveListElements.
+     * </p>
+     * 
+     * @param request
+     *            a {@link javax.servlet.http.HttpServletRequest} object.
+     * @param response
+     *            a {@link javax.servlet.http.HttpServletResponse} object.
+     * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+     * @throws java.io.IOException
+     *             if any.
+     */
+    @RequestMapping("/studyListDetailsFlat.htm")
+    public ModelAndView doRetrieveListElements(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) {
+            // return new ModelAndView("redirect:/login.htm");
+            return new ModelAndView("StudyListRoot");
         }
-      }
-      if (typeList.equals("mysharelist")) {
-        Boolean isAsc = ControllerUtil.saveAscInSession(request, "ascMyShareListStudyFlat");
-        listAll = getStudyService().listMyShared(registration, isAsc);
-        listView = PaginationUtil.subList(request, "mySharedStudyPageFlat", itemsPerPage, listAll);
-        pageInfo = PaginationUtil.getPageInfo(request, "mySharedStudyPageFlat", listView, listAll, nameOneItem,
-            nameLotOfItem, ma);
-      }
-      if (typeList.equals("bymesharelist")) {
-        Boolean isAsc = ControllerUtil.saveAscInSession(request, "ascByMeShareListStudyFlat");
-        listAll = getStudyService().listSharedWithMe(registration, isAsc);
-        listView = PaginationUtil.subList(request, "studySharedWithMeFlat", itemsPerPage, listAll);
-        pageInfo = PaginationUtil.getPageInfo(request, "studySharedWithMeFlat", listView, listAll, nameOneItem,
-            nameLotOfItem, ma);
-      }
-    } else {
-      if (root.indexOf("assi_") != -1) {
-        sam = getSampleService().findByID(Constant.getFirstId(root));
-        workflowRun = getWorkflowRunService().findByID(Constant.getId(root));
-      } else if (root.indexOf("sam_") != -1) {
-        sam = getSampleService().findByID(Constant.getId(root));
-        System.out.println("  CHILD SIZE = " + sam.getChildren().size());
-      } else if (root.indexOf("exp_") != -1) {
-        exp = getExperimentService().findByID(Constant.getId(root));
-      } else if (root.indexOf("wr_") != -1) {
-        workflowRun = getWorkflowRunService().findByID(Constant.getFirstId(root));
-        sam = getSampleService().findByID(Constant.getId(root));
-      } else if (root.indexOf("proc_") != -1) {
-        proc = getProcessingService().findByID(Constant.getId(root));
-      } else {
-        s = getStudyService().findByID(Constant.getId(root));
-        listView.add(s);
-      }
+
+        Study s = null;
+        Experiment exp = new Experiment();
+        Sample sam = new Sample();
+        IUS ius = new IUS();
+        Processing proc = new Processing();
+        WorkflowRun workflowRun = new WorkflowRun();
+
+        PageInfo pageInfo = null;
+        Boolean isHasError = false;
+        String errorMessage = "";
+
+        List<Study> listAll = new ArrayList<>();
+        List<Study> listView = new ArrayList<>();
+
+        ModelAndView modelAndView;
+
+        String root = (String) request.getParameter("root");
+        log.debug("ROOT: " + root);
+
+        int itemsPerPage = 20;
+        try {
+            itemsPerPage = Integer.parseInt(request.getParameter("pi"));
+        } catch (NumberFormatException e) {
+            log.warn("No items per page is provided. This is ok for the Tree view");
+        }
+
+        if (root == null || "".equals(root) || "source".equals(root)) {
+            MessageSourceAccessor ma = this.getMessageSourceAccessor();
+            String nameOneItem = "study.list.pagination.nameOneItem";
+            String nameLotOfItem = "study.list.pagination.nameLotOfItem";
+            String typeList = ControllerUtil.getRequestedTypeList(request);
+
+            if (typeList.equals("mylist")) {
+                Boolean isAsc = ControllerUtil.saveAscInSession(request, "ascMyListStudyFlat");
+                listAll = getStudyService().list(registration, isAsc);
+                listView = PaginationUtil.subList(request, "myStudiesPageFlat", itemsPerPage, listAll);
+                pageInfo = PaginationUtil.getPageInfo(request, "myStudiesPageFlat", listView, listAll, nameOneItem, nameLotOfItem, ma);
+
+                // set error if want
+                if (listAll.size() == 0) {
+                    isHasError = true;
+                    errorMessage = this.getMessageSourceAccessor().getMessage("study.list.required.one.item");
+                }
+            }
+            if (typeList.equals("mysharelist")) {
+                Boolean isAsc = ControllerUtil.saveAscInSession(request, "ascMyShareListStudyFlat");
+                listAll = getStudyService().listMyShared(registration, isAsc);
+                listView = PaginationUtil.subList(request, "mySharedStudyPageFlat", itemsPerPage, listAll);
+                pageInfo = PaginationUtil.getPageInfo(request, "mySharedStudyPageFlat", listView, listAll, nameOneItem, nameLotOfItem, ma);
+            }
+            if (typeList.equals("bymesharelist")) {
+                Boolean isAsc = ControllerUtil.saveAscInSession(request, "ascByMeShareListStudyFlat");
+                listAll = getStudyService().listSharedWithMe(registration, isAsc);
+                listView = PaginationUtil.subList(request, "studySharedWithMeFlat", itemsPerPage, listAll);
+                pageInfo = PaginationUtil.getPageInfo(request, "studySharedWithMeFlat", listView, listAll, nameOneItem, nameLotOfItem, ma);
+            }
+        } else {
+            if (root.indexOf("assi_") != -1) {
+                sam = getSampleService().findByID(Constant.getFirstId(root));
+                workflowRun = getWorkflowRunService().findByID(Constant.getId(root));
+            } else if (root.indexOf("sam_") != -1) {
+                sam = getSampleService().findByID(Constant.getId(root));
+                System.out.println("  CHILD SIZE = " + sam.getChildren().size());
+            } else if (root.indexOf("exp_") != -1) {
+                exp = getExperimentService().findByID(Constant.getId(root));
+            } else if (root.indexOf("wr_") != -1) {
+                workflowRun = getWorkflowRunService().findByID(Constant.getFirstId(root));
+                sam = getSampleService().findByID(Constant.getId(root));
+            } else if (root.indexOf("proc_") != -1) {
+                proc = getProcessingService().findByID(Constant.getId(root));
+            } else {
+                s = getStudyService().findByID(Constant.getId(root));
+                listView.add(s);
+            }
+        }
+
+        if (root.indexOf("ius_") != -1) {
+            log.debug("RENDERING INDIVIDUAL IUS");
+            modelAndView = new ModelAndView("StudyListProcessing");
+            modelAndView.addObject("ius", ius);
+        } else if (root.indexOf("sam_") != -1) {
+            log.debug("RENDERING INDIVIDUAL Sample");
+            modelAndView = new ModelAndView("StudyListFlatSampleDetails");
+            modelAndView.addObject("sample", sam);
+            Set<WorkflowRun> workflowRuns = getWorkflowRunService().findRunsForSample(sam);
+            Set<Processing> orphanedProcessings = getOrphanedProcessings(sam, workflowRuns);
+            modelAndView.addObject("workflowRuns", workflowRuns);
+            modelAndView.addObject("orphanProcessings", orphanedProcessings);
+        } else if (root.indexOf("exp_") != -1) {
+            log.debug("RENDERING INDIVIDUAL EXPERIMENT");
+            modelAndView = new ModelAndView("StudyListSampleFlat");
+            modelAndView.addObject("experiment", exp);
+            populateExperimentSpotDesign(modelAndView, exp);
+        } else if (root.indexOf("wr_") != -1) {
+            log.debug("RENDERING INDIVIDUAL WORKFLOW_RUN");
+            modelAndView = new ModelAndView("StudyListWorkflowRunFlat");
+            modelAndView.addObject("run", workflowRun);
+            modelAndView.addObject("iuses", CollectionUtils.intersection(workflowRun.getIus(), sam.getIUS()));
+            modelAndView.addObject("processings", getProcessingService().findFor(sam, workflowRun));
+            modelAndView.addObject("sample", sam);
+        } else if (root.indexOf("assi_") != -1) {
+            log.debug("RENDERING ASSOCIATED IUSES");
+            modelAndView = new ModelAndView("StudyListAssociatedIusFlat");
+            Set<IUS> wfIus = workflowRun.getIus();
+            Set<IUS> sampleIus = sam.getIUS();
+            modelAndView.addObject("iuses", CollectionUtils.intersection(wfIus, sampleIus));
+            // modelAndView.addObject("iuses", sam.getIUS());
+        } else if (root.indexOf("proc_") != -1) {
+            log.debug("RENDERING PROCESSING");
+            modelAndView = new ModelAndView("StudyListProcessingFlat");
+            modelAndView.addObject("processing", proc);
+        } else if (root != null && !"".equals(root) && !"source".equals(root) && Integer.parseInt(root) > 0) {
+            log.debug("RENDERING INDIVIDUAL STUDY");
+            modelAndView = new ModelAndView("StudyListDetailsFlat");
+            addProgressBar(s, modelAndView);
+        } else {
+            log.debug("RENDERING ALL STUDIES");
+            modelAndView = new ModelAndView("StudyListRootFlat");
+            modelAndView.addObject("pageInfo", pageInfo);
+        }
+
+        // set error data
+        modelAndView.addObject("isHasError", isHasError);
+        modelAndView.addObject("errorMessage", errorMessage);
+
+        modelAndView.addObject("studies", listView);
+        modelAndView.addObject("registration", registration);
+
+        return modelAndView;
     }
 
-    if (root.indexOf("ius_") != -1) {
-      log.debug("RENDERING INDIVIDUAL IUS");
-      modelAndView = new ModelAndView("StudyListProcessing");
-      modelAndView.addObject("ius", ius);
-    } else if (root.indexOf("sam_") != -1) {
-      log.debug("RENDERING INDIVIDUAL Sample");
-      modelAndView = new ModelAndView("StudyListFlatSampleDetails");
-      modelAndView.addObject("sample", sam);
-      Set<WorkflowRun> workflowRuns = getWorkflowRunService().findRunsForSample(sam);
-      Set<Processing> orphanedProcessings = getOrphanedProcessings(sam, workflowRuns);
-      modelAndView.addObject("workflowRuns", workflowRuns);
-      modelAndView.addObject("orphanProcessings", orphanedProcessings);
-    } else if (root.indexOf("exp_") != -1) {
-      log.debug("RENDERING INDIVIDUAL EXPERIMENT");
-      modelAndView = new ModelAndView("StudyListSampleFlat");
-      modelAndView.addObject("experiment", exp);
-      populateExperimentSpotDesign(modelAndView, exp);
-    } else if (root.indexOf("wr_") != -1) {
-      log.debug("RENDERING INDIVIDUAL WORKFLOW_RUN");
-      modelAndView = new ModelAndView("StudyListWorkflowRunFlat");
-      modelAndView.addObject("run", workflowRun);
-      modelAndView.addObject("iuses", CollectionUtils.intersection(workflowRun.getIus(), sam.getIUS()));
-      modelAndView.addObject("processings", getProcessingService().findFor(sam, workflowRun));
-      modelAndView.addObject("sample", sam);
-    } else if (root.indexOf("assi_") != -1) {
-      log.debug("RENDERING ASSOCIATED IUSES");
-      modelAndView = new ModelAndView("StudyListAssociatedIusFlat");
-      Set<IUS> wfIus = workflowRun.getIus();
-      Set<IUS> sampleIus = sam.getIUS();
-      modelAndView.addObject("iuses", CollectionUtils.intersection(wfIus, sampleIus));
-      // modelAndView.addObject("iuses", sam.getIUS());
-    } else if (root.indexOf("proc_") != -1) {
-      log.debug("RENDERING PROCESSING");
-      modelAndView = new ModelAndView("StudyListProcessingFlat");
-      modelAndView.addObject("processing", proc);
-    } else if (root != null && !"".equals(root) && !"source".equals(root) && Integer.parseInt(root) > 0) {
-      log.debug("RENDERING INDIVIDUAL STUDY");
-      modelAndView = new ModelAndView("StudyListDetailsFlat");
-      addProgressBar(s, modelAndView);
-    } else {
-      log.debug("RENDERING ALL STUDIES");
-      modelAndView = new ModelAndView("StudyListRootFlat");
-      modelAndView.addObject("pageInfo", pageInfo);
+    /**
+     * Returns processings, which doesn't belong to any workflow runs.
+     * 
+     * @param sample
+     * @param workflowRuns
+     * @return
+     */
+    private Set<Processing> getOrphanedProcessings(Sample sample, Set<WorkflowRun> workflowRuns) {
+        Set<Processing> processings = getProcessingService().findFor(sample);
+        for (WorkflowRun run : workflowRuns) {
+            processings.removeAll(getProcessingService().findFor(sample, run));
+        }
+        return processings;
     }
 
-    // set error data
-    modelAndView.addObject("isHasError", isHasError);
-    modelAndView.addObject("errorMessage", errorMessage);
+    private void addProgressBar(Study study, ModelAndView modelAndView) {
+        int completed = getStudyService().getFinishedCount(study);
+        int running = getStudyService().getRunningCount(study);
+        int failed = getStudyService().getFailedCount(study);
 
-    modelAndView.addObject("studies", listView);
-    modelAndView.addObject("registration", registration);
+        int sum = completed + running + failed;
 
-    return modelAndView;
-  }
+        int completedWidth = 0;
+        int runningWidth = 0;
+        int failedWidth = 0;
 
-  /**
-   * Returns processings, which doesn't belong to any workflow runs.
-   * 
-   * @param sample
-   * @param workflowRuns
-   * @return
-   */
-  private Set<Processing> getOrphanedProcessings(Sample sample, Set<WorkflowRun> workflowRuns) {
-    Set<Processing> processings = getProcessingService().findFor(sample);
-    for (WorkflowRun run : workflowRuns) {
-      processings.removeAll(getProcessingService().findFor(sample, run));
-    }
-    return processings;
-  }
+        if (sum > 0) {
+            completedWidth = completed * BAR_WIDTH / sum;
+            runningWidth = running * BAR_WIDTH / sum;
+            failedWidth = failed * BAR_WIDTH / sum;
+        }
 
-  private void addProgressBar(Study study, ModelAndView modelAndView) {
-    int completed = getStudyService().getFinishedCount(study);
-    int running = getStudyService().getRunningCount(study);
-    int failed = getStudyService().getFailedCount(study);
-
-    int sum = completed + running + failed;
-
-    int completedWidth = 0;
-    int runningWidth = 0;
-    int failedWidth = 0;
-
-    if (sum > 0) {
-      completedWidth = completed * BAR_WIDTH / sum;
-      runningWidth = running * BAR_WIDTH / sum;
-      failedWidth = failed * BAR_WIDTH / sum;
+        modelAndView.addObject("completedWidth", completedWidth);
+        modelAndView.addObject("runningWidth", runningWidth);
+        modelAndView.addObject("failedWidth", failedWidth);
+        modelAndView.addObject("completedNum", completed);
+        modelAndView.addObject("runningNum", running);
+        modelAndView.addObject("failedNum", failed);
+        modelAndView.addObject("bar_width", BAR_WIDTH);
+        modelAndView.addObject("bar_height", BAR_HEIGHT);
     }
 
-    modelAndView.addObject("completedWidth", completedWidth);
-    modelAndView.addObject("runningWidth", runningWidth);
-    modelAndView.addObject("failedWidth", failedWidth);
-    modelAndView.addObject("completedNum", completed);
-    modelAndView.addObject("runningNum", running);
-    modelAndView.addObject("failedNum", failed);
-    modelAndView.addObject("bar_width", BAR_WIDTH);
-    modelAndView.addObject("bar_height", BAR_HEIGHT);
-  }
-
-  private void populateExperimentSpotDesign(ModelAndView modelAndView, Experiment exp) {
-    ExperimentSpotDesign spotDesign = exp.getExperimentSpotDesign();
-    Set<ExperimentSpotDesignReadSpec> readSpecs = spotDesign.getReadSpecs();
-    modelAndView.addObject("readSpecs", readSpecs);
-  }
-
-  private List<SampleDetailsLineItem> getSampleDetails(Sample sam) {
-    List<SampleDetailsLineItem> sampleDetails = new ArrayList<>();
-
-    for (IUS ius : sam.getIUS()) {
-      Lane lane = ius.getLane();
-      SequencerRun sRun = lane.getSequencerRun();
-      sampleDetails.add(new SampleDetailsLineItem(sRun, lane, ius));
+    private void populateExperimentSpotDesign(ModelAndView modelAndView, Experiment exp) {
+        ExperimentSpotDesign spotDesign = exp.getExperimentSpotDesign();
+        Set<ExperimentSpotDesignReadSpec> readSpecs = spotDesign.getReadSpecs();
+        modelAndView.addObject("readSpecs", readSpecs);
     }
-    return sampleDetails;
-  }
 
-  /**
-   * <p>Getter for the field <code>studyService</code>.</p>
-   *
-   * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
-   */
-  public StudyService getStudyService() {
-    return studyService;
-  }
+    private List<SampleDetailsLineItem> getSampleDetails(Sample sam) {
+        List<SampleDetailsLineItem> sampleDetails = new ArrayList<>();
 
-  /**
-   * <p>Setter for the field <code>studyService</code>.</p>
-   *
-   * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
-   */
-  public void setStudyService(StudyService studyService) {
-    this.studyService = studyService;
-  }
+        for (IUS ius : sam.getIUS()) {
+            Lane lane = ius.getLane();
+            SequencerRun sRun = lane.getSequencerRun();
+            sampleDetails.add(new SampleDetailsLineItem(sRun, lane, ius));
+        }
+        return sampleDetails;
+    }
 
-  /**
-   * <p>Getter for the field <code>experimentService</code>.</p>
-   *
-   * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
-   */
-  public ExperimentService getExperimentService() {
-    return experimentService;
-  }
+    /**
+     * <p>
+     * Getter for the field <code>studyService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+     */
+    public StudyService getStudyService() {
+        return studyService;
+    }
 
-  /**
-   * <p>Setter for the field <code>experimentService</code>.</p>
-   *
-   * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
-   */
-  public void setExperimentService(ExperimentService experimentService) {
-    this.experimentService = experimentService;
-  }
+    /**
+     * <p>
+     * Setter for the field <code>studyService</code>.
+     * </p>
+     * 
+     * @param studyService
+     *            a {@link net.sourceforge.seqware.common.business.StudyService} object.
+     */
+    public void setStudyService(StudyService studyService) {
+        this.studyService = studyService;
+    }
 
-  /**
-   * <p>Getter for the field <code>sampleService</code>.</p>
-   *
-   * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
-   */
-  public SampleService getSampleService() {
-    return sampleService;
-  }
+    /**
+     * <p>
+     * Getter for the field <code>experimentService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+     */
+    public ExperimentService getExperimentService() {
+        return experimentService;
+    }
 
-  /**
-   * <p>Setter for the field <code>sampleService</code>.</p>
-   *
-   * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
-   */
-  public void setSampleService(SampleService sampleService) {
-    this.sampleService = sampleService;
-  }
+    /**
+     * <p>
+     * Setter for the field <code>experimentService</code>.
+     * </p>
+     * 
+     * @param experimentService
+     *            a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+     */
+    public void setExperimentService(ExperimentService experimentService) {
+        this.experimentService = experimentService;
+    }
 
-  /**
-   * <p>Getter for the field <code>laneService</code>.</p>
-   *
-   * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
-   */
-  public LaneService getLaneService() {
-    return laneService;
-  }
+    /**
+     * <p>
+     * Getter for the field <code>sampleService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+     */
+    public SampleService getSampleService() {
+        return sampleService;
+    }
 
-  /**
-   * <p>Setter for the field <code>laneService</code>.</p>
-   *
-   * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
-   */
-  public void setLaneService(LaneService laneService) {
-    this.laneService = laneService;
-  }
+    /**
+     * <p>
+     * Setter for the field <code>sampleService</code>.
+     * </p>
+     * 
+     * @param sampleService
+     *            a {@link net.sourceforge.seqware.common.business.SampleService} object.
+     */
+    public void setSampleService(SampleService sampleService) {
+        this.sampleService = sampleService;
+    }
 
-  /**
-   * <p>Getter for the field <code>processingService</code>.</p>
-   *
-   * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
-   */
-  public ProcessingService getProcessingService() {
-    return processingService;
-  }
+    /**
+     * <p>
+     * Getter for the field <code>laneService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+     */
+    public LaneService getLaneService() {
+        return laneService;
+    }
 
-  /**
-   * <p>Setter for the field <code>processingService</code>.</p>
-   *
-   * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
-   */
-  public void setProcessingService(ProcessingService processingService) {
-    this.processingService = processingService;
-  }
+    /**
+     * <p>
+     * Setter for the field <code>laneService</code>.
+     * </p>
+     * 
+     * @param laneService
+     *            a {@link net.sourceforge.seqware.common.business.LaneService} object.
+     */
+    public void setLaneService(LaneService laneService) {
+        this.laneService = laneService;
+    }
 
-  /**
-   * <p>getIUSService.</p>
-   *
-   * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
-   */
-  public IUSService getIUSService() {
-    return iusService;
-  }
+    /**
+     * <p>
+     * Getter for the field <code>processingService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+     */
+    public ProcessingService getProcessingService() {
+        return processingService;
+    }
 
-  /**
-   * <p>setIUSService.</p>
-   *
-   * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
-   */
-  public void setIUSService(IUSService iusService) {
-    this.iusService = iusService;
-  }
+    /**
+     * <p>
+     * Setter for the field <code>processingService</code>.
+     * </p>
+     * 
+     * @param processingService
+     *            a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+     */
+    public void setProcessingService(ProcessingService processingService) {
+        this.processingService = processingService;
+    }
 
-  /**
-   * <p>Getter for the field <code>workflowRunService</code>.</p>
-   *
-   * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
-   */
-  public WorkflowRunService getWorkflowRunService() {
-    return workflowRunService;
-  }
+    /**
+     * <p>
+     * getIUSService.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+     */
+    public IUSService getIUSService() {
+        return iusService;
+    }
 
-  /**
-   * <p>Setter for the field <code>workflowRunService</code>.</p>
-   *
-   * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
-   */
-  public void setWorkflowRunService(WorkflowRunService workflowRunService) {
-    this.workflowRunService = workflowRunService;
-  }
+    /**
+     * <p>
+     * setIUSService.
+     * </p>
+     * 
+     * @param iusService
+     *            a {@link net.sourceforge.seqware.common.business.IUSService} object.
+     */
+    public void setIUSService(IUSService iusService) {
+        this.iusService = iusService;
+    }
+
+    /**
+     * <p>
+     * Getter for the field <code>workflowRunService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+     */
+    public WorkflowRunService getWorkflowRunService() {
+        return workflowRunService;
+    }
+
+    /**
+     * <p>
+     * Setter for the field <code>workflowRunService</code>.
+     * </p>
+     * 
+     * @param workflowRunService
+     *            a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+     */
+    public void setWorkflowRunService(WorkflowRunService workflowRunService) {
+        this.workflowRunService = workflowRunService;
+    }
 }

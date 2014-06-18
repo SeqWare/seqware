@@ -18,110 +18,118 @@ import org.apache.log4j.Logger;
 import com.google.common.collect.Lists;
 
 /**
- * This authentication plugin allows the SeqWare Portal to authenticate against
- * the Ontario Institute for Cancer Research (OICR) LDAP server.
- *
- * Users will pass in an email address and password. An associated list of uids
- * that match the email address will be retrieved via an LDAP directory search.
- * More than one uid will be returned for users who have multiple credentials.
- * This plugin will loop through the uids and attempt to authenticate with the
- * provided password.
- *
+ * This authentication plugin allows the SeqWare Portal to authenticate against the Ontario Institute for Cancer Research (OICR) LDAP
+ * server.
+ * 
+ * Users will pass in an email address and password. An associated list of uids that match the email address will be retrieved via an LDAP
+ * directory search. More than one uid will be returned for users who have multiple credentials. This plugin will loop through the uids and
+ * attempt to authenticate with the provided password.
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class OICRLdapAuthentication extends Authentication {
 
-  static Logger log = Logger.getLogger(OICRLdapAuthentication.class);
+    static Logger log = Logger.getLogger(OICRLdapAuthentication.class);
 
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public boolean loginSuccess(String uid, String password) {
-    // uid value is an email address.
-    return oicrLdapLogin(uid, password);
-  }
-
-  private boolean oicrLdapLogin(String email, String password) {
-    List<String> uids = Lists.newArrayList();
-    try {
-      uids = getUids(findUidsByEmail(email));
-    } catch (NamingException e) {
-      log.debug("Failed to locate uids for user [" + email + "] due to ldap exception. ", e);
-    }
-    for (String uid : uids) {
-      if (oicrLdapAuthenticate(uid, password)) {
-        return true;
-      }
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public boolean loginSuccess(String uid, String password) {
+        // uid value is an email address.
+        return oicrLdapLogin(uid, password);
     }
 
-    return false;
-  }
+    private boolean oicrLdapLogin(String email, String password) {
+        List<String> uids = Lists.newArrayList();
+        try {
+            uids = getUids(findUidsByEmail(email));
+        } catch (NamingException e) {
+            log.debug("Failed to locate uids for user [" + email + "] due to ldap exception. ", e);
+        }
+        for (String uid : uids) {
+            if (oicrLdapAuthenticate(uid, password)) {
+                return true;
+            }
+        }
 
-  private boolean oicrLdapAuthenticate(String uid, String password) {
-    boolean result = false;
-
-    Hashtable<String, String> env = new Hashtable<>(11);
-    env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-    env.put(Context.PROVIDER_URL, "ldap://10.0.0.100/");
-
-    env.put(Context.SECURITY_AUTHENTICATION, "simple");
-    env.put(Context.SECURITY_PRINCIPAL, "uid=" + uid + ", ou=People, dc=oicr, dc=on, dc=ca");
-    env.put(Context.SECURITY_CREDENTIALS, password);
-
-    try {
-      DirContext context = new InitialDirContext(env);
-      context.close();
-      result = true;
-    } catch (NamingException e) {
-      log.debug("User [" + uid + "] failed to authenticate via ldap. ", e);
+        return false;
     }
-    return result;
-  }
 
-  private NamingEnumeration<SearchResult> findUidsByEmail(String email) throws NamingException {
-    NamingEnumeration<SearchResult> result;
-    DirContext context = getDirContext();
-    try {
-      // Ignore case when matching.
-      Attributes matchingAttributes = new BasicAttributes(true);
-      // Search for object with 'mail' attribute that matches the provided
-      // 'email' address.
-      matchingAttributes.put(new BasicAttribute("mail", email));
-      result = context.search("ou=People, dc=oicr, dc=on, dc=ca", matchingAttributes);
-    } finally {
-      context.close();
+    private boolean oicrLdapAuthenticate(String uid, String password) {
+        boolean result = false;
+
+        Hashtable<String, String> env = new Hashtable<>(11);
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, "ldap://10.0.0.100/");
+
+        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_PRINCIPAL, "uid=" + uid + ", ou=People, dc=oicr, dc=on, dc=ca");
+        env.put(Context.SECURITY_CREDENTIALS, password);
+
+        try {
+            DirContext context = new InitialDirContext(env);
+            context.close();
+            result = true;
+        } catch (NamingException e) {
+            log.debug("User [" + uid + "] failed to authenticate via ldap. ", e);
+        }
+        return result;
     }
-    return result;
-  }
 
-  /**
-   * <p>getDirContext.</p>
-   *
-   * @return a {@link javax.naming.directory.DirContext} object.
-   * @throws javax.naming.NamingException if any.
-   */
-  public DirContext getDirContext() throws NamingException {
-    Hashtable<String, String> env = new Hashtable<>(11);
-    env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-    env.put(Context.PROVIDER_URL, "ldap://10.0.0.100/");
-    DirContext ctx = new InitialDirContext(env);
-    return ctx;
-  }
-
-  /**
-   * <p>getUids.</p>
-   *
-   * @param searchResultEnum a {@link javax.naming.NamingEnumeration} object.
-   * @return a {@link java.util.List} object.
-   * @throws javax.naming.NamingException if any.
-   */
-  public List<String> getUids(NamingEnumeration<SearchResult> searchResultEnum) throws NamingException {
-    List<String> uids = Lists.newArrayList();
-    while (searchResultEnum.hasMore()) {
-      SearchResult sr = (SearchResult) searchResultEnum.next();
-      uids.add((String) sr.getAttributes().get("uid").get());
+    private NamingEnumeration<SearchResult> findUidsByEmail(String email) throws NamingException {
+        NamingEnumeration<SearchResult> result;
+        DirContext context = getDirContext();
+        try {
+            // Ignore case when matching.
+            Attributes matchingAttributes = new BasicAttributes(true);
+            // Search for object with 'mail' attribute that matches the provided
+            // 'email' address.
+            matchingAttributes.put(new BasicAttribute("mail", email));
+            result = context.search("ou=People, dc=oicr, dc=on, dc=ca", matchingAttributes);
+        } finally {
+            context.close();
+        }
+        return result;
     }
-    return uids;
-  }
+
+    /**
+     * <p>
+     * getDirContext.
+     * </p>
+     * 
+     * @return a {@link javax.naming.directory.DirContext} object.
+     * @throws javax.naming.NamingException
+     *             if any.
+     */
+    public DirContext getDirContext() throws NamingException {
+        Hashtable<String, String> env = new Hashtable<>(11);
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, "ldap://10.0.0.100/");
+        DirContext ctx = new InitialDirContext(env);
+        return ctx;
+    }
+
+    /**
+     * <p>
+     * getUids.
+     * </p>
+     * 
+     * @param searchResultEnum
+     *            a {@link javax.naming.NamingEnumeration} object.
+     * @return a {@link java.util.List} object.
+     * @throws javax.naming.NamingException
+     *             if any.
+     */
+    public List<String> getUids(NamingEnumeration<SearchResult> searchResultEnum) throws NamingException {
+        List<String> uids = Lists.newArrayList();
+        while (searchResultEnum.hasMore()) {
+            SearchResult sr = (SearchResult) searchResultEnum.next();
+            uids.add((String) sr.getAttributes().get("uid").get());
+        }
+        return uids;
+    }
 }

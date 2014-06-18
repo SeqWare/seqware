@@ -25,17 +25,23 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.log4j.Logger;
 
 /**
- * <p>SequencerRunReport class.</p>
- *
+ * <p>
+ * SequencerRunReport class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class SequencerRunReport {
     private Logger logger = Logger.getLogger(SequencerRunReport.class);
+
     /**
-     * <p>makeReport.</p>
-     *
-     * @param identity a {@link java.lang.String} object.
+     * <p>
+     * makeReport.
+     * </p>
+     * 
+     * @param identity
+     *            a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
      */
     public String makeReport(String identity) {
@@ -69,8 +75,7 @@ public class SequencerRunReport {
 
     }
 
-    private void makeRowsGetWorkflows(Collection<ReturnValue> set, Map<String, Row> rows,
-            SortedMap<String, String> workflows) {
+    private void makeRowsGetWorkflows(Collection<ReturnValue> set, Map<String, Row> rows, SortedMap<String, String> workflows) {
         for (ReturnValue val : set) {
 
             String workflowName = val.getAttribute(FindAllTheFiles.WORKFLOW_NAME);
@@ -171,8 +176,7 @@ public class SequencerRunReport {
             }
             String sequencerRunSwa = val.getAttribute(FindAllTheFiles.SEQUENCER_RUN_SWA);
 
-            Row row = new Row(updateTimestamp, sequencerRunName, sequencerRunSwa, laneName, laneSwa, iusTag, iusSwa,
-                    sampleName, sampleSwa);
+            Row row = new Row(updateTimestamp, sequencerRunName, sequencerRunSwa, laneName, laneSwa, iusTag, iusSwa, sampleName, sampleSwa);
             if (workflowSwa != null) {
                 row.addWorkflowRun(workflowSwa, workflowRunSwa, workflowRunStatus);
             }
@@ -270,9 +274,9 @@ public class SequencerRunReport {
 
         @Override
         public String toString() {
-            return "Row{" + "date=" + date + ", runName=" + runName + ", runSwa=" + runSwa + ", laneName=" + laneName
-                    + ", laneSwa=" + laneSwa + ", iusTag=" + iusTag + ", iusSwa=" + iusSwa + ", sampleName=" + sampleName
-                    + ", sampleSwa=" + sampleSwa + ", workflowsAndRuns=" + workflowsAndRuns + '}';
+            return "Row{" + "date=" + date + ", runName=" + runName + ", runSwa=" + runSwa + ", laneName=" + laneName + ", laneSwa="
+                    + laneSwa + ", iusTag=" + iusTag + ", iusSwa=" + iusSwa + ", sampleName=" + sampleName + ", sampleSwa=" + sampleSwa
+                    + ", workflowsAndRuns=" + workflowsAndRuns + '}';
         }
     }
 }

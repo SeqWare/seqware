@@ -42,18 +42,21 @@ import net.sourceforge.seqware.queryengine.webservice.model.MetadataDB;
 import org.restlet.Request;
 
 /**
- * <p>WorkflowResource class.</p>
- *
- * @author boconnor
- * FIXME: this needs to be made generic so all workflow-specific cruft comes from the workflow_param and other tables!
+ * <p>
+ * WorkflowResource class.
+ * </p>
+ * 
+ * @author boconnor FIXME: this needs to be made generic so all workflow-specific cruft comes from the workflow_param and other tables!
  * @version $Id: $Id
  */
 public class WorkflowResource extends ServerResource {
 
-    //Get("text/html")
+    // Get("text/html")
     /**
-     * <p>represent.</p>
-     *
+     * <p>
+     * represent.
+     * </p>
+     * 
      * @return a {@link org.restlet.representation.Representation} object.
      */
     @Get
@@ -66,17 +69,16 @@ public class WorkflowResource extends ServerResource {
 
         // TODO: move into a helper
         // get the ROOT URL for various uses
-        //String rootURL = EnvUtil.getProperty("rooturl");
+        // String rootURL = EnvUtil.getProperty("rooturl");
         String host = this.getRequest().getResourceRef().getHostIdentifier();
         String path = this.getRequest().getResourceRef().getPath();
         String[] pathArr = path.split("/");
         String rootURL = host + "/" + pathArr[1];
 
-
         // get the swid
         String swid = (String) getRequestAttributes().get("workflowId");
 
-        // now build a model  
+        // now build a model
         ArrayList<Map<String, String>> data = new ArrayList<>();
 
         // contains all the get params
@@ -88,12 +90,12 @@ public class WorkflowResource extends ServerResource {
 
         try {
             Configuration cfg = new Configuration();
-            ServletContext context = (ServletContext) getContext().getServerDispatcher().getContext().getAttributes().get("org.restlet.ext.servlet.ServletContext");
+            ServletContext context = (ServletContext) getContext().getServerDispatcher().getContext().getAttributes()
+                    .get("org.restlet.ext.servlet.ServletContext");
             // Specify the data source where the template files come from.
             // Here I set a file directory for it:
-            cfg.setDirectoryForTemplateLoading(
-                    new File(context.getRealPath("/WEB-INF/templates")));
-            //new File("templates"));
+            cfg.setDirectoryForTemplateLoading(new File(context.getRealPath("/WEB-INF/templates")));
+            // new File("templates"));
             // Specify how templates will see the data-model. This is an advanced topic...
             // but just use this:
             cfg.setObjectWrapper(new DefaultObjectWrapper());
@@ -124,11 +126,15 @@ public class WorkflowResource extends ServerResource {
     }
 
     /**
-     * <p>accept.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
+     * <p>
+     * accept.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
      * @return a {@link org.restlet.representation.Representation} object.
-     * @throws java.lang.Exception if any.
+     * @throws java.lang.Exception
+     *             if any.
      */
     @Post
     public Representation accept(Representation entity) throws Exception {
@@ -137,7 +143,7 @@ public class WorkflowResource extends ServerResource {
             if (MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true)) {
 
                 // get the ROOT URL for various uses
-                //String rootURL = EnvUtil.getProperty("rooturl");
+                // String rootURL = EnvUtil.getProperty("rooturl");
 
                 // 1/ Create a factory for disk-based file items
                 DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -147,15 +153,13 @@ public class WorkflowResource extends ServerResource {
                 // FileUpload extension that will parse Restlet requests and
                 // generates FileItems.
                 RestletFileUpload upload = new RestletFileUpload(factory);
-                //ServletFileUpload upload = new ServletFileUpload(factory);
+                // ServletFileUpload upload = new ServletFileUpload(factory);
 
                 List<FileItem> items;
-
 
                 // 3/ Request is parsed by the handler which generates a
                 // list of FileItems
                 items = upload.parseRequest(getRequest());
-
 
                 // get the swid
                 String swid = (String) getRequestAttributes().get("workflowId");
@@ -169,8 +173,6 @@ public class WorkflowResource extends ServerResource {
                 // and with a content type of "multipart/form-data", then
                 // FileUpload can parse that request, and get all uploaded files
                 // as FileItem.
-
-
 
                 // the other variables that have been posted (not files)
                 Map<String, String> props = new HashMap<>();
@@ -189,7 +191,6 @@ public class WorkflowResource extends ServerResource {
                 tempDirObj.setExecutable(true, false);
 
                 System.err.println("The file iterator: " + items.size());
-
 
                 // iterate over all the files that have been uploaded
                 for (final Iterator<FileItem> it = items.iterator(); it.hasNext();) {
@@ -226,7 +227,7 @@ public class WorkflowResource extends ServerResource {
                 out.write("outdir=" + tempDir + "\n");
                 iniContents.append("outdir=" + tempDir + "\n");
 
-                // now call the workflow tool 
+                // now call the workflow tool
                 // FIXME: the workflow (and perhaps command) should be in the database so this command can be constructed
                 // FIXME: hardcoded below
                 MetadataDB metadataDB = new MetadataDB();
@@ -237,10 +238,13 @@ public class WorkflowResource extends ServerResource {
                 String pass = EnvUtil.getProperty("pass");
                 String command = "";
                 // Can't run directly since the tomcat6 user isn't authorized to run workflows
-                //RunTools.runCommand( new String[] { "bash", "-c", command } );
+                // RunTools.runCommand( new String[] { "bash", "-c", command } );
                 // FIXME: hardcoded here
-                int wrAccession = metadataDB.scheduleWorkflowRun(workflowAccession, "VariantAnnotationWorkflow", "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline", iniContents.toString(), command, "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/HelloWorld.ftl", "hold");
-                //command = "SEQWARE_DB_HOST="+server+" /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/bin/pegasus-run.pl --seqware_meta_db_url=jdbc:postgresql://"+server+"/"+db+" --seqware_meta_db_username="+user+" --seqware_meta_db_password="+pass+" --workflow-accession="+workflowAccession+" --workflow-run-accession="+wrAccession+" /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/config/site-specific/ec2/VariantAnnotation/VariantAnnotation_0.8.0.ini "+iniFilePath+" /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/VariantAnnotation/VariantAnnotation_0.8.0.ftl";
+                int wrAccession = metadataDB.scheduleWorkflowRun(workflowAccession, "VariantAnnotationWorkflow",
+                        "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline", iniContents.toString(), command,
+                        "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/HelloWorld.ftl", "hold");
+                // command =
+                // "SEQWARE_DB_HOST="+server+" /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/bin/pegasus-run.pl --seqware_meta_db_url=jdbc:postgresql://"+server+"/"+db+" --seqware_meta_db_username="+user+" --seqware_meta_db_password="+pass+" --workflow-accession="+workflowAccession+" --workflow-run-accession="+wrAccession+" /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/config/site-specific/ec2/VariantAnnotation/VariantAnnotation_0.8.0.ini "+iniFilePath+" /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/VariantAnnotation/VariantAnnotation_0.8.0.ftl";
 
                 // loop to create workflow_run_params
                 for (String key : props.keySet()) {
@@ -253,13 +257,22 @@ public class WorkflowResource extends ServerResource {
                 command = "perl bin/pegasus-run.pl ";
 
                 // FIXME TESTING
-                //command = "SEQWARE_DB_HOST="+server+" /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/bin/pegasus-run.pl --seqware_meta_db_url=jdbc:postgresql://"+server+"/"+db+" --seqware_meta_db_username="+user+" --seqware_meta_db_password="+pass+" --workflow-run-accession="+wrAccession+" --input_file=/tmp/input --output_file=/tmp/output /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/HelloWorld.ftl";
+                // command =
+                // "SEQWARE_DB_HOST="+server+" /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/bin/pegasus-run.pl --seqware_meta_db_url=jdbc:postgresql://"+server+"/"+db+" --seqware_meta_db_username="+user+" --seqware_meta_db_password="+pass+" --workflow-run-accession="+wrAccession+" --input_file=/tmp/input --output_file=/tmp/output /home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/HelloWorld.ftl";
                 out.write("workflow-accession=" + workflowAccession + "\n");
                 iniContents.append("workflow-accession=" + workflowAccession + "\n");
                 out.write("workflow_run_accession=" + wrAccession + "\n");
                 iniContents.append("workflow_run_accession=" + wrAccession + "\n");
                 out.close();
-                metadataDB.updateWorkflowRun(wrAccession, "VariantAnnotationWorkflow", "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline", iniContents.toString(), command, "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/VariantAnnotation/VariantAnnotation_0.8.0.ftl", WorkflowRunStatus.submitted);
+                metadataDB
+                        .updateWorkflowRun(
+                                wrAccession,
+                                "VariantAnnotationWorkflow",
+                                "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline",
+                                iniContents.toString(),
+                                command,
+                                "/home/seqware/svnroot/seqware-complete/trunk/seqware-pipeline/workflows/VariantAnnotation/VariantAnnotation_0.8.0.ftl",
+                                WorkflowRunStatus.submitted);
 
                 Request req = getRequest();
                 String host = req.getResourceRef().getHostIdentifier();
@@ -268,16 +281,18 @@ public class WorkflowResource extends ServerResource {
                 String rootURL = host + "/" + pathArr[1];
 
                 if (wrAccession > 0) {
-                    String result = "<?xml version=\"1.0\"?>"
-                            + "<queryengine>"
-                            + "  <asynchronous>"
-                            + /* "    <workflows>"+
-                            "        <workflow uri=\""+rootURL+"/queryengine/asynchronous/workflow/1\">"+ */ "          <workflow_run>"
-                            + "              <status uri=\"" + rootURL + "/queryengine/asynchronous/workflow_run/status/" + wrAccession + "\""
-                            + "              swid=\"" + wrAccession + "\" />"
-                            + "          </workflow_run>"
-                            + /* "        </workflow>"+
-                            "    </workflows>"+ */ "  </asynchronous>"
+                    String result = "<?xml version=\"1.0\"?>" + "<queryengine>" + "  <asynchronous>" + /*
+                                                                                                        * "    <workflows>"+
+                                                                                                        * "        <workflow uri=\""
+                                                                                                        * +rootURL+
+                                                                                                        * "/queryengine/asynchronous/workflow/1\">"
+                                                                                                        * +
+                                                                                                        */"          <workflow_run>"
+                            + "              <status uri=\"" + rootURL + "/queryengine/asynchronous/workflow_run/status/" + wrAccession
+                            + "\"" + "              swid=\"" + wrAccession + "\" />" + "          </workflow_run>" + /*
+                                                                                                                      * "        </workflow>"+
+                                                                                                                      * "    </workflows>"+
+                                                                                                                      */"  </asynchronous>"
                             + "</queryengine>";
                     rep = new StringRepresentation(result, MediaType.TEXT_XML);
                 } else {

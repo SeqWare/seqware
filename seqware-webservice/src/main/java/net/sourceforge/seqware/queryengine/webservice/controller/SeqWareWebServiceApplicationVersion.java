@@ -1,6 +1,5 @@
 package net.sourceforge.seqware.queryengine.webservice.controller;
 
-
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -25,8 +24,10 @@ import net.sourceforge.seqware.queryengine.webservice.view.*;
 import org.restlet.ext.wadl.*;
 
 /**
- * <p>SeqWareWebServiceApplicationVersion class.</p>
- *
+ * <p>
+ * SeqWareWebServiceApplicationVersion class.
+ * </p>
+ * 
  * @author morgantaschuk
  * @version $Id: $Id
  */
@@ -35,8 +36,10 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
     private Configuration configuration = null;
 
     /**
-     * <p>Getter for the field <code>configuration</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>configuration</code>.
+     * </p>
+     * 
      * @return a {@link freemarker.template.Configuration} object.
      */
     public Configuration getConfiguration() {
@@ -45,7 +48,7 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
 
     /**
      * Creates a root Restlet that will receive all incoming calls.
-     *
+     * 
      * @return a {@link org.restlet.Restlet} object.
      */
     @Override
@@ -53,22 +56,19 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
         final Component component = new Component();
         component.getClients().add(Protocol.CLAP);
         configuration = new Configuration();
-        configuration.setTemplateLoader(new ContextTemplateLoader(getContext(),
-                "clap://system/templates"));
+        configuration.setTemplateLoader(new ContextTemplateLoader(getContext(), "clap://system/templates"));
 
         ChallengeAuthenticator guard = getGuard();
 
-        //String rootURL = ""; 
-        //if (EnvUtil.getProperty("urlhack") != null) { rootURL = EnvUtil.getProperty("urlhack"); }
-        
+        // String rootURL = "";
+        // if (EnvUtil.getProperty("urlhack") != null) { rootURL = EnvUtil.getProperty("urlhack"); }
+
         // We don't want to use CGLIB since it is a huge memory hog
-        //see for more information: http://beanlib.svn.sourceforge.net/viewvc/beanlib/trunk/beanlib-doc/faq.html
+        // see for more information: http://beanlib.svn.sourceforge.net/viewvc/beanlib/trunk/beanlib-doc/faq.html
         UnEnhancer.setDefaultCheckCGLib(false);
-        
-        
 
         String version = "queryengine";
-        //if (EnvUtil.getProperty("version") != null) { rootURL = EnvUtil.getProperty("version"); }
+        // if (EnvUtil.getProperty("version") != null) { rootURL = EnvUtil.getProperty("version"); }
 
         // Create a router Restlet that routes each call to a
         // new instance of HelloWorldResource.
@@ -92,11 +92,10 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
     private ChallengeAuthenticator getGuard() {
         // FIXME: double slash is an artifact of the groove proxy server
         // get the ROOT URL for various uses
-        //String rootURL = "";
-        //if (EnvUtil.getProperty("urlhack") != null) { rootURL = EnvUtil.getProperty("urlhack"); }
+        // String rootURL = "";
+        // if (EnvUtil.getProperty("urlhack") != null) { rootURL = EnvUtil.getProperty("urlhack"); }
         // Guard the restlet with BASIC authentication.
-        ChallengeAuthenticator guard = new ChallengeAuthenticator(null,
-                ChallengeScheme.HTTP_BASIC, "testRealm");
+        ChallengeAuthenticator guard = new ChallengeAuthenticator(null, ChallengeScheme.HTTP_BASIC, "testRealm");
         // Instantiates a Verifier of identifier/secret couples based on a
         // simple Map.
         SeqWareVerifier verifier = new SeqWareVerifier();
@@ -104,22 +103,23 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
         return guard;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ApplicationInfo getApplicationInfo(Request request, Response response) {
         ApplicationInfo result = super.getApplicationInfo(request, response);
         ResourcesInfo ri = new ResourcesInfo();
         ResourceInfo r = new ResourceInfo();
-//        ri.setResources(null);
-        
-//        result.setResources(ri);
+        // ri.setResources(null);
 
-        DocumentationInfo docInfo = new DocumentationInfo(
-                "SeqWare Web Service Application");
+        // result.setResources(ri);
+
+        DocumentationInfo docInfo = new DocumentationInfo("SeqWare Web Service Application");
         docInfo.setTitle("First resource sample application.");
         result.setDocumentation(docInfo);
-        
 
         return result;
     }

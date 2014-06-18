@@ -23,18 +23,19 @@ import org.junit.Test;
 import org.openide.util.Lookup;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class DocumentationTest {
-  @Test 
-  public void ensurePluginDescriptions(){
-    Collection<? extends PluginInterface> plugs;
-    plugs = Lookup.getDefault().lookupAll(PluginInterface.class);
+    @Test
+    public void ensurePluginDescriptions() {
+        Collection<? extends PluginInterface> plugs;
+        plugs = Lookup.getDefault().lookupAll(PluginInterface.class);
 
-    for (PluginInterface plug : plugs) {
-          String description = plug.get_description();
-          Assert.assertTrue("Plugin missing description: " + plug.getClass().getSimpleName(), description != null && !description.isEmpty());
+        for (PluginInterface plug : plugs) {
+            String description = plug.get_description();
+            Assert.assertTrue("Plugin missing description: " + plug.getClass().getSimpleName(),
+                    description != null && !description.isEmpty());
+        }
     }
-  }
 }

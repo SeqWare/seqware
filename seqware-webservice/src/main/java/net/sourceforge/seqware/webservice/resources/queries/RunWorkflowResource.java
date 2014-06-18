@@ -43,18 +43,22 @@ import org.restlet.Response;
 import org.restlet.data.*;
 
 /**
- * <p>RunWorkflowResource class.</p>
- *
+ * <p>
+ * RunWorkflowResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class RunWorkflowResource
-        extends BasicRestlet {
+public class RunWorkflowResource extends BasicRestlet {
 
     /**
-     * <p>Constructor for RunWorkflowResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for RunWorkflowResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public RunWorkflowResource(Context context) {
         super(context);
@@ -89,7 +93,7 @@ public class RunWorkflowResource
 
         } else if (request.getMethod().compareTo(Method.POST) == 0) {
             WorkflowInfo workflowInfo = new WorkflowInfo();
-            Log.debug("ID: "+id);
+            Log.debug("ID: " + id);
             Workflow w = (Workflow) testIfNull(ws.findBySWAccession(parseClientInt(id)));
 
             workflowInfo.setCommand(w.getCommand());
@@ -129,8 +133,8 @@ public class RunWorkflowResource
             }
 
             WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-            ReturnValue ret = wrs.runWorkflow(workflowInfo, workflowRunAccession,
-                    iniFilesStr, noMetadata, parentAccessionsStr, parentsLinkedToWR, registration);
+            ReturnValue ret = wrs.runWorkflow(workflowInfo, workflowRunAccession, iniFilesStr, noMetadata, parentAccessionsStr,
+                    parentsLinkedToWR, registration);
             if (ret.getExitStatus() != ReturnValue.SUCCESS) {
                 Log.error("Exited with non-success status: " + ret.getExitStatus());
                 response.setStatus(Status.SERVER_ERROR_INTERNAL);

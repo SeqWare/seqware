@@ -21,126 +21,139 @@ import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import org.junit.Test;
 
 /**
- * <p>WorkflowRunServiceImplTest class.</p>
- *
+ * <p>
+ * WorkflowRunServiceImplTest class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  * @since 0.13.3
  */
 public class WorkflowRunServiceImplTest extends BaseUnit {
 
-  /**
-   * <p>Constructor for WorkflowRunServiceImplTest.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  public WorkflowRunServiceImplTest() throws Exception {
-    super();
-  }
+    /**
+     * <p>
+     * Constructor for WorkflowRunServiceImplTest.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    public WorkflowRunServiceImplTest() throws Exception {
+        super();
+    }
 
-  /**
-   * <p>testParentLanes.</p>
-   */
-  @Test
-  public void testParentLanes() {
-    InSessionExecutions.bindSessionToThread();
-    WorkflowRunService wfService = BeanFactory.getWorkflowRunServiceBean();
-    WorkflowRun wfRun = wfService.findByID(22);
+    /**
+     * <p>
+     * testParentLanes.
+     * </p>
+     */
+    @Test
+    public void testParentLanes() {
+        InSessionExecutions.bindSessionToThread();
+        WorkflowRunService wfService = BeanFactory.getWorkflowRunServiceBean();
+        WorkflowRun wfRun = wfService.findByID(22);
 
-    SortedSet<Lane> lanes = wfRun.getLanes();
-    assertNotNull(lanes);
+        SortedSet<Lane> lanes = wfRun.getLanes();
+        assertNotNull(lanes);
 
-    System.out.print(lanes.size());
+        System.out.print(lanes.size());
 
-    // Let's try to add new lane to wfRun
-    LaneService laneService = BeanFactory.getLaneServiceBean();
-    Lane lane = laneService.findByID(3);
-    lanes.add(lane);
-    wfRun.setLanes(lanes);
-    wfService.update(wfRun);
-    InSessionExecutions.unBindSessionFromTheThread();
-    // Let's open new session
-    InSessionExecutions.bindSessionToThread();
-    wfRun = wfService.findByID(22);
-    lanes = wfRun.getLanes();
-    System.out.print(lanes.size());
-    assertEquals(1, lanes.size());
-    InSessionExecutions.unBindSessionFromTheThread();
-  }
+        // Let's try to add new lane to wfRun
+        LaneService laneService = BeanFactory.getLaneServiceBean();
+        Lane lane = laneService.findByID(3);
+        lanes.add(lane);
+        wfRun.setLanes(lanes);
+        wfService.update(wfRun);
+        InSessionExecutions.unBindSessionFromTheThread();
+        // Let's open new session
+        InSessionExecutions.bindSessionToThread();
+        wfRun = wfService.findByID(22);
+        lanes = wfRun.getLanes();
+        System.out.print(lanes.size());
+        assertEquals(1, lanes.size());
+        InSessionExecutions.unBindSessionFromTheThread();
+    }
 
-  /**
-   * <p>testParentIus.</p>
-   */
-  @Test
-  public void testParentIus() {
-    InSessionExecutions.bindSessionToThread();
-    WorkflowRunService wfService = BeanFactory.getWorkflowRunServiceBean();
-    WorkflowRun wfRun = wfService.findByID(22);
+    /**
+     * <p>
+     * testParentIus.
+     * </p>
+     */
+    @Test
+    public void testParentIus() {
+        InSessionExecutions.bindSessionToThread();
+        WorkflowRunService wfService = BeanFactory.getWorkflowRunServiceBean();
+        WorkflowRun wfRun = wfService.findByID(22);
 
-    SortedSet<IUS> ius = wfRun.getIus();
-    assertNotNull(ius);
-    assertEquals(0, ius.size());
+        SortedSet<IUS> ius = wfRun.getIus();
+        assertNotNull(ius);
+        assertEquals(0, ius.size());
 
-    // Get some IUS
-    IUSService iusService = BeanFactory.getIUSServiceBean();
-    IUS someIus = iusService.findByID(4);
-    ius.add(someIus);
-    wfRun.setIus(ius);
-    wfService.update(wfRun);
-    InSessionExecutions.unBindSessionFromTheThread();
+        // Get some IUS
+        IUSService iusService = BeanFactory.getIUSServiceBean();
+        IUS someIus = iusService.findByID(4);
+        ius.add(someIus);
+        wfRun.setIus(ius);
+        wfService.update(wfRun);
+        InSessionExecutions.unBindSessionFromTheThread();
 
-    InSessionExecutions.bindSessionToThread();
-    wfRun = wfService.findByID(22);
-    ius = wfRun.getIus();
-    assertNotNull(ius);
-    assertEquals(1, ius.size());
-    InSessionExecutions.unBindSessionFromTheThread();
-  }
+        InSessionExecutions.bindSessionToThread();
+        wfRun = wfService.findByID(22);
+        ius = wfRun.getIus();
+        assertNotNull(ius);
+        assertEquals(1, ius.size());
+        InSessionExecutions.unBindSessionFromTheThread();
+    }
 
-  /**
-   * <p>testAttachNewlyCreatedWorkflowRun.</p>
-   */
-  @Test
-  public void testAttachNewlyCreatedWorkflowRun() {
-    // Suppose we created or get WorkflowRun object which is hibernate outbound
-    InSessionExecutions.bindSessionToThread();
-    WorkflowRun createdWorkflowRun = new WorkflowRun();
-    createdWorkflowRun.setWorkflowRunId(22);
-    createdWorkflowRun.setIniFile("newIniFile"); // <-- ini file has been
-                                                 // updated
-    createdWorkflowRun.setStatus(WorkflowRunStatus.completed);
-    createdWorkflowRun.setStatusCmd("newCommand"); // <-- command has been
-                                                   // updated
-    createdWorkflowRun.setSeqwareRevision("2305M");
-    createdWorkflowRun.setSwAccession(64);
+    /**
+     * <p>
+     * testAttachNewlyCreatedWorkflowRun.
+     * </p>
+     */
+    @Test
+    public void testAttachNewlyCreatedWorkflowRun() {
+        // Suppose we created or get WorkflowRun object which is hibernate outbound
+        InSessionExecutions.bindSessionToThread();
+        WorkflowRun createdWorkflowRun = new WorkflowRun();
+        createdWorkflowRun.setWorkflowRunId(22);
+        createdWorkflowRun.setIniFile("newIniFile"); // <-- ini file has been
+                                                     // updated
+        createdWorkflowRun.setStatus(WorkflowRunStatus.completed);
+        createdWorkflowRun.setStatusCmd("newCommand"); // <-- command has been
+                                                       // updated
+        createdWorkflowRun.setSeqwareRevision("2305M");
+        createdWorkflowRun.setSwAccession(64);
 
-    createdWorkflowRun.setCreateTimestamp(new Date());
-    createdWorkflowRun.setUpdateTimestamp(new Date());
+        createdWorkflowRun.setCreateTimestamp(new Date());
+        createdWorkflowRun.setUpdateTimestamp(new Date());
 
-    WorkflowRunService wfService = BeanFactory.getWorkflowRunServiceBean();
-    wfService.updateDetached(createdWorkflowRun);
-    InSessionExecutions.unBindSessionFromTheThread();
-  }
+        WorkflowRunService wfService = BeanFactory.getWorkflowRunServiceBean();
+        wfService.updateDetached(createdWorkflowRun);
+        InSessionExecutions.unBindSessionFromTheThread();
+    }
 
-  /**
-   * <p>testFindByCriteria.</p>
-   */
-  @Test
-  public void testFindByCriteria() {
-    WorkflowRunService wfService = BeanFactory.getWorkflowRunServiceBean();
-    List<WorkflowRun> found = wfService.findByCriteria("NC_001807", false);
-    assertEquals(4, found.size());
+    /**
+     * <p>
+     * testFindByCriteria.
+     * </p>
+     */
+    @Test
+    public void testFindByCriteria() {
+        WorkflowRunService wfService = BeanFactory.getWorkflowRunServiceBean();
+        List<WorkflowRun> found = wfService.findByCriteria("NC_001807", false);
+        assertEquals(4, found.size());
 
-    // Case sensitive
-    found = wfService.findByCriteria("ExomesOrHg19Tumour", true);
-    assertEquals(1, found.size());
+        // Case sensitive
+        found = wfService.findByCriteria("ExomesOrHg19Tumour", true);
+        assertEquals(1, found.size());
 
-    found = wfService.findByCriteria("exomesOrHg19Tumour", true);
-    assertEquals(0, found.size());
+        found = wfService.findByCriteria("exomesOrHg19Tumour", true);
+        assertEquals(0, found.size());
 
-    // SWID
-    found = wfService.findByCriteria("2862", true);
-    assertEquals(1, found.size());
-  }
+        // SWID
+        found = wfService.findByCriteria("2862", true);
+        assertEquals(1, found.size());
+    }
 
 }

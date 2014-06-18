@@ -36,50 +36,60 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>ExperimentIDResource class.</p>
- *
+ * <p>
+ * ExperimentIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class ExperimentIDResource extends DatabaseIDResource {
 
     /**
-     * <p>Constructor for ExperimentIDResource.</p>
+     * <p>
+     * Constructor for ExperimentIDResource.
+     * </p>
      */
     public ExperimentIDResource() {
         super("experimentId");
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
         ExperimentService ss = BeanFactory.getExperimentServiceBean();
-        
+
         Experiment experiment = (Experiment) testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<Experiment> jaxbTool = new JaxbObject<>();
 
-        Experiment dto = copier.hibernate2dto(Experiment.class, experiment, new Class<?>[]{ExperimentSpotDesign.class, ExperimentLibraryDesign.class}, new CollectionPropertyName<?>[]{});
-        
-		if (fields.contains("attributes")) {
-			Set<ExperimentAttribute> eas = experiment.getExperimentAttributes();
-			if(eas!=null && !eas.isEmpty()) {
-				Set<ExperimentAttribute> newEas = new TreeSet<>();
-				for(ExperimentAttribute ea: eas) {
-					newEas.add(copier.hibernate2dto(ExperimentAttribute.class, ea));
-				}
-				dto.setExperimentAttributes(newEas);
-			}
-		}
+        Experiment dto = copier.hibernate2dto(Experiment.class, experiment, new Class<?>[] { ExperimentSpotDesign.class,
+                ExperimentLibraryDesign.class }, new CollectionPropertyName<?>[] {});
+
+        if (fields.contains("attributes")) {
+            Set<ExperimentAttribute> eas = experiment.getExperimentAttributes();
+            if (eas != null && !eas.isEmpty()) {
+                Set<ExperimentAttribute> newEas = new TreeSet<>();
+                for (ExperimentAttribute ea : eas) {
+                    newEas.add(copier.hibernate2dto(ExperimentAttribute.class, ea));
+                }
+                dto.setExperimentAttributes(newEas);
+            }
+        }
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
 
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     @Put
     public Representation put(Representation entity) {
@@ -102,7 +112,7 @@ public class ExperimentIDResource extends DatabaseIDResource {
             Experiment exp = (Experiment) testIfNull(service.findByID(testIfNull(newObj).getExperimentId()));
             exp.givesPermission(registration);
 
-            //simple types
+            // simple types
             String title = newObj.getTitle();
             String name = newObj.getName();
             String desc = newObj.getDescription();
@@ -118,16 +128,16 @@ public class ExperimentIDResource extends DatabaseIDResource {
             Long expectedNumberSpots = newObj.getExpectedNumberSpots();
             Long expectedNumberReads = newObj.getExpectedNumberReads();
 
-            //foreign keys
+            // foreign keys
             Study study = newObj.getStudy();
             Registration owner = newObj.getOwner();
 
             // sets
             Set<ExperimentAttribute> expAttributes = newObj.getExperimentAttributes();
 
-			if (title != null) {
-				exp.setTitle(title);
-			}
+            if (title != null) {
+                exp.setTitle(title);
+            }
             if (name != null) {
                 exp.setName(name);
             }
@@ -149,24 +159,24 @@ public class ExperimentIDResource extends DatabaseIDResource {
             if (sequencerSpace != null) {
                 exp.setSequenceSpace(sequencerSpace);
             }
-			if (baseCaller != null) {
-				exp.setBaseCaller(baseCaller);
-			}
-			if (qualityScorer !=null) {
-				exp.setQualityScorer(qualityScorer);
-			}
-			if (qualityNumberLevels !=null) {
-				exp.setQualityNumberOfLevels(qualityNumberLevels);
-			}
-			if (qualityMultiplier != null) {
-				exp.setQualityMultiplier(qualityMultiplier);
-			}
-			if (expectedNumberSpots != null) {
-				exp.setExpectedNumberSpots(expectedNumberSpots);
-			}
-			if (expectedNumberReads !=null) {
-				exp.setExpectedNumberReads(expectedNumberReads);
-			}
+            if (baseCaller != null) {
+                exp.setBaseCaller(baseCaller);
+            }
+            if (qualityScorer != null) {
+                exp.setQualityScorer(qualityScorer);
+            }
+            if (qualityNumberLevels != null) {
+                exp.setQualityNumberOfLevels(qualityNumberLevels);
+            }
+            if (qualityMultiplier != null) {
+                exp.setQualityMultiplier(qualityMultiplier);
+            }
+            if (expectedNumberSpots != null) {
+                exp.setExpectedNumberSpots(expectedNumberSpots);
+            }
+            if (expectedNumberReads != null) {
+                exp.setExpectedNumberReads(expectedNumberReads);
+            }
 
             if (study != null) {
                 StudyService ss = BeanFactory.getStudyServiceBean();
@@ -191,12 +201,11 @@ public class ExperimentIDResource extends DatabaseIDResource {
             }
 
             if (null != expAttributes) {
-                //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
                 this.mergeAttributes(exp.getExperimentAttributes(), expAttributes, exp);
             }
 
-	    service.update(registration,exp);
-
+            service.update(registration, exp);
 
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             Experiment detachedLane = copier.hibernate2dto(Experiment.class, exp);

@@ -29,609 +29,614 @@ import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * <p>LaneServiceImpl class.</p>
- *
+ * <p>
+ * LaneServiceImpl class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class LaneServiceImpl implements LaneService {
 
-  private LaneDAO laneDAO = null;
-  private ProcessingDAO processingDAO = null;
-  private FileDAO fileDAO = null;
-  private IUSDAO IUSDAO = null;
-  private Logger log = Logger.getLogger(LaneServiceImpl.class);
+    private LaneDAO laneDAO = null;
+    private ProcessingDAO processingDAO = null;
+    private FileDAO fileDAO = null;
+    private IUSDAO IUSDAO = null;
+    private Logger log = Logger.getLogger(LaneServiceImpl.class);
 
-  /**
-   * <p>Constructor for LaneServiceImpl.</p>
-   */
-  public LaneServiceImpl() {
-    super();
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * Sets a private member variable with an instance of an implementation of
-   * LaneDAO. This method is called by the Spring framework at run time.
-   * @see LaneDAO
-   */
-  @Override
-  public void setLaneDAO(LaneDAO laneDAO) {
-    this.laneDAO = laneDAO;
-  }
-
-  /**
-   * Sets a private member variable with an instance of an implementation of
-   * ProcessingDAO. This method is called by the Spring framework at run time.
-   *
-   * @param processingDAO
-   *          implementation of ProcessingDAO
-   * @see ProcessingDAO
-   */
-  public void setProcessingDAO(ProcessingDAO processingDAO) {
-    this.processingDAO = processingDAO;
-  }
-
-  /**
-   * Sets a private member variable with an instance of an implementation of
-   * FileDAO. This method is called by the Spring framework at run time.
-   *
-   * @param fileDAO
-   *          implementation of FileDAO
-   * @see fileDAO
-   */
-  public void setFileDAO(FileDAO fileDAO) {
-    this.fileDAO = fileDAO;
-  }
-
-  /**
-   * Sets a private member variable with an instance of an implementation of
-   * IUSDAO. This method is called by the Spring framework at run time.
-   *
-   * @see iusDAO
-   * @param IUSDAO a {@link net.sourceforge.seqware.common.dao.IUSDAO} object.
-   */
-  public void setIUSDAO(IUSDAO IUSDAO) {
-    this.IUSDAO = IUSDAO;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public List<File> getFiles(Integer laneId) {
-    return laneDAO.getFiles(laneId);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public List<File> getFiles(Integer studyId, String metaType) {
-    return laneDAO.getFiles(studyId, metaType);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public boolean isHasFile(Integer studyId, String metaType) {
-    return laneDAO.isHasFile(studyId, metaType);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public boolean isHasFile(Integer laneId) {
-    return laneDAO.isHasFile(laneId);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public SortedSet<Lane> setWithHasFile(SortedSet<Lane> list) {
-    for (Lane lane : list) {
-      lane.setIsHasFile(isHasFile(lane.getLaneId()));
-    }
-    return list;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public SortedSet<Lane> listWithHasFile(SortedSet<Lane> list, String metaType) {
-    SortedSet<Lane> result = new TreeSet<>();
-    for (Lane lane : list) {
-      boolean isHasFile = isHasFile(lane.getLaneId(), metaType);
-      if (isHasFile) {
-        // log.debug("ADD LANES ZZZ");
-        lane.setIsHasFile(true);
-        result.add(lane);
-      }
-      // lane.setIsHasFile();
-    }
-    // log.debug("Lanes RESZ ZZZ = " + result.size());
-    return result;
-  }
-
-  /** {@inheritDoc}
-     * @param uploadSeqence */
-  @Override
-  public Integer insertLane(Registration registration, Sample sample, UploadSequence uploadSeqence, FileType fileType)
-      throws Exception {
-    Set<File> files = new TreeSet<>();
-    String folderStore = uploadSeqence.getFolderStore();
-
-    if (uploadSeqence.getUseOneURL()) {
-      files.add(createFile(registration, uploadSeqence.getFileURL(), fileType.getMetaType(), folderStore));
-    } else {
-      MultipartFile fileOne = uploadSeqence.getFileOne();
-      if (fileOne != null && !fileOne.isEmpty()) {
-        java.io.File uploadFile = fileDAO.saveFile(fileOne, folderStore, registration);
-        files.add(createFile(registration, uploadFile.getPath(), fileType.getMetaType(), folderStore));
-      }
+    /**
+     * <p>
+     * Constructor for LaneServiceImpl.
+     * </p>
+     */
+    public LaneServiceImpl() {
+        super();
     }
 
-    if (uploadSeqence.isUsePairedFile()) {
-      if (uploadSeqence.getUseTwoURL()) {
-        files.add(createFile(registration, uploadSeqence.getFileTwoURL(), fileType.getMetaType(), folderStore));
-      } else {
-        MultipartFile fileTwo = uploadSeqence.getFileTwo();
-        if (fileTwo != null && !fileTwo.isEmpty()) {
-          java.io.File uploadFile = fileDAO.saveFile(fileTwo, folderStore, registration);
-          files.add(createFile(registration, uploadFile.getPath(), fileType.getMetaType(), folderStore));
+    /**
+     * {@inheritDoc}
+     * 
+     * Sets a private member variable with an instance of an implementation of LaneDAO. This method is called by the Spring framework at run
+     * time.
+     * 
+     * @see LaneDAO
+     */
+    @Override
+    public void setLaneDAO(LaneDAO laneDAO) {
+        this.laneDAO = laneDAO;
+    }
+
+    /**
+     * Sets a private member variable with an instance of an implementation of ProcessingDAO. This method is called by the Spring framework
+     * at run time.
+     * 
+     * @param processingDAO
+     *            implementation of ProcessingDAO
+     * @see ProcessingDAO
+     */
+    public void setProcessingDAO(ProcessingDAO processingDAO) {
+        this.processingDAO = processingDAO;
+    }
+
+    /**
+     * Sets a private member variable with an instance of an implementation of FileDAO. This method is called by the Spring framework at run
+     * time.
+     * 
+     * @param fileDAO
+     *            implementation of FileDAO
+     * @see fileDAO
+     */
+    public void setFileDAO(FileDAO fileDAO) {
+        this.fileDAO = fileDAO;
+    }
+
+    /**
+     * Sets a private member variable with an instance of an implementation of IUSDAO. This method is called by the Spring framework at run
+     * time.
+     * 
+     * @see iusDAO
+     * @param IUSDAO
+     *            a {@link net.sourceforge.seqware.common.dao.IUSDAO} object.
+     */
+    public void setIUSDAO(IUSDAO IUSDAO) {
+        this.IUSDAO = IUSDAO;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<File> getFiles(Integer laneId) {
+        return laneDAO.getFiles(laneId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<File> getFiles(Integer studyId, String metaType) {
+        return laneDAO.getFiles(studyId, metaType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isHasFile(Integer studyId, String metaType) {
+        return laneDAO.isHasFile(studyId, metaType);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public boolean isHasFile(Integer laneId) {
+        return laneDAO.isHasFile(laneId);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public SortedSet<Lane> setWithHasFile(SortedSet<Lane> list) {
+        for (Lane lane : list) {
+            lane.setIsHasFile(isHasFile(lane.getLaneId()));
         }
-      }
+        return list;
     }
 
-    /*
-     * if(uploadSeqence.getUseURL()){
-     * files.add(createFile(uploadSeqence.getFileURL(), fileType.getMetaType(),
-     * folderStore, registration));
+    /** {@inheritDoc} */
+    @Override
+    public SortedSet<Lane> listWithHasFile(SortedSet<Lane> list, String metaType) {
+        SortedSet<Lane> result = new TreeSet<>();
+        for (Lane lane : list) {
+            boolean isHasFile = isHasFile(lane.getLaneId(), metaType);
+            if (isHasFile) {
+                // log.debug("ADD LANES ZZZ");
+                lane.setIsHasFile(true);
+                result.add(lane);
+            }
+            // lane.setIsHasFile();
+        }
+        // log.debug("Lanes RESZ ZZZ = " + result.size());
+        return result;
+    }
+
+    /**
+     * {@inheritDoc}
      * 
-     * if(uploadSeqence.isUsePairedFile()){
-     * files.add(createFile(uploadSeqence.getFileTwoURL(),
-     * fileType.getMetaType(), folderStore, registration)); } } else{
-     * MultipartFile fileOne = uploadSeqence.getFileOne(); MultipartFile fileTwo
-     * = uploadSeqence.getFileTwo(); if(fileOne!= null && !fileOne.isEmpty()){
-     * java.io.File uploadFile = fileDAO.saveFile(fileOne, folderStore,
-     * registration); files.add(createFile(uploadFile.getPath(),
-     * fileType.getMetaType(), folderStore, registration)); }
-     * 
-     * if(fileTwo!=null && !fileTwo.isEmpty()){ java.io.File uploadFile =
-     * fileDAO.saveFile(fileTwo, folderStore, registration);
-     * files.add(createFile(uploadFile.getPath(), fileType.getMetaType(),
-     * folderStore, registration)); } }
+     * @param uploadSeqence
      */
-    // create new IUS
-    IUS ius = new IUS();
+    @Override
+    public Integer insertLane(Registration registration, Sample sample, UploadSequence uploadSeqence, FileType fileType) throws Exception {
+        Set<File> files = new TreeSet<>();
+        String folderStore = uploadSeqence.getFolderStore();
 
-    // create new processing
-    Processing newProcessing = insertProcessing(registration, files);
+        if (uploadSeqence.getUseOneURL()) {
+            files.add(createFile(registration, uploadSeqence.getFileURL(), fileType.getMetaType(), folderStore));
+        } else {
+            MultipartFile fileOne = uploadSeqence.getFileOne();
+            if (fileOne != null && !fileOne.isEmpty()) {
+                java.io.File uploadFile = fileDAO.saveFile(fileOne, folderStore, registration);
+                files.add(createFile(registration, uploadFile.getPath(), fileType.getMetaType(), folderStore));
+            }
+        }
 
-    // create new Processing
-    Set<Processing> processings = new TreeSet<>();
-    processings.add(newProcessing);
+        if (uploadSeqence.isUsePairedFile()) {
+            if (uploadSeqence.getUseTwoURL()) {
+                files.add(createFile(registration, uploadSeqence.getFileTwoURL(), fileType.getMetaType(), folderStore));
+            } else {
+                MultipartFile fileTwo = uploadSeqence.getFileTwo();
+                if (fileTwo != null && !fileTwo.isEmpty()) {
+                    java.io.File uploadFile = fileDAO.saveFile(fileTwo, folderStore, registration);
+                    files.add(createFile(registration, uploadFile.getPath(), fileType.getMetaType(), folderStore));
+                }
+            }
+        }
 
-    // set new Processing
-    ius.setProcessings(processings);
+        /*
+         * if(uploadSeqence.getUseURL()){ files.add(createFile(uploadSeqence.getFileURL(), fileType.getMetaType(), folderStore,
+         * registration));
+         * 
+         * if(uploadSeqence.isUsePairedFile()){ files.add(createFile(uploadSeqence.getFileTwoURL(), fileType.getMetaType(), folderStore,
+         * registration)); } } else{ MultipartFile fileOne = uploadSeqence.getFileOne(); MultipartFile fileTwo = uploadSeqence.getFileTwo();
+         * if(fileOne!= null && !fileOne.isEmpty()){ java.io.File uploadFile = fileDAO.saveFile(fileOne, folderStore, registration);
+         * files.add(createFile(uploadFile.getPath(), fileType.getMetaType(), folderStore, registration)); }
+         * 
+         * if(fileTwo!=null && !fileTwo.isEmpty()){ java.io.File uploadFile = fileDAO.saveFile(fileTwo, folderStore, registration);
+         * files.add(createFile(uploadFile.getPath(), fileType.getMetaType(), folderStore, registration)); } }
+         */
+        // create new IUS
+        IUS ius = new IUS();
 
-    // create new lane
-    Lane lane = new Lane();
-    lane.setOwner(sample.getOwner());
-    insert(registration, lane);
+        // create new processing
+        Processing newProcessing = insertProcessing(registration, files);
 
-    // set new Lane
-    ius.setLane(lane);
-    SortedSet<IUS> newIUS = new TreeSet<>();
-    newIUS.add(ius);
-    lane.setIUS(newIUS);
+        // create new Processing
+        Set<Processing> processings = new TreeSet<>();
+        processings.add(newProcessing);
 
-    // set IUS into new processing
-    newProcessing.setIUS(newIUS);
+        // set new Processing
+        ius.setProcessings(processings);
 
-    // get old IUD
-    Set<IUS> oldIUS = sample.getIUS();
-    // and add them to new processing
-    newIUS.addAll(oldIUS);
+        // create new lane
+        Lane lane = new Lane();
+        lane.setOwner(sample.getOwner());
+        insert(registration, lane);
 
-    // clear old IUD
-    oldIUS.clear();
-    // and set new IUD as current
-    oldIUS.addAll(newIUS);
+        // set new Lane
+        ius.setLane(lane);
+        SortedSet<IUS> newIUS = new TreeSet<>();
+        newIUS.add(ius);
+        lane.setIUS(newIUS);
 
-    // set exixst Sample
-    ius.setSample(sample);
-    // sample.setIUS(newIUS);
+        // set IUS into new processing
+        newProcessing.setIUS(newIUS);
 
-    // insert new IUS
-    ius.setCreateTimestamp(new Date());
-    IUSDAO.insert(registration, ius);
+        // get old IUD
+        Set<IUS> oldIUS = sample.getIUS();
+        // and add them to new processing
+        newIUS.addAll(oldIUS);
 
-    // create new Lane
-    // Lane lane = new Lane();
-    // lane.setSample(sample);
-    // lane.setOwner(sample.getOwner());
-    // lane.setProcessings(processings);
+        // clear old IUD
+        oldIUS.clear();
+        // and set new IUD as current
+        oldIUS.addAll(newIUS);
 
-    // set lanes
-    // newProcessing.getLanes().add(lane);
+        // set exixst Sample
+        ius.setSample(sample);
+        // sample.setIUS(newIUS);
 
-    // insert(lane);
+        // insert new IUS
+        ius.setCreateTimestamp(new Date());
+        IUSDAO.insert(registration, ius);
 
-    return newProcessing.getProcessingId();
-  }
+        // create new Lane
+        // Lane lane = new Lane();
+        // lane.setSample(sample);
+        // lane.setOwner(sample.getOwner());
+        // lane.setProcessings(processings);
 
-  /**
-   * <p>updateLane.</p>
-   *
-   * @param sample a {@link net.sourceforge.seqware.common.model.Sample} object.
-   * @param fileOne a {@link org.springframework.web.multipart.MultipartFile} object.
-   * @param fileTwo a {@link org.springframework.web.multipart.MultipartFile} object.
-   * @param typeFile a {@link java.lang.String} object.
-   * @param folderStore a {@link java.lang.String} object.
-   * @param registration a {@link net.sourceforge.seqware.common.model.Registration} object.
-   * @return a {@link java.lang.Integer} object.
-   * @throws java.lang.Exception if any.
-   */
-  public Integer updateLane(Sample sample, MultipartFile fileOne, MultipartFile fileTwo, String typeFile,
-      String folderStore, Registration registration) throws Exception {
-    /*
-     * Set<File> files = new TreeSet<File>();
+        // set lanes
+        // newProcessing.getLanes().add(lane);
+
+        // insert(lane);
+
+        return newProcessing.getProcessingId();
+    }
+
+    /**
+     * <p>
+     * updateLane.
+     * </p>
      * 
-     * if(fileOne!= null && !fileOne.isEmpty()){ files.add(createFile(fileOne,
-     * typeFile, folderStore, registration)); }
-     * 
-     * if(fileTwo!=null && !fileTwo.isEmpty()){ files.add(createFile(fileTwo,
-     * typeFile, folderStore, registration)); }
-     * 
-     * IUS ius = getCurrentIUS(sample);
-     * 
-     * // create new processing Processing newProcessing =
-     * insertProcessing(sample.getOwner(), files);
-     * 
-     * // get old processings Set<Processing> oldProcessings =
-     * ius.getProcessings(); // and add them to new processing
-     * newProcessing.getChildren().addAll(oldProcessings);
-     * 
-     * // clear old processings oldProcessings.clear(); // and set new
-     * processing as current lane's child oldProcessings.add(newProcessing);
-     * 
-     * // set lanes newProcessing.getIUS().add(ius);
-     * 
-     * // update current Lane IUSDAO.update(ius);
-     * 
-     * // get first Lane // Lane lane = getLane(sample);
-     * 
-     * // create new processing // Processing newProcessing =
-     * insertProcessing(sample.getOwner(), files); // get old processings //
-     * Set<Processing> oldProcessings = lane.getProcessings(); // and add them
-     * to new processing // newProcessing.getChildren().addAll(oldProcessings);
-     * 
-     * // clear old processings // oldProcessings.clear(); // and set new
-     * processing as current lane's child // oldProcessings.add(newProcessing);
-     * 
-     * // set lanes // newProcessing.getLanes().add(lane);
-     * 
-     * // update current Lane // update(lane);
-     * 
-     * return newProcessing.getProcessingId();
+     * @param sample
+     *            a {@link net.sourceforge.seqware.common.model.Sample} object.
+     * @param fileOne
+     *            a {@link org.springframework.web.multipart.MultipartFile} object.
+     * @param fileTwo
+     *            a {@link org.springframework.web.multipart.MultipartFile} object.
+     * @param typeFile
+     *            a {@link java.lang.String} object.
+     * @param folderStore
+     *            a {@link java.lang.String} object.
+     * @param registration
+     *            a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * @return a {@link java.lang.Integer} object.
+     * @throws java.lang.Exception
+     *             if any.
      */
-    return null;
-  }
+    public Integer updateLane(Sample sample, MultipartFile fileOne, MultipartFile fileTwo, String typeFile, String folderStore,
+            Registration registration) throws Exception {
+        /*
+         * Set<File> files = new TreeSet<File>();
+         * 
+         * if(fileOne!= null && !fileOne.isEmpty()){ files.add(createFile(fileOne, typeFile, folderStore, registration)); }
+         * 
+         * if(fileTwo!=null && !fileTwo.isEmpty()){ files.add(createFile(fileTwo, typeFile, folderStore, registration)); }
+         * 
+         * IUS ius = getCurrentIUS(sample);
+         * 
+         * // create new processing Processing newProcessing = insertProcessing(sample.getOwner(), files);
+         * 
+         * // get old processings Set<Processing> oldProcessings = ius.getProcessings(); // and add them to new processing
+         * newProcessing.getChildren().addAll(oldProcessings);
+         * 
+         * // clear old processings oldProcessings.clear(); // and set new processing as current lane's child
+         * oldProcessings.add(newProcessing);
+         * 
+         * // set lanes newProcessing.getIUS().add(ius);
+         * 
+         * // update current Lane IUSDAO.update(ius);
+         * 
+         * // get first Lane // Lane lane = getLane(sample);
+         * 
+         * // create new processing // Processing newProcessing = insertProcessing(sample.getOwner(), files); // get old processings //
+         * Set<Processing> oldProcessings = lane.getProcessings(); // and add them to new processing //
+         * newProcessing.getChildren().addAll(oldProcessings);
+         * 
+         * // clear old processings // oldProcessings.clear(); // and set new processing as current lane's child //
+         * oldProcessings.add(newProcessing);
+         * 
+         * // set lanes // newProcessing.getLanes().add(lane);
+         * 
+         * // update current Lane // update(lane);
+         * 
+         * return newProcessing.getProcessingId();
+         */
+        return null;
+    }
 
-  private Processing insertProcessing(Registration owner, Set<File> files) {
-    Processing newProcessing = new Processing();
-    newProcessing.setOwner(owner);
-    newProcessing.setFiles(files);
-    // if (newProcessing.getStatus() == null) {
-    // newProcessing.setStatus("pending"); }
-    newProcessing.setStatus(ProcessingStatus.success);
-    newProcessing.setExitStatus(0);
-    newProcessing.setProcessExitStatus(0);
-    newProcessing.setRunStartTimestamp(null);
-    newProcessing.setRunStopTimestamp(null);
-    newProcessing.setAlgorithm("upload");
-    newProcessing.setCreateTimestamp(new Date());
-    processingDAO.insert(owner, newProcessing);
+    private Processing insertProcessing(Registration owner, Set<File> files) {
+        Processing newProcessing = new Processing();
+        newProcessing.setOwner(owner);
+        newProcessing.setFiles(files);
+        // if (newProcessing.getStatus() == null) {
+        // newProcessing.setStatus("pending"); }
+        newProcessing.setStatus(ProcessingStatus.success);
+        newProcessing.setExitStatus(0);
+        newProcessing.setProcessExitStatus(0);
+        newProcessing.setRunStartTimestamp(null);
+        newProcessing.setRunStopTimestamp(null);
+        newProcessing.setAlgorithm("upload");
+        newProcessing.setCreateTimestamp(new Date());
+        processingDAO.insert(owner, newProcessing);
 
-    // status pending, exit_status and process_exit_status null,
-    // run_start/stop_tstmp null, algorithm null
+        // status pending, exit_status and process_exit_status null,
+        // run_start/stop_tstmp null, algorithm null
 
-    return newProcessing;
-  }
+        return newProcessing;
+    }
 
-  private IUS getCurrentIUS(Sample sample) {
-    IUS currentUIS = sample.getIUS().first();
-    return currentUIS;
-  }
+    private IUS getCurrentIUS(Sample sample) {
+        IUS currentUIS = sample.getIUS().first();
+        return currentUIS;
+    }
 
-  private Lane getLane(Sample sample) {
-    Lane lane = null;
-    Set<Lane> lanes = sample.getLanes();
+    private Lane getLane(Sample sample) {
+        Lane lane = null;
+        Set<Lane> lanes = sample.getLanes();
 
-    if (lanes != null && !lanes.isEmpty())
-      lane = lanes.iterator().next();
-    return lane;
-  }
+        if (lanes != null && !lanes.isEmpty()) lane = lanes.iterator().next();
+        return lane;
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public List<Lane> list(List<Integer> laneIds) {
-    if (laneIds == null || laneIds.size() == 0)
-      return new ArrayList<>();
+    /** {@inheritDoc} */
+    @Override
+    public List<Lane> list(List<Integer> laneIds) {
+        if (laneIds == null || laneIds.size() == 0) return new ArrayList<>();
 
-    return laneDAO.list(laneIds);
-  }
+        return laneDAO.list(laneIds);
+    }
 
-  /**
-   * {@inheritDoc}
-   *
-   * Inserts an instance of Lane into the database.
-   */
-  @Override
-  public void insert(Lane lane) {
-    // lane.setExperimentId(exp.getExperimentId());
-    lane.setCreateTimestamp(new Date());
-    laneDAO.insert(lane);
-  }
+    /**
+     * {@inheritDoc}
+     * 
+     * Inserts an instance of Lane into the database.
+     */
+    @Override
+    public void insert(Lane lane) {
+        // lane.setExperimentId(exp.getExperimentId());
+        lane.setCreateTimestamp(new Date());
+        laneDAO.insert(lane);
+    }
 
-  /**
-   * {@inheritDoc}
-   *
-   * Updates an instance of Lane in the database.
-   */
-  @Override
-  public void update(Lane lane) {
-    laneDAO.update(lane);
-  }
+    /**
+     * {@inheritDoc}
+     * 
+     * Updates an instance of Lane in the database.
+     */
+    @Override
+    public void update(Lane lane) {
+        laneDAO.update(lane);
+    }
 
-  /**
-   * {@inheritDoc}
-   *
-   * Deletes an instance of Lane in the database.
+    /**
+     * {@inheritDoc}
+     * 
+     * Deletes an instance of Lane in the database.
+     * 
      * @param lane
      * @param deleteRealFiles
-   */
-  @Override
-  public void delete(Lane lane, boolean deleteRealFiles) {
-    List<File> deleteFiles = null;
-    if (deleteRealFiles) {
-      deleteFiles = laneDAO.getFiles(lane.getLaneId());
-    }
-
-    laneDAO.delete(lane);
-
-    if (deleteRealFiles) {
-      fileDAO.deleteAllWithFolderStore(deleteFiles);
-    }
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * Finds an instance of Lane in the database by the Lane emailAddress, and
-   * copies the Lane properties to an instance of Lane.
-   */
-  @Override
-  public Lane findByName(String name) {
-    Lane lane = null;
-    if (name != null) {
-      try {
-        lane = laneDAO.findByName(name.trim().toLowerCase());
-      } catch (Exception exception) {
-        log.debug("Cannot find Lane by name " + name);
-      }
-    }
-    return lane;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public Lane findByID(Integer laneID) {
-    Lane lane = null;
-    if (laneID != null) {
-      try {
-        lane = laneDAO.findByID(laneID);
-        // fillInLanes(lane);
-      } catch (Exception exception) {
-        log.error("Cannot find Lane by expID " + laneID);
-        log.error(exception.getMessage());
-      }
-    }
-    return lane;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public Lane findBySWAccession(Integer swAccession) {
-    Lane lane = null;
-    if (swAccession != null) {
-      try {
-        lane = laneDAO.findBySWAccession(swAccession);
-        // fillInLanes(lane);
-      } catch (Exception exception) {
-        log.error("Cannot find Lane by swAccession " + swAccession);
-        log.error(exception.getMessage());
-      }
-    }
-    return lane;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public List<Lane> findByOwnerID(Integer registrationId) {
-    List<Lane> lanes = null;
-    if (registrationId != null) {
-      try {
-        lanes = laneDAO.findByOwnerID(registrationId);
-      } catch (Exception exception) {
-        log.error("Cannot find Lane by registrationId " + registrationId);
-        log.error(exception.getMessage());
-      }
-    }
-    return lanes;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * Determines if an email address has already been used.
-   */
-  @Override
-  public boolean hasNameBeenUsed(String oldName, String newName) {
-    boolean nameUsed = false;
-    boolean checkName = true;
-
-    if (newName != null) {
-
-      if (oldName != null) {
-        /*
-         * We do not want to check if an name address has been used if the user
-         * is updating an existing lane and has not changed the nameAddress.
-         */
-        checkName = !newName.trim().equalsIgnoreCase(oldName.trim());
-      }
-
-      if (checkName) {
-        Lane lane = this.findByName(newName.trim().toLowerCase());
-        if (lane != null) {
-          nameUsed = true;
+     */
+    @Override
+    public void delete(Lane lane, boolean deleteRealFiles) {
+        List<File> deleteFiles = null;
+        if (deleteRealFiles) {
+            deleteFiles = laneDAO.getFiles(lane.getLaneId());
         }
-      }
-    }
-    return nameUsed;
-  }
 
-  /**
-   * <p>listFile.</p>
-   *
-   * @param reqistration a {@link net.sourceforge.seqware.common.model.Registration} object.
-   * @param typeNode a {@link java.lang.String} object.
-   * @param list a {@link java.util.List} object.
-   * @param ids an array of {@link java.lang.String} objects.
-   * @param statuses an array of {@link java.lang.String} objects.
-   * @return a {@link java.util.List} object.
-   */
-  @Override
-  public List<File> listFile(Registration reqistration, String typeNode, List<File> list, String[] ids,
-      String[] statuses) {
-    for (int i = 0; i < ids.length; i++) {
+        laneDAO.delete(lane);
 
-      Integer id = Integer.parseInt(ids[i]);
-      Integer status = Integer.parseInt(statuses[i]);
-      List<File> files = new ArrayList<>();
-
-      if (typeNode.equals("lane")) {
-        Lane lane = findByID(Integer.parseInt(ids[i]));
-        files = getListFile(lane);
-      }
-      if (typeNode.equals("file")) {
-        File file = fileDAO.findByID(id);
-        files.add(file);
-      }
-
-      if (status == 0) {
-        log.debug("Remove files");
-        // list.removeAll(getListFile(lane));
-        list = removeFiles(list, files);
-      } else {
-        log.debug("Add files");
-        // list.addAll(getListFile(lane));
-        list = addFiles(list, files);
-
-        // add elements, including duplicates
-        /*
-         * Set set = new TreeSet(); set.addAll(list); list.clear();
-         * list.addAll(set);
-         */
-      }
-
-      /*
-       * log.debug("Lane id:" + ids[i] + "; Files size:" +
-       * list.size()); for(File file : list){
-       * log.debug(file.getFileName()); }
-       */
-    }
-    return list;
-  }
-
-  private List<File> addFiles(List<File> list, List<File> addList) {
-    for (File addFile : addList) {
-      boolean isAdd = true;
-      for (File file : list) {
-        if (file.getFileId().equals(addFile.getFileId())) {
-          isAdd = false;
+        if (deleteRealFiles) {
+            fileDAO.deleteAllWithFolderStore(deleteFiles);
         }
-      }
-      if (isAdd) {
-        list.add(addFile);
-      }
     }
-    return list;
-  }
 
-  private List<File> removeFiles(List<File> list, List<File> removeList) {
-    for (File removefile : removeList) {
-      boolean isRemove = false;
-      for (File file : list) {
-        if (file.getFileId().equals(removefile.getFileId())) {
-          isRemove = true;
+    /**
+     * {@inheritDoc}
+     * 
+     * Finds an instance of Lane in the database by the Lane emailAddress, and copies the Lane properties to an instance of Lane.
+     */
+    @Override
+    public Lane findByName(String name) {
+        Lane lane = null;
+        if (name != null) {
+            try {
+                lane = laneDAO.findByName(name.trim().toLowerCase());
+            } catch (Exception exception) {
+                log.debug("Cannot find Lane by name " + name);
+            }
         }
-      }
-
-      if (isRemove) {
-        list.remove(removefile);
-      }
-      /*
-       * int size = list.size(); for (int i = 0; i < size; i++) { File file =
-       * list.get(i); if(file.getFileId().equals(removefile.getFileId())){
-       * list.remove(i); size = size--; } }
-       */
+        return lane;
     }
-    return list;
-  }
 
-  private List<File> getListFile(Lane lane) {
-    List<File> list = new ArrayList<>();
-
-    Processing processing = new Processing();
-    Set<Processing> processings = lane.getProcessings();
-
-    do {
-      list.addAll(getFiles(processings));
-
-      Iterator<Processing> it = processings.iterator();
-      if (it.hasNext()) {
-        processing = it.next();
-      }
-
-      processings = processing.getChildren();
-    } while (!processings.isEmpty());
-
-    return list;
-  }
-
-  private List<File> getFiles(Set<Processing> processings) {
-    List<File> list = new ArrayList<>();
-    for (Processing processing : processings) {
-      list.addAll(processing.getFiles());
+    /** {@inheritDoc} */
+    @Override
+    public Lane findByID(Integer laneID) {
+        Lane lane = null;
+        if (laneID != null) {
+            try {
+                lane = laneDAO.findByID(laneID);
+                // fillInLanes(lane);
+            } catch (Exception exception) {
+                log.error("Cannot find Lane by expID " + laneID);
+                log.error(exception.getMessage());
+            }
+        }
+        return lane;
     }
-    return list;
-  }
 
-  private File createFile(Registration owner, String filePath, String metaType, String folderStore) throws IOException {
-    File file = new File();
-    file.setFilePath(filePath);
-    file.setOwner(owner);
-    file.setMetaType(metaType);
-    fileDAO.insert(owner, file);
-    return file;
-  }
+    /** {@inheritDoc} */
+    @Override
+    public Lane findBySWAccession(Integer swAccession) {
+        Lane lane = null;
+        if (swAccession != null) {
+            try {
+                lane = laneDAO.findBySWAccession(swAccession);
+                // fillInLanes(lane);
+            } catch (Exception exception) {
+                log.error("Cannot find Lane by swAccession " + swAccession);
+                log.error(exception.getMessage());
+            }
+        }
+        return lane;
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public List<Lane> findByCriteria(String criteria, boolean isCaseSens) {
-    return laneDAO.findByCriteria(criteria, isCaseSens);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public List<Lane> findByOwnerID(Integer registrationId) {
+        List<Lane> lanes = null;
+        if (registrationId != null) {
+            try {
+                lanes = laneDAO.findByOwnerID(registrationId);
+            } catch (Exception exception) {
+                log.error("Cannot find Lane by registrationId " + registrationId);
+                log.error(exception.getMessage());
+            }
+        }
+        return lanes;
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public Lane updateDetached(Lane lane) {
-    return laneDAO.updateDetached(lane);
-  }
+    /**
+     * {@inheritDoc}
+     * 
+     * Determines if an email address has already been used.
+     */
+    @Override
+    public boolean hasNameBeenUsed(String oldName, String newName) {
+        boolean nameUsed = false;
+        boolean checkName = true;
+
+        if (newName != null) {
+
+            if (oldName != null) {
+                /*
+                 * We do not want to check if an name address has been used if the user is updating an existing lane and has not changed the
+                 * nameAddress.
+                 */
+                checkName = !newName.trim().equalsIgnoreCase(oldName.trim());
+            }
+
+            if (checkName) {
+                Lane lane = this.findByName(newName.trim().toLowerCase());
+                if (lane != null) {
+                    nameUsed = true;
+                }
+            }
+        }
+        return nameUsed;
+    }
+
+    /**
+     * <p>
+     * listFile.
+     * </p>
+     * 
+     * @param reqistration
+     *            a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * @param typeNode
+     *            a {@link java.lang.String} object.
+     * @param list
+     *            a {@link java.util.List} object.
+     * @param ids
+     *            an array of {@link java.lang.String} objects.
+     * @param statuses
+     *            an array of {@link java.lang.String} objects.
+     * @return a {@link java.util.List} object.
+     */
+    @Override
+    public List<File> listFile(Registration reqistration, String typeNode, List<File> list, String[] ids, String[] statuses) {
+        for (int i = 0; i < ids.length; i++) {
+
+            Integer id = Integer.parseInt(ids[i]);
+            Integer status = Integer.parseInt(statuses[i]);
+            List<File> files = new ArrayList<>();
+
+            if (typeNode.equals("lane")) {
+                Lane lane = findByID(Integer.parseInt(ids[i]));
+                files = getListFile(lane);
+            }
+            if (typeNode.equals("file")) {
+                File file = fileDAO.findByID(id);
+                files.add(file);
+            }
+
+            if (status == 0) {
+                log.debug("Remove files");
+                // list.removeAll(getListFile(lane));
+                list = removeFiles(list, files);
+            } else {
+                log.debug("Add files");
+                // list.addAll(getListFile(lane));
+                list = addFiles(list, files);
+
+                // add elements, including duplicates
+                /*
+                 * Set set = new TreeSet(); set.addAll(list); list.clear(); list.addAll(set);
+                 */
+            }
+
+            /*
+             * log.debug("Lane id:" + ids[i] + "; Files size:" + list.size()); for(File file : list){ log.debug(file.getFileName()); }
+             */
+        }
+        return list;
+    }
+
+    private List<File> addFiles(List<File> list, List<File> addList) {
+        for (File addFile : addList) {
+            boolean isAdd = true;
+            for (File file : list) {
+                if (file.getFileId().equals(addFile.getFileId())) {
+                    isAdd = false;
+                }
+            }
+            if (isAdd) {
+                list.add(addFile);
+            }
+        }
+        return list;
+    }
+
+    private List<File> removeFiles(List<File> list, List<File> removeList) {
+        for (File removefile : removeList) {
+            boolean isRemove = false;
+            for (File file : list) {
+                if (file.getFileId().equals(removefile.getFileId())) {
+                    isRemove = true;
+                }
+            }
+
+            if (isRemove) {
+                list.remove(removefile);
+            }
+            /*
+             * int size = list.size(); for (int i = 0; i < size; i++) { File file = list.get(i);
+             * if(file.getFileId().equals(removefile.getFileId())){ list.remove(i); size = size--; } }
+             */
+        }
+        return list;
+    }
+
+    private List<File> getListFile(Lane lane) {
+        List<File> list = new ArrayList<>();
+
+        Processing processing = new Processing();
+        Set<Processing> processings = lane.getProcessings();
+
+        do {
+            list.addAll(getFiles(processings));
+
+            Iterator<Processing> it = processings.iterator();
+            if (it.hasNext()) {
+                processing = it.next();
+            }
+
+            processings = processing.getChildren();
+        } while (!processings.isEmpty());
+
+        return list;
+    }
+
+    private List<File> getFiles(Set<Processing> processings) {
+        List<File> list = new ArrayList<>();
+        for (Processing processing : processings) {
+            list.addAll(processing.getFiles());
+        }
+        return list;
+    }
+
+    private File createFile(Registration owner, String filePath, String metaType, String folderStore) throws IOException {
+        File file = new File();
+        file.setFilePath(filePath);
+        file.setOwner(owner);
+        file.setMetaType(metaType);
+        fileDAO.insert(owner, file);
+        return file;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public List<Lane> findByCriteria(String criteria, boolean isCaseSens) {
+        return laneDAO.findByCriteria(criteria, isCaseSens);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Lane updateDetached(Lane lane) {
+        return laneDAO.updateDetached(lane);
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -651,12 +656,15 @@ public class LaneServiceImpl implements LaneService {
         laneDAO.update(registration, lane);
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public Integer insert(Registration registration, Lane lane) {
         lane.setCreateTimestamp(new Date());
-	return(laneDAO.insert(registration, lane));
+        return (laneDAO.insert(registration, lane));
     }
 
     /** {@inheritDoc} */

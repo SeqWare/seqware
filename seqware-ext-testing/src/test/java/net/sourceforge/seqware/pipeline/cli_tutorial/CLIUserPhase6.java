@@ -24,12 +24,10 @@ import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 
 /**
  * Tests downloading results in the tutorial
- *
+ * 
  * @author dyuen
  */
-public class CLIUserPhase6 extends UserPhase6{
-
-  
+public class CLIUserPhase6 extends UserPhase6 {
 
     @Override
     protected void runWorkflowRunReporter(File workingDir) throws IOException {
@@ -39,12 +37,14 @@ public class CLIUserPhase6 extends UserPhase6{
 
     @Override
     protected void runWorkflowRunReporterStdErr(String swid, File workingDir) throws IOException {
-        ITUtility.runSeqwareCLI(" workflow-run stderr --out _workflowrun_" + swid + "_STDERR.csv --accession " + swid, ReturnValue.SUCCESS, workingDir);
+        ITUtility.runSeqwareCLI(" workflow-run stderr --out _workflowrun_" + swid + "_STDERR.csv --accession " + swid, ReturnValue.SUCCESS,
+                workingDir);
     }
 
     @Override
     protected void runWorkflowRunReporterStdOut(String swid, File workingDir) throws IOException {
-        ITUtility.runSeqwareCLI(" workflow-run stdout --out _workflowrun_" + swid + "_STDOUT.csv --accession " + swid, ReturnValue.SUCCESS, workingDir);
+        ITUtility.runSeqwareCLI(" workflow-run stdout --out _workflowrun_" + swid + "_STDOUT.csv --accession " + swid, ReturnValue.SUCCESS,
+                workingDir);
     }
 
     @Override

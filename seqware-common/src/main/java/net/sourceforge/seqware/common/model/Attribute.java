@@ -1,59 +1,77 @@
 package net.sourceforge.seqware.common.model;
 
 /**
- * <p>Attribute interface.</p>
- *
+ * <p>
+ * Attribute interface.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  * @param <T>
  */
 public interface Attribute<T> {
 
-  /**
-   * <p>getTag.</p>
-   *
-   * @return a {@link java.lang.String} object.
-   */
-  public String getTag();
+    /**
+     * <p>
+     * getTag.
+     * </p>
+     * 
+     * @return a {@link java.lang.String} object.
+     */
+    public String getTag();
 
-  /**
-   * <p>setTag.</p>
-   *
-   * @param tag a {@link java.lang.String} object.
-   */
-  public void setTag(String tag);
+    /**
+     * <p>
+     * setTag.
+     * </p>
+     * 
+     * @param tag
+     *            a {@link java.lang.String} object.
+     */
+    public void setTag(String tag);
 
-  /**
-   * <p>getValue.</p>
-   *
-   * @return a {@link java.lang.String} object.
-   */
-  public String getValue();
+    /**
+     * <p>
+     * getValue.
+     * </p>
+     * 
+     * @return a {@link java.lang.String} object.
+     */
+    public String getValue();
 
-  /**
-   * <p>setValue.</p>
-   *
-   * @param value a {@link java.lang.String} object.
-   */
-  public void setValue(String value);
+    /**
+     * <p>
+     * setValue.
+     * </p>
+     * 
+     * @param value
+     *            a {@link java.lang.String} object.
+     */
+    public void setValue(String value);
 
-  /**
-   * <p>getUnit.</p>
-   *
-   * @return a {@link java.lang.String} object.
-   */
-  public String getUnit();
+    /**
+     * <p>
+     * getUnit.
+     * </p>
+     * 
+     * @return a {@link java.lang.String} object.
+     */
+    public String getUnit();
 
-  /**
-   * <p>setUnit.</p>
-   *
-   * @param unit a {@link java.lang.String} object.
-   */
-  public void setUnit(String unit);
+    /**
+     * <p>
+     * setUnit.
+     * </p>
+     * 
+     * @param unit
+     *            a {@link java.lang.String} object.
+     */
+    public void setUnit(String unit);
 
-  /**
-   * Associate this attribute with its parent
-   * @param parent 
-   */
-  public void setAttributeParent(T parent);
+    /**
+     * Associate this attribute with its parent
+     * 
+     * @param parent
+     */
+    public void setAttributeParent(T parent);
 }

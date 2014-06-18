@@ -18,12 +18,14 @@ package net.sourceforge.seqware.common.model;
 
 /**
  * This links together all models that do not have sw_accession
+ * 
  * @author dyuen
  */
 public interface SecondTierModel {
     /**
      * Get the id for this model
-     * @return 
+     * 
+     * @return
      */
     public int getModelId();
 }

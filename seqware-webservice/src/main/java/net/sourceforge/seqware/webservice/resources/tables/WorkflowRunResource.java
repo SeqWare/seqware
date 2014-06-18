@@ -40,29 +40,34 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>WorkflowRunResource class.</p>
- *
+ * <p>
+ * WorkflowRunResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowRunResource extends DatabaseResource {
 
     /**
-     * <p>Constructor for WorkflowRunResource.</p>
+     * <p>
+     * Constructor for WorkflowRunResource.
+     * </p>
      */
     public WorkflowRunResource() {
         super("workflowRun_id");
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
         authenticate();
         WorkflowRunService ss = BeanFactory.getWorkflowRunServiceBean();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-
 
         if (queryValues.get("id") != null) {
             JaxbObject<WorkflowRun> jaxbTool = new JaxbObject<>();
@@ -74,16 +79,15 @@ public class WorkflowRunResource extends DatabaseResource {
         } else if (queryValues.get("email") != null) {
             // SEQWARE-1134
             RegistrationService rs = BeanFactory.getRegistrationServiceBean();
-            RegistrationDTO regDTO = (RegistrationDTO)testIfNull(rs.findByEmailAddress(queryValues.get("email")));
+            RegistrationDTO regDTO = (RegistrationDTO) testIfNull(rs.findByEmailAddress(queryValues.get("email")));
             Integer registrationId = regDTO.getRegistrationId();
             List<WorkflowRun> runs = ss.findByOwnerID(registrationId);
             respondWithList(runs, copier);
-        } 
-        else { 
-            
+        } else {
+
             List<WorkflowRun> runs = null;
             if (queryValues.get("status") != null) {
-                runs = ss.findByCriteria("wr.status='"+queryValues.get("status")+"'");
+                runs = ss.findByCriteria("wr.status='" + queryValues.get("status") + "'");
             } else {
                 runs = (List<WorkflowRun>) testIfNull(ss.list());
             }
@@ -92,9 +96,12 @@ public class WorkflowRunResource extends DatabaseResource {
     }
 
     /**
-     * <p>postJaxb.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
      */
     @Post("xml")
     public void postJaxb(Representation entity) {
@@ -117,8 +124,8 @@ public class WorkflowRunResource extends DatabaseResource {
                 if (reg != null) {
                     p.setOwner(reg);
                 } else {
-                Log.info("Could not be found: owner " + p.getOwner());
-            }
+                    Log.info("Could not be found: owner " + p.getOwner());
+                }
             } else {
                 p.setOwner(registration);
             }
@@ -138,13 +145,16 @@ public class WorkflowRunResource extends DatabaseResource {
     }
 
     /**
-     * <p>insertWorkflowRun.</p>
-     *
-     * @param p a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
+     * <p>
+     * insertWorkflowRun.
+     * </p>
+     * 
+     * @param p
+     *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
     public WorkflowRun insertWorkflowRun(WorkflowRun p) {
-        //persist p
+        // persist p
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
 
         Workflow workflow = p.getWorkflow();

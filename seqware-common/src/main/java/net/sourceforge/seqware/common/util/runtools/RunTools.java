@@ -9,18 +9,24 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.iotools.BufferedReaderThread;
 
 /**
- * <p>RunTools class.</p>
- *
+ * <p>
+ * RunTools class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class RunTools {
 
     /**
-     * <p>runCommand.</p>
-     *
-     * @param env a {@link java.util.Map} object.
-     * @param command a {@link java.lang.String} object.
+     * <p>
+     * runCommand.
+     * </p>
+     * 
+     * @param env
+     *            a {@link java.util.Map} object.
+     * @param command
+     *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue runCommand(Map<String, String> env, String command) {
@@ -28,21 +34,29 @@ public class RunTools {
     }
 
     /**
-     * <p>startCommand.</p>
-     *
-     * @param env a {@link java.util.Map} object.
-     * @param command a {@link java.lang.String} object.
+     * <p>
+     * startCommand.
+     * </p>
+     * 
+     * @param env
+     *            a {@link java.util.Map} object.
+     * @param command
+     *            a {@link java.lang.String} object.
      * @return a {@link java.lang.Process} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException
+     *             if any.
      */
     public static Process startCommand(Map<String, String> env, String command) throws IOException {
         return (RunTools.startCommand(env, splitCommandPreserveQuote(command)));
     }
 
     /**
-     * <p>runCommand.</p>
-     *
-     * @param command a {@link java.lang.String} object.
+     * <p>
+     * runCommand.
+     * </p>
+     * 
+     * @param command
+     *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue runCommand(String command) {
@@ -50,20 +64,27 @@ public class RunTools {
     }
 
     /**
-     * <p>startCommand.</p>
-     *
-     * @param command a {@link java.lang.String} object.
+     * <p>
+     * startCommand.
+     * </p>
+     * 
+     * @param command
+     *            a {@link java.lang.String} object.
      * @return a {@link java.lang.Process} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException
+     *             if any.
      */
     public static Process startCommand(String command) throws IOException {
         return (RunTools.startCommand(splitCommandPreserveQuote(command)));
     }
 
     /**
-     * <p>runCommand.</p>
-     *
-     * @param command an array of {@link java.lang.String} objects.
+     * <p>
+     * runCommand.
+     * </p>
+     * 
+     * @param command
+     *            an array of {@link java.lang.String} objects.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue runCommand(String[] command) {
@@ -71,11 +92,15 @@ public class RunTools {
     }
 
     /**
-     * <p>startCommand.</p>
-     *
-     * @param command an array of {@link java.lang.String} objects.
+     * <p>
+     * startCommand.
+     * </p>
+     * 
+     * @param command
+     *            an array of {@link java.lang.String} objects.
      * @return a {@link java.lang.Process} object.
-     * @throws java.io.IOException if any.
+     * @throws java.io.IOException
+     *             if any.
      */
     public static Process startCommand(String[] command) throws IOException {
         return (RunTools.startCommand(null, command));
@@ -84,19 +109,18 @@ public class RunTools {
     public static ReturnValue runCommand(Map<String, String> env, String[] command) {
         return runCommand(env, command, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
-    
+
     /**
-     * A simple command runner that captures the return value of the program. If
-     * the command was OK it should (in most cases) return 0. This util assumes
-     * this is the case.
-     *
-     * FIXME: Jordan, the Process object does not start the command within a
-     * shell environment, so if you're depending on environmental variables
-     * you'll run into problems, see
-     * http://java.sun.com/javase/6/docs/api/java/lang/Process.html
-     *
-     * @param command an array of {@link java.lang.String} objects.
-     * @param env a {@link java.util.Map} object.
+     * A simple command runner that captures the return value of the program. If the command was OK it should (in most cases) return 0. This
+     * util assumes this is the case.
+     * 
+     * FIXME: Jordan, the Process object does not start the command within a shell environment, so if you're depending on environmental
+     * variables you'll run into problems, see http://java.sun.com/javase/6/docs/api/java/lang/Process.html
+     * 
+     * @param command
+     *            an array of {@link java.lang.String} objects.
+     * @param env
+     *            a {@link java.util.Map} object.
      * @param stdoutCapacity
      * @param stderrCapacity
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
@@ -105,17 +129,17 @@ public class RunTools {
         ReturnValue ret = new ReturnValue();
 
         Process p = null;
-//        Log.debug("Env:"+env);
-//        Log.debug("Command:");
-//        for (String s: command)
-//        {
-//            Log.debug(s);
-//        }
-//        Log.debug("End Command");
+        // Log.debug("Env:"+env);
+        // Log.debug("Command:");
+        // for (String s: command)
+        // {
+        // Log.debug(s);
+        // }
+        // Log.debug("End Command");
         try {
             p = startCommand(env, command);
         } catch (Exception e) {
-            // make sure return value is not success if we got a exception! 
+            // make sure return value is not success if we got a exception!
             if (p != null) {
                 ret.setProcessExitStatus(p.exitValue());
             } else {
@@ -136,18 +160,20 @@ public class RunTools {
         ret = waitAndGetReturn(p, stdoutCapacity, stderrCapacity);
         return ret;
     }
-    
-    
+
     public static ReturnValue waitAndGetReturn(Process p) {
         return waitAndGetReturn(p, 0, 0);
     }
 
     /**
      * Wait on a process to finish, then parse information into return value
-     *
-     * @param p a {@link java.lang.Process} object.
-     * @param stdoutLineCapacity limit the number of lines stored or set to 0 to store everything
-     * @param stderrLineCapacity limit the number of lines stored or set to 0 to store everything
+     * 
+     * @param p
+     *            a {@link java.lang.Process} object.
+     * @param stdoutLineCapacity
+     *            limit the number of lines stored or set to 0 to store everything
+     * @param stderrLineCapacity
+     *            limit the number of lines stored or set to 0 to store everything
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue waitAndGetReturn(Process p, int stdoutLineCapacity, int stderrLineCapacity) {
@@ -160,7 +186,7 @@ public class RunTools {
 
         try {
             // Spawn reader threads to grab stdout and stderr
-            
+
             BufferedReaderThread stdOutThread = new BufferedReaderThread(p.getInputStream(), stdoutLineCapacity);
             BufferedReaderThread stdErrThread = new BufferedReaderThread(p.getErrorStream(), stderrLineCapacity);
             stdOutThread.start();
@@ -183,7 +209,7 @@ public class RunTools {
             if (p.exitValue() != 0) {
                 Log.stdout(stdOutThread.getOutput().toString());
                 Log.stderr(stdErrThread.getOutput().toString());
-                Log.error("The exit value was "+p.exitValue());
+                Log.error("The exit value was " + p.exitValue());
                 ret.setExitStatus(ReturnValue.PROGRAMFAILED);
             }
             if (stdOutThread.getError() != null) {
@@ -196,7 +222,7 @@ public class RunTools {
             }
 
         } catch (Exception e) {
-            //  make sure return value is not success if we got a exception! 
+            // make sure return value is not success if we got a exception!
             if (p != null) {
                 ret.setProcessExitStatus(p.exitValue());
             } else {
@@ -215,20 +241,21 @@ public class RunTools {
     }
 
     /**
-     * An alternate runner that launches a process and returns it so that the
-     * caller can process it's output directly. A use case is when we need to
-     * output stdout or stderr to a file in real-time, or if it will be too
-     * large to buffer in RAM and return.
-     *
-     * @throws java.io.IOException if any.
-     * @param env a {@link java.util.Map} object.
-     * @param command an array of {@link java.lang.String} objects.
+     * An alternate runner that launches a process and returns it so that the caller can process it's output directly. A use case is when we
+     * need to output stdout or stderr to a file in real-time, or if it will be too large to buffer in RAM and return.
+     * 
+     * @throws java.io.IOException
+     *             if any.
+     * @param env
+     *            a {@link java.util.Map} object.
+     * @param command
+     *            an array of {@link java.lang.String} objects.
      * @return a {@link java.lang.Process} object.
      */
     // FIXME: This should instantiate the shell. Modules should not need to say
-    // FIXME:     RunTools.runCommand( new String[] { "bash", "-c", cmd.toString() } );
+    // FIXME: RunTools.runCommand( new String[] { "bash", "-c", cmd.toString() } );
     // FIXME: Instead they should just say:
-    // FIXME:     RunTools.runCommand( cmd.toString() ) with this function adding the bash -c logic
+    // FIXME: RunTools.runCommand( cmd.toString() ) with this function adding the bash -c logic
     // FIXME: Doing this will break modules, so when we do this, also need to remove the bash -c from whatever calls us
     public static Process startCommand(Map<String, String> env, String[] command) throws IOException {
 
@@ -244,9 +271,12 @@ public class RunTools {
     }
 
     /**
-     * <p>main.</p>
-     *
-     * @param args an array of {@link java.lang.String} objects.
+     * <p>
+     * main.
+     * </p>
+     * 
+     * @param args
+     *            an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
         StringBuffer sb = new StringBuffer();
@@ -262,19 +292,17 @@ public class RunTools {
     }
 
     /**
-     * A little helper that splits up a command into an array but preserves any
-     * options that are quoted (either ' or ") as single entries in the array
-     * rather than further breaking them up.
-     *
+     * A little helper that splits up a command into an array but preserves any options that are quoted (either ' or ") as single entries in
+     * the array rather than further breaking them up.
+     * 
      * This won't work well if you have something like this:
-     *
+     * 
      * bash -c 'echo "foo 'bar' "'
-     *
+     * 
      * It won't like the single quotes inside single quotes.
-     *
-     * This method preserves the outside quotes so they will be passed to the
-     * underlying shell
-     *
+     * 
+     * This method preserves the outside quotes so they will be passed to the underlying shell
+     * 
      * @param command
      * @return
      */

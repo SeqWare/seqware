@@ -23,25 +23,16 @@ package net.sourceforge.seqware.common.util.maptools;
  * @author dyuen
  */
 public enum ReservedIniKeys {
-    PARENT_UNDERSCORE_ACCESSIONS("parent_accessions"),
-    PARENT_DASH_ACCESSIONS("parent-accessions"),
-    OUTPUT_PREFIX("output_prefix"),
-    OUTPUT_DIR("output_dir"),
-    PARENT_ACCESSION("parent_accession"),
-    MANUAL_OUTPUT("manual_output"),
-    INPUT_FILE("input_file"),
-    WORKFLOW_RUN_ACCESSION_DASHED("workflow-run-accession"),
-    WORKFLOW_RUN_ACCESSION_UNDERSCORES("workflow_run_accession"),
-    METADATA("metadata"),
-    WORKFLOW_BUNDLE_DIR("workflow_bundle_dir"),
-    SEQWARE_LINES_NUMBER("seqware-output-lines-number");
-    
-    
+    PARENT_UNDERSCORE_ACCESSIONS("parent_accessions"), PARENT_DASH_ACCESSIONS("parent-accessions"), OUTPUT_PREFIX("output_prefix"), OUTPUT_DIR(
+            "output_dir"), PARENT_ACCESSION("parent_accession"), MANUAL_OUTPUT("manual_output"), INPUT_FILE("input_file"), WORKFLOW_RUN_ACCESSION_DASHED(
+            "workflow-run-accession"), WORKFLOW_RUN_ACCESSION_UNDERSCORES("workflow_run_accession"), METADATA("metadata"), WORKFLOW_BUNDLE_DIR(
+            "workflow_bundle_dir"), SEQWARE_LINES_NUMBER("seqware-output-lines-number");
+
     private final String key;
-    
-    ReservedIniKeys(String key){
+
+    ReservedIniKeys(String key) {
         this.key = key;
-    } 
+    }
 
     /**
      * @return the key

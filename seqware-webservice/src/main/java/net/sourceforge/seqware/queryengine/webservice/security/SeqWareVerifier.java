@@ -11,45 +11,40 @@ import org.restlet.security.SecretVerifier;
 //import org.slf4j.LoggerFactory;
 
 /**
- * <p>SeqWareVerifier class.</p>
- *
+ * <p>
+ * SeqWareVerifier class.
+ * </p>
+ * 
  * @author morgantaschuk
  * @version $Id: $Id
  */
 public class SeqWareVerifier extends SecretVerifier {
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public int verify(String identifier, char[] secret) {
         RegistrationService registrationService = BeanFactory.getRegistrationServiceBean();
-        //log.info("SeqWare Verifier called");
+        // log.info("SeqWare Verifier called");
         Registration registration = registrationService.findByEmailAddress(identifier);
         Logger.getLogger(SeqWareVerifier.class).debug(registration);
         if (registration != null) {
             String pass = new String(secret).trim();
-            if (registration.getPassword()==null)
-            {                
-                if (pass.isEmpty() || pass.equals("null"))
-                {
+            if (registration.getPassword() == null) {
+                if (pass.isEmpty() || pass.equals("null")) {
                     return RESULT_VALID;
+                } else {
+                    return RESULT_INVALID;
                 }
-                else
-                {
-                   return RESULT_INVALID; 
-                }
-            }
-            else if (registration.getPassword().equals(pass))
-            {
+            } else if (registration.getPassword().equals(pass)) {
                 return RESULT_VALID;
-            }
-            else
-            {
+            } else {
                 return RESULT_INVALID;
             }
-        }
-        else
-        {
+        } else {
             return RESULT_MISSING;
         }
     }

@@ -13,15 +13,19 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * <p>PlatformDAOHibernate class.</p>
- *
+ * <p>
+ * PlatformDAOHibernate class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class PlatformDAOHibernate extends HibernateDaoSupport implements PlatformDAO {
 
     /**
-     * <p>Constructor for PlatformDAOHibernate.</p>
+     * <p>
+     * Constructor for PlatformDAOHibernate.
+     * </p>
      */
     public PlatformDAOHibernate() {
         super();
@@ -36,7 +40,7 @@ public class PlatformDAOHibernate extends HibernateDaoSupport implements Platfor
         }
 
         List expmts = this.getHibernateTemplate().find("from Platform as platform order by platform.platformId asc" // desc
-                );
+        );
 
         // expmts =
         // this.getHibernateTemplate().find("from Platform as platform order by platform.name desc");
@@ -51,7 +55,7 @@ public class PlatformDAOHibernate extends HibernateDaoSupport implements Platfor
     public Platform findByID(Integer id) {
         String query = "from Platform as p where p.platformId = ?";
         Platform obj = null;
-        Object[] parameters = {id};
+        Object[] parameters = { id };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             obj = (Platform) list.get(0);
@@ -81,7 +85,7 @@ public class PlatformDAOHibernate extends HibernateDaoSupport implements Platfor
         ArrayList<Platform> platforms = new ArrayList<>();
 
         List expmts = this.getHibernateTemplate().find("from Platform as platform order by platform.platformId asc" // desc
-                );
+        );
 
         for (Object platform : expmts) {
             platforms.add((Platform) platform);

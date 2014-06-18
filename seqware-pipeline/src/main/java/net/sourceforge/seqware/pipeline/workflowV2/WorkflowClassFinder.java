@@ -24,88 +24,82 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-
-
-
 /**
- * <p>WorkflowClassFinder class.</p>
- *
+ * <p>
+ * WorkflowClassFinder class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class WorkflowClassFinder {
-	
 
-	private final static String FOLDERS_SEPARATOR_AS_STRING = System.getProperty("file.separator");
+    private final static String FOLDERS_SEPARATOR_AS_STRING = System.getProperty("file.separator");
 
-	private final ResourcePatternResolver resourceResolver;
+    private final ResourcePatternResolver resourceResolver;
 
-	/**
-	 * <p>Constructor for WorkflowClassFinder.</p>
-	 */
-	public WorkflowClassFinder() {
-		this.resourceResolver = new PathMatchingResourcePatternResolver(
-			Thread.currentThread().getContextClassLoader());
-	}
+    /**
+     * <p>
+     * Constructor for WorkflowClassFinder.
+     * </p>
+     */
+    public WorkflowClassFinder() {
+        this.resourceResolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
+    }
 
-	/**
-	 * find the first .class in the clazzPath
-         * 
-         * This has been modified to locate a specific class. The name of the method is now totally misleading.
-         * We are loading a specific class. 
-         * 
-	 * @param clazzPath
-	 * @return
-	 */
-	public Class<?> findFirstWorkflowClass(String clazzPath) {
-                String classWithoutJava = clazzPath.substring(0, clazzPath.length()-5);
-                String classPathWithoutClass = clazzPath.substring(0, clazzPath.lastIndexOf("classes")+8);
-                clazzPath = classPathWithoutClass;
-                
-		String candidateClassesLocationPattern = "file:" + 
-			clazzPath + "**" + FOLDERS_SEPARATOR_AS_STRING + "*.class";
-		Resource[] resources = null;
+    /**
+     * find the first .class in the clazzPath
+     * 
+     * This has been modified to locate a specific class. The name of the method is now totally misleading. We are loading a specific class.
+     * 
+     * @param clazzPath
+     * @return
+     */
+    public Class<?> findFirstWorkflowClass(String clazzPath) {
+        String classWithoutJava = clazzPath.substring(0, clazzPath.length() - 5);
+        String classPathWithoutClass = clazzPath.substring(0, clazzPath.lastIndexOf("classes") + 8);
+        clazzPath = classPathWithoutClass;
 
-		try {
-			resources = resourceResolver.getResources(candidateClassesLocationPattern);	
-		} catch (IOException e) {
-			throw new RuntimeException(
-			"An I/O problem occurs when trying to resolve "
-				+ "ressources matching the pattern : "
-			+ candidateClassesLocationPattern, e);
+        String candidateClassesLocationPattern = "file:" + clazzPath + "**" + FOLDERS_SEPARATOR_AS_STRING + "*.class";
+        Resource[] resources = null;
 
-		}
-		for(Resource resource: resources) {
-			try {
-                                //seqware-1904 ignore private classes 
-                                if (resource.getFilename().contains("$")){
-                                    continue;
-                                }
-				//get the path
-				String path = resource.getFile().getPath();
-				String qPath = path.substring(classPathWithoutClass.length(),path.length() 
-					- ".class".length());
-				qPath = qPath.replaceAll(FOLDERS_SEPARATOR_AS_STRING, ".");
-                                
-                                if (!path.contains(classWithoutJava)){
-                                    continue;
-                                }
-                                
-				URL url = new URL("file://"+clazzPath);
-				URL[] urls = new URL[]{url};
-				ClassLoader cl = new URLClassLoader(urls);				
-				Class<?> cls = cl.loadClass(qPath);
-				Log.info("CLASS LOADED "+ qPath);
-				return cls;
-				
-			} catch (IOException ex) {
-				Log.error(ex, ex);
-			} catch (ClassNotFoundException ex) {
-				Log.error(ex, ex);
-			}
-		}
-		return null;
+        try {
+            resources = resourceResolver.getResources(candidateClassesLocationPattern);
+        } catch (IOException e) {
+            throw new RuntimeException("An I/O problem occurs when trying to resolve " + "ressources matching the pattern : "
+                    + candidateClassesLocationPattern, e);
 
-	}
+        }
+        for (Resource resource : resources) {
+            try {
+                // seqware-1904 ignore private classes
+                if (resource.getFilename().contains("$")) {
+                    continue;
+                }
+                // get the path
+                String path = resource.getFile().getPath();
+                String qPath = path.substring(classPathWithoutClass.length(), path.length() - ".class".length());
+                qPath = qPath.replaceAll(FOLDERS_SEPARATOR_AS_STRING, ".");
+
+                if (!path.contains(classWithoutJava)) {
+                    continue;
+                }
+
+                URL url = new URL("file://" + clazzPath);
+                URL[] urls = new URL[] { url };
+                ClassLoader cl = new URLClassLoader(urls);
+                Class<?> cls = cl.loadClass(qPath);
+                Log.info("CLASS LOADED " + qPath);
+                return cls;
+
+            } catch (IOException ex) {
+                Log.error(ex, ex);
+            } catch (ClassNotFoundException ex) {
+                Log.error(ex, ex);
+            }
+        }
+        return null;
+
+    }
 
 }

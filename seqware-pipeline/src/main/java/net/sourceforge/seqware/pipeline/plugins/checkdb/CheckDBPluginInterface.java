@@ -22,21 +22,21 @@ import java.util.SortedMap;
 
 /**
  * Specifies an interface for database checks that can be run against the seqware database
+ * 
  * @author dyuen
  */
 public interface CheckDBPluginInterface {
-    
+
     /**
-     * @param qRunner the query runner allows for the running of read-only SQL statements with an arbitrary ResultHandler
+     * @param qRunner
+     *            the query runner allows for the running of read-only SQL statements with an arbitrary ResultHandler
      * @param results
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void check(SelectQueryRunner qRunner, SortedMap<Level, Set<String>> results) throws SQLException;
-    
-    public enum Level{
-        SEVERE,
-        WARNING, 
-        TRIVIAL
+
+    public enum Level {
+        SEVERE, WARNING, TRIVIAL
     }
-    
+
 }

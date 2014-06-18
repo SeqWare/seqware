@@ -36,13 +36,11 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * This plugin currently lets users creation a limited set of table rows in the
- * database from the command line. In the future we should expand this tool to
- * make it both more generic and to increase the number of tables that can be
- * added to. Here's a list of TODO items we should add at some point: * TODO:
- * ability to update rows in addition to creating and listing them * FIXME:
- * better support for lookup tables rather than just hard-coding
- *
+ * This plugin currently lets users creation a limited set of table rows in the database from the command line. In the future we should
+ * expand this tool to make it both more generic and to increase the number of tables that can be added to. Here's a list of TODO items we
+ * should add at some point: * TODO: ability to update rows in addition to creating and listing them * FIXME: better support for lookup
+ * tables rather than just hard-coding
+ * 
  * @author Brian O'Connor <briandoconnor@gmail.com>
  * @version $Id: $Id
  */
@@ -70,26 +68,43 @@ public class Metadata extends Plugin {
     ArrayList<FileMetadata> files = new ArrayList<>();
 
     /**
-     * <p>Constructor for Metadata.</p>
+     * <p>
+     * Constructor for Metadata.
+     * </p>
      */
     public Metadata() {
         super();
-        parser.acceptsAll(Arrays.asList("list-tables", "lt"), "Optional: if provided will list out the tables this tools knows how to read and/or write to.");
+        parser.acceptsAll(Arrays.asList("list-tables", "lt"),
+                "Optional: if provided will list out the tables this tools knows how to read and/or write to.");
         parser.acceptsAll(Arrays.asList("table", "t"), "Required: the table you are interested in reading or writing.").withRequiredArg();
-        //parser.acceptsAll(Arrays.asList("list", "l"), "Optional: if provided will list out the table rows currently in the MetaDB your settings point to.");
-        parser.acceptsAll(Arrays.asList("output-file", "of"), "Optional: if provided along with the --list or --list-tables options this will cause the output list of rows/tables to be written to the file specified rather than stdout.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("list-fields", "lf"), "Optional: if provided along with the --table option this will list out the fields for that table and their type.");
-        parser.acceptsAll(Arrays.asList("field", "f"), "Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("file"), "Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("parent-accession"), "Optional: one or more --parent-accession options can be specified when you create a workflow_run.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("create", "c"), "Optional: indicates you want to create a new row, must supply --table and all the required --field params.");
+        // parser.acceptsAll(Arrays.asList("list", "l"),
+        // "Optional: if provided will list out the table rows currently in the MetaDB your settings point to.");
+        parser.acceptsAll(
+                Arrays.asList("output-file", "of"),
+                "Optional: if provided along with the --list or --list-tables options this will cause the output list of rows/tables to be written to the file specified rather than stdout.")
+                .withRequiredArg();
+        parser.acceptsAll(Arrays.asList("list-fields", "lf"),
+                "Optional: if provided along with the --table option this will list out the fields for that table and their type.");
+        parser.acceptsAll(
+                Arrays.asList("field", "f"),
+                "Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.")
+                .withRequiredArg();
+        parser.acceptsAll(
+                Arrays.asList("file"),
+                "Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.")
+                .withRequiredArg();
+        parser.acceptsAll(Arrays.asList("parent-accession"),
+                "Optional: one or more --parent-accession options can be specified when you create a workflow_run.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("create", "c"),
+                "Optional: indicates you want to create a new row, must supply --table and all the required --field params.");
         parser.accepts("interactive", "Optional: Interactively prompt for fields during creation");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue init() {
@@ -100,7 +115,8 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_test() {
@@ -109,7 +125,8 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_run() {
@@ -129,7 +146,7 @@ public class Metadata extends Plugin {
         if (options.has("list-tables")) {
 
             print("TableName\n");
-            for (String table : new String[]{"study", "experiment", "sample", "sequencer_run", "ius", "lane", "workflow", "workflow_run"}) {
+            for (String table : new String[] { "study", "experiment", "sample", "sequencer_run", "ius", "lane", "workflow", "workflow_run" }) {
                 print(table + "\n");
             }
         } else if (options.has("table") && options.has("list")) {
@@ -138,8 +155,7 @@ public class Metadata extends Plugin {
             // list the fields for this table
             ret = (listFields((String) options.valueOf("table")));
             return ret;
-        } else if (options.has("table") && options.has("create") && 
-                (options.has("field") || options.has("interactive"))) {
+        } else if (options.has("table") && options.has("create") && (options.has("field") || options.has("interactive"))) {
 
             // create a row with these fields
             if ("study".equals((String) options.valueOf("table"))) {
@@ -170,7 +186,7 @@ public class Metadata extends Plugin {
                 ret = addWorkflow();
                 return ret;
 
-            }  else if ("workflow_run".equals((String) options.valueOf("table"))) {
+            } else if ("workflow_run".equals((String) options.valueOf("table"))) {
                 ret = addWorkflowRun();
                 return ret;
             } else if ("file".equals((String) options.valueOf("table"))) {
@@ -190,8 +206,9 @@ public class Metadata extends Plugin {
 
     /**
      * list the fields available to set
+     * 
      * @param table
-     * @return 
+     * @return
      */
     protected ReturnValue listFields(String table) {
         final String fileDescription = "\nThis takes one file encoded as --file type::file-meta-type::file-path[::description] \n";
@@ -202,7 +219,7 @@ public class Metadata extends Plugin {
             for (StudyType st : studyTypes) {
                 print(st.getStudyTypeId() + ": " + st.getName() + ", ");
             }
-            //"1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other"
+            // "1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other"
             print("]\n");
         } else if ("experiment".equals(table)) {
             print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nstudy_accession\tInteger\nplatform_id\tInteger\t[");
@@ -214,13 +231,13 @@ public class Metadata extends Plugin {
             print("experiment_library_design_id\tInteger\t[");
             List<ExperimentLibraryDesign> elds = this.metadata.getExperimentLibraryDesigns();
             for (ExperimentLibraryDesign obj : elds) {
-                print(obj.getExperimentLibraryDesignId()+ ": " + obj.getName() + ", ");
+                print(obj.getExperimentLibraryDesignId() + ": " + obj.getName() + ", ");
             }
             print("]\n");
             print("experiment_spot_design_id\tInteger\t[");
             List<ExperimentSpotDesign> esds = this.metadata.getExperimentSpotDesigns();
             for (ExperimentSpotDesign obj : esds) {
-                print(obj.getExperimentSpotDesignId()+ ": " + obj.getReadSpec()+ ", ");
+                print(obj.getExperimentSpotDesignId() + ": " + obj.getReadSpec() + ", ");
             }
             print("]\n");
         } else if ("sample".equals(table)) {
@@ -264,13 +281,13 @@ public class Metadata extends Plugin {
 
         } else if ("workflow".equals(table)) {
             print("Field\tType\tPossible_Values\nname\tString\nversion\tString\ndescription\tString\n");
-        }  else if ("workflow_run".equals(table)) {
+        } else if ("workflow_run".equals(table)) {
             print("Field\tType\tPossible_Values\nworkflow_accession\tInteger\nstatus\tString\t[completed, failed]\nstdout\tString\nstderr\tString\n");
             print(fileDescription);
             print("\nThis also takes one or more --parent-accession options.\n");
             print("\nThis command will result in one workflow_run, one processing tied to the parents specified, and n files attached to that processing event.\n");
-        }  else if ("file".equals(table)) {
-            print("Field\tType\tPossible_Values\nalgorithm\tString\n"); 
+        } else if ("file".equals(table)) {
+            print("Field\tType\tPossible_Values\nalgorithm\tString\n");
             print(fileDescription);
             print("\nThis also takes one or more --parent-accession options.\n");
         } else {
@@ -279,12 +296,12 @@ public class Metadata extends Plugin {
         return (rv);
     }
 
-     /**
-     *
+    /**
+     * 
      * @return ReturnValue
      */
     protected ReturnValue addWorkflow() {
-        String[] necessaryFields = {"name", "version", "description"};
+        String[] necessaryFields = { "name", "version", "description" };
         if (interactive) {
             print("Unfortunately interactive mode is not supported for adding workflows.");
         }
@@ -292,8 +309,10 @@ public class Metadata extends Plugin {
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
         if (checkFields(necessaryFields)) {
             // create a new workflow!
-            localRet = metadata.addWorkflow(fields.get("name"), fields.get("version"), fields.get("description"), null, null, null, null, false, null, false, null, null, null);
-            print(String.format("Created workflow '%s' version %s with SWID: %s", fields.get("name"), fields.get("version"), localRet.getAttribute("sw_accession")));
+            localRet = metadata.addWorkflow(fields.get("name"), fields.get("version"), fields.get("description"), null, null, null, null,
+                    false, null, false, null, null, null);
+            print(String.format("Created workflow '%s' version %s with SWID: %s", fields.get("name"), fields.get("version"),
+                    localRet.getAttribute("sw_accession")));
         } else {
             Log.error("You need to supply name, version, and description for the workflow table.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
@@ -302,11 +321,11 @@ public class Metadata extends Plugin {
     }
 
     /**
-     *
+     * 
      * @return ReturnValue
      */
     protected ReturnValue addWorkflowRun() {
-        String[] necessaryFields = {"workflow_accession", "status"};
+        String[] necessaryFields = { "workflow_accession", "status" };
         if (interactive) {
             print("Unfortunately interactive mode is not supported for adding workflow runs and files.");
         }
@@ -316,16 +335,15 @@ public class Metadata extends Plugin {
             // parent accessions
             int[] parents = parseParentAccessions();
             // if we have parent accessions, check that they're valid right up front
-            if(metadata.getViaParentAccessions(parents).contains(null)) {
-                    Log.error("parent accession invalid.");
-                    localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-                    return localRet;
+            if (metadata.getViaParentAccessions(parents).contains(null)) {
+                Log.error("parent accession invalid.");
+                localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+                return localRet;
             }
-
 
             // create a new workflow!
             int workflowRunId = metadata.add_workflow_run(Integer.parseInt(fields.get("workflow_accession")));
-            if (workflowRunId == 0){
+            if (workflowRunId == 0) {
                 Log.error("Workflow_accession invalid.");
                 localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                 return localRet;
@@ -343,22 +361,22 @@ public class Metadata extends Plugin {
             int processingId = metaret.getReturnValue();
             ReturnValue newRet = new ReturnValue();
             newRet.setFiles(this.files);
-            //newRet.setExitStatus(fields.get("status"));
+            // newRet.setExitStatus(fields.get("status"));
 
             metadata.update_processing_event(processingId, newRet);
 
             // LEFT OFF WITH: need to link process with workflow_run
             metadata.update_processing_workflow_run(processingId, workflowRunAccession);
-            //SEQWARE-1692 - need to update workflow with the status
+            // SEQWARE-1692 - need to update workflow with the status
             WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccession);
             String statusField = fields.get("status");
             WorkflowRunStatus status = statusField == null ? null : WorkflowRunStatus.valueOf(statusField);
             wr.setStatus(status);
             wr.setStdOut(fields.get("stdout"));
             wr.setStdErr(fields.get("stderr"));
-            metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(),
-                    wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(),
-                    wr.getHost(), wr.getStdErr(), wr.getStdOut(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
+            metadata.update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), wr.getStatus(), wr.getStatusCmd(),
+                    wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(), wr.getHost(), wr.getStdErr(), wr.getStdOut(),
+                    wr.getWorkflowEngine(), wr.getInputFileAccessions());
 
         } else {
             Log.error("You need to supply workflow_accession and status for the workflow_run table.");
@@ -367,13 +385,13 @@ public class Metadata extends Plugin {
 
         return (localRet);
     }
-    
+
     /**
-     *
+     * 
      * @return ReturnValue
      */
     protected ReturnValue addFile() {
-        String[] necessaryFields = {"algorithm"};
+        String[] necessaryFields = { "algorithm" };
         if (interactive) {
             print("Unfortunately interactive mode is not supported for adding files.");
         }
@@ -417,13 +435,13 @@ public class Metadata extends Plugin {
 
         return (localRet);
     }
-    
+
     /**
-     *
+     * 
      * @return ReturnValue
      */
     protected ReturnValue addStudy() {
-        String[] necessaryFields = {"title", "description", "center_name", "center_project_name", "study_type"};
+        String[] necessaryFields = { "title", "description", "center_name", "center_project_name", "study_type" };
         if (interactive) {
             promptForStudy(necessaryFields);
         }
@@ -431,68 +449,70 @@ public class Metadata extends Plugin {
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
         if (checkFields(necessaryFields)) {
             // create a new study!
-            localRet = metadata.addStudy(fields.get("title"), fields.get("description"), fields.get("center_name"), fields.get("center_project_name"),
-                    Integer.parseInt(fields.get("study_type")));
-            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
-                print ("Invalid parameters, please check your id values");
+            localRet = metadata.addStudy(fields.get("title"), fields.get("description"), fields.get("center_name"),
+                    fields.get("center_project_name"), Integer.parseInt(fields.get("study_type")));
+            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS) {
+                print("Invalid parameters, please check your id values");
                 return localRet;
             }
             print("Created study with SWID: " + localRet.getAttribute("sw_accession"));
         } else {
             printErrorMessage(necessaryFields, null);
-            //Log.error("You need to supply title, description, accession, center_name, and center_project_name for the study table along with an integer for study_type [1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other]. Alternatively, enable --interactive mode.");
+            // Log.error("You need to supply title, description, accession, center_name, and center_project_name for the study table along with an integer for study_type [1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other]. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (localRet);
     }
 
     /**
-     *
+     * 
      * @return ReturnValue
      */
     protected ReturnValue addExperiment() {
-        String[] necessaryFields = {"study_accession", "platform_id", "title", "description"};
+        String[] necessaryFields = { "study_accession", "platform_id", "title", "description" };
         final String experiment_library_design_id = "experiment_library_design_id";
         final String experiment_spot_design_id = "experiment_spot_design_id";
-        String[] optionalFields = {experiment_library_design_id, experiment_spot_design_id};
+        String[] optionalFields = { experiment_library_design_id, experiment_spot_design_id };
         // check to make sure we have what we need
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
         if (interactive) {
             promptForExperiment(necessaryFields);
         }
-        
-         for (String s: optionalFields){
-            if (fields.get(s) == null){
+
+        for (String s : optionalFields) {
+            if (fields.get(s) == null) {
                 fields.put(s, null);
             }
-         }
-        
-        if (checkFields(necessaryFields) && nullOrLessThanZero(experiment_library_design_id) && nullOrLessThanZero(experiment_spot_design_id)){
+        }
+
+        if (checkFields(necessaryFields) && nullOrLessThanZero(experiment_library_design_id)
+                && nullOrLessThanZero(experiment_spot_design_id)) {
             // check for valid platform id
             final int platformId = Integer.parseInt(fields.get("platform_id"));
             // create a new experiment
-            localRet = metadata.addExperiment(Integer.parseInt(fields.get("study_accession")), platformId, fields.get("description"), fields.get("title"), parseNullOrInteger(experiment_library_design_id), parseNullOrInteger(experiment_spot_design_id));
-            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
-                print ("Invalid parameters, please check your id values");
+            localRet = metadata.addExperiment(Integer.parseInt(fields.get("study_accession")), platformId, fields.get("description"),
+                    fields.get("title"), parseNullOrInteger(experiment_library_design_id), parseNullOrInteger(experiment_spot_design_id));
+            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS) {
+                print("Invalid parameters, please check your id values");
                 return localRet;
             }
             print("Created experiment with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, null);
-            //Log.error("You need to supply study_accession (reported if you create a study using this tool), title, and description for the experiment table along with an integer for platform_id [9: Illumina Genome Analyzer II, 20: Illumina HiSeq 2000, 26: Illumina MiSeq]. Alternatively, enable --interactive mode.");
+            // Log.error("You need to supply study_accession (reported if you create a study using this tool), title, and description for the experiment table along with an integer for platform_id [9: Illumina Genome Analyzer II, 20: Illumina HiSeq 2000, 26: Illumina MiSeq]. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (localRet);
     }
 
     /**
-     *
+     * 
      * @return ReturnValue
      */
     protected ReturnValue addSample() {
-        String[] necessaryFields = {"organism_id", "title", "description"};
-        String[] optionalFields = {"experiment_accession", "parent_sample_accession"};
+        String[] necessaryFields = { "organism_id", "title", "description" };
+        String[] optionalFields = { "experiment_accession", "parent_sample_accession" };
         // check to make sure we have what we need
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -500,44 +520,42 @@ public class Metadata extends Plugin {
             promptForSample(necessaryFields);
         }
 
-        for (String s: optionalFields){
-            if (fields.get(s) == null){
+        for (String s : optionalFields) {
+            if (fields.get(s) == null) {
                 fields.put(s, "0");
             }
         }
-        
+
         if (checkFields(necessaryFields)
                 && (notNullOrLessThanZero("experiment_accession") || notNullOrLessThanZero("parent_sample_accession"))) {
             // check for valid organism id (accession is blank and should not confuse with sw_accession)
             final int organismId = Integer.parseInt(fields.get("organism_id"));
-            // create a new sample 
+            // create a new sample
             localRet = metadata.addSample(Integer.parseInt(fields.get("experiment_accession")),
-                    Integer.parseInt(fields.get("parent_sample_accession")), organismId,
-                    fields.get("description"), fields.get("title"));
-            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
-                print ("Invalid parameters, please check your id values");
+                    Integer.parseInt(fields.get("parent_sample_accession")), organismId, fields.get("description"), fields.get("title"));
+            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS) {
+                print("Invalid parameters, please check your id values");
                 return localRet;
             }
             print("Created sample with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, optionalFields);
-            //Log.error("You need to supply experiment_accession (reported if you create an experiment using this tool), title, and description for the sample table along with an integer for organism_id [31: Homo sapiens]. Alternatively, enable --interactive mode.");
+            // Log.error("You need to supply experiment_accession (reported if you create an experiment using this tool), title, and description for the sample table along with an integer for organism_id [31: Homo sapiens]. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return localRet;
     }
-    
-    
+
     private Integer parseNullOrInteger(String fieldName) {
         String field = fields.get(fieldName);
         if (field == null) {
-           return null;
+            return null;
         } else {
-           return Integer.valueOf(field);
+            return Integer.valueOf(field);
         }
     }
-    
+
     private boolean nullOrLessThanZero(String fieldName) {
         boolean usable = true;
         String field = fields.get(fieldName);
@@ -548,7 +566,7 @@ public class Metadata extends Plugin {
         }
         return usable;
     }
-    
+
     private boolean notNullOrLessThanZero(String fieldName) {
         boolean usable = true;
         String field = fields.get(fieldName);
@@ -561,46 +579,44 @@ public class Metadata extends Plugin {
     }
 
     /**
-     *
+     * 
      * @return ReturnValue
-     *
+     * 
      */
     protected ReturnValue addSequencerRun() {
-        String[] necessaryFields = {"platform_accession", "name", "description", "paired_end", "skip", "file_path"};
-        String[] optionalFields = {"status"};
+        String[] necessaryFields = { "platform_accession", "name", "description", "paired_end", "skip", "file_path" };
+        String[] optionalFields = { "status" };
         // check to make sure we have what we need
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
         if (interactive) {
             promptForSequencerRun(necessaryFields);
         }
-        
-        for (String s: optionalFields){
-            if (fields.get(s) == null){
+
+        for (String s : optionalFields) {
+            if (fields.get(s) == null) {
                 fields.put(s, null);
             }
         }
 
         if (checkFields(necessaryFields)) {
             // create a new experiment
-            localRet = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), 
-                    fields.get("name"), fields.get("description"), "true".equalsIgnoreCase(fields.get("paired_end")),
-                    "true".equalsIgnoreCase(fields.get("skip")), fields.get("file_path"),
-                    fields.get("status") == null ? null : SequencerRunStatus.valueOf(fields.get("status")));
+            localRet = metadata.addSequencerRun(Integer.parseInt(fields.get("platform_accession")), fields.get("name"), fields
+                    .get("description"), "true".equalsIgnoreCase(fields.get("paired_end")), "true".equalsIgnoreCase(fields.get("skip")),
+                    fields.get("file_path"), fields.get("status") == null ? null : SequencerRunStatus.valueOf(fields.get("status")));
 
             print("Created sequencer run with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, optionalFields);
-            //Log.error("You need to supply name, description, platform_accession [see platform lookup], the complete file path of the run, and 'true' or 'false' for paired_end and skip. Alternatively, enable --interactive mode.");
+            // Log.error("You need to supply name, description, platform_accession [see platform lookup], the complete file path of the run, and 'true' or 'false' for paired_end and skip. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (localRet);
     }
 
     protected ReturnValue addLane() {
-        String[] necessaryFields = {"sequencer_run_accession", "study_type_accession",
-            "library_strategy_accession", "library_selection_accession", "library_source_accession",
-            "name", "description", "cycle_descriptor", "lane_number", "skip"};
+        String[] necessaryFields = { "sequencer_run_accession", "study_type_accession", "library_strategy_accession",
+                "library_selection_accession", "library_source_accession", "name", "description", "cycle_descriptor", "lane_number", "skip" };
         // check to make sure we have what we need
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -612,23 +628,27 @@ public class Metadata extends Plugin {
             // note, study type has no accession in the database
             final int studyTypeId = Integer.parseInt(fields.get("study_type_accession"));
             // create a new experiment
-            localRet = metadata.addLane(Integer.parseInt(fields.get("sequencer_run_accession")), studyTypeId, Integer.parseInt(fields.get("library_strategy_accession")), Integer.parseInt(fields.get("library_selection_accession")), Integer.parseInt(fields.get("library_source_accession")), fields.get("name"), fields.get("description"), fields.get("cycle_descriptor"), "true".equalsIgnoreCase(fields.get("skip")), Integer.parseInt(fields.get("lane_number")));
-            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
-                print ("Invalid parameters, please check your id values");
+            localRet = metadata.addLane(Integer.parseInt(fields.get("sequencer_run_accession")), studyTypeId,
+                    Integer.parseInt(fields.get("library_strategy_accession")),
+                    Integer.parseInt(fields.get("library_selection_accession")), Integer.parseInt(fields.get("library_source_accession")),
+                    fields.get("name"), fields.get("description"), fields.get("cycle_descriptor"),
+                    "true".equalsIgnoreCase(fields.get("skip")), Integer.parseInt(fields.get("lane_number")));
+            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS) {
+                print("Invalid parameters, please check your id values");
                 return localRet;
             }
             print("Created lane with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, null);
-            //Log.error("You need to supply name, description, cycle_descriptor [e.g. {F*120}{..}{R*120}], sequencer_run_accession, study_type_accession, library_strategy_accession, library_selection_accession, library_source_accession and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
+            // Log.error("You need to supply name, description, cycle_descriptor [e.g. {F*120}{..}{R*120}], sequencer_run_accession, study_type_accession, library_strategy_accession, library_selection_accession, library_source_accession and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return localRet;
     }
 
     protected ReturnValue addIUS() {
-        String[] necessaryFields = {"lane_accession", "sample_accession", "name", "description", "skip", "barcode"};
+        String[] necessaryFields = { "lane_accession", "sample_accession", "name", "description", "skip", "barcode" };
         // check to make sure we have what we need
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -636,21 +656,22 @@ public class Metadata extends Plugin {
             promptForIUS(necessaryFields);
         }
 
-        //Integer laneId, Integer sampleId, String name, String description, String cycleDescriptor, boolean skip
+        // Integer laneId, Integer sampleId, String name, String description, String cycleDescriptor, boolean skip
         if (checkFields(necessaryFields)) {
-            //allow barcode to be empty
+            // allow barcode to be empty
 
             // create a new experiment
-            localRet = metadata.addIUS(Integer.parseInt(fields.get("lane_accession")), Integer.parseInt(fields.get("sample_accession")), fields.get("name"), fields.get("description"), fields.get("barcode"), "true".equalsIgnoreCase(fields.get("skip")));
-            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS){
-                print ("Invalid parameters, please check your id values");
+            localRet = metadata.addIUS(Integer.parseInt(fields.get("lane_accession")), Integer.parseInt(fields.get("sample_accession")),
+                    fields.get("name"), fields.get("description"), fields.get("barcode"), "true".equalsIgnoreCase(fields.get("skip")));
+            if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS) {
+                print("Invalid parameters, please check your id values");
                 return localRet;
             }
             print("Created IUS with SWID: " + localRet.getAttribute("sw_accession"));
 
         } else {
             printErrorMessage(necessaryFields, null);
-            //Log.error("You need to supply name, description, lane_accession, sample_accession, barcode and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
+            // Log.error("You need to supply name, description, lane_accession, sample_accession, barcode and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
         return (localRet);
@@ -663,9 +684,9 @@ public class Metadata extends Plugin {
         for (String s : requiredFields) {
             sb.append("\n\t").append(s);
         }
-        if (optionalFields!=null) {
+        if (optionalFields != null) {
             sb.append("\nOptional fields:");
-            for (String s: optionalFields) {
+            for (String s : optionalFields) {
                 sb.append("\n\t").append(s);
             }
         }
@@ -675,10 +696,10 @@ public class Metadata extends Plugin {
         Log.stdout("You supplied:");
         printFields();
     }
-   
 
     /**
      * {@inheritDoc}
+     * 
      * @param string
      */
     @Override
@@ -695,7 +716,7 @@ public class Metadata extends Plugin {
     }
 
     /**
-     *
+     * 
      * @return ReturnValue
      */
     protected ReturnValue parseFields() {
@@ -710,7 +731,7 @@ public class Metadata extends Plugin {
         }
         return (localRet);
     }
-    
+
     protected ReturnValue parseFiles() {
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
         List<?> valuesOf = options.valuesOf("file");
@@ -724,25 +745,25 @@ public class Metadata extends Plugin {
         }
         return (localRet);
     }
-    
-        
+
     protected int[] parseParentAccessions() {
-      
-      List<?> valuesOf = options.valuesOf("parent-accession");
-      ArrayList<Integer> parents = new ArrayList<>();
-      for (Object value : valuesOf) {
-        parents.add(Integer.parseInt(value.toString()));
-      }
-      int[] localRet = new int[parents.size()];
-      for (int i=0; i< localRet.length; i++) {
-        localRet[i] = parents.get(i).intValue();
-      }
-      return(localRet);
+
+        List<?> valuesOf = options.valuesOf("parent-accession");
+        ArrayList<Integer> parents = new ArrayList<>();
+        for (Object value : valuesOf) {
+            parents.add(Integer.parseInt(value.toString()));
+        }
+        int[] localRet = new int[parents.size()];
+        for (int i = 0; i < localRet.length; i++) {
+            localRet[i] = parents.get(i).intValue();
+        }
+        return (localRet);
     }
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue clean_up() {
@@ -752,7 +773,8 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public String get_description() {
@@ -790,9 +812,9 @@ public class Metadata extends Plugin {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    ///// Interactive code
-    ////////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
+    // /// Interactive code
+    // //////////////////////////////////////////////////////////////////////////
     protected void promptForStudy(String[] necessaryFields) {
         Log.stdout("---Create a study---");
         if (!fields.containsKey("study_type")) {
@@ -973,7 +995,7 @@ public class Metadata extends Plugin {
         }
 
         String confirm = ConsoleAdapter.getInstance().readLine("Is this information correct? [y/n] :");
-        //System.out.println("result: " + confirm);
+        // System.out.println("result: " + confirm);
         if (confirm.trim().toLowerCase().equals("y") || confirm.trim().toLowerCase().equals("yes") || confirm.trim().isEmpty()) {
             return true;
         } else {
@@ -982,7 +1004,7 @@ public class Metadata extends Plugin {
             return false;
         }
     }
-    
+
     public static FileMetadata fileString2FileMetadata(String fileString) {
         FileMetadata fm = null;
         String[] tokens = fileString.split("::");

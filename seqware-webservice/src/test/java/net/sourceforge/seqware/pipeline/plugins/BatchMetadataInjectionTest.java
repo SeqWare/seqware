@@ -53,7 +53,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.*;
 
 /**
- *
+ * 
  * @author mtaschuk
  * @author Raunaq Suri
  */
@@ -66,9 +66,9 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     private final List<String> iusSwids = new ArrayList<String>();
     private final List<String> laneSwids = new ArrayList<String>();
 
-    //Metadata object
-//    Map<String, String> hm = ConfigTools.getSettings();
-//    net.sourceforge.seqware.common.metadata.Metadata metadata = MetadataFactory.get(hm);
+    // Metadata object
+    // Map<String, String> hm = ConfigTools.getSettings();
+    // net.sourceforge.seqware.common.metadata.Metadata metadata = MetadataFactory.get(hm);
 
     private static String miseqPath = null;
     private static String inputJsonCorrect = null;
@@ -99,9 +99,10 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
         instance = new BatchMetadataInjection();
         super.setUp();
     }
+
     /**
      * Tests to see if the json was validated correctly
-     *
+     * 
      * @throws java.io.FileNotFoundException
      */
     @Test
@@ -111,7 +112,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
     /**
      * Tests to see that the json was imported correctly
-     *
+     * 
      * @throws IOException
      */
 
@@ -119,17 +120,17 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     public void testImportJsonSequencerRun() throws IOException {
         System.out.println("Testing if importing a json file works");
 
-        String[] bmiparams = {"--import-json-sequencer-run", inputJsonCorrect};
+        String[] bmiparams = { "--import-json-sequencer-run", inputJsonCorrect };
 
         PrintStream old = System.out;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         System.setOut(new PrintStream(baos));
 
-        //Runs the Batch Metadata injection with the input json and importing a json run
+        // Runs the Batch Metadata injection with the input json and importing a json run
         BatchMetadataInjection.main(bmiparams);
         String output = baos.toString();
 
-        //Gets the IUSs from the stdout
+        // Gets the IUSs from the stdout
         getStdOut(output);
         runFileLinkerPlugin(createFileLinkerFile(iusSwids), wfaccession);
         getData();
@@ -165,96 +166,98 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
         Set<SampleInfo> samples = run.getLanes().iterator().next().getSamples();
         Assert.assertEquals("Incorrect number of samples", 6, samples.size());
-//        SampleInfo sample = samples.get(0);
-//        String[] archiveSample = new String[]{
-//            "TCACAG", //barcode
-//            "1", //lane
-//            "TST1-002-1ARC", //name
-//            "Homo sapiens", //organism
-//            "TST1-002",//parent sample
-//            "", //targeted resequencing
-//            "", //template type
-//            "", //tissue origin
-//            "", //tissue preparation
-//            "1", //region
-//            "A"}; //tissue type
-//        String[] biopsySample = new String[]{
-//            "CGTAGT", //barcode
-//            "1", //lane
-//            "TST1-010-1BIO", //name
-//            "Homo sapiens", //organism
-//            "TST1-010",//parent sample
-//            "", //targeted resequencing
-//            "", //template type
-//            "", //tissue origin
-//            "", //tissue preparation
-//            "1", //region
-//            "P"
-//        };
-//        String[] bloodSample = new String[]{
-//            "TTAGCG", //barcode
-//            "1", //lane
-//            "TST1-012-3BLD", //name
-//            "Homo sapiens", //organism
-//            "TST1-012",//parent sample
-//            "", //targeted resequencing
-//            "", //template type
-//            "", //tissue origin
-//            "Blood", //tissue preparation
-//            "3", //region
-//            "R"
-//        };
-//        assertSample(archiveSample, samples.get(0));
-//        assertSample(biopsySample, samples.get(1));
-//        assertSample(bloodSample, samples.get(2));
+        // SampleInfo sample = samples.get(0);
+        // String[] archiveSample = new String[]{
+        // "TCACAG", //barcode
+        // "1", //lane
+        // "TST1-002-1ARC", //name
+        // "Homo sapiens", //organism
+        // "TST1-002",//parent sample
+        // "", //targeted resequencing
+        // "", //template type
+        // "", //tissue origin
+        // "", //tissue preparation
+        // "1", //region
+        // "A"}; //tissue type
+        // String[] biopsySample = new String[]{
+        // "CGTAGT", //barcode
+        // "1", //lane
+        // "TST1-010-1BIO", //name
+        // "Homo sapiens", //organism
+        // "TST1-010",//parent sample
+        // "", //targeted resequencing
+        // "", //template type
+        // "", //tissue origin
+        // "", //tissue preparation
+        // "1", //region
+        // "P"
+        // };
+        // String[] bloodSample = new String[]{
+        // "TTAGCG", //barcode
+        // "1", //lane
+        // "TST1-012-3BLD", //name
+        // "Homo sapiens", //organism
+        // "TST1-012",//parent sample
+        // "", //targeted resequencing
+        // "", //template type
+        // "", //tissue origin
+        // "Blood", //tissue preparation
+        // "3", //region
+        // "R"
+        // };
+        // assertSample(archiveSample, samples.get(0));
+        // assertSample(biopsySample, samples.get(1));
+        // assertSample(bloodSample, samples.get(2));
 
     }
 
-//    private void assertSample(String[] sample, SampleInfo actualSample) {
-//        Assert.assertEquals("Incorrect Barcode", sample[0], actualSample.getBarcode());
-//        Assert.assertEquals("Incorrect Lane", sample[1], actualSample.getLane());
-//        Assert.assertEquals("Incorrect Name",sample[2], actualSample.getName());
-//        Assert.assertEquals("Incorrect Organism", sample[3], actualSample.getOrganism());
-//        Assert.assertEquals("Incorrect Parent Sample", sample[4], actualSample.getParentSample());
-//        Assert.assertEquals("Incorrect Targeted Resequencing", sample[5], actualSample.getTargetedResequencing());
-//        Assert.assertEquals("Incorrect Template Type", sample[6], actualSample.getTemplateType());
-//        Assert.assertEquals("Incorrect Tissue Origin", sample[7], actualSample.getTissueOrigin());
-//        Assert.assertEquals("Incorrect Tissue Preparation", sample[8], actualSample.getTissuePreparation());
-//        Assert.assertEquals("Incorrect Region", sample[9], actualSample.getTissueRegion());
-//        Assert.assertEquals("Incorrect Tissue Type", sample[10], actualSample.getTissueType());
-//    }
-//    /**
-//     * Test of parseMiseqData method, of class BatchMetadataInjection.
-//     */
-//    @Test
-//    public void testParseMiseqData() throws Exception {
-//        System.out.println("parseMiseqData");
-//        BufferedReader freader = null;
-//        BatchMetadataInjection instance = new BatchMetadataInjection();
-//                instance.parseMiseqData(freader);
-//    }
-//
-//    /**
-//     * Test of parseMiseqHeader method, of class BatchMetadataInjection.
-//     */
-//    @Test
-//    public void testParseMiseqHeader() throws Exception {
-//        System.out.println("parseMiseqHeader");
-//        BufferedReader freader = null;
-//        BatchMetadataInjection instance = new BatchMetadataInjection();
-//        Map expResult = null;
-//        Map result = instance.parseMiseqHeader(freader);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+    // private void assertSample(String[] sample, SampleInfo actualSample) {
+    // Assert.assertEquals("Incorrect Barcode", sample[0], actualSample.getBarcode());
+    // Assert.assertEquals("Incorrect Lane", sample[1], actualSample.getLane());
+    // Assert.assertEquals("Incorrect Name",sample[2], actualSample.getName());
+    // Assert.assertEquals("Incorrect Organism", sample[3], actualSample.getOrganism());
+    // Assert.assertEquals("Incorrect Parent Sample", sample[4], actualSample.getParentSample());
+    // Assert.assertEquals("Incorrect Targeted Resequencing", sample[5], actualSample.getTargetedResequencing());
+    // Assert.assertEquals("Incorrect Template Type", sample[6], actualSample.getTemplateType());
+    // Assert.assertEquals("Incorrect Tissue Origin", sample[7], actualSample.getTissueOrigin());
+    // Assert.assertEquals("Incorrect Tissue Preparation", sample[8], actualSample.getTissuePreparation());
+    // Assert.assertEquals("Incorrect Region", sample[9], actualSample.getTissueRegion());
+    // Assert.assertEquals("Incorrect Tissue Type", sample[10], actualSample.getTissueType());
+    // }
+    // /**
+    // * Test of parseMiseqData method, of class BatchMetadataInjection.
+    // */
+    // @Test
+    // public void testParseMiseqData() throws Exception {
+    // System.out.println("parseMiseqData");
+    // BufferedReader freader = null;
+    // BatchMetadataInjection instance = new BatchMetadataInjection();
+    // instance.parseMiseqData(freader);
+    // }
+    //
+    // /**
+    // * Test of parseMiseqHeader method, of class BatchMetadataInjection.
+    // */
+    // @Test
+    // public void testParseMiseqHeader() throws Exception {
+    // System.out.println("parseMiseqHeader");
+    // BufferedReader freader = null;
+    // BatchMetadataInjection instance = new BatchMetadataInjection();
+    // Map expResult = null;
+    // Map result = instance.parseMiseqHeader(freader);
+    // assertEquals(expResult, result);
+    // // TODO review the generated test code and remove the default call to fail.
+    // fail("The test case is a prototype.");
+    // }
     private void writeToObjects() throws IOException {
 
         net.sourceforge.seqware.common.model.Study study = metadata.getStudyByName(fileReport.get(0).get("Study Title"));
 
-        net.sourceforge.seqware.common.model.SequencerRun sequencer = metadata.getSequencerRun(Integer.parseInt(fileReport.get(0).get("Sequencer Run SWID")));
-        net.sourceforge.seqware.common.model.Experiment experiment = metadata.getExperiment(Integer.parseInt(fileReport.get(0).get("Experiment SWID")));
-        //Sets study attributes
+        net.sourceforge.seqware.common.model.SequencerRun sequencer = metadata.getSequencerRun(Integer.parseInt(fileReport.get(0).get(
+                "Sequencer Run SWID")));
+        net.sourceforge.seqware.common.model.Experiment experiment = metadata.getExperiment(Integer.parseInt(fileReport.get(0).get(
+                "Experiment SWID")));
+        // Sets study attributes
         runInfo = new RunInfo();
         runInfo.setStudyTitle(fileReport.get(0).get("Study Title").replaceAll("_", " "));
 
@@ -264,26 +267,26 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
         runInfo.setStudyCenterProject(study.getCenterProjectName());
         runInfo.setStudyDescription(study.getDescription());
-        runInfo.setPairedEnd(true); //true for 99% of the cases
+        runInfo.setPairedEnd(true); // true for 99% of the cases
         runInfo.setRunSkip(Boolean.parseBoolean(fileReport.get(0).get("Skip")));
 
-        //Can't get study type
-        //Sets experiment info
+        // Can't get study type
+        // Sets experiment info
         runInfo.setExperimentName(fileReport.get(0).get("Experiment Name").replaceAll("_", " "));
         runInfo.setExperimentAttributes(getAttributes(fileReport.get(0).get("Experiment Attributes")));
         runInfo.setExperimentDescription(experiment.getDescription());
-        //Sets sequencer info
+        // Sets sequencer info
         runInfo.setRunName(fileReport.get(0).get("Sequencer Run Name"));
         runInfo.setRunAttributes(getAttributes(fileReport.get(0).get("Sequencer Run Attributes")));
         runInfo.setRunDescription(sequencer.getDescription());
 
         Set<LaneInfo> lanes = new HashSet<LaneInfo>();
         for (int i = 0; i < laneSwids.size(); i++) {
-            //Iterates through all the unique lanes
+            // Iterates through all the unique lanes
             Lane metadataLane = metadata.getLane(Integer.parseInt(laneSwids.get(i)));
             LaneInfo lane = new LaneInfo();
 
-            //Sets the required data
+            // Sets the required data
             lane.setLaneName(metadataLane.getName());
             lane.setLaneDescription(metadataLane.getDescription());
             lane.setLaneCycleDescriptor(metadataLane.getCycleDescriptor());
@@ -293,10 +296,10 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
             lane.setLibraryStrategyAcc(metadataLane.getLibraryStrategy().getLibraryStrategyId());
 
             Set<SampleInfo> samples = new HashSet<SampleInfo>();
-            //Iterates through the data
+            // Iterates through the data
             for (int j = 0; j < fileReport.size(); j++) {
-                //Makes sure that the data is going to the right lane
-                //Checks to make sure that the samples are from the correct lanes
+                // Makes sure that the data is going to the right lane
+                // Checks to make sure that the samples are from the correct lanes
                 if (fileReport.get(j).get("Lane SWID").equals(String.valueOf(laneSwids.get(i)))) {
                     lane.setLaneNumber(fileReport.get(j).get("Lane Number"));
                     lane.setLaneAttributes(getAttributes(fileReport.get(j).get("Lane Attributes")));
@@ -319,7 +322,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
                     sample.setSampleDescription(metadata.getSampleByName(sample.getName()).get(0).getDescription());
 
-                    //The Sample Attributes also contains other info which can be parsed
+                    // The Sample Attributes also contains other info which can be parsed
                     for (TagValueUnit unit : getAttributes(fileReport.get(j).get("Sample Attributes"))) {
                         if (unit.getTag().matches(".*tissue_origin.*")) {
                             sample.setTissueOrigin(unit.getValue());
@@ -358,7 +361,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     }
 
     private Set<TagValueUnit> getAttributes(String data) {
-        //Splits the strings into multiple key value pairs
+        // Splits the strings into multiple key value pairs
         if ("".equals(data)) {
             return null;
         }
@@ -378,7 +381,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
     private void getData() {
 
-        Map<FileProvenanceParam, List<String>> fileProvenanceParams = new EnumMap<FileProvenanceParam, List<String>>(FileProvenanceParam.class);
+        Map<FileProvenanceParam, List<String>> fileProvenanceParams = new EnumMap<FileProvenanceParam, List<String>>(
+                FileProvenanceParam.class);
         fileProvenanceParams.put(FileProvenanceParam.ius, iusSwids);
 
         metadata.fileProvenanceReportTrigger();
@@ -386,16 +390,16 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     }
 
     private void getStdOut(String output) {
-        //Captures the required data from standard output that was given
+        // Captures the required data from standard output that was given
         String[] outputLines = output.split("\n");
 
         for (String s : outputLines) {
-            //Gets the IUS swids
+            // Gets the IUS swids
             if (s.matches("Created IUS with SWID: [0-9]*")) {
 
                 iusSwids.add(parseSWID(s));
             } else if (s.matches("Created lane with SWID: [0-9]*")) {
-                //gets the lane swids
+                // gets the lane swids
                 laneSwids.add(parseSWID(s));
             }
 
@@ -407,11 +411,11 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
         String header = "sequencer_run,sample,lane,ius_sw_accession,file_status,mime_type,file\n";
         File fileLinkerFile = new File(fileName);
 
-        //Starts writing to file
+        // Starts writing to file
         FileUtils.writeStringToFile(fileLinkerFile, header);
         fileLinkerFile.deleteOnExit();
 
-        //Creates the random files
+        // Creates the random files
         String randomName = RandomStringUtils.random(5, true, false);
         int count = 0;
         for (String s : swids) {
@@ -432,7 +436,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
     private void runFileLinkerPlugin(String fileLinkerPath, String wfaccession) throws IOException {
 
-        String[] fileLinkerParams = {"--file-list-file", fileLinkerPath, "--workflow-accession", wfaccession, "--csv-separator", ","};
+        String[] fileLinkerParams = { "--file-list-file", fileLinkerPath, "--workflow-accession", wfaccession, "--csv-separator", "," };
         PluginRunner p = new PluginRunner();
         List<String> a = new ArrayList<String>();
         a.add("--plugin");
@@ -456,7 +460,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
     /**
      * Compares all values in the json to make sure that they are equal
-     *
+     * 
      * @param original
      * @param actual
      * @return If the jsons match or not
@@ -467,13 +471,13 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
         EqualsBuilder equal = new EqualsBuilder();
 
-        //Study stuff
+        // Study stuff
         equal.append(original.getStudyTitle(), actual.getStudyTitle());
         equal.append(original.getStudyDescription(), actual.getStudyDescription());
         equal.append(original.getStudyCenterName(), actual.getStudyCenterName());
         equal.append(original.getStudyCenterProject(), actual.getStudyCenterProject());
 
-        //Sequencer stuff
+        // Sequencer stuff
         equal.append(original.getRunName(), actual.getRunName());
         equal.append(original.getRunSkip(), actual.getRunSkip());
         equal.append(original.getRunDescription(), actual.getRunDescription());
@@ -493,7 +497,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
             equal.append(unitAct.getValue(), unitOrig.getValue());
         }
 
-        //Experiment stuff
+        // Experiment stuff
         equal.append(original.getExperimentDescription(), actual.getExperimentDescription());
         equal.append(original.getExperimentName(), actual.getExperimentName());
 
@@ -512,7 +516,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
             equal.append(unitAct.getValue(), unitOrig.getValue());
         }
 
-        //Lanes
+        // Lanes
         List<LaneInfo> originalLanes = new ArrayList<LaneInfo>(original.getLanes());
         List<LaneInfo> actualLanes = new ArrayList<LaneInfo>(actual.getLanes());
 
@@ -522,7 +526,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
         Iterator<LaneInfo> iterActualLane = actualLanes.iterator();
         Iterator<LaneInfo> iterOriginalLane = originalLanes.iterator();
 
-        //Adds all the lane info
+        // Adds all the lane info
         while (iterActualLane.hasNext() && iterOriginalLane.hasNext()) {
             LaneInfo originalLane = iterOriginalLane.next();
             LaneInfo actualLane = iterActualLane.next();
@@ -535,7 +539,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
             equal.append(originalLane.getLibrarySourceAcc(), actualLane.getLibrarySourceAcc());
             equal.append(originalLane.getLibraryStrategyAcc(), actualLane.getLibraryStrategyAcc());
 
-            //Adds all the lane attributes
+            // Adds all the lane attributes
             List<TagValueUnit> originalLaneAttributes = new ArrayList<TagValueUnit>(originalLane.getLaneAttributes());
             List<TagValueUnit> actualLaneAttributes = new ArrayList<TagValueUnit>(actualLane.getLaneAttributes());
             Collections.sort(originalLaneAttributes);
@@ -552,7 +556,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
                 equal.append(unitOrig.getValue(), unitActual.getValue());
             }
 
-            //Now to check samples
+            // Now to check samples
             List<SampleInfo> originalSamples = new ArrayList<SampleInfo>(originalLane.getSamples());
             List<SampleInfo> actualSamples = new ArrayList<SampleInfo>(actualLane.getSamples());
 

@@ -36,19 +36,19 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * This resource will pull back the workflow runs that are generated from a
- * particular file.
- *
+ * This resource will pull back the workflow runs that are generated from a particular file.
+ * 
  * This version can limit results by particular workflow runs and take parameters by JSON
- *
+ * 
  * @author dyuen
  * @version $Id: $Id
  */
 public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
 
-
     /**
-     * <p>Constructor for FileChildWorkflowRunsResource.</p>
+     * <p>
+     * Constructor for FileChildWorkflowRunsResource.
+     * </p>
      */
     public FileChildLimitedWorkflowRunsResource() {
         super("file");
@@ -83,7 +83,7 @@ public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
                 throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, ex);
             }
             o = testIfNull(o);
-                
+
             Log.debug("Working with " + o.size() + " files");
             Log.debug("Working with " + workflows.size() + " workflows");
             WorkflowRunList2 runs = FileChildWorkflowRunsResource.directRetrieveWorkflowRuns(o, workflows);
@@ -101,6 +101,5 @@ public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
             getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
         }
     }
-    
-    
+
 }
