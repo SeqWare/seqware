@@ -50,6 +50,7 @@ import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
@@ -528,6 +529,10 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         rerun = processWorkflowRuns(filesToRun, failures, runs);
         if (!rerun) {
             Log.debug("This workflow has failed to launch based on workflow runs found via direct search");
+            return rerun;
+        }
+        // special case, when rerun max is 0, we still want to launch even if there are 0 failures
+        if (failures.isEmpty() && this.rerunMax == 0){
             return rerun;
         }
         if (failures.size() >= this.rerunMax) {
@@ -1020,6 +1025,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
         map.put(FileProvenanceParam.workflow_run_status, new ImmutableList.Builder<String>().add(WorkflowRunStatus.completed.toString())
                 .build());
+        map.put(FileProvenanceParam.processing_status, new ImmutableList.Builder<String>().add(ProcessingStatus.success.toString()).build());
         if (this.parentWorkflowAccessions.size() > 0) {
             map.put(FileProvenanceParam.workflow, new ImmutableList.Builder<String>().addAll(this.parentWorkflowAccessions).build());
         }

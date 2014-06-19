@@ -60,7 +60,8 @@
               "Workflow Run SWID" 
               "Processing Algorithm" 
               "Processing SWID" 
-              "Processing Attributes" 
+              "Processing Attributes"
+              "Processing Status" 
               "File Meta-Type" 
               "File SWID" 
               "File Attributes"
@@ -113,6 +114,7 @@
     "workflow-run"    (in "workflow_run_swa" (->ints values))
     "workflow-run-status" (in "workflow_run_status" values)
     "processing"      (in "processing_swa" (->ints values))
+    "processing-status" (in "processing_status" values)
     "file"            (in "file_swa" (->ints values))
     "file-meta-type"  (in "file_meta_type" values)
     "skip"            (in "skip" (->bools values))

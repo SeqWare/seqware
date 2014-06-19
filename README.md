@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/4360/SeqWare/seqware.png)](http://dx.doi.org/10.5281/zenodo.10549)
+
 ## Introduction 
 
 This README is just a quick overview of building SeqWare. See our
@@ -123,6 +125,10 @@ You can also build individual components such as the new query engine with:
 
     cd seqware-queryengine
     mvn clean install
+
+### Coding Standards
+
+Please refer to SeqWare's [Coding Standards](https://seqware.github.io/docs/100-coding-standards/). 
 
 ### Building Our Site
 
