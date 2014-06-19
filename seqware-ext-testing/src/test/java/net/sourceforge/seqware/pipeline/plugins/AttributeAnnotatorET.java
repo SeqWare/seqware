@@ -263,9 +263,9 @@ public class AttributeAnnotatorET {
                     accession);
             Assert.assertTrue("skip value incorrect", runQuery.length == 1 && runQuery[0].equals(true));
             List<Object[]> runQuery1 = dbCreator.runQuery(new ArrayListHandler(), query, accession);
-            Assert.assertTrue("first annotation incorrect", runQuery1.size() == 1);
-            Assert.assertTrue("first tag incorrect", runQuery1.get(0)[1].equals("skip"));
-            Assert.assertTrue("first value incorrect", runQuery1.get(0)[2].equals(value));
+            Assert.assertTrue("first annotation incorrect, found " + runQuery1.size(), runQuery1.size() == 1);
+            Assert.assertTrue("first tag incorrect, found " + runQuery1.get(0)[1], runQuery1.get(0)[1].equals("skip"));
+            Assert.assertTrue("first value incorrect, found " + runQuery1.get(0)[2] , runQuery1.get(0)[2].equals(value));
         }
     }
 
