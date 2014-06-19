@@ -4,6 +4,7 @@
  */
 package io.seqware.webservice.generated.model;
 
+import com.sun.xml.bind.CycleRecoverable;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -12,6 +13,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,14 +25,25 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Persistence;
+import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Query;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -63,7 +77,7 @@ import javax.xml.bind.annotation.XmlTransient;
   @NamedQuery(name = "Sample.findBySwAccession", query = "SELECT s FROM Sample s WHERE s.swAccession = :swAccession"),
   @NamedQuery(name = "Sample.findByCreateTstmp", query = "SELECT s FROM Sample s WHERE s.createTstmp = :createTstmp"),
   @NamedQuery(name = "Sample.findByUpdateTstmp", query = "SELECT s FROM Sample s WHERE s.updateTstmp = :updateTstmp")})
-public class Sample implements Serializable {
+public class Sample implements Serializable, CycleRecoverable {
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -351,7 +365,6 @@ public class Sample implements Serializable {
     this.updateTstmp = updateTstmp;
   }
 
-  @XmlTransient
   public Collection<Sample> getSampleCollection() {
     return sampleCollection;
   }
@@ -360,7 +373,7 @@ public class Sample implements Serializable {
     this.sampleCollection = sampleCollection;
   }
 
-  @XmlTransient
+  
   public Collection<Sample> getSampleCollection1() {
     return sampleCollection1;
   }
@@ -498,5 +511,52 @@ public class Sample implements Serializable {
   public String toString() {
     return "io.seqware.webservice.model.Sample[ sampleId=" + sampleId + " ]";
   }
-  
+
+    /**
+     * from
+     * http://wiki.eclipse.org/EclipseLink/Release/2.4.0/JAXB_RI_Extensions/Cycle_Recoverable
+     *
+     * @param cntxt
+     * @return
+     */
+    @Override
+    public Object onCycleDetected(Context cntxt) {
+        return this.getSampleId();
+    }
+
+    /**
+     * For debugging (silly generated classes have no model base class)
+     * TODO: create a base class and fix this
+     */
+    public void toXml() {
+        try {
+            JAXBContext ctx = JAXBContext.newInstance(this.getClass());
+            Marshaller marshaller = ctx.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            marshaller.marshal(this, System.out);
+        } catch (Exception e) {
+
+            //catch exception 
+        }
+    }
+    
+    @PostLoad
+    public void loadRootSampleFlag(){
+        Logger.getLogger(Sample.class).info(this.getSampleId() + ": Attempting to find root sample flag");
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU");
+        EntityManager em = emFactory.createEntityManager();
+        Query query = selectNullParentCountQuery(em, this.getSampleId());
+        Long firstResult = (Long) query.getSingleResult();
+        if (firstResult != null && firstResult > 0){
+            Logger.getLogger(Sample.class).info(this.getSampleId() + ": Found root sample flag");
+            this.getSampleCollection1().add(null);
+            return;
+        }
+        Logger.getLogger(Sample.class).info(this.getSampleId() + ": Did not find root sample flag");
+    }
+
+    public static Query selectNullParentCountQuery(EntityManager em, int id) {
+        Query query = em.createNativeQuery("select count(*) from sample_hierarchy where sample_id = "+id+" and parent_id IS NULL;");
+        return query;
+    }
 }
