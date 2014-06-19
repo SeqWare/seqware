@@ -4,24 +4,27 @@ import com.google.common.collect.ObjectArrays;
 import io.seqware.Reports;
 import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.sourceforge.seqware.common.util.Log;
-
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
+import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
+import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility.HumanProvenanceFilters;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -836,21 +839,16 @@ public class Main {
       out("");
       out("Optional parameters:");
       out("  --out <file>                   The name of the output file");
-      out("  --study-name <name>            Limit files to the specified study name. Can occur multiple times.");
-      out("  --root-sample-name <name>      Limit files to the specified root sample name. Can occur multiple times.");
-      out("  --sample-name <name>           Limit files to the specified sample name. Can occur multiple times.");
-      out("  --sequencer-run-name <name>    Limit files to the specified sequencer run name. Can occur multiple times.");
-      out("  --ius-SWID <swid>              Limit files to the specified ius SWID. Can occur multiple times.");
-      out("  --lane-SWID <swid>             Limit files to the specified lane SWID. Can occur multiple times.");
+      for(HumanProvenanceFilters filter : ProvenanceUtility.HumanProvenanceFilters.values()){
+            out("  --"+filter.human_str+" <value>            Limit files to the specified "+filter.desc+". Can occur multiple times.");
+      }
       out("");
     } else {
-                
-      List<String> studies = optVals(args, "--study-name");
-      List<String> rootSamples = optVals(args, "--root-sample-name");
-      List<String> samples = optVals(args, "--sample-name");
-      List<String> sequencerRuns = optVals(args, "--sequencer-run-name");
-      List<String> iusSWIDs = optVals(args, "--ius-SWID");
-      List<String> laneSWIDs = optVals(args, "--lane-SWID");
+      Map<ProvenanceUtility.HumanProvenanceFilters, List<String>> map = new HashMap<>();
+      for(HumanProvenanceFilters filter : ProvenanceUtility.HumanProvenanceFilters.values()){
+              List<String> optVals = optVals(args, "--" + filter.human_str);
+              map.put(filter, optVals);
+      }
       String file = optVal(args, "--out", (new Date() + ".tsv").replace(" ", "_"));
 
       extras(args, "files report");
@@ -860,33 +858,22 @@ public class Main {
       runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.fileprovenance.FileProvenanceReporter");
       runnerArgs.add("--");
 
-        if (studies.isEmpty() && rootSamples.isEmpty() && samples.isEmpty() && sequencerRuns.isEmpty() && iusSWIDs.isEmpty() && laneSWIDs.isEmpty()) {
-            runnerArgs.add("-all");
+        // check if all values in the map are empty
+        boolean allEmpty = true;
+        for(Entry<ProvenanceUtility.HumanProvenanceFilters, List<String>> e : map.entrySet()){
+            if (!e.getValue().isEmpty()){
+                allEmpty = false;
+            }
+        }
+        
+        if (allEmpty) {
+            runnerArgs.add("--all");
         } else {
-
-            for (String study : studies) {
-                runnerArgs.add("--study-name");
-                runnerArgs.add(study);
-            }
-            for (String rootSample : rootSamples) {
-                runnerArgs.add("--root-sample-name");
-                runnerArgs.add(rootSample);
-            }
-            for (String sample : samples) {
-                runnerArgs.add("--sample-name");
-                runnerArgs.add(sample);
-            }
-            for (String sequencerRun : sequencerRuns) {
-                runnerArgs.add("--sequencer-run-name");
-                runnerArgs.add(sequencerRun);
-            }
-            for (String iusSWID : iusSWIDs) {
-                runnerArgs.add("--ius-SWID");
-                runnerArgs.add(iusSWID);
-            }
-            for (String laneSWID : laneSWIDs) {
-                runnerArgs.add("--lane-SWID");
-                runnerArgs.add(laneSWID);
+            for (Entry<ProvenanceUtility.HumanProvenanceFilters, List<String>> e : map.entrySet()) {
+                for(String val : e.getValue()){
+                    runnerArgs.add("--" + e.getKey().human_str);
+                    runnerArgs.add(val);
+                }
             }
         }
         if (file != null) {

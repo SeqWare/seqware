@@ -260,6 +260,17 @@ public class BasicDeciderTest extends PluginTest {
         Assert.assertTrue("output 2 does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 34);
     }
     
+    @Test
+    public void testSEQWARE1924FailedProcessing() {
+        dbCreator.runUpdate("update workflow_run set status = 'completed' where sw_accession = 6481;");
+        metadata.fileProvenanceReportTrigger();
+        String[] params = new String[]{"--all", "", "--wf-accession", "4773", "--meta-types", "application/bam", "--force-run-all", "--test"};
+        launchAndCaptureOutput(params);
+        TestingDecider decider = (TestingDecider) instance;
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 80);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 13);
+    }
+    
     @Test 
     public void testDecidingWithAttributes(){
          // swap out the decider
@@ -525,20 +536,20 @@ public class BasicDeciderTest extends PluginTest {
         @Override
         protected String handleGroupByAttribute(String attribute) {
             fileSet.add(attribute);
-            Log.debug("GROUP BY ATTRIBUTE: " + getHeader().getTitle() + " " + attribute);
+            Log.warn("GROUP BY ATTRIBUTE: " + getHeader().getTitle() + " " + attribute);
             return attribute;
         }
 
         @Override
         protected boolean checkFileDetails(ReturnValue returnValue, FileMetadata fm) {
-            Log.debug("CHECK FILE DETAILS:" + fm);
+            Log.warn("CHECK FILE DETAILS:" + fm);
             //pathToAttributes.put(fm.getFilePath(), returnValue);
             return super.checkFileDetails(returnValue, fm);
         }
 
         @Override
         protected Map<String, String> modifyIniFile(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
-            Log.debug("INI FILE:" + commaSeparatedFilePaths);
+            Log.warn("INI FILE:" + commaSeparatedFilePaths);
 
             Map<String, String> iniFileMap = new TreeMap<>();
             iniFileMap.put(ReservedIniKeys.INPUT_FILE.getKey(), commaSeparatedFilePaths);
