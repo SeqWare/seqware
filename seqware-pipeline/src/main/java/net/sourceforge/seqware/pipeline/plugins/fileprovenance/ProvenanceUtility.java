@@ -47,8 +47,8 @@ public class ProvenanceUtility {
                 "sample-name", "Full sample name", false, FileProvenanceParam.sample), ROOT_SAMPLE_NAME("root-sample-name",
                 "Full root sample name", false, FileProvenanceParam.root_sample), SEQUENCER_RUN_NAME("sequencer-run-name",
                 "Full sequencer run name", false, FileProvenanceParam.sequencer_run), ORGANISM("organism", "organism id", true,
-                FileProvenanceParam.organism), PROCESSING("processing-SWID", "processing sw_accession", true,
-                FileProvenanceParam.processing);
+                FileProvenanceParam.organism), WORKFLOW_RUN_STATUS("workflow-run-status","Workflow run status", true, FileProvenanceParam.workflow_run_status),
+		        PROCESSING_STATUS("processing-status","Processing status", true, FileProvenanceParam.processing_status), PROCESSING("processing-SWID", "processing sw_accession", true, FileProvenanceParam.processing);
 
         public final String human_str;
         public final String desc;

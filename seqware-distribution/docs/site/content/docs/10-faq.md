@@ -36,6 +36,6 @@ What workflow language should I use?
 : Our Java workflow language is the current recommended choice.
 
 What workflow engine should I use?
-: Our Pegasus workflow engine is the current recommended choice.
+: Our Oozie-SGE workflow engine is the current recommended choice.
 
 

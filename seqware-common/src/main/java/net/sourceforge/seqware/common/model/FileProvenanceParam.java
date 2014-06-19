@@ -1,7 +1,7 @@
 package net.sourceforge.seqware.common.model;
 
 public enum FileProvenanceParam {
-    study, experiment, sample, root_sample("root-sample"), organism, processing, sample_ancestor("sample-ancestor"), sequencer_run(
+    study, experiment, sample, root_sample("root-sample"), organism, processing, sample_ancestor("sample-ancestor"), processing_status("processing-status"), sequencer_run(
             "sequencer-run"), lane, ius, workflow, workflow_run("workflow-run"), workflow_run_status("workflow-run-status"), file, file_meta_type(
             "file-meta-type"), skip;
 
