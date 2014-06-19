@@ -840,18 +840,14 @@ public class Main {
       out("Optional parameters:");
       out("  --out <file>                   The name of the output file");
       for(HumanProvenanceFilters filter : ProvenanceUtility.HumanProvenanceFilters.values()){
-          if (filter.standard){
-            out("  --"+filter.human_str+" <name>            Limit files to the specified "+filter.desc+". Can occur multiple times.");
-          }
+            out("  --"+filter.human_str+" <value>            Limit files to the specified "+filter.desc+". Can occur multiple times.");
       }
       out("");
     } else {
       Map<ProvenanceUtility.HumanProvenanceFilters, List<String>> map = new HashMap<>();
       for(HumanProvenanceFilters filter : ProvenanceUtility.HumanProvenanceFilters.values()){
-          if (filter.standard){
               List<String> optVals = optVals(args, "--" + filter.human_str);
               map.put(filter, optVals);
-          }
       }
       String file = optVal(args, "--out", (new Date() + ".tsv").replace(" ", "_"));
 
