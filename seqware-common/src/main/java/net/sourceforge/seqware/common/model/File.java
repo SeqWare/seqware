@@ -345,6 +345,10 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
 
   @Override
   public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
+      if (registration.isLIMSAdmin()) {
+          Log.debug("Skipping permissions admin on File object " + swAccession);
+          return true;
+      }
       boolean consideredBefore = considered.contains(this.getSwAccession());
       if (!consideredBefore) {
           considered.add(this.getSwAccession());
