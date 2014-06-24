@@ -17,6 +17,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import org.apache.log4j.Logger;
 
 /**
  * 
@@ -43,6 +44,10 @@ public class SampleFacadeREST extends AbstractFacade<Sample> {
     @Override
     @Consumes({ "application/xml", "application/json" })
     public void edit(Sample entity) {
+    Logger.getLogger(Sample.class).info("XML output for @Put");
+    if (Logger.getLogger(Sample.class).isDebugEnabled()){
+        entity.toXml();
+    }
         super.edit(entity);
     }
 
@@ -56,7 +61,12 @@ public class SampleFacadeREST extends AbstractFacade<Sample> {
     @Path("{id}")
     @Produces({ "application/xml", "application/json" })
     public Sample find(@PathParam("id") Integer id) {
-        return super.find(id);
+      Sample find = super.find(id);
+      if (Logger.getLogger(Sample.class).isDebugEnabled()){
+        Logger.getLogger(Sample.class).info("XML output for @Get");
+        find.toXml();
+      }
+      return find;
     }
 
     @GET
