@@ -12,6 +12,12 @@ toc_includes_sections: true
 * the adding new job step below should show how to call a user-created script! A one-step workflow!
 -->
 
+<p class="warning"><strong>Note:</strong>This guide assumes you have installed
+SeqWare already. If you have not, please install SeqWare by either downloading
+the VirtualBox VM or launching the AMI on the Amazon cloud.  See <a
+href="/docs/2-installation/">Installation</a> for directions. We also recommend you
+follow the [User Tutorial](/docs/3-getting-started/user-tutorial/) before this guide.</p>
+
 This guide picks up where the [User
 Tutorial](/docs/3-getting-started/user-tutorial/) left off. In that previous
 guide we showed you how to start up your local VM, create studies, experiments,

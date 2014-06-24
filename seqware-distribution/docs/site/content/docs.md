@@ -29,6 +29,22 @@ workflows.  This user is responsible for the components that allow the User and
 Developer to do their work and, consequently, this role is responsible for
 setting up and maintaining the various SeqWare components.
 
+We recommend you follow the guides in the following order: User, Developer, then Admin guides.
+
+<table>
+<tr>
+<th><h2><strong>Users</strong></h2></th>
+<th><h2><strong>Developers</strong></h2></th>
+<th><h2><strong>Admins</strong></h2></th>
+</tr>
+<tr>
+<td><a href="/docs/3-getting-started/user-tutorial/"><img src="/assets/images/genome-capable_ico.png"/></a></td>
+<td><a href="/docs/3-getting-started/developer-tutorial/"><img src="/assets/images/open-source_ico.png"/></a></td>
+<td><a href="/docs/3-getting-started/admin-tutorial/"><img src="/assets/images/cloud-based_ico.png"/></a></td>
+</tr>
+</table>
+
+
 ## SeqWare Overview
 
 SeqWare currently provides 5 main tools specifically designed to support the analysis necessary for massively parallel sequencing technologies. All tools can be used together or separately. The tutorials below will focus mainly on Pipeline with information about other projects provided as needed:
