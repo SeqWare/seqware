@@ -193,9 +193,6 @@ public class WorkflowDataModelFactory {
         int randInt = rand.nextInt(100000000);
         dataModel.setRandom("" + randInt);
         // copy some properties from .settings to configs
-        dataModel.getEnv().setPegasusConfigDir(config.get("SW_PEGASUS_CONFIG_DIR"));
-        dataModel.getEnv().setDaxDir(config.get("SW_DAX_DIR"));
-        dataModel.getEnv().setSwCluster(config.get("SW_CLUSTER"));
         dataModel.getEnv().setOOZIE_URL(config.get("OOZIE_URL"));
         dataModel.getEnv().setOOZIE_APP_ROOT(config.get("OOZIE_APP_ROOT"));
         dataModel.getEnv().setOOZIE_JOBTRACKER(config.get("OOZIE_JOBTRACKER"));
