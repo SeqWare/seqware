@@ -16,38 +16,33 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.tools.RunLock;
-
+import org.apache.oozie.client.OozieClient;
+import org.apache.oozie.client.WorkflowJob;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import org.mockito.Mock;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -57,7 +52,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * 
  * @author dyuen
  */
-@PrepareForTest({ WorkflowTools.class, FileTools.class, WorkflowStatusChecker.class })
+@PrepareForTest({ FileTools.class, WorkflowStatusChecker.class })
 @RunWith(PowerMockRunner.class)
 public class WorkflowStatusCheckerTest {
 
@@ -170,7 +165,7 @@ public class WorkflowStatusCheckerTest {
             wr.setCurrentWorkingDir("dummyValue");
             wr.setDax("dummyValue");
             wr.setIniFile("dummyValue");
-            wr.setWorkflowEngine("dummyValue");
+            wr.setWorkflowEngine("oozie");
             wr.setHost("localhost");
             wr.setStatusCmd("pegasus-status -l /home/seqware/pegasus-dax/seqware/pegasus/FastqQualityReportAndFilter_0.10.0/run00" + 42 + i);
             wrList.add(wr);
@@ -178,14 +173,17 @@ public class WorkflowStatusCheckerTest {
         PowerMockito.mockStatic(FileTools.class);
         when(FileTools.getLocalhost(options)).thenReturn(new LocalhostPair("localhost", new ReturnValue(ReturnValue.SUCCESS)));
         when(FileTools.isFileOwner(anyString())).thenReturn(true);
-        final WorkflowTools workflowTools = mock(WorkflowTools.class);
-        PowerMockito.whenNew(WorkflowTools.class).withAnyArguments().thenReturn(workflowTools);
+        final OozieClient oozieClient = mock(OozieClient.class);
+        PowerMockito.whenNew(OozieClient.class).withAnyArguments().thenReturn(oozieClient);
+
+        final WorkflowJob workflowJob = mock(WorkflowJob.class);
+        when(oozieClient.getJobInfo(anyString())).thenReturn(workflowJob);
+        when(workflowJob.getStatus()).thenReturn(WorkflowJob.Status.RUNNING);
 
         ReturnValue fakeReturn = new ReturnValue(ReturnValue.SUCCESS);
         fakeReturn.setAttribute("currStep", "1");
         fakeReturn.setAttribute("totalSteps", "1");
 
-        when(workflowTools.watchWorkflow(anyString(), anyString(), anyInt())).thenReturn(fakeReturn);
         when(metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running)).thenReturn(wrList);
     }
 
@@ -200,7 +198,6 @@ public class WorkflowStatusCheckerTest {
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.pending);
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel);
         verify(metadata).getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry);
-        verify(metadata, times(100)).update_workflow_run(anyInt(), anyString(), anyString(), any(WorkflowRunStatus.class), anyString(),
-                anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), (Set<Integer>) anyObject());
+        verify(metadata, times(100)).updateWorkflowRun(any(WorkflowRun.class));
     }
 }
