@@ -14,41 +14,47 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
- * <p>StudyReportSetupController class.</p>
- *
+ * <p>
+ * StudyReportSetupController class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class StudyReportSetupController extends BaseCommandController {
-	
-	private StudyService studyService;
-	
-	/**
-	 * <p>Setter for the field <code>studyService</code>.</p>
-	 *
-	 * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
-	 */
-	public void setStudyService(StudyService studyService) {
-		this.studyService = studyService;
-	}
 
-	/** {@inheritDoc}
+    private StudyService studyService;
+
+    /**
+     * <p>
+     * Setter for the field <code>studyService</code>.
+     * </p>
+     * 
+     * @param studyService
+     *            a {@link net.sourceforge.seqware.common.business.StudyService} object.
+     */
+    public void setStudyService(StudyService studyService) {
+        this.studyService = studyService;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		
-		Registration registration = Security.getRegistration(request);
-		if (registration == null)
-		{
-			return new ModelAndView("redirect:/login.htm");
-		}
-		
-		List<Study> studies = studyService.list(registration);
-		ModelAndView modelAndView = new ModelAndView("ReportStudySetup");
-		modelAndView.addObject("studies", studies);
-		return modelAndView;
-	}
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) {
+            return new ModelAndView("redirect:/login.htm");
+        }
+
+        List<Study> studies = studyService.list(registration);
+        ModelAndView modelAndView = new ModelAndView("ReportStudySetup");
+        modelAndView.addObject("studies", studies);
+        return modelAndView;
+    }
 
 }

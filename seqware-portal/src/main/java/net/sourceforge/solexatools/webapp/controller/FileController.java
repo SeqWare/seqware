@@ -23,211 +23,232 @@ import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
  * LaneController
- *
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class FileController extends MultiActionController {
-	private FileService fileService;
-	private Validator validator;
+    private FileService fileService;
+    private Validator validator;
 
-	/**
-	 * <p>Constructor for FileController.</p>
-	 */
-	public FileController() {
-		super();
-	}
+    /**
+     * <p>
+     * Constructor for FileController.
+     * </p>
+     */
+    public FileController() {
+        super();
+    }
 
-	/**
-	 * <p>Constructor for FileController.</p>
-	 *
-	 * @param delegate a {@link java.lang.Object} object.
-	 */
-	public FileController(Object delegate) {
-		super(delegate);
-	}
+    /**
+     * <p>
+     * Constructor for FileController.
+     * </p>
+     * 
+     * @param delegate
+     *            a {@link java.lang.Object} object.
+     */
+    public FileController(Object delegate) {
+        super(delegate);
+    }
 
-	/**
-	 * <p>Getter for the field <code>fileService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
-	 */
-	public FileService getFileService() {
-		return fileService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>fileService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+     */
+    public FileService getFileService() {
+        return fileService;
+    }
 
-	/**
-	 * <p>Setter for the field <code>fileService</code>.</p>
-	 *
-	 * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
-	 */
-	public void setFileService(FileService fileService) {
-		this.fileService = fileService;
-	}
+    /**
+     * <p>
+     * Setter for the field <code>fileService</code>.
+     * </p>
+     * 
+     * @param fileService
+     *            a {@link net.sourceforge.seqware.common.business.FileService} object.
+     */
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
 
-	/**
-	 * <p>Getter for the field <code>validator</code>.</p>
-	 *
-	 * @return a {@link org.springframework.validation.Validator} object.
-	 */
-	public Validator getValidator() {
-		return validator;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>validator</code>.
+     * </p>
+     * 
+     * @return a {@link org.springframework.validation.Validator} object.
+     */
+    public Validator getValidator() {
+        return validator;
+    }
 
-	/**
-	 * <p>Setter for the field <code>validator</code>.</p>
-	 *
-	 * @param validator a {@link org.springframework.validation.Validator} object.
-	 */
-	public void setValidator(Validator validator) {
-		this.validator = validator;
-	}
+    /**
+     * <p>
+     * Setter for the field <code>validator</code>.
+     * </p>
+     * 
+     * @param validator
+     *            a {@link org.springframework.validation.Validator} object.
+     */
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
 
-	/**
-	 * Handles the user's request to submit a new lane.
-	 *
-	 * @param request HttpServletRequest
-	 * @param response HttpServletResponse
-	 * @param command Lane command object
-	 * @return ModelAndView
-	 * @throws java.lang.Exception if any.
-	 */
-	public ModelAndView handleSubmit(HttpServletRequest request,
-									 HttpServletResponse response,
-									 Lane command) throws Exception {
-		ModelAndView modelAndView = null;
-		return modelAndView;
-	}
+    /**
+     * Handles the user's request to submit a new lane.
+     * 
+     * @param request
+     *            HttpServletRequest
+     * @param response
+     *            HttpServletResponse
+     * @param command
+     *            Lane command object
+     * @return ModelAndView
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    public ModelAndView handleSubmit(HttpServletRequest request, HttpServletResponse response, Lane command) throws Exception {
+        ModelAndView modelAndView = null;
+        return modelAndView;
+    }
 
-	/**
-	 * Handles the user's request to reset the lane page during a new or
-	 * update lane.
-	 *
-	 * @param request HttpServletRequest
-	 * @param response HttpServletResponse
-	 * @param command Lane command object
-	 * @return ModelAndView
-	 * @throws java.lang.Exception if any.
-	 */
-	public ModelAndView handleReset(HttpServletRequest request,
-									HttpServletResponse response,
-									Lane command) throws Exception {
+    /**
+     * Handles the user's request to reset the lane page during a new or update lane.
+     * 
+     * @param request
+     *            HttpServletRequest
+     * @param response
+     *            HttpServletResponse
+     * @param command
+     *            Lane command object
+     * @return ModelAndView
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    public ModelAndView handleReset(HttpServletRequest request, HttpServletResponse response, Lane command) throws Exception {
 
-		ModelAndView modelAndView = null;
-		return modelAndView;
-	}
+        ModelAndView modelAndView = null;
+        return modelAndView;
+    }
 
-	/**
-	 * Handles the user's request to cancel the lane
-	 * or the lane update page.
-	 *
-	 * @param request HttpServletRequest
-	 * @param response HttpServletResponse
-	 * @param command Lane command object
-	 * @return ModelAndView
-	 * @throws java.lang.Exception if any.
-	 */
-	public ModelAndView handleCancel(HttpServletRequest request,
-									 HttpServletResponse response,
-									 Lane command) throws Exception {
-		return new ModelAndView("redirect:/Welcome.htm");
-	}
+    /**
+     * Handles the user's request to cancel the lane or the lane update page.
+     * 
+     * @param request
+     *            HttpServletRequest
+     * @param response
+     *            HttpServletResponse
+     * @param command
+     *            Lane command object
+     * @return ModelAndView
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    public ModelAndView handleCancel(HttpServletRequest request, HttpServletResponse response, Lane command) throws Exception {
+        return new ModelAndView("redirect:/Welcome.htm");
+    }
 
-	/**
-	 * Handles the user's request to update their lane.
-	 *
-	 * @param request HttpServletRequest
-	 * @param response HttpServletResponse
-	 * @param command Lane command object
-	 * @return ModelAndView
-	 * @throws java.lang.Exception if any.
-	 */
-	public ModelAndView handleUpdate(HttpServletRequest request,
-									 HttpServletResponse response,
-									 Lane command) throws Exception {
+    /**
+     * Handles the user's request to update their lane.
+     * 
+     * @param request
+     *            HttpServletRequest
+     * @param response
+     *            HttpServletResponse
+     * @param command
+     *            Lane command object
+     * @return ModelAndView
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    public ModelAndView handleUpdate(HttpServletRequest request, HttpServletResponse response, Lane command) throws Exception {
 
-	   Registration registration = Security.getRegistration(request);
-	    if(registration == null)
-	      return new ModelAndView("redirect:/login.htm");
-	  
-	    HttpSession session = request.getSession(false);
-		ModelAndView modelAndView = null;
-		
-		return modelAndView;
-	}
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
 
-	/**
-	 * Validates a lane.
-	 *
-	 * @param request HttpServletRequest
-	 * @param command the Command instance as an Object
-	 *
-	 * @return BindingResult validation errors
-	 *
-	 */
-	private BindingResult validate(HttpServletRequest request, Object command) {
-		BindingResult errors = new BindException(command, getCommandName(command));
-		//ValidationUtils.invokeValidator(getValidator(), command, errors);
+        HttpSession session = request.getSession(false);
+        ModelAndView modelAndView = null;
 
-		return errors;
-	}
+        return modelAndView;
+    }
 
-	/**
-	 * Handles the user's request to delete their file.
-	 *
-	 * @param command file command object
-	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
-	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
-	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
-	 * @throws java.lang.Exception if any.
-	 */
-	public ModelAndView handleDelete(HttpServletRequest		request,
-									 HttpServletResponse	response,
-									 File				command)
-		throws Exception {
+    /**
+     * Validates a lane.
+     * 
+     * @param request
+     *            HttpServletRequest
+     * @param command
+     *            the Command instance as an Object
+     * 
+     * @return BindingResult validation errors
+     * 
+     */
+    private BindingResult validate(HttpServletRequest request, Object command) {
+        BindingResult errors = new BindException(command, getCommandName(command));
+        // ValidationUtils.invokeValidator(getValidator(), command, errors);
 
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
+        return errors;
+    }
 
-		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
-		File				    file			= getRequestedFile(request);
-		
-		ServletContext context = this.getServletContext();
-		boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
+    /**
+     * Handles the user's request to delete their file.
+     * 
+     * @param command
+     *            file command object
+     * @param request
+     *            a {@link javax.servlet.http.HttpServletRequest} object.
+     * @param response
+     *            a {@link javax.servlet.http.HttpServletResponse} object.
+     * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    public ModelAndView handleDelete(HttpServletRequest request, HttpServletResponse response, File command) throws Exception {
 
-		if (file != null) {			
-		    if(registration.equals(file.getOwner()) || registration.isLIMSAdmin()){
-	    		getFileService().delete(file, deleteRealFiles);
-		    }
-		} 
-		//modelAndView = new ModelAndView("redirect:/myStudyList.htm", model);
-		modelAndView = new ModelAndView(getViewName(request), model);
-		return modelAndView;
-	}
-	
-	private String getViewName(HttpServletRequest request){
-		String typeTree = (String)request.getSession(false).getAttribute("typeTree");
-		String viewName = Constant.getViewName(typeTree);
-		request.getSession(false).removeAttribute("typeTree");
-		return viewName;
-	}
-	
-	private Registration getOwner(File file){
-		Registration registration = null;
-		return registration;
-	}
-	
-	private File getRequestedFile(HttpServletRequest request) {
-		File	file	= null;
-		String	id		= (String)request.getParameter("objectId");
-		
-		if (id != null) {
-			Integer fileID = Integer.parseInt(id);
-			file = getFileService().findByID(fileID);
-		}
-		return file;
-	}
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
+
+        ModelAndView modelAndView = null;
+        HashMap<String, Object> model = new HashMap<>();
+        File file = getRequestedFile(request);
+
+        ServletContext context = this.getServletContext();
+        boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
+
+        if (file != null) {
+            if (registration.equals(file.getOwner()) || registration.isLIMSAdmin()) {
+                getFileService().delete(file, deleteRealFiles);
+            }
+        }
+        // modelAndView = new ModelAndView("redirect:/myStudyList.htm", model);
+        modelAndView = new ModelAndView(getViewName(request), model);
+        return modelAndView;
+    }
+
+    private String getViewName(HttpServletRequest request) {
+        String typeTree = (String) request.getSession(false).getAttribute("typeTree");
+        String viewName = Constant.getViewName(typeTree);
+        request.getSession(false).removeAttribute("typeTree");
+        return viewName;
+    }
+
+    private Registration getOwner(File file) {
+        Registration registration = null;
+        return registration;
+    }
+
+    private File getRequestedFile(HttpServletRequest request) {
+        File file = null;
+        String id = (String) request.getParameter("objectId");
+
+        if (id != null) {
+            Integer fileID = Integer.parseInt(id);
+            file = getFileService().findByID(fileID);
+        }
+        return file;
+    }
 }
-

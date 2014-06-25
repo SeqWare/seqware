@@ -23,14 +23,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * This runs all the tests needed to test the Developer Tutorials. The test suite
- * actually enforces order for us. We actually started with built and installed bundles from step 5 of 
- * the user tutorials.
- *
+ * This runs all the tests needed to test the Developer Tutorials. The test suite actually enforces order for us. We actually started with
+ * built and installed bundles from step 5 of the user tutorials.
+ * 
  * @author dyuen
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = {DeveloperPhase1.class, CLIDeveloperPhase2.class})
+@Suite.SuiteClasses(value = { DeveloperPhase1.class, CLIDeveloperPhase2.class })
 public class CLIDeveloperTutorialSuiteET extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {

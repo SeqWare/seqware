@@ -16,10 +16,11 @@ import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
-
 /**
- * <p>SampleServiceImpl class.</p>
- *
+ * <p>
+ * SampleServiceImpl class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -29,7 +30,9 @@ public class SampleServiceImpl implements SampleService {
     private FileDAO fileDAO = null;
 
     /**
-     * <p>Constructor for SampleServiceImpl.</p>
+     * <p>
+     * Constructor for SampleServiceImpl.
+     * </p>
      */
     public SampleServiceImpl() {
         super();
@@ -37,10 +40,10 @@ public class SampleServiceImpl implements SampleService {
 
     /**
      * {@inheritDoc}
-     *
-     * Sets a private member variable with an instance of an implementation of
-     * SampleDAO. This method is called by the Spring framework at run time.
-     *
+     * 
+     * Sets a private member variable with an instance of an implementation of SampleDAO. This method is called by the Spring framework at
+     * run time.
+     * 
      * @see SampleDAO
      */
     @Override
@@ -49,10 +52,11 @@ public class SampleServiceImpl implements SampleService {
     }
 
     /**
-     * Sets a private member variable with an instance of an implementation of
-     * FileDAO. This method is called by the Spring framework at run time.
-     *
-     * @param fileDAO implementation of FileDAO
+     * Sets a private member variable with an instance of an implementation of FileDAO. This method is called by the Spring framework at run
+     * time.
+     * 
+     * @param fileDAO
+     *            implementation of FileDAO
      * @see FileDAO
      */
     public void setFileDAO(FileDAO fileDAO) {
@@ -61,7 +65,7 @@ public class SampleServiceImpl implements SampleService {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Inserts an instance of Sample into the database.
      */
     @Override
@@ -72,7 +76,7 @@ public class SampleServiceImpl implements SampleService {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Updates an instance of Sample in the database.
      */
     @Override
@@ -82,8 +86,9 @@ public class SampleServiceImpl implements SampleService {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Deletes an instance of Sample in the database.
+     * 
      * @param sample
      * @param deleteRealFiles
      */
@@ -149,10 +154,9 @@ public class SampleServiceImpl implements SampleService {
     @Override
     public SortedSet<Sample> setWithHasFile(Integer expId, SortedSet<Sample> list) {
         /*
-         * Map<Integer, Integer> countFiles = sampleDAO.getCountFiles(expId);
-         * for (Sample sample : list) { boolean isHasFile = false; Integer count
-         * = countFiles.get(sample.getSampleId()); if(count > 0){ isHasFile =
-         * true; } sample.setIsHasFile(isHasFile); } return list;
+         * Map<Integer, Integer> countFiles = sampleDAO.getCountFiles(expId); for (Sample sample : list) { boolean isHasFile = false;
+         * Integer count = countFiles.get(sample.getSampleId()); if(count > 0){ isHasFile = true; } sample.setIsHasFile(isHasFile); } return
+         * list;
          */
         SortedSet<Sample> result = new TreeSet<>();
         for (Sample sample : list) {
@@ -172,12 +176,9 @@ public class SampleServiceImpl implements SampleService {
     @Override
     public SortedSet<Sample> listWithHasFile(Integer expId, SortedSet<Sample> list, String metaType) {
         /*
-         * SortedSet<Sample> result = new TreeSet<Sample>(); Map<Integer,
-         * Integer> countFiles = sampleDAO.getCountFiles(expId, metaType); for
-         * (Sample sample : list) { boolean isHasFile = false; Integer count =
-         * countFiles.get(sample.getSampleId()); if(count > 0){ isHasFile =
-         * true; sample.setIsHasFile(isHasFile); result.add(sample); }
-         * //sample.setIsHasFile(isHasFile); } return result;
+         * SortedSet<Sample> result = new TreeSet<Sample>(); Map<Integer, Integer> countFiles = sampleDAO.getCountFiles(expId, metaType);
+         * for (Sample sample : list) { boolean isHasFile = false; Integer count = countFiles.get(sample.getSampleId()); if(count > 0){
+         * isHasFile = true; sample.setIsHasFile(isHasFile); result.add(sample); } //sample.setIsHasFile(isHasFile); } return result;
          */
         SortedSet<Sample> result = new TreeSet<>();
         for (Sample sample : list) {
@@ -209,9 +210,8 @@ public class SampleServiceImpl implements SampleService {
 
     /**
      * {@inheritDoc}
-     *
-     * Finds an instance of Sample in the database by the Sample emailAddress,
-     * and copies the Sample properties to an instance of Sample.
+     * 
+     * Finds an instance of Sample in the database by the Sample emailAddress, and copies the Sample properties to an instance of Sample.
      */
     @Override
     public Sample findByName(String name) {
@@ -241,6 +241,7 @@ public class SampleServiceImpl implements SampleService {
 
     /**
      * {@inheritDoc}
+     * 
      * @param sampleId
      */
     @Override
@@ -298,7 +299,7 @@ public class SampleServiceImpl implements SampleService {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Determines if an email address has already been used.
      */
     @Override
@@ -310,8 +311,7 @@ public class SampleServiceImpl implements SampleService {
 
             if (oldName != null) {
                 /*
-                 * We do not want to check if an name address has been used if
-                 * the user is updating an existing sample and has not changed
+                 * We do not want to check if an name address has been used if the user is updating an existing sample and has not changed
                  * the nameAddress.
                  */
                 checkName = !newName.trim().equalsIgnoreCase(oldName.trim());
@@ -328,8 +328,10 @@ public class SampleServiceImpl implements SampleService {
     }
 
     /**
-     * <p>listComplete.</p>
-     *
+     * <p>
+     * listComplete.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -338,8 +340,10 @@ public class SampleServiceImpl implements SampleService {
     }
 
     /**
-     * <p>listIncomplete.</p>
-     *
+     * <p>
+     * listIncomplete.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     @Override

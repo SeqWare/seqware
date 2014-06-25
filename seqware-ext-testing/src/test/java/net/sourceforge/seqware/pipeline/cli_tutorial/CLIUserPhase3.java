@@ -22,16 +22,16 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 
 /**
- *
+ * 
  * @author dyuen
  */
-public class CLIUserPhase3 extends UserPhase3{
-        
-     @Override
-     protected String createSampleAndLinkToExperiment() throws IOException {
-        String output = ITUtility.runSeqwareCLI("  create sample --title 'New Test Sample' --description 'This is a test description' --organism-id 26 --experiment-accession "+AccessionMap.accessionMap.get(UserPhase2.EXPERIMENT)
-                , ReturnValue.SUCCESS
-                , null);
+public class CLIUserPhase3 extends UserPhase3 {
+
+    @Override
+    protected String createSampleAndLinkToExperiment() throws IOException {
+        String output = ITUtility.runSeqwareCLI(
+                "  create sample --title 'New Test Sample' --description 'This is a test description' --organism-id 26 --experiment-accession "
+                        + AccessionMap.accessionMap.get(UserPhase2.EXPERIMENT), ReturnValue.SUCCESS, null);
         return output;
     }
 }

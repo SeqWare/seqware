@@ -21,23 +21,29 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
 
 /**
- * <p>ExperimentLibraryDesignList class.</p>
+ * <p>
+ * ExperimentLibraryDesignList class.
+ * </p>
  * 
  */
-public class ExperimentLibraryDesignList{
+public class ExperimentLibraryDesignList {
 
     protected List<ExperimentLibraryDesign> tList;
 
     /**
-     * <p>Constructor for ExperimentLibraryDesignList.</p>
+     * <p>
+     * Constructor for ExperimentLibraryDesignList.
+     * </p>
      */
     public ExperimentLibraryDesignList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<ExperimentLibraryDesign> getList() {
@@ -45,18 +51,24 @@ public class ExperimentLibraryDesignList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<ExperimentLibraryDesign> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
     public void add(ExperimentLibraryDesign ex) {
         tList.add(ex);

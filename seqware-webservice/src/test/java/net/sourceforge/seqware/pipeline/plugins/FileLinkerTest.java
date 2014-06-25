@@ -26,22 +26,23 @@ import org.junit.*;
 
 /**
  * Runs the tests for the FileLinker
+ * 
  * @author dyuen
  */
 public class FileLinkerTest extends ExtendedPluginTest {
 
     @BeforeClass
-    public static void beforeClass(){
+    public static void beforeClass() {
         BasicTestDatabaseCreator.resetDatabaseWithUsers();
     }
-    
+
     @Before
     @Override
     public void setUp() {
         instance = new FileLinker();
         super.setUp();
     }
-    
+
     public FileLinkerTest() {
     }
 
@@ -55,54 +56,60 @@ public class FileLinkerTest extends ExtendedPluginTest {
         String firstWorkflowRun = getAndCheckSwid(s);
 
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
-        List<Object[]> runQuery = dbCreator.runQuery(new ArrayListHandler(), "select f.file_path, f.meta_type, i.sw_accession from workflow_run r, processing p, processing_files pf, file f, processing_ius pi, ius i\n"
-                + "WHERE \n"
-                + "r.sw_accession = ?\n"
-                + "AND p.workflow_run_id = r.workflow_run_id\n"
-                + "AND p.processing_id = pf.processing_id\n"
-                + "AND pf.file_id = f.file_id\n"
-                + "AND p.processing_id = pi.processing_id \n"
-                + "AND pi.ius_id = i.ius_id\n"
-                + "ORDER BY f.sw_accession\n"
-                + "; ", Integer.valueOf(firstWorkflowRun));
-        Assert.assertTrue("first file values were incorrect", runQuery.get(0)[0].equals("funky_file1.gz") && runQuery.get(0)[1].equals("txt"));
-        Assert.assertTrue("second file values were incorrect", runQuery.get(1)[0].equals("funky_file2.gz") && runQuery.get(1)[1].equals("txt"));
+        List<Object[]> runQuery = dbCreator
+                .runQuery(
+                        new ArrayListHandler(),
+                        "select f.file_path, f.meta_type, i.sw_accession from workflow_run r, processing p, processing_files pf, file f, processing_ius pi, ius i\n"
+                                + "WHERE \n"
+                                + "r.sw_accession = ?\n"
+                                + "AND p.workflow_run_id = r.workflow_run_id\n"
+                                + "AND p.processing_id = pf.processing_id\n"
+                                + "AND pf.file_id = f.file_id\n"
+                                + "AND p.processing_id = pi.processing_id \n"
+                                + "AND pi.ius_id = i.ius_id\n"
+                                + "ORDER BY f.sw_accession\n"
+                                + "; ", Integer.valueOf(firstWorkflowRun));
+        Assert.assertTrue("first file values were incorrect",
+                runQuery.get(0)[0].equals("funky_file1.gz") && runQuery.get(0)[1].equals("txt"));
+        Assert.assertTrue("second file values were incorrect",
+                runQuery.get(1)[0].equals("funky_file2.gz") && runQuery.get(1)[1].equals("txt"));
         Assert.assertTrue("ius links  were correct", runQuery.get(0)[2].equals(4765) && runQuery.get(1)[2].equals(4765));
         // check that we can get them back via metadata methods as well
         WorkflowRun workflowRun = metadata.getWorkflowRunWithWorkflow(firstWorkflowRun);
-        Assert.assertTrue("could not retrieve optional fields via metadata", workflowRun.getSwAccession().equals(Integer.valueOf(firstWorkflowRun)));
+        Assert.assertTrue("could not retrieve optional fields via metadata",
+                workflowRun.getSwAccession().equals(Integer.valueOf(firstWorkflowRun)));
         Assert.assertTrue("parent workflow incorrect", workflowRun.getWorkflow().getSwAccession() == 4);
         String workflowRunReport = metadata.getWorkflowRunReport(Integer.valueOf(firstWorkflowRun));
         // look for files using the gross metadata way
-        Assert.assertTrue("files could not be found using the metadata workflow run report", 
-                workflowRunReport.contains("funky_file1.gz") && workflowRunReport.contains("funky_file2.gz"));
+        Assert.assertTrue("files could not be found using the metadata workflow run report", workflowRunReport.contains("funky_file1.gz")
+                && workflowRunReport.contains("funky_file2.gz"));
         s = s.split("\n")[1];
         int secondWorkflowRun = Integer.valueOf(getAndCheckSwid(s));
         workflowRunReport = metadata.getWorkflowRunReport(secondWorkflowRun);
-        Assert.assertTrue("second set of files could not be found using the metadata workflow run report", 
+        Assert.assertTrue("second set of files could not be found using the metadata workflow run report",
                 workflowRunReport.contains("abc1.gz") && workflowRunReport.contains("abc2.gz"));
     }
-    
+
     @Test
     public void testFileLinkerComma() {
         String path = FileLinkerTest.class.getResource("file_linker_test_comma.txt").getPath();
 
-        launchPlugin("--workflow-accession", "4", "--file-list-file", path, "--csv-separator",",");
+        launchPlugin("--workflow-accession", "4", "--file-list-file", path, "--csv-separator", ",");
 
         String s = getOut();
         int firstWorkflowRun = Integer.valueOf(getAndCheckSwid(s));
 
         String workflowRunReport = metadata.getWorkflowRunReport(firstWorkflowRun);
         // look for files using the gross metadata way
-        Assert.assertTrue("files could not be found using the metadata workflow run report", 
-                workflowRunReport.contains("cfunky_file1.gz") && workflowRunReport.contains("cfunky_file2.gz"));
+        Assert.assertTrue("files could not be found using the metadata workflow run report", workflowRunReport.contains("cfunky_file1.gz")
+                && workflowRunReport.contains("cfunky_file2.gz"));
         s = s.split("\n")[1];
         int secondWorkflowRun = Integer.valueOf(getAndCheckSwid(s));
         workflowRunReport = metadata.getWorkflowRunReport(secondWorkflowRun);
-        Assert.assertTrue("second set of files could not be found using the metadata workflow run report", 
+        Assert.assertTrue("second set of files could not be found using the metadata workflow run report",
                 workflowRunReport.contains("cabc1.gz") && workflowRunReport.contains("cabc2.gz"));
     }
-    
+
     @Test
     public void testFileLinkerWithNoLanes() {
         String path = FileLinkerTest.class.getResource("file_linker_no_lane_test.txt").getPath();
@@ -114,17 +121,17 @@ public class FileLinkerTest extends ExtendedPluginTest {
 
         String workflowRunReport = metadata.getWorkflowRunReport(firstWorkflowRun);
         // look for files using the gross metadata way
-        Assert.assertTrue("files could not be found using the metadata workflow run report", 
-                workflowRunReport.contains("nfunky_file1.gz") && workflowRunReport.contains("nfunky_file2.gz"));
+        Assert.assertTrue("files could not be found using the metadata workflow run report", workflowRunReport.contains("nfunky_file1.gz")
+                && workflowRunReport.contains("nfunky_file2.gz"));
         s = s.split("\n")[1];
         int secondWorkflowRun = Integer.valueOf(getAndCheckSwid(s));
         workflowRunReport = metadata.getWorkflowRunReport(secondWorkflowRun);
-        Assert.assertTrue("second set of files could not be found using the metadata workflow run report", 
+        Assert.assertTrue("second set of files could not be found using the metadata workflow run report",
                 workflowRunReport.contains("nabc1.gz") && workflowRunReport.contains("nabc2.gz"));
     }
-    
+
     @Test
-    public void checkRepeatedFileImportFail(){
+    public void checkRepeatedFileImportFail() {
         String path = FileLinkerTest.class.getResource("file_linker_test2.txt").getPath();
         launchPlugin("--workflow-accession", "4", "--file-list-file", path);
         launchPlugin("--workflow-accession", "4", "--file-list-file", path);

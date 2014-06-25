@@ -37,10 +37,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- *
+ * 
  * @author dyuen
  */
-@PrepareForTest({WorkflowTools.class, FileTools.class, SymLinkFileReporter.class})
+@PrepareForTest({ WorkflowTools.class, FileTools.class, SymLinkFileReporter.class })
 @RunWith(PowerMockRunner.class)
 public class SymLinkFileReporterTest {
 
@@ -162,7 +162,7 @@ public class SymLinkFileReporterTest {
         when(options.has("show-failed-and-running")).thenReturn(true);
         when(options.has(SymLinkFileReporter.SHOW_STATUS)).thenReturn(true);
     }
-    
+
     @Test
     public void testSimpleSample() {
         ReturnValue ret = symLinkFileReporter.init();
@@ -182,7 +182,7 @@ public class SymLinkFileReporterTest {
         when(options.has("study")).thenReturn(true);
         when(options.valueOf("study")).thenReturn("TestStudy");
         List<ReturnValue> list = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             ReturnValue ret = new ReturnValue();
             list.add(ret);
         }

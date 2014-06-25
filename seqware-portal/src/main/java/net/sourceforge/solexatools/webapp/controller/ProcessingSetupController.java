@@ -1,4 +1,5 @@
-package	net.sourceforge.solexatools.webapp.controller;
+package net.sourceforge.solexatools.webapp.controller;
+
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,127 +18,138 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
- *
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class ProcessingSetupController extends BaseCommandController {
-	private SequencerRunService sequencerRunService;
-	private ProcessingService processingService;
+    private SequencerRunService sequencerRunService;
+    private ProcessingService processingService;
 
-	/**
-	 * <p>Constructor for ProcessingSetupController.</p>
-	 */
-	public ProcessingSetupController() {
-		super();
-		setSupportedMethods(new String[] {METHOD_GET});
-	}
+    /**
+     * <p>
+     * Constructor for ProcessingSetupController.
+     * </p>
+     */
+    public ProcessingSetupController() {
+        super();
+        setSupportedMethods(new String[] { METHOD_GET });
+    }
 
-	/** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-												 HttpServletResponse response)
-		throws Exception {
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
 
-		ModelAndView modelAndView = null;
-		HashMap <String,String> model = new HashMap<>();
+        ModelAndView modelAndView = null;
+        HashMap<String, String> model = new HashMap<>();
 
-		SequencerRun sequencerRun = figureOutSequencerRun(request);
-		Processing processing = figureOutProcessing(request);
-		boolean isReport = request.getParameter("report") != null;
+        SequencerRun sequencerRun = figureOutSequencerRun(request);
+        Processing processing = figureOutProcessing(request);
+        boolean isReport = request.getParameter("report") != null;
 
-		if (sequencerRun != null) {
-			model.put("expID", sequencerRun.getSequencerRunId().toString());
-		}
+        if (sequencerRun != null) {
+            model.put("expID", sequencerRun.getSequencerRunId().toString());
+        }
 
-		if (processing != null) {
-			request.setAttribute(getCommandName(), processing);
-			model.put("strategy", "update");
-			if (!isReport) {
-				modelAndView = new ModelAndView("Processing", model);
-			} else {
-				modelAndView = new ModelAndView("ProcessingReport", model);
-			}
-		} 
-		
-		if (sequencerRun != null && processing == null) {
-				request.setAttribute(getCommandName(), new Processing());
-				model.put("strategy", "submit");
-				modelAndView = new ModelAndView("Processing", model);
-		}
+        if (processing != null) {
+            request.setAttribute(getCommandName(), processing);
+            model.put("strategy", "update");
+            if (!isReport) {
+                modelAndView = new ModelAndView("Processing", model);
+            } else {
+                modelAndView = new ModelAndView("ProcessingReport", model);
+            }
+        }
 
-		return modelAndView;
-	}
+        if (sequencerRun != null && processing == null) {
+            request.setAttribute(getCommandName(), new Processing());
+            model.put("strategy", "submit");
+            modelAndView = new ModelAndView("Processing", model);
+        }
 
-	private SequencerRun figureOutSequencerRun(HttpServletRequest request) {
+        return modelAndView;
+    }
 
-		HttpSession session = request.getSession(false);
-		SequencerRun sequencerRun = null;
+    private SequencerRun figureOutSequencerRun(HttpServletRequest request) {
 
-		String id = (String)request.getParameter("expID");
-		if (id != null) {
-			sequencerRun	= getSequencerRunService().findByID(Integer.parseInt(id));
-			session.setAttribute("sequencerRun", sequencerRun);
-		}
+        HttpSession session = request.getSession(false);
+        SequencerRun sequencerRun = null;
 
-		return sequencerRun;
-	}
+        String id = (String) request.getParameter("expID");
+        if (id != null) {
+            sequencerRun = getSequencerRunService().findByID(Integer.parseInt(id));
+            session.setAttribute("sequencerRun", sequencerRun);
+        }
 
-	private Processing figureOutProcessing(HttpServletRequest request) {
-		HttpSession	session		= request.getSession(false);
-		Processing	processing	= null;
+        return sequencerRun;
+    }
 
-		String id = (String)request.getParameter("procID");
+    private Processing figureOutProcessing(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Processing processing = null;
 
-		if (id != null) {
-			Integer procID = Integer.parseInt(id);
-			processing = getProcessingService().findByID(procID);
-			session.setAttribute("processing", processing);
-		}
+        String id = (String) request.getParameter("procID");
 
-		return processing;
-	}
+        if (id != null) {
+            Integer procID = Integer.parseInt(id);
+            processing = getProcessingService().findByID(procID);
+            session.setAttribute("processing", processing);
+        }
 
-	/**
-	 * <p>Getter for the field <code>sequencerRunService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
-	 */
-	public SequencerRunService getSequencerRunService() {
-		return sequencerRunService;
-	}
+        return processing;
+    }
 
-	/**
-	 * <p>Setter for the field <code>sequencerRunService</code>.</p>
-	 *
-	 * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
-	 */
-	public void setSequencerRunService(SequencerRunService sequencerRunService) {
-		this.sequencerRunService = sequencerRunService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>sequencerRunService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+     */
+    public SequencerRunService getSequencerRunService() {
+        return sequencerRunService;
+    }
 
+    /**
+     * <p>
+     * Setter for the field <code>sequencerRunService</code>.
+     * </p>
+     * 
+     * @param sequencerRunService
+     *            a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+     */
+    public void setSequencerRunService(SequencerRunService sequencerRunService) {
+        this.sequencerRunService = sequencerRunService;
+    }
 
-	/**
-	 * <p>Getter for the field <code>processingService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
-	 */
-	public ProcessingService getProcessingService() {
-		return processingService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>processingService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+     */
+    public ProcessingService getProcessingService() {
+        return processingService;
+    }
 
-	/**
-	 * <p>Setter for the field <code>processingService</code>.</p>
-	 *
-	 * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
-	 */
-	public void setProcessingService(ProcessingService processingService) {
-		this.processingService = processingService;
-	}
+    /**
+     * <p>
+     * Setter for the field <code>processingService</code>.
+     * </p>
+     * 
+     * @param processingService
+     *            a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+     */
+    public void setProcessingService(ProcessingService processingService) {
+        this.processingService = processingService;
+    }
 }

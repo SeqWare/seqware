@@ -39,17 +39,22 @@ import org.restlet.data.Status;
 import org.w3c.dom.Document;
 
 /**
- * <p>WorkflowRunIDProcessingsResource class.</p>
- *
+ * <p>
+ * WorkflowRunIDProcessingsResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowRunIDProcessingsResource extends BasicRestlet {
 
     /**
-     * <p>Constructor for WorkflowRunIDProcessingsResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for WorkflowRunIDProcessingsResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public WorkflowRunIDProcessingsResource(Context context) {
         super(context);
@@ -79,29 +84,31 @@ public class WorkflowRunIDProcessingsResource extends BasicRestlet {
     }
 
     /**
-     * <p>collectProcessingList.</p>
-     *
-     * @param wrSWA a int.
+     * <p>
+     * collectProcessingList.
+     * </p>
+     * 
+     * @param wrSWA
+     *            a int.
      * @return a {@link java.util.List} object.
-     * @throws java.sql.SQLException if any.
+     * @throws java.sql.SQLException
+     *             if any.
      */
     public List<Processing> collectProcessingList(int wrSWA) throws SQLException {
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-        WorkflowRun run = (WorkflowRun)testIfNull(wrs.findBySWAccession(wrSWA));
-        SortedSet<Processing> procs = new TreeSet<>(new Comparator<Processing>(){
+        WorkflowRun run = (WorkflowRun) testIfNull(wrs.findBySWAccession(wrSWA));
+        SortedSet<Processing> procs = new TreeSet<>(new Comparator<Processing>() {
             @Override
             public int compare(Processing t, Processing t1) {
                 return t.getCreateTimestamp().compareTo(t1.getCreateTimestamp());
             }
-            
+
         });
-        if (run.getProcessings()!=null)
-            procs.addAll(run.getProcessings());
-        if (run.getOffspringProcessings()!=null)
-            procs.addAll(run.getOffspringProcessings());
-        
+        if (run.getProcessings() != null) procs.addAll(run.getProcessings());
+        if (run.getOffspringProcessings() != null) procs.addAll(run.getOffspringProcessings());
+
         List<Processing> procDto = new ArrayList<>();
-        
+
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         for (Processing p : procs) {
             procDto.add(copier.hibernate2dto(Processing.class, p));

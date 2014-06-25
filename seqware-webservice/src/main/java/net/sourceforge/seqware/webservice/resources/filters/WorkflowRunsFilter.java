@@ -37,7 +37,7 @@ import org.restlet.resource.Post;
 
 /**
  * We presume there is either a runId or a testId, not both.
- *
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -51,8 +51,11 @@ public class WorkflowRunsFilter extends BasicResource {
         workflowId = (String) getRequestAttributes().get("workflowId");
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     protected Representation get() {
         String path = this.getRequest().getResourceRef().getPath();
@@ -65,8 +68,11 @@ public class WorkflowRunsFilter extends BasicResource {
         return rep;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     protected Representation post(Representation entity) {
         authenticate();
@@ -86,12 +92,17 @@ public class WorkflowRunsFilter extends BasicResource {
     }
 
     /**
-     * <p>postRun.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
+     * <p>
+     * postRun.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
      * @return a {@link org.restlet.representation.Representation} object.
-     * @throws java.io.IOException if any.
-     * @throws java.lang.Exception if any.
+     * @throws java.io.IOException
+     *             if any.
+     * @throws java.lang.Exception
+     *             if any.
      */
     @Post("txt")
     public Representation postRun(Representation entity) throws IOException, Exception {
@@ -108,9 +119,9 @@ public class WorkflowRunsFilter extends BasicResource {
         String workflowPath = workflow.getCwd();
         String workflowVersion = workflow.getVersion();
 
-        runPluginRunner(new String[]{"--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher",
-                    "--", "no-metadata", "--unzipped-bundle", workflowPath, "--workflow",
-                    workflowName, "--workflow-version", workflowVersion, "--ini-files", filename}, filename);
+        runPluginRunner(new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "no-metadata",
+                "--unzipped-bundle", workflowPath, "--workflow", workflowName, "--workflow-version", workflowVersion, "--ini-files",
+                filename }, filename);
 
         Representation rep = new StringRepresentation("POST run " + entity.getText());
         return rep;
@@ -123,8 +134,8 @@ public class WorkflowRunsFilter extends BasicResource {
 
         String workflowPath = workflow.getCwd();
 
-        String[] args = new String[]{"--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager",
-            "--", "--unzipped-bundle", workflowPath, "--test"};
+        String[] args = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--unzipped-bundle",
+                workflowPath, "--test" };
 
         runPluginRunner(args, "workflowtest" + workflowId);
         Representation rep = new StringRepresentation("POST test " + entity.getText());

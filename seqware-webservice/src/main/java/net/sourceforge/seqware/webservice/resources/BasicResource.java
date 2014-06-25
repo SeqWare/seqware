@@ -34,9 +34,8 @@ import org.restlet.resource.ResourceException;
 import com.google.common.annotations.VisibleForTesting;
 
 /**
- * See
- * https://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_extend_the_web_service#Basic_Resource
- *
+ * See https://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_extend_the_web_service#Basic_Resource
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -46,30 +45,34 @@ public class BasicResource extends WadlServerResource {
     protected List<String> fields;
     protected Registration registration;
     private static RegistrationService registrationService;
-    
 
     /**
-     * <p>Constructor for BasicResource.</p>
+     * <p>
+     * Constructor for BasicResource.
+     * </p>
      */
     public BasicResource() {
         super();
     }
-    
+
     private static RegistrationService getRegistrationService() {
-      if (BasicResource.registrationService == null) {
-        BasicResource.registrationService = BeanFactory.getRegistrationServiceBean();
-      }
-      return BasicResource.registrationService;
+        if (BasicResource.registrationService == null) {
+            BasicResource.registrationService = BeanFactory.getRegistrationServiceBean();
+        }
+        return BasicResource.registrationService;
     }
-    
+
     /**
-     * <p>Setter for the field <code>registrationService</code>.</p>
-     *
-     * @param registrationService a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
+     * <p>
+     * Setter for the field <code>registrationService</code>.
+     * </p>
+     * 
+     * @param registrationService
+     *            a {@link net.sourceforge.seqware.common.business.RegistrationService} object.
      */
     @VisibleForTesting
     protected static void setRegistrationService(RegistrationService registrationService) {
-      BasicResource.registrationService = registrationService;
+        BasicResource.registrationService = registrationService;
     }
 
     /** {@inheritDoc} */
@@ -91,20 +94,25 @@ public class BasicResource extends WadlServerResource {
     }
 
     /**
-     * <p>authenticate.</p>
-     *
-     * @throws org.restlet.resource.ResourceException if any.
+     * <p>
+     * authenticate.
+     * </p>
+     * 
+     * @throws org.restlet.resource.ResourceException
+     *             if any.
      */
     protected void authenticate() throws ResourceException {
-        registration = BasicResource.getRegistrationService().
-                findByEmailAddress(this.getRequest().getChallengeResponse().getIdentifier()); 
+        registration = BasicResource.getRegistrationService().findByEmailAddress(this.getRequest().getChallengeResponse().getIdentifier());
     }
 
     /**
-     * <p>testIfNull.</p>
-     *
+     * <p>
+     * testIfNull.
+     * </p>
+     * 
      * @param <T>
-     * @param o a {@link java.lang.Object} object.
+     * @param o
+     *            a {@link java.lang.Object} object.
      * @return a {@link java.lang.Object} object.
      */
     public static <T> T testIfNull(T o) {
@@ -116,14 +124,15 @@ public class BasicResource extends WadlServerResource {
 
     /**
      * Parses the ID field and throws resourceExceptions as needed
+     * 
      * @param attribute
-     * @return 
+     * @return
      */
     public static int parseClientInt(String attribute) throws ResourceException {
-        try{
+        try {
             return Integer.parseInt(attribute);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         }
-    } 
+    }
 }

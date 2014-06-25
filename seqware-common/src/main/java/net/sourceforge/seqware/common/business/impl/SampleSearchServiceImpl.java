@@ -20,25 +20,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SampleSearchServiceImpl implements SampleSearchService {
 
-  @Autowired
-  private SampleSearchDAO sampleSearchDao;
+    @Autowired
+    private SampleSearchDAO sampleSearchDao;
 
-  /** {@inheritDoc} */
-  @Override
-  public List<SampleSearch> list() {
-    return sampleSearchDao.list();
-  }
+    /** {@inheritDoc} */
+    @Override
+    public List<SampleSearch> list() {
+        return sampleSearchDao.list();
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public SampleSearch findById(Integer id) {
-    return sampleSearchDao.findById(id);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public SampleSearch findById(Integer id) {
+        return sampleSearchDao.findById(id);
+    }
 
-  /** {@inheritDoc} */
-  @Override
-  public Integer create(SampleSearch sampleSearch) {
-    return sampleSearchDao.create(sampleSearch);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public Integer create(SampleSearch sampleSearch) {
+        return sampleSearchDao.create(sampleSearch);
+    }
 
 }

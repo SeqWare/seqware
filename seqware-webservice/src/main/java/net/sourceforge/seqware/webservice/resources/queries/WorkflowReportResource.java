@@ -28,18 +28,22 @@ import org.restlet.data.Method;
 import org.restlet.data.Status;
 
 /**
- * <p>WorkflowReportResource class.</p>
- *
+ * <p>
+ * WorkflowReportResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class WorkflowReportResource
-        extends BasicRestlet {
+public class WorkflowReportResource extends BasicRestlet {
 
     /**
-     * <p>Constructor for WorkflowReportResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for WorkflowReportResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public WorkflowReportResource(Context context) {
         super(context);

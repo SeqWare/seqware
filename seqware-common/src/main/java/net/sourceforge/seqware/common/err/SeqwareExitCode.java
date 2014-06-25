@@ -1,11 +1,8 @@
 package net.sourceforge.seqware.common.err;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Xiaoshu Wang (xiao@renci.org)
- * Date: 8/11/11
- * Time: 10:36 PM
- *
+ * Created by IntelliJ IDEA. User: Xiaoshu Wang (xiao@renci.org) Date: 8/11/11 Time: 10:36 PM
+ * 
  * @author boconnor
  * @version $Id: $Id
  */

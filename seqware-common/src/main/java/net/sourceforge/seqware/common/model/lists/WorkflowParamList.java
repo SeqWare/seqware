@@ -21,25 +21,31 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 
 /**
- * <p>WorkflowParamList class.</p>
- *
+ * <p>
+ * WorkflowParamList class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowParamList {
-    
+
     protected List<WorkflowParam> tList;
 
     /**
-     * <p>Constructor for WorkflowParamList.</p>
+     * <p>
+     * Constructor for WorkflowParamList.
+     * </p>
      */
     public WorkflowParamList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<WorkflowParam> getList() {
@@ -47,18 +53,24 @@ public class WorkflowParamList {
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<WorkflowParam> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.WorkflowParam} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.WorkflowParam} object.
      */
     public void add(WorkflowParam ex) {
         tList.add(ex);

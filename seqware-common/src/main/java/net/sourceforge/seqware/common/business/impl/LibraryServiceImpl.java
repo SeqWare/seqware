@@ -21,35 +21,34 @@ import com.google.common.collect.Lists;
  */
 public class LibraryServiceImpl implements LibraryService {
 
-  @Autowired
-  private LibraryDAO libraryDao;
+    @Autowired
+    private LibraryDAO libraryDao;
 
-  /** {@inheritDoc} */
-  @Override
-  public List<Sample> getLibraries() {
-    return libraryDao.getLibraries();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public List<Sample> getLibraries(Map<String, String> attributes) {
-    List<Sample> result = Lists.newArrayList();
-    for (Map.Entry<String, String> entry : attributes.entrySet()) {
-      List<Sample> libraries = libraryDao.getLibraries(entry.getKey(), entry.getValue());
-      if (result.isEmpty()) {
-        result = libraries;
-      } else {
-        result.retainAll(libraries); // Intersection.
-      }
+    /** {@inheritDoc} */
+    @Override
+    public List<Sample> getLibraries() {
+        return libraryDao.getLibraries();
     }
-    return result;
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public Sample findBySWAccession(Long swAccession) {
-    return libraryDao.findBySWAccession(swAccession);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public List<Sample> getLibraries(Map<String, String> attributes) {
+        List<Sample> result = Lists.newArrayList();
+        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+            List<Sample> libraries = libraryDao.getLibraries(entry.getKey(), entry.getValue());
+            if (result.isEmpty()) {
+                result = libraries;
+            } else {
+                result.retainAll(libraries); // Intersection.
+            }
+        }
+        return result;
+    }
 
+    /** {@inheritDoc} */
+    @Override
+    public Sample findBySWAccession(Long swAccession) {
+        return libraryDao.findBySWAccession(swAccession);
+    }
 
 }

@@ -12,76 +12,83 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
- * <p>LaunchWorkflowListController class.</p>
- *
+ * <p>
+ * LaunchWorkflowListController class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
-public class LaunchWorkflowListController  extends BaseCommandController {
-	private StudyService studyService;
-	
-	/**
-	 * <p>Constructor for LaunchWorkflowListController.</p>
-	 */
-	public LaunchWorkflowListController() {
-		super();
-		setSupportedMethods(new String[] {METHOD_GET});
-	}
+public class LaunchWorkflowListController extends BaseCommandController {
+    private StudyService studyService;
 
-	/** {@inheritDoc}
+    /**
+     * <p>
+     * Constructor for LaunchWorkflowListController.
+     * </p>
+     */
+    public LaunchWorkflowListController() {
+        super();
+        setSupportedMethods(new String[] { METHOD_GET });
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-												 HttpServletResponse response)
-		throws Exception {
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		//Registration registration = Security.requireRegistration(request, response);
-		
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
+        // Registration registration = Security.requireRegistration(request, response);
 
-		/**
-		 * Pass registration so that we can filter the list if its appropriate
-		 * to do so.
-		 */
-		String timeout = this.getServletContext().getInitParameter("timeout.load.report.bundle");
-		
-//		List<Study>	list			= getStudyService().list(registration);
-		
-		ModelAndView		modelAndView	= new ModelAndView("SelectInput");
-//		modelAndView.addObject("studys", list);
-		modelAndView.addObject("registration", registration);
-		modelAndView.addObject("timeout", timeout);
-		
-		HttpSession session = request.getSession(false);
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
 
-		// clear list analysis bulk download files from session
-	//	Log.info("RemAnalysis");
+        /**
+         * Pass registration so that we can filter the list if its appropriate to do so.
+         */
+        String timeout = this.getServletContext().getInitParameter("timeout.load.report.bundle");
+
+        // List<Study> list = getStudyService().list(registration);
+
+        ModelAndView modelAndView = new ModelAndView("SelectInput");
+        // modelAndView.addObject("studys", list);
+        modelAndView.addObject("registration", registration);
+        modelAndView.addObject("timeout", timeout);
+
+        HttpSession session = request.getSession(false);
+
+        // clear list analysis bulk download files from session
+        // Log.info("RemAnalysis");
         session.removeAttribute("selectedInput"); // bulkDownloadFiles
         session.removeAttribute("launchWorkflowIds");
         session.removeAttribute("launchWorkflowNodes");
-				
 
-		return modelAndView;
-	}
+        return modelAndView;
+    }
 
-	/**
-	 * <p>Getter for the field <code>studyService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
-	 */
-	public StudyService getStudyService() {
-		return studyService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>studyService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+     */
+    public StudyService getStudyService() {
+        return studyService;
+    }
 
-	/**
-	 * <p>Setter for the field <code>studyService</code>.</p>
-	 *
-	 * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
-	 */
-	public void setStudyService(StudyService studyService) {
-		this.studyService = studyService;
-	}
+    /**
+     * <p>
+     * Setter for the field <code>studyService</code>.
+     * </p>
+     * 
+     * @param studyService
+     *            a {@link net.sourceforge.seqware.common.business.StudyService} object.
+     */
+    public void setStudyService(StudyService studyService) {
+        this.studyService = studyService;
+    }
 }

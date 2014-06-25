@@ -23,76 +23,76 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class FileAttributeServiceImpl implements FileAttributeService {
 
-  @Autowired
-  private FileAttributeDAO fileAttributeDao;
+    @Autowired
+    private FileAttributeDAO fileAttributeDao;
 
-  @Autowired
-  private FileDAO fileDao;
+    @Autowired
+    private FileDAO fileDao;
 
-  /** {@inheritDoc} */
-  @Override
-  public Set<FileAttribute> getFileAttributes(Integer fileSwa) {
-    File file = fileDao.findBySWAccession(fileSwa);
-    if (file == null) {
-      throw new NotFoundException();
+    /** {@inheritDoc} */
+    @Override
+    public Set<FileAttribute> getFileAttributes(Integer fileSwa) {
+        File file = fileDao.findBySWAccession(fileSwa);
+        if (file == null) {
+            throw new NotFoundException();
+        }
+        return file.getFileAttributes();
     }
-    return file.getFileAttributes();
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public FileAttribute get(Integer fileSwa, Integer id) {
-    File file = fileDao.findBySWAccession(fileSwa);
-    if (file == null) {
-      return null;
+    /** {@inheritDoc} */
+    @Override
+    public FileAttribute get(Integer fileSwa, Integer id) {
+        File file = fileDao.findBySWAccession(fileSwa);
+        if (file == null) {
+            return null;
+        }
+        return fileAttributeDao.get(id);
     }
-    return fileAttributeDao.get(id);
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public Integer add(Integer fileSwa, FileAttribute fileAttribute) {
-    File file = fileDao.findBySWAccession(fileSwa);
-    if (file == null) {
-      return null;
+    /** {@inheritDoc} */
+    @Override
+    public Integer add(Integer fileSwa, FileAttribute fileAttribute) {
+        File file = fileDao.findBySWAccession(fileSwa);
+        if (file == null) {
+            return null;
+        }
+        fileAttribute.setFile(file);
+        return fileAttributeDao.add(fileAttribute);
     }
-    fileAttribute.setFile(file);
-    return fileAttributeDao.add(fileAttribute);
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public void update(Integer fileSwa, FileAttribute fileAttribute) {
-    File file = fileDao.findBySWAccession(fileSwa);
-    if (file == null) {
-      throw new NotFoundException();
+    /** {@inheritDoc} */
+    @Override
+    public void update(Integer fileSwa, FileAttribute fileAttribute) {
+        File file = fileDao.findBySWAccession(fileSwa);
+        if (file == null) {
+            throw new NotFoundException();
+        }
+        FileAttribute currentFileAttribute = fileAttributeDao.get(fileAttribute.getFileAttributeId());
+        if (currentFileAttribute == null) {
+            throw new NotFoundException();
+        }
+        if (!currentFileAttribute.getFile().equals(file)) {
+            throw new NotFoundException();
+        }
+        fileAttribute.setFile(file);
+        fileAttributeDao.update(fileAttribute);
     }
-    FileAttribute currentFileAttribute = fileAttributeDao.get(fileAttribute.getFileAttributeId());
-    if (currentFileAttribute == null) {
-      throw new NotFoundException();
-    }
-    if (!currentFileAttribute.getFile().equals(file)) {
-      throw new NotFoundException();
-    }
-    fileAttribute.setFile(file);
-    fileAttributeDao.update(fileAttribute);
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public void delete(Integer fileSwa, Integer fileAttributeId) {
-    File file = fileDao.findBySWAccession(fileSwa);
-    if (file == null) {
-      throw new NotFoundException();
+    /** {@inheritDoc} */
+    @Override
+    public void delete(Integer fileSwa, Integer fileAttributeId) {
+        File file = fileDao.findBySWAccession(fileSwa);
+        if (file == null) {
+            throw new NotFoundException();
+        }
+        FileAttribute fileAttribute = fileAttributeDao.get(fileAttributeId);
+        if (fileAttribute == null) {
+            throw new NotFoundException();
+        }
+        if (!fileAttribute.getFile().equals(file)) {
+            throw new NotFoundException();
+        }
+        fileAttributeDao.delete(fileAttribute);
     }
-    FileAttribute fileAttribute = fileAttributeDao.get(fileAttributeId);
-    if (fileAttribute == null) {
-      throw new NotFoundException();
-    }
-    if (!fileAttribute.getFile().equals(file)) {
-      throw new NotFoundException();
-    }
-    fileAttributeDao.delete(fileAttribute);
-  }
 
 }

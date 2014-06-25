@@ -16,6 +16,7 @@
  */
 
 package net.sourceforge.seqware.pipeline.module;
+
 //import org.aspectj.weaver.ast.Test;
 import net.sourceforge.seqware.common.util.Log;
 import org.junit.After;
@@ -26,10 +27,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * User: xiao
- * Date: 7/25/11
- * Time: 11:09 PM
- *
+ * User: xiao Date: 7/25/11 Time: 11:09 PM
+ * 
  * @author boconnor
  * @version $Id: $Id
  * @since 0.13.3
@@ -39,45 +38,59 @@ import static org.junit.Assert.*;
 public class ModuleMethodTest {
 
     /**
-     * <p>Constructor for ModuleMethodTest.</p>
+     * <p>
+     * Constructor for ModuleMethodTest.
+     * </p>
      */
     public ModuleMethodTest() {
     }
 
     /**
-     * <p>setUpClass.</p>
-     *
-     * @throws java.lang.Exception if any.
+     * <p>
+     * setUpClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
      */
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
 
     /**
-     * <p>tearDownClass.</p>
-     *
-     * @throws java.lang.Exception if any.
+     * <p>
+     * tearDownClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
      */
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
 
     /**
-     * <p>setUp.</p>
+     * <p>
+     * setUp.
+     * </p>
      */
     @Before
     public void setUp() {
     }
 
     /**
-     * <p>tearDown.</p>
+     * <p>
+     * tearDown.
+     * </p>
      */
     @After
     public void tearDown() {
     }
 
     /**
-     * <p>testAnnotation.</p>
+     * <p>
+     * testAnnotation.
+     * </p>
      */
     @Test
     public void testAnnotation() {

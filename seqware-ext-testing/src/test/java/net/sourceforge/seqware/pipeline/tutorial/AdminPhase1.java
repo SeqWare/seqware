@@ -30,11 +30,11 @@ import org.junit.Test;
 
 /**
  * Do all tests that can be concurrently done in the admin tutorial
- *
+ * 
  * @author dyuen
  */
 public class AdminPhase1 {
-    
+
     private static File separateTempDir = Files.createTempDir();
 
     @Test
@@ -50,20 +50,25 @@ public class AdminPhase1 {
         File packageDir = Files.createTempDir();
 
         // for this test, we're going to create, install and package just one archetype. Doing more seems redundant for this test
-        String[] archetypes = {"java-workflow"/*, "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow"*/};
+        String[] archetypes = { "java-workflow"/* , "simplified-ftl-workflow", "legacy-ftl-workflow", "simple-legacy-ftl-workflow" */};
         for (String archetype : archetypes) {
             String workflow = "seqware-archetype-" + archetype;
-	    String workflowName = workflow.replace("-","");
+            String workflowName = workflow.replace("-", "");
             // generate and install archetypes to local maven repo
-            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId=" + workflow + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=" + workflow + " -Dworkflow-name="+workflowName+" -B -Dgoals=install";
+            String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.seqware.github -DgroupId=com.github.seqware -DarchetypeArtifactId="
+                    + workflow
+                    + " -Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId="
+                    + workflow
+                    + " -Dworkflow-name=" + workflowName + " -B -Dgoals=install";
             String genOutput = ITUtility.runArbitraryCommand(command, 0, separateTempDir);
             Log.info(genOutput);
-            // install the workflows to the database and record their information 
+            // install the workflows to the database and record their information
             File workflowDir = new File(separateTempDir, workflow);
             File targetDir = new File(workflowDir, "target");
             File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflowName + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
 
-            String packageCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + packageDir + " -p " + bundleDir.getAbsolutePath();
+            String packageCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + packageDir + " -p "
+                    + bundleDir.getAbsolutePath();
             String packageOutput = ITUtility.runSeqWareJar(packageCommand, ReturnValue.SUCCESS, null);
             Log.info(packageOutput);
 
@@ -73,7 +78,7 @@ public class AdminPhase1 {
             String installOutput = installBundle(zippedBundle);
             Log.info(installOutput);
         }
-        
+
         FileUtils.deleteDirectory(packageDir);
     }
 
@@ -88,11 +93,11 @@ public class AdminPhase1 {
         String listOutput = statusCheck();
         Log.info(listOutput);
     }
-    
+
     // later we will test/add utilities for wrapping cancel and rescue workflows
-    
+
     @AfterClass
-    public static void cleanup() throws IOException{
+    public static void cleanup() throws IOException {
         FileUtils.deleteDirectory(separateTempDir);
     }
 

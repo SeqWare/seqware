@@ -21,26 +21,30 @@ import java.util.Set;
 import net.sourceforge.seqware.common.model.Registration;
 
 /**
- * <p>PermissionsAware interface.</p>
- *
+ * <p>
+ * PermissionsAware interface.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public abstract class PermissionsAware {
-    
-    public boolean givesPermission(Registration registration){
+
+    public boolean givesPermission(Registration registration) {
         return this.givesPermission(registration, new HashSet<Integer>());
     }
-  
+
     public boolean givesPermission(Registration registration, Set<Integer> considered) {
         return this.givesPermissionInternal(registration, considered);
-    } 
+    }
+
     /**
      * Short-circuit permission checking by providing a set of entities that have already been checked
+     * 
      * @param registration
      * @param considered
-     * @return 
+     * @return
      */
     public abstract boolean givesPermissionInternal(Registration registration, Set<Integer> considered);
-        
+
 }

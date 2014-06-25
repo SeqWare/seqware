@@ -31,7 +31,7 @@ import org.junit.Test;
 
 /**
  * Tests downloading results in the tutorial
- *
+ * 
  * @author dyuen
  */
 public class UserPhase6 {
@@ -41,16 +41,17 @@ public class UserPhase6 {
         monitorAndReturnWorkflowRun();
     }
 
-    //TODO: test wra instead of wa, but the previous step we needed to use --wait to ensure we have results to report and --wait does not output a SWID to the command-line
+    // TODO: test wra instead of wa, but the previous step we needed to use --wait to ensure we have results to report and --wait does not
+    // output a SWID to the command-line
     @Test
     public void testMonitorWorkflowRunStdOut() throws IOException {
         File workingDir = Files.createTempDir();
-        String swid = monitorAndReturnWorkflowRun();      
-         // check on existence and contents of output
+        String swid = monitorAndReturnWorkflowRun();
+        // check on existence and contents of output
         // delete files that would interfere
         WorkFlowRunReporterFilterStdOut filter = new WorkFlowRunReporterFilterStdOut(swid);
         runWorkflowRunReporterStdOut(swid, workingDir);
-        
+
         Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         Assert.assertTrue("wrong number of csv files found, found " + listFiles.size(), listFiles.size() == 1);
         File foundFile = listFiles.iterator().next();
@@ -61,8 +62,8 @@ public class UserPhase6 {
     public void testMonitorWorkflowRunStdErr() throws IOException {
         File workingDir = Files.createTempDir();
         String swid = monitorAndReturnWorkflowRun();
-         // check on existence and contents of output
-        WorkFlowRunReporterFilterStdErr filter = new WorkFlowRunReporterFilterStdErr(swid);     
+        // check on existence and contents of output
+        WorkFlowRunReporterFilterStdErr filter = new WorkFlowRunReporterFilterStdErr(swid);
         runWorkflowRunReporterStdErr(swid, workingDir);
         Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         Assert.assertTrue("wrong number of csv files found, found " + listFiles.size(), listFiles.size() == 1);
@@ -74,9 +75,9 @@ public class UserPhase6 {
     public void testdownloadWorkflowResults() throws IOException {
         exportStudyResults();
     }
-    
+
     @AfterClass
-    public static void cleanup() throws IOException{
+    public static void cleanup() throws IOException {
         PluginRunnerET.monitorAndClean(false);
     }
 
@@ -88,7 +89,8 @@ public class UserPhase6 {
 
         Collection<File> listFiles = FileUtils.listFiles(workingDir, filter, filter);
         // ensure that we only have one csv file
-        Assert.assertTrue("wrong number of csv files, found " + listFiles.size() + " in " + workingDir.getAbsolutePath(), listFiles.size() == 1);
+        Assert.assertTrue("wrong number of csv files, found " + listFiles.size() + " in " + workingDir.getAbsolutePath(),
+                listFiles.size() == 1);
         File foundFile = listFiles.iterator().next();
         // check that we have at least one run in the output
         boolean runFound = false;
@@ -106,29 +108,26 @@ public class UserPhase6 {
     }
 
     protected void runWorkflowRunReporter(File workingDir) throws IOException {
-        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW)
-                , ReturnValue.SUCCESS
-                , workingDir);
+        ITUtility.runSeqWareJar(
+                " -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- -wa "
+                        + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW), ReturnValue.SUCCESS, workingDir);
     }
 
     protected void runWorkflowRunReporterStdErr(String swid, File workingDir) throws IOException {
-        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stderr -wra " + swid
-                , ReturnValue.SUCCESS
-                , workingDir);
+        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stderr -wra " + swid,
+                ReturnValue.SUCCESS, workingDir);
     }
 
     protected void runWorkflowRunReporterStdOut(String swid, File workingDir) throws IOException {
-        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stdout -wra " + swid
-                , ReturnValue.SUCCESS
-                , workingDir);
+        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter -- --wr-stdout -wra " + swid,
+                ReturnValue.SUCCESS, workingDir);
     }
 
     protected void exportStudyResults() throws IOException {
-        ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- "
-                + " --no-links --output-filename study_report "
-                + "--workflow-accession "
-                + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW) + " "
-                + "--study 'New Test Study'", ReturnValue.SUCCESS, null);
+        ITUtility.runSeqWareJar(
+                " -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- " + " --no-links --output-filename study_report "
+                        + "--workflow-accession " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW) + " " + "--study 'New Test Study'",
+                ReturnValue.SUCCESS, null);
     }
 
     public static class WorkFlowRunReporterFilter implements IOFileFilter {
@@ -142,21 +141,21 @@ public class UserPhase6 {
         public boolean accept(File file, String string) {
             return check(file);
         }
-        
-        private boolean check(File file){
-             return file.getName().contains("_workflow_" + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW) + ".csv");
+
+        private boolean check(File file) {
+            return file.getName().contains("_workflow_" + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW) + ".csv");
         }
     }
 
     public static class WorkFlowRunReporterFilterStdOut implements IOFileFilter {
 
         private String swid;
-        
-        public WorkFlowRunReporterFilterStdOut(String swid){
+
+        public WorkFlowRunReporterFilterStdOut(String swid) {
             this.swid = swid;
         }
-        
-       @Override
+
+        @Override
         public boolean accept(File file) {
             return check(file);
         }
@@ -165,17 +164,17 @@ public class UserPhase6 {
         public boolean accept(File file, String string) {
             return check(file);
         }
-        
-        private boolean check(File file){
-             return file.getName().contains("_workflowrun_" + swid + "_STDOUT.csv");
+
+        private boolean check(File file) {
+            return file.getName().contains("_workflowrun_" + swid + "_STDOUT.csv");
         }
     }
 
     public static class WorkFlowRunReporterFilterStdErr implements IOFileFilter {
-        
+
         private String swid;
-        
-        public WorkFlowRunReporterFilterStdErr(String swid){
+
+        public WorkFlowRunReporterFilterStdErr(String swid) {
             this.swid = swid;
         }
 
@@ -188,9 +187,9 @@ public class UserPhase6 {
         public boolean accept(File file, String string) {
             return check(file);
         }
-        
-        private boolean check(File file){
-             return file.getName().contains("_workflowrun_" + swid + "_STDERR.csv");
+
+        private boolean check(File file) {
+            return file.getName().contains("_workflowrun_" + swid + "_STDERR.csv");
         }
     }
 }

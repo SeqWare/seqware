@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 import org.restlet.representation.Representation;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public abstract class DatabaseResourceIDTest extends AbstractResourceTest {
@@ -55,7 +55,7 @@ public abstract class DatabaseResourceIDTest extends AbstractResourceTest {
         } catch (Exception e) {
             e.printStackTrace();
             Assert.fail(e.getMessage());
-            
+
         }
     }
 
@@ -113,6 +113,6 @@ public abstract class DatabaseResourceIDTest extends AbstractResourceTest {
             Assert.fail(e.getMessage());
         }
     }
-    
+
     protected abstract int testObject(Object o);
 }

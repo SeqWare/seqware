@@ -12,49 +12,50 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * RegistrationSetupController
- *
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class StudyTableController extends BaseCommandController {
 
-  private StudyService studyService;
+    private StudyService studyService;
 
-  /**
-   * <p>Constructor for AnalisysListController.</p>
-   */
-  public StudyTableController() {
-    super();
-    setSupportedMethods(new String[]{METHOD_GET});
-  }
-
-  /**
-   * {@inheritDoc}
-     * @return 
-     * @throws java.lang.Exception 
-   */
-  @Override
-  protected ModelAndView handleRequestInternal(HttpServletRequest request,
-          HttpServletResponse response)
-          throws Exception {
-
-    //Registration registration = Security.requireRegistration(request, response);
-    Registration registration = Security.getRegistration(request);
-    if (registration == null) {
-      return new ModelAndView("redirect:/login.htm");
+    /**
+     * <p>
+     * Constructor for AnalisysListController.
+     * </p>
+     */
+    public StudyTableController() {
+        super();
+        setSupportedMethods(new String[] { METHOD_GET });
     }
 
-    ModelAndView modelAndView = new ModelAndView("StudyTable");
-    modelAndView.addObject("registration", registration);
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-    return modelAndView;
-  }
+        // Registration registration = Security.requireRegistration(request, response);
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) {
+            return new ModelAndView("redirect:/login.htm");
+        }
 
-  public StudyService getStudyService() {
-    return studyService;
-  }
+        ModelAndView modelAndView = new ModelAndView("StudyTable");
+        modelAndView.addObject("registration", registration);
 
-  public void setStudyService(StudyService studyService) {
-    this.studyService = studyService;
-  }
+        return modelAndView;
+    }
+
+    public StudyService getStudyService() {
+        return studyService;
+    }
+
+    public void setStudyService(StudyService studyService) {
+        this.studyService = studyService;
+    }
 }

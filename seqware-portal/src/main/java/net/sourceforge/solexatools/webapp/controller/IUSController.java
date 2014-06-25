@@ -19,185 +19,204 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 /**
- * <p>IUSController class.</p>
- *
+ * <p>
+ * IUSController class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class IUSController extends MultiActionController {
-	private IUSService iusService;
+    private IUSService iusService;
 
-	/**
-	 * <p>Constructor for IUSController.</p>
-	 */
-	public IUSController() {
-	    super();
-	}
+    /**
+     * <p>
+     * Constructor for IUSController.
+     * </p>
+     */
+    public IUSController() {
+        super();
+    }
 
-	/**
-	 * <p>Constructor for IUSController.</p>
-	 *
-	 * @param delegate a {@link java.lang.Object} object.
-	 */
-	public IUSController(Object delegate) {
-		super(delegate);
-	}
-  
-	/**
-	 * <p>Getter for the field <code>iusService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
-	 */
-	public IUSService getIusService() {
-		return iusService;
-	}
+    /**
+     * <p>
+     * Constructor for IUSController.
+     * </p>
+     * 
+     * @param delegate
+     *            a {@link java.lang.Object} object.
+     */
+    public IUSController(Object delegate) {
+        super(delegate);
+    }
 
-	/**
-	 * <p>Setter for the field <code>iusService</code>.</p>
-	 *
-	 * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
-	 */
-	public void setIusService(IUSService iusService) {
-		this.iusService = iusService;
-	}
-					  
-	/**
-	 * <p>getIUSService.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
-	 */
-	public IUSService getIUSService() {
-		return iusService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>iusService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+     */
+    public IUSService getIusService() {
+        return iusService;
+    }
 
-	/**
-	 * <p>setIUSService.</p>
-	 *
-	 * @param iusService a {@link net.sourceforge.seqware.common.business.IUSService} object.
-	 */
-	public void setIUSService(IUSService iusService) {
-		this.iusService = iusService;
-	}
-	  
-	/**
-	 * Handles the user's request to delete their ius.
-	 *
-	 * @param command IUS command object
-	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
-	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
-	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
-	 * @throws java.lang.Exception if any.
-	 */
-	public ModelAndView handleDelete(HttpServletRequest		request,
-									 HttpServletResponse	response,
-									 IUS					command)
-		throws Exception {
+    /**
+     * <p>
+     * Setter for the field <code>iusService</code>.
+     * </p>
+     * 
+     * @param iusService
+     *            a {@link net.sourceforge.seqware.common.business.IUSService} object.
+     */
+    public void setIusService(IUSService iusService) {
+        this.iusService = iusService;
+    }
 
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
+    /**
+     * <p>
+     * getIUSService.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.IUSService} object.
+     */
+    public IUSService getIUSService() {
+        return iusService;
+    }
 
-		ModelAndView			modelAndView	= null;
-		HashMap<String,Object>	model			= new HashMap<>();
-		IUS						ius				= getRequestedIUS(request);
-		
-		ServletContext context = this.getServletContext();
-		boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
+    /**
+     * <p>
+     * setIUSService.
+     * </p>
+     * 
+     * @param iusService
+     *            a {@link net.sourceforge.seqware.common.business.IUSService} object.
+     */
+    public void setIUSService(IUSService iusService) {
+        this.iusService = iusService;
+    }
 
-		if (ius != null) {
-		    if(registration.equals(ius.getOwner()) || registration.isLIMSAdmin()){
-		    	getIUSService().delete(ius, deleteRealFiles);
-		    }
-		} 
-		modelAndView = new ModelAndView(getViewName(request), model);
-		return modelAndView;
-	}
-	
-	/**
-	 * Handles the user's request to delete their ius.
-	 *
-	 * @param command IUS command object
-	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
-	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
-	 * @return a {@link org.springframework.web.servlet.ModelAndView} object.
-	 * @throws java.lang.Exception if any.
-	 */
-	public ModelAndView handleUpdate(HttpServletRequest		request,
-									 HttpServletResponse	response,
-									 IUS					command)
-		throws Exception {
+    /**
+     * Handles the user's request to delete their ius.
+     * 
+     * @param command
+     *            IUS command object
+     * @param request
+     *            a {@link javax.servlet.http.HttpServletRequest} object.
+     * @param response
+     *            a {@link javax.servlet.http.HttpServletResponse} object.
+     * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    public ModelAndView handleDelete(HttpServletRequest request, HttpServletResponse response, IUS command) throws Exception {
 
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
-		
-		ModelAndView modelAndView = null;
-		
-		IUS newIus = command;
-		IUS oldIus = getCurrentIus(request);
-		if (newIus != null && oldIus != null) {
-			new ServletRequestDataBinder(oldIus).bind(request);
-			getIusService().update(oldIus);
-			modelAndView = new ModelAndView("redirect:/search.htm");
-		} else {
-			modelAndView = new ModelAndView("redirect:/Error.htm");
-		}
-	
-		request.getSession(false).removeAttribute("ius");
-		
-		return modelAndView;
-	}
-	
-	/**
-	 * Handles the user's request to cancel.
-	 *
-	 * @param command IUS command object
-	 * @return ModelAndView
-	 * @throws java.lang.Exception if any.
-	 * @param request a {@link javax.servlet.http.HttpServletRequest} object.
-	 * @param response a {@link javax.servlet.http.HttpServletResponse} object.
-	 */
-	public ModelAndView handleCancel(HttpServletRequest request,
-									 HttpServletResponse response,
-									 IUS command) throws Exception {
-		return new ModelAndView("redirect:/search.htm");
-	}
-	
-	/**
-	 * Gets the IUS from the session.
-	 *
-	 * @param request HttpServletRequest
-	 *
-	 * @return instance of IUS from the session, or a new instance
-	 * if the IUS is not in the session (e.g. the user is not logged in)
-	 */
-	private IUS getCurrentIus(HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			Object ius = session.getAttribute("ius");
-			if (ius != null) {
-				return (IUS)ius;
-			}
-		}
-		return new IUS();
-	}
-	  
-	private String getViewName(HttpServletRequest request){
-		String typeTree = (String)request.getSession(false).getAttribute("typeTree");
-		String viewName = Constant.getViewName(typeTree);
-		request.getSession(false).removeAttribute("typeTree");
-		return viewName;
-	}
-	
-	private IUS getRequestedIUS(HttpServletRequest request) {
-		HttpSession	session	= request.getSession(false);
-		IUS  	ius	= null;
-		String	id	= (String)request.getParameter("objectId");
-			
-		 if (id != null) {
-		  Integer iusID = Integer.parseInt(id);
-		  ius = getIUSService().findByID(iusID);
-		 }
-		 return ius;
-	}
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
+
+        ModelAndView modelAndView = null;
+        HashMap<String, Object> model = new HashMap<>();
+        IUS ius = getRequestedIUS(request);
+
+        ServletContext context = this.getServletContext();
+        boolean deleteRealFiles = Bool.parse(context.getInitParameter("delete.files.for.node.deletion"));
+
+        if (ius != null) {
+            if (registration.equals(ius.getOwner()) || registration.isLIMSAdmin()) {
+                getIUSService().delete(ius, deleteRealFiles);
+            }
+        }
+        modelAndView = new ModelAndView(getViewName(request), model);
+        return modelAndView;
+    }
+
+    /**
+     * Handles the user's request to delete their ius.
+     * 
+     * @param command
+     *            IUS command object
+     * @param request
+     *            a {@link javax.servlet.http.HttpServletRequest} object.
+     * @param response
+     *            a {@link javax.servlet.http.HttpServletResponse} object.
+     * @return a {@link org.springframework.web.servlet.ModelAndView} object.
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    public ModelAndView handleUpdate(HttpServletRequest request, HttpServletResponse response, IUS command) throws Exception {
+
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
+
+        ModelAndView modelAndView = null;
+
+        IUS newIus = command;
+        IUS oldIus = getCurrentIus(request);
+        if (newIus != null && oldIus != null) {
+            new ServletRequestDataBinder(oldIus).bind(request);
+            getIusService().update(oldIus);
+            modelAndView = new ModelAndView("redirect:/search.htm");
+        } else {
+            modelAndView = new ModelAndView("redirect:/Error.htm");
+        }
+
+        request.getSession(false).removeAttribute("ius");
+
+        return modelAndView;
+    }
+
+    /**
+     * Handles the user's request to cancel.
+     * 
+     * @param command
+     *            IUS command object
+     * @return ModelAndView
+     * @throws java.lang.Exception
+     *             if any.
+     * @param request
+     *            a {@link javax.servlet.http.HttpServletRequest} object.
+     * @param response
+     *            a {@link javax.servlet.http.HttpServletResponse} object.
+     */
+    public ModelAndView handleCancel(HttpServletRequest request, HttpServletResponse response, IUS command) throws Exception {
+        return new ModelAndView("redirect:/search.htm");
+    }
+
+    /**
+     * Gets the IUS from the session.
+     * 
+     * @param request
+     *            HttpServletRequest
+     * 
+     * @return instance of IUS from the session, or a new instance if the IUS is not in the session (e.g. the user is not logged in)
+     */
+    private IUS getCurrentIus(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Object ius = session.getAttribute("ius");
+            if (ius != null) {
+                return (IUS) ius;
+            }
+        }
+        return new IUS();
+    }
+
+    private String getViewName(HttpServletRequest request) {
+        String typeTree = (String) request.getSession(false).getAttribute("typeTree");
+        String viewName = Constant.getViewName(typeTree);
+        request.getSession(false).removeAttribute("typeTree");
+        return viewName;
+    }
+
+    private IUS getRequestedIUS(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        IUS ius = null;
+        String id = (String) request.getParameter("objectId");
+
+        if (id != null) {
+            Integer iusID = Integer.parseInt(id);
+            ius = getIUSService().findByID(iusID);
+        }
+        return ius;
+    }
 }

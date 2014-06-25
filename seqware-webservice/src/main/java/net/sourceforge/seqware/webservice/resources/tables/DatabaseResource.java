@@ -19,49 +19,50 @@ package net.sourceforge.seqware.webservice.resources.tables;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 
 /**
- * <p>DatabaseResource class.</p>
- *
+ * <p>
+ * DatabaseResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class DatabaseResource extends BasicResource {
 
     protected String table;
-    
 
     /**
-     * <p>Constructor for DatabaseResource.</p>
-     *
-     * @param table a {@link java.lang.String} object.
+     * <p>
+     * Constructor for DatabaseResource.
+     * </p>
+     * 
+     * @param table
+     *            a {@link java.lang.String} object.
      */
     public DatabaseResource(String table) {
         this.table = table;
     }
 
+    // @Get
+    // @Override
+    // public Representation get() {
+    // String output = "Get All " + table;
+    // StringRepresentation repOutput = new StringRepresentation(output);
+    // repOutput.setMediaType(MediaType.TEXT_PLAIN);
+    // return repOutput;
+    // }
 
-
-//    @Get
-//    @Override
-//    public Representation get() {
-//        String output = "Get All " + table;
-//        StringRepresentation repOutput = new StringRepresentation(output);
-//        repOutput.setMediaType(MediaType.TEXT_PLAIN);
-//        return repOutput;
-//    }
-
-//    @Post
-//    @Override
-//    public Representation post(Representation entity) {
-//        try {
-//            String output = "Post " + table + " " + entity.getText();
-//            StringRepresentation repOutput = new StringRepresentation(output);
-//            repOutput.setMediaType(MediaType.TEXT_PLAIN);
-//            return repOutput;
-//        } catch (IOException e) {
-//            getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-//            return null;
-//        }
-//    }
-
+    // @Post
+    // @Override
+    // public Representation post(Representation entity) {
+    // try {
+    // String output = "Post " + table + " " + entity.getText();
+    // StringRepresentation repOutput = new StringRepresentation(output);
+    // repOutput.setMediaType(MediaType.TEXT_PLAIN);
+    // return repOutput;
+    // } catch (IOException e) {
+    // getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+    // return null;
+    // }
+    // }
 
 }
