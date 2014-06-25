@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 @RunWith(Suite.class)
@@ -58,12 +58,10 @@ import org.junit.runners.Suite;
         net.sourceforge.seqware.webservice.resources.tables.ExperimentResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.LaneResourceTest.class,
         net.sourceforge.seqware.webservice.resources.queries.SampleIdFilesResourceTest.class,
-    //        net.sourceforge.seqware.webservice.resources.queries.SequencerRunIdFilesResourceTest.class,
+        // net.sourceforge.seqware.webservice.resources.queries.SequencerRunIdFilesResourceTest.class,
         net.sourceforge.seqware.webservice.resources.queries.StudyIdSamplesResourceTest.class,
         net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResourceTest.class,
-        net.sourceforge.seqware.common.metadata.MetadataWSTest.class,
-        net.sourceforge.seqware.common.metadata.MetadataDBTest.class
-})
+        net.sourceforge.seqware.common.metadata.MetadataWSTest.class, net.sourceforge.seqware.common.metadata.MetadataDBTest.class })
 public class WSResourceTestSuite {
 
     protected SessionFactory sessionFactory = null;
@@ -72,24 +70,24 @@ public class WSResourceTestSuite {
     public static void setUpClass() throws Exception {
         BasicTestDatabaseCreatorWrapper.resetDatabaseWithUsers();
         JndiDatasourceCreator.create();
-//        SeqWareWebServiceMain.main(null);
+        // SeqWareWebServiceMain.main(null);
     }
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-//        SeqWareWebServiceMain.stop();
+        // SeqWareWebServiceMain.stop();
         BasicTestDatabaseCreatorWrapper.dropDatabase();
     }
-//    @Before
-//    public void setUp() {
-//        sessionFactory = BeanFactory.getSessionFactoryBean();
-//        Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-//        TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
-//    }
-//
-//    @After
-//    public void tearDown() {
-//        SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(sessionFactory);
-//        SessionFactoryUtils.closeSession(sessionHolder.getSession());
-//    }
+    // @Before
+    // public void setUp() {
+    // sessionFactory = BeanFactory.getSessionFactoryBean();
+    // Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+    // TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
+    // }
+    //
+    // @After
+    // public void tearDown() {
+    // SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(sessionFactory);
+    // SessionFactoryUtils.closeSession(sessionHolder.getSession());
+    // }
 }

@@ -36,8 +36,10 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * <p>SymLinkFileReporter class.</p>
- *
+ * <p>
+ * SymLinkFileReporter class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -45,7 +47,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class SymLinkFileReporter extends Plugin {
 
     public static final String SHOW_STATUS = "show-status";
-    //Filenames have a max size of 144 chars on Ubuntu, believe it or not.
+    // Filenames have a max size of 144 chars on Ubuntu, believe it or not.
     public static final int MAX_FILE_NAME_SIZE = 143;
     private ReturnValue ret = new ReturnValue();
     private static final String LINKTYPE_SYM = "s";
@@ -54,23 +56,32 @@ public class SymLinkFileReporter extends Plugin {
     private Writer writer;
 
     /**
-     * <p>Constructor for SymLinkFileReporter.</p>
+     * <p>
+     * Constructor for SymLinkFileReporter.
+     * </p>
      */
     public SymLinkFileReporter() {
         super();
         parser.acceptsAll(Arrays.asList("study"), "Make symlinks for a study").withRequiredArg();
         parser.acceptsAll(Arrays.asList("sample"), "Make symlinks for a sample").withRequiredArg();
-        //FIXME: SymLinking using SequencerRuns is not working properly yet, so it is disabled for now.
+        // FIXME: SymLinking using SequencerRuns is not working properly yet, so it is disabled for now.
         parser.acceptsAll(Arrays.asList("sequencer-run"), "Make symlinks for a sequencerRun").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("file-type", "f"), "Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on our website under 'Module Conventions'").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("workflow-accession", "w"), "Optional: List all workflow runs with this workflow accession").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("link", "l"), "Optional: make hard links (P) or symlinks (s). Default is symlinks.").withRequiredArg();
+        parser.acceptsAll(
+                Arrays.asList("file-type", "f"),
+                "Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on our website under 'Module Conventions'")
+                .withRequiredArg();
+        parser.acceptsAll(Arrays.asList("workflow-accession", "w"), "Optional: List all workflow runs with this workflow accession")
+                .withRequiredArg();
+        parser.acceptsAll(Arrays.asList("link", "l"), "Optional: make hard links (P) or symlinks (s). Default is symlinks.")
+                .withRequiredArg();
         parser.acceptsAll(Arrays.asList("prod-format"), "Optional: print the directories in prod format");
         parser.acceptsAll(Arrays.asList("duplicates"), "Optional: Allow duplications at the file path level");
         parser.acceptsAll(Arrays.asList("dump-all"), "Optional: Dumps all of the studies in the database to one file.");
         parser.acceptsAll(Arrays.asList("no-links"), "Optional: Create only the CSV file, not the symlinked directories.");
-        parser.acceptsAll(Arrays.asList("output-filename"), "Optional: Name of the output CSV file (without the extension)").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("show-failed-and-running"), "Show all of the files regardless of the workflow run status. Default shows only successful runs.");
+        parser.acceptsAll(Arrays.asList("output-filename"), "Optional: Name of the output CSV file (without the extension)")
+                .withRequiredArg();
+        parser.acceptsAll(Arrays.asList("show-failed-and-running"),
+                "Show all of the files regardless of the workflow run status. Default shows only successful runs.");
         parser.acceptsAll(Arrays.asList(SHOW_STATUS), "Show the workflow run status in the output CSV.");
         parser.acceptsAll(Arrays.asList("human"), "Optional: will print output in expanded human friendly format");
         parser.acceptsAll(Arrays.asList("stdout"), "Prints to standard out instead of to a file");
@@ -79,7 +90,8 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue init() {
@@ -89,7 +101,8 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_test() {
@@ -98,7 +111,8 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_run() {
@@ -193,26 +207,23 @@ public class SymLinkFileReporter extends Plugin {
         println("There are " + returnValues.size() + " returnValues in total before filtering");
         println("Saving symlinks and creating CSV file");
 
-        returnValues = FindAllTheFiles.filterReturnValues(returnValues, studyName,
-                fileType, options.has("duplicates"), options.has("show-failed-and-running"),
-                options.has(SHOW_STATUS));
+        returnValues = FindAllTheFiles.filterReturnValues(returnValues, studyName, fileType, options.has("duplicates"),
+                options.has("show-failed-and-running"), options.has(SHOW_STATUS));
 
         if (options.has("human")) {
             StringWriter sWriter = new StringWriter();
-            FindAllTheFiles.printTSVFile(sWriter, options.has(SHOW_STATUS),
-                    returnValues, studyName);
+            FindAllTheFiles.printTSVFile(sWriter, options.has(SHOW_STATUS), returnValues, studyName);
             writer.write(TabExpansionUtil.expansion(sWriter.toString()));
             return;
         } else {
-            FindAllTheFiles.printTSVFile(writer, options.has(SHOW_STATUS),
-                    returnValues, studyName);
+            FindAllTheFiles.printTSVFile(writer, options.has(SHOW_STATUS), returnValues, studyName);
         }
 
         for (ReturnValue rv : returnValues) {
             StringBuilder directory = new StringBuilder();
             directory.append(rootDirectory).append(File.separator);
 
-            //First pull all of the required information out of the ReturnValue
+            // First pull all of the required information out of the ReturnValue
             String studySwa = rv.getAttribute(FindAllTheFiles.STUDY_SWA);
             String parentSampleName = rv.getAttribute(FindAllTheFiles.PARENT_SAMPLE_NAME);
             String parentSampleSwa = rv.getAttribute(FindAllTheFiles.PARENT_SAMPLE_SWA);
@@ -230,10 +241,9 @@ public class SymLinkFileReporter extends Plugin {
             String workflowVersion = rv.getAttribute(FindAllTheFiles.WORKFLOW_VERSION);
 
             if (!options.has("no-links")) {
-                ///Save in the format requested
+                // /Save in the format requested
                 if (options.has("prod-format")) {
-                    saveProdFileName(directory, studyName, studySwa, parentSampleName,
-                            parentSampleSwa, rv, workflowName, workflowVersion,
+                    saveProdFileName(directory, studyName, studySwa, parentSampleName, parentSampleSwa, rv, workflowName, workflowVersion,
                             sampleName, sampleSwa);
                 } else {
                     if (studyName != null && studySwa != null) {
@@ -244,10 +254,8 @@ public class SymLinkFileReporter extends Plugin {
                     directory.append(File.separator);
                     directory.append(sampleName).append("-").append(sampleSwa);
 
-                    saveSeqwareFileName(directory.toString(), workflowName, workflowSwa,
-                            workflowRunName, workflowRunSwa, sequencerRunName,
-                            sequencerRunSwa, laneNum, iusTag, iusSwa, sampleName,
-                            sampleSwa, rv);
+                    saveSeqwareFileName(directory.toString(), workflowName, workflowSwa, workflowRunName, workflowRunSwa, sequencerRunName,
+                            sequencerRunSwa, laneNum, iusTag, iusSwa, sampleName, sampleSwa, rv);
                 }
             }
 
@@ -257,21 +265,24 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * Links files in a loose interpretation of the Production format.
-     *
-     * @param directory the base directory to build the hierarchical structure
+     * 
+     * @param directory
+     *            the base directory to build the hierarchical structure
      * @param studyName
-     * @param studySwa study seqware accession
+     * @param studySwa
+     *            study seqware accession
      * @param parentSampleName
-     * @param parentSampleSwa parent sample seqware accession
-     * @param rv the ReturnValue where all the attributes are stored
+     * @param parentSampleSwa
+     *            parent sample seqware accession
+     * @param rv
+     *            the ReturnValue where all the attributes are stored
      * @param workflowName
      * @param workflowVersion
      * @param sampleName
      * @param sampleSwa
      */
-    private void saveProdFileName(StringBuilder directory, String studyName, String studySwa,
-            String parentSampleName, String parentSampleSwa, ReturnValue rv, String workflowName, String workflowVersion, String sampleName,
-            String sampleSwa) {
+    private void saveProdFileName(StringBuilder directory, String studyName, String studySwa, String parentSampleName,
+            String parentSampleSwa, ReturnValue rv, String workflowName, String workflowVersion, String sampleName, String sampleSwa) {
         if (studyName != null && studySwa != null) {
             directory.append(studyName).append("-").append(studySwa);
             directory.append(File.separator);
@@ -294,7 +305,7 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * Links files in the SeqWare file format and directory hierarchy.
-     *
+     * 
      * @param directory
      * @param workflowName
      * @param workflowSwa
@@ -309,12 +320,9 @@ public class SymLinkFileReporter extends Plugin {
      * @param sampleSwa
      * @param rv
      */
-    private void saveSeqwareFileName(String directory, String workflowName,
-            String workflowSwa, String workflowRunName, String workflowRunSwa,
-            String sequencerRunName, String sequencerRunSwa, String laneNum,
-            String iusTag, String iusSwa, String sampleName, String sampleSwa,
-            ReturnValue rv) {
-
+    private void saveSeqwareFileName(String directory, String workflowName, String workflowSwa, String workflowRunName,
+            String workflowRunSwa, String sequencerRunName, String sequencerRunSwa, String laneNum, String iusTag, String iusSwa,
+            String sampleName, String sampleSwa, ReturnValue rv) {
 
         StringBuilder fileNamePrefix = new StringBuilder();
         fileNamePrefix.append(workflowName).append("-");
@@ -328,25 +336,26 @@ public class SymLinkFileReporter extends Plugin {
         fileNamePrefix.append(iusSwa).append("__");
         fileNamePrefix.append(sampleName).append("-");
         fileNamePrefix.append(sampleSwa).append("__");
-        saveFiles(rv.getFiles(), fileNamePrefix.toString(),
-                directory);
+        saveFiles(rv.getFiles(), fileNamePrefix.toString(), directory);
     }
 
     /**
      * Link some files and creates a directory structure.
-     *
-     * @param files a list of the files
-     * @param fileNamePrefix the prefix of the files
-     * @param directory the directory in which to link the files
+     * 
+     * @param files
+     *            a list of the files
+     * @param fileNamePrefix
+     *            the prefix of the files
+     * @param directory
+     *            the directory in which to link the files
      */
-    private void saveFiles(List<FileMetadata> files,
-            String fileNamePrefix, String directory) {
+    private void saveFiles(List<FileMetadata> files, String fileNamePrefix, String directory) {
         for (FileMetadata fm : files) {
             if (fm.getMetaType().equals(fileType) || fileType.equals(FindAllTheFiles.FILETYPE_ALL)) {
                 String[] pathArr = fm.getFilePath().split(File.separator);
                 String filename = fileNamePrefix + pathArr[pathArr.length - 1];
 
-                //Filenames have a max size of 144 chars on Ubuntu, believe it or not.
+                // Filenames have a max size of 144 chars on Ubuntu, believe it or not.
                 if (filename.length() >= MAX_FILE_NAME_SIZE) {
                     String pieces = fm.getDescription() + pathArr[pathArr.length - 1];
                     String ext = "." + fm.getMetaType().replace("/", ".");
@@ -355,12 +364,10 @@ public class SymLinkFileReporter extends Plugin {
                     }
                 }
 
-
                 try {
                     (new File(directory)).mkdirs();
                     Process process = Runtime.getRuntime().exec(
-                            new String[]{"ln", "-" + linkType, fm.getFilePath(),
-                        directory + File.separator + filename});
+                            new String[] { "ln", "-" + linkType, fm.getFilePath(), directory + File.separator + filename });
                     process.waitFor();
                 } catch (InterruptedException ex) {
                     Logger.getLogger(SymLinkFileReporter.class.getName()).log(Level.SEVERE, null, ex);
@@ -389,7 +396,8 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue clean_up() {
@@ -401,15 +409,15 @@ public class SymLinkFileReporter extends Plugin {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public String get_description() {
         return "Create a nested tree structure of all of the output files from a "
                 + "particular sample, or all of the samples in a study by using "
                 + "the SymLinkFileReporter plugin. This plugin also creates a CSV "
-                + "file with all of the accompanying information for every file. "
-                + "For more information, see "
+                + "file with all of the accompanying information for every file. " + "For more information, see "
                 + "see http://seqware.github.com/docs/21-study-reporter/";
     }
 }

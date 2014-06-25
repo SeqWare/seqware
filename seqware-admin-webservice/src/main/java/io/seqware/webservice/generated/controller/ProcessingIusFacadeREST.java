@@ -19,71 +19,70 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 /**
- *
- * @author
- * boconnor
+ * 
+ * @author boconnor
  */
 @Stateless
 @Path("io.seqware.webservice.model.processingius")
 public class ProcessingIusFacadeREST extends AbstractFacade<ProcessingIus> {
-  @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
-  private EntityManager em;
+    @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
+    private EntityManager em;
 
-  public ProcessingIusFacadeREST() {
-    super(ProcessingIus.class);
-  }
+    public ProcessingIusFacadeREST() {
+        super(ProcessingIus.class);
+    }
 
-  @POST
-  @Override
-  @Consumes({"application/xml", "application/json"})
-  public void create(ProcessingIus entity) {
-    super.create(entity);
-  }
+    @POST
+    @Override
+    @Consumes({ "application/xml", "application/json" })
+    public void create(ProcessingIus entity) {
+        super.create(entity);
+    }
 
-  @PUT
-  @Override
-  @Consumes({"application/xml", "application/json"})
-  public void edit(ProcessingIus entity) {
-    super.edit(entity);
-  }
+    @PUT
+    @Override
+    @Consumes({ "application/xml", "application/json" })
+    public void edit(ProcessingIus entity) {
+        super.edit(entity);
+    }
 
-  @DELETE
-  @Path("{id}")
-  public void remove(@PathParam("id") Integer id) {
-    super.remove(super.find(id));
-  }
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") Integer id) {
+        super.remove(super.find(id));
+    }
 
-  @GET
-  @Path("{id}")
-  @Produces({"application/xml", "application/json"})
-  public ProcessingIus find(@PathParam("id") Integer id) {
-    return super.find(id);
-  }
+    @GET
+    @Path("{id}")
+    @Produces({ "application/xml", "application/json" })
+    public ProcessingIus find(@PathParam("id") Integer id) {
+        return super.find(id);
+    }
 
-  @GET
-  @Override
-  @Produces({"application/xml", "application/json"})
-  public List<ProcessingIus> findAll() {
-    return super.findAll();
-  }
+    @GET
+    @Override
+    @Produces({ "application/xml", "application/json" })
+    public List<ProcessingIus> findAll() {
+        return super.findAll();
+    }
 
-  @GET
-  @Path("{from}/{to}")
-  @Produces({"application/xml", "application/json"})
-  public List<ProcessingIus> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-    return super.findRange(new int[]{from, to});
-  }
+    @GET
+    @Path("{from}/{to}")
+    @Produces({ "application/xml", "application/json" })
+    public List<ProcessingIus> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+        return super.findRange(new int[] { from, to });
+    }
 
-  @GET
-  @Path("count")
-  @Produces("text/plain")
-  public String countREST() {
-    return String.valueOf(super.count());
-  }
+    @GET
+    @Path("count")
+    @Produces("text/plain")
+    public String countREST() {
+        return String.valueOf(super.count());
+    }
 
-  @Override
-  protected EntityManager getEntityManager() {
-    return em;
-  }
-  
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
 }

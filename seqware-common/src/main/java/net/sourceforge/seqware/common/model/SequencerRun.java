@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
  */
 public class SequencerRun extends PermissionsAware implements Serializable, Comparable<SequencerRun>, ParentAccessionModel {
 
-  private static final long serialVersionUID = 3681328115923390568L;
+    private static final long serialVersionUID = 3681328115923390568L;
     private Integer sequencerRunId;
     private Registration owner;
     private Platform platform;
@@ -72,19 +72,23 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     private String strRefLane;
 
     /**
-     * <p>Constructor for SequencerRun.</p>
+     * <p>
+     * Constructor for SequencerRun.
+     * </p>
      */
     public SequencerRun() {
         super();
         /*
-         * lane1 = new Lane(); lane2 = new Lane(); lane3 = new Lane(); lane4 =
-         * new Lane(); lane5 = new Lane(); lane6 = new Lane(); lane7 = new
-         * Lane(); lane8 = new Lane();
+         * lane1 = new Lane(); lane2 = new Lane(); lane3 = new Lane(); lane4 = new Lane(); lane5 = new Lane(); lane6 = new Lane(); lane7 =
+         * new Lane(); lane8 = new Lane();
          */
     }
 
-    /** {@inheritDoc}
-     * @param that */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param that
+     */
     @Override
     public int compareTo(SequencerRun that) {
         if (that == null) {
@@ -109,8 +113,11 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
         return new ToStringBuilder(this).append("sequencerRunId", getSequencerRunId()).append("name", getName()).toString();
     }
 
-    /** {@inheritDoc}
-     * @param other */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param other
+     */
     @Override
     public boolean equals(Object other) {
         if ((this == other)) {
@@ -122,8 +129,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
         SequencerRun castOther = (SequencerRun) other;
         return (new EqualsBuilder().append(this.getSequencerRunId(), castOther.getSequencerRunId()).isEquals());
         /*
-         * return new EqualsBuilder() .append(this.getName(),
-         * castOther.getName()) .isEquals();
+         * return new EqualsBuilder() .append(this.getName(), castOther.getName()) .isEquals();
          */
     }
 
@@ -134,8 +140,10 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>getAllProcessing.</p>
-     *
+     * <p>
+     * getAllProcessing.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getAllProcessing() {
@@ -153,8 +161,10 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>getErrorCnt.</p>
-     *
+     * <p>
+     * getErrorCnt.
+     * </p>
+     * 
      * @return a int.
      */
     public int getErrorCnt() {
@@ -177,8 +187,10 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>getProcessingCnt.</p>
-     *
+     * <p>
+     * getProcessingCnt.
+     * </p>
+     * 
      * @return a int.
      */
     public int getProcessingCnt() {
@@ -191,8 +203,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
 
     private int recursiveCountProcRunning(Processing proc) {
         int runCnt = 0;
-        if (proc != null
-                && (proc.getStatus() == ProcessingStatus.running || proc.getStatus() == ProcessingStatus.pending)) {
+        if (proc != null && (proc.getStatus() == ProcessingStatus.running || proc.getStatus() == ProcessingStatus.pending)) {
             runCnt++;
         }
         for (Processing childProc : proc.getChildren()) {
@@ -202,8 +213,10 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>getProcessedCnt.</p>
-     *
+     * <p>
+     * getProcessedCnt.
+     * </p>
+     * 
      * @return a int.
      */
     public int getProcessedCnt() {
@@ -226,8 +239,10 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Getter for the field <code>process</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>process</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public boolean getProcess() {
@@ -235,17 +250,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>process</code>.</p>
-     *
-     * @param process a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>process</code>.
+     * </p>
+     * 
+     * @param process
+     *            a {@link java.lang.Boolean} object.
      */
     public void setProcess(Boolean process) {
         this.process = process == null ? false : true;
     }
 
     /**
-     * <p>Getter for the field <code>swAccession</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>swAccession</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -253,17 +273,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>swAccession</code>.</p>
-     *
-     * @param swAccession a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>swAccession</code>.
+     * </p>
+     * 
+     * @param swAccession
+     *            a {@link java.lang.Integer} object.
      */
     public void setSwAccession(Integer swAccession) {
         this.swAccession = swAccession;
     }
 
     /**
-     * <p>Getter for the field <code>sequencerRunId</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>sequencerRunId</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSequencerRunId() {
@@ -271,17 +296,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>sequencerRunId</code>.</p>
-     *
-     * @param sequencerRunId a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>sequencerRunId</code>.
+     * </p>
+     * 
+     * @param sequencerRunId
+     *            a {@link java.lang.Integer} object.
      */
     public void setSequencerRunId(Integer sequencerRunId) {
         this.sequencerRunId = sequencerRunId;
     }
 
     /**
-     * <p>Getter for the field <code>serialVersionUID</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>serialVersionUID</code>.
+     * </p>
+     * 
      * @return a long.
      */
     public static long getSerialVersionUID() {
@@ -289,8 +319,10 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Getter for the field <code>createTimestamp</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>createTimestamp</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -298,17 +330,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>createTimestamp</code>.</p>
-     *
-     * @param createTimestamp a {@link java.util.Date} object.
+     * <p>
+     * Setter for the field <code>createTimestamp</code>.
+     * </p>
+     * 
+     * @param createTimestamp
+     *            a {@link java.util.Date} object.
      */
     public void setCreateTimestamp(Date createTimestamp) {
         this.createTimestamp = createTimestamp;
     }
 
     /**
-     * <p>Getter for the field <code>cycles</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>cycles</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getCycles() {
@@ -316,17 +353,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>cycles</code>.</p>
-     *
-     * @param cycles a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>cycles</code>.
+     * </p>
+     * 
+     * @param cycles
+     *            a {@link java.lang.String} object.
      */
     public void setCycles(String cycles) {
         this.cycles = cycles;
     }
 
     /**
-     * <p>Getter for the field <code>description</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>description</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -334,17 +376,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>description</code>.</p>
-     *
-     * @param description a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>description</code>.
+     * </p>
+     * 
+     * @param description
+     *            a {@link java.lang.String} object.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * <p>Getter for the field <code>filePath</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>filePath</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getFilePath() {
@@ -352,17 +399,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>filePath</code>.</p>
-     *
-     * @param filePath a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>filePath</code>.
+     * </p>
+     * 
+     * @param filePath
+     *            a {@link java.lang.String} object.
      */
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
     /**
-     * <p>Getter for the field <code>refLane</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>refLane</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getRefLane() {
@@ -370,17 +422,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>refLane</code>.</p>
-     *
-     * @param refLane a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>refLane</code>.
+     * </p>
+     * 
+     * @param refLane
+     *            a {@link java.lang.Integer} object.
      */
     public void setRefLane(Integer refLane) {
         this.refLane = refLane;
     }
 
     /**
-     * <p>Getter for the field <code>status</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>status</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public SequencerRunStatus getStatus() {
@@ -388,17 +445,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>status</code>.</p>
-     *
-     * @param status a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>status</code>.
+     * </p>
+     * 
+     * @param status
+     *            a {@link java.lang.String} object.
      */
     public void setStatus(SequencerRunStatus status) {
         this.status = status;
     }
 
     /**
-     * <p>Getter for the field <code>updateTimestamp</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>updateTimestamp</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -406,17 +468,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>updateTimestamp</code>.</p>
-     *
-     * @param updateTimestamp a {@link java.util.Date} object.
+     * <p>
+     * Setter for the field <code>updateTimestamp</code>.
+     * </p>
+     * 
+     * @param updateTimestamp
+     *            a {@link java.util.Date} object.
      */
     public void setUpdateTimestamp(Date updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
     }
 
     /**
-     * <p>Getter for the field <code>name</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>name</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getName() {
@@ -424,8 +491,10 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>getJsonEscapeName.</p>
-     *
+     * <p>
+     * getJsonEscapeName.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeName() {
@@ -433,17 +502,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>name</code>.</p>
-     *
-     * @param name a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>name</code>.
+     * </p>
+     * 
+     * @param name
+     *            a {@link java.lang.String} object.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * <p>Getter for the field <code>processings</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>processings</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getProcessings() {
@@ -451,17 +525,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>processings</code>.</p>
-     *
-     * @param processings a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>processings</code>.
+     * </p>
+     * 
+     * @param processings
+     *            a {@link java.util.Set} object.
      */
     public void setProcessings(Set<Processing> processings) {
         this.processings = processings;
     }
 
     /**
-     * <p>Getter for the field <code>lanes</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>lanes</code>.
+     * </p>
+     * 
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<Lane> getLanes() {
@@ -469,9 +548,12 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>lanes</code>.</p>
-     *
-     * @param lanes a {@link java.util.SortedSet} object.
+     * <p>
+     * Setter for the field <code>lanes</code>.
+     * </p>
+     * 
+     * @param lanes
+     *            a {@link java.util.SortedSet} object.
      */
     public void setLanes(SortedSet<Lane> lanes) {
         this.lanes = lanes;
@@ -479,41 +561,43 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
 
     /*
      * public Lane getLane1() { return lane1; }
-     *
+     * 
      * public void setLane1(Lane lane1) { this.lane1 = lane1; }
-     *
+     * 
      * public Lane getLane2() { return lane2; }
-     *
+     * 
      * public void setLane2(Lane lane2) { this.lane2 = lane2; }
-     *
+     * 
      * public Lane getLane3() { return lane3; }
-     *
+     * 
      * public void setLane3(Lane lane3) { this.lane3 = lane3; }
-     *
+     * 
      * public Lane getLane4() { return lane4; }
-     *
+     * 
      * public void setLane4(Lane lane4) { this.lane4 = lane4; }
-     *
+     * 
      * public Lane getLane5() { return lane5; }
-     *
+     * 
      * public void setLane5(Lane lane5) { this.lane5 = lane5; }
-     *
+     * 
      * public Lane getLane6() { return lane6; }
-     *
+     * 
      * public void setLane6(Lane lane6) { this.lane6 = lane6; }
-     *
+     * 
      * public Lane getLane7() { return lane7; }
-     *
+     * 
      * public void setLane7(Lane lane7) { this.lane7 = lane7; }
-     *
+     * 
      * public Lane getLane8() { return lane8; }
-     *
+     * 
      * public void setLane8(Lane lane8) { this.lane8 = lane8; }
      */
 
     /**
-     * <p>Getter for the field <code>pairedEnd</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>pairedEnd</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getPairedEnd() {
@@ -521,17 +605,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>pairedEnd</code>.</p>
-     *
-     * @param pairedEnd a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>pairedEnd</code>.
+     * </p>
+     * 
+     * @param pairedEnd
+     *            a {@link java.lang.Boolean} object.
      */
     public void setPairedEnd(Boolean pairedEnd) {
         this.pairedEnd = pairedEnd;
     }
 
     /**
-     * <p>Getter for the field <code>pairedFilePath</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>pairedFilePath</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getPairedFilePath() {
@@ -539,17 +628,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>pairedFilePath</code>.</p>
-     *
-     * @param pairedFilePath a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>pairedFilePath</code>.
+     * </p>
+     * 
+     * @param pairedFilePath
+     *            a {@link java.lang.String} object.
      */
     public void setPairedFilePath(String pairedFilePath) {
         this.pairedFilePath = pairedFilePath;
     }
 
     /**
-     * <p>Getter for the field <code>useIparIntensities</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>useIparIntensities</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getUseIparIntensities() {
@@ -557,17 +651,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>useIparIntensities</code>.</p>
-     *
-     * @param useIparIntensities a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>useIparIntensities</code>.
+     * </p>
+     * 
+     * @param useIparIntensities
+     *            a {@link java.lang.Boolean} object.
      */
     public void setUseIparIntensities(Boolean useIparIntensities) {
         this.useIparIntensities = useIparIntensities;
     }
 
     /**
-     * <p>Getter for the field <code>owner</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>owner</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -575,17 +674,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>owner</code>.</p>
-     *
-     * @param owner a {@link net.sourceforge.seqware.common.model.Registration} object.
+     * <p>
+     * Setter for the field <code>owner</code>.
+     * </p>
+     * 
+     * @param owner
+     *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public void setOwner(Registration owner) {
         this.owner = owner;
     }
 
     /**
-     * <p>Getter for the field <code>platform</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>platform</code>.
+     * </p>
+     * 
      * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
     public Platform getPlatform() {
@@ -593,17 +697,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>platform</code>.</p>
-     *
-     * @param platform a {@link net.sourceforge.seqware.common.model.Platform} object.
+     * <p>
+     * Setter for the field <code>platform</code>.
+     * </p>
+     * 
+     * @param platform
+     *            a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
     public void setPlatform(Platform platform) {
         this.platform = platform;
     }
 
     /**
-     * <p>Getter for the field <code>instrumentName</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>instrumentName</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getInstrumentName() {
@@ -611,17 +720,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>instrumentName</code>.</p>
-     *
-     * @param instrumentName a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>instrumentName</code>.
+     * </p>
+     * 
+     * @param instrumentName
+     *            a {@link java.lang.String} object.
      */
     public void setInstrumentName(String instrumentName) {
         this.instrumentName = instrumentName;
     }
 
     /**
-     * <p>Getter for the field <code>cycleDescriptor</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>cycleDescriptor</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getCycleDescriptor() {
@@ -629,17 +743,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>cycleDescriptor</code>.</p>
-     *
-     * @param cycleDescriptor a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>cycleDescriptor</code>.
+     * </p>
+     * 
+     * @param cycleDescriptor
+     *            a {@link java.lang.String} object.
      */
     public void setCycleDescriptor(String cycleDescriptor) {
         this.cycleDescriptor = cycleDescriptor;
     }
 
     /**
-     * <p>Getter for the field <code>cycleSequence</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>cycleSequence</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getCycleSequence() {
@@ -647,17 +766,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>cycleSequence</code>.</p>
-     *
-     * @param cycleSequence a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>cycleSequence</code>.
+     * </p>
+     * 
+     * @param cycleSequence
+     *            a {@link java.lang.String} object.
      */
     public void setCycleSequence(String cycleSequence) {
         this.cycleSequence = cycleSequence;
     }
 
     /**
-     * <p>Getter for the field <code>cycleCount</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>cycleCount</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getCycleCount() {
@@ -665,17 +789,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>cycleCount</code>.</p>
-     *
-     * @param cycleCount a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>cycleCount</code>.
+     * </p>
+     * 
+     * @param cycleCount
+     *            a {@link java.lang.Integer} object.
      */
     public void setCycleCount(Integer cycleCount) {
         this.cycleCount = cycleCount;
     }
 
     /**
-     * <p>Getter for the field <code>colorMatrix</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>colorMatrix</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getColorMatrix() {
@@ -683,17 +812,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>colorMatrix</code>.</p>
-     *
-     * @param colorMatrix a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>colorMatrix</code>.
+     * </p>
+     * 
+     * @param colorMatrix
+     *            a {@link java.lang.String} object.
      */
     public void setColorMatrix(String colorMatrix) {
         this.colorMatrix = colorMatrix;
     }
 
     /**
-     * <p>Getter for the field <code>colorMatrixCode</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>colorMatrixCode</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getColorMatrixCode() {
@@ -701,17 +835,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>colorMatrixCode</code>.</p>
-     *
-     * @param colorMatrixCode a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>colorMatrixCode</code>.
+     * </p>
+     * 
+     * @param colorMatrixCode
+     *            a {@link java.lang.String} object.
      */
     public void setColorMatrixCode(String colorMatrixCode) {
         this.colorMatrixCode = colorMatrixCode;
     }
 
     /**
-     * <p>Getter for the field <code>slideOneLaneCount</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>slideOneLaneCount</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSlideOneLaneCount() {
@@ -719,17 +858,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>slideOneLaneCount</code>.</p>
-     *
-     * @param slideOneLaneCount a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>slideOneLaneCount</code>.
+     * </p>
+     * 
+     * @param slideOneLaneCount
+     *            a {@link java.lang.Integer} object.
      */
     public void setSlideOneLaneCount(Integer slideOneLaneCount) {
         this.slideOneLaneCount = slideOneLaneCount;
     }
 
     /**
-     * <p>Getter for the field <code>slideTwoLaneCount</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>slideTwoLaneCount</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSlideTwoLaneCount() {
@@ -737,17 +881,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>slideTwoLaneCount</code>.</p>
-     *
-     * @param slideTwoLaneCount a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>slideTwoLaneCount</code>.
+     * </p>
+     * 
+     * @param slideTwoLaneCount
+     *            a {@link java.lang.Integer} object.
      */
     public void setSlideTwoLaneCount(Integer slideTwoLaneCount) {
         this.slideTwoLaneCount = slideTwoLaneCount;
     }
 
     /**
-     * <p>Getter for the field <code>slideOneFilePath</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>slideOneFilePath</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getSlideOneFilePath() {
@@ -755,17 +904,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>slideOneFilePath</code>.</p>
-     *
-     * @param slideOneFilePath a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>slideOneFilePath</code>.
+     * </p>
+     * 
+     * @param slideOneFilePath
+     *            a {@link java.lang.String} object.
      */
     public void setSlideOneFilePath(String slideOneFilePath) {
         this.slideOneFilePath = slideOneFilePath;
     }
 
     /**
-     * <p>Getter for the field <code>slideTwoFilePath</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>slideTwoFilePath</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getSlideTwoFilePath() {
@@ -773,17 +927,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>slideTwoFilePath</code>.</p>
-     *
-     * @param slideTwoFilePath a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>slideTwoFilePath</code>.
+     * </p>
+     * 
+     * @param slideTwoFilePath
+     *            a {@link java.lang.String} object.
      */
     public void setSlideTwoFilePath(String slideTwoFilePath) {
         this.slideTwoFilePath = slideTwoFilePath;
     }
 
     /**
-     * <p>Getter for the field <code>flowSequence</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>flowSequence</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getFlowSequence() {
@@ -791,17 +950,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>flowSequence</code>.</p>
-     *
-     * @param flowSequence a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>flowSequence</code>.
+     * </p>
+     * 
+     * @param flowSequence
+     *            a {@link java.lang.String} object.
      */
     public void setFlowSequence(String flowSequence) {
         this.flowSequence = flowSequence;
     }
 
     /**
-     * <p>Getter for the field <code>flowCount</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>flowCount</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getFlowCount() {
@@ -809,17 +973,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>flowCount</code>.</p>
-     *
-     * @param flowCount a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>flowCount</code>.
+     * </p>
+     * 
+     * @param flowCount
+     *            a {@link java.lang.Integer} object.
      */
     public void setFlowCount(Integer flowCount) {
         this.flowCount = flowCount;
     }
 
     /**
-     * <p>Getter for the field <code>runCenter</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>runCenter</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getRunCenter() {
@@ -827,17 +996,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>runCenter</code>.</p>
-     *
-     * @param runCenter a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>runCenter</code>.
+     * </p>
+     * 
+     * @param runCenter
+     *            a {@link java.lang.String} object.
      */
     public void setRunCenter(String runCenter) {
         this.runCenter = runCenter;
     }
 
     /**
-     * <p>Getter for the field <code>platformInt</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>platformInt</code>.
+     * </p>
+     * 
      * @return a int.
      */
     public int getPlatformInt() {
@@ -845,17 +1019,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>platformInt</code>.</p>
-     *
-     * @param platformInt a int.
+     * <p>
+     * Setter for the field <code>platformInt</code>.
+     * </p>
+     * 
+     * @param platformInt
+     *            a int.
      */
     public void setPlatformInt(int platformInt) {
         this.platformInt = platformInt;
     }
 
     /**
-     * <p>getJsonEscapeDescription.</p>
-     *
+     * <p>
+     * getJsonEscapeDescription.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -863,8 +1042,10 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Getter for the field <code>processingCount</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>processingCount</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getProcessingCount() {
@@ -872,17 +1053,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>processingCount</code>.</p>
-     *
-     * @param processingCount a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>processingCount</code>.
+     * </p>
+     * 
+     * @param processingCount
+     *            a {@link java.lang.Integer} object.
      */
     public void setProcessingCount(Integer processingCount) {
         this.processingCount = processingCount;
     }
 
     /**
-     * <p>Getter for the field <code>processedCount</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>processedCount</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getProcessedCount() {
@@ -890,17 +1076,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>processedCount</code>.</p>
-     *
-     * @param processedCount a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>processedCount</code>.
+     * </p>
+     * 
+     * @param processedCount
+     *            a {@link java.lang.Integer} object.
      */
     public void setProcessedCount(Integer processedCount) {
         this.processedCount = processedCount;
     }
 
     /**
-     * <p>Getter for the field <code>errorCount</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>errorCount</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getErrorCount() {
@@ -908,17 +1099,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>errorCount</code>.</p>
-     *
-     * @param errorCount a {@link java.lang.Integer} object.
+     * <p>
+     * Setter for the field <code>errorCount</code>.
+     * </p>
+     * 
+     * @param errorCount
+     *            a {@link java.lang.Integer} object.
      */
     public void setErrorCount(Integer errorCount) {
         this.errorCount = errorCount;
     }
 
     /**
-     * <p>Getter for the field <code>html</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>html</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getHtml() {
@@ -926,17 +1122,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>html</code>.</p>
-     *
-     * @param html a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>html</code>.
+     * </p>
+     * 
+     * @param html
+     *            a {@link java.lang.String} object.
      */
     public void setHtml(String html) {
         this.html = html;
     }
 
     /**
-     * <p>Getter for the field <code>strRefLane</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>strRefLane</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     public String getStrRefLane() {
@@ -944,17 +1145,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>strRefLane</code>.</p>
-     *
-     * @param strRefLane a {@link java.lang.String} object.
+     * <p>
+     * Setter for the field <code>strRefLane</code>.
+     * </p>
+     * 
+     * @param strRefLane
+     *            a {@link java.lang.String} object.
      */
     public void setStrRefLane(String strRefLane) {
         this.strRefLane = strRefLane;
     }
 
     /**
-     * <p>Getter for the field <code>skip</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>skip</code>.
+     * </p>
+     * 
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getSkip() {
@@ -962,13 +1168,16 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>skip</code>.</p>
-     *
-     * @param skip a {@link java.lang.Boolean} object.
+     * <p>
+     * Setter for the field <code>skip</code>.
+     * </p>
+     * 
+     * @param skip
+     *            a {@link java.lang.Boolean} object.
      */
     public void setSkip(Boolean skip) {
-        if (skip != null && this.skip!=skip) {
-            Log.debug("Setting skip="+skip+" in sequencer run " + getName() + " " + getSwAccession());
+        if (skip != null && this.skip != skip) {
+            Log.debug("Setting skip=" + skip + " in sequencer run " + getName() + " " + getSwAccession());
             this.skip = skip;
             for (Lane lane : lanes) {
                 lane.setSkip(skip);
@@ -977,8 +1186,10 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Getter for the field <code>sequencerRunAttributes</code>.</p>
-     *
+     * <p>
+     * Getter for the field <code>sequencerRunAttributes</code>.
+     * </p>
+     * 
      * @return a {@link java.util.Set} object.
      */
     @XmlElementWrapper(name = "SequencerRunAttributes")
@@ -988,16 +1199,22 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     }
 
     /**
-     * <p>Setter for the field <code>sequencerRunAttributes</code>.</p>
-     *
-     * @param sequencerRunAttributes a {@link java.util.Set} object.
+     * <p>
+     * Setter for the field <code>sequencerRunAttributes</code>.
+     * </p>
+     * 
+     * @param sequencerRunAttributes
+     *            a {@link java.util.Set} object.
      */
     public void setSequencerRunAttributes(Set<SequencerRunAttribute> sequencerRunAttributes) {
         this.sequencerRunAttributes = sequencerRunAttributes;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
         Logger.getLogger(SequencerRun.class).info("Sequencer run always gives permission");

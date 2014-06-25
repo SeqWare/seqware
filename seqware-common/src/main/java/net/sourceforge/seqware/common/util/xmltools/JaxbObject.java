@@ -34,7 +34,7 @@ import org.w3c.dom.Document;
 
 /**
  * Convenience class for converting objects into JAXB XML.
- *
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  * @param <T>
@@ -44,44 +44,54 @@ public class JaxbObject<T> {
     private static JAXBContext context = null;
 
     /**
-     * JAXB has a memory leak when it comes to making new JAXBContext instances,
-     * so one JAXBContext is created for the entire lifetime of the program and
-     * initialized with all of the classes that we marshal and unmarshal at the
-     * moment, as per the instructions at *
-     * http://whileonefork.blogspot.com/2010/09/leaking-of-jaxb.html and *
-     * http://jaxb.java.net/guide/Performance_and_thread_safety.html . In order
-     * to marshall or unmarshall new objects, they must be added to the context
-     * creation in this constructor.
+     * JAXB has a memory leak when it comes to making new JAXBContext instances, so one JAXBContext is created for the entire lifetime of
+     * the program and initialized with all of the classes that we marshal and unmarshal at the moment, as per the instructions at *
+     * http://whileonefork.blogspot.com/2010/09/leaking-of-jaxb.html and * http://jaxb.java.net/guide/Performance_and_thread_safety.html .
+     * In order to marshall or unmarshall new objects, they must be added to the context creation in this constructor.
      */
     public JaxbObject() {
         try {
             if (context == null) {
-                context = JAXBContext.newInstance(Experiment.class,
-                                                ExperimentAttribute.class, ExperimentLibraryDesign.class, // ExperimentLink.class,
-                                                ExperimentSpotDesign.class, ExperimentSpotDesignReadSpec.class,
+                context = JAXBContext.newInstance(
+                        Experiment.class,
+                        ExperimentAttribute.class,
+                        ExperimentLibraryDesign.class, // ExperimentLink.class,
+                        ExperimentSpotDesign.class,
+                        ExperimentSpotDesignReadSpec.class,
                         File.class,
-                        FileType.class, IUS.class, IUSAttribute.class, IUSLink.class, Lane.class,
-                        LaneAttribute.class, LaneLink.class, LibrarySelection.class, LibrarySource.class,
-                        LibraryStrategy.class, Organism.class, Platform.class, Processing.class,
+                        FileType.class,
+                        IUS.class,
+                        IUSAttribute.class,
+                        IUSLink.class,
+                        Lane.class,
+                        LaneAttribute.class,
+                        LaneLink.class,
+                        LibrarySelection.class,
+                        LibrarySource.class,
+                        LibraryStrategy.class,
+                        Organism.class,
+                        Platform.class,
+                        Processing.class,
                         ProcessingAttribute.class,
-                        //                        ProcessingExperiments.class, ProcessingIus.class,
-                        //                        ProcessingLanes.class, ProcessingRelationship.class, ProcessingSamples.class,
-                        //                        ProcessingSequencerRuns.class, ProcessingStudies.class,
-                        Registration.class, Sample.class, SampleAttribute.class, SampleLink.class,
-                        SequencerRun.class, SequencerRunWizardDTO.class,
-                        //                        ShareExperiment.class, ShareFile.class, ShareLane.class,
-                        //                        ShareProcessing.class, ShareSample.class, ShareStudy.class, ShareWorkflowRun.class,
-                        Study.class, StudyAttribute.class, StudyLink.class, StudyType.class,
-                        Workflow.class, WorkflowParam.class, WorkflowParamValue.class,
-                        WorkflowRun.class, WorkflowRunParam.class,
-                        ExperimentList.class,
+                        // ProcessingExperiments.class, ProcessingIus.class,
+                        // ProcessingLanes.class, ProcessingRelationship.class, ProcessingSamples.class,
+                        // ProcessingSequencerRuns.class, ProcessingStudies.class,
+                        Registration.class,
+                        Sample.class,
+                        SampleAttribute.class,
+                        SampleLink.class,
+                        SequencerRun.class,
+                        SequencerRunWizardDTO.class,
+                        // ShareExperiment.class, ShareFile.class, ShareLane.class,
+                        // ShareProcessing.class, ShareSample.class, ShareStudy.class, ShareWorkflowRun.class,
+                        Study.class, StudyAttribute.class, StudyLink.class, StudyType.class, Workflow.class, WorkflowParam.class,
+                        WorkflowParamValue.class, WorkflowRun.class, WorkflowRunParam.class, ExperimentList.class,
                         ExperimentLibraryDesignList.class, ExperimentSpotDesignList.class, ExperimentSpotDesignReadSpecList.class,
-                        FileList.class, IUSList.class, LaneList.class, 
-                        LibrarySelectionList.class, LibrarySourceList.class, LibraryStrategyList.class,
-                        OrganismList.class, PlatformList.class, ProcessingList.class,
-                        ReturnValueList.class, SampleList.class, SequencerRunList.class, StudyList.class,
-                        StudyTypeList.class, WorkflowList.class, WorkflowRunList.class, WorkflowRunList2.class,
-                        WorkflowParamList.class, WorkflowParamValueList.class, ArrayList.class, IntegerList.class);
+                        FileList.class, IUSList.class, LaneList.class, LibrarySelectionList.class, LibrarySourceList.class,
+                        LibraryStrategyList.class, OrganismList.class, PlatformList.class, ProcessingList.class, ReturnValueList.class,
+                        SampleList.class, SequencerRunList.class, StudyList.class, StudyTypeList.class, WorkflowList.class,
+                        WorkflowRunList.class, WorkflowRunList2.class, WorkflowParamList.class, WorkflowParamValueList.class,
+                        ArrayList.class, IntegerList.class);
             }
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -89,13 +99,13 @@ public class JaxbObject<T> {
     }
 
     /**
-     * Turn an object into XML using JAXB and provide the result in a
-     * StreamResult.
-     *
-     * @param t The object to XMLize.
-     * @return the XML. The StreamResult was created with a StringWriter, which
-     * can be used to retrieve the XML.
-     * @throws javax.xml.bind.JAXBException if any.
+     * Turn an object into XML using JAXB and provide the result in a StreamResult.
+     * 
+     * @param t
+     *            The object to XMLize.
+     * @return the XML. The StreamResult was created with a StringWriter, which can be used to retrieve the XML.
+     * @throws javax.xml.bind.JAXBException
+     *             if any.
      */
     public Document marshalToDocument(T t) throws JAXBException {
         Document doc = null;
@@ -107,17 +117,17 @@ public class JaxbObject<T> {
 
             T object = t;
 
-            //get the XML
-//            JAXBContext context = JAXBContext.newInstance(object.getClass());
+            // get the XML
+            // JAXBContext context = JAXBContext.newInstance(object.getClass());
             Marshaller m = context.createMarshaller();
             m.marshal(new JAXBElement(new QName(object.getClass().getSimpleName()), object.getClass(), object), doc);
 
-//            try {
-//                XmlTools.getDocument(output);
-//            } catch (Exception ex) {
-//                Log.info("Exception while marshaling: " + ex.getMessage() + ". Trying again.");
-//                output = marshal(t);
-//            }
+            // try {
+            // XmlTools.getDocument(output);
+            // } catch (Exception ex) {
+            // Log.info("Exception while marshaling: " + ex.getMessage() + ". Trying again.");
+            // output = marshal(t);
+            // }
 
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(JaxbObject.class.getName()).log(Level.SEVERE, null, ex);
@@ -129,13 +139,13 @@ public class JaxbObject<T> {
     }
 
     /**
-     * Turn an object into XML using JAXB and provide the result in a
-     * StreamResult.
-     *
-     * @param t The object to XMLize.
-     * @return the XML. The StreamResult was created with a StringWriter, which
-     * can be used to retrieve the XML.
-     * @throws javax.xml.bind.JAXBException if any.
+     * Turn an object into XML using JAXB and provide the result in a StreamResult.
+     * 
+     * @param t
+     *            The object to XMLize.
+     * @return the XML. The StreamResult was created with a StringWriter, which can be used to retrieve the XML.
+     * @throws javax.xml.bind.JAXBException
+     *             if any.
      */
     public String marshal(T t) throws JAXBException {
         String output = null;
@@ -143,22 +153,22 @@ public class JaxbObject<T> {
             StreamResult result = new StreamResult(new StringWriter());
             T object = t;
 
-            //get the XML
-//            JAXBContext context = JAXBContext.newInstance(object.getClass());
+            // get the XML
+            // JAXBContext context = JAXBContext.newInstance(object.getClass());
             Marshaller m = context.createMarshaller();
             m.marshal(new JAXBElement(new QName(object.getClass().getSimpleName()), object.getClass(), object), result);
 
-            //convert to String
+            // convert to String
             StringWriter writer = (StringWriter) result.getWriter();
             StringBuffer buffer = writer.getBuffer();
             output = buffer.toString();
 
-//            try {
-//                XmlTools.getDocument(output);
-//            } catch (Exception ex) {
-//                Log.info("Exception while marshaling: " + ex.getMessage() + ". Trying again.");
-//                output = marshal(t);
-//            }
+            // try {
+            // XmlTools.getDocument(output);
+            // } catch (Exception ex) {
+            // Log.info("Exception while marshaling: " + ex.getMessage() + ". Trying again.");
+            // output = marshal(t);
+            // }
 
         } catch (JAXBException jbe) {
             jbe.printStackTrace();
@@ -169,16 +179,19 @@ public class JaxbObject<T> {
 
     /**
      * Turn an XML stream into an object, if possible.
-     *
-     * @param expectedType a T object.
-     * @param reader a {@link java.io.Reader} object.
+     * 
+     * @param expectedType
+     *            a T object.
+     * @param reader
+     *            a {@link java.io.Reader} object.
      * @return a T object.
-     * @throws javax.xml.bind.JAXBException if any.
+     * @throws javax.xml.bind.JAXBException
+     *             if any.
      */
     public T unMarshal(T expectedType, Reader reader) throws JAXBException {
         T object = null;
         try {
-//            JAXBContext context = JAXBContext.newInstance(expectedType.getClass());
+            // JAXBContext context = JAXBContext.newInstance(expectedType.getClass());
             Unmarshaller m = context.createUnmarshaller();
             JAXBElement o = m.unmarshal(new StreamSource(reader), expectedType.getClass());
             object = (T) o.getValue();
@@ -191,16 +204,19 @@ public class JaxbObject<T> {
 
     /**
      * Turn an XML stream into an object, if possible.
-     *
-     * @param expectedType a T object.
-     * @param d a {@link org.w3c.dom.Document} object.
+     * 
+     * @param expectedType
+     *            a T object.
+     * @param d
+     *            a {@link org.w3c.dom.Document} object.
      * @return a T object.
-     * @throws javax.xml.bind.JAXBException if any.
+     * @throws javax.xml.bind.JAXBException
+     *             if any.
      */
     public T unMarshal(Document d, T expectedType) throws JAXBException {
         T object = null;
         try {
-//            JAXBContext context = JAXBContext.newInstance(expectedType.getClass());
+            // JAXBContext context = JAXBContext.newInstance(expectedType.getClass());
             Unmarshaller m = context.createUnmarshaller();
             JAXBElement o = m.unmarshal(d, expectedType.getClass());
             object = (T) o.getValue();

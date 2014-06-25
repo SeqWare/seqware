@@ -25,7 +25,7 @@ import net.sourceforge.seqware.webservice.resources.tables.DatabaseResourceIDTes
 import org.junit.Ignore;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class SequencerRunIdFilesResourceTest extends DatabaseResourceIDTest {
@@ -64,18 +64,18 @@ public class SequencerRunIdFilesResourceTest extends DatabaseResourceIDTest {
     @Ignore
     @Override
     public void testDelete() {
-//        super.testDelete();
+        // super.testDelete();
     }
 
     @Ignore
     @Override
     public void testPost() {
-//        super.testPost();
+        // super.testPost();
     }
 
     @Ignore
     @Override
     public void testPut() {
-//        super.testPut();
+        // super.testPut();
     }
 }

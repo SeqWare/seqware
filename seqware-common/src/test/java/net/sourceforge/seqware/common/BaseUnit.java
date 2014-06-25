@@ -8,41 +8,51 @@ import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
 
 /**
- * <p>BaseUnit class.</p>
- *
+ * <p>
+ * BaseUnit class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  * @since 0.13.3
  */
 public class BaseUnit {
-  protected RegistrationService registrationService;
+    protected RegistrationService registrationService;
 
-  /**
-   * <p>Constructor for BaseUnit.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  public BaseUnit() throws Exception {
-    registrationService = BeanFactory.getRegistrationServiceBean();
-  }
+    /**
+     * <p>
+     * Constructor for BaseUnit.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    public BaseUnit() throws Exception {
+        registrationService = BeanFactory.getRegistrationServiceBean();
+    }
 
-  /**
-   * <p>getSession.</p>
-   *
-   * @return a {@link org.hibernate.Session} object.
-   */
-  protected Session getSession() {
-    SessionFactory sessionFactory = BeanFactory.getSessionFactoryBean();
-    Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-    return session;
-  }
+    /**
+     * <p>
+     * getSession.
+     * </p>
+     * 
+     * @return a {@link org.hibernate.Session} object.
+     */
+    protected Session getSession() {
+        SessionFactory sessionFactory = BeanFactory.getSessionFactoryBean();
+        Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+        return session;
+    }
 
-  /**
-   * <p>removeSession.</p>
-   *
-   * @param session a {@link org.hibernate.Session} object.
-   */
-  protected void removeSession(Session session) {
-    SessionFactoryUtils.closeSession(session);
-  }
+    /**
+     * <p>
+     * removeSession.
+     * </p>
+     * 
+     * @param session
+     *            a {@link org.hibernate.Session} object.
+     */
+    protected void removeSession(Session session) {
+        SessionFactoryUtils.closeSession(session);
+    }
 }

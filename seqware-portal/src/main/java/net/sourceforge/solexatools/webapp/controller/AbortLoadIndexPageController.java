@@ -10,35 +10,39 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
- * <p>AbortLoadIndexPageController class.</p>
- *
+ * <p>
+ * AbortLoadIndexPageController class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class AbortLoadIndexPageController extends BaseCommandController {
-    
-	/**
-	 * <p>Constructor for AbortLoadIndexPageController.</p>
-	 */
-	public AbortLoadIndexPageController() {
-		super();
-		setSupportedMethods(new String[] {METHOD_GET});
-	}
 
-	/** {@inheritDoc}
+    /**
+     * <p>
+     * Constructor for AbortLoadIndexPageController.
+     * </p>
+     */
+    public AbortLoadIndexPageController() {
+        super();
+        setSupportedMethods(new String[] { METHOD_GET });
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
-												 HttpServletResponse response)
-		throws Exception {
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
-		
-		request.getSession(false).setAttribute("isUserAbortedViewIndexPage", true);
-			
-		return null;
-	}
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
+
+        request.getSession(false).setAttribute("isUserAbortedViewIndexPage", true);
+
+        return null;
+    }
 }

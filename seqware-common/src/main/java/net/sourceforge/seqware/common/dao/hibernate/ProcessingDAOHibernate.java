@@ -18,8 +18,10 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * <p>ProcessingDAOHibernate class.</p>
- *
+ * <p>
+ * ProcessingDAOHibernate class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -28,7 +30,9 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     private Logger logger;
 
     /**
-     * <p>Constructor for ProcessingDAOHibernate.</p>
+     * <p>
+     * Constructor for ProcessingDAOHibernate.
+     * </p>
      */
     public ProcessingDAOHibernate() {
         super();
@@ -48,7 +52,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Updates an instance of Processing in the database.
      */
     @Override
@@ -60,66 +64,55 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
     /**
      * {@inheritDoc}
-     *
-     * Updates an instance of Processing in the database.
-     * This is likely to not work given the complex tree structures 
-     * created with processing entries.
+     * 
+     * Updates an instance of Processing in the database. This is likely to not work given the complex tree structures created with
+     * processing entries.
      */
     @Override
     public void delete(Processing processing) {
-      
+
         this.getHibernateTemplate().delete(processing);
     }
 
     /**
      * {@inheritDoc}
-     *
-     * WITH RECURSIVE "processing_root_to_leaf" ("child_id", "parent_id") AS (
-     * SELECT p."child_id" as "child_id", p."parent_id" FROM
-     * "processing_relationship" p where p."parent_id" = 53851 UNION ALL SELECT
-     * p."child_id", rl."parent_id" FROM "processing_root_to_leaf" rl,
-     * "processing_relationship" p WHERE p."parent_id" = rl."child_id" )
-     * --select * from "processing_root_to_leaf" p; select distinct file_id from
-     * "processing_root_to_leaf"p, processing_files pf where p.parent_id =
-     * processing_id or p.child_id = processing_id;
+     * 
+     * WITH RECURSIVE "processing_root_to_leaf" ("child_id", "parent_id") AS ( SELECT p."child_id" as "child_id", p."parent_id" FROM
+     * "processing_relationship" p where p."parent_id" = 53851 UNION ALL SELECT p."child_id", rl."parent_id" FROM "processing_root_to_leaf"
+     * rl, "processing_relationship" p WHERE p."parent_id" = rl."child_id" ) --select * from "processing_root_to_leaf" p; select distinct
+     * file_id from "processing_root_to_leaf"p, processing_files pf where p.parent_id = processing_id or p.child_id = processing_id;
      */
     @Override
     public List<File> getFiles(Integer processingId) {
         List<File> files = new ArrayList<>();
 
         /*
-         * String query = "WITH RECURSIVE processing_root_to_leaf (child_id,
-         * parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id FROM
-         * processing_relationship p where p.parent_id = ? " + "UNION ALL " +
-         * "SELECT p.child_id, rl.parent_id " + "FROM processing_root_to_leaf
-         * rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id )
-         * " + "select * from File myfile where myfile.file_id in( " + "select
-         * distinct file_id from processing_root_to_leaf p, processing_files pf
-         * where p.parent_id = processing_id " + "UNION ALL " + "select distinct
-         * file_id from processing_root_to_leaf p, processing_files pf where
-         * p.child_id = processing_id)" ;
+         * String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id
+         * FROM processing_relationship p where p.parent_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id " + "FROM
+         * processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id ) " + "select * from File myfile where
+         * myfile.file_id in( " + "select distinct file_id from processing_root_to_leaf p, processing_files pf where p.parent_id =
+         * processing_id " + "UNION ALL " + "select distinct file_id from processing_root_to_leaf p, processing_files pf where p.child_id =
+         * processing_id)" ;
          */
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? "
-                + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id ) "
-                + "select * from File myfile where myfile.file_id in( "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
-                + "where p.parent_id = processing_id " + "UNION ALL "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
+                + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? " + "UNION ALL "
+                + "SELECT p.child_id, rl.parent_id " + "FROM processing_root_to_leaf rl, processing_relationship p "
+                + "WHERE p.parent_id = rl.child_id ) " + "select * from File myfile where myfile.file_id in( "
+                + "select distinct file_id from processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id "
+                + "UNION ALL " + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
                 + "where p.child_id = processing_id " + "UNION ALL "
                 + "select distinct file_id from processing_files pf where pf.processing_id = ?)";
 
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, processingId/*
-                 * 53851
-                 */).setInteger(1, processingId).list();
+                                                                                                             * 53851
+                                                                                                             */)
+                .setInteger(1, processingId).list();
 
         /*
          * Processing proc = findByID(processingId);
-         *
-         * logger.debug("CHILDREN == ? 0"); if(proc.getChildren() == null ||
-         * proc.getChildren().size() == 0){ logger.debug("CHILDREN == NULL");
-         * list.addAll(proc.getFiles()); }
+         * 
+         * logger.debug("CHILDREN == ? 0"); if(proc.getChildren() == null || proc.getChildren().size() == 0){
+         * logger.debug("CHILDREN == NULL"); list.addAll(proc.getFiles()); }
          */
         logger.debug("FILES:");
         for (Object file : list) {
@@ -129,10 +122,9 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
         }
         // logger.debug("THE END");
-    /*
-         * Object[] parameters = { processingId }; List list =
-         * this.getHibernateTemplate().find(query, parameters);
-         *
+        /*
+         * Object[] parameters = { processingId }; List list = this.getHibernateTemplate().find(query, parameters);
+         * 
          * for(Object file : list) { files.add((File)file); }
          */
 
@@ -144,19 +136,18 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     public boolean isHasFile(Integer processingId) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? "
-                + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id ) "
-                + "select * from File myfile where myfile.file_id in( "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
-                + "where p.parent_id = processing_id " + "UNION ALL "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
+                + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? " + "UNION ALL "
+                + "SELECT p.child_id, rl.parent_id " + "FROM processing_root_to_leaf rl, processing_relationship p "
+                + "WHERE p.parent_id = rl.child_id ) " + "select * from File myfile where myfile.file_id in( "
+                + "select distinct file_id from processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id "
+                + "UNION ALL " + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
                 + "where p.child_id = processing_id " + "UNION ALL "
                 + "select distinct file_id from processing_files pf where pf.processing_id = ?) LIMIT 1";
 
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, processingId/*
-                 * 53851
-                 */).setInteger(1, processingId).list();
+                                                                                                             * 53851
+                                                                                                             */)
+                .setInteger(1, processingId).list();
 
         isHasFile = (list.size() > 0) ? true : false;
 
@@ -168,19 +159,18 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     public List<File> getFiles(Integer processingId, String metaType) {
         List<File> files = new ArrayList<>();
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? "
-                + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-                + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id ) "
-                + "select * from File myfile where myfile.meta_type=? and myfile.file_id in( "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
-                + "where p.parent_id = processing_id " + "UNION ALL "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
+                + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? " + "UNION ALL "
+                + "SELECT p.child_id, rl.parent_id " + "FROM processing_root_to_leaf rl, processing_relationship p "
+                + "WHERE p.parent_id = rl.child_id ) " + "select * from File myfile where myfile.meta_type=? and myfile.file_id in( "
+                + "select distinct file_id from processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id "
+                + "UNION ALL " + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
                 + "where p.child_id = processing_id " + "UNION ALL "
                 + "select distinct file_id from processing_files pf where pf.processing_id = ?)";
 
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, processingId/*
-                 * 53851
-                 */).setString(1, metaType).setInteger(2, processingId).list();
+                                                                                                             * 53851
+                                                                                                             */).setString(1, metaType)
+                .setInteger(2, processingId).list();
 
         // logger.debug("FILES:");
         for (Object file : list) {
@@ -197,22 +187,21 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     public boolean isHasFile(Integer processingId, String metaType) {
         boolean isHasFile = false;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-                + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? "
-                + "UNION ALL "
+                + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? " + "UNION ALL "
                 + "SELECT p.child_id, rl.parent_id "
                 + "FROM processing_root_to_leaf rl, processing_relationship p "
                 + "WHERE p.parent_id = rl.child_id ) "
                 + "select * from File myfile where myfile.meta_type=? and myfile.file_id in( "
                 + // "select * from File myfile where myfile.file_id in( " +
-                "select distinct file_id from processing_root_to_leaf p, processing_files pf "
-                + "where p.parent_id = processing_id " + "UNION ALL "
-                + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
+                "select distinct file_id from processing_root_to_leaf p, processing_files pf " + "where p.parent_id = processing_id "
+                + "UNION ALL " + "select distinct file_id from processing_root_to_leaf p, processing_files pf "
                 + "where p.child_id = processing_id " + "UNION ALL "
                 + "select distinct file_id from processing_files pf where pf.processing_id = ?) LIMIT 1";
 
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, processingId/*
-                 * 53851
-                 */).setString(1, metaType).setInteger(2, processingId).list();
+                                                                                                             * 53851
+                                                                                                             */).setString(1, metaType)
+                .setInteger(2, processingId).list();
 
         isHasFile = (list.size() > 0) ? true : false;
 
@@ -221,15 +210,14 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
     /**
      * {@inheritDoc}
-     *
-     * Finds an instance of Processing in the database by the Processing
-     * emailAddress.
+     * 
+     * Finds an instance of Processing in the database by the Processing emailAddress.
      */
     @Override
     public Processing findByFilePath(String filePath) {
         String query = "from processing as processing where processing.file_path = ?";
         Processing processing = null;
-        Object[] parameters = {filePath};
+        Object[] parameters = { filePath };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             processing = (Processing) list.get(0);
@@ -239,15 +227,16 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * Finds an instance of SequencerRun in the database by the SequencerRun ID.
+     * 
      * @param id
      */
     @Override
     public Processing findByID(Integer id) {
         String query = "from Processing as processing where processing.processingId = ?";
         Processing processing = null;
-        Object[] parameters = {id};
+        Object[] parameters = { id };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             processing = (Processing) list.get(0);
@@ -261,7 +250,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     public Processing findBySWAccession(Integer swAccession) {
         String query = "from Processing as processing where processing.swAccession = ?";
         Processing processing = null;
-        Object[] parameters = {swAccession};
+        Object[] parameters = { swAccession };
         List<Processing> list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             processing = (Processing) list.get(0);
@@ -274,7 +263,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     @Override
     public List<Processing> findByOwnerID(Integer registrationId) {
         String query = "from Processing as processing where processing.owner.registrationId = ?";
-        Object[] parameters = {registrationId};
+        Object[] parameters = { registrationId };
         return this.getHibernateTemplate().find(query, parameters);
     }
 
@@ -286,8 +275,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
                 + " or cast(p.swAccession as string) like :sw or p.algorithm like :alg order by p.algorithm, p.description";
         String queryStringICase = "from Processing as p where lower(p.description) like :description "
                 + " or cast(p.swAccession as string) like :sw or lower(p.algorithm) like :alg order by p.algorithm, p.description";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(
-                queryStringICase);
+        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -338,8 +326,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         Logger logger = Logger.getLogger(ProcessingDAOHibernate.class);
         if (registration == null) {
             logger.error("ProcessingDAOHibernate update registration is null");
-        } else if (registration.isLIMSAdmin()
-                || dbObject.givesPermission(registration)) {
+        } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
             logger.info("Updating processing object");
             update(processing);
         } else {
@@ -377,8 +364,8 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         }
         return null;
     }
-    
-        private Processing reattachProcessing(Processing processing) throws IllegalStateException, DataAccessResourceFailureException {
+
+    private Processing reattachProcessing(Processing processing) throws IllegalStateException, DataAccessResourceFailureException {
         Processing dbObject = processing;
         if (!getSession().contains(processing)) {
             dbObject = findByID(processing.getProcessingId());

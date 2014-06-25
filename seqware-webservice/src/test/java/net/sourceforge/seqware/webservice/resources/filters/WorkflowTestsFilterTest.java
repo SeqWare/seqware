@@ -19,7 +19,7 @@ package net.sourceforge.seqware.webservice.resources.filters;
 import net.sourceforge.seqware.webservice.resources.AbstractResourceTest;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class WorkflowTestsFilterTest extends AbstractResourceTest {
@@ -34,46 +34,46 @@ public class WorkflowTestsFilterTest extends AbstractResourceTest {
     @Override
     public void testGet() {
         System.out.println(getRelativeURI() + " GET");
-//        try {
-//            Assert.assertTrue(resource.get().getText().contains("GET all tests from " + workflowId));
-//        } catch (Exception e) {
-//            Assert.fail(e.getMessage());
-//            e.printStackTrace();
-//        }
+        // try {
+        // Assert.assertTrue(resource.get().getText().contains("GET all tests from " + workflowId));
+        // } catch (Exception e) {
+        // Assert.fail(e.getMessage());
+        // e.printStackTrace();
+        // }
     }
 
     @Override
     public void testPut() {
         System.out.println(getRelativeURI() + " PUT");
-//        try {
-//            resource.put(null).write(System.out);
-//            Assert.fail("No PUT on " + getRelativeURI());
-//        } catch (Exception e) {
-//            Assert.assertEquals("Method Not Allowed", e.getMessage());
-//        }
+        // try {
+        // resource.put(null).write(System.out);
+        // Assert.fail("No PUT on " + getRelativeURI());
+        // } catch (Exception e) {
+        // Assert.assertEquals("Method Not Allowed", e.getMessage());
+        // }
     }
 
     @Override
     public void testPost() {
         System.out.println(getRelativeURI() + " POST");
-//        try {
-//            StringRepresentation myString = new StringRepresentation("Test test test");
-//            Assert.assertTrue(resource.post(myString).getText().contains("POST test Test test test"));
-//        } catch (Exception e) {
-//            Assert.fail(e.getMessage());
-//            e.printStackTrace();
-//        }
+        // try {
+        // StringRepresentation myString = new StringRepresentation("Test test test");
+        // Assert.assertTrue(resource.post(myString).getText().contains("POST test Test test test"));
+        // } catch (Exception e) {
+        // Assert.fail(e.getMessage());
+        // e.printStackTrace();
+        // }
     }
 
-//    @Override
+    // @Override
     @Override
     public void testDelete() {
         System.out.println(getRelativeURI() + " DELETE");
-//        try {
-//            resource.delete().write(System.out);
-//            Assert.fail("No DELETE on " + getRelativeURI());
-//        } catch (Exception e) {
-//            Assert.assertEquals("Method Not Allowed", e.getMessage());
-//        }
+        // try {
+        // resource.delete().write(System.out);
+        // Assert.fail("No DELETE on " + getRelativeURI());
+        // } catch (Exception e) {
+        // Assert.assertEquals("Method Not Allowed", e.getMessage());
+        // }
     }
 }

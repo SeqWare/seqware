@@ -27,30 +27,24 @@ import org.junit.Test;
 import org.mortbay.log.Log;
 
 /**
- * These tests support command-line tools found in the SeqWare User Tutorial, in
- * this case, AttributeAnnotator
- *
+ * These tests support command-line tools found in the SeqWare User Tutorial, in this case, AttributeAnnotator
+ * 
  * @author dyuen
  */
 public class AttributeAnnotatorET {
     public static final String COUNT_DB_SIZE = "SELECT (SELECT COUNT(*) FROM workflow), (SELECT COUNT(*) FROM workflow_run), (SELECT COUNT(*) FROM sequencer_run), (SELECT COUNT(*) FROM experiment), (SELECT COUNT(*) FROM ius), (SELECT COUNT(*) FROM lane), (SELECT COUNT(*) FROM processing), (SELECT COUNT(*) FROM sample), (SELECT COUNT(*) FROM sample_hierarchy), (SELECT COUNT(*) FROM processing_ius), (SELECT COUNT(*) FROM processing_files), (SELECT COUNT(*) FROM processing_relationship), (SELECT COUNT(*) FROM file), (SELECT COUNT(*) FROM study)";
     private ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
-        
+
     public enum AttributeType {
-        FILE("file", "file", "file", true),
-        SEQUENCER_RUN("sequencer-run", "sequencer_run", "sample", true),
-        LANE("lane", "lane", "lane", true),
-        IUS("ius", "ius", "ius", true),
-        EXPERIMENT("experiment", "experiment", "experiment", false),
-        PROCESSING("processing", "processing", "processing", false),
-        SAMPLE("sample", "sample", "sample", true),
-        STUDY("study", "study", "study", false),
-        WORKFLOW("workflow", "workflow", "workflow", false),
-        WORKFLOW_RUN("workflow-run", "workflow_run", "workflow_run", false);
+        FILE("file", "file", "file", true), SEQUENCER_RUN("sequencer-run", "sequencer_run", "sample", true), LANE("lane", "lane", "lane",
+                true), IUS("ius", "ius", "ius", true), EXPERIMENT("experiment", "experiment", "experiment", false), PROCESSING(
+                "processing", "processing", "processing", false), SAMPLE("sample", "sample", "sample", true), STUDY("study", "study",
+                "study", false), WORKFLOW("workflow", "workflow", "workflow", false), WORKFLOW_RUN("workflow-run", "workflow_run",
+                "workflow_run", false);
         protected final String parameter_prefix;
         protected final String table_name;
         protected final String attribute_id_prefix;
-        
+
         /**
          * SEQWARE-1676
          */
@@ -73,7 +67,7 @@ public class AttributeAnnotatorET {
     public void testFileSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.FILE, 835);
     }
-    
+
     @Test
     public void testSequencerRunSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.SEQUENCER_RUN, 47150);
@@ -113,17 +107,17 @@ public class AttributeAnnotatorET {
     public void testWorkflowSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.WORKFLOW, 2861);
     }
-    
-     @Test
+
+    @Test
     public void testWorkflowRunSkipOnly() throws IOException {
         toggleSkipOnly(AttributeType.WORKFLOW_RUN, 863);
     }
-    
+
     @Test
     public void testFileSkipValue() throws IOException {
         annotateSkipImplicitly(AttributeType.FILE, 838);
     }
-    
+
     @Test
     public void testSequencerRunSkipValue() throws IOException {
         annotateSkipImplicitly(AttributeType.SEQUENCER_RUN, 4715);
@@ -143,7 +137,6 @@ public class AttributeAnnotatorET {
     public void testExperimentSkipValue() throws IOException {
         annotateSkipImplicitly(AttributeType.EXPERIMENT, 4759);
     }
-
 
     @Test
     public void testProcessingSkipValue() throws IOException {
@@ -169,7 +162,7 @@ public class AttributeAnnotatorET {
     public void testWorkflowRunSkipValue() throws IOException {
         annotateSkipImplicitly(AttributeType.WORKFLOW_RUN, 6654);
     }
-    
+
     @Test
     public void testFileAnnotateArbitrary() throws IOException {
         annotateAndReannotate(AttributeType.FILE, 6120);
@@ -222,63 +215,63 @@ public class AttributeAnnotatorET {
 
     /**
      * Toggle just the skip column on a selected table type
-     *
+     * 
      * @param type
      * @param accession
      * @throws IOException
      */
     public void toggleSkipOnly(AttributeType type, int accession) throws IOException {
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --" + type.parameter_prefix + "-accession " + accession + " --skip true";
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --" + type.parameter_prefix
+                + "-accession " + accession + " --skip true";
         int expectedReturnValue = type.skippable ? ReturnValue.SUCCESS : ReturnValue.INVALIDPARAMETERS;
         ITUtility.runSeqWareJar(listCommand, expectedReturnValue, null);
         if (type.skippable) {
-            Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
+            Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?",
+                    accession);
             Assert.assertTrue("skip value incorrect", runQuery.length == 1 && runQuery[0].equals(true));
         }
-        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --" + type.parameter_prefix + "-accession " + accession + " --skip false";
+        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --" + type.parameter_prefix + "-accession "
+                + accession + " --skip false";
         ITUtility.runSeqWareJar(listCommand, expectedReturnValue, null);
         if (type.skippable) {
-            Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
+            Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?",
+                    accession);
             Assert.assertTrue("skip value incorrect", runQuery.length == 1 && runQuery[0].equals(false));
         }
     }
 
     /**
      * Annotate skip with an implicit key of "skip"
-     *
+     * 
      * @param type
      * @param accession
      * @throws IOException
      */
     public void annotateSkipImplicitly(AttributeType type, int accession) throws IOException {
-        String query = "SELECT t2." + type.table_name + "_attribute_id, t2.tag, t2.value FROM " + type.table_name
-                + "_attribute t2, " + type.table_name + " t1 WHERE "
-                + "t1." + type.table_name + "_id=t2." + type.attribute_id_prefix
+        String query = "SELECT t2." + type.table_name + "_attribute_id, t2.tag, t2.value FROM " + type.table_name + "_attribute t2, "
+                + type.table_name + " t1 WHERE " + "t1." + type.table_name + "_id=t2." + type.attribute_id_prefix
                 + "_id AND t1.sw_accession=? ORDER BY " + type.table_name + "_attribute_id";
         Log.info(query);
         String value = "\"Improperly entered into the LIMS\"";
-        
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --" + type.parameter_prefix + "-accession " + accession + " --skip true --value "+value;
+
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --" + type.parameter_prefix
+                + "-accession " + accession + " --skip true --value " + value;
         int expectedReturnValue = type.skippable ? ReturnValue.SUCCESS : ReturnValue.INVALIDPARAMETERS;
         ITUtility.runSeqWareJar(listCommand, expectedReturnValue, null);
         if (type.skippable) {
-            Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?", accession);
+            Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "SELECT skip FROM " + type.table_name + " WHERE sw_accession=?",
+                    accession);
             Assert.assertTrue("skip value incorrect", runQuery.length == 1 && runQuery[0].equals(true));
             List<Object[]> runQuery1 = dbCreator.runQuery(new ArrayListHandler(), query, accession);
-            Assert.assertTrue("first annotation incorrect", runQuery1.size() == 1);
-            Assert.assertTrue("first tag incorrect", runQuery1.get(0)[1].equals("skip"));
-            Assert.assertTrue("first value incorrect", runQuery1.get(0)[2].equals(value));
+            Assert.assertTrue("first annotation incorrect, found " + runQuery1.size(), runQuery1.size() == 1);
+            Assert.assertTrue("first tag incorrect, found " + runQuery1.get(0)[1], runQuery1.get(0)[1].equals("skip"));
+            Assert.assertTrue("first value incorrect, found " + runQuery1.get(0)[2] , runQuery1.get(0)[2].equals(value));
         }
     }
-    
-    
+
     /**
-     * Annotate an attribute with both a key and value. Re-annotate and ensure
-     * that no duplicates are formed.
-     *
+     * Annotate an attribute with both a key and value. Re-annotate and ensure that no duplicates are formed.
+     * 
      * @param type
      * @param accession
      * @throws IOException
@@ -289,13 +282,12 @@ public class AttributeAnnotatorET {
         final String funky_initial_value = "funky_initial_value";
         final String groovy_key = "groovy_key";
         final String groovy_value = "groovy_value";
-        
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --" + type.parameter_prefix + "-accession " + accession + " --key " + funky_key + " --value " + funky_initial_value;
+
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --" + type.parameter_prefix
+                + "-accession " + accession + " --key " + funky_key + " --value " + funky_initial_value;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
-        String query = "SELECT t2." + type.table_name + "_attribute_id, t2.tag, t2.value FROM " + type.table_name
-                + "_attribute t2, " + type.table_name + " t1 WHERE "
-                + "t1." + type.table_name + "_id=t2." + type.attribute_id_prefix
+        String query = "SELECT t2." + type.table_name + "_attribute_id, t2.tag, t2.value FROM " + type.table_name + "_attribute t2, "
+                + type.table_name + " t1 WHERE " + "t1." + type.table_name + "_id=t2." + type.attribute_id_prefix
                 + "_id AND t1.sw_accession=? ORDER BY " + type.table_name + "_attribute_id";
         Log.info(query);
         List<Object[]> runQuery = dbCreator.runQuery(new ArrayListHandler(), query, accession);
@@ -303,13 +295,13 @@ public class AttributeAnnotatorET {
         Assert.assertTrue("first tag incorrect", runQuery.get(0)[1].equals(funky_key));
         Assert.assertTrue("first value incorrect", runQuery.get(0)[2].equals(funky_initial_value));
         // count records in the database to check for cascading deletes
-        List<Object[]> count1 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);        
+        List<Object[]> count1 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         // reannotate with same key, different value
-        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --" + type.parameter_prefix + "-accession " + accession + " --key "+funky_key+" --value " + funky_second_value;
+        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --" + type.parameter_prefix + "-accession "
+                + accession + " --key " + funky_key + " --value " + funky_second_value;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         // ensure that duplicates are not formed in the database
-        runQuery = dbCreator.runQuery(new ArrayListHandler(), query , accession);
+        runQuery = dbCreator.runQuery(new ArrayListHandler(), query, accession);
         Assert.assertTrue("incorrect resulting number of duplicate annotations, found " + runQuery.size(), runQuery.size() == 1);
         Assert.assertTrue("second tag incorrect", runQuery.get(0)[1].equals(funky_key));
         Assert.assertTrue("second value incorrect", runQuery.get(0)[2].equals(funky_second_value));
@@ -317,11 +309,11 @@ public class AttributeAnnotatorET {
         List<Object[]> count2 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         compareTwoCounts(count1.get(0), count2.get(0));
         // try unrelated annotation
-        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --" + type.parameter_prefix + "-accession " + accession + " --key "+groovy_key+" --value " + groovy_value;
+        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --" + type.parameter_prefix + "-accession "
+                + accession + " --key " + groovy_key + " --value " + groovy_value;
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         // check results of unrelated annotation
-        runQuery = dbCreator.runQuery(new ArrayListHandler(), query , accession);
+        runQuery = dbCreator.runQuery(new ArrayListHandler(), query, accession);
         Assert.assertTrue("incorrect resulting number of unrelated annotations, found: " + runQuery.size(), runQuery.size() == 2);
         Assert.assertTrue("second tag incorrect", runQuery.get(0)[1].equals(funky_key));
         Assert.assertTrue("second value incorrect", runQuery.get(0)[2].equals(funky_second_value));
@@ -330,53 +322,51 @@ public class AttributeAnnotatorET {
         List<Object[]> count3 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         compareTwoCounts(count2.get(0), count3.get(0));
     }
-    
+
     /**
-     * Compare two object arrays element by element and 
-     * output which element fails
+     * Compare two object arrays element by element and output which element fails
+     * 
      * @param count1
-     * @param count2 
+     * @param count2
      */
-    private void compareTwoCounts(Object[] count1, Object[] count2){
+    private void compareTwoCounts(Object[] count1, Object[] count2) {
         Assert.assertTrue("size of arrays is different", count1.length == count2.length);
-        for(int i = 0; i < count1.length; i++){
+        for (int i = 0; i < count1.length; i++) {
             Assert.assertTrue("element " + i + " did not match", count1[i].equals(count2[i]));
         }
     }
-    
+
     /**
-     * Test various forms of invalid parameters
-     * SEQWARE-1678
+     * Test various forms of invalid parameters SEQWARE-1678
+     * 
      * @throws java.io.IOException
      */
     @Test
-    public void testInvalidParameters() throws IOException{
+    public void testInvalidParameters() throws IOException {
         // invalid value
-                String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --ius 4789 --key funky_key --funky_change_value" ;
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
+                + "-- --ius 4789 --key funky_key --funky_change_value";
         ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
         // key with no valid value
-                listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --ius 4789 --key funky_key" ;
+        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --ius 4789 --key funky_key";
         ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, null);
     }
-    
+
     @Test
-    public void testRejectDoubleAnnotation()throws IOException{
+    public void testRejectDoubleAnnotation() throws IOException {
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --file-accession 6650 --key funky_key --value funky_value" ;
+                + "-- --file-accession 6650 --key funky_key --value funky_value";
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
-                listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --file-accession 6650 --key funky_key --value funky_value" ;
+        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
+                + "-- --file-accession 6650 --key funky_key --value funky_value";
         ITUtility.runSeqWareJar(listCommand, ReturnValue.FAILURE, null);
     }
-    
+
     @Test
-    public void testBulkInsert() throws IOException{
+    public void testBulkInsert() throws IOException {
         String path = AttributeAnnotatorET.class.getResource("attributeAnnotator.csv").getPath();
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
-                + "-- --file " + path  ;
-        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);    
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --file " + path;
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
     }
-    
+
 }

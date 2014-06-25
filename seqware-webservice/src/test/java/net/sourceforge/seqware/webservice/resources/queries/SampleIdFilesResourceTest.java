@@ -24,7 +24,7 @@ import net.sourceforge.seqware.webservice.resources.tables.DatabaseResourceIDTes
 import org.junit.Ignore;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class SampleIdFilesResourceTest extends DatabaseResourceIDTest {
@@ -41,15 +41,13 @@ public class SampleIdFilesResourceTest extends DatabaseResourceIDTest {
             ReturnValueList e = (ReturnValueList) o;
             for (Object ob : e.getList()) {
                 if (ob instanceof ReturnValue) {
-                    ReturnValue rt = (ReturnValue)ob;
+                    ReturnValue rt = (ReturnValue) ob;
                     System.out.println("Client: " + rt.getAlgorithm());
                     for (FileMetadata f : rt.getFiles()) {
                         System.out.println("Client side: " + f.getFilePath());
                     }
-                }
-                else
-                {
-                    System.err.println("Object is not an instance of ReturnValue: "+ob.toString());
+                } else {
+                    System.err.println("Object is not an instance of ReturnValue: " + ob.toString());
                 }
             }
         } else {
@@ -62,18 +60,18 @@ public class SampleIdFilesResourceTest extends DatabaseResourceIDTest {
     @Ignore
     @Override
     public void testDelete() {
-//        super.testDelete();
+        // super.testDelete();
     }
 
     @Ignore
     @Override
     public void testPost() {
-//        super.testPost();
+        // super.testPost();
     }
 
     @Ignore
     @Override
     public void testPut() {
-//        super.testPut();
+        // super.testPut();
     }
 }

@@ -29,54 +29,68 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * <p>FileToolsTest class.</p>
- *
+ * <p>
+ * FileToolsTest class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  * @since 0.13.3
  */
 public class FileToolsTest {
 
-  /**
-   * <p>Constructor for FileToolsTest.</p>
-   */
-  public FileToolsTest() {
-  }
-
-  /**
-   * <p>setUpClass.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @BeforeClass
-  public static void setUpClass() throws Exception {
-  }
-
-  /**
-   * <p>tearDownClass.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @AfterClass
-  public static void tearDownClass() throws Exception {
-  }
-
-  /**
-   * <p>setUp.</p>
-   */
-  @Before
-  public void setUp() {
-  }
-
-  /**
-   * <p>tearDown.</p>
-   */
-  @After
-  public void tearDown() {
-  }
-  
     /**
-     *
+     * <p>
+     * Constructor for FileToolsTest.
+     * </p>
+     */
+    public FileToolsTest() {
+    }
+
+    /**
+     * <p>
+     * setUpClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+    }
+
+    /**
+     * <p>
+     * tearDownClass.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+    }
+
+    /**
+     * <p>
+     * setUp.
+     * </p>
+     */
+    @Before
+    public void setUp() {
+    }
+
+    /**
+     * <p>
+     * tearDown.
+     * </p>
+     */
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * 
      * @throws IOException
      */
     @Test
@@ -91,77 +105,79 @@ public class FileToolsTest {
             FileTools.listFilesRecursive(sudoersFile, files);
         } catch (Exception e) {
             Assert.assertTrue("Did not avoid crash when listing file with no read permissions", false);
-        } 
+        }
     }
 
-  /**
-   * <p>testIsFileOwner.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @Test
-  public void testIsFileOwner() throws Exception {
+    /**
+     * <p>
+     * testIsFileOwner.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @Test
+    public void testIsFileOwner() throws Exception {
 
-    String path = FileToolsTest.class.getResource("FileToolsTest.txt").getPath();
-    boolean isOwner = FileTools.isFileOwner(path);
-    assertTrue(isOwner);
+        String path = FileToolsTest.class.getResource("FileToolsTest.txt").getPath();
+        boolean isOwner = FileTools.isFileOwner(path);
+        assertTrue(isOwner);
 
-    // don't do this if you are root for some reason
-    if (!"root".equals(System.getProperty("user.name"))) {
-      // assumes the root filesystem is owned by 
-      isOwner = FileTools.isFileOwner(File.separator);
-      assertFalse(isOwner);
+        // don't do this if you are root for some reason
+        if (!"root".equals(System.getProperty("user.name"))) {
+            // assumes the root filesystem is owned by
+            isOwner = FileTools.isFileOwner(File.separator);
+            assertFalse(isOwner);
+        }
     }
-  }
 
-  /**
-   * <p>testIsFileOwner.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @Test
-  public void testWhoAmI() throws Exception {
+    /**
+     * <p>
+     * testIsFileOwner.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @Test
+    public void testWhoAmI() throws Exception {
 
-    // you can override this but I'm guessing people won't for testing
-    String username = System.getProperty("user.name");
+        // you can override this but I'm guessing people won't for testing
+        String username = System.getProperty("user.name");
 
-    assertEquals(username, FileTools.whoAmI());
+        assertEquals(username, FileTools.whoAmI());
 
-  }
+    }
 
-  
-  /**
-   * <p>testGetFilename.</p>
-   *
-   * @throws java.lang.Exception if any.
-   */
-  @Test
-  public void testGetFilename() throws Exception {
+    /**
+     * <p>
+     * testGetFilename.
+     * </p>
+     * 
+     * @throws java.lang.Exception
+     *             if any.
+     */
+    @Test
+    public void testGetFilename() throws Exception {
 
-    String filename = "/foo/bar/jar.txt";
-    assertEquals("jar.txt", FileTools.getFilename(filename));
+        String filename = "/foo/bar/jar.txt";
+        assertEquals("jar.txt", FileTools.getFilename(filename));
 
-  }
+    }
 
-/** Test conks out on Jenkins. Possibly, file permissions are handled differently there. 
-   * However, since we no longer die on incorrect file permissions, this is a bit less important. 
-  @Test
-  public void testOwnership() throws Exception{
-      File tempFile = File.createTempFile("test", "test");
-      String determineFilePermissions = FileTools.determineFilePermissions(tempFile.getAbsolutePath());
-      Assert.assertTrue("incorrect file permissions", determineFilePermissions.equals("-rw-rw-r--"));
-      
-      // create a "settings file" and then check to see if its permissions are correct
-      tempFile.setExecutable(false, false);
-      tempFile.setWritable(false, false);
-      tempFile.setWritable(true, true);
-      tempFile.setReadable(false, false);
-      tempFile.setReadable(true, true);
-      System.setProperty(SEQWARE_SETTINGS_PROPERTY, tempFile.getPath());
-      
-      String settingPerms = FileTools.determineFilePermissions(ConfigTools.getSettingsFilePath());
-      Assert.assertTrue("incorrect file permissions", settingPerms.equals("-rw-------"));
-      tempFile.deleteOnExit();
-  }
-  **/
+    /**
+     * Test conks out on Jenkins. Possibly, file permissions are handled differently there. However, since we no longer die on incorrect
+     * file permissions, this is a bit less important.
+     * 
+     * @Test public void testOwnership() throws Exception{ File tempFile = File.createTempFile("test", "test"); String
+     *       determineFilePermissions = FileTools.determineFilePermissions(tempFile.getAbsolutePath());
+     *       Assert.assertTrue("incorrect file permissions", determineFilePermissions.equals("-rw-rw-r--"));
+     * 
+     *       // create a "settings file" and then check to see if its permissions are correct tempFile.setExecutable(false, false);
+     *       tempFile.setWritable(false, false); tempFile.setWritable(true, true); tempFile.setReadable(false, false);
+     *       tempFile.setReadable(true, true); System.setProperty(SEQWARE_SETTINGS_PROPERTY, tempFile.getPath());
+     * 
+     *       String settingPerms = FileTools.determineFilePermissions(ConfigTools.getSettingsFilePath());
+     *       Assert.assertTrue("incorrect file permissions", settingPerms.equals("-rw-------")); tempFile.deleteOnExit(); }
+     **/
 }

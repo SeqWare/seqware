@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class ExperimentSpotDesignReadSpecResourceTest extends DatabaseResourceTest {
@@ -26,11 +26,9 @@ public class ExperimentSpotDesignReadSpecResourceTest extends DatabaseResourceTe
         super("/experimentspotdesignreadspecs");
     }
 
-  @Override
-  public void testPost() {
-    // TODO
-  }
-    
-    
+    @Override
+    public void testPost() {
+        // TODO
+    }
 
 }

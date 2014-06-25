@@ -24,8 +24,10 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * <p>CycleChecker class.</p>
- *
+ * <p>
+ * CycleChecker class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -35,7 +37,9 @@ public class CycleChecker extends Plugin {
     ReturnValue ret = new ReturnValue();
 
     /**
-     * <p>Constructor for CycleChecker.</p>
+     * <p>
+     * Constructor for CycleChecker.
+     * </p>
      */
     public CycleChecker() {
         super();
@@ -43,52 +47,65 @@ public class CycleChecker extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue init() {
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue do_run() {
-        
-            if (options.has("study-accession")) {
-                Integer study = Integer.parseInt((String) options.valueOf("study"));
-                CheckForCycles cfc = new CheckForCycles();
-                println(cfc.checkStudy(study));
-            } else {
-                println("Combination of parameters not recognized!");
-                println(this.get_syntax());
-                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-            }
-        
+
+        if (options.has("study-accession")) {
+            Integer study = Integer.parseInt((String) options.valueOf("study"));
+            CheckForCycles cfc = new CheckForCycles();
+            println(cfc.checkStudy(study));
+        } else {
+            println("Combination of parameters not recognized!");
+            println(this.get_syntax());
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        }
+
         return ret;
     }
 
-
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public String get_description() {
         return "Checks for cycles in the sample hierarchy and processing hierarchy of a particular study and prints some information about the study";
     }
-    
-    
+
 }

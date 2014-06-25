@@ -33,17 +33,22 @@ import org.restlet.Response;
 import org.w3c.dom.Document;
 
 /**
- * <p>WorkflowRunIDWorkflowResource class.</p>
- *
+ * <p>
+ * WorkflowRunIDWorkflowResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowRunIDWorkflowResource extends BasicRestlet {
 
     /**
-     * <p>Constructor for WorkflowRunIDWorkflowResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for WorkflowRunIDWorkflowResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public WorkflowRunIDWorkflowResource(Context context) {
         super(context);
@@ -53,17 +58,17 @@ public class WorkflowRunIDWorkflowResource extends BasicRestlet {
     @Override
     public void handle(Request request, Response response) {
         authenticate(request.getChallengeResponse().getIdentifier());
-        
-            String id = request.getAttributes().get("workflowRunId").toString();  
-            WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-            WorkflowRun run = (WorkflowRun)testIfNull(wrs.findBySWAccession(parseClientInt(id)));
-            Workflow w = run.getWorkflow();
-            JaxbObject<Workflow> jaxbTool = new JaxbObject<>();
-            Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-            Workflow wdto = copier.hibernate2dto(Workflow.class, w);
-            Document doc = XmlTools.marshalToDocument(jaxbTool, wdto);
-            response.setEntity(XmlTools.getRepresentation(doc));
-        
+
+        String id = request.getAttributes().get("workflowRunId").toString();
+        WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
+        WorkflowRun run = (WorkflowRun) testIfNull(wrs.findBySWAccession(parseClientInt(id)));
+        Workflow w = run.getWorkflow();
+        JaxbObject<Workflow> jaxbTool = new JaxbObject<>();
+        Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
+        Workflow wdto = copier.hibernate2dto(Workflow.class, w);
+        Document doc = XmlTools.marshalToDocument(jaxbTool, wdto);
+        response.setEntity(XmlTools.getRepresentation(doc));
+
     }
 
 }

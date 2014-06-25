@@ -63,28 +63,33 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>ProcessIDResource class.</p>
- *
+ * <p>
+ * ProcessIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class ProcessIDResource extends DatabaseIDResource {
 
     /**
-     * <p>Constructor for ProcessIDResource.</p>
+     * <p>
+     * Constructor for ProcessIDResource.
+     * </p>
      */
     public ProcessIDResource() {
         super("processId");
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
         JaxbObject<Lane> jaxbTool = new JaxbObject<>();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
-
 
         authenticate();
 
@@ -116,9 +121,12 @@ public class ProcessIDResource extends DatabaseIDResource {
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @param rep
-     * @return  */
+     * @return
+     */
     @Override
     public Representation put(Representation rep) {
         authenticate();
@@ -298,8 +306,8 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
                 if (p.getWorkflowRun() != null
-                        && (processing.getWorkflowRun() == null
-                        || p.getWorkflowRun().getSwAccession() != processing.getWorkflowRun().getSwAccession())) {
+                        && (processing.getWorkflowRun() == null || p.getWorkflowRun().getSwAccession() != processing.getWorkflowRun()
+                                .getSwAccession())) {
                     WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
                     WorkflowRun newWr = wrs.findBySWAccession(p.getWorkflowRun().getSwAccession());
                     if (newWr != null && newWr.givesPermission(registration)) {
@@ -309,10 +317,9 @@ public class ProcessIDResource extends DatabaseIDResource {
                     }
                 }
 
-
                 if (p.getWorkflowRunByAncestorWorkflowRunId() != null
-                        && (processing.getWorkflowRunByAncestorWorkflowRunId() == null
-                        || p.getWorkflowRunByAncestorWorkflowRunId().getSwAccession() != processing.getWorkflowRunByAncestorWorkflowRunId().getSwAccession())) {
+                        && (processing.getWorkflowRunByAncestorWorkflowRunId() == null || p.getWorkflowRunByAncestorWorkflowRunId()
+                                .getSwAccession() != processing.getWorkflowRunByAncestorWorkflowRunId().getSwAccession())) {
                     WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
                     WorkflowRun newWr = wrs.findBySWAccession(p.getWorkflowRunByAncestorWorkflowRunId().getSwAccession());
                     if (newWr != null && newWr.givesPermission(registration)) {
@@ -322,13 +329,13 @@ public class ProcessIDResource extends DatabaseIDResource {
                     }
                 }
 
-		if (p.getProcessingAttributes() != null && !p.getProcessingAttributes().isEmpty()) {
-                    //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                if (p.getProcessingAttributes() != null && !p.getProcessingAttributes().isEmpty()) {
+                    // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
                     this.mergeAttributes(processing.getProcessingAttributes(), p.getProcessingAttributes(), processing);
                 }
                 ps.update(registration, processing);
 
-                //Direct DB calls
+                // Direct DB calls
                 if (p.getFiles() != null) {
                     addNewFiles(p);
                 }
@@ -358,42 +365,37 @@ public class ProcessIDResource extends DatabaseIDResource {
 
                 if (p.getWorkflowRun() != null) {
                     MetadataDB mdb = DBAccess.get();
-                    try{
-                    ReturnValue ret = mdb.update_processing_workflow_run(
-                            p.getProcessingId(),
-                            p.getWorkflowRun().getSwAccession());
-                    if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-                        throw new ResourceException(Status.SERVER_ERROR_INTERNAL,
-                                "Error in Update Processing Workflow Run with error  " + ret.getExitStatus());
-                    }
-                    } finally{
+                    try {
+                        ReturnValue ret = mdb.update_processing_workflow_run(p.getProcessingId(), p.getWorkflowRun().getSwAccession());
+                        if (ret.getExitStatus() != ReturnValue.SUCCESS) {
+                            throw new ResourceException(Status.SERVER_ERROR_INTERNAL,
+                                    "Error in Update Processing Workflow Run with error  " + ret.getExitStatus());
+                        }
+                    } finally {
                         DBAccess.close();
                     }
                 }
 
                 if (p.getWorkflowRunByAncestorWorkflowRunId() != null) {
                     MetadataDB mdb = DBAccess.get();
-                    try{
-                    mdb.add_workflow_run_ancestor(
-                            p.getWorkflowRunByAncestorWorkflowRunId().getSwAccession(),
-                            p.getProcessingId());
-                    } finally{
+                    try {
+                        mdb.add_workflow_run_ancestor(p.getWorkflowRunByAncestorWorkflowRunId().getSwAccession(), p.getProcessingId());
+                    } finally {
                         DBAccess.close();
                     }
 
                 }
 
-
-
                 ReturnValue newProcessing = Processing.clone(p), ret;
                 MetadataDB mdb = DBAccess.get();
-                try{
-                ret = DBAccess.get().update_processing_event(p.getProcessingId(), newProcessing);
-                } finally{
+                try {
+                    ret = DBAccess.get().update_processing_event(p.getProcessingId(), newProcessing);
+                } finally {
                     DBAccess.close();
                 }
                 if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Updating the Processing failed with error " + ret.getExitStatus());
+                    throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Updating the Processing failed with error "
+                            + ret.getExitStatus());
                 }
 
                 Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
@@ -416,21 +418,23 @@ public class ProcessIDResource extends DatabaseIDResource {
         return toreturn;
     }
 
-    public static class IntListByName implements ResultSetHandler<List<Integer>>{
-      private final String col;
-      public IntListByName(String col){
-        this.col = col;
-      }
-      @Override
-      public List<Integer> handle(ResultSet rs) throws SQLException {
-        List<Integer> ids = new ArrayList<>();
-        while (rs.next()){
-          ids.add(rs.getInt(col));
+    public static class IntListByName implements ResultSetHandler<List<Integer>> {
+        private final String col;
+
+        public IntListByName(String col) {
+            this.col = col;
         }
-        return ids;
-      }
+
+        @Override
+        public List<Integer> handle(ResultSet rs) throws SQLException {
+            List<Integer> ids = new ArrayList<>();
+            while (rs.next()) {
+                ids.add(rs.getInt(col));
+            }
+            return ids;
+        }
     }
-    
+
     private void addNewFiles(Processing p) throws SQLException, ResourceException {
         Log.debug("Starting addNewFiles() with " + p.toString());
         Set<Integer> newFiles = new HashSet<>();
@@ -438,21 +442,19 @@ public class ProcessIDResource extends DatabaseIDResource {
             newFiles.add(file.getFileId());
         }
         Log.debug("Adding " + newFiles.size() + " files");
-        
+
         MetadataDB mdb = null;
-        try{
-        
-        String query = "SELECT file_id "
-                + "FROM processing_files "
-                + "WHERE processing_id = " + p.getProcessingId();
-        Log.debug("Executing query: " + query);
-        mdb = DBAccess.get();
-        List<Integer> fileIDs = mdb.executeQuery(query, new IntListByName("file_id"));
-        
-        for (int fileID : fileIDs) {
-            newFiles.remove(fileID);
-        } 
-        } finally{
+        try {
+
+            String query = "SELECT file_id " + "FROM processing_files " + "WHERE processing_id = " + p.getProcessingId();
+            Log.debug("Executing query: " + query);
+            mdb = DBAccess.get();
+            List<Integer> fileIDs = mdb.executeQuery(query, new IntListByName("file_id"));
+
+            for (int fileID : fileIDs) {
+                newFiles.remove(fileID);
+            }
+        } finally {
             DBAccess.close();
         }
         for (int fileID : newFiles) {
@@ -467,30 +469,26 @@ public class ProcessIDResource extends DatabaseIDResource {
         for (IUS ius : p.getIUS()) {
             newIUSswa.add(ius.getSwAccession());
         }
-        
-        MetadataDB mdb = DBAccess.get();
-        try{
 
-        List<Integer> swas = mdb.executeQuery(
-                "SELECT i.sw_accession "
-                + "FROM processing_ius pi, ius i "
-                + "WHERE pi.ius_id = i.ius_id "
-                + "AND pi.processing_id = " + p.getProcessingId(),
-                new IntListByName("sw_accession"));
-        
-        for (int swa : swas) {
-            newIUSswa.remove(swa);
-        }
-        
-        } finally{
+        MetadataDB mdb = DBAccess.get();
+        try {
+
+            List<Integer> swas = mdb.executeQuery("SELECT i.sw_accession " + "FROM processing_ius pi, ius i "
+                    + "WHERE pi.ius_id = i.ius_id " + "AND pi.processing_id = " + p.getProcessingId(), new IntListByName("sw_accession"));
+
+            for (int swa : swas) {
+                newIUSswa.remove(swa);
+            }
+
+        } finally {
             DBAccess.close();
         }
-        
-        
+
         for (int swa : newIUSswa) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(swa, p.getProcessingId());
             if (!toReturn) {
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error " + toReturn + " while linking new iuses: SWID not found: " + swa);
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error " + toReturn
+                        + " while linking new iuses: SWID not found: " + swa);
             }
         }
     }
@@ -503,24 +501,21 @@ public class ProcessIDResource extends DatabaseIDResource {
         }
 
         MetadataDB mdb = DBAccess.get();
-        try{
-        List<Integer> swas = mdb.executeQuery(
-                "SELECT l.sw_accession "
-                + "FROM processing_lanes pl, lane l "
-                + "WHERE pl.lane_id = l.lane_id "
-                + "AND pl.processing_id = " + p.getProcessingId(),
-                new IntListByName("sw_accession"));
-        for (int swa : swas) {
-            newLane.remove(swa);
-        }
-        } finally{
+        try {
+            List<Integer> swas = mdb.executeQuery("SELECT l.sw_accession " + "FROM processing_lanes pl, lane l "
+                    + "WHERE pl.lane_id = l.lane_id " + "AND pl.processing_id = " + p.getProcessingId(), new IntListByName("sw_accession"));
+            for (int swa : swas) {
+                newLane.remove(swa);
+            }
+        } finally {
             DBAccess.close();
         }
-        
+
         for (int laneID : newLane) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(laneID, p.getProcessingId());
             if (!toReturn) {
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn + " while adding new lanes: SWID not found: " + laneID);
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn
+                        + " while adding new lanes: SWID not found: " + laneID);
             }
         }
     }
@@ -533,25 +528,22 @@ public class ProcessIDResource extends DatabaseIDResource {
         }
 
         MetadataDB mdb = DBAccess.get();
-        try{
-        List<Integer> swas = mdb.executeQuery(
-                "SELECT o.sw_accession "
-                + "FROM processing_sequencer_runs po, sequencer_run o "
-                + "WHERE po.sequencer_run_id = o.sequencer_run_id "
-                + "AND po.processing_id = " + p.getProcessingId(),
-                new IntListByName("sw_accession"));
-        for (int swa : swas) {
-            newObj.remove(swa);
-        }      
-        } finally{
+        try {
+            List<Integer> swas = mdb.executeQuery("SELECT o.sw_accession " + "FROM processing_sequencer_runs po, sequencer_run o "
+                    + "WHERE po.sequencer_run_id = o.sequencer_run_id " + "AND po.processing_id = " + p.getProcessingId(),
+                    new IntListByName("sw_accession"));
+            for (int swa : swas) {
+                newObj.remove(swa);
+            }
+        } finally {
             DBAccess.close();
         }
-        
-        
+
         for (int objID : newObj) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(objID, p.getProcessingId());
             if (!toReturn) {
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn + " while adding new sequencer runs: SWID not found: " + objID);
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn
+                        + " while adding new sequencer runs: SWID not found: " + objID);
             }
         }
     }
@@ -564,24 +556,22 @@ public class ProcessIDResource extends DatabaseIDResource {
         }
 
         MetadataDB mdb = DBAccess.get();
-        try{
-        List<Integer> swas = mdb.executeQuery(
-                "SELECT o.sw_accession "
-                + "FROM processing_studies po, study o "
-                + "WHERE po.study_id = o.study_id "
-                + "AND po.processing_id = " + p.getProcessingId(),
-                new IntListByName("sw_accession"));
-        for (int swa : swas) {
-            newObj.remove(swa);
-        }  
-        } finally{
+        try {
+            List<Integer> swas = mdb.executeQuery("SELECT o.sw_accession " + "FROM processing_studies po, study o "
+                    + "WHERE po.study_id = o.study_id " + "AND po.processing_id = " + p.getProcessingId(),
+                    new IntListByName("sw_accession"));
+            for (int swa : swas) {
+                newObj.remove(swa);
+            }
+        } finally {
             DBAccess.close();
         }
-        
+
         for (int objID : newObj) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(objID, p.getProcessingId());
             if (!toReturn) {
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn + " while adding new studies: SWID not found: " + objID);
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn
+                        + " while adding new studies: SWID not found: " + objID);
             }
         }
     }
@@ -594,24 +584,22 @@ public class ProcessIDResource extends DatabaseIDResource {
         }
 
         MetadataDB mdb = DBAccess.get();
-        try{
-        List<Integer> swas = mdb.executeQuery(
-                "SELECT o.sw_accession "
-                + "FROM processing_experiments po, experiment o "
-                + "WHERE po.experiment_id = o.experiment_id "
-                + "AND po.processing_id = " + p.getProcessingId(),
-                new IntListByName("sw_accession"));
-        for (int swa : swas) {
-            newObj.remove(swa);
-        }               
-        } finally{
+        try {
+            List<Integer> swas = mdb.executeQuery("SELECT o.sw_accession " + "FROM processing_experiments po, experiment o "
+                    + "WHERE po.experiment_id = o.experiment_id " + "AND po.processing_id = " + p.getProcessingId(), new IntListByName(
+                    "sw_accession"));
+            for (int swa : swas) {
+                newObj.remove(swa);
+            }
+        } finally {
             DBAccess.close();
         }
-        
+
         for (int objID : newObj) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(objID, p.getProcessingId());
             if (!toReturn) {
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn + " while adding new experiments: SWID not found: " + objID);
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn
+                        + " while adding new experiments: SWID not found: " + objID);
             }
         }
     }
@@ -624,24 +612,22 @@ public class ProcessIDResource extends DatabaseIDResource {
         }
 
         MetadataDB mdb = DBAccess.get();
-        try{
-        List<Integer> swas = DBAccess.get().executeQuery(
-                "SELECT o.sw_accession "
-                + "FROM processing_samples po, sample o "
-                + "WHERE po.sample_id = o.sample_id "
-                + "AND po.processing_id = " + p.getProcessingId(),
-                new IntListByName("sw_accession"));
-        for (int swa : swas) {
-            newObj.remove(swa);
-        }              
-        } finally{
+        try {
+            List<Integer> swas = DBAccess.get().executeQuery(
+                    "SELECT o.sw_accession " + "FROM processing_samples po, sample o " + "WHERE po.sample_id = o.sample_id "
+                            + "AND po.processing_id = " + p.getProcessingId(), new IntListByName("sw_accession"));
+            for (int swa : swas) {
+                newObj.remove(swa);
+            }
+        } finally {
             DBAccess.close();
         }
-        
+
         for (int objID : newObj) {
             boolean toReturn = DBAccess.get().linkAccessionAndParent(objID, p.getProcessingId());
             if (!toReturn) {
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn + " while adding new samples: SWID not found: " + objID);
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Error  " + toReturn
+                        + " while adding new samples: SWID not found: " + objID);
             }
         }
     }
@@ -651,50 +637,46 @@ public class ProcessIDResource extends DatabaseIDResource {
         Set<Processing> children = p.getChildren();
         Set<Processing> parents = p.getParents();
 
-        //parents
+        // parents
         Set<Integer> newParents = new HashSet<>();
         for (Processing pr : parents) {
             newParents.add(pr.getProcessingId());
         }
 
         MetadataDB mdb = DBAccess.get();
-        try{
-        List<Integer> parentIds = mdb.executeQuery(
-                "SELECT parent_id "
-                + "FROM processing_relationship "
-                + "WHERE child_id = " + p.getProcessingId(),
-                new IntListByName("parent_id"));
+        try {
+            List<Integer> parentIds = mdb.executeQuery(
+                    "SELECT parent_id " + "FROM processing_relationship " + "WHERE child_id = " + p.getProcessingId(), new IntListByName(
+                            "parent_id"));
 
-        for (int parent : parentIds) {
-            newParents.remove(parent);
-        }
-              
-        } finally{
+            for (int parent : parentIds) {
+                newParents.remove(parent);
+            }
+
+        } finally {
             DBAccess.close();
         }
 
-//children
+        // children
         Set<Integer> newChildren = new HashSet<>();
         for (Processing pr : children) {
             newChildren.add(pr.getProcessingId());
         }
 
         mdb = DBAccess.get();
-        try{
-        List<Integer> childIds = mdb.executeQuery(
-                "SELECT child_id "
-                + "FROM processing_relationship "
-                + "WHERE parent_id = " + p.getProcessingId(),
-                new IntListByName("child_id"));
+        try {
+            List<Integer> childIds = mdb.executeQuery(
+                    "SELECT child_id " + "FROM processing_relationship " + "WHERE parent_id = " + p.getProcessingId(), new IntListByName(
+                            "child_id"));
 
-        for (int child : childIds) {
-            newParents.remove(child);
-        }          
-        } finally{
+            for (int child : childIds) {
+                newParents.remove(child);
+            }
+        } finally {
             DBAccess.close();
         }
 
-        //make simple arrays
+        // make simple arrays
         int[] parentArr = new int[newParents.size()];
 
         int i = 0;
@@ -709,16 +691,17 @@ public class ProcessIDResource extends DatabaseIDResource {
             childArr[i] = iterator.next();
         }
 
-        //finally do something about it
+        // finally do something about it
         mdb = DBAccess.get();
-        try{
+        try {
             ReturnValue ret = mdb.associate_processing_event_with_parents_and_child(p.getProcessingId(), parentArr, childArr);
             if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed while adding parents and children with error " + ret.getExitStatus());
+                throw new ResourceException(Status.SERVER_ERROR_INTERNAL, "Failed while adding parents and children with error "
+                        + ret.getExitStatus());
             }
-        } finally{
+        } finally {
             DBAccess.close();
-        }  
+        }
 
     }
 

@@ -35,17 +35,22 @@ import org.restlet.ext.wadl.ResourceInfo;
 import org.restlet.ext.wadl.WadlDescribable;
 
 /**
- * <p>GenericDBResource class.</p>
- *
+ * <p>
+ * GenericDBResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class GenericDBResource extends BasicRestlet implements WadlDescribable {
 
     /**
-     * <p>Constructor for GenericDBResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for GenericDBResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public GenericDBResource(Context context) {
         super(context);
@@ -58,19 +63,18 @@ public class GenericDBResource extends BasicRestlet implements WadlDescribable {
         String query = request.getEntityAsText();
 
         if (query == null || query.trim().isEmpty()) {
-            response.setEntity("<?xml version=\"1.0\"?>"
-                    + "<version major=\"0\" minor=\"11\" patch=\"0\"/>", MediaType.TEXT_XML);
+            response.setEntity("<?xml version=\"1.0\"?>" + "<version major=\"0\" minor=\"11\" patch=\"0\"/>", MediaType.TEXT_XML);
             return;
         }
 
         if (request.getMethod() == Method.GET) {
             try {
-              String table = DBAccess.get().executeQuery(query, new ResultSetHandler<String>(){
-                @Override
-                public String handle(ResultSet rs) throws SQLException {
-                  return printResultSet(rs);
-                }
-              });
+                String table = DBAccess.get().executeQuery(query, new ResultSetHandler<String>() {
+                    @Override
+                    public String handle(ResultSet rs) throws SQLException {
+                        return printResultSet(rs);
+                    }
+                });
                 response.setEntity(table, MediaType.TEXT_PLAIN);
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -97,12 +101,12 @@ public class GenericDBResource extends BasicRestlet implements WadlDescribable {
         StringBuilder s = new StringBuilder();
         ResultSetMetaData rsmd = rs.getMetaData();
         int numColumns = rsmd.getColumnCount();
-        //header
+        // header
         for (int i = 1; i <= numColumns; i++) {
             s.append(rsmd.getColumnName(i));
             s.append("\t");
         }
-        //values
+        // values
         while (rs.next()) {
             for (int i = 1; i <= numColumns; i++) {
                 s.append(rs.getString(i));
@@ -114,8 +118,11 @@ public class GenericDBResource extends BasicRestlet implements WadlDescribable {
         return s.toString();
     }
 
-    /** {@inheritDoc}
-     * @param ai */
+    /**
+     * {@inheritDoc}
+     * 
+     * @param ai
+     */
     @Override
     public ResourceInfo getResourceInfo(ApplicationInfo ai) {
         ResourceInfo ri = new ResourceInfo();
