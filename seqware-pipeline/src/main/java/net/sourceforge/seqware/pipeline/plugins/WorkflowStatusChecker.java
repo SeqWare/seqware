@@ -330,7 +330,7 @@ public class WorkflowStatusChecker extends Plugin {
             if (Engines.isOozie(wr.getWorkflowEngine())) {
                 checkOozie();
             } else {
-                checkPegasus();
+                throw new RuntimeException("No other workflow engines currently supported");
             }
         }
 
@@ -520,63 +520,6 @@ public class WorkflowStatusChecker extends Plugin {
                 throw new RuntimeException("Unexpected oozie status value: " + oozieStatus);
             }
             return sqwStatus;
-        }
-
-        private void checkPegasus() {
-            if (wr.getStatus() != null) {
-                switch (wr.getStatus()) {
-                case submitted_cancel:
-                case submitted_retry:
-                    // This should be prevented from ever happening on the submit-side.
-                    throw new RuntimeException("cancel/retry not supported with pegasus engine.");
-                default: // continue
-                }
-            }
-
-            // check the owner of the status dir
-            boolean dirOwner = true;
-            String statusDir = findStatusDir(wr.getStatusCmd());
-            if (statusDir != null && !FileTools.isFileOwner(statusDir)) {
-                dirOwner = false;
-                Log.info("You don't own the status directory: " + wr.getStatusCmd());
-            } else if (statusDir == null) {
-                dirOwner = false;
-                Log.info("The status directory can't be parsed!: " + wr.getStatusCmd());
-            }
-
-            if (dirOwner) {
-                ReturnValue currRet = checkWorkflow(wr.getStatusCmd());
-                if (currRet.getExitStatus() == ReturnValue.SUCCESS) {
-                    synchronized (metadata_sync) {
-                        WorkflowStatusChecker.this.metadata
-                                .update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), WorkflowRunStatus.completed,
-                                        wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(), wr.getHost(),
-                                        currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-                    }
-
-                } else if (currRet.getExitStatus() == ReturnValue.PROCESSING) {
-                    synchronized (metadata_sync) {
-                        WorkflowStatusChecker.this.metadata
-                                .update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), WorkflowRunStatus.running,
-                                        wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(), wr.getHost(),
-                                        currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-                    }
-
-                } else if (currRet.getExitStatus() == ReturnValue.FAILURE) {
-                    Log.error("WORKFLOW FAILURE: this workflow has failed and this status will be saved to the DB.");
-                    synchronized (metadata_sync) {
-                        WorkflowStatusChecker.this.metadata
-                                .update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), WorkflowRunStatus.failed,
-                                        wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(), wr.getHost(),
-                                        currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-                    }
-                } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
-                    Log.error("ERROR: the workflow status has returned UNKNOWN, this is typically if the workflow status command points"
-                            + "to a non-existant directory or a directory that is not writable or owned by you. No information will be saved to the"
-                            + "DB since the workflow state cannot be determined!");
-
-                }
-            }
         }
 
     }
