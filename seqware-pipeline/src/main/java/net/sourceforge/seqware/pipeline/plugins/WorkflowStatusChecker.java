@@ -83,10 +83,6 @@ public class WorkflowStatusChecker extends Plugin {
      */
     public WorkflowStatusChecker() {
         super();
-        parser.acceptsAll(
-                Arrays.asList("status-cmd", "s"),
-                "Optional: the Pegasus status command, if you specify this option the command will be run, potentially displaying the summarized/parsed errors, but the database will not be updated.")
-                .withRequiredArg();
         parser.acceptsAll(Arrays.asList(WORKFLOW_RUN_ACCESSION, "wra"),
                 "Optional: this will cause the program to only check the status of workflow run(s). For multiple runs, comma-separate with no spaces")
                 .withRequiredArg().withValuesSeparatedBy(',').ofType(Integer.class);
