@@ -345,7 +345,7 @@ public class HelloWorldExample extends Module {
   
   /**
    * A cleanup method, make sure you cleanup files that are outside the current working directory
-   * since Pegasus won't clean those for you.
+   * since SeqWare won't clean those for you.
    * 
    * clean_up is optional
      * @return 
