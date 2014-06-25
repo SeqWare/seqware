@@ -21,23 +21,29 @@ import java.util.List;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 
 /**
- * <p>ExperimentSpotDesignReadSpecList class.</p>
+ * <p>
+ * ExperimentSpotDesignReadSpecList class.
+ * </p>
  * 
  */
-public class ExperimentSpotDesignReadSpecList{
+public class ExperimentSpotDesignReadSpecList {
 
     protected List<ExperimentSpotDesignReadSpec> tList;
 
     /**
-     * <p>Constructor for ExperimentSpotDesignReadSpecList.</p>
+     * <p>
+     * Constructor for ExperimentSpotDesignReadSpecList.
+     * </p>
      */
     public ExperimentSpotDesignReadSpecList() {
         tList = new ArrayList<>();
     }
 
     /**
-     * <p>getList.</p>
-     *
+     * <p>
+     * getList.
+     * </p>
+     * 
      * @return a {@link java.util.List} object.
      */
     public List<ExperimentSpotDesignReadSpec> getList() {
@@ -45,18 +51,24 @@ public class ExperimentSpotDesignReadSpecList{
     }
 
     /**
-     * <p>setList.</p>
-     *
-     * @param list a {@link java.util.List} object.
+     * <p>
+     * setList.
+     * </p>
+     * 
+     * @param list
+     *            a {@link java.util.List} object.
      */
     public void setList(List<ExperimentSpotDesignReadSpec> list) {
         this.tList = list;
     }
 
     /**
-     * <p>add.</p>
-     *
-     * @param ex a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
+     * <p>
+     * add.
+     * </p>
+     * 
+     * @param ex
+     *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
     public void add(ExperimentSpotDesignReadSpec ex) {
         tList.add(ex);

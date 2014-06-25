@@ -52,7 +52,7 @@ import javax.ws.rs.Produces;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 
 /**
- *
+ * 
  * @author dyuen
  */
 @Stateless
@@ -60,9 +60,8 @@ import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
 
     /**
-     * The actual delete method, container managed JTA transactions should
-     * handle rollback and atomic operations
-     *
+     * The actual delete method, container managed JTA transactions should handle rollback and atomic operations
+     * 
      * @param id
      * @param victims
      * @param targetClass
@@ -70,8 +69,9 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @DELETE
     @Path("{id}/rdelete/{targetClass}")
-    @Consumes({"application/json"})
-    public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims, @PathParam("targetClass") String targetClass) {
+    @Consumes({ "application/json" })
+    public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims,
+            @PathParam("targetClass") String targetClass) {
         Set<ModelAccessionIDTuple> victimsFound = handleTargetting(targetClass, id, true, victims);
 
         if (victims.equals(victimsFound)) {
@@ -85,28 +85,28 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
                 throw new NotFoundException();
             }
         } else {
-            throw new ConflictException("keyFile of size " + victims.size() + " does not match " + victimsFound.size() + " found elements were not found, rolling back");
+            throw new ConflictException("keyFile of size " + victims.size() + " does not match " + victimsFound.size()
+                    + " found elements were not found, rolling back");
         }
     }
 
     /**
      * Returns the list of potential victims for a deletion operation
-     *
+     * 
      * @param id
      * @param targetClass
      * @return
      */
     @GET
     @Path("{id}/rdelete/{targetClass}")
-    @Produces({"application/json"})
+    @Produces({ "application/json" })
     public Set<ModelAccessionIDTuple> findRecursive(@PathParam("id") Integer id, @PathParam("targetClass") String targetClass) {
         return handleTargetting(targetClass, id, false, null);
     }
 
     /**
-     * Method that starts from a SequencerRun, either deleting appropriate
-     * workflow runs or reporting on what would have been deleted
-     *
+     * Method that starts from a SequencerRun, either deleting appropriate workflow runs or reporting on what would have been deleted
+     * 
      * @param id
      * @param delete
      * @param matchSet
@@ -130,9 +130,8 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
     }
 
     /**
-     * Method that starts from a lane, either deleting appropriate workflow runs
-     * or reporting on what would have been deleted
-     *
+     * Method that starts from a lane, either deleting appropriate workflow runs or reporting on what would have been deleted
+     * 
      * @param id
      * @param delete
      * @param matchSet
@@ -156,9 +155,8 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
     }
 
     /**
-     * Method that starts from an ius, either deleting appropriate workflow runs
-     * or reporting on what would have been deleted
-     *
+     * Method that starts from an ius, either deleting appropriate workflow runs or reporting on what would have been deleted
+     * 
      * @param id
      * @param delete
      * @param matchSet
@@ -189,13 +187,14 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
     }
 
     /**
-     * Method that starts from a workflow run, either deleting appropriate
-     * entities or reporting on what would have been deleted
-     *
-     * @param id primary key id for the workflow run
-     * @param delete whether to actually go through with deletion
-     * @param matchSet when actually doing deletion, this set should be a
-     * superset of what we find
+     * Method that starts from a workflow run, either deleting appropriate entities or reporting on what would have been deleted
+     * 
+     * @param id
+     *            primary key id for the workflow run
+     * @param delete
+     *            whether to actually go through with deletion
+     * @param matchSet
+     *            when actually doing deletion, this set should be a superset of what we find
      * @return
      */
     private Set<ModelAccessionIDTuple> deleteWorkflowRunRecursive(Integer id, boolean delete, Set<ModelAccessionIDTuple> matchSet) {
@@ -206,8 +205,9 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
             return null;
         }
         // if the workflow run is not in a settled state, then abort
-        if (!(data.getStatus().equals(WorkflowRunStatus.completed.name()) || data.getStatus().equals(WorkflowRunStatus.failed.name()) || data.getStatus().equals(WorkflowRunStatus.cancelled.name()))) {
-            UtilityREST.throwExceptionWithMessage("Unsettled workflow run blocking deletion: " + data.getSwAccession());   
+        if (!(data.getStatus().equals(WorkflowRunStatus.completed.name()) || data.getStatus().equals(WorkflowRunStatus.failed.name()) || data
+                .getStatus().equals(WorkflowRunStatus.cancelled.name()))) {
+            UtilityREST.throwExceptionWithMessage("Unsettled workflow run blocking deletion: " + data.getSwAccession());
         }
         Set<Processing> affectedProcessing = new HashSet<>();
         // workflow_run
@@ -247,7 +247,7 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         }
         // handle the workflow run itself
         results.add(new ModelAccessionIDTuple(data.getSwAccession(), data.getWorkflowRunId(), data.getClass().getName()));
-       
+
         return results;
     }
 
@@ -277,7 +277,8 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
         }
     }
 
-    private void handleWorkflowRunGivenProcessing(Processing childp, WorkflowRun data, boolean delete, Set<ModelAccessionIDTuple> matchSet, Set<ModelAccessionIDTuple> results) {
+    private void handleWorkflowRunGivenProcessing(Processing childp, WorkflowRun data, boolean delete, Set<ModelAccessionIDTuple> matchSet,
+            Set<ModelAccessionIDTuple> results) {
         // if the child processing is connected to a workflow run that is not this one, recursive
         WorkflowRun childRun = childp.getAncestorWorkflowRunId();
         if (childRun == null) {

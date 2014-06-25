@@ -24,18 +24,18 @@ import net.sourceforge.seqware.pipeline.plugins.ProvisionFilesET;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author dyuen
  */
-public class CLIUserPhase4 extends UserPhase4{
-        
+public class CLIUserPhase4 extends UserPhase4 {
+
     @Test
     @Override
     public void testProvisionFileInAndAssociateWithSample() throws IOException {
         ProvisionFilesET it = new ProvisionFilesET();
         it.provisionFileWithRandomInput(AccessionMap.accessionMap.get(UserPhase3.SAMPLE));
     }
-    
+
     @Test
     @Override
     public void testExistingFileInAndAssociateWithSample() throws IOException {
@@ -44,5 +44,5 @@ public class CLIUserPhase4 extends UserPhase4{
         String sw_accession = String.valueOf(ITUtility.extractSwid(output));
         AccessionMap.accessionMap.put(UserPhase4.FILE, sw_accession);
     }
-   
+
 }

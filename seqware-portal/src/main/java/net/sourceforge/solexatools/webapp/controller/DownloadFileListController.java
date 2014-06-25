@@ -38,407 +38,433 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
- * <p>DownloadFileListController class.</p>
- *
+ * <p>
+ * DownloadFileListController class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class DownloadFileListController extends BaseCommandController {
-	private StudyService studyService;
-	private ExperimentService experimentService;
-	private SampleService sampleService;
-	private LaneService laneService;
-	private ProcessingService processingService;
-	private FileService fileService;
-	private WorkflowRunService workflowRunService;
-		
- 
-	/**
-	 * <p>Constructor for DownloadFileListController.</p>
-	 */
-	public DownloadFileListController() {
-		super();
-	//	setSupportedMethods(new String[] {METHOD_GET});
-		setSupportedMethods(new String[] {METHOD_POST});
-	}
-	
-	private String getRequestedOption(HttpServletRequest request) {
-		return request.getParameter("option");
-	}
-	private String getRequestedTypeNode(HttpServletRequest request) {
-		return request.getParameter("typeNode");
-	}
-	private String[] getRequestedAllSelectIds(HttpServletRequest request) {
-		return request.getParameter("allSelectIds").split(",");
-	}
-	private String[] getRequestedAllSelectStatuses(HttpServletRequest request) {
-		return request.getParameter("allSelectStatuses").split(",");
-	}
-	private boolean getRequestedIsSelect(HttpServletRequest request) {
-		return Boolean.parseBoolean(request.getParameter("isSelect"));
-	}
-	private String getRequestedNodeId(HttpServletRequest request) {
-		return request.getParameter("nodeId");
-	}
-	private String getRequestedTypeBulkTree(HttpServletRequest request) {
-		return request.getParameter("typeBulkTree");
-	}
-	private String getRequestedChildId(HttpServletRequest request) {
-		return request.getParameter("childId");
-	}
-	private String getNameFileListInSession(String typeNode, String option){
-		String nameListInSession = "";
-		if(option.equals("getCurrentFileList")){
-			nameListInSession = "unknow";
-		}
-		if(option.equals("updateFileList")){
-			if(typeNode.equals("study")){
-				nameListInSession = "bulkDownloadFiles";
-			}
-			if(typeNode.equals("analisys")){
-				nameListInSession = "analysisBulkDownloadFiles";
-			}
-		}
-		
-		return nameListInSession;
-	}
-	private String getNameSelectedIdsInSession(String typeNode){
-		String nameListInSession = "";
-		if(typeNode.equals("study")){
-			nameListInSession = "selectedNodes";
-		}
-		if(typeNode.equals("analisys")){
-			nameListInSession = "analysisSelectedNodes";
-		}
-		
-		return nameListInSession;
-	}
+    private StudyService studyService;
+    private ExperimentService experimentService;
+    private SampleService sampleService;
+    private LaneService laneService;
+    private ProcessingService processingService;
+    private FileService fileService;
+    private WorkflowRunService workflowRunService;
 
-	/** {@inheritDoc}
+    /**
+     * <p>
+     * Constructor for DownloadFileListController.
+     * </p>
+     */
+    public DownloadFileListController() {
+        super();
+        // setSupportedMethods(new String[] {METHOD_GET});
+        setSupportedMethods(new String[] { METHOD_POST });
+    }
+
+    private String getRequestedOption(HttpServletRequest request) {
+        return request.getParameter("option");
+    }
+
+    private String getRequestedTypeNode(HttpServletRequest request) {
+        return request.getParameter("typeNode");
+    }
+
+    private String[] getRequestedAllSelectIds(HttpServletRequest request) {
+        return request.getParameter("allSelectIds").split(",");
+    }
+
+    private String[] getRequestedAllSelectStatuses(HttpServletRequest request) {
+        return request.getParameter("allSelectStatuses").split(",");
+    }
+
+    private boolean getRequestedIsSelect(HttpServletRequest request) {
+        return Boolean.parseBoolean(request.getParameter("isSelect"));
+    }
+
+    private String getRequestedNodeId(HttpServletRequest request) {
+        return request.getParameter("nodeId");
+    }
+
+    private String getRequestedTypeBulkTree(HttpServletRequest request) {
+        return request.getParameter("typeBulkTree");
+    }
+
+    private String getRequestedChildId(HttpServletRequest request) {
+        return request.getParameter("childId");
+    }
+
+    private String getNameFileListInSession(String typeNode, String option) {
+        String nameListInSession = "";
+        if (option.equals("getCurrentFileList")) {
+            nameListInSession = "unknow";
+        }
+        if (option.equals("updateFileList")) {
+            if (typeNode.equals("study")) {
+                nameListInSession = "bulkDownloadFiles";
+            }
+            if (typeNode.equals("analisys")) {
+                nameListInSession = "analysisBulkDownloadFiles";
+            }
+        }
+
+        return nameListInSession;
+    }
+
+    private String getNameSelectedIdsInSession(String typeNode) {
+        String nameListInSession = "";
+        if (typeNode.equals("study")) {
+            nameListInSession = "selectedNodes";
+        }
+        if (typeNode.equals("analisys")) {
+            nameListInSession = "analysisSelectedNodes";
+        }
+
+        return nameListInSession;
+    }
+
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-												 HttpServletResponse response)
-		throws Exception {
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		//Registration registration = Security.requireRegistration(request, response);
-		Registration registration = Security.getRegistration(request);
-		if(registration == null){
-			//return new ModelAndView("redirect:/login.htm");
-			return new ModelAndView("FileList");
-		}
-		
-		/**
-		 * Pass registration so that we can filter the list if its appropriate
-		 * to do so.
-		 */
+        // Registration registration = Security.requireRegistration(request, response);
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) {
+            // return new ModelAndView("redirect:/login.htm");
+            return new ModelAndView("FileList");
+        }
 
-		String option = getRequestedOption(request);
-		String typeNode = getRequestedTypeNode(request);
-		boolean isSelect = getRequestedIsSelect(request);
-		String typeBulkTree = getRequestedTypeBulkTree(request);
-		
-		String nameFileListInSession = getNameFileListInSession(typeBulkTree, option);
-		
-		List<File>	listAllFile = BulkUtil.getFiles(request, nameFileListInSession);
-		
-		List<File> files = new ArrayList<>();
-		if(option.equals("updateFileList")){
-			// update file list
-			Integer nodeId = Integer.parseInt(getRequestedNodeId(request));
-			List<String> nodeIds = new LinkedList<>();
-			
-			if(typeNode.equals("study")){
-				files = getStudyService().getFiles(nodeId);
-				nodeIds = FindChildUtil.getNodeIds(getStudyService().findByID(nodeId));
-			}else
-			if(typeNode.equals("exp")){
-				files = getExperimentService().getFiles(nodeId);
-				nodeIds = FindChildUtil.getNodeIds(getExperimentService().findByID(nodeId));
-			}else
-			if(typeNode.equals("sam")){
-				files = getSampleService().getFiles(nodeId);
-			//	nodeIds = FindChildUtil.getNodeIds(getStudyService().findByID(nodeId));
-				nodeIds = FindChildUtil.getNodeIds(getSampleService().findByID(nodeId));
-			}else
-			if(typeNode.equals("lane")){
-				files = getLaneService().getFiles(nodeId);
-				nodeIds = FindChildUtil.getNodeIds(getLaneService().findByID(nodeId));
-			//	nodeIds.add(nodeId.toString());
-			}else
-			if(typeNode.equals("ae")){
-				files = getProcessingService().getFiles(nodeId);
-				nodeIds = FindChildUtil.getNodeIds(getProcessingService().findByID(nodeId));
-			}else
-			if(typeNode.equals("file")){
-				files = getFileService().getFiles(nodeId);
-				nodeIds.add(nodeId.toString());
-			}if(typeNode.equals("wfr")){
-			//	Integer processingId = getWorkflowRunService().getRootProcessing(nodeId).getProcessingId();
-				WorkflowRun wr = getWorkflowRunService().findByID(nodeId);
-				String strChildId = getRequestedChildId(request);
-				if(strChildId != null && !"".equals(strChildId)){
-					Log.info("One Proc in Workflow Run");
-					
-					Integer processingId = Constant.getId(strChildId);
-					files = getProcessingService().getFiles(processingId);
-					
-					// get Processing
-					SortedSet<Processing> processings = new TreeSet<>();
-					processings.add(getProcessingService().findByID(processingId));
-					
-					// set one Processing in Workflow Run 
-					wr.setProcessings(processings);
-				}else{
-					Log.info("More One Proc in Workflow Run");
-					files = getWorkflowRunService().getFiles(wr.getWorkflowRunId());
-				}
-				nodeIds = FindChildUtil.getNodeIds(wr);
-			}
-			
-			listAllFile = updateFiles(isSelect, files, listAllFile);
+        /**
+         * Pass registration so that we can filter the list if its appropriate to do so.
+         */
 
-			setFiles(request, nameFileListInSession, listAllFile);
-			
-			// update Selected nodes in tree view 
-	//		String[] allSelectIds = getRequestedAllSelectIds(request);
-	//		String[] allSelectStatuses = getRequestedAllSelectStatuses(request);
-			String nameSelectedIdsInSession = getNameSelectedIdsInSession(typeBulkTree);
-		//	BulkUtil.getSelectedIds(request, nameSelectedIdsInSession, allSelectIds, allSelectStatuses);
-			BulkUtil.updateSelectedIds(request, nameSelectedIdsInSession, isSelect, nodeIds);
-			
-		}
-		
-		MessageSourceAccessor ma = this.getMessageSourceAccessor();
-		
-		/**
+        String option = getRequestedOption(request);
+        String typeNode = getRequestedTypeNode(request);
+        boolean isSelect = getRequestedIsSelect(request);
+        String typeBulkTree = getRequestedTypeBulkTree(request);
+
+        String nameFileListInSession = getNameFileListInSession(typeBulkTree, option);
+
+        List<File> listAllFile = BulkUtil.getFiles(request, nameFileListInSession);
+
+        List<File> files = new ArrayList<>();
+        if (option.equals("updateFileList")) {
+            // update file list
+            Integer nodeId = Integer.parseInt(getRequestedNodeId(request));
+            List<String> nodeIds = new LinkedList<>();
+
+            if (typeNode.equals("study")) {
+                files = getStudyService().getFiles(nodeId);
+                nodeIds = FindChildUtil.getNodeIds(getStudyService().findByID(nodeId));
+            } else if (typeNode.equals("exp")) {
+                files = getExperimentService().getFiles(nodeId);
+                nodeIds = FindChildUtil.getNodeIds(getExperimentService().findByID(nodeId));
+            } else if (typeNode.equals("sam")) {
+                files = getSampleService().getFiles(nodeId);
+                // nodeIds = FindChildUtil.getNodeIds(getStudyService().findByID(nodeId));
+                nodeIds = FindChildUtil.getNodeIds(getSampleService().findByID(nodeId));
+            } else if (typeNode.equals("lane")) {
+                files = getLaneService().getFiles(nodeId);
+                nodeIds = FindChildUtil.getNodeIds(getLaneService().findByID(nodeId));
+                // nodeIds.add(nodeId.toString());
+            } else if (typeNode.equals("ae")) {
+                files = getProcessingService().getFiles(nodeId);
+                nodeIds = FindChildUtil.getNodeIds(getProcessingService().findByID(nodeId));
+            } else if (typeNode.equals("file")) {
+                files = getFileService().getFiles(nodeId);
+                nodeIds.add(nodeId.toString());
+            }
+            if (typeNode.equals("wfr")) {
+                // Integer processingId = getWorkflowRunService().getRootProcessing(nodeId).getProcessingId();
+                WorkflowRun wr = getWorkflowRunService().findByID(nodeId);
+                String strChildId = getRequestedChildId(request);
+                if (strChildId != null && !"".equals(strChildId)) {
+                    Log.info("One Proc in Workflow Run");
+
+                    Integer processingId = Constant.getId(strChildId);
+                    files = getProcessingService().getFiles(processingId);
+
+                    // get Processing
+                    SortedSet<Processing> processings = new TreeSet<>();
+                    processings.add(getProcessingService().findByID(processingId));
+
+                    // set one Processing in Workflow Run
+                    wr.setProcessings(processings);
+                } else {
+                    Log.info("More One Proc in Workflow Run");
+                    files = getWorkflowRunService().getFiles(wr.getWorkflowRunId());
+                }
+                nodeIds = FindChildUtil.getNodeIds(wr);
+            }
+
+            listAllFile = updateFiles(isSelect, files, listAllFile);
+
+            setFiles(request, nameFileListInSession, listAllFile);
+
+            // update Selected nodes in tree view
+            // String[] allSelectIds = getRequestedAllSelectIds(request);
+            // String[] allSelectStatuses = getRequestedAllSelectStatuses(request);
+            String nameSelectedIdsInSession = getNameSelectedIdsInSession(typeBulkTree);
+            // BulkUtil.getSelectedIds(request, nameSelectedIdsInSession, allSelectIds, allSelectStatuses);
+            BulkUtil.updateSelectedIds(request, nameSelectedIdsInSession, isSelect, nodeIds);
+
+        }
+
+        MessageSourceAccessor ma = this.getMessageSourceAccessor();
+
+        /**
 		 * 
 		 */
-		List<File> listViewFile = null;
-		PageInfo pageInfo = null;
-		synchronized (listAllFile) {
-		//	listViewFile = Collections.synchronizedList(PaginationUtil.subListSD(request, "bulkDownloadFilePage", listAllFile));
-			listViewFile = Collections.synchronizedList(PaginationUtil.subListSD(request, "bulkDownloadFilePage", Collections.synchronizedList(listAllFile)));
-		//	listViewFile = PaginationUtil.subListSD(request, "bulkDownloadFilePage", listAllFile);
-			pageInfo = PaginationUtil.getPageInfoSD(request, "bulkDownloadFilePage", listViewFile, listAllFile, ma);
-		}
-		
-		/**
+        List<File> listViewFile = null;
+        PageInfo pageInfo = null;
+        synchronized (listAllFile) {
+            // listViewFile = Collections.synchronizedList(PaginationUtil.subListSD(request, "bulkDownloadFilePage", listAllFile));
+            listViewFile = Collections.synchronizedList(PaginationUtil.subListSD(request, "bulkDownloadFilePage",
+                    Collections.synchronizedList(listAllFile)));
+            // listViewFile = PaginationUtil.subListSD(request, "bulkDownloadFilePage", listAllFile);
+            pageInfo = PaginationUtil.getPageInfoSD(request, "bulkDownloadFilePage", listViewFile, listAllFile, ma);
+        }
+
+        /**
 		 * 
 		 */
-		
-		ModelAndView modelAndView = new ModelAndView("FileList");
-		modelAndView.addObject("isSelectedInput", false);
-		modelAndView.addObject("files", listViewFile);
-		modelAndView.addObject("pageInfo", pageInfo);
-		modelAndView.addObject("registration", registration);
 
-		return modelAndView;
-	}
-	
-	/*private void updateMetaFile(List<FileMeta> metaFiles, List<File> files) {
-		// TODO Auto-generated method stub
-		for (File file: files) {
-			
-			//FileMeta metaFile = new FileMeta(path, size));
-		}
-	}*/
+        ModelAndView modelAndView = new ModelAndView("FileList");
+        modelAndView.addObject("isSelectedInput", false);
+        modelAndView.addObject("files", listViewFile);
+        modelAndView.addObject("pageInfo", pageInfo);
+        modelAndView.addObject("registration", registration);
 
-	private synchronized List<File> updateFiles(boolean isSelect, List<File> files, List<File> list){
-		if(isSelect){
-			list = addFiles(list, files);
-		}else{
-			list = removeFiles(list, files);
-		}
-		return list;
-	}
-	
-	private List<File> addFiles(List<File> list, List<File> addList){
-		Set<File> temp = new HashSet<>();
-		temp.addAll(list);
-		temp.addAll(addList);
-		
-		List<File> result = Collections.synchronizedList(new LinkedList<File>());
-		result.addAll(temp);
-		
-		return result;
-		/*
-		for(File addFile: addList){
-			boolean isAdd = true;
-			for (File file: list) {
-				if(file.equals(addFile)){
-					isAdd = false;
-					break;
-				}
-			}
-			if(isAdd){
-				list.add(addFile);
-			}
-		}
-	*/
-//		if(!list.contains(addFile)){
-		//		list.add(addFile);
-		//	}
-	//	return list;
-	}
-	
-	private List<File> removeFiles(List<File> list, List<File> removeList){
-	//	list.removeAll(removeList);
-		for (File removefile : removeList) {
-			list.remove(removefile);
-		/*	boolean isRemove = false;
-			for(File file: list){
-				if(file.equals(removefile)){
-					isRemove = true;
-				}
-			}
-			if(isRemove){
-				list.remove(removefile);
-			}
-		*/
-		}
-		return list;
-	}
-	
-	private void setSelectedIds(HttpServletRequest request, String typeNode, String selectedIds){
-		HttpSession	session	= request.getSession(false);
-		if(typeNode.equals("study")){
-			session.setAttribute("selectedIds", selectedIds);
-		}
-		if(typeNode.equals("analisys")){
-			session.setAttribute("analysisSelectedIds", selectedIds);
-		}
-	}
-	
-	private void setFiles(HttpServletRequest request, String nameList, List<File> list){
-		HttpSession	session	= request.getSession(false);
-		session.setAttribute(nameList, list);
-	}
+        return modelAndView;
+    }
 
-	/**
-	 * <p>Getter for the field <code>studyService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
-	 */
-	public StudyService getStudyService() {
-		return studyService;
-	}
+    /*
+     * private void updateMetaFile(List<FileMeta> metaFiles, List<File> files) { // TODO Auto-generated method stub for (File file: files) {
+     * 
+     * //FileMeta metaFile = new FileMeta(path, size)); } }
+     */
 
-	/**
-	 * <p>Setter for the field <code>studyService</code>.</p>
-	 *
-	 * @param studyService a {@link net.sourceforge.seqware.common.business.StudyService} object.
-	 */
-	public void setStudyService(StudyService studyService) {
-		this.studyService = studyService;
-	}
+    private synchronized List<File> updateFiles(boolean isSelect, List<File> files, List<File> list) {
+        if (isSelect) {
+            list = addFiles(list, files);
+        } else {
+            list = removeFiles(list, files);
+        }
+        return list;
+    }
 
-	/**
-	 * <p>Getter for the field <code>experimentService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
-	 */
-	public ExperimentService getExperimentService() {
-		return experimentService;
-	}
+    private List<File> addFiles(List<File> list, List<File> addList) {
+        Set<File> temp = new HashSet<>();
+        temp.addAll(list);
+        temp.addAll(addList);
 
-	/**
-	 * <p>Setter for the field <code>experimentService</code>.</p>
-	 *
-	 * @param experimentService a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
-	 */
-	public void setExperimentService(ExperimentService experimentService) {
-		this.experimentService = experimentService;
-	}
+        List<File> result = Collections.synchronizedList(new LinkedList<File>());
+        result.addAll(temp);
 
-	/**
-	 * <p>Getter for the field <code>sampleService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
-	 */
-	public SampleService getSampleService() {
-		return sampleService;
-	}
+        return result;
+        /*
+         * for(File addFile: addList){ boolean isAdd = true; for (File file: list) { if(file.equals(addFile)){ isAdd = false; break; } }
+         * if(isAdd){ list.add(addFile); } }
+         */
+        // if(!list.contains(addFile)){
+        // list.add(addFile);
+        // }
+        // return list;
+    }
 
-	/**
-	 * <p>Setter for the field <code>sampleService</code>.</p>
-	 *
-	 * @param sampleService a {@link net.sourceforge.seqware.common.business.SampleService} object.
-	 */
-	public void setSampleService(SampleService sampleService) {
-		this.sampleService = sampleService;
-	}
+    private List<File> removeFiles(List<File> list, List<File> removeList) {
+        // list.removeAll(removeList);
+        for (File removefile : removeList) {
+            list.remove(removefile);
+            /*
+             * boolean isRemove = false; for(File file: list){ if(file.equals(removefile)){ isRemove = true; } } if(isRemove){
+             * list.remove(removefile); }
+             */
+        }
+        return list;
+    }
 
-	/**
-	 * <p>Getter for the field <code>laneService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
-	 */
-	public LaneService getLaneService() {
-		return laneService;
-	}
+    private void setSelectedIds(HttpServletRequest request, String typeNode, String selectedIds) {
+        HttpSession session = request.getSession(false);
+        if (typeNode.equals("study")) {
+            session.setAttribute("selectedIds", selectedIds);
+        }
+        if (typeNode.equals("analisys")) {
+            session.setAttribute("analysisSelectedIds", selectedIds);
+        }
+    }
 
-	/**
-	 * <p>Setter for the field <code>laneService</code>.</p>
-	 *
-	 * @param laneService a {@link net.sourceforge.seqware.common.business.LaneService} object.
-	 */
-	public void setLaneService(LaneService laneService) {
-		this.laneService = laneService;
-	}
+    private void setFiles(HttpServletRequest request, String nameList, List<File> list) {
+        HttpSession session = request.getSession(false);
+        session.setAttribute(nameList, list);
+    }
 
-	/**
-	 * <p>Getter for the field <code>processingService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
-	 */
-	public ProcessingService getProcessingService() {
-		return processingService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>studyService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.StudyService} object.
+     */
+    public StudyService getStudyService() {
+        return studyService;
+    }
 
-	/**
-	 * <p>Setter for the field <code>processingService</code>.</p>
-	 *
-	 * @param processingService a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
-	 */
-	public void setProcessingService(ProcessingService processingService) {
-		this.processingService = processingService;
-	}
+    /**
+     * <p>
+     * Setter for the field <code>studyService</code>.
+     * </p>
+     * 
+     * @param studyService
+     *            a {@link net.sourceforge.seqware.common.business.StudyService} object.
+     */
+    public void setStudyService(StudyService studyService) {
+        this.studyService = studyService;
+    }
 
-	/**
-	 * <p>Getter for the field <code>fileService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
-	 */
-	public FileService getFileService() {
-		return fileService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>experimentService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+     */
+    public ExperimentService getExperimentService() {
+        return experimentService;
+    }
 
-	/**
-	 * <p>Setter for the field <code>fileService</code>.</p>
-	 *
-	 * @param fileService a {@link net.sourceforge.seqware.common.business.FileService} object.
-	 */
-	public void setFileService(FileService fileService) {
-		this.fileService = fileService;
-	}
+    /**
+     * <p>
+     * Setter for the field <code>experimentService</code>.
+     * </p>
+     * 
+     * @param experimentService
+     *            a {@link net.sourceforge.seqware.common.business.ExperimentService} object.
+     */
+    public void setExperimentService(ExperimentService experimentService) {
+        this.experimentService = experimentService;
+    }
 
-	/**
-	 * <p>Getter for the field <code>workflowRunService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
-	 */
-	public WorkflowRunService getWorkflowRunService() {
-		return workflowRunService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>sampleService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.SampleService} object.
+     */
+    public SampleService getSampleService() {
+        return sampleService;
+    }
 
-	/**
-	 * <p>Setter for the field <code>workflowRunService</code>.</p>
-	 *
-	 * @param workflowRunService a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
-	 */
-	public void setWorkflowRunService(WorkflowRunService workflowRunService) {
-		this.workflowRunService = workflowRunService;
-	}
+    /**
+     * <p>
+     * Setter for the field <code>sampleService</code>.
+     * </p>
+     * 
+     * @param sampleService
+     *            a {@link net.sourceforge.seqware.common.business.SampleService} object.
+     */
+    public void setSampleService(SampleService sampleService) {
+        this.sampleService = sampleService;
+    }
+
+    /**
+     * <p>
+     * Getter for the field <code>laneService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.LaneService} object.
+     */
+    public LaneService getLaneService() {
+        return laneService;
+    }
+
+    /**
+     * <p>
+     * Setter for the field <code>laneService</code>.
+     * </p>
+     * 
+     * @param laneService
+     *            a {@link net.sourceforge.seqware.common.business.LaneService} object.
+     */
+    public void setLaneService(LaneService laneService) {
+        this.laneService = laneService;
+    }
+
+    /**
+     * <p>
+     * Getter for the field <code>processingService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+     */
+    public ProcessingService getProcessingService() {
+        return processingService;
+    }
+
+    /**
+     * <p>
+     * Setter for the field <code>processingService</code>.
+     * </p>
+     * 
+     * @param processingService
+     *            a {@link net.sourceforge.seqware.common.business.ProcessingService} object.
+     */
+    public void setProcessingService(ProcessingService processingService) {
+        this.processingService = processingService;
+    }
+
+    /**
+     * <p>
+     * Getter for the field <code>fileService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.FileService} object.
+     */
+    public FileService getFileService() {
+        return fileService;
+    }
+
+    /**
+     * <p>
+     * Setter for the field <code>fileService</code>.
+     * </p>
+     * 
+     * @param fileService
+     *            a {@link net.sourceforge.seqware.common.business.FileService} object.
+     */
+    public void setFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
+
+    /**
+     * <p>
+     * Getter for the field <code>workflowRunService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+     */
+    public WorkflowRunService getWorkflowRunService() {
+        return workflowRunService;
+    }
+
+    /**
+     * <p>
+     * Setter for the field <code>workflowRunService</code>.
+     * </p>
+     * 
+     * @param workflowRunService
+     *            a {@link net.sourceforge.seqware.common.business.WorkflowRunService} object.
+     */
+    public void setWorkflowRunService(WorkflowRunService workflowRunService) {
+        this.workflowRunService = workflowRunService;
+    }
 }

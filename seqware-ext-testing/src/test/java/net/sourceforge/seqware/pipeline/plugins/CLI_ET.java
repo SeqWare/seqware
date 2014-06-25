@@ -26,17 +26,16 @@ import org.springframework.util.StringUtils;
 /**
  * These tests support the new simplified command-line tools.
  * 
- * Try a few simple commands as a sanity check. 
- *
+ * Try a few simple commands as a sanity check.
+ * 
  * @author dyuen
  */
 public class CLI_ET {
-    
+
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
-    
 
     @Test
     public void runHelp() throws IOException {
@@ -45,14 +44,14 @@ public class CLI_ET {
         Assert.assertTrue("output contains Usage", listOutput.contains("Usage:") && listOutput.contains("Commands:"));
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
     }
-    
+
     @Test
     public void checkVersion() throws IOException {
         String listCommand = "--version";
         String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
         Assert.assertTrue("output does not contain version", listOutput.startsWith("SeqWare version"));
     }
-    
+
     @Test
     public void listBundles() throws IOException {
         String listCommand = " workflow list";
@@ -60,7 +59,7 @@ public class CLI_ET {
         int countOccurrencesOf = StringUtils.countOccurrencesOf(listOutput, "RECORD");
         Assert.assertTrue("incorrect number of expected bundles", countOccurrencesOf == 20);
     }
-    
+
     @Test
     public void workflowRunReport() throws IOException {
         String listCommand = " workflow-run report --accession 6603";

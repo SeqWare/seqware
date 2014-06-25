@@ -24,7 +24,7 @@ import net.sourceforge.seqware.common.model.StudyType;
 import org.apache.commons.lang.StringUtils;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class LaneInfo implements Comparable<LaneInfo> {
@@ -43,7 +43,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of studyTypeAcc
-     *
+     * 
      * @return the value of studyTypeAcc
      */
     public String getStudyTypeAcc() {
@@ -52,8 +52,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of studyTypeAcc
-     *
-     * @param studyTypeAcc new value of studyTypeAcc
+     * 
+     * @param studyTypeAcc
+     *            new value of studyTypeAcc
      */
     public void setStudyTypeAcc(int studyTypeAcc) {
         this.studyTypeAcc = String.valueOf(studyTypeAcc);
@@ -67,11 +68,12 @@ public class LaneInfo implements Comparable<LaneInfo> {
     }
 
     /**
-     * Adds a new lane attribute if the tag does not exist for this lane, or
-     * changes the value of an existing lane attribute.
-     *
-     * @param tag the key of the attribute
-     * @param value the value of the attribute
+     * Adds a new lane attribute if the tag does not exist for this lane, or changes the value of an existing lane attribute.
+     * 
+     * @param tag
+     *            the key of the attribute
+     * @param value
+     *            the value of the attribute
      */
     public void setLaneAttribute(String tag, String value) {
 
@@ -82,7 +84,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
                 break;
             }
         }
-        //if we are unsetting the lane attribute, remove it from the list.
+        // if we are unsetting the lane attribute, remove it from the list.
         if (value == null && sa != null) {
             getLaneAttributes().remove(sa);
             return;
@@ -101,7 +103,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of librarySelectionAcc
-     *
+     * 
      * @return the value of librarySelectionAcc
      */
     public String getLibrarySelectionAcc() {
@@ -110,8 +112,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of librarySelectionAcc
-     *
-     * @param librarySelectionAcc new value of librarySelectionAcc
+     * 
+     * @param librarySelectionAcc
+     *            new value of librarySelectionAcc
      */
     public void setLibrarySelectionAcc(int librarySelectionAcc) {
         this.librarySelectionAcc = String.valueOf(librarySelectionAcc);
@@ -119,7 +122,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of librarySourceAcc
-     *
+     * 
      * @return the value of librarySourceAcc
      */
     public String getLibrarySourceAcc() {
@@ -128,8 +131,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of librarySourceAcc
-     *
-     * @param librarySourceAcc new value of librarySourceAcc
+     * 
+     * @param librarySourceAcc
+     *            new value of librarySourceAcc
      */
     public void setLibrarySourceAcc(int librarySourceAcc) {
         this.librarySourceAcc = String.valueOf(librarySourceAcc);
@@ -137,7 +141,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of libraryStrategyAcc
-     *
+     * 
      * @return the value of libraryStrategyAcc
      */
     public String getLibraryStrategyAcc() {
@@ -146,8 +150,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of libraryStrategyAcc
-     *
-     * @param libraryStrategyAcc new value of libraryStrategyAcc
+     * 
+     * @param libraryStrategyAcc
+     *            new value of libraryStrategyAcc
      */
     public void setLibraryStrategyAcc(int libraryStrategyAcc) {
         this.libraryStrategyAcc = String.valueOf(libraryStrategyAcc);
@@ -155,7 +160,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of samples
-     *
+     * 
      * @return the value of samples
      */
     public Set<SampleInfo> getSamples() {
@@ -167,8 +172,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of samples
-     *
-     * @param samples new value of samples
+     * 
+     * @param samples
+     *            new value of samples
      */
     public void setSamples(Set<SampleInfo> samples) {
         this.samples = samples;
@@ -176,7 +182,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of laneSkip
-     *
+     * 
      * @return the value of laneSkip
      */
     public Boolean getLaneSkip() {
@@ -185,8 +191,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of laneSkip
-     *
-     * @param laneSkip new value of laneSkip
+     * 
+     * @param laneSkip
+     *            new value of laneSkip
      */
     public void setLaneSkip(Boolean laneSkip) {
         this.laneSkip = laneSkip;
@@ -194,7 +201,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of laneCycleDescriptor
-     *
+     * 
      * @return the value of laneCycleDescriptor
      */
     public String getLaneCycleDescriptor() {
@@ -203,8 +210,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of laneCycleDescriptor
-     *
-     * @param laneCycleDescriptor new value of laneCycleDescriptor
+     * 
+     * @param laneCycleDescriptor
+     *            new value of laneCycleDescriptor
      */
     public void setLaneCycleDescriptor(String laneCycleDescriptor) {
         this.laneCycleDescriptor = laneCycleDescriptor;
@@ -212,7 +220,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of laneDescription
-     *
+     * 
      * @return the value of laneDescription
      */
     public String getLaneDescription() {
@@ -221,8 +229,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of laneDescription
-     *
-     * @param laneDescription new value of laneDescription
+     * 
+     * @param laneDescription
+     *            new value of laneDescription
      */
     public void setLaneDescription(String laneDescription) {
         this.laneDescription = laneDescription;
@@ -230,7 +239,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of laneName
-     *
+     * 
      * @return the value of laneName
      */
     public String getLaneName() {
@@ -239,8 +248,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of laneName
-     *
-     * @param laneName new value of laneName
+     * 
+     * @param laneName
+     *            new value of laneName
      */
     public void setLaneName(String laneName) {
         this.laneName = laneName;
@@ -248,7 +258,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Get the value of laneNumber
-     *
+     * 
      * @return the value of laneNumber
      */
     public String getLaneNumber() {
@@ -257,8 +267,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     /**
      * Set the value of laneNumber, and sets the 'geo_lane' attribute.
-     *
-     * @param laneNumber new value of laneNumber
+     * 
+     * @param laneNumber
+     *            new value of laneNumber
      */
     public void setLaneNumber(String laneNumber) {
         setLaneAttribute("geo_lane", laneNumber);
@@ -267,12 +278,9 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     @Override
     public String toString() {
-        return "LaneInfo{" + "\n\tlaneNumber=" + laneNumber
-                + "\n\t laneCycleDescriptor=" + laneCycleDescriptor
-                + "\n\t libraryStrategyAcc=" + libraryStrategyAcc
-                + "\n\t librarySourceAcc=" + librarySourceAcc
-                + "\n\t librarySelectionAcc=" + librarySelectionAcc
-                + "\n\t studyTypeAcc=" + studyTypeAcc + '}';
+        return "LaneInfo{" + "\n\tlaneNumber=" + laneNumber + "\n\t laneCycleDescriptor=" + laneCycleDescriptor
+                + "\n\t libraryStrategyAcc=" + libraryStrategyAcc + "\n\t librarySourceAcc=" + librarySourceAcc
+                + "\n\t librarySelectionAcc=" + librarySelectionAcc + "\n\t studyTypeAcc=" + studyTypeAcc + '}';
     }
 
     public void print(Appendable writer, Metadata metadata) throws IOException {
@@ -295,16 +303,16 @@ public class LaneInfo implements Comparable<LaneInfo> {
         }
         writer.append("\n\t}");
     }
-    
+
     @Override
-    public int compareTo(LaneInfo otherLane){
+    public int compareTo(LaneInfo otherLane) {
         int i;
         i = Integer.parseInt(this.laneNumber) - Integer.parseInt(otherLane.getLaneNumber());
-        if(i != 0){
+        if (i != 0) {
             return i;
         }
         i = this.laneName.compareTo(otherLane.laneName);
-        if(i !=0){
+        if (i != 0) {
             return i;
         }
         i = this.laneDescription.compareTo(otherLane.laneDescription);

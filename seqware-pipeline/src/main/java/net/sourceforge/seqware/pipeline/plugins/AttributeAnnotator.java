@@ -46,122 +46,135 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * <p>AttributeAnnotator class.</p>
- *
+ * <p>
+ * AttributeAnnotator class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 @ServiceProvider(service = PluginInterface.class)
 public class AttributeAnnotator extends Plugin {
 
-  ReturnValue ret = new ReturnValue();
+    ReturnValue ret = new ReturnValue();
 
-  /**
-   * <p>Constructor for AttributeAnnotator.</p>
-   */
-  public AttributeAnnotator() {
-    super();
-    parser.acceptsAll(Arrays.asList("sequencer-run-accession", "sr"),
-        "The SWID of the sequencer run to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("lane-accession", "l"),
-        "The SWID of the Lane to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("ius-accession", "i"),
-        "The SWID of the IUS to annotate. One of the -accession options is required.").withRequiredArg();
+    /**
+     * <p>
+     * Constructor for AttributeAnnotator.
+     * </p>
+     */
+    public AttributeAnnotator() {
+        super();
+        parser.acceptsAll(Arrays.asList("sequencer-run-accession", "sr"),
+                "The SWID of the sequencer run to annotate. One of the -accession options is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("lane-accession", "l"),
+                "The SWID of the Lane to annotate. One of the -accession options is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("ius-accession", "i"),
+                "The SWID of the IUS to annotate. One of the -accession options is required.").withRequiredArg();
 
-    parser.acceptsAll(Arrays.asList("experiment-accession", "e"),
-        "The SWID of the Experiment to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("processing-accession", "p"),
-        "The SWID of the Processing to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("sample-accession", "s"),
-        "The SWID of the Sample to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("study-accession", "st"),
-        "The SWID of the Study to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("workflow-accession", "w"),
-        "The SWID of the workflow to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("workflow-run-accession", "wr"),
-        "The SWID of the workflow run to annotate. One of the -accession options is required.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("file-accession", "f"),
-        "The SWID of the file to annotate. One of the -accession options is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("experiment-accession", "e"),
+                "The SWID of the Experiment to annotate. One of the -accession options is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("processing-accession", "p"),
+                "The SWID of the Processing to annotate. One of the -accession options is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("sample-accession", "s"),
+                "The SWID of the Sample to annotate. One of the -accession options is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("study-accession", "st"),
+                "The SWID of the Study to annotate. One of the -accession options is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("workflow-accession", "w"),
+                "The SWID of the workflow to annotate. One of the -accession options is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("workflow-run-accession", "wr"),
+                "The SWID of the workflow run to annotate. One of the -accession options is required.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("file-accession", "f"),
+                "The SWID of the file to annotate. One of the -accession options is required.").withRequiredArg();
 
-    parser.accepts("file", "The CSV file for bulk insert").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("skip"),
-        "Optional: Sets the 'skip' flag to either true or false for sequencer-run, lane, ius, or sample only.")
-        .withRequiredArg();
-    parser.acceptsAll(Arrays.asList("key"),
-        "Optional: The field that defines this attribute. The default value is 'skip'.").withRequiredArg();
-    parser.acceptsAll(Arrays.asList("value"),
-        "Optional: The description of this field. If not specified, no attribute will be created.").withRequiredArg();
+        parser.accepts("file", "The CSV file for bulk insert").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("skip"),
+                "Optional: Sets the 'skip' flag to either true or false for sequencer-run, lane, ius, or sample only.").withRequiredArg();
+        parser.acceptsAll(Arrays.asList("key"), "Optional: The field that defines this attribute. The default value is 'skip'.")
+                .withRequiredArg();
+        parser.acceptsAll(Arrays.asList("value"),
+                "Optional: The description of this field. If not specified, no attribute will be created.").withRequiredArg();
 
-    ret.setExitStatus(ReturnValue.SUCCESS);
-  }
-
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public ReturnValue init() {
-    return ret;
-  }
-
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public ReturnValue do_test() {
-    return ret;
-  }
-
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public ReturnValue do_run() {
-
-    // Key/Value pair
-    String key = "skip", value = "";
-    boolean hasKey = options.has("key");
-    boolean hasValue = options.has("value");
-    if (hasKey) {
-      key = (String) options.valueOf("key");
-      // SEQWARE-1678 a key cannot be inserted without a value
-      if (!hasValue){
-          println("Combination of parameters not recognized!");
-          println(this.get_syntax());
-          ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-      }
-    }
-    if (hasValue) {
-      value = (String) options.valueOf("value");
+        ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    if (options.has("file")) {
-      this.bulkInsert();
-
-      return ret;
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public ReturnValue init() {
+        return ret;
     }
 
-    // skip
-    Boolean skip = null;
-    boolean hasSkip = options.has("skip");
-    if (hasSkip) {
-      skip = Boolean.parseBoolean((String) options.valueOf("skip"));
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public ReturnValue do_test() {
+        return ret;
     }
-    
-    boolean hasSequencerRun = options.has("sequencer-run-accession");
-    boolean hasLane = options.has("lane-accession");
-    boolean hasIus = options.has("ius-accession");
-    boolean hasExperimentAccession = options.has("experiment-accession");
-    boolean hasProcessingAccession = options.has("processing-accession");
-    boolean hasSampleAccession = options.has("sample-accession");
-    boolean hasStudyAccession = options.has("study-accession");
-    boolean hasWorkflowAccession = options.has("workflow-accession");
-    boolean hasWorkflowRunAccession = options.has("workflow-run-accession");
-    boolean hasFileAccession = options.has("file-accession");
 
-      if (hasSkip && (hasExperimentAccession || hasProcessingAccession || hasStudyAccession || hasWorkflowAccession || hasWorkflowRunAccession)) {
-          println("Combination of parameters not recognized!");
-          println(this.get_syntax());
-          ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-          return ret;
-      }
-    
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public ReturnValue do_run() {
+
+        // Key/Value pair
+        String key = "skip", value = "";
+        boolean hasKey = options.has("key");
+        boolean hasValue = options.has("value");
+        if (hasKey) {
+            key = (String) options.valueOf("key");
+            // SEQWARE-1678 a key cannot be inserted without a value
+            if (!hasValue) {
+                println("Combination of parameters not recognized!");
+                println(this.get_syntax());
+                ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            }
+        }
+        if (hasValue) {
+            value = (String) options.valueOf("value");
+        }
+
+        if (options.has("file")) {
+            this.bulkInsert();
+
+            return ret;
+        }
+
+        // skip
+        Boolean skip = null;
+        boolean hasSkip = options.has("skip");
+        if (hasSkip) {
+            skip = Boolean.parseBoolean((String) options.valueOf("skip"));
+        }
+
+        boolean hasSequencerRun = options.has("sequencer-run-accession");
+        boolean hasLane = options.has("lane-accession");
+        boolean hasIus = options.has("ius-accession");
+        boolean hasExperimentAccession = options.has("experiment-accession");
+        boolean hasProcessingAccession = options.has("processing-accession");
+        boolean hasSampleAccession = options.has("sample-accession");
+        boolean hasStudyAccession = options.has("study-accession");
+        boolean hasWorkflowAccession = options.has("workflow-accession");
+        boolean hasWorkflowRunAccession = options.has("workflow-run-accession");
+        boolean hasFileAccession = options.has("file-accession");
+
+        if (hasSkip
+                && (hasExperimentAccession || hasProcessingAccession || hasStudyAccession || hasWorkflowAccession || hasWorkflowRunAccession)) {
+            println("Combination of parameters not recognized!");
+            println(this.get_syntax());
+            ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+            return ret;
+        }
+
         try {
             if (hasSequencerRun) {
                 Integer sequencerRunSWID = Integer.parseInt((String) options.valueOf("sequencer-run-accession"));
@@ -282,231 +295,235 @@ public class AttributeAnnotator extends Plugin {
         return ret;
     }
 
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public ReturnValue clean_up() {
-    return ret;
-  }
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public ReturnValue clean_up() {
+        return ret;
+    }
 
-  /** {@inheritDoc}
-     * @return  */
-  @Override
-  public String get_description() {
-    return "Experimental plugin. Allows the annotation of objects in the database with 'skip' values.";
-  }
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
+    @Override
+    public String get_description() {
+        return "Experimental plugin. Allows the annotation of objects in the database with 'skip' values.";
+    }
 
-  private boolean parseFile(Map<String, Map<String, Map<String, String>>> bulkMap) {
-    String filepath = (String) options.valueOf("file");
-    File file = new File(filepath);
-    try {
-      BufferedReader freader = new BufferedReader(new FileReader(file));
-      String line = null;
-      while ((line = freader.readLine()) != null) {
-        String[] args = line.split(",");
-        if (!checkArgs(args))
-          return false;
-        Map<String, Map<String, String>> types = bulkMap.get(args[0]);
-        if (types == null) {
-          types = new HashMap<>();
-          bulkMap.put(args[0], types);
+    private boolean parseFile(Map<String, Map<String, Map<String, String>>> bulkMap) {
+        String filepath = (String) options.valueOf("file");
+        File file = new File(filepath);
+        try {
+            BufferedReader freader = new BufferedReader(new FileReader(file));
+            String line = null;
+            while ((line = freader.readLine()) != null) {
+                String[] args = line.split(",");
+                if (!checkArgs(args)) return false;
+                Map<String, Map<String, String>> types = bulkMap.get(args[0]);
+                if (types == null) {
+                    types = new HashMap<>();
+                    bulkMap.put(args[0], types);
+                }
+                Map<String, String> ids = types.get(args[1]);
+                if (ids == null) {
+                    ids = new LinkedHashMap<>();
+                    types.put(args[1], ids);
+                }
+                ids.put(args[2], args[3]);
+            }
+            freader.close();
+        } catch (FileNotFoundException e) {
+            Log.error("Input file was not found", e);
+            return false;
+        } catch (IOException ex) {
+            Log.error("IOException", ex);
+            return false;
         }
-        Map<String, String> ids = types.get(args[1]);
-        if (ids == null) {
-          ids = new LinkedHashMap<>();
-          types.put(args[1], ids);
+        return true;
+    }
+
+    private boolean checkArgs(String[] args) {
+        if (args.length != 4) return false;
+        try {
+            Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            return false;
         }
-        ids.put(args[2], args[3]);
-      }
-      freader.close();
-    } catch (FileNotFoundException e) {
-      Log.error("Input file was not found", e);
-      return false;
-    } catch (IOException ex) {
-      Log.error("IOException", ex);
-      return false;
+        return true;
     }
-    return true;
-  }
 
-  private boolean checkArgs(String[] args) {
-    if (args.length != 4)
-      return false;
-    try {
-      Integer.parseInt(args[1]);
-    } catch (NumberFormatException e) {
-      return false;
-    }
-    return true;
-  }
-
-  private void bulkInsert() {
-    Map<String, Map<String, Map<String, String>>> bulkMap = new HashMap<>();
-    if (this.parseFile(bulkMap)) {
-      for (Map.Entry<String, Map<String, Map<String, String>>> entry : bulkMap.entrySet()) {
-        if (entry.getKey().equals("w") || entry.getKey().equals("workflow-accesion")) {
-          this.bulkInsertWorkflow(entry.getValue());
+    private void bulkInsert() {
+        Map<String, Map<String, Map<String, String>>> bulkMap = new HashMap<>();
+        if (this.parseFile(bulkMap)) {
+            for (Map.Entry<String, Map<String, Map<String, String>>> entry : bulkMap.entrySet()) {
+                if (entry.getKey().equals("w") || entry.getKey().equals("workflow-accesion")) {
+                    this.bulkInsertWorkflow(entry.getValue());
+                }
+                if (entry.getKey().equals("wr") || entry.getKey().equals("workflow-run-accession")) {
+                    this.bulkInsertWorkflowRun(entry.getValue());
+                }
+                if (entry.getKey().equals("sr") || entry.getKey().equals("sequencer-run-accession")) {
+                    this.bulkInsertSequencerRun(entry.getValue());
+                }
+                if (entry.getKey().equals("l") || entry.getKey().equals("lane-accession")) {
+                    this.bulkInsertLane(entry.getValue());
+                }
+                if (entry.getKey().equals("i") || entry.getKey().equals("ius-accession")) {
+                    this.bulkInsertIUS(entry.getValue());
+                }
+                if (entry.getKey().equals("e") || entry.getKey().equals("experiment-accession")) {
+                    this.bulkInsertExperiment(entry.getValue());
+                }
+                if (entry.getKey().equals("st") || entry.getKey().equals("study-accession")) {
+                    this.bulkInsertStudy(entry.getValue());
+                }
+                if (entry.getKey().equals("p") || entry.getKey().equals("processing-accession")) {
+                    this.bulkInsertProcessing(entry.getValue());
+                }
+                if (entry.getKey().equals("s") || entry.getKey().equals("sample-accession")) {
+                    this.bulkInsertSample(entry.getValue());
+                }
+            }
         }
-        if (entry.getKey().equals("wr") || entry.getKey().equals("workflow-run-accession")) {
-          this.bulkInsertWorkflowRun(entry.getValue());
+    }
+
+    private void bulkInsertSample(Map<String, Map<String, String>> wmap) {
+        for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
+            Integer swid = Integer.parseInt((String) entry.getKey());
+            Map<String, String> keyvalueMap = entry.getValue();
+            Set<SampleAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+                SampleAttribute a = new SampleAttribute();
+                a.setTag(entry2.getKey());
+                a.setValue(entry2.getValue());
+                atts.add(a);
+            }
+            metadata.annotateSample(swid, atts);
         }
-        if (entry.getKey().equals("sr") || entry.getKey().equals("sequencer-run-accession")) {
-          this.bulkInsertSequencerRun(entry.getValue());
+    }
+
+    private void bulkInsertProcessing(Map<String, Map<String, String>> wmap) {
+        for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
+            Integer swid = Integer.parseInt((String) entry.getKey());
+            Map<String, String> keyvalueMap = entry.getValue();
+            Set<ProcessingAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+                ProcessingAttribute a = new ProcessingAttribute();
+                a.setTag(entry2.getKey());
+                a.setValue(entry2.getValue());
+                atts.add(a);
+            }
+            metadata.annotateProcessing(swid, atts);
         }
-        if (entry.getKey().equals("l") || entry.getKey().equals("lane-accession")) {
-          this.bulkInsertLane(entry.getValue());
+    }
+
+    private void bulkInsertStudy(Map<String, Map<String, String>> wmap) {
+        for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
+            Integer swid = Integer.parseInt((String) entry.getKey());
+            Map<String, String> keyvalueMap = entry.getValue();
+            Set<StudyAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+                StudyAttribute a = new StudyAttribute();
+                a.setTag(entry2.getKey());
+                a.setValue(entry2.getValue());
+                atts.add(a);
+            }
+            metadata.annotateStudy(swid, atts);
         }
-        if (entry.getKey().equals("i") || entry.getKey().equals("ius-accession")) {
-          this.bulkInsertIUS(entry.getValue());
+    }
+
+    private void bulkInsertIUS(Map<String, Map<String, String>> wmap) {
+        for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
+            Integer swid = Integer.parseInt((String) entry.getKey());
+            Map<String, String> keyvalueMap = entry.getValue();
+            Set<IUSAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+                IUSAttribute a = new IUSAttribute();
+                a.setTag(entry2.getKey());
+                a.setValue(entry2.getValue());
+                atts.add(a);
+            }
+            metadata.annotateIUS(swid, atts);
         }
-        if (entry.getKey().equals("e") || entry.getKey().equals("experiment-accession")) {
-          this.bulkInsertExperiment(entry.getValue());
+    }
+
+    private void bulkInsertExperiment(Map<String, Map<String, String>> wmap) {
+        for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
+            Integer swid = Integer.parseInt((String) entry.getKey());
+            Map<String, String> keyvalueMap = entry.getValue();
+            Set<ExperimentAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+                ExperimentAttribute a = new ExperimentAttribute();
+                a.setTag(entry2.getKey());
+                a.setValue(entry2.getValue());
+                atts.add(a);
+            }
+            metadata.annotateExperiment(swid, atts);
         }
-        if (entry.getKey().equals("st") || entry.getKey().equals("study-accession")) {
-          this.bulkInsertStudy(entry.getValue());
+    }
+
+    private void bulkInsertLane(Map<String, Map<String, String>> wmap) {
+        for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
+            Integer swid = Integer.parseInt((String) entry.getKey());
+            Map<String, String> keyvalueMap = entry.getValue();
+            Set<LaneAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+                LaneAttribute a = new LaneAttribute();
+                a.setTag(entry2.getKey());
+                a.setValue(entry2.getValue());
+                atts.add(a);
+            }
+            metadata.annotateLane(swid, atts);
         }
-        if (entry.getKey().equals("p") || entry.getKey().equals("processing-accession")) {
-          this.bulkInsertProcessing(entry.getValue());
+    }
+
+    private void bulkInsertSequencerRun(Map<String, Map<String, String>> wmap) {
+        for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
+            Integer swid = Integer.parseInt((String) entry.getKey());
+            Map<String, String> keyvalueMap = entry.getValue();
+            Set<SequencerRunAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+                SequencerRunAttribute a = new SequencerRunAttribute();
+                a.setTag(entry2.getKey());
+                a.setValue(entry2.getValue());
+                atts.add(a);
+            }
+            metadata.annotateSequencerRun(swid, atts);
         }
-        if (entry.getKey().equals("s") || entry.getKey().equals("sample-accession")) {
-          this.bulkInsertSample(entry.getValue());
+    }
+
+    private void bulkInsertWorkflow(Map<String, Map<String, String>> wmap) {
+        for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
+            Integer swid = Integer.parseInt((String) entry.getKey());
+            Map<String, String> keyvalueMap = entry.getValue();
+            Set<WorkflowAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+                WorkflowAttribute a = new WorkflowAttribute();
+                a.setTag(entry2.getKey());
+                a.setValue(entry2.getValue());
+                atts.add(a);
+            }
+            metadata.annotateWorkflow(swid, atts);
         }
-      }
     }
-  }
 
-  private void bulkInsertSample(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<SampleAttribute> atts = new TreeSet<>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        SampleAttribute a = new SampleAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateSample(swid, atts);
+    private void bulkInsertWorkflowRun(Map<String, Map<String, String>> wmap) {
+        for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
+            Integer swid = Integer.parseInt((String) entry.getKey());
+            Map<String, String> keyvalueMap = entry.getValue();
+            Set<WorkflowRunAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+                WorkflowRunAttribute a = new WorkflowRunAttribute();
+                a.setTag(entry2.getKey());
+                a.setValue(entry2.getValue());
+                atts.add(a);
+            }
+            metadata.annotateWorkflowRun(swid, atts);
+        }
     }
-  }
-
-  private void bulkInsertProcessing(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<ProcessingAttribute> atts = new TreeSet<>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        ProcessingAttribute a = new ProcessingAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateProcessing(swid, atts);
-    }
-  }
-
-  private void bulkInsertStudy(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<StudyAttribute> atts = new TreeSet<>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        StudyAttribute a = new StudyAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateStudy(swid, atts);
-    }
-  }
-
-  private void bulkInsertIUS(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<IUSAttribute> atts = new TreeSet<>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        IUSAttribute a = new IUSAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateIUS(swid, atts);
-    }
-  }
-
-  private void bulkInsertExperiment(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<ExperimentAttribute> atts = new TreeSet<>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        ExperimentAttribute a = new ExperimentAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateExperiment(swid, atts);
-    }
-  }
-
-  private void bulkInsertLane(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<LaneAttribute> atts = new TreeSet<>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        LaneAttribute a = new LaneAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateLane(swid, atts);
-    }
-  }
-
-  private void bulkInsertSequencerRun(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<SequencerRunAttribute> atts = new TreeSet<>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        SequencerRunAttribute a = new SequencerRunAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateSequencerRun(swid, atts);
-    }
-  }
-
-  private void bulkInsertWorkflow(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<WorkflowAttribute> atts = new TreeSet<>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        WorkflowAttribute a = new WorkflowAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateWorkflow(swid, atts);
-    }
-  }
-
-  private void bulkInsertWorkflowRun(Map<String, Map<String, String>> wmap) {
-    for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-      Integer swid = Integer.parseInt((String) entry.getKey());
-      Map<String, String> keyvalueMap = entry.getValue();
-      Set<WorkflowRunAttribute> atts = new TreeSet<>();
-      for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-        WorkflowRunAttribute a = new WorkflowRunAttribute();
-        a.setTag(entry2.getKey());
-        a.setValue(entry2.getValue());
-        atts.add(a);
-      }
-      metadata.annotateWorkflowRun(swid, atts);
-    }
-  }
 }

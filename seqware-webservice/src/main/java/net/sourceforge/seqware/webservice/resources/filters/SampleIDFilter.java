@@ -37,40 +37,44 @@ import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 
 /**
- * <p>SampleIDFilter class.</p>
- *
+ * <p>
+ * SampleIDFilter class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class SampleIDFilter extends BasicResource {
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
-        //String path = getRequest().getResourceRef().getPath();getAttribute();
+        // String path = getRequest().getResourceRef().getPath();getAttribute();
         Collection<Sample> samples = null;
         Map<String, Object> requestAttributes = getRequestAttributes();
         if (requestAttributes.containsKey("experimentId")) {
             Object val = requestAttributes.get("experimentId");
             if (val != null) {
                 ExperimentService es = BeanFactory.getExperimentServiceBean();
-                Experiment s = (Experiment)testIfNull(es.findBySWAccession(parseClientInt(val.toString())));
+                Experiment s = (Experiment) testIfNull(es.findBySWAccession(parseClientInt(val.toString())));
                 samples = (SortedSet<Sample>) testIfNull(s.getSamples());
             }
         } else if (requestAttributes.containsKey("parentId")) {
             Object val = requestAttributes.get("parentId");
             if (val != null) {
                 SampleService es = BeanFactory.getSampleServiceBean();
-                Sample s = (Sample)testIfNull(es.findBySWAccession(parseClientInt(val.toString())));
+                Sample s = (Sample) testIfNull(es.findBySWAccession(parseClientInt(val.toString())));
                 samples = (Set<Sample>) testIfNull(s.getChildren());
             }
         } else if (requestAttributes.containsKey("childId")) {
             Object val = requestAttributes.get("childId");
             if (val != null) {
                 SampleService es = BeanFactory.getSampleServiceBean();
-                Sample s = (Sample)testIfNull(es.findBySWAccession(parseClientInt(val.toString())));
+                Sample s = (Sample) testIfNull(es.findBySWAccession(parseClientInt(val.toString())));
                 samples = (Set<Sample>) testIfNull(s.getParents());
             }
         } else {
@@ -80,11 +84,11 @@ public class SampleIDFilter extends BasicResource {
             }
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "This resource cannot handle these data types: " + sb.toString());
         }
-        
+
         if (samples.isEmpty()) {
             throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "There are no samples for this resource");
         }
-        
+
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<SampleList> jaxbTool = new JaxbObject<>();
 

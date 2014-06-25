@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.restlet.resource.ClientResource;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public abstract class AbstractResourceTest {
@@ -37,15 +37,15 @@ public abstract class AbstractResourceTest {
         this.relativeURI = relativeURI;
     }
 
-//    @BeforeClass
-//    public static void setUpClass() throws Exception {
-//        SeqWareWebServiceMain.main(null);
-//    }
-//
-//    @AfterClass
-//    public static void tearDownClass() throws Exception {
-//        SeqWareWebServiceMain.stop();
-//    }
+    // @BeforeClass
+    // public static void setUpClass() throws Exception {
+    // SeqWareWebServiceMain.main(null);
+    // }
+    //
+    // @AfterClass
+    // public static void tearDownClass() throws Exception {
+    // SeqWareWebServiceMain.stop();
+    // }
     @Before
     public void setUp() {
         resource = ClientResourceInstance.getChild(relativeURI);
@@ -58,9 +58,7 @@ public abstract class AbstractResourceTest {
             if (resource.getResponse() != null && resource.getResponse().getEntity() != null) {
                 resource.getResponse().getEntity().exhaust();
                 resource.getResponse().getEntity().release();
-            }
-            else
-            {
+            } else {
                 logger.debug("No response or entity to exhaust");
             }
         } catch (IOException ex) {

@@ -22,24 +22,24 @@ import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class UserPhase2 {
-        
+
     public static final String EXPERIMENT = "experiment";
-    
+
     @Test
-    public void createExperimentAndLinkToStudy() throws IOException{
+    public void createExperimentAndLinkToStudy() throws IOException {
         String output = runCreateExperimentAndLinkStudy();
-        String sw_accession  = String.valueOf(ITUtility.extractSwid(output));
+        String sw_accession = String.valueOf(ITUtility.extractSwid(output));
         AccessionMap.accessionMap.put(EXPERIMENT, sw_accession);
     }
 
     protected String runCreateExperimentAndLinkStudy() throws IOException {
         String output = ITUtility.runSeqWareJar(" -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --table experiment "
-                + "--create --field title::New Test Experiment --field description::This is a test description --field study_accession::"+AccessionMap.accessionMap.get(UserPhase1.STUDY) +" --field platform_id::26", 
-                ReturnValue.SUCCESS, null);
-        return output;     
+                + "--create --field title::New Test Experiment --field description::This is a test description --field study_accession::"
+                + AccessionMap.accessionMap.get(UserPhase1.STUDY) + " --field platform_id::26", ReturnValue.SUCCESS, null);
+        return output;
     }
 }

@@ -37,74 +37,73 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
 /**
- *
+ * 
  * @author dyuen
  */
 public class ITUtility {
-    
+
     /**
-     * Run the new SeqWare simplified command-line script given a particular set of parameters and check for an 
-     * expected return value.
+     * Run the new SeqWare simplified command-line script given a particular set of parameters and check for an expected return value.
      * 
-     * @param parameters 
-     * @param expectedReturnValue this will be checked via a JUnit assert
-     * @param workingDir
-     * @return
-     * @throws IOException 
-     */
-    public static String runSeqwareCLI(String parameters, int expectedReturnValue, File workingDir) throws IOException{
-        File script = retrieveCompiledSeqwareScript();
-        script.setExecutable(true);
-                
-        if (workingDir == null){
-            workingDir = Files.createTempDir();
-            workingDir.deleteOnExit();
-        }
- 
-        String line = "bash " + script.getAbsolutePath() + " " + parameters;
-        String output = runArbitraryCommand(line, expectedReturnValue, workingDir);
-        return output;
-    }
-    
-    /**
-     * Run the SeqWare jar given a particular set of parameters and check for an
-     * expected return value.
-     *
-     * The beauty of this approach is that we can later move this out into its
-     * own class, create an interface, and then we can reuse the same tests
-     * running against our code directly rather than through a jar, so we can
-     * compute code coverage and the like.
-     *
      * @param parameters
      * @param expectedReturnValue
-     * @param workingDir null, if caller does not care about the working directory
-     * @return 
+     *            this will be checked via a JUnit assert
+     * @param workingDir
+     * @return
      * @throws IOException
      */
-    public static String runSeqWareJar(String parameters, int expectedReturnValue, File workingDir) throws IOException {
-        File jar = retrieveFullAssembledJar();
-        
-        Properties props = new Properties();
-        props.load(ITUtility.class.getClassLoader().getResourceAsStream("project.properties"));
-        String itCoverageAgent = (String) props.get("itCoverageAgent");
-        
-        if (workingDir == null){
+    public static String runSeqwareCLI(String parameters, int expectedReturnValue, File workingDir) throws IOException {
+        File script = retrieveCompiledSeqwareScript();
+        script.setExecutable(true);
+
+        if (workingDir == null) {
             workingDir = Files.createTempDir();
             workingDir.deleteOnExit();
         }
-        
-        String line = "java "+itCoverageAgent+" -jar " + jar.getAbsolutePath() + " " + parameters;
+
+        String line = "bash " + script.getAbsolutePath() + " " + parameters;
         String output = runArbitraryCommand(line, expectedReturnValue, workingDir);
         return output;
     }
 
     /**
-     *
-     * @param seqTargetDir the value of seqTargetDir
+     * Run the SeqWare jar given a particular set of parameters and check for an expected return value.
+     * 
+     * The beauty of this approach is that we can later move this out into its own class, create an interface, and then we can reuse the
+     * same tests running against our code directly rather than through a jar, so we can compute code coverage and the like.
+     * 
+     * @param parameters
+     * @param expectedReturnValue
+     * @param workingDir
+     *            null, if caller does not care about the working directory
+     * @return
+     * @throws IOException
+     */
+    public static String runSeqWareJar(String parameters, int expectedReturnValue, File workingDir) throws IOException {
+        File jar = retrieveFullAssembledJar();
+
+        Properties props = new Properties();
+        props.load(ITUtility.class.getClassLoader().getResourceAsStream("project.properties"));
+        String itCoverageAgent = (String) props.get("itCoverageAgent");
+
+        if (workingDir == null) {
+            workingDir = Files.createTempDir();
+            workingDir.deleteOnExit();
+        }
+
+        String line = "java " + itCoverageAgent + " -jar " + jar.getAbsolutePath() + " " + parameters;
+        String output = runArbitraryCommand(line, expectedReturnValue, workingDir);
+        return output;
+    }
+
+    /**
+     * 
+     * @param seqTargetDir
+     *            the value of seqTargetDir
      */
     private static File searchForFullJar(File seqTargetDir) {
         File targetFullJar = null;
-        if (!seqTargetDir.exists()){
+        if (!seqTargetDir.exists()) {
             throw new RuntimeException(seqTargetDir.getAbsolutePath() + " does not exist!");
         }
         for (File files : seqTargetDir.listFiles()) {
@@ -126,14 +125,12 @@ public class ITUtility {
     }
 
     /**
-     * This is the hackiest hack in the universe of hacks for getting the final
-     * assembly jar so I can run tests.
-     *
-     * There has got to be a better way of getting the path of the assembled jar
-     * via maven properties or some such. But I really need something to help me
-     * run tests on production bundles
-     *
-     * @return 
+     * This is the hackiest hack in the universe of hacks for getting the final assembly jar so I can run tests.
+     * 
+     * There has got to be a better way of getting the path of the assembled jar via maven properties or some such. But I really need
+     * something to help me run tests on production bundles
+     * 
+     * @return
      */
     protected static File retrieveFullAssembledJar() {
         String workingDir = System.getProperty("user.dir");
@@ -153,10 +150,11 @@ public class ITUtility {
 
     /**
      * Run an arbitrary command and check it against an expected return value
-     *
+     * 
      * @param line
      * @param expectedReturnValue
-     * @param dir working directory, can be null if you don't want to change directories
+     * @param dir
+     *            working directory, can be null if you don't want to change directories
      * @return
      * @throws IOException
      */
@@ -173,7 +171,8 @@ public class ITUtility {
         exec.setExitValue(expectedReturnValue);
         try {
             int exitValue = exec.execute(commandline);
-            Assert.assertTrue("exit value for full jar with no params should be " + expectedReturnValue + " was " + exitValue, exitValue == expectedReturnValue);
+            Assert.assertTrue("exit value for full jar with no params should be " + expectedReturnValue + " was " + exitValue,
+                    exitValue == expectedReturnValue);
             String output = outputStream.toString();
             return output;
         } catch (ExecuteException e) {
@@ -184,15 +183,16 @@ public class ITUtility {
     }
 
     private static Pattern swid = Pattern.compile("SWID\\D*(\\d+)");
-    public static int extractSwid(String s){
-      String[] lines = s.split(System.getProperty("line.separator"));
-      for (String line : lines){
-        Matcher m = swid.matcher(line);
-        if (m.find()){
-          return Integer.parseInt(m.group(1));
+
+    public static int extractSwid(String s) {
+        String[] lines = s.split(System.getProperty("line.separator"));
+        for (String line : lines) {
+            Matcher m = swid.matcher(line);
+            if (m.find()) {
+                return Integer.parseInt(m.group(1));
+            }
         }
-      }
-      throw new RuntimeException("Could not parse SWID from string: "+s);
+        throw new RuntimeException("Could not parse SWID from string: " + s);
     }
 
     public static String extractValueFrom(String listOutput, String key) {
@@ -222,10 +222,10 @@ public class ITUtility {
      */
     public static File retrieveCompiledSeqwareScript() {
         String property = System.getProperty("cliPath");
-        if (property == null){
+        if (property == null) {
             // try PATH
-            File p = new File(System.getProperty("user.home")+ "/bin", "seqware");
-            if (p.exists()){
+            File p = new File(System.getProperty("user.home") + "/bin", "seqware");
+            if (p.exists()) {
                 return p;
             }
             throw new RuntimeException("Could not locate seqware script");

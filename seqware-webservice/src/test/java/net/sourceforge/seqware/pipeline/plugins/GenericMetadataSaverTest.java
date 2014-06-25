@@ -32,9 +32,8 @@ import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
-
 /**
- * Runs the tests for the GenericMetadataSaver plugin 
+ * Runs the tests for the GenericMetadataSaver plugin
  * 
  * @author dyuen
  */
@@ -45,25 +44,22 @@ public class GenericMetadataSaverTest extends PluginTest {
     private Pattern swidPattern = Pattern.compile("SWID: ([\\d]+)");
     private Pattern errorPattern = Pattern.compile("ERROR|error|Error|FATAL|fatal|Fatal|WARN|warn|Warn");
     private PrintStream systemErr = System.err;
-    
-    
+
     /**
-     * This allows us to intercept and ignore the various System.exit calls within runner
-     * so they don't take down the tests as well
+     * This allows us to intercept and ignore the various System.exit calls within runner so they don't take down the tests as well
      */
     @Rule
     public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 
     @BeforeClass
-    public static void beforeClass(){
+    public static void beforeClass() {
         BasicTestDatabaseCreator.resetDatabaseWithUsers();
     }
-    
 
     @Before
     @Override
     public void setUp() {
-        super.setUp();        
+        super.setUp();
         instance = new ModuleRunner();
         instance.setMetadata(metadata);
 
@@ -112,7 +108,7 @@ public class GenericMetadataSaverTest extends PluginTest {
             String s = r.readLine();
             while (s != null) {
                 s = s.trim();
-                //remove any blank lines
+                // remove any blank lines
                 if (s.isEmpty()) {
                     s = r.readLine();
                     continue;
@@ -147,8 +143,6 @@ public class GenericMetadataSaverTest extends PluginTest {
         Assert.assertFalse("Output contains errors:" + s, matcher.find());
     }
 
-    
-
     @Test
     public void testMatcher() {
         String string = "[SeqWare Pipeline] ERROR [2012/11/01 15:53:51] | "
@@ -161,60 +155,64 @@ public class GenericMetadataSaverTest extends PluginTest {
         Assert.assertTrue(match.find());
         Assert.assertEquals("ERROR", match.group(0));
     }
-    
+
     @Test
     public void testSaveNonExistingFileFail() {
         exit.expectSystemExitWithStatus(ReturnValue.FILENOTREADABLE);
-        instance.setParams(Arrays.asList("--module","net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", 
-                "--metadata-parent-accession", "10",
-                "--", "--gms-output-file","text::text/plain::/abcdefghijklmnop/test.txt",
-                "--gms-algorithm","UploadText"));
+        instance.setParams(Arrays.asList("--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver",
+                "--metadata-parent-accession", "10", "--", "--gms-output-file", "text::text/plain::/abcdefghijklmnop/test.txt",
+                "--gms-algorithm", "UploadText"));
         String s = getOut();
         checkExpectedFailure();
     }
 
     @Test
-    public void testSaveNonExistingFile() throws IOException {  
+    public void testSaveNonExistingFile() throws IOException {
         exit.expectSystemExitWithStatus(ReturnValue.SUCCESS);
-        launchPlugin("--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", 
-                "--metadata-parent-accession", "10",
-                "--", "--gms-output-file","text::text/plain::/tmp/abcdefghijklmnop/xyz",
-                "--gms-algorithm","UploadText","--gms-suppress-output-file-check");
+        launchPlugin("--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", "--metadata-parent-accession", "10",
+                "--", "--gms-output-file", "text::text/plain::/tmp/abcdefghijklmnop/xyz", "--gms-algorithm", "UploadText",
+                "--gms-suppress-output-file-check");
         String s = getOut();
         String swid = getAndCheckSwid(s);
         int accession = Integer.valueOf(swid);
         // check that file records and processing were created properly
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
-        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select file_path, meta_type, algorithm from file f, processing_files pf, processing p WHERE f.file_id = pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession == ?", accession);
+        Object[] runQuery = dbCreator
+                .runQuery(
+                        new ArrayHandler(),
+                        "select file_path, meta_type, algorithm from file f, processing_files pf, processing p WHERE f.file_id = pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession == ?",
+                        accession);
         Assert.assertTrue("values not found", runQuery.length == 3);
         Assert.assertTrue("file_path value incorrect", runQuery[0].equals("/tmp/abcdefghijklmnop/xyz"));
         Assert.assertTrue("meta_type value incorrect", runQuery[1].equals("text/plain"));
         Assert.assertTrue("algorithm value incorrect", runQuery[2].equals("UploadText"));
     }
-    
+
     @Test
     public void testSaveExistingFile() throws IOException {
         exit.expectSystemExitWithStatus(ReturnValue.SUCCESS);
         File createTempFile = File.createTempFile("output", "txt");
         createTempFile.createNewFile();
-        
-        launchPlugin("--module","net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", 
-                "--metadata-parent-accession", "10",
-                "--", "--gms-output-file","text::text/plain::"+createTempFile.getAbsolutePath(),
-                "--gms-algorithm","UploadText");
+
+        launchPlugin("--module", "net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver", "--metadata-parent-accession", "10",
+                "--", "--gms-output-file", "text::text/plain::" + createTempFile.getAbsolutePath(), "--gms-algorithm", "UploadText");
         String s = getOut();
         String swid = getAndCheckSwid(s);
         int accession = Integer.valueOf(swid);
         // check that file records and processing were created properly
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
-        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select file_path, meta_type, algorithm from file f, processing_files pf, processing p WHERE f.file_id = pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession == ?", accession);
+        Object[] runQuery = dbCreator
+                .runQuery(
+                        new ArrayHandler(),
+                        "select file_path, meta_type, algorithm from file f, processing_files pf, processing p WHERE f.file_id = pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession == ?",
+                        accession);
         Assert.assertTrue("values not found", runQuery.length == 3);
         Assert.assertTrue("file_path value incorrect", runQuery[0].equals(createTempFile.getAbsolutePath()));
         Assert.assertTrue("meta_type value incorrect", runQuery[1].equals("text/plain"));
         Assert.assertTrue("algorithm value incorrect", runQuery[2].equals("UploadText"));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////
     private String getAndCheckSwid(String s) throws NumberFormatException {
         Matcher match = swidPattern.matcher(s);
         Assert.assertTrue("SWID not found in output.", match.find());
@@ -223,9 +221,10 @@ public class GenericMetadataSaverTest extends PluginTest {
         Integer.parseInt(swid.trim());
         return swid;
     }
+
     @Rule
     public TestRule watchman = new TestWatcher() {
-        //This doesn't catch logs that are sent to Log4J
+        // This doesn't catch logs that are sent to Log4J
 
         @Override
         protected void succeeded(Description d) {

@@ -26,18 +26,22 @@ import org.restlet.data.Method;
 import org.restlet.data.Status;
 
 /**
- * <p>SequencerRunReportResource class.</p>
- *
+ * <p>
+ * SequencerRunReportResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class SequencerRunReportResource
-        extends BasicRestlet {
+public class SequencerRunReportResource extends BasicRestlet {
 
     /**
-     * <p>Constructor for SequencerRunReportResource.</p>
-     *
-     * @param context a {@link org.restlet.Context} object.
+     * <p>
+     * Constructor for SequencerRunReportResource.
+     * </p>
+     * 
+     * @param context
+     *            a {@link org.restlet.Context} object.
      */
     public SequencerRunReportResource(Context context) {
         super(context);

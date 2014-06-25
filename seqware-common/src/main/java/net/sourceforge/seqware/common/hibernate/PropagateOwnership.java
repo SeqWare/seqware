@@ -21,27 +21,31 @@ import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
- * Should only be used for one query and then discarded and re-instantiated. The
- * Session needs to be open for it to work (InSessionExecution). The list of
- * files is returned as-is, so I make no guarantees on constancy.
- *
+ * Should only be used for one query and then discarded and re-instantiated. The Session needs to be open for it to work
+ * (InSessionExecution). The list of files is returned as-is, so I make no guarantees on constancy.
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class PropagateOwnership {
 
-   private StringBuilder out = new StringBuilder();
-    
+    private StringBuilder out = new StringBuilder();
+
     /**
-     * <p>Constructor for PropagateOwnership.</p>
+     * <p>
+     * Constructor for PropagateOwnership.
+     * </p>
      */
     public PropagateOwnership() {
     }
 
     /**
-     * <p>filesFromStudy.</p>
-     *
-     * @param study a {@link net.sourceforge.seqware.common.model.Study} object.
+     * <p>
+     * filesFromStudy.
+     * </p>
+     * 
+     * @param study
+     *            a {@link net.sourceforge.seqware.common.model.Study} object.
      */
     public void filesFromStudy(Study study) {
         for (Experiment e : study.getExperiments()) {
@@ -113,11 +117,10 @@ public class PropagateOwnership {
             workflowRun = processing.getWorkflowRunByAncestorWorkflowRunId();
         }
 
-
         Registration processingOwner = processing.getOwner();
         Registration workflowRunOwner = workflowRun.getOwner();
 
-        //check processing owner and set if necessary
+        // check processing owner and set if necessary
         if (processingOwner != null && (processingOwner.equals(studyOwner))) {
             Log.stderr("Owner already set for processing SWID " + processing.getSwAccession());
             Log.stderr("\tPreviously set: " + processingOwner.getRegistrationId());
@@ -126,7 +129,7 @@ public class PropagateOwnership {
             processing.setOwner(study.getOwner());
         }
 
-        //check workflow run owner and set if necessary
+        // check workflow run owner and set if necessary
         if (workflowRunOwner != null && (workflowRunOwner.equals(studyOwner))) {
             Log.stderr("Owner already set for workflowRun SWID " + workflowRun.getSwAccession());
             Log.stderr("\tPreviously set: " + workflowRunOwner.getRegistrationId());
@@ -135,7 +138,7 @@ public class PropagateOwnership {
             workflowRun.setOwner(study.getOwner());
         }
 
-        //check file owners and set if necessary
+        // check file owners and set if necessary
         if (processing.getFiles() != null) {
             for (File file : processing.getFiles()) {
                 Registration fileOwner = file.getOwner();

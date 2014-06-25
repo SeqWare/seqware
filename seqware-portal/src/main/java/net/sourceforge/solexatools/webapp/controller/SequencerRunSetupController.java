@@ -1,4 +1,5 @@
 package net.sourceforge.solexatools.webapp.controller;
+
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,88 +17,95 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 
 /**
  * SequencingRunSetupController
- *
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class SequencerRunSetupController extends BaseCommandController {
-	private SequencerRunService sequencerRunService;
+    private SequencerRunService sequencerRunService;
 
-	/**
-	 * <p>Constructor for SequencerRunSetupController.</p>
-	 */
-	public SequencerRunSetupController() {
-		super();
-		setSupportedMethods(new String[] {METHOD_GET});
-	}
+    /**
+     * <p>
+     * Constructor for SequencerRunSetupController.
+     * </p>
+     */
+    public SequencerRunSetupController() {
+        super();
+        setSupportedMethods(new String[] { METHOD_GET });
+    }
 
-	/** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest	 request,
-												 HttpServletResponse response)
-		throws Exception {
+     * @throws java.lang.Exception
+     */
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		Registration registration = Security.getRegistration(request);
-		if(registration == null)
-			return new ModelAndView("redirect:/login.htm");
+        Registration registration = Security.getRegistration(request);
+        if (registration == null) return new ModelAndView("redirect:/login.htm");
 
-		ModelAndView			modelAndView	= null;
-		HashMap<String,String>	model			= new HashMap<>();
-		SequencerRun				sequencerRun		= getRequestedSequencerRun(request);
-		boolean isReport = request.getParameter("report") != null;
+        ModelAndView modelAndView = null;
+        HashMap<String, String> model = new HashMap<>();
+        SequencerRun sequencerRun = getRequestedSequencerRun(request);
+        boolean isReport = request.getParameter("report") != null;
 
-		if (sequencerRun != null) {
-			if (sequencerRun.getStatus() == SequencerRunStatus.Complete) {
-				sequencerRun.setProcess(true);
-			} else {
-				sequencerRun.setProcess(false);
-			}
-			request.setAttribute(getCommandName(), sequencerRun);
-			model.put("strategy", "update");
-			if (!isReport) {
-				modelAndView = new ModelAndView("SequencerRun1", model);
-			} else {
-				modelAndView = new ModelAndView("SequencerRunReport", model);
-			}
-		} else {
-			request.setAttribute(getCommandName(), new SequencerRun());
-			model.put("strategy", "submit");
-			modelAndView = new ModelAndView("SequencerRun1", model);
-		}
-		return modelAndView;
-	}
+        if (sequencerRun != null) {
+            if (sequencerRun.getStatus() == SequencerRunStatus.Complete) {
+                sequencerRun.setProcess(true);
+            } else {
+                sequencerRun.setProcess(false);
+            }
+            request.setAttribute(getCommandName(), sequencerRun);
+            model.put("strategy", "update");
+            if (!isReport) {
+                modelAndView = new ModelAndView("SequencerRun1", model);
+            } else {
+                modelAndView = new ModelAndView("SequencerRunReport", model);
+            }
+        } else {
+            request.setAttribute(getCommandName(), new SequencerRun());
+            model.put("strategy", "submit");
+            modelAndView = new ModelAndView("SequencerRun1", model);
+        }
+        return modelAndView;
+    }
 
-	private SequencerRun getRequestedSequencerRun(HttpServletRequest request) {
-		HttpSession	session		= request.getSession(false);
-		SequencerRun	sequencerRun	= null;
-		String		id			= (String)request.getParameter("sequencerRunID");
+    private SequencerRun getRequestedSequencerRun(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        SequencerRun sequencerRun = null;
+        String id = (String) request.getParameter("sequencerRunID");
 
-		if (id != null) {
-			Integer expID = Integer.parseInt(id);
-			sequencerRun = getSequencerRunService().findByID(expID);
-			session.setAttribute("sequencerRun", sequencerRun);
-		}
+        if (id != null) {
+            Integer expID = Integer.parseInt(id);
+            sequencerRun = getSequencerRunService().findByID(expID);
+            session.setAttribute("sequencerRun", sequencerRun);
+        }
 
-		return sequencerRun;
-	}
+        return sequencerRun;
+    }
 
-	/**
-	 * <p>Getter for the field <code>sequencerRunService</code>.</p>
-	 *
-	 * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
-	 */
-	public SequencerRunService getSequencerRunService() {
-		return sequencerRunService;
-	}
+    /**
+     * <p>
+     * Getter for the field <code>sequencerRunService</code>.
+     * </p>
+     * 
+     * @return a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+     */
+    public SequencerRunService getSequencerRunService() {
+        return sequencerRunService;
+    }
 
-	/**
-	 * <p>Setter for the field <code>sequencerRunService</code>.</p>
-	 *
-	 * @param sequencerRunService a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
-	 */
-	public void setSequencerRunService(SequencerRunService sequencerRunService) {
-		this.sequencerRunService = sequencerRunService;
-	}
+    /**
+     * <p>
+     * Setter for the field <code>sequencerRunService</code>.
+     * </p>
+     * 
+     * @param sequencerRunService
+     *            a {@link net.sourceforge.seqware.common.business.SequencerRunService} object.
+     */
+    public void setSequencerRunService(SequencerRunService sequencerRunService) {
+        this.sequencerRunService = sequencerRunService;
+    }
 }

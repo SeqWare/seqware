@@ -40,15 +40,19 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>SampleResource class.</p>
- *
+ * <p>
+ * SampleResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class SampleResource extends DatabaseResource {
 
     /**
-     * <p>Constructor for SampleResource.</p>
+     * <p>
+     * Constructor for SampleResource.
+     * </p>
      */
     public SampleResource() {
         super("sample");
@@ -63,7 +67,9 @@ public class SampleResource extends DatabaseResource {
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -121,10 +127,14 @@ public class SampleResource extends DatabaseResource {
     }
 
     /**
-     * <p>postJaxb.</p>
-     *
-     * @param entity a {@link org.restlet.representation.Representation} object.
-     * @throws org.restlet.resource.ResourceException if any.
+     * <p>
+     * postJaxb.
+     * </p>
+     * 
+     * @param entity
+     *            a {@link org.restlet.representation.Representation} object.
+     * @throws org.restlet.resource.ResourceException
+     *             if any.
      */
     @Post("xml")
     public void postJaxb(Representation entity) throws ResourceException {
@@ -156,18 +166,18 @@ public class SampleResource extends DatabaseResource {
             }
 
             boolean createExplicitRootSample = false;
-            // SEQWARE-1576, 1724 In this bug, attempting to force a root sample by adding an explicit null 
-            // leads to a weird sample with a null sample id, 
+            // SEQWARE-1576, 1724 In this bug, attempting to force a root sample by adding an explicit null
+            // leads to a weird sample with a null sample id,
             // this seems to be the cause for the two duplicates, ignoring them and triggering an SQL update below
             // we're changing this behaviour to use a empty or null parent set instead
-            if (o.getParents() == null || o.getParents().isEmpty()){
+            if (o.getParents() == null || o.getParents().isEmpty()) {
                 createExplicitRootSample = true;
             } else {
                 SampleService ss = BeanFactory.getSampleServiceBean();
                 HashSet<Sample> parents = new HashSet<>();
                 for (Sample s : o.getParents()) {
-                    // leaving in this guard against these strange sample objects will all null fields 
-                    if (s.getSampleId() != null){
+                    // leaving in this guard against these strange sample objects will all null fields
+                    if (s.getSampleId() != null) {
                         parents.add(ss.findByID(s.getSampleId()));
                     }
                 }
@@ -177,39 +187,38 @@ public class SampleResource extends DatabaseResource {
                 SampleService ss = BeanFactory.getSampleServiceBean();
                 HashSet<Sample> children = new HashSet<>();
                 for (Sample s : o.getChildren()) {
-                        children.add(ss.findByID(s.getSampleId()));
-                    }
+                    children.add(ss.findByID(s.getSampleId()));
+                }
                 o.setChildren(children);
             }
 
-
-            //persist object
+            // persist object
             SampleService service = BeanFactory.getSampleServiceBean();
             Integer swAccession = service.insert(registration, o);
 
             Sample sample = (Sample) testIfNull(service.findBySWAccession(swAccession));
-            
+
             // explicitly create root sample if needed
             if (createExplicitRootSample) {
                 Log.info("Found null parent in sample object, creating explicit root sample in sample_hierarchy");
-                
+
                 Session openSession = BeanFactory.getSessionFactoryBean().openSession();
-                try{ 
-                    Query query = openSession.createSQLQuery("INSERT INTO sample_hierarchy(sample_id, parent_id) VALUES (" + sample.getSampleId() + ",null)");
+                try {
+                    Query query = openSession.createSQLQuery("INSERT INTO sample_hierarchy(sample_id, parent_id) VALUES ("
+                            + sample.getSampleId() + ",null)");
                     query.executeUpdate();
-                } catch(Exception e){
-                     getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
-                     return;
-                }finally{
+                } catch (Exception e) {
+                    getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
+                    return;
+                } finally {
                     openSession.close();
                 }
             }
-            
-            
+
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             Sample detachedSample = copier.hibernate2dto(Sample.class, sample);
-            if (null!=o.getParents()) {
-                for (Sample s: sample.getParents()) {
+            if (null != o.getParents()) {
+                for (Sample s : sample.getParents()) {
                     detachedSample.getParents().add(copier.hibernate2dto(Sample.class, s));
                 }
             }
@@ -226,4 +235,4 @@ public class SampleResource extends DatabaseResource {
         }
 
     }
-    }
+}

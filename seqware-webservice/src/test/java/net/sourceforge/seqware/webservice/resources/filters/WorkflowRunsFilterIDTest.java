@@ -21,7 +21,7 @@ import net.sourceforge.seqware.webservice.resources.AbstractResourceTest;
 import org.restlet.representation.Representation;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class WorkflowRunsFilterIDTest extends AbstractResourceTest {
@@ -88,7 +88,7 @@ public class WorkflowRunsFilterIDTest extends AbstractResourceTest {
             String result = rep.getText();
             rep.exhaust();
             rep.release();
-//            Assert.assertTrue("workflowId is not in representation:" + result, result.contains(workflowId));
+            // Assert.assertTrue("workflowId is not in representation:" + result, result.contains(workflowId));
             Assert.assertTrue("runId is not in representation:" + result, result.contains(runId));
         } catch (Exception e) {
             Assert.fail(e.getMessage());

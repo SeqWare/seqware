@@ -33,38 +33,39 @@ import org.jdom.output.XMLOutputter;
  * @author yongliang
  */
 public class DaxgeneratorV2 {
-    
-	/**
-	 * generate a dax file from the object model
-	 * @param wfdm
-	 * @param output
-	 * @return
-	 */
+
+    /**
+     * generate a dax file from the object model
+     * 
+     * @param wfdm
+     * @param output
+     * @return
+     */
     public ReturnValue generateDax(AbstractWorkflowDataModel wfdm, String output) {
-    	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    	ret = this.createDax(wfdm, output);
-    	return ret;
+        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+        ret = this.createDax(wfdm, output);
+        return ret;
     }
-    
+
     private ReturnValue createDax(AbstractWorkflowDataModel wfdm, String output) {
-    	ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-    	File dax = new File(output);
-    	// write to dax
-    	Document doc = new Document();
-    	try {
-    	    OutputStream out = new FileOutputStream(dax);
-    	    XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-    	    Adag adag = new Adag(wfdm);
-    	    doc.setRootElement(adag.serializeXML());
-    	    serializer.output(doc, out);
-    	    // serializer.output(doc, System.out);
-    	    out.flush();
-    	    out.close();
-    	} catch (IOException e) {
-    	    Log.error(e);
-    	    ret.setExitStatus(ReturnValue.FAILURE);
-    	}
-    	return ret;
+        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+        File dax = new File(output);
+        // write to dax
+        Document doc = new Document();
+        try {
+            OutputStream out = new FileOutputStream(dax);
+            XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
+            Adag adag = new Adag(wfdm);
+            doc.setRootElement(adag.serializeXML());
+            serializer.output(doc, out);
+            // serializer.output(doc, System.out);
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            Log.error(e);
+            ret.setExitStatus(ReturnValue.FAILURE);
+        }
+        return ret;
     }
 
 }

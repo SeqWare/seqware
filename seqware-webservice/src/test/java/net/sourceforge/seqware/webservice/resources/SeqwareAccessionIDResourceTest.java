@@ -20,7 +20,7 @@ import junit.framework.Assert;
 import org.restlet.representation.Representation;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class SeqwareAccessionIDResourceTest extends AbstractResourceTest {

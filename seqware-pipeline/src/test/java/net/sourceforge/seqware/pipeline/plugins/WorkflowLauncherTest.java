@@ -32,10 +32,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- *
+ * 
  * @author dyuen
  */
-@PrepareForTest({WorkflowTools.class, FileTools.class, WorkflowLauncher.class})
+@PrepareForTest({ WorkflowTools.class, FileTools.class, WorkflowLauncher.class })
 @RunWith(PowerMockRunner.class)
 public class WorkflowLauncherTest {
 

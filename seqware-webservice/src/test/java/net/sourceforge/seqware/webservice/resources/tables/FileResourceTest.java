@@ -24,17 +24,16 @@ import org.restlet.representation.Representation;
 import org.w3c.dom.Document;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
-public class FileResourceTest extends DatabaseResourceTest
-{
+public class FileResourceTest extends DatabaseResourceTest {
     public FileResourceTest() {
         super("/files");
     }
-    
+
     @Override
-     public void testPost() {
+    public void testPost() {
         System.out.println(getRelativeURI() + " POST");
         Representation rep = null;
         try {
@@ -42,7 +41,7 @@ public class FileResourceTest extends DatabaseResourceTest
             file.setDescription("test test");
             file.setFilePath("http://testing.my.file.txt");
             file.setMetaType("txt");
-            
+
             Document doc = XmlTools.marshalToDocument(new JaxbObject<File>(), file);
             rep = resource.post(XmlTools.getRepresentation(doc));
             rep.exhaust();
@@ -52,5 +51,5 @@ public class FileResourceTest extends DatabaseResourceTest
             Assert.fail();
         }
     }
-    
+
 }

@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 import org.junit.Assert;
 
 /**
- *
+ * 
  * @author seqware
  */
 public class TutorialSuite {

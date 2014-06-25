@@ -28,8 +28,10 @@ import net.sourceforge.seqware.common.util.Log;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * <p>SequencerRunReporter class.</p>
- *
+ * <p>
+ * SequencerRunReporter class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
@@ -40,7 +42,9 @@ public class SequencerRunReporter extends Plugin {
     private BufferedWriter writer;
 
     /**
-     * <p>Constructor for SequencerRunReporter.</p>
+     * <p>
+     * Constructor for SequencerRunReporter.
+     * </p>
      */
     public SequencerRunReporter() {
         super();
@@ -48,23 +52,32 @@ public class SequencerRunReporter extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue init() {
 
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue do_test() {
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue do_run() {
         String report = this.metadata.getSequencerRunReport();
@@ -90,22 +103,26 @@ public class SequencerRunReporter extends Plugin {
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public ReturnValue clean_up() {
         return ret;
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public String get_description() {
         return "Prints a tab-delimited file describing the sequencer run, lane, "
                 + "sample, and algorithms run on every IUS in the database. For more "
                 + "information, see see http://seqware.github.com/docs/20-sequencer-run-reporter/";
     }
-    
-    
-    
+
 }

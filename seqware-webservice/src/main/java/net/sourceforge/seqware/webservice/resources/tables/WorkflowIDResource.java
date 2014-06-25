@@ -43,29 +43,38 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * <p>WorkflowIDResource class.</p>
- *
+ * <p>
+ * WorkflowIDResource class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class WorkflowIDResource extends DatabaseIDResource {
 
     /**
-     * <p>Constructor for WorkflowIDResource.</p>
+     * <p>
+     * Constructor for WorkflowIDResource.
+     * </p>
      */
     public WorkflowIDResource() {
         super("workflowId");
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public SeqWareWebServiceApplication getApplication() {
         return (SeqWareWebServiceApplication) super.getApplication();
     }
 
     /**
-     * <p>getXml.</p>
+     * <p>
+     * getXml.
+     * </p>
      */
     @Get
     public void getXml() {
@@ -88,23 +97,26 @@ public class WorkflowIDResource extends DatabaseIDResource {
                 Log.info("Could not be found: workflow params");
             }
         }
-		if (fields.contains("attributes")) {
-			Set<WorkflowAttribute> was = workflow.getWorkflowAttributes();
-			if(was!=null && !was.isEmpty()) {
-				Set<WorkflowAttribute> newwas = new TreeSet<>();
-				for(WorkflowAttribute wa: was) {
-					newwas.add(copier.hibernate2dto(WorkflowAttribute.class,wa));
-				}
-				dto.setWorkflowAttributes(newwas);
-			}
-		}
+        if (fields.contains("attributes")) {
+            Set<WorkflowAttribute> was = workflow.getWorkflowAttributes();
+            if (was != null && !was.isEmpty()) {
+                Set<WorkflowAttribute> newwas = new TreeSet<>();
+                for (WorkflowAttribute wa : was) {
+                    newwas.add(copier.hibernate2dto(WorkflowAttribute.class, wa));
+                }
+                dto.setWorkflowAttributes(newwas);
+            }
+        }
 
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
-    /** {@inheritDoc}
-     * @return  */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public Representation put(Representation entity) {
         authenticate();
@@ -125,7 +137,7 @@ public class WorkflowIDResource extends DatabaseIDResource {
             WorkflowService fs = BeanFactory.getWorkflowServiceBean();
             Workflow workflow = (Workflow) testIfNull(fs.findByID(newWorkflow.getWorkflowId()));
             workflow.givesPermission(registration);
-            //simple types
+            // simple types
             String name = newWorkflow.getName();
             String desc = newWorkflow.getDescription();
             String baseIniFile = newWorkflow.getBaseIniFile();
@@ -138,7 +150,7 @@ public class WorkflowIDResource extends DatabaseIDResource {
             String template = newWorkflow.getTemplate();
             String username = newWorkflow.getUsername();
             String version = newWorkflow.getVersion();
-            //foreign keys
+            // foreign keys
             Registration owner = newWorkflow.getOwner();
 
             workflow.setName(name);
@@ -170,9 +182,9 @@ public class WorkflowIDResource extends DatabaseIDResource {
                 workflow.setOwner(registration);
             }
 
-            if(newWorkflow.getWorkflowAttributes()!=null) {
-              //SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-              this.mergeAttributes(workflow.getWorkflowAttributes(), newWorkflow.getWorkflowAttributes(), workflow);
+            if (newWorkflow.getWorkflowAttributes() != null) {
+                // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
+                this.mergeAttributes(workflow.getWorkflowAttributes(), newWorkflow.getWorkflowAttributes(), workflow);
             }
             fs.update(registration, workflow);
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();

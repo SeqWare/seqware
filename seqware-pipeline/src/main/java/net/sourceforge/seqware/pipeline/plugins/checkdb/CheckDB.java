@@ -44,7 +44,7 @@ import org.rendersnake.HtmlCanvas;
 
 /**
  * A database validation tool for your SeqWare metadb
- *
+ * 
  * @author dyuen ProviderFor(PluginInterface.class)
  * @version $Id: $Id
  */
@@ -52,33 +52,36 @@ import org.rendersnake.HtmlCanvas;
 public final class CheckDB extends Plugin {
     public static final int NUMBER_TO_OUTPUT = 100;
 
-
     /**
-     * <p>Constructor for HelloWorld.</p>
+     * <p>
+     * Constructor for HelloWorld.
+     * </p>
      */
     public CheckDB() {
         super();
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public final ReturnValue init() {
-         try {
+        try {
             HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
             // do a defensive check to see if we have a direct database connection available
-            if (settings.get("SW_DB_SERVER") == null
-                    || settings.get("SW_DB") == null
-                    || settings.get("SW_DB_USER") == null
+            if (settings.get("SW_DB_SERVER") == null || settings.get("SW_DB") == null || settings.get("SW_DB_USER") == null
                     || settings.get("SW_DB_PASS") == null) {
                 ReturnValue ret = new ReturnValue();
-                System.out.println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
+                System.out
+                        .println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
                 ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
                 return (ret);
             }
@@ -90,12 +93,15 @@ public final class CheckDB extends Plugin {
         return new ReturnValue();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_test() {
@@ -103,31 +109,35 @@ public final class CheckDB extends Plugin {
         return new ReturnValue();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public final ReturnValue do_run() {
         ReturnValue ret = new ReturnValue();
-        Collection<CheckDBPluginInterface> plugins = (Collection<CheckDBPluginInterface>) Lookup.getDefault().lookupAll(CheckDBPluginInterface.class);
+        Collection<CheckDBPluginInterface> plugins = (Collection<CheckDBPluginInterface>) Lookup.getDefault().lookupAll(
+                CheckDBPluginInterface.class);
         Map<CheckDBPluginInterface, SortedMap<CheckDBPluginInterface.Level, Set<String>>> resultMap = new HashMap<>();
-        for(CheckDBPluginInterface plugin : plugins){
-            
+        for (CheckDBPluginInterface plugin : plugins) {
+
             SortedMap<Level, Set<String>> result = new TreeMap<>();
-            for(Level l : CheckDBPluginInterface.Level.values()){
+            for (Level l : CheckDBPluginInterface.Level.values()) {
                 result.put(l, new HashSet<String>());
             }
             Log.info("Running " + plugin.getClass().getSimpleName());
-            try{     
+            try {
                 plugin.check(new SelectQueryRunner(DBAccess.get()), result);
                 resultMap.put(plugin, result);
-            } catch (Exception e){
+            } catch (Exception e) {
                 Log.fatal("Plugin " + plugin.getClass().getSimpleName() + " died", e);
-                if (!result.containsKey(Level.SEVERE)){
+                if (!result.containsKey(Level.SEVERE)) {
                     // defensive check in case plugin author decided to corrupt the map
                     result.put(Level.SEVERE, new HashSet<String>());
                 }
@@ -138,21 +148,18 @@ public final class CheckDB extends Plugin {
         // presumably, we would reformat resultMap and create a nice HTML report here
         HtmlCanvas html = new HtmlCanvas();
         try {
-            html
-                    .html()
-                    .body()
-                    .h1().content(this.getClass().getSimpleName() + " Report");
-            for(Entry<CheckDBPluginInterface, SortedMap<CheckDBPluginInterface.Level, Set<String>>> pluginEntry : resultMap.entrySet()){
+            html.html().body().h1().content(this.getClass().getSimpleName() + " Report");
+            for (Entry<CheckDBPluginInterface, SortedMap<CheckDBPluginInterface.Level, Set<String>>> pluginEntry : resultMap.entrySet()) {
                 html.h2().content(pluginEntry.getKey().getClass().getSimpleName());
-               for(Entry<CheckDBPluginInterface.Level, Set<String>> warning : pluginEntry.getValue().entrySet()){
-                   html.h3().content(warning.getKey().name());
-                   html.ol();
-                   for(String entry : warning.getValue()){
-                       html.li().content(entry, false);
-                       //html.li().content(entry);
-                   }
-                   html._ol();
-               }
+                for (Entry<CheckDBPluginInterface.Level, Set<String>> warning : pluginEntry.getValue().entrySet()) {
+                    html.h3().content(warning.getKey().name());
+                    html.ol();
+                    for (String entry : warning.getValue()) {
+                        html.li().content(entry, false);
+                        // html.li().content(entry);
+                    }
+                    html._ol();
+                }
             }
             html._body()._html();
             File createTempFile = File.createTempFile("report", ".html");
@@ -163,20 +170,21 @@ public final class CheckDB extends Plugin {
             Log.fatal("Could not render HTML report", ex);
             ret.setExitStatus(ReturnValue.FAILURE);
         }
-        
+
         return ret;
     }
 
-
     /**
-     * <p>get_description.</p>
-     *
+     * <p>
+     * get_description.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     @Override
     public final String get_description() {
         return ("A database validation tool for your SeqWare metadb.");
-    }   
+    }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         CheckDB mp = new CheckDB();
@@ -194,28 +202,33 @@ public final class CheckDB extends Plugin {
     }
 
     /**
-     * Convenience method for processing output and appending it to the warning map 
-     * @param result a sorted map where results can be appended
-     * @param level Level of message to create
-     * @param description A description of the sw_accessions to be reported from list
-     * @param list a list of sw_accessions to report
+     * Convenience method for processing output and appending it to the warning map
+     * 
+     * @param result
+     *            a sorted map where results can be appended
+     * @param level
+     *            Level of message to create
+     * @param description
+     *            A description of the sw_accessions to be reported from list
+     * @param list
+     *            a list of sw_accessions to report
      */
-    public static void processOutput(SortedMap<Level, Set<String>> result, Level level, String description, List<Integer> list){
-        if (list.size() > 0){
+    public static void processOutput(SortedMap<Level, Set<String>> result, Level level, String description, List<Integer> list) {
+        if (list.size() > 0) {
             String SW_REST_URL = ConfigTools.getSettings().get("SW_REST_URL");
             Metadata md = MetadataFactory.get(ConfigTools.getSettings());
             Collections.sort(list);
             // shorten list if required
             List<Integer> outputList = new ArrayList<>(list);
-            if (list.size() > NUMBER_TO_OUTPUT){
-                outputList =  outputList.subList(0, NUMBER_TO_OUTPUT);
-            } 
+            if (list.size() > NUMBER_TO_OUTPUT) {
+                outputList = outputList.subList(0, NUMBER_TO_OUTPUT);
+            }
             StringBuilder warnings = new StringBuilder();
             warnings.append(description);
             int[] parentAccessions = ArrayUtils.toPrimitive(outputList.toArray(new Integer[outputList.size()]));
             List<Object> parentModels = md.getViaAccessions(parentAccessions);
             // let's try constructing hyperlinks here
-            for(int i = 0; i < parentModels.size(); i++){
+            for (int i = 0; i < parentModels.size(); i++) {
                 String url = null;
                 if (parentModels.get(i) instanceof Experiment) {
                     url = SW_REST_URL + "/experiments/" + parentAccessions[i];
@@ -237,17 +250,17 @@ public final class CheckDB extends Plugin {
                     url = SW_REST_URL + "/workflowruns/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof Workflow) {
                     url = SW_REST_URL + "/workflows/" + parentAccessions[i];
-                } 
+                }
                 if (url != null) {
                     warnings.append(" <a href=\"").append(url).append("\">").append(parentAccessions[i]).append("</a> ");
-                } else{
+                } else {
                     warnings.append(parentAccessions[i]);
                 }
-                if (i != parentModels.size() - 1){
+                if (i != parentModels.size() - 1) {
                     warnings.append(',');
                 }
             }
-            if (list.size() != outputList.size()){
+            if (list.size() != outputList.size()) {
                 warnings.append(" (Truncated, ").append(list.size()).append(" in total)");
             }
             result.get(level).add(warnings.toString());

@@ -23,18 +23,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * These tests support command-line tools
- * in this case, BundleManager
- *
+ * These tests support command-line tools in this case, BundleManager
+ * 
  * @author dyuen
  */
 public class BundleManagerET {
-    
+
     @BeforeClass
     public static void resetDatabase() {
-         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
-    
 
     @Test
     public void runInvalidParameters() throws IOException {
@@ -43,19 +41,16 @@ public class BundleManagerET {
                 + "-- --install --install-dir-only --bundle does_not_matter";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDPARAMETERS, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
-        
+
     }
-    
-    
+
     @Test
     public void exportEmptyParameters() throws IOException {
         // SEQWARE-1700 -- export parameters for workflow without parameters
         // cannot use install and install-dir-only at the same time SEQWARE-1632
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager "
-                + "-- --workflow-accession 4 --list-params";
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager " + "-- --workflow-accession 4 --list-params";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
     }
-    
-    
+
 }

@@ -44,8 +44,10 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * <p>BatchImport class.</p>
- *
+ * <p>
+ * BatchImport class.
+ * </p>
+ * 
  * @author mtaschuk
  * @author Raunaq Suri
  * @version $Id: $Id
@@ -60,9 +62,11 @@ public class BatchMetadataInjection extends Metadata {
     private static InputStream schema = BatchMetadataInjection.class.getResourceAsStream("bmischema.json");
     JSONHelper jsonHelper = new JSONHelper();
 
-    //private boolean createStudy = false;
+    // private boolean createStudy = false;
     /**
-     * <p>Constructor for AttributeAnnotator.</p>
+     * <p>
+     * Constructor for AttributeAnnotator.
+     * </p>
      */
     public BatchMetadataInjection() {
         super();
@@ -79,7 +83,8 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue init() {
@@ -92,7 +97,8 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_test() {
@@ -101,7 +107,8 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue do_run() {
@@ -144,7 +151,7 @@ public class BatchMetadataInjection extends Metadata {
                     return ret;
                 }
 
-                //Read json file, validate it, and deserialize it to RunInfo
+                // Read json file, validate it, and deserialize it to RunInfo
                 try {
                     run = jsonToRunInfo(jsonFileInputPath);
                 } catch (IOException ioe) {
@@ -153,7 +160,7 @@ public class BatchMetadataInjection extends Metadata {
                     return ret;
                 }
 
-                //Inject the RunInfo data into the seqware db
+                // Inject the RunInfo data into the seqware db
                 try {
                     inject(run);
                 } catch (Exception e) {
@@ -170,7 +177,7 @@ public class BatchMetadataInjection extends Metadata {
                     return ret;
                 }
 
-                //If conversion to RunInfo object is successfull, then json file validated against RunInfo schema
+                // If conversion to RunInfo object is successfull, then json file validated against RunInfo schema
                 try {
                     jsonToRunInfo(jsonFileInputPath);
                 } catch (IOException ioe) {
@@ -180,11 +187,11 @@ public class BatchMetadataInjection extends Metadata {
                 }
                 Log.stdout("JSON sequencer run file is valid.");
                 return ret;
-            } else if((options.has("export-json-sequencer-run") && interactive) && !options.has("new")){
-                    parseFields();
-                    CreateFromScratch create = new CreateFromScratch(metadata, (Map<String, String>) fields.clone(), interactive);
-                    run = create.getRunInfo();
-            }else {
+            } else if ((options.has("export-json-sequencer-run") && interactive) && !options.has("new")) {
+                parseFields();
+                CreateFromScratch create = new CreateFromScratch(metadata, (Map<String, String>) fields.clone(), interactive);
+                run = create.getRunInfo();
+            } else {
                 Log.stdout("Combination of parameters not recognized!");
                 Log.stdout(this.get_syntax());
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
@@ -220,12 +227,12 @@ public class BatchMetadataInjection extends Metadata {
                 String jsonRunInfo;
                 try {
                     jsonRunInfo = writer.writeValueAsString(run);
-                    //jsonRunInfo = mapper.generateJsonSchema(RunInfo.class).toString();
+                    // jsonRunInfo = mapper.generateJsonSchema(RunInfo.class).toString();
                 } catch (IOException ioe) {
                     Log.error("Could not convert RunInfo object to json", ioe);
                     ret.setExitStatus(ReturnValue.FAILURE);
                     return ret;
-        }
+                }
 
                 java.io.File jsonFileOutputPath = new java.io.File((String) o);
                 try {
@@ -233,8 +240,8 @@ public class BatchMetadataInjection extends Metadata {
                 } catch (IOException ioe) {
                     Log.error("Could not write JSON output file: " + jsonFileOutputPath, ioe);
                     ret.setExitStatus(ReturnValue.FAILURE);
-        return ret;
-    }
+                    return ret;
+                }
             }
         }
         return ret;
@@ -242,7 +249,8 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public ReturnValue clean_up() {
@@ -253,7 +261,8 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * @return 
+     * 
+     * @return
      */
     @Override
     public String get_description() {
@@ -267,7 +276,8 @@ public class BatchMetadataInjection extends Metadata {
 
         List<Lane> existingLanes = metadata.getLanesFrom(sequencerRunAccession);
         if (existingLanes != null && !existingLanes.isEmpty() && interactive) {
-            Boolean yorn = ConsoleAdapter.getInstance().promptBoolean("This sequencer run already has " + existingLanes.size() + " lanes. Continue?", Boolean.TRUE);
+            Boolean yorn = ConsoleAdapter.getInstance().promptBoolean(
+                    "This sequencer run already has " + existingLanes.size() + " lanes. Continue?", Boolean.TRUE);
             if (yorn.equals(Boolean.FALSE)) {
                 throw new Exception("Sequencer run " + sequencerRunAccession + " already has lanes.");
             }
@@ -275,11 +285,10 @@ public class BatchMetadataInjection extends Metadata {
 
         int studyAccession = retrieveStudy(run);
         int experimentAccession = retrieveExperiment(run, studyAccession);
-        
 
         Log.debug("study: " + studyAccession + " exp: " + experimentAccession + " run: " + sequencerRunAccession);
         for (LaneInfo lane : lanes) {
-            Log.stdout("\nCreating lane "+lane.getLaneNumber());
+            Log.stdout("\nCreating lane " + lane.getLaneNumber());
             int laneAccession = createLane(lane, sequencerRunAccession);
 
             for (SampleInfo barcode : lane.getSamples()) {
@@ -303,9 +312,9 @@ public class BatchMetadataInjection extends Metadata {
 
     private int createLibrarySample(SampleInfo sample, int tissueTypeSampleAcc, int experimentAccession) throws Exception {
 
-        //get the library sample
-        int librarySampleNameAcc = createSample(sample.getName(), sample.getSampleDescription(),
-                experimentAccession, tissueTypeSampleAcc, sample.getOrganismId(), true);
+        // get the library sample
+        int librarySampleNameAcc = createSample(sample.getName(), sample.getSampleDescription(), experimentAccession, tissueTypeSampleAcc,
+                sample.getOrganismId(), true);
 
         List<Sample> children = metadata.getChildSamplesFrom(tissueTypeSampleAcc);
         for (Sample s : children) {
@@ -319,7 +328,7 @@ public class BatchMetadataInjection extends Metadata {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
-        }
+            }
             metadata.annotateSample(librarySampleNameAcc, sa);
         }
         children = metadata.getChildSamplesFrom(tissueTypeSampleAcc);
@@ -333,9 +342,9 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private int retrieveTissueTypeSampleAccession(Integer parentSampleAcc, SampleInfo barcode, int experimentAccession) throws Exception {
-        //get the tissue type sample if it exists, otherwise create it
+        // get the tissue type sample if it exists, otherwise create it
         int tissueTypeSampleAcc = 0;
-        String name = barcode.getParentSample() + "_" +barcode.getTissueOrigin()+"_"+ barcode.getTissueType();
+        String name = barcode.getParentSample() + "_" + barcode.getTissueOrigin() + "_" + barcode.getTissueType();
         List<Sample> children = metadata.getChildSamplesFrom(parentSampleAcc);
         if (children != null) {
             for (Sample s : children) {
@@ -345,8 +354,7 @@ public class BatchMetadataInjection extends Metadata {
             }
         }
         if (tissueTypeSampleAcc == 0) {
-            tissueTypeSampleAcc = createSample(name, "", experimentAccession,
-                    parentSampleAcc, barcode.getOrganismId(), false);
+            tissueTypeSampleAcc = createSample(name, "", experimentAccession, parentSampleAcc, barcode.getOrganismId(), false);
         }
         names.put(tissueTypeSampleAcc, name);
         recordEdge("Sample", parentSampleAcc, "Sample", tissueTypeSampleAcc);
@@ -355,7 +363,7 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private Integer retrieveParentSampleAccession(List<Sample> parentSamples, SampleInfo sample, int experimentAccession) throws Exception {
-        //get the parent sample if it exists, otherwise create it
+        // get the parent sample if it exists, otherwise create it
         Integer parentSampleAcc = null;
         if (parentSamples != null && !parentSamples.isEmpty()) {
             for (Sample pSample : parentSamples) {
@@ -365,8 +373,7 @@ public class BatchMetadataInjection extends Metadata {
             }
         }
         if (parentSampleAcc == null) {
-            parentSampleAcc = createSample(sample.getParentSample(), "",
-                    experimentAccession, 0, sample.getOrganismId(), false);
+            parentSampleAcc = createSample(sample.getParentSample(), "", experimentAccession, 0, sample.getOrganismId(), false);
         }
         names.put(parentSampleAcc, sample.getParentSample());
         recordEdge("Experiment", experimentAccession, "Sample", parentSampleAcc);
@@ -375,7 +382,7 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private int createIUS(SampleInfo barcode, int laneAccession, int sampleAccession) throws Exception {
-        Log.stdout("\nCreating barcode "+barcode.getBarcode());
+        Log.stdout("\nCreating barcode " + barcode.getBarcode());
         fields.clear();
         fields.put("lane_accession", String.valueOf(laneAccession));
         fields.put("sample_accession", String.valueOf(sampleAccession));
@@ -384,8 +391,8 @@ public class BatchMetadataInjection extends Metadata {
         fields.put("skip", String.valueOf(barcode.getIusSkip()));
         fields.put("barcode", barcode.getBarcode());
 
-        //printDefaults();
-//        interactive = true;
+        // printDefaults();
+        // interactive = true;
         ReturnValue rv = addIUS();
         Integer swAccession = getSwAccession(rv);
 
@@ -397,7 +404,7 @@ public class BatchMetadataInjection extends Metadata {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
-        }
+            }
             metadata.annotateIUS(swAccession, ia);
         }
 
@@ -410,8 +417,9 @@ public class BatchMetadataInjection extends Metadata {
 
     }
 
-    private int createSample(String name, String description, int experimentAccession, int parentSampleAccession, String organismId, boolean interactive) throws Exception {
-        Log.stdout("\nCreating sample "+name);
+    private int createSample(String name, String description, int experimentAccession, int parentSampleAccession, String organismId,
+            boolean interactive) throws Exception {
+        Log.stdout("\nCreating sample " + name);
         fields.clear();
         fields.put("experiment_accession", String.valueOf(experimentAccession));
         fields.put("parent_sample_accession", String.valueOf(parentSampleAccession));
@@ -421,16 +429,16 @@ public class BatchMetadataInjection extends Metadata {
 
         this.interactive = interactive;
 
-//        if (interactive) {
-//            printDefaults();
-//        }
+        // if (interactive) {
+        // printDefaults();
+        // }
         ReturnValue rv = addSample();
 
         return getSwAccession(rv);
     }
 
-//    private int retrieveExperiment(RunInfo run, int studyAccession) {
-//    }
+    // private int retrieveExperiment(RunInfo run, int studyAccession) {
+    // }
     private int createLane(LaneInfo lane, int sequencerRunAccession) throws Exception {
 
         fields.clear();
@@ -445,8 +453,8 @@ public class BatchMetadataInjection extends Metadata {
         fields.put("cycle_descriptor", lane.getLaneCycleDescriptor());
         fields.put("study_type_accession", lane.getStudyTypeAcc());
 
-//        printDefaults();
-//        interactive = true;
+        // printDefaults();
+        // interactive = true;
         ReturnValue rv = addLane();
         Integer swAccession = getSwAccession(rv);
 
@@ -458,7 +466,7 @@ public class BatchMetadataInjection extends Metadata {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
-        }
+            }
             metadata.annotateLane(swAccession, la);
         }
 
@@ -470,7 +478,7 @@ public class BatchMetadataInjection extends Metadata {
 
     private int createRun(RunInfo run) throws Exception {
         Integer swAccession = null;
-        Log.stdout("\nRetrieving sequencer run "+run.getRunName());
+        Log.stdout("\nRetrieving sequencer run " + run.getRunName());
         List<SequencerRun> runs = metadata.getAllSequencerRuns();
         if (runs != null) {
             for (SequencerRun sr : runs) {
@@ -489,12 +497,12 @@ public class BatchMetadataInjection extends Metadata {
             fields.put("name", run.getRunName());
             fields.put("description", run.getRunDescription());
             fields.put("file_path", run.getRunFilePath());
-            
-            if(run.getStatus() != null){
-            fields.put("status", run.getStatus().toString());
+
+            if (run.getStatus() != null) {
+                fields.put("status", run.getStatus().toString());
             }
-//        printDefaults();
-//            interactive = true;
+            // printDefaults();
+            // interactive = true;
             ReturnValue rv = addSequencerRun();
             swAccession = getSwAccession(rv);
         }
@@ -506,7 +514,7 @@ public class BatchMetadataInjection extends Metadata {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
-        }
+            }
             metadata.annotateSequencerRun(swAccession, ra);
         }
 
@@ -515,7 +523,7 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private int retrieveExperiment(RunInfo run, int studyAccession) throws Exception {
-        Log.stdout("\nRetrieving experiments for "+run.getStudyTitle());
+        Log.stdout("\nRetrieving experiments for " + run.getStudyTitle());
         List<Experiment> experiments = metadata.getExperimentsFrom(studyAccession);
         Integer experimentAccession = null;
         if (experiments != null && !experiments.isEmpty()) {
@@ -534,7 +542,7 @@ public class BatchMetadataInjection extends Metadata {
         }
         if (experimentAccession == null) {
             if (experiments == null || experiments.isEmpty()) {
-                Log.stdout("\nAdding experiment "+run.getExperimentName());
+                Log.stdout("\nAdding experiment " + run.getExperimentName());
 
                 fields.clear();
                 fields.put("study_accession", String.valueOf(studyAccession));
@@ -542,8 +550,8 @@ public class BatchMetadataInjection extends Metadata {
                 fields.put("title", run.getExperimentName());
                 fields.put("description", run.getExperimentDescription());
 
-//                printDefaults();
-//                interactive = true;
+                // printDefaults();
+                // interactive = true;
                 ReturnValue rv = addExperiment();
                 experimentAccession = getSwAccession(rv);
             } else {
@@ -561,7 +569,7 @@ public class BatchMetadataInjection extends Metadata {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
-        }
+            }
             metadata.annotateExperiment(experimentAccession, ea);
         }
 
@@ -572,7 +580,7 @@ public class BatchMetadataInjection extends Metadata {
     }
 
     private int retrieveStudy(RunInfo run) throws Exception {
-        Log.stdout("\nRetrieving study "+run.getStudyTitle());
+        Log.stdout("\nRetrieving study " + run.getStudyTitle());
         List<Study> studies = metadata.getAllStudies();
         Integer studyAccession = null;
         for (Study st : studies) {
@@ -589,8 +597,8 @@ public class BatchMetadataInjection extends Metadata {
             fields.put("center_project_name", run.getStudyCenterProject());
             fields.put("study_type", run.getStudyType());
 
-//            printDefaults();
-//            interactive = true;
+            // printDefaults();
+            // interactive = true;
             ReturnValue rv = addStudy();
             studyAccession = getSwAccession(rv);
         }
@@ -602,7 +610,7 @@ public class BatchMetadataInjection extends Metadata {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 System.exit(1);
-        }
+            }
             metadata.annotateStudy(studyAccession, sa);
         }
 
@@ -623,25 +631,25 @@ public class BatchMetadataInjection extends Metadata {
             throw new Exception("No accession was returned");
         }
     }
-    
+
     private RunInfo jsonToRunInfo(String filePath) throws IOException {
-      //Checks to ensure that the input is first valid before doing anything
-        if(!jsonHelper.isJSONValid(schema, new FileInputStream(filePath))){
-            //Throws an exception if it's not valid
+        // Checks to ensure that the input is first valid before doing anything
+        if (!jsonHelper.isJSONValid(schema, new FileInputStream(filePath))) {
+            // Throws an exception if it's not valid
             throw new IOException("JSON is not valid");
         }
-        //Else continue
+        // Else continue
         java.io.File jsonFileInputPath = new java.io.File(filePath);
         String jsonRunInfo = Files.toString(jsonFileInputPath, Charsets.UTF_8);
-        
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
-        
-        return mapper.readValue(jsonRunInfo, RunInfo.class);
-}
 
-    private <SeqwareObjectType, AttributeType extends Attribute<SeqwareObjectType>> Set<AttributeType> convertTagValueUnitSetToAttributeSet(Set<TagValueUnit> tagValueUnits, Class<AttributeType> attributeTypeClass)
-            throws InstantiationException, IllegalAccessException {
+        return mapper.readValue(jsonRunInfo, RunInfo.class);
+    }
+
+    private <SeqwareObjectType, AttributeType extends Attribute<SeqwareObjectType>> Set<AttributeType> convertTagValueUnitSetToAttributeSet(
+            Set<TagValueUnit> tagValueUnits, Class<AttributeType> attributeTypeClass) throws InstantiationException, IllegalAccessException {
 
         Set<AttributeType> attributes = new HashSet<AttributeType>();
 
@@ -660,8 +668,8 @@ public class BatchMetadataInjection extends Metadata {
 
         System.out.println(Arrays.asList(args));
 
-//        BatchMetadataInjection b = new BatchMetadataInjection();
-//        b.setParams(Arrays.asList(args));
+        // BatchMetadataInjection b = new BatchMetadataInjection();
+        // b.setParams(Arrays.asList(args));
         PluginRunner p = new PluginRunner();
         List<String> a = new ArrayList<String>();
         a.add("--plugin");
@@ -671,12 +679,12 @@ public class BatchMetadataInjection extends Metadata {
         System.out.println(Arrays.deepToString(a.toArray()));
 
         p.run(a.toArray(new String[a.size()]));
-//        b.parse_parameters();
-//        b.init();
-//        b.do_test();
-//        b.do_run();
-//        b.clean_up();
-        //b.setParams(Arrays.asList("import-run-info", "test"));
+        // b.parse_parameters();
+        // b.init();
+        // b.do_test();
+        // b.do_run();
+        // b.clean_up();
+        // b.setParams(Arrays.asList("import-run-info", "test"));
 
     }
 }

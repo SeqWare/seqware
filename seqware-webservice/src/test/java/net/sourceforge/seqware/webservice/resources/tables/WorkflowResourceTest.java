@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class WorkflowResourceTest extends DatabaseResourceTest {
@@ -26,49 +26,47 @@ public class WorkflowResourceTest extends DatabaseResourceTest {
         super("/workflows");
     }
 
-    
-    
-//    @Override
-//    public void testPost() {
-//        Representation rep = null;
-//        try {
-//            System.out.println(getRelativeURI() + " POST  zip");
-//            String zipFile = WorkflowResourceTest.class.getResource("test_bundle.zip").getPath();
-//            FileRepresentation myString = new FileRepresentation(new File(zipFile), MediaType.APPLICATION_ZIP);
-//
-//            Disposition d = new Disposition();
-//            d.setFilename(myString.getFile().getName());
-//            myString.setDisposition(d);
-//            rep = resource.post(myString);
-//            rep.write(System.out);
-//            rep.exhaust();
-//            rep.release();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Assert.fail(e.getMessage());
-//        }
-//    }
+    // @Override
+    // public void testPost() {
+    // Representation rep = null;
+    // try {
+    // System.out.println(getRelativeURI() + " POST  zip");
+    // String zipFile = WorkflowResourceTest.class.getResource("test_bundle.zip").getPath();
+    // FileRepresentation myString = new FileRepresentation(new File(zipFile), MediaType.APPLICATION_ZIP);
+    //
+    // Disposition d = new Disposition();
+    // d.setFilename(myString.getFile().getName());
+    // myString.setDisposition(d);
+    // rep = resource.post(myString);
+    // rep.write(System.out);
+    // rep.exhaust();
+    // rep.release();
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // Assert.fail(e.getMessage());
+    // }
+    // }
 
-//    @Test
-//    public void testURIPost() {
-//        Representation rep = null;
-//        try {
-//            System.out.println(getRelativeURI() + " POST uri");
-//            URL uriFile = WorkflowResourceTest.class.getResource("test_bundle.zip").toURI().toURL();
-//            String uri = uriFile.toString();
-//            StringRepresentation myString = new StringRepresentation(uri, MediaType.TEXT_PLAIN);
-//            rep = resource.post(myString);
-//            rep.write(System.out);
-//            rep.exhaust();
-//            rep.release();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            Assert.fail(e.getMessage());
-//        }
-//    }
+    // @Test
+    // public void testURIPost() {
+    // Representation rep = null;
+    // try {
+    // System.out.println(getRelativeURI() + " POST uri");
+    // URL uriFile = WorkflowResourceTest.class.getResource("test_bundle.zip").toURI().toURL();
+    // String uri = uriFile.toString();
+    // StringRepresentation myString = new StringRepresentation(uri, MediaType.TEXT_PLAIN);
+    // rep = resource.post(myString);
+    // rep.write(System.out);
+    // rep.exhaust();
+    // rep.release();
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // Assert.fail(e.getMessage());
+    // }
+    // }
 
     @Override
     public void testPost() {
-        
+
     }
 }

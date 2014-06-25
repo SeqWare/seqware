@@ -13,85 +13,93 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <p>WorkflowParamServiceImpl class.</p>
- *
+ * <p>
+ * WorkflowParamServiceImpl class.
+ * </p>
+ * 
  * @author boconnor
  * @version $Id: $Id
  */
 public class WorkflowParamServiceImpl implements WorkflowParamService {
-  private WorkflowParamDAO workflowParamDAO = null;
-  private static final Log log = LogFactory.getLog(WorkflowParamServiceImpl.class);
+    private WorkflowParamDAO workflowParamDAO = null;
+    private static final Log log = LogFactory.getLog(WorkflowParamServiceImpl.class);
 
-  /**
-   * <p>Constructor for WorkflowParamServiceImpl.</p>
-   */
-  public WorkflowParamServiceImpl() {
-    super();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void setWorkflowParamDAO(WorkflowParamDAO workflowParamDAO) {
-    this.workflowParamDAO = workflowParamDAO;
-  }
+    /**
+     * <p>
+     * Constructor for WorkflowParamServiceImpl.
+     * </p>
+     */
+    public WorkflowParamServiceImpl() {
+        super();
+    }
 
     /** {@inheritDoc} */
     @Override
-  public Integer insert(WorkflowParam workflowParam) {
-    return workflowParamDAO.insert(workflowParam);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void update(WorkflowParam workflowParam) {
-    workflowParamDAO.update(workflowParam);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public void delete(WorkflowParam workflowParam) {
-    workflowParamDAO.delete(workflowParam);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public WorkflowParam findByID(Integer id) {
-    WorkflowParam workflowParam = null;
-    if (id != null) {
-      try {
-        workflowParam = workflowParamDAO.findByID(id);
-        // fillInLanes(lane);
-      } catch (Exception exception) {
-        log.error("Cannot find Lane by expID " + id);
-        log.error(exception.getMessage());
-      }
+    public void setWorkflowParamDAO(WorkflowParamDAO workflowParamDAO) {
+        this.workflowParamDAO = workflowParamDAO;
     }
-    return workflowParam;
-  }
 
-  /**
-   * <p>findValueByID.</p>
-   *
-   * @param workflowParam a {@link net.sourceforge.seqware.common.model.WorkflowParam} object.
-   * @param id a {@link java.lang.Integer} object.
-   * @return a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
-   */
-  public WorkflowParamValue findValueByID(WorkflowParam workflowParam, Integer id) {
-    WorkflowParamValue value = null;
-    SortedSet<WorkflowParamValue> values = workflowParam.getValues();
-    for (WorkflowParamValue workflowParamValue : values) {
-      if (workflowParamValue != null && workflowParamValue.getWorkflowParamValueId().equals(id)) {
-        value = workflowParamValue;
-      }
+    /** {@inheritDoc} */
+    @Override
+    public Integer insert(WorkflowParam workflowParam) {
+        return workflowParamDAO.insert(workflowParam);
     }
-    return value;
-  }
 
-  /** {@inheritDoc} */
-  @Override
-  public WorkflowParam updateDetached(WorkflowParam workflowParam) {
-    return workflowParamDAO.updateDetached(workflowParam);
-  }
+    /** {@inheritDoc} */
+    @Override
+    public void update(WorkflowParam workflowParam) {
+        workflowParamDAO.update(workflowParam);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void delete(WorkflowParam workflowParam) {
+        workflowParamDAO.delete(workflowParam);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public WorkflowParam findByID(Integer id) {
+        WorkflowParam workflowParam = null;
+        if (id != null) {
+            try {
+                workflowParam = workflowParamDAO.findByID(id);
+                // fillInLanes(lane);
+            } catch (Exception exception) {
+                log.error("Cannot find Lane by expID " + id);
+                log.error(exception.getMessage());
+            }
+        }
+        return workflowParam;
+    }
+
+    /**
+     * <p>
+     * findValueByID.
+     * </p>
+     * 
+     * @param workflowParam
+     *            a {@link net.sourceforge.seqware.common.model.WorkflowParam} object.
+     * @param id
+     *            a {@link java.lang.Integer} object.
+     * @return a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
+     */
+    public WorkflowParamValue findValueByID(WorkflowParam workflowParam, Integer id) {
+        WorkflowParamValue value = null;
+        SortedSet<WorkflowParamValue> values = workflowParam.getValues();
+        for (WorkflowParamValue workflowParamValue : values) {
+            if (workflowParamValue != null && workflowParamValue.getWorkflowParamValueId().equals(id)) {
+                value = workflowParamValue;
+            }
+        }
+        return value;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public WorkflowParam updateDetached(WorkflowParam workflowParam) {
+        return workflowParamDAO.updateDetached(workflowParam);
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -114,6 +122,6 @@ public class WorkflowParamServiceImpl implements WorkflowParamService {
     /** {@inheritDoc} */
     @Override
     public WorkflowParam updateDetached(Registration registration, WorkflowParam workflowParam) {
-         return workflowParamDAO.updateDetached(registration, workflowParam);
+        return workflowParamDAO.updateDetached(registration, workflowParam);
     }
 }

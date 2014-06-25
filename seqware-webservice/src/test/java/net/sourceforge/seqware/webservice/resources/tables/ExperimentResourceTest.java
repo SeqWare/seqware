@@ -17,20 +17,18 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
-public class ExperimentResourceTest  extends DatabaseResourceTest{
+public class ExperimentResourceTest extends DatabaseResourceTest {
 
     public ExperimentResourceTest() {
         super("/experiments");
     }
 
-  @Override
-  public void testPost() {
-    // TODO
-  }
-    
-    
-    
+    @Override
+    public void testPost() {
+        // TODO
+    }
+
 }

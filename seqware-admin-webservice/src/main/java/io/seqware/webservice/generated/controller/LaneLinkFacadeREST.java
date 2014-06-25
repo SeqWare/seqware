@@ -19,71 +19,70 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 /**
- *
- * @author
- * boconnor
+ * 
+ * @author boconnor
  */
 @Stateless
 @Path("io.seqware.webservice.model.lanelink")
 public class LaneLinkFacadeREST extends AbstractFacade<LaneLink> {
-  @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
-  private EntityManager em;
+    @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
+    private EntityManager em;
 
-  public LaneLinkFacadeREST() {
-    super(LaneLink.class);
-  }
+    public LaneLinkFacadeREST() {
+        super(LaneLink.class);
+    }
 
-  @POST
-  @Override
-  @Consumes({"application/xml", "application/json"})
-  public void create(LaneLink entity) {
-    super.create(entity);
-  }
+    @POST
+    @Override
+    @Consumes({ "application/xml", "application/json" })
+    public void create(LaneLink entity) {
+        super.create(entity);
+    }
 
-  @PUT
-  @Override
-  @Consumes({"application/xml", "application/json"})
-  public void edit(LaneLink entity) {
-    super.edit(entity);
-  }
+    @PUT
+    @Override
+    @Consumes({ "application/xml", "application/json" })
+    public void edit(LaneLink entity) {
+        super.edit(entity);
+    }
 
-  @DELETE
-  @Path("{id}")
-  public void remove(@PathParam("id") Integer id) {
-    super.remove(super.find(id));
-  }
+    @DELETE
+    @Path("{id}")
+    public void remove(@PathParam("id") Integer id) {
+        super.remove(super.find(id));
+    }
 
-  @GET
-  @Path("{id}")
-  @Produces({"application/xml", "application/json"})
-  public LaneLink find(@PathParam("id") Integer id) {
-    return super.find(id);
-  }
+    @GET
+    @Path("{id}")
+    @Produces({ "application/xml", "application/json" })
+    public LaneLink find(@PathParam("id") Integer id) {
+        return super.find(id);
+    }
 
-  @GET
-  @Override
-  @Produces({"application/xml", "application/json"})
-  public List<LaneLink> findAll() {
-    return super.findAll();
-  }
+    @GET
+    @Override
+    @Produces({ "application/xml", "application/json" })
+    public List<LaneLink> findAll() {
+        return super.findAll();
+    }
 
-  @GET
-  @Path("{from}/{to}")
-  @Produces({"application/xml", "application/json"})
-  public List<LaneLink> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
-    return super.findRange(new int[]{from, to});
-  }
+    @GET
+    @Path("{from}/{to}")
+    @Produces({ "application/xml", "application/json" })
+    public List<LaneLink> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
+        return super.findRange(new int[] { from, to });
+    }
 
-  @GET
-  @Path("count")
-  @Produces("text/plain")
-  public String countREST() {
-    return String.valueOf(super.count());
-  }
+    @GET
+    @Path("count")
+    @Produces("text/plain")
+    public String countREST() {
+        return String.valueOf(super.count());
+    }
 
-  @Override
-  protected EntityManager getEntityManager() {
-    return em;
-  }
-  
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
+    }
+
 }

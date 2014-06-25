@@ -23,7 +23,7 @@ import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import org.junit.*;
 
 /**
- *
+ * 
  * @author mtaschuk
  */
 public class PluginTest {
@@ -38,7 +38,7 @@ public class PluginTest {
         Assert.assertEquals("Plugin did not exit successfully.", expected, rv.getExitStatus());
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // //////////////////////////////////////////////////////////////////////////////////////////////////
     protected void launchPlugin(String... params) {
         instance.setParams(Arrays.asList(params));
         checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());

@@ -24,40 +24,45 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.lists.LaneList;
 
-
 /**
- * <p>XmlizeLaneSortedSet class.</p>
- *
+ * <p>
+ * XmlizeLaneSortedSet class.
+ * </p>
+ * 
  * @author mtaschuk
  * @version $Id: $Id
  */
-public class XmlizeLaneSortedSet extends XmlAdapter<LaneList, SortedSet<Lane>>{
+public class XmlizeLaneSortedSet extends XmlAdapter<LaneList, SortedSet<Lane>> {
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
+     * @throws java.lang.Exception
+     */
     @Override
     public SortedSet<Lane> unmarshal(LaneList vt) throws Exception {
         SortedSet<Lane> laneSet = new TreeSet<>();
-        for (Lane l : vt.getList())
-        {
+        for (Lane l : vt.getList()) {
             laneSet.add(l);
         }
-        return laneSet;        
+        return laneSet;
     }
 
-    /** {@inheritDoc}
+    /**
+     * {@inheritDoc}
+     * 
      * @return
-     * @throws java.lang.Exception  */
+     * @throws java.lang.Exception
+     */
     @Override
     public LaneList marshal(SortedSet<Lane> bt) throws Exception {
-        if (bt != null)
-        {
-        List<Lane> list = new ArrayList<>(bt);        
-        LaneList laneList = new LaneList();
-        laneList.setList(list);
-        return laneList;
-        }
-        else return null;
+        if (bt != null) {
+            List<Lane> list = new ArrayList<>(bt);
+            LaneList laneList = new LaneList();
+            laneList.setList(list);
+            return laneList;
+        } else
+            return null;
     }
 }
