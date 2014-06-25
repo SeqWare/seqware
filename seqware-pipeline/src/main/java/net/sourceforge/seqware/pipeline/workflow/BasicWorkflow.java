@@ -1,33 +1,21 @@
 package net.sourceforge.seqware.pipeline.workflow;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.metadata.MetadataNoConnection;
-import net.sourceforge.seqware.common.model.WorkflowParam;
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
-import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.daxgenerator.Daxgenerator;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
 
@@ -50,7 +38,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     protected int totalSteps = 0;
     protected int currStep = 0;
     protected int percentage = 0;
-    protected WorkflowTools workflowTools = null;
 
     public static ReturnValue gridProxyInit() {
         // initialize globus authentication proxy
@@ -86,7 +73,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
     private ReturnValue setup() {
 
-        workflowTools = new WorkflowTools();
         ReturnValue retVal = new ReturnValue(ReturnValue.SUCCESS);
 
         ReturnValue retProxy = gridProxyInit();
