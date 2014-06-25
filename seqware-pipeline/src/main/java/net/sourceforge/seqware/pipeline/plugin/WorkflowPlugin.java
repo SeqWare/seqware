@@ -536,9 +536,9 @@ public class WorkflowPlugin extends Plugin {
             return new ReturnValue(ReturnValue.SUCCESS);
         }
 
-        ReturnValue retPegasus = engine.runWorkflow();
+        ReturnValue localReturn = engine.runWorkflow();
         if (!dataModel.isMetadataWriteBack()) {
-            return retPegasus;
+            return localReturn;
         }
 
         Log.info("attempting metadata writeback");
@@ -547,7 +547,7 @@ public class WorkflowPlugin extends Plugin {
         String wra = dataModel.getWorkflow_run_accession();
 
         if (wra == null || wra.isEmpty()) {
-            return retPegasus;
+            return localReturn;
         }
 
         // int workflowrunId = Integer.parseInt(wra);
@@ -591,20 +591,20 @@ public class WorkflowPlugin extends Plugin {
 
         String host = scheduled && !options.has(HOST) ? wr.getHost() : (String) options.valueOf(HOST);
 
-        if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || workflowRunToken == null) {
-            // then something went wrong trying to call pegasus
+        if (localReturn.getProcessExitStatus() != ReturnValue.SUCCESS || workflowRunToken == null) {
+            // then something went wrong trying to call the workflow engine
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                     dataModel.getTags().get("workflow_template"), WorkflowRunStatus.failed, workflowRunToken, engine.getWorkingDirectory(),
-                    wr.getDax(), wr.getIniFile(), host, retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(),
+                    wr.getDax(), wr.getIniFile(), host, localReturn.getStderr(), localReturn.getStdout(), dataModel.getWorkflow_engine(),
                     inputFiles);
 
-            return retPegasus;
+            return localReturn;
         } else {
             // determine status based on object model
             WorkflowRunStatus status = dataModel.isWait() ? WorkflowRunStatus.completed : WorkflowRunStatus.pending;
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                     dataModel.getTags().get("workflow_template"), status, workflowRunToken, engine.getWorkingDirectory(), wr.getDax(),
-                    wr.getIniFile(), host, retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
+                    wr.getIniFile(), host, localReturn.getStderr(), localReturn.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
             return ret;
         }
     }

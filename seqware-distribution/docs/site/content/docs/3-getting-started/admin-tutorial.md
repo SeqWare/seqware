@@ -91,7 +91,7 @@ details on how to install the components of the SeqWare software stack.
 
 We are also preparing guides which will walk administrators through
 
-* Hooking up to an SGE cluster (Pegasus)
+* Hooking up to an SGE cluster (Oozie)
 * Hooking up to an Oozie cluster
 * Hooking up to an LSF cluster
 -->
