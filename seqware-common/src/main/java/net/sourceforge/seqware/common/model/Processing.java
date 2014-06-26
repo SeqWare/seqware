@@ -1,5 +1,7 @@
 package net.sourceforge.seqware.common.model;
 
+import io.seqware.common.model.ProcessingStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;

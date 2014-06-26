@@ -13,7 +13,7 @@ import net.sourceforge.seqware.common.business.WorkflowService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.LaunchWorkflowUtil;

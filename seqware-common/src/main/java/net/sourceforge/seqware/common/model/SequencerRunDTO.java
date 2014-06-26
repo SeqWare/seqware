@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.model;
 
+import io.seqware.common.model.ProcessingStatus;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.SortedSet;

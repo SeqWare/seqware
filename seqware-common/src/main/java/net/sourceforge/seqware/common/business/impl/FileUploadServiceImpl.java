@@ -22,7 +22,7 @@ import net.sourceforge.seqware.common.model.FileType;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
-import net.sourceforge.seqware.common.model.ProcessingStatus;
+import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;

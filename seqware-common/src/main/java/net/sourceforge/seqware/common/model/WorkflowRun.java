@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.model;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;

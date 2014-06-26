@@ -19,7 +19,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 import java.util.Map;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
-import net.sourceforge.seqware.metadb.util.TestDatabaseCreator;
+import io.seqware.metadb.util.TestDatabaseCreator;
 
 /**
  * This class controls configuration of the database used for extended integration tests.
