@@ -11,7 +11,7 @@ import net.sourceforge.seqware.common.dao.StudyTypeDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
 import org.apache.commons.logging.Log;

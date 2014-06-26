@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;

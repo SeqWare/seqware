@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.solexatools.Security;
 
 import org.springframework.web.servlet.ModelAndView;

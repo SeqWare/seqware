@@ -12,7 +12,7 @@ import net.sourceforge.seqware.common.dao.SequencerRunDAO;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
-import net.sourceforge.seqware.common.model.SequencerRunStatus;
+import io.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.SequencerRunWizardDTO;
 import net.sourceforge.seqware.common.util.Log;
 
