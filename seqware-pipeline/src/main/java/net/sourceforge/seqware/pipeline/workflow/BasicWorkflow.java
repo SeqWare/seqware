@@ -16,7 +16,6 @@ import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
-import net.sourceforge.seqware.pipeline.daxgenerator.Daxgenerator;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
 
 /**
@@ -497,36 +496,5 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         map.put("seqware_cluster", config.get("SW_CLUSTER"));
 
         return map;
-    }
-
-    /**
-     * <p>
-     * generateDaxFile.
-     * </p>
-     * 
-     * @param wi
-     *            a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
-     * @param dax
-     *            a {@link java.io.File} object.
-     * @param iniFilesStr
-     *            a {@link java.lang.String} object.
-     * @param map
-     *            a {@link java.util.Map} object.
-     * @param cmdLineOptions
-     *            a {@link java.util.List} object.
-     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-     */
-    protected ReturnValue generateDaxFile(WorkflowInfo wi, File dax, String iniFilesStr, Map<String, String> map,
-            List<String> cmdLineOptions) {
-        Daxgenerator daxGen = new Daxgenerator();
-        String template = wi.getTemplatePath();
-        template = replaceWBD(template, wi.getWorkflowDir());
-        Log.stdout("TEMPLATE FILE: " + template);
-
-        Log.stdout("CREATING DAX IN: " + dax.getAbsolutePath());
-        ReturnValue daxReturn = daxGen.processTemplate(iniFilesStr.toString().split(","), template, dax.getAbsolutePath(), map,
-                cmdLineOptions.toArray(new String[0]));
-
-        return daxReturn;
     }
 }
