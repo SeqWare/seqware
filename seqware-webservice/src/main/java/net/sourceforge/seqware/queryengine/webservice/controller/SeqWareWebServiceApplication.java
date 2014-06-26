@@ -2,7 +2,6 @@ package net.sourceforge.seqware.queryengine.webservice.controller;
 
 import net.sf.beanlib.hibernate.UnEnhancer;
 import net.sourceforge.seqware.queryengine.webservice.security.SeqWareVerifier;
-import net.sourceforge.seqware.queryengine.webservice.view.WorkflowRunStatusResource;
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionIDResource;
 import net.sourceforge.seqware.webservice.resources.SeqwareAccessionResource;
 import net.sourceforge.seqware.webservice.resources.filters.ExperimentIDFilter;
@@ -81,7 +80,6 @@ import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
-import org.restlet.ext.freemarker.ContextTemplateLoader;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.WadlApplication;
@@ -89,7 +87,6 @@ import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 
-import freemarker.template.Configuration;
 import net.sourceforge.seqware.webservice.resources.queries.TriggerFileProvenanceResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileChildLimitedWorkflowRunsResource;
 
@@ -103,19 +100,6 @@ import net.sourceforge.seqware.webservice.resources.tables.FileChildLimitedWorkf
  */
 public class SeqWareWebServiceApplication extends WadlApplication {
 
-    private Configuration configuration = null;
-
-    /**
-     * <p>
-     * Getter for the field <code>configuration</code>.
-     * </p>
-     * 
-     * @return a {@link freemarker.template.Configuration} object.
-     */
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
     /**
      * Creates a root Restlet that will receive all incoming calls.
      * 
@@ -125,8 +109,6 @@ public class SeqWareWebServiceApplication extends WadlApplication {
     public synchronized Restlet createInboundRoot() {
         final Component component = new Component();
         component.getClients().add(Protocol.CLAP);
-        configuration = new Configuration();
-        configuration.setTemplateLoader(new ContextTemplateLoader(getContext(), "clap://system/templates"));
 
         ChallengeAuthenticator guard = getGuard();
 
@@ -317,23 +299,6 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/reports/fileworkflowruns/", slashRedirect);
         router.attach("/reports/fileworkflowruns/limit", FileChildLimitedWorkflowRunsResource.class);
         router.attach("/reports/fileworkflowruns/limit/", slashRedirect);
-
-        // REPORT RESOURCES
-
-        // router.attach("/"+version+"/realtime/reports/workflows/errors", WorkflowErrors.class);
-        // router.attach("/"+version+"/realtime/reports/workflows/runtime", WorkflowRuntimes.class);
-
-        // ASYNCHRONOUS
-
-        // ANALYSIS RESOURCES
-        // these are the various asynchronous tools, most importantly a resource that calls workflows
-        router.attach("/" + version + "/asynchronous/workflow/{workflowId}",
-                net.sourceforge.seqware.queryengine.webservice.view.WorkflowResource.class);
-
-        // router.attach(rootURL+"/"+version+"/asynchronous/workflow_run/submit", WorkflowResource.class);
-        // router.attach(rootURL+"/"+version+"/asynchronous/workflow_run/status", TemplateResource.class);
-        router.attach("/" + version + "/asynchronous/workflow_run/status/{workflowRunAccession}", WorkflowRunStatusResource.class);
-        router.attach("/" + version + "/asynchronous/workflow_run/file/{fileAccession}", FileResource.class);
 
         // STATIC COMPONENTS
 

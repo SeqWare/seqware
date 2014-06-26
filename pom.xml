@@ -485,11 +485,6 @@
             </dependency>
             <dependency>
                 <groupId>org.restlet.jee</groupId>
-                <artifactId>org.restlet.ext.freemarker</artifactId>
-                <version>${restlet.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.restlet.jee</groupId>
                 <artifactId>org.restlet.ext.protobuf</artifactId>
                 <version>2.1-R2</version>
             </dependency>

@@ -221,12 +221,6 @@ public class TestDatabaseCreator {
         }
     }
 
-    private void loadDatabase(Connection connection) throws SQLException {
-        System.out.println("----------------Creating Database " + getSEQWARE_DB() + "--------------------");
-        connection.createStatement().execute("DROP DATABASE IF EXISTS " + getSEQWARE_DB() + ";");
-        connection.createStatement().execute("CREATE DATABASE " + getSEQWARE_DB() + " WITH OWNER = " + getSEQWARE_USER() + ";");
-    }
-
     private static void loadDBStructure(Connection connection) throws SQLException {
         System.out.println("----------------Loading dump into PostgreSQL--------------------");
         try {

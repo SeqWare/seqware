@@ -65,7 +65,7 @@ public class WorkflowDataModelFactory {
     }
 
     /**
-     * load metadata.xml, if FTL, parse the FTL to XML, and translate it to Java based Object if Java, load the class.
+     * load metadata.xml and load the class.
      * 
      * @param workflowAccession
      *            if this is present, we grab metadata information from the database, not the options
@@ -258,8 +258,7 @@ public class WorkflowDataModelFactory {
                 Rethrow.rethrow(e);
             }
         } else {
-            WorkflowXmlParser xmlParser = new WorkflowXmlParser();
-            xmlParser.parseXml(dataModel, metaInfo.get("workflow_template"));
+            throw new RuntimeException("No other workflow engine is currently supported.");
         }
         AbstractWorkflowDataModel.prepare(dataModel);
         // set wait
