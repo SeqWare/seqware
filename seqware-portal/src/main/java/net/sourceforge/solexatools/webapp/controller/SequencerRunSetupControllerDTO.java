@@ -10,7 +10,7 @@ import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunDTO;
-import net.sourceforge.seqware.common.model.SequencerRunStatus;
+import io.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.solexatools.Security;
 
 import org.springframework.web.servlet.ModelAndView;

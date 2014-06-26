@@ -16,7 +16,7 @@ import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 
 import org.junit.Test;
 

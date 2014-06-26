@@ -23,7 +23,7 @@ import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
-import net.sourceforge.seqware.common.model.SequencerRunStatus;
+import io.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;

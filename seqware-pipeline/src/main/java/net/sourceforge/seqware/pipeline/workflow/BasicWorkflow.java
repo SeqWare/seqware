@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
@@ -38,21 +38,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     protected int currStep = 0;
     protected int percentage = 0;
 
-    public static ReturnValue gridProxyInit() {
-        // initialize globus authentication proxy
-        ArrayList<String> theCommand = new ArrayList<>();
-        theCommand.add("bash");
-        theCommand.add("-lc");
-        theCommand.add("grid-proxy-init -valid 480:00");
-        ReturnValue retProxy = RunTools.runCommand(theCommand.toArray(new String[0]));
-        return retProxy;
-    }
-
-    protected enum Job {
-
-        setup, prejob, mainjob, postjob, cleanup, statcall, data;
-    }
-
     /**
      * <p>
      * Constructor for BasicWorkflow.
@@ -68,19 +53,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         this.metadata = metadata;
         this.config = config;
         this.bundleUtil = new Bundle(metadata, config);
-    }
-
-    private ReturnValue setup() {
-
-        ReturnValue retVal = new ReturnValue(ReturnValue.SUCCESS);
-
-        ReturnValue retProxy = gridProxyInit();
-        if (retProxy.getExitStatus() != ReturnValue.SUCCESS) {
-            Log.error("ERROR: can't init the globus proxy so terminating here, continuing but your workflow submissions will fail!");
-            return (retProxy);
-        }
-
-        return (retVal);
     }
 
     /**
