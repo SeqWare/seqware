@@ -1,3 +1,7 @@
+/**
+ * Auto-generated model classes.
+ * @since 1.0
+ */
 @XmlJavaTypeAdapters({ @XmlJavaTypeAdapter(value = TimestampFormatterAdapter.class, type = Timestamp.class),
         @XmlJavaTypeAdapter(value = DateFormatterAdapter.class, type = Date.class) })
 package io.seqware.webservice.generated.model;

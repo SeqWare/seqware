@@ -47,11 +47,6 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.seqware</groupId>
-            <artifactId>seqware-bin-noarch-pegasus-dirmanager</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-distribution</artifactId>
             <version>${seqware-version}</version>

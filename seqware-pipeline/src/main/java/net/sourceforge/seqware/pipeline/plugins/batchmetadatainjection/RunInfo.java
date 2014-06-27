@@ -25,7 +25,7 @@ import net.sourceforge.seqware.common.model.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import net.sourceforge.seqware.common.model.SequencerRunStatus;
+import io.seqware.common.model.SequencerRunStatus;
 
 /**
  * 

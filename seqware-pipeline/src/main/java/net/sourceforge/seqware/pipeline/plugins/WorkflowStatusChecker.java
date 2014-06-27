@@ -41,12 +41,11 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.tools.RunLock;
@@ -84,10 +83,6 @@ public class WorkflowStatusChecker extends Plugin {
      */
     public WorkflowStatusChecker() {
         super();
-        parser.acceptsAll(
-                Arrays.asList("status-cmd", "s"),
-                "Optional: the Pegasus status command, if you specify this option the command will be run, potentially displaying the summarized/parsed errors, but the database will not be updated.")
-                .withRequiredArg();
         parser.acceptsAll(Arrays.asList(WORKFLOW_RUN_ACCESSION, "wra"),
                 "Optional: this will cause the program to only check the status of workflow run(s). For multiple runs, comma-separate with no spaces")
                 .withRequiredArg().withValuesSeparatedBy(',').ofType(Integer.class);
@@ -161,62 +156,55 @@ public class WorkflowStatusChecker extends Plugin {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
-        // lets you just check a given workflow without metadata
-        if (options.has("status-cmd") && options.valueOf("status-cmd") != null) {
+        // this checks workflows and writes their status back to the DB
 
-            ret = checkWorkflow((String) options.valueOf("status-cmd"));
+        Set<WorkflowRun> runningWorkflows = new HashSet<>();
 
-        } else { // this checks workflows and writes their status back to the DB
-
-            Set<WorkflowRun> runningWorkflows = new HashSet<>();
-
-            if (options.has(WORKFLOW_RUN_ACCESSION)) {
-                List<Integer> swids = (List<Integer>) options.valuesOf(WORKFLOW_RUN_ACCESSION);
-                for (Integer swid : swids) {
-                    WorkflowRun wr = this.metadata.getWorkflowRun(swid);
-                    runningWorkflows.add(wr);
-                }
-            } else {
-                runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running));
-                runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
-                runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel));
-                runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry));
-                if (options.has("check-failed")) {
-                    runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.failed));
-                }
+        if (options.has(WORKFLOW_RUN_ACCESSION)) {
+            List<Integer> swids = (List<Integer>) options.valuesOf(WORKFLOW_RUN_ACCESSION);
+            for (Integer swid : swids) {
+                WorkflowRun wr = this.metadata.getWorkflowRun(swid);
+                runningWorkflows.add(wr);
             }
-
-            // setup thread pool
-            ExecutorService pool; // Executors.newFixedThreadPool(4);
-            if (options.has("threads-in-thread-pool")) {
-                int threads = (Integer) options.valueOf("threads-in-thread-pool");
-                if (threads <= 0) {
-                    Log.fatal("Inappropriate number of threads selected");
-                    ret = new ReturnValue(ReturnValue.FAILURE);
-                    return ret;
-                }
-                pool = Executors.newFixedThreadPool(threads);
-            } else {
-                pool = Executors.newSingleThreadExecutor();
+        } else {
+            runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.running));
+            runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.pending));
+            runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_cancel));
+            runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted_retry));
+            if (options.has("check-failed")) {
+                runningWorkflows.addAll(this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.failed));
             }
-
-            List<Future<?>> futures = new ArrayList<>(runningWorkflows.size());
-            // loop over running workflows and check their status
-            for (WorkflowRun wr : runningWorkflows) {
-                futures.add(pool.submit(new CheckerThread(wr)));
-            }
-            for (Future<?> future : futures) {
-                try {
-                    future.get();
-                } catch (InterruptedException ex) {
-                    Log.fatal(ex);
-                } catch (ExecutionException ex) {
-                    Log.fatal(ex);
-                }
-            }
-
-            pool.shutdown();
         }
+
+        // setup thread pool
+        ExecutorService pool; // Executors.newFixedThreadPool(4);
+        if (options.has("threads-in-thread-pool")) {
+            int threads = (Integer) options.valueOf("threads-in-thread-pool");
+            if (threads <= 0) {
+                Log.fatal("Inappropriate number of threads selected");
+                ret = new ReturnValue(ReturnValue.FAILURE);
+                return ret;
+            }
+            pool = Executors.newFixedThreadPool(threads);
+        } else {
+            pool = Executors.newSingleThreadExecutor();
+        }
+
+        List<Future<?>> futures = new ArrayList<>(runningWorkflows.size());
+        // loop over running workflows and check their status
+        for (WorkflowRun wr : runningWorkflows) {
+            futures.add(pool.submit(new CheckerThread(wr)));
+        }
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException ex) {
+                Log.fatal(ex);
+            }
+        }
+
+        pool.shutdown();
+
         return ret;
     }
 
@@ -244,42 +232,6 @@ public class WorkflowStatusChecker extends Plugin {
                 + "workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file "
                 + "and the hostname is the same as 'hostname --long', and 4) you can force the checking of workflows with a particular "
                 + "host value but be careful with that.";
-    }
-
-    /**
-     * This takes like 15 seconds per check!
-     * 
-     * @param statusCmd
-     * @return
-     */
-    private ReturnValue checkWorkflow(String statusCmd) {
-
-        Log.info("Checking the status using " + statusCmd);
-        WorkflowTools workflowTools = new WorkflowTools();
-        String statusDir = findStatusDir(statusCmd);
-        ReturnValue ret = workflowTools.watchWorkflow(statusCmd, statusDir, 1);
-        Log.info("OUT: " + ret.getStdout());
-        Log.info("ERR: " + ret.getStderr());
-        Log.info("STATUS: " + ret.getExitStatus());
-
-        return (ret);
-
-    }
-
-    private String findStatusDir(String statusCmd) {
-
-        String statusDir = null;
-        if (statusCmd == null || "".equals(statusCmd)) {
-            return (statusDir);
-        }
-        Pattern p = Pattern.compile("pegasus-status -l (\\S+)");
-        Matcher m = p.matcher(statusCmd);
-
-        if (m.find()) {
-            statusDir = m.group(1);
-        }
-        return (statusDir);
-
     }
 
     protected Metadata getMetadata() {
@@ -330,7 +282,7 @@ public class WorkflowStatusChecker extends Plugin {
             if (Engines.isOozie(wr.getWorkflowEngine())) {
                 checkOozie();
             } else {
-                checkPegasus();
+                throw new RuntimeException("No other workflow engines currently supported");
             }
         }
 
@@ -520,63 +472,6 @@ public class WorkflowStatusChecker extends Plugin {
                 throw new RuntimeException("Unexpected oozie status value: " + oozieStatus);
             }
             return sqwStatus;
-        }
-
-        private void checkPegasus() {
-            if (wr.getStatus() != null) {
-                switch (wr.getStatus()) {
-                case submitted_cancel:
-                case submitted_retry:
-                    // This should be prevented from ever happening on the submit-side.
-                    throw new RuntimeException("cancel/retry not supported with pegasus engine.");
-                default: // continue
-                }
-            }
-
-            // check the owner of the status dir
-            boolean dirOwner = true;
-            String statusDir = findStatusDir(wr.getStatusCmd());
-            if (statusDir != null && !FileTools.isFileOwner(statusDir)) {
-                dirOwner = false;
-                Log.info("You don't own the status directory: " + wr.getStatusCmd());
-            } else if (statusDir == null) {
-                dirOwner = false;
-                Log.info("The status directory can't be parsed!: " + wr.getStatusCmd());
-            }
-
-            if (dirOwner) {
-                ReturnValue currRet = checkWorkflow(wr.getStatusCmd());
-                if (currRet.getExitStatus() == ReturnValue.SUCCESS) {
-                    synchronized (metadata_sync) {
-                        WorkflowStatusChecker.this.metadata
-                                .update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), WorkflowRunStatus.completed,
-                                        wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(), wr.getHost(),
-                                        currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-                    }
-
-                } else if (currRet.getExitStatus() == ReturnValue.PROCESSING) {
-                    synchronized (metadata_sync) {
-                        WorkflowStatusChecker.this.metadata
-                                .update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), WorkflowRunStatus.running,
-                                        wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(), wr.getHost(),
-                                        currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-                    }
-
-                } else if (currRet.getExitStatus() == ReturnValue.FAILURE) {
-                    Log.error("WORKFLOW FAILURE: this workflow has failed and this status will be saved to the DB.");
-                    synchronized (metadata_sync) {
-                        WorkflowStatusChecker.this.metadata
-                                .update_workflow_run(wr.getWorkflowRunId(), wr.getCommand(), wr.getTemplate(), WorkflowRunStatus.failed,
-                                        wr.getStatusCmd(), wr.getCurrentWorkingDir(), wr.getDax(), wr.getIniFile(), wr.getHost(),
-                                        currRet.getStderr(), currRet.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
-                    }
-                } else if (currRet.getExitStatus() == ReturnValue.UNKNOWN) {
-                    Log.error("ERROR: the workflow status has returned UNKNOWN, this is typically if the workflow status command points"
-                            + "to a non-existant directory or a directory that is not writable or owned by you. No information will be saved to the"
-                            + "DB since the workflow state cannot be determined!");
-
-                }
-            }
         }
 
     }

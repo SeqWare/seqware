@@ -10,14 +10,12 @@ import org.restlet.data.Method;
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
 import org.restlet.data.Status;
-import org.restlet.ext.freemarker.ContextTemplateLoader;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 
-import freemarker.template.Configuration;
 import net.sf.beanlib.hibernate.UnEnhancer;
 import net.sourceforge.seqware.queryengine.webservice.security.SeqWareVerifier;
 import net.sourceforge.seqware.queryengine.webservice.view.*;
@@ -33,19 +31,6 @@ import org.restlet.ext.wadl.*;
  */
 public class SeqWareWebServiceApplicationVersion extends WadlApplication {
 
-    private Configuration configuration = null;
-
-    /**
-     * <p>
-     * Getter for the field <code>configuration</code>.
-     * </p>
-     * 
-     * @return a {@link freemarker.template.Configuration} object.
-     */
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
     /**
      * Creates a root Restlet that will receive all incoming calls.
      * 
@@ -55,8 +40,6 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
     public synchronized Restlet createInboundRoot() {
         final Component component = new Component();
         component.getClients().add(Protocol.CLAP);
-        configuration = new Configuration();
-        configuration.setTemplateLoader(new ContextTemplateLoader(getContext(), "clap://system/templates"));
 
         ChallengeAuthenticator guard = getGuard();
 

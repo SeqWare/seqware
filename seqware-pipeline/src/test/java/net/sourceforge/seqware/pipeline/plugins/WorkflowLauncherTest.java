@@ -19,7 +19,6 @@ package net.sourceforge.seqware.pipeline.plugins;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * 
  * @author dyuen
  */
-@PrepareForTest({ WorkflowTools.class, FileTools.class, WorkflowLauncher.class })
+@PrepareForTest({ FileTools.class, WorkflowLauncher.class })
 @RunWith(PowerMockRunner.class)
 public class WorkflowLauncherTest {
 

@@ -19,7 +19,7 @@ import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.solexatools.Security;
 import net.sourceforge.solexatools.util.PaginationUtil;
 import net.sourceforge.solexatools.webapp.metamodel.Flexigrid;

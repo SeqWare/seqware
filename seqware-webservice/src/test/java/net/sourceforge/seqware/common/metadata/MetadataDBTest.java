@@ -21,7 +21,7 @@ import java.util.Date;
 
 import junit.framework.Assert;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
 import org.apache.log4j.Logger;

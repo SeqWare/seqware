@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import joptsimple.OptionSpec;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -36,7 +36,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 import com.google.common.collect.Lists;
 import java.sql.SQLException;
-import net.sourceforge.seqware.common.model.ProcessingStatus;
+import io.seqware.common.model.ProcessingStatus;
 
 /**
  * 
