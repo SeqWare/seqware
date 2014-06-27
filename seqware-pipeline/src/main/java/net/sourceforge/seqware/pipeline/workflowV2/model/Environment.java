@@ -15,9 +15,6 @@ public class Environment {
     private String memory;
     private String network;
     // from .seqware/settings
-    private String SW_PEGASUS_CONFIG_DIR;
-    private String SW_DAX_DIR;
-    private String SW_CLUSTER;
 
     private String OOZIE_URL;
     private String OOZIE_APP_ROOT;
@@ -108,30 +105,6 @@ public class Environment {
 
     public void setNetwork(String network) {
         this.network = network;
-    }
-
-    public String getPegasusConfigDir() {
-        return SW_PEGASUS_CONFIG_DIR;
-    }
-
-    public void setPegasusConfigDir(String sW_PEGASUS_CONFIG_DIR) {
-        SW_PEGASUS_CONFIG_DIR = sW_PEGASUS_CONFIG_DIR;
-    }
-
-    public String getDaxDir() {
-        return SW_DAX_DIR;
-    }
-
-    public void setDaxDir(String sW_DAX_DIR) {
-        SW_DAX_DIR = sW_DAX_DIR;
-    }
-
-    public String getSwCluster() {
-        return SW_CLUSTER;
-    }
-
-    public void setSwCluster(String sW_CLUSTER) {
-        SW_CLUSTER = sW_CLUSTER;
     }
 
     public String getOOZIE_URL() {

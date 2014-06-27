@@ -24,7 +24,7 @@ import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
@@ -37,7 +37,6 @@ import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowV2Utility;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.pegasus.PegasusWorkflowEngine;
 
 import org.openide.util.lookup.ServiceProvider;
 
@@ -138,7 +137,7 @@ public class WorkflowPlugin extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    public static final String ENGINES_LIST = "pegasus, oozie, oozie-sge";
+    public static final String ENGINES_LIST = "oozie, oozie-sge";
     public static final String DEFAULT_ENGINE = "oozie";
     public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ENGINES_LIST.split(", "))));
 
@@ -284,36 +283,13 @@ public class WorkflowPlugin extends Plugin {
                         (String) options.valueOf("workflow-run-accession"), iniFiles, metadataWriteback, parentAccessions,
                         parentsLinkedToWR, false, nonOptions, host, engine, inputFiles);
             } else {
-                // then your running locally but taking info saved in the
-                // workflow table from the DB
-                Log.info("You are running a workflow installed in the metadb on the local computer.");
-                ret = w.launchInstalledBundle((String) options.valueOf("workflow-accession"),
-                        (String) options.valueOf("workflow-run-accession"), iniFiles, metadataWriteback, parentAccessions,
-                        parentsLinkedToWR, options.has(WAIT), nonOptions, inputFiles);
+                throw new RuntimeException("SeqWare no longer supports running Pegasus bundles");
             }
 
         } else if ((options.has("bundle") || options.has("provisioned-bundle-dir")) && options.has("workflow") && options.has("version")
                 && options.has("ini-files")) {
 
-            // then your launching directly and not something that has been
-            // installed
-            Log.info("FYI: You are running the workflow without metadata writeback since you are running directly from a bundle zip file or directory.");
-            // then run the workflow specified
-            String bundlePath = "";
-            if (options.has("bundle")) {
-                bundlePath = (String) options.valueOf("bundle");
-            } else {
-                bundlePath = (String) options.valueOf("provisioned-bundle-dir");
-            }
-            Log.info("Bundle Path: " + bundlePath);
-            String workflow = (String) options.valueOf("workflow");
-            String version = (String) options.valueOf("version");
-            String metadataFile = (String) options.valueOf("metadata");
-
-            // NOTE: this overrides options to process with metadata writeback
-            // since this is not supported for bundle running!
-            ret = w.launchBundle(workflow, version, metadataFile, bundlePath, iniFiles, false, new ArrayList<String>(),
-                    new ArrayList<String>(), options.has(WAIT), nonOptions, inputFiles);
+            throw new RuntimeException("SeqWare no longer supports running Pegasus bundles");
 
         } else if (options.has(LAUNCH_SCHEDULED)) {
             RunLock.acquire();
@@ -379,7 +355,7 @@ public class WorkflowPlugin extends Plugin {
         AbstractWorkflowEngine wfEngine = null;
         String engine = dataModel.getWorkflow_engine();
         if (engine == null || engine.equalsIgnoreCase("pegasus")) {
-            wfEngine = new PegasusWorkflowEngine();
+            throw new RuntimeException("Pegasus workflow engine is no longer supported");
         } else if (engine.equalsIgnoreCase("oozie")) {
             wfEngine = new OozieWorkflowEngine(dataModel, false, null, null);
         } else if (engine.equalsIgnoreCase("oozie-sge")) {
@@ -501,8 +477,7 @@ public class WorkflowPlugin extends Plugin {
                 boolean requiresNewLauncher = WorkflowV2Utility.requiresNewLauncher(wrWithWorkflow.getWorkflow());
                 if (!requiresNewLauncher) {
                     Log.stdout("Launching via old launcher: " + wr.getSwAccession());
-                    w.launchScheduledBundle(wrWithWorkflow.getWorkflow().getSwAccession().toString(), wr.getSwAccession().toString(),
-                            metadataWriteback, options.has(WAIT));
+                    throw new RuntimeException("SeqWare no longer supports running Pegasus bundles");
                 } else {
                     Log.stdout("Launching via new launcher: " + wr.getSwAccession());
                     WorkflowPlugin.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession(),
@@ -561,9 +536,9 @@ public class WorkflowPlugin extends Plugin {
             return new ReturnValue(ReturnValue.SUCCESS);
         }
 
-        ReturnValue retPegasus = engine.runWorkflow();
+        ReturnValue localReturn = engine.runWorkflow();
         if (!dataModel.isMetadataWriteBack()) {
-            return retPegasus;
+            return localReturn;
         }
 
         Log.info("attempting metadata writeback");
@@ -572,7 +547,7 @@ public class WorkflowPlugin extends Plugin {
         String wra = dataModel.getWorkflow_run_accession();
 
         if (wra == null || wra.isEmpty()) {
-            return retPegasus;
+            return localReturn;
         }
 
         // int workflowrunId = Integer.parseInt(wra);
@@ -616,20 +591,20 @@ public class WorkflowPlugin extends Plugin {
 
         String host = scheduled && !options.has(HOST) ? wr.getHost() : (String) options.valueOf(HOST);
 
-        if (retPegasus.getProcessExitStatus() != ReturnValue.SUCCESS || workflowRunToken == null) {
-            // then something went wrong trying to call pegasus
+        if (localReturn.getProcessExitStatus() != ReturnValue.SUCCESS || workflowRunToken == null) {
+            // then something went wrong trying to call the workflow engine
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                     dataModel.getTags().get("workflow_template"), WorkflowRunStatus.failed, workflowRunToken, engine.getWorkingDirectory(),
-                    wr.getDax(), wr.getIniFile(), host, retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(),
+                    wr.getDax(), wr.getIniFile(), host, localReturn.getStderr(), localReturn.getStdout(), dataModel.getWorkflow_engine(),
                     inputFiles);
 
-            return retPegasus;
+            return localReturn;
         } else {
             // determine status based on object model
             WorkflowRunStatus status = dataModel.isWait() ? WorkflowRunStatus.completed : WorkflowRunStatus.pending;
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                     dataModel.getTags().get("workflow_template"), status, workflowRunToken, engine.getWorkingDirectory(), wr.getDax(),
-                    wr.getIniFile(), host, retPegasus.getStderr(), retPegasus.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
+                    wr.getIniFile(), host, localReturn.getStderr(), localReturn.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
             return ret;
         }
     }

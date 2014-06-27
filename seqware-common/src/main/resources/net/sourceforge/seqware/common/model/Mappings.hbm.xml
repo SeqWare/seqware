@@ -429,7 +429,7 @@
 
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">net.sourceforge.seqware.common.model.WorkflowRunStatus</param>
+                <param name="enumClass">io.seqware.common.model.WorkflowRunStatus</param>
                 <!-- Persist the name instead of the ordinal. 12 is the int value of java.sql.Types.VARCHAR -->
                 <param name="type">12</param>
             </type>
@@ -1343,7 +1343,7 @@
         <property name="description" column="description" type="string"/>
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">net.sourceforge.seqware.common.model.SequencerRunStatus</param>
+                <param name="enumClass">io.seqware.common.model.SequencerRunStatus</param>
                 <!-- Persist the name instead of the ordinal. 12 is the int value of java.sql.Types.VARCHAR -->
                 <param name="type">12</param>
             </type>
@@ -1448,7 +1448,7 @@
         <property name="description" column="description" type="string"/>
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">net.sourceforge.seqware.common.model.SequencerRunStatus</param>
+                <param name="enumClass">io.seqware.common.model.SequencerRunStatus</param>
                 <!-- Persist the name instead of the ordinal. 12 is the int value of java.sql.Types.VARCHAR -->
                 <param name="type">12</param>
             </type>
@@ -2139,7 +2139,7 @@
         <property name="algorithm" column="algorithm" type="string"/>
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">net.sourceforge.seqware.common.model.ProcessingStatus</param>
+                <param name="enumClass">io.seqware.common.model.ProcessingStatus</param>
                 <!-- Persist the name instead of the ordinal. 12 is the int value of java.sql.Types.VARCHAR -->
                 <param name="type">12</param>
             </type>

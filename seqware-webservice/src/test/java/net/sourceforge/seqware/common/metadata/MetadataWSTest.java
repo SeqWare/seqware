@@ -16,8 +16,8 @@
  */
 package net.sourceforge.seqware.common.metadata;
 
-import net.sourceforge.seqware.common.model.WorkflowRunStatus;
-import net.sourceforge.seqware.common.model.ProcessingStatus;
+import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.common.model.ProcessingStatus;
 import java.net.URISyntaxException;
 import java.sql.ResultSet;
 import java.sql.SQLException;

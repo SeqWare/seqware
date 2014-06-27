@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -17,9 +15,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
-import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles;
 
 import org.apache.commons.io.FileUtils;
@@ -491,99 +487,6 @@ public class Bundle {
         if (ret.getExitStatus() == ReturnValue.SUCCESS) {
             Log.info("Validated Bundle: " + bundle.getAbsolutePath());
         }
-        return (ret);
-    }
-
-    /**
-     * <p>
-     * testBundle.
-     * </p>
-     * 
-     * @param bundle
-     *            a {@link java.io.File} object.
-     * @param metadataFile
-     *            a {@link java.io.File} object.
-     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-     */
-    public ReturnValue testBundle(File bundle, File metadataFile) {
-        return (testBundle(bundle, metadataFile, null, null));
-    }
-
-    /**
-     * A bundle test occurs without metadata writeback
-     * 
-     * @param bundle
-     *            a {@link java.io.File} object.
-     * @return ReturnValue
-     * @param metadataFile
-     *            a {@link java.io.File} object.
-     * @param workflow
-     *            a {@link java.lang.String} object.
-     * @param version
-     *            a {@link java.lang.String} object.
-     */
-    public ReturnValue testBundle(File bundle, File metadataFile, String workflow, String version) {
-
-        // unzip the package and get metadata
-        // FIXME: revise once getBundleInfo no longer unzips the file, could run the metadata.xml through template process
-        BundleInfo bi = getBundleInfo(bundle, metadataFile);
-
-        try {
-
-            for (WorkflowInfo wi : bi.getWorkflowInfo()) {
-
-                if ((workflow == null || version == null)
-                        || (workflow != null && version != null && workflow.equals(wi.getName()) && version.equals(wi.getVersion()))) {
-
-                    // actual test command
-                    String testCmd = wi.getTestCmd();
-                    testCmd = testCmd.replaceAll("\\$\\{workflow_bundle_dir\\}", getOutputDir());
-                    Log.stdout("  Running Test Command:\n" + testCmd);
-
-                    ReturnValue runReturn = RunTools.runCommand(testCmd);
-                    if (runReturn.getExitStatus() != ReturnValue.SUCCESS) {
-                        Log.error("Command Run Failed!\n" + runReturn.getStderr());
-                        ret.setReturnValue(runReturn.getExitStatus());
-                    }
-
-                    // now parse out the return status from the pegasus tool
-                    // FIXME: there should be more direct way (calling API directly) than this
-                    String stdOut = runReturn.getStdout();
-                    Pattern p = Pattern.compile("(pegasus-status -l \\S+)");
-                    Matcher m = p.matcher(stdOut);
-                    if (m.find()) {
-                        String statusCmd = m.group(1);
-
-                        // look for the status directory
-                        p = Pattern.compile("pegasus-status -l (\\S+)");
-                        m = p.matcher(stdOut);
-                        String statusDir = null;
-                        if (m.find()) {
-                            statusDir = m.group(1);
-                        }
-
-                        // now use the WorkflowTools to monitor this
-                        // now parse out the return status from the pegasus tool
-                        ReturnValue watchedResult = null;
-                        if (statusCmd != null && statusDir != null) {
-                            WorkflowTools wt = new WorkflowTools();
-                            watchedResult = wt.watchWorkflow(statusCmd, statusDir);
-                        }
-
-                        if (watchedResult.getExitStatus() == ReturnValue.SUCCESS) {
-                            Log.info("Workflow Completed!");
-                        } else {
-                            Log.error("ERROR: problems watching workflow");
-                            ret.setExitStatus(ReturnValue.FAILURE);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
         return (ret);
     }
 
