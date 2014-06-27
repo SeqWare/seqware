@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.sourceforge.seqware.common.dao.SampleDAO;
-import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.model.*;
-import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -841,21 +839,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
             e.printStackTrace();
         }
         return null;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<ReturnValue> findFiles(Integer swAccession) {
-        getSessionFactory().getCurrentSession().flush();
-        getSessionFactory().getCurrentSession().clear();
-        FindAllTheFiles fatf = new FindAllTheFiles();
-        Sample sample = findBySWAccession(swAccession);
-        List<ReturnValue> list = fatf.filesFromSample(sample, null, null);
-        getSessionFactory().getCurrentSession().flush();
-        getSessionFactory().getCurrentSession().clear();
-        return list;
     }
 
     /**

@@ -439,8 +439,9 @@ Also note the study report gives you SWIDs for processing events and
 entities such as studies, samples, and experiments.  You can use this report to
 find these SWIDs that are used as “parents” for subsequent workflow runs.
 
-You can find more information on this report tool on the [Study
-Reporter](/docs/21-study-reporter/) page.
+You can find more information on this report tool by running the following command:
+
+    $ seqware files report --help
 
 ## How to Cancel Workflows
 

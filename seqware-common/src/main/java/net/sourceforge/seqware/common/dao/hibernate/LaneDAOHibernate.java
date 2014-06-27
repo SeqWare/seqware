@@ -7,9 +7,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import net.sourceforge.seqware.common.dao.LaneDAO;
-import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.model.*;
-import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -436,19 +434,6 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<ReturnValue> findFiles(Integer swAccession) {
-        getSessionFactory().getCurrentSession().flush();
-        getSessionFactory().getCurrentSession().clear();
-        FindAllTheFiles fatf = new FindAllTheFiles();
-        Lane lane = findBySWAccession(swAccession);
-        List<ReturnValue> list = fatf.filesFromLane(lane, null, null);
-        getSessionFactory().getCurrentSession().flush();
-        getSessionFactory().getCurrentSession().clear();
-        return list;
     }
 
     /** {@inheritDoc} */

@@ -14,11 +14,6 @@ import net.sourceforge.seqware.webservice.resources.queries.FileProvenanceResour
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
 import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
 import net.sourceforge.seqware.webservice.resources.queries.SampleHierarchyResource;
-import net.sourceforge.seqware.webservice.resources.queries.SampleIdFilesResource;
-import net.sourceforge.seqware.webservice.resources.queries.SequencerRunIdFilesResource;
-import net.sourceforge.seqware.webservice.resources.queries.SequencerRunReportResource;
-import net.sourceforge.seqware.webservice.resources.queries.StudyIdFilesResource;
-import net.sourceforge.seqware.webservice.resources.queries.StudyIdFilesTSVResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowReportResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunIDProcessingsResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunIDWorkflowResource;
@@ -268,17 +263,9 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/reports/file-provenance", new FileProvenanceResource(getContext()));
         router.attach("/reports/file-provenance/generate", new TriggerFileProvenanceResource(getContext()));
 
-        StudyIdFilesResource studyIdSamples = new StudyIdFilesResource(getContext());
-        router.attach("/studies/{studyId}/files", studyIdSamples);
-        router.attach("/sequencerruns/{sequencerRunId}/files", new SequencerRunIdFilesResource(getContext()));
-        router.attach("/samples/{sampleId}/files", new SampleIdFilesResource(getContext()));
-
         // the following collides with the non-variable paths.
         // router.attach("/reports/studies/{studyId}", new CycleCheckResource(getContext()));
-        router.attach("/reports/studies/{studyId}/files", new StudyIdFilesTSVResource(getContext()));
-        router.attach("/reports/studies/files", new StudyIdFilesTSVResource(getContext()));
         router.attach("/reports/workflows/{workflowId}", new WorkflowReportResource(getContext()));
-        router.attach("/reports/sequencerruns", new SequencerRunReportResource(getContext()));
 
         WorkflowRunReportResource wrrr = new WorkflowRunReportResource(getContext());
         router.attach("/reports/workflowruns/{workflowRunId}", wrrr);

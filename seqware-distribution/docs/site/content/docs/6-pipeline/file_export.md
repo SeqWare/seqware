@@ -14,8 +14,7 @@ TODO:
 
 ## Overview 
 
-The reporting tools for [studies](/docs/21-study-reporter/), [sequencer
-runs](/docs/20-sequencer-run-reporter/), and [workflow
+The reporting tools for the file provenance report (seqware files report) and [workflow
 runs](/docs/19-workflow-run-reporter/) each generate tab-delimited reports that
 also include file output URLs.  We currently do not have a bulk export tool in
 SeqWare but the ProvisionFiles module can be used to copy remote files from

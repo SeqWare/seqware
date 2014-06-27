@@ -214,17 +214,6 @@ public interface SampleService {
 
     /**
      * <p>
-     * findFiles.
-     * </p>
-     * 
-     * @param swAccession
-     *            a {@link java.lang.Integer} object.
-     * @return a {@link java.util.List} object.
-     */
-    public List<ReturnValue> findFiles(Integer swAccession);
-
-    /**
-     * <p>
      * isHasFile.
      * </p>
      * 

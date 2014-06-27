@@ -30,8 +30,7 @@ import org.junit.runners.Suite;
  * @author mtaschuk
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-        net.sourceforge.seqware.webservice.resources.tables.DummyExperimentIDResourceTest.class,
+@Suite.SuiteClasses({ net.sourceforge.seqware.webservice.resources.tables.DummyExperimentIDResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.ExperimentIDResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.ExperimentLibraryDesignResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignResourceTest.class,
@@ -57,9 +56,6 @@ import org.junit.runners.Suite;
         net.sourceforge.seqware.webservice.resources.tables.SequencerRunIDResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.ExperimentResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.LaneResourceTest.class,
-        net.sourceforge.seqware.webservice.resources.queries.SampleIdFilesResourceTest.class,
-        // net.sourceforge.seqware.webservice.resources.queries.SequencerRunIdFilesResourceTest.class,
-        net.sourceforge.seqware.webservice.resources.queries.StudyIdSamplesResourceTest.class,
         net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResourceTest.class,
         net.sourceforge.seqware.common.metadata.MetadataWSTest.class, net.sourceforge.seqware.common.metadata.MetadataDBTest.class })
 public class WSResourceTestSuite {

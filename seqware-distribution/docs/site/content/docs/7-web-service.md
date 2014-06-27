@@ -61,9 +61,8 @@ these are the options:
 
 * **Use SeqWare Pipeline with the Web service enabled:** The only configuration necessary is to change your .seqware/settings file to point to the Web service. The seqware-distribution jar will use the Web service instead of a direct database connection with no further changes. This is how you access the command line-based reporting tools.
 * **Use the Java API**: When writing SeqWare plugins or workflow modules, you can access the Webservice through the Metadata object. This object gives you more direct control while hiding the business logic. For example, you can install a new workflow, create processing events, and schedule workflow runs programmatically through this system.
-* **Script to the Web service directly**: Which would involve sending HTTP requests to the RESTful URLs and processing the response. Simple queries can also be entered directly into your browser, which will return XML describing the object. For example, you can get an XML representation of all of the studies in the database by going to http://localhost:8080/seqware-webservice-<%= seqware_release_version %>/studies. Very little business logic is built into the Web service directly. The exception to this is [Running workflows through the Web service](/docs/23-running-workflows-via-web-service/) for more details.
 
-The .seqware/settings file needs to be configured to use the Web service for the first two options. In the third option, you must provide the URL, username and password yourself.
+The .seqware/settings file needs to be configured to use the Web service for these two options.
 
 ## Building and Installing
 

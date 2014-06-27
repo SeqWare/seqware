@@ -182,35 +182,6 @@ public class CommandLineToolTest {
 
     /**
      * <p>
-     * sequencerRunReport.
-     * </p>
-     */
-    @Test
-    public void sequencerRunReport() {
-        PluginRunner runner = new PluginRunner();
-        String[] args = new String[] { "-p", "net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter", "--", "--output-filename",
-                "./testdata/foo.txt" };
-        runner.run(args);
-        assertTrue(true);
-
-    }
-
-    /**
-     * <p>
-     * symlinkReport.
-     * </p>
-     */
-    @Test
-    public void symlinkReport() {
-        PluginRunner runner = new PluginRunner();
-        String[] args = new String[] { "-p", "net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter", "--", "--no-links",
-                "--output-filename", "./testdata/symlinkreport", "--study", "Brian New Test Study 2" };
-        runner.run(args);
-        assertTrue(true);
-    }
-
-    /**
-     * <p>
      * listworkflowparams.
      * </p>
      */

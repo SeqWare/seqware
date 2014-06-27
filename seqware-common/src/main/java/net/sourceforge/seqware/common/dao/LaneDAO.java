@@ -226,17 +226,6 @@ public interface LaneDAO {
 
     /**
      * <p>
-     * findFiles.
-     * </p>
-     * 
-     * @param swAccession
-     *            a {@link java.lang.Integer} object.
-     * @return a {@link java.util.List} object.
-     */
-    public List<ReturnValue> findFiles(Integer swAccession);
-
-    /**
-     * <p>
      * list.
      * </p>
      * 
