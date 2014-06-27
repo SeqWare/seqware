@@ -28,7 +28,6 @@ import org.restlet.resource.ServerResource;
  */
 public class WorkflowRunIDsFilter extends ServerResource {
 
-    private String workflowId;
     private String testId;
     private String runId;
     private boolean isTest, isRun;
@@ -36,7 +35,6 @@ public class WorkflowRunIDsFilter extends ServerResource {
     /** {@inheritDoc} */
     @Override
     public void doInit() {
-        workflowId = (String) getRequestAttributes().get("workflowId");
         testId = (String) getRequestAttributes().get("testId");
         runId = (String) getRequestAttributes().get("runId");
         isTest = (testId != null);

@@ -31,7 +31,6 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +46,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * 
  * @author dyuen
  */
-@PrepareForTest({ WorkflowTools.class, FileTools.class, AttributeAnnotator.class })
+@PrepareForTest({ FileTools.class, AttributeAnnotator.class })
 @RunWith(PowerMockRunner.class)
 public class AttributeAnnotatorTest {
 

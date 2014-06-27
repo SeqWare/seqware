@@ -30,7 +30,7 @@ import org.junit.AfterClass;
 import org.junit.Test;
 
 /**
- * Build and install a bundle, used by both the User tutorial and the Developer tutorial
+ * Build and install a bundle, used by both the User tutorial and the Developer tutorial.
  * 
  * @author dyuen
  */
@@ -55,9 +55,7 @@ public class DeveloperPhase2 {
     }
 
     protected void testWorkflow() throws IOException {
-        ITUtility.runSeqWareJar(
-                "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + DeveloperPhase1.BuildDir.getAbsolutePath()
-                        + " -t --workflow seqwarearchetypejavaworkflow --version 1.0-SNAPSHOT", ReturnValue.SUCCESS, null);
+        /** do nothing, testing in the old pre-CLI is now unsupported */
     }
 
     protected void packageBundle(File tempPackageDir) throws IOException {

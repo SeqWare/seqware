@@ -63,7 +63,6 @@ public class BundleManager extends Plugin {
                 Arrays.asList("list-workflow-params", "list-params"),
                 "Optional: List the parameters for a given workflow and version. You need to supply a workflow accession and you need a database/webservice enabled in your .seqware/settings for this option to work.");
         parser.acceptsAll(Arrays.asList("validate", "v"), "Optional: Run a light basic validation on this bundle.");
-        parser.acceptsAll(Arrays.asList("test", "t"), "Optional: This will trigger the test setup in the metadata.xml within this bundle.");
         parser.acceptsAll(
                 Arrays.asList("install", "i"),
                 "Optional: if the --bundle param points to a .zip file then the install process will first unzip into the directory specified by the directory defined by SW_BUNDLE_DIR in the .seqware/settings file (skipping files that already exit).  It will then copy the whole zip file to the SW_BUNDLE_REPO_DIR which can be a directory or S3 prefix (the copy will be skipped if the file is already at this location). It will finish this process by installing this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location.  If the --bundle param point to a directory then this will first create a zip of the bundle and place it in SW_BUNDLE_REPO_DIR. It will then install this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location. The method (direct database or web service) and server location of the SeqWare  MetaDB is controlled via the .seqware/settings file.");
@@ -184,26 +183,6 @@ public class BundleManager extends Plugin {
             if (ret.getExitStatus() == ReturnValue.SUCCESS) {
                 println("Bundle Validates!");
             }
-        } else if (options.has("bundle") && options.has("test")) {
-            println("Validating Bundle structure");
-            String bundlePath = (String) options.valueOf("bundle");
-            File bundle = new File(bundlePath);
-            ret = b.validateBundle(bundle);
-            if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-                println("Bundle Validates!");
-                println("Testing Bundle");
-                if (options.has("workflow") && options.has("version")) {
-                    // then just run the test for a particular workflow and version
-                    ret = b.testBundle(bundle, specificMetadataFile, (String) options.valueOf("workflow"),
-                            (String) options.valueOf("version"));
-                } else {
-                    ret = b.testBundle(bundle, specificMetadataFile);
-                }
-                if (ret.getExitStatus() == ReturnValue.SUCCESS) {
-                    println("Bundle Passed Test!");
-                }
-            }
-
         } else if (options.has("bundle") && options.has("path-to-package")) {
             println("Validating Bundle structure");
             File bundleDir = new File((String) options.valueOf("path-to-package"));

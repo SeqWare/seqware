@@ -13,7 +13,7 @@ import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Processing;
-import net.sourceforge.seqware.common.model.ProcessingStatus;
+import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.RegistrationDTO;
 import net.sourceforge.seqware.common.util.Log;
 
