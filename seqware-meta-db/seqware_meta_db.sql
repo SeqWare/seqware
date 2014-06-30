@@ -1,1 +1,1 @@
-src/main/resources/net/sourceforge/seqware/metadb/util/seqware_meta_db.sql
+src/main/resources/io/seqware/metadb/util/seqware_meta_db.sql
