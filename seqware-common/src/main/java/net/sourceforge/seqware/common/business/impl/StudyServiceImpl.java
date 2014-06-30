@@ -359,12 +359,6 @@ public class StudyServiceImpl implements StudyService {
 
     /** {@inheritDoc} */
     @Override
-    public List<ReturnValue> findFiles(Integer swAccession) {
-        return studyDAO.findFiles(swAccession);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public void updateOwners(Integer swAccession) {
         studyDAO.updateOwners(swAccession);
     }

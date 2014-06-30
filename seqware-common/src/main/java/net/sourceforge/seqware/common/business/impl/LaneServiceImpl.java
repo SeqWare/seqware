@@ -640,12 +640,6 @@ public class LaneServiceImpl implements LaneService {
 
     /** {@inheritDoc} */
     @Override
-    public List<ReturnValue> findFiles(Integer swAccession) {
-        return laneDAO.findFiles(swAccession);
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public List<Lane> list() {
         return laneDAO.list();
     }

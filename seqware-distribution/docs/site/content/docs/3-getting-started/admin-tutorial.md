@@ -76,7 +76,7 @@ For more information see the [Monitor Configuration](/docs/6-pipeline/monitor_co
 
 <p class="warning"><strong>Note:</strong>
 Before proceeding further, it is worth noting that the SeqWare MetaDB should be regularly backed-up. 
-On our deployment, we have a cron script which calls the SymLinkFileReporter and <code>pg_dump</code> nightly to do back-up. 
+On our deployment, we have a cron script which calls the Files Report and <code>pg_dump</code> nightly to do back-up. 
 </p>
 
 

@@ -536,7 +536,6 @@ public class Main {
             out("  launch    Launch a specified workflow in a bundle directory");
             out("  list      List workflows within a bundle directory");
             out("  package   Package a bundle directory into a zip file");
-            out("  test      Test-launch all the workflows in a bundle directory");
             out("");
         } else {
             String cmd = args.remove(0);
@@ -830,16 +829,17 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --out <file>                   The name of the output file");
-      for(HumanProvenanceFilters filter : ProvenanceUtility.HumanProvenanceFilters.values()){
-            out("  --"+filter.human_str+" <value>            Limit files to the specified "+filter.desc+". Can occur multiple times.");
-      }
+            for (HumanProvenanceFilters filter : ProvenanceUtility.HumanProvenanceFilters.values()) {
+                out("  --" + filter.human_str + " <value>            Limit files to the specified " + filter.desc
+                        + ". Can occur multiple times.");
+            }
             out("");
         } else {
-      Map<ProvenanceUtility.HumanProvenanceFilters, List<String>> map = new HashMap<>();
-      for(HumanProvenanceFilters filter : ProvenanceUtility.HumanProvenanceFilters.values()){
-              List<String> optVals = optVals(args, "--" + filter.human_str);
-              map.put(filter, optVals);
-      }
+            Map<ProvenanceUtility.HumanProvenanceFilters, List<String>> map = new HashMap<>();
+            for (HumanProvenanceFilters filter : ProvenanceUtility.HumanProvenanceFilters.values()) {
+                List<String> optVals = optVals(args, "--" + filter.human_str);
+                map.put(filter, optVals);
+            }
             String file = optVal(args, "--out", (new Date() + ".tsv").replace(" ", "_"));
 
             extras(args, "files report");
@@ -849,22 +849,22 @@ public class Main {
             runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.fileprovenance.FileProvenanceReporter");
             runnerArgs.add("--");
 
-        // check if all values in the map are empty
-        boolean allEmpty = true;
-        for(Entry<ProvenanceUtility.HumanProvenanceFilters, List<String>> e : map.entrySet()){
-            if (!e.getValue().isEmpty()){
-                allEmpty = false;
-                }
-        }
-        
-        if (allEmpty) {
-            runnerArgs.add("--all");
-        } else {
+            // check if all values in the map are empty
+            boolean allEmpty = true;
             for (Entry<ProvenanceUtility.HumanProvenanceFilters, List<String>> e : map.entrySet()) {
-                for(String val : e.getValue()){
-                    runnerArgs.add("--" + e.getKey().human_str);
-                    runnerArgs.add(val);
+                if (!e.getValue().isEmpty()) {
+                    allEmpty = false;
                 }
+            }
+
+            if (allEmpty) {
+                runnerArgs.add("--all");
+            } else {
+                for (Entry<ProvenanceUtility.HumanProvenanceFilters, List<String>> e : map.entrySet()) {
+                    for (String val : e.getValue()) {
+                        runnerArgs.add("--" + e.getKey().human_str);
+                        runnerArgs.add(val);
+                    }
                 }
             }
             if (file != null) {

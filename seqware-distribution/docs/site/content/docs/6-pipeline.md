@@ -110,10 +110,8 @@ The Deciders framework allows for the automatic parameterization and calling of 
 
 A major focus of the SeqWare Web Service is providing reporting resources. These are command line tools that are particularly useful for generating reports for SeqWare entities such as workflow runs and their outputs.
 
-* [Study Reporter](/docs/21-study-reporter/)
-: Create a nested tree structure of all of the output files from a particular sample, or all of the samples in a study
-* [Sequencer Run Reporter](/docs/20-sequencer-run-reporter/)
-: Gives you a view of all the sequencer runs/lanes/barcodes and the associated analysis processing events.
+* seqware files report
+: Gives you a view of all files and their position in the database hierarchy from study on down
 * [Workflow Run Reporter](/docs/19-workflow-run-reporter/)
 : Find the identity and library samples and input and output files from one or more workflow runs.
 

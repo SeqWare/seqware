@@ -387,14 +387,6 @@ public class SampleServiceImpl implements SampleService {
      * {@inheritDoc}
      */
     @Override
-    public List<ReturnValue> findFiles(Integer swAccession) {
-        return sampleDAO.findFiles(swAccession);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public List<Sample> list() {
         return sampleDAO.list();
     }
