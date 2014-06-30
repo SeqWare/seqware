@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.seqware.common.dao.StudyDAO;
-import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.PropagateOwnership;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.File;
@@ -14,7 +13,6 @@ import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
 import io.seqware.common.model.WorkflowRunStatus;
-import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
@@ -1119,19 +1117,6 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<ReturnValue> findFiles(Integer swAccession) {
-        getSessionFactory().getCurrentSession().flush();
-        getSessionFactory().getCurrentSession().clear();
-        FindAllTheFiles fatf = new FindAllTheFiles();
-        Study study = findBySWAccession(swAccession);
-        List<ReturnValue> list = fatf.filesFromStudy(study);
-        getSessionFactory().getCurrentSession().flush();
-        getSessionFactory().getCurrentSession().clear();
-        return list;
     }
 
     /** {@inheritDoc} */

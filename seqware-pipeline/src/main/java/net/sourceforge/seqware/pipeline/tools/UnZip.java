@@ -8,7 +8,7 @@ import net.sourceforge.seqware.common.util.filetools.FileTools;
 
 /**
  * <p>
- * UnZip class.
+ * Unzip tool, seemingly unique only in its ability to unzip Zip64 files
  * </p>
  * 
  * @author boconnor

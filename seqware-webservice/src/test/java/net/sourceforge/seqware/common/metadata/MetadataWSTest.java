@@ -352,60 +352,6 @@ public class MetadataWSTest {
     }
 
     /**
-     * Test of findFilesAssociatedWithASample method, of class MetadataWS.
-     */
-    // @Test
-    public void testFindFilesAssociatedWithASample() {
-        logger.info("findFilesAssociatedWithASample");
-        String sampleName = "Sample_Tumour";
-        List<ReturnValue> result = instance.findFilesAssociatedWithASample(sampleName);
-        logger.debug("File size: " + result.size());
-        Assert.assertEquals("No results", true, (result.size() > 0));
-        for (ReturnValue ret : result) {
-            logger.debug(ret.getAlgorithm());
-        }
-    }
-
-    /**
-     * Test of findSamplesAssociatedWithAStudy method, of class MetadataWS.
-     */
-    // @Test
-    public void testFindSamplesAssociatedWithAStudy() {
-        logger.info("findSamplesAssociatedWithAStudy");
-        String studyName = "AbcCo_Tumour_Sequencing";
-        List<ReturnValue> result = instance.findFilesAssociatedWithAStudy(studyName);
-        logger.debug("Sample size: " + result.size());
-        Assert.assertEquals("No results", true, (result.size() > 0));
-        for (ReturnValue ret : result) {
-            Assert.assertNotNull(ret.getAlgorithm());
-            Assert.assertFalse(ret.getAttributes().isEmpty());
-            for (String key : ret.getAttributes().keySet()) {
-                logger.debug(key + "->" + ret.getAttribute(key));
-            }
-        }
-
-        // assertEquals(expResult, result);
-    }
-
-    // @Test
-    // public void testFindFilesAssociatedWithASequencerRun() {
-    // logger.info("testFindFilesAssociatedWithASequencerRun");
-    // String srName = "TEST_SQR_RUN_001";
-    // List<ReturnValue> result = instance.findFilesAssociatedWithASequencerRun(srName);
-    // logger.debug("Sample size: " + result.size());
-    // for (ReturnValue ret :result)
-    // {
-    // Assert.assertNotNull(ret.getAlgorithm());
-    // Assert.assertFalse(ret.getAttributes().isEmpty());
-    // for (String key : ret.getAttributes().keySet())
-    // {
-    // logger.debug(key + "->"+ ret.getAttribute(key));
-    // }
-    // }
-
-    // assertEquals(expResult, result);
-    // }
-    /**
      * Test of get_workflow_info method, of class MetadataWS.
      */
     // @Test

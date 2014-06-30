@@ -123,11 +123,13 @@ public class UserPhase6 {
                 ReturnValue.SUCCESS, workingDir);
     }
 
+    /**
+     * 
+     * @throws IOException
+     */
     protected void exportStudyResults() throws IOException {
-        ITUtility.runSeqWareJar(
-                " -p net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter -- " + " --no-links --output-filename study_report "
-                        + "--workflow-accession " + AccessionMap.accessionMap.get(UserPhase5.WORKFLOW) + " " + "--study 'New Test Study'",
-                ReturnValue.SUCCESS, null);
+        /** do nothing, this is only accessible via the CLI now */
+        return;
     }
 
     public static class WorkFlowRunReporterFilter implements IOFileFilter {
