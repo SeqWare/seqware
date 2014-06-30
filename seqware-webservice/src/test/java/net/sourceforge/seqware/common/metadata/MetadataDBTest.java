@@ -73,19 +73,6 @@ public class MetadataDBTest extends MetadataWSTest {
         testTimestamp("select update_tstmp from workflow_run " + "where workflow_run_id=32;", "update_tstmp", beforeDate);
     }
 
-    @Test
-    @Override
-    public void testFindFilesAssociatedWithASample() {
-    }
-
-    /**
-     * Test of findSamplesAssociatedWithAStudy method, of class MetadataWS.
-     */
-    @Test
-    @Override
-    public void testFindSamplesAssociatedWithAStudy() {
-    }
-
     @Override
     public void testGetFile() {
     }

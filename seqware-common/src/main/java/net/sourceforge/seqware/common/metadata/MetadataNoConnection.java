@@ -82,30 +82,6 @@ public class MetadataNoConnection implements Metadata {
         return Collections.emptyList();
     }
 
-    /** {@inheritDoc} */
-    @Override
-    public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName) {
-        logger.info("No metadata connection");
-        ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
-        finished.setExitStatus(ReturnValue.SUCCESS);
-        List<ReturnValue> list = new ArrayList<>();
-        list.add(finished);
-        return list;
-
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<ReturnValue> findFilesAssociatedWithASample(String sampleName) {
-        logger.info("No metadata connection");
-        ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
-        finished.setExitStatus(ReturnValue.SUCCESS);
-        List<ReturnValue> list = new ArrayList<>();
-        list.add(finished);
-        return list;
-
-    }
-
     // FIXME: Need to tune these statements in case of null values. Need to figure
     // what we exactly need
     // FIXME: to require in a ReturnValue and gracefully exit on missing required
@@ -477,13 +453,6 @@ public class MetadataNoConnection implements Metadata {
 
     /** {@inheritDoc} */
     @Override
-    public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName) {
-        logger.info("No metadata connection");
-        return new ArrayList<>();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
         logger.info("No metadata connection");
         return new ArrayList<>();
@@ -705,21 +674,6 @@ public class MetadataNoConnection implements Metadata {
     public Workflow getWorkflow(int workflowAccession) {
         logger.info("No metadata connection");
         return null;
-    }
-
-    @Override
-    public List<ReturnValue> findFilesAssociatedWithASample(String sampleName, boolean requireFiles) {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<ReturnValue> findFilesAssociatedWithAStudy(String studyName, boolean requireFiles) {
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<ReturnValue> findFilesAssociatedWithASequencerRun(String sequencerRunName, boolean requireFiles) {
-        return new ArrayList<>();
     }
 
     @Override

@@ -29,7 +29,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * These tests support command-line tools found in the SeqWare User Tutorial, in this case, SequencerRunReporter
+ * These tests support command-line tools found in the SeqWare User Tutorial, in this case, WorkflowRunReporter
  * 
  * @author dyuen
  */
