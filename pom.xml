@@ -213,7 +213,7 @@
             <dependency>
                 <groupId>commons-collections</groupId>
                 <artifactId>commons-collections</artifactId>
-                <version>3.1</version>
+                <version>3.2.1</version>
             </dependency>
             <dependency>
                 <groupId>ch.enterag</groupId>
@@ -536,6 +536,11 @@
             </dependency>
             <dependency>
                 <groupId>org.restlet.jee</groupId>
+                <artifactId>org.restlet.ext.slf4j</artifactId>
+                <version>${restlet.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.restlet.jee</groupId>
                 <artifactId>org.restlet.ext.httpclient</artifactId>
                 <version>${restlet.version}</version>
             </dependency>
@@ -608,7 +613,7 @@
         <dependency>
             <groupId>org.codehaus.jettison</groupId>
             <artifactId>jettison</artifactId>
-            <version>1.1</version>
+            <version>1.3</version>
         </dependency>
         <dependency>
             <groupId>org.jvnet.mimepull</groupId>
@@ -858,6 +863,7 @@
                                         <exclude>com.github.seqware:*</exclude>
                                     </excludes>
                                 </requireReleaseDeps>
+                                <requireUpperBoundDeps/>
                             </rules>
                         </configuration>
                         <goals>
