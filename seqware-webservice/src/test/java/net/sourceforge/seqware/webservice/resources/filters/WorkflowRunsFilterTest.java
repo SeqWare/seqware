@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.filters;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.webservice.resources.AbstractResourceTest;
 import org.junit.Ignore;

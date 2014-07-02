@@ -17,7 +17,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @XmlRootElement
 /**
@@ -87,6 +88,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
     private Set<SampleLink> sampleLinks = new TreeSet<>();
     // non-persisted field to store organism_id
     private Integer organismId;
+    final Logger logger = LoggerFactory.getLogger(Sample.class);
 
     /**
      * <p>
@@ -114,7 +116,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
             return -1;
         }
 
-        if (that.getSampleId() == this.getSampleId()) // when both names are null
+        if (Objects.equals(that.getSampleId(), this.getSampleId())) // when both names are null
         {
             return 0;
         }
@@ -1050,10 +1052,10 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      if (registration.isLIMSAdmin()) {
-        Log.debug("Skipping permissions admin on Sample object " + swAccession);
-        return true;
-      }
+        if (registration.isLIMSAdmin()) {
+            Log.debug("Skipping permissions admin on Sample object " + swAccession);
+            return true;
+        }
         boolean consideredBefore = considered.contains(this.getSwAccession());
         if (!consideredBefore) {
             considered.add(this.getSwAccession());
@@ -1063,21 +1065,21 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
             return true;
         }
 
-        boolean hasPermission = true;
+        boolean hasPermission;
         Log.debug("registration: " + registration + " owner: " + owner);
         if (experiment != null) {
             hasPermission = experiment.givesPermission(registration, considered);
         } else {// orphaned Sample
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                Logger.getLogger(Sample.class).warn("Modifying Orphan Sample: " + this.getName());
+                logger.warn("Modifying Orphan Sample: " + this.getName());
                 hasPermission = true;
             } else {
-                Logger.getLogger(Sample.class).warn("Not modifying Orphan Sample: " + this.getName());
+                logger.warn("Not modifying Orphan Sample: " + this.getName());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            Logger.getLogger(Sample.class).info("Sample does not give permission to " + registration);
+            logger.info("Sample does not give permission to " + registration);
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.getName());
         }
         return hasPermission;

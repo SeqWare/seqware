@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sourceforge.seqware.common.model.lists.ReturnValueList;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;

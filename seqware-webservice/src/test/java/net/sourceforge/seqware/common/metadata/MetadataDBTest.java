@@ -19,7 +19,7 @@ package net.sourceforge.seqware.common.metadata;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;

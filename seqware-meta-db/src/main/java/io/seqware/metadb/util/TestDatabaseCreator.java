@@ -3,15 +3,16 @@ package io.seqware.metadb.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import org.apache.log4j.Logger;
-import java.io.InputStreamReader;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class handles basic database creation.
@@ -34,7 +35,7 @@ public class TestDatabaseCreator {
     private final static String SEQWARE_PASSWORD = "seqware";
     private static boolean database_changed;
     private static boolean first_time_created = true;
-    private static Logger logger = Logger.getLogger(TestDatabaseCreator.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestDatabaseCreator.class);
 
     /**
      * @return the DEFAULT_DB_HOST
@@ -67,7 +68,6 @@ public class TestDatabaseCreator {
             connectionToSeqware = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
             loadDBStructure(connectionToSeqware);
         } catch (Exception e) {
-            e.printStackTrace();
             logger.info("TestDatabaseCreator.createDatabase " + e.getMessage());
         } finally {
             if (connectionToPostgres != null) {
@@ -128,7 +128,7 @@ public class TestDatabaseCreator {
         try {
             connectionToSeqware = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
             if (update) {
-                return (T) new Integer(run.update(connectionToSeqware, query, params));
+                return (T) (Integer) run.update(connectionToSeqware, query, params);
             } else {
                 result = run.query(connectionToSeqware, query, h, params);
             }
@@ -150,17 +150,11 @@ public class TestDatabaseCreator {
      *             if any.
      */
     public void dropDatabase() throws SQLException {
-        Connection connectionToPostgres = null;
-        try {
-            connectionToPostgres = createConnection(getPOSTGRE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
+        try (Connection connectionToPostgres = createConnection(getPOSTGRE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD())) {
             unLoadDatabase(connectionToPostgres);
         } catch (Exception e) {
             // e.printStackTrace();
             logger.info("TestDatabaseCreator.dropDatabase" + e.getMessage());
-        } finally {
-            if (connectionToPostgres != null) {
-                connectionToPostgres.close();
-            }
         }
     }
 
@@ -171,18 +165,12 @@ public class TestDatabaseCreator {
      *             if any.
      */
     public void dropDatabaseWithUsers() throws SQLException {
-        Connection connectionToPostgres = null;
-        try {
-            connectionToPostgres = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
+        try (Connection connectionToPostgres = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD())) {
             connectionToPostgres.createStatement().execute("drop schema if exists public cascade;");
             connectionToPostgres.createStatement().execute("create schema public;");
         } catch (Exception e) {
             // e.printStackTrace();
             logger.info("TestDatabaseCreator.dropDatabaseWithUsers" + e.getMessage());
-        } finally {
-            if (connectionToPostgres != null) {
-                connectionToPostgres.close();
-            }
         }
     }
 
@@ -231,7 +219,7 @@ public class TestDatabaseCreator {
             System.out.println("Loading testing data");
             connection.createStatement().execute(getClassPathFileToString("seqware_meta_db_testdata.sql"));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("could not load testing database", e);
         }
         System.out.println("----------------Dump Loaded--------------------");
     }
@@ -239,15 +227,15 @@ public class TestDatabaseCreator {
     private static String getClassPathFileToString(String path) throws IOException {
         InputStream in = TestDatabaseCreator.class.getResourceAsStream(path);
         StringBuilder fileData = new StringBuilder(1000);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        char[] buf = new char[1024];
-        int numRead = 0;
-        while ((numRead = reader.read(buf)) != -1) {
-            String readData = String.valueOf(buf, 0, numRead);
-            fileData.append(readData);
-            buf = new char[1024];
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            char[] buf = new char[1024];
+            int numRead;
+            while ((numRead = reader.read(buf)) != -1) {
+                String readData = String.valueOf(buf, 0, numRead);
+                fileData.append(readData);
+                buf = new char[1024];
+            }
         }
-        reader.close();
         return fileData.toString();
     }
 
@@ -299,9 +287,9 @@ public class TestDatabaseCreator {
     protected void basicResetDatabaseWithUsers() {
         try {
             this.dropDatabaseWithUsers();
-            this.markDatabaseChanged();
+            TestDatabaseCreator.markDatabaseChanged();
             this.createDatabase();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new RuntimeException();
         }
     }

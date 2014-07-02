@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
@@ -51,16 +51,16 @@ public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
 
             int result = testObject(o);
             if (result == ReturnValue.INVALIDFILE) {
-                junit.framework.Assert.fail("IDs are not equal. See System.err for more information.");
+                Assert.fail("IDs are not equal. See System.err for more information.");
             } else if (result == ReturnValue.FILENOTREADABLE) {
-                junit.framework.Assert.fail("Returned object is not correct instance. See System.err for more information.");
+                Assert.fail("Returned object is not correct instance. See System.err for more information.");
             }
 
             rep.exhaust();
             rep.release();
         } catch (Exception e) {
             e.printStackTrace();
-            junit.framework.Assert.fail(e.getMessage());
+            Assert.fail(e.getMessage());
 
         }
     }
@@ -88,16 +88,16 @@ public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
 
             int result = ret.getExitStatus();
             if (result == ReturnValue.INVALIDFILE) {
-                junit.framework.Assert.fail("IDs are not equal. See System.err for more information.");
+                Assert.fail("IDs are not equal. See System.err for more information.");
             } else if (result == ReturnValue.FILENOTREADABLE) {
-                junit.framework.Assert.fail("Returned object is not correct instance. See System.err for more information.");
+                Assert.fail("Returned object is not correct instance. See System.err for more information.");
             }
 
             rep.exhaust();
             rep.release();
         } catch (Exception e) {
             e.printStackTrace();
-            junit.framework.Assert.fail(e.getMessage());
+            Assert.fail(e.getMessage());
 
         }
     }
@@ -125,16 +125,16 @@ public class RunWorkflowResourceTest extends DatabaseResourceIDTest {
 
             int result = ret.getExitStatus();
             if (result == ReturnValue.INVALIDFILE) {
-                junit.framework.Assert.fail("IDs are not equal. See System.err for more information.");
+                Assert.fail("IDs are not equal. See System.err for more information.");
             } else if (result == ReturnValue.FILENOTREADABLE) {
-                junit.framework.Assert.fail("Returned object is not correct instance. See System.err for more information.");
+                Assert.fail("Returned object is not correct instance. See System.err for more information.");
             }
 
             rep.exhaust();
             rep.release();
         } catch (Exception e) {
             e.printStackTrace();
-            junit.framework.Assert.fail(e.getMessage());
+            Assert.fail(e.getMessage());
 
         }
     }

@@ -40,8 +40,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <aspectj.version>1.6.11</aspectj.version>
-        <powermock.version>1.5.4</powermock.version>
     </properties>
     <repositories>
         <repository>
@@ -79,57 +77,17 @@
             <artifactId>spring-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
             <version>1.1</version>
         </dependency>
         <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>2.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>${aspectj.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-            <version>${aspectj.version}</version>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
+            <artifactId>junit</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.objenesis</groupId>
-            <artifactId>objenesis</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -140,13 +98,13 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
-            <version>${powermock.version}</version>
+            <version>1.5.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-            <version>${powermock.version}</version>
+            <version>1.5.5</version>
             <scope>test</scope>
         </dependency>  
         <dependency>
@@ -171,19 +129,12 @@
             <artifactId>jackson-core-asl</artifactId>
         </dependency>
         <dependency>
-            <groupId>args4j</groupId>
-            <artifactId>args4j</artifactId>
-            <version>2.0.12</version>
-        </dependency>
-        <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
-            <version>RELEASE701</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.3</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -196,6 +147,12 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <type>jar</type>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javassist</artifactId>
+                    <groupId>javassist</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>net.sf.opencsv</groupId>
@@ -205,16 +162,12 @@
             <groupId>org.apache.oozie</groupId>
             <artifactId>oozie-client</artifactId>
             <version>3.3.2-cdh4.5.0 </version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.oozie</groupId>
-            <artifactId>oozie-tools</artifactId>
-            <version>3.3.2-cdh4.5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-simple</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
         <groupId>org.rendersnake</groupId>
@@ -222,18 +175,65 @@
         <version>1.7.2</version>
         </dependency>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
+            <artifactId>seqware-meta-db</artifactId>
+            <groupId>com.github.seqware</groupId>
             <type>jar</type>
         </dependency>
         <dependency>
-            <artifactId>jersey-json</artifactId>
-            <groupId>com.sun.jersey</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <groupId>org.slf4j</groupId>
+            <type>jar</type>
         </dependency>
         <dependency>
+            <artifactId>xml-apis</artifactId>
+            <groupId>xml-apis</groupId>
+            <type>jar</type>
+            <version>1.4.01</version>
+        </dependency>
+        <dependency>
+            <artifactId>commons-lang3</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <type>jar</type>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+            <artifactId>guava</artifactId>
+            <groupId>com.google.guava</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <groupId>org.codehaus.jackson</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>xercesImpl</artifactId>
+            <groupId>xerces</groupId>
+            <type>jar</type>
+            <version>2.10.0</version>
+        </dependency>
+        <dependency>
+            <artifactId>commons-dbutils</artifactId>
+            <groupId>commons-dbutils</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>hadoop-common</artifactId>
+            <groupId>org.apache.hadoop</groupId>
+            <type>jar</type>
+            <version>2.0.0-cdh4.5.0</version>
+        </dependency>
+        <dependency>
+            <artifactId>powermock-core</artifactId>
+            <groupId>org.powermock</groupId>
+            <type>jar</type>
+            <version>1.5.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>jersey-client</artifactId>
             <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-core</artifactId>
+            <type>jar</type>
         </dependency>
     </dependencies>
     <build>

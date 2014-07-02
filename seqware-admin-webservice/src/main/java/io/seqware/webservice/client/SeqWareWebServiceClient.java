@@ -24,7 +24,6 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
-//import io.seqware.webservice.controller.CustomWorkflowRunFacadeREST.UnsettledWorkflowRunException;
 import io.seqware.webservice.controller.ModelAccessionIDTuple;
 import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
 import io.seqware.webservice.generated.model.Processing;
@@ -82,10 +81,11 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
                 .type(javax.ws.rs.core.MediaType.APPLICATION_JSON).header("X-HTTP-Method-Override", "DELETE").post(matchSet);
     }
 
-    public void createSampleNullParentHierarchyRelationship(String id) throws UniformInterfaceException{
-        super.getWebResource().path(java.text.MessageFormat.format("{0}/createNullHierarchy", id)).type(javax.ws.rs.core.MediaType.APPLICATION_JSON).put();
+    public void createSampleNullParentHierarchyRelationship(String id) throws UniformInterfaceException {
+        super.getWebResource().path(java.text.MessageFormat.format("{0}/createNullHierarchy", id))
+                .type(javax.ws.rs.core.MediaType.APPLICATION_JSON).put();
     }
-    
+
     public ModelAccessionIDTuple findTupleByAccession(String id) throws UniformInterfaceException {
         WebResource resource = getClient().resource(baseUri);
         resource = resource.path(java.text.MessageFormat.format("utility/translateSWID/{0}", id));
@@ -103,17 +103,17 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
         // some testing for workflow_runs
         SeqWareWebserviceClient processingClient = new SeqWareWebserviceClient("processing");
         SeqWareWebserviceClient client1 = new SeqWareWebserviceClient("workflowrun");
-      
-      // some testing to investigate seqware admin webservice
-      SeqWareWebserviceClient sampleClient = new SeqWareWebserviceClient("sample");
-      ClientResponse response0 = sampleClient.find_XML(ClientResponse.class, "127665");
-      GenericType<Sample> genericType0 = new GenericType<Sample>() {
-      };
-      Sample sample = response0.getEntity(genericType0);
-      // test out sample null creation
-      io.seqware.webservice.client.SeqWareWebServiceClient sampleClient2 = new SeqWareWebServiceClient("sample");
-      sampleClient2.createSampleNullParentHierarchyRelationship("127665");
-      
+
+        // some testing to investigate seqware admin webservice
+        SeqWareWebserviceClient sampleClient = new SeqWareWebserviceClient("sample");
+        ClientResponse response0 = sampleClient.find_XML(ClientResponse.class, "127665");
+        GenericType<Sample> genericType0 = new GenericType<Sample>() {
+        };
+        Sample sample = response0.getEntity(genericType0);
+        // test out sample null creation
+        io.seqware.webservice.client.SeqWareWebServiceClient sampleClient2 = new SeqWareWebServiceClient("sample");
+        sampleClient2.createSampleNullParentHierarchyRelationship("127665");
+
         ClientResponse response = client1.findRange_XML(ClientResponse.class, "1", "5");
         GenericType<List<WorkflowRun>> genericType = new GenericType<List<WorkflowRun>>() {
         };
