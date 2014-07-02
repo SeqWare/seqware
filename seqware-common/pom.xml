@@ -122,9 +122,6 @@
         <repository>
             <id>cloudera</id>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
         </repository>
     </repositories>
 
@@ -166,6 +163,12 @@
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.xstream</artifactId>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.thoughtworks.xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.restlet.jee</groupId>
@@ -317,7 +320,7 @@
         <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.7</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

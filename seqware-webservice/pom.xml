@@ -433,6 +433,12 @@
             <artifactId>org.restlet.ext.json</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <scope>test</scope>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.test</artifactId>
             <scope>test</scope>
@@ -472,6 +478,14 @@
                 <exclusion>
                     <groupId>commons-pool</groupId>
                     <artifactId>commons-pool</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.thoughtworks.xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.inject</groupId>
+                    <artifactId>guice</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
