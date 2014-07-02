@@ -6,9 +6,10 @@ import java.util.Map;
 
 import net.sourceforge.seqware.common.dao.WorkflowRunParamDAO;
 import net.sourceforge.seqware.common.model.*;
-import org.apache.log4j.Logger;
 
 import org.hibernate.SQLQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -21,7 +22,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements WorkflowRunParamDAO {
 
-    private Logger logger;
+    final Logger localLogger = LoggerFactory.getLogger(WorkflowRunParamDAOHibernate.class);
 
     /**
      * <p>
@@ -30,7 +31,6 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
      */
     public WorkflowRunParamDAOHibernate() {
         super();
-        logger = Logger.getLogger(WorkflowRunParamDAOHibernate.class);
     }
 
     /** {@inheritDoc} */
@@ -70,12 +70,12 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
      */
     @Override
     public void insertFilesAsWorkflowRunParam(WorkflowRun workflowRun, Map<String, List<File>> paramNameFileHash) {
-        logger.debug("Start insert files ...");
+        localLogger.debug("Start insert files ...");
         for (String paramName : paramNameFileHash.keySet()) {
 
             List<File> files = paramNameFileHash.get(paramName);
 
-            logger.debug("Param Name = " + paramName);
+            localLogger.debug("Param Name = " + paramName);
 
             if (files != null && files.size() > 0) {
 
@@ -94,7 +94,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
 
                 int countParam = 5;
                 // 0,1,2,3,4 5,6,7,8,9
-                logger.debug("Insert Files :");
+                localLogger.debug("Insert Files :");
                 for (int i = 0; i < files.size(); i++) {
                     int startPos = countParam * i;
                     sql.setInteger(startPos, workflowRunId);
@@ -108,12 +108,12 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
                     // event
                     sql.setInteger(startPos + 3, getProcessingSWID(files.get(i).getFileId()));
                     sql.setString(startPos + 4, "file");
-                    logger.debug("Key = " + paramName + "; Value = " + files.get(i).getFilePath() + "; parent swAccession = "
+                    localLogger.debug("Key = " + paramName + "; Value = " + files.get(i).getFilePath() + "; parent swAccession = "
                             + getProcessingSWID(files.get(i).getFileId()) + "; type = file");
 
                 }
 
-                logger.debug("INSERT STATEMENT: " + query);
+                localLogger.debug("INSERT STATEMENT: " + query);
 
                 sql.executeUpdate();
             }
@@ -145,14 +145,13 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
     /** {@inheritDoc} */
     @Override
     public void update(Registration registration, WorkflowRunParam workflowRunParam) {
-        Logger logger = Logger.getLogger(WorkflowRunParamDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowRunParamDAOHibernate update registration is null");
+            localLogger.error("WorkflowRunParamDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || workflowRunParam.givesPermission(registration)) {
-            logger.info("update workflow run param object");
+            localLogger.info("update workflow run param object");
             update(workflowRunParam);
         } else {
-            logger.error("WorkflowRunParamDAOHibernate update is not authorized");
+            localLogger.error("WorkflowRunParamDAOHibernate update is not authorized");
         }
 
     }
@@ -160,28 +159,26 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
     /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, WorkflowRunParam workflowRunParam) {
-        Logger logger = Logger.getLogger(WorkflowRunParamDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowRunParamDAOHibernate insert registration is null");
+            localLogger.error("WorkflowRunParamDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || workflowRunParam.givesPermission(registration)) {
-            logger.info("insert workflow run param object");
+            localLogger.info("insert workflow run param object");
             insert(workflowRunParam);
         } else {
-            logger.error("WorkflowRunParamDAOHibernate insert is not authorized");
+            localLogger.error("WorkflowRunParamDAOHibernate insert is not authorized");
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void insertFilesAsWorkflowRunParam(Registration registration, WorkflowRun workflowRun, Map<String, List<File>> files) {
-        Logger logger = Logger.getLogger(WorkflowRunParamDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowRunParamDAOHibernate insertFilesAsWorkflowRunParam registration is null");
+            localLogger.error("WorkflowRunParamDAOHibernate insertFilesAsWorkflowRunParam registration is null");
         } else if (registration.isLIMSAdmin() || workflowRun.givesPermission(registration)) {
-            logger.info("insertFilesAsWorkflowRunParam workflow run param object");
+            localLogger.info("insertFilesAsWorkflowRunParam workflow run param object");
             insertFilesAsWorkflowRunParam(workflowRun, files);
         } else {
-            logger.error("WorkflowRunParamDAOHibernate insertFilesAsWorkflowRunParam is not authorized");
+            localLogger.error("WorkflowRunParamDAOHibernate insertFilesAsWorkflowRunParam is not authorized");
         }
     }
 
@@ -190,14 +187,13 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
     public WorkflowRunParam updateDetached(Registration registration, WorkflowRunParam workflowRunParam) {
         // Should probably grab an instance of this object from the database, but
         // clearly this method isn't being used at the moment
-        Logger logger = Logger.getLogger(WorkflowRunParamDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowRunParamDAOHibernate updateDetached registration is null");
+            localLogger.error("WorkflowRunParamDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || workflowRunParam.givesPermission(registration)) {
-            logger.info("updateDetached workflow run param object");
+            localLogger.info("updateDetached workflow run param object");
             return updateDetached(workflowRunParam);
         } else {
-            logger.error("WorkflowRunParamDAOHibernate updateDetached is not authorized");
+            localLogger.error("WorkflowRunParamDAOHibernate updateDetached is not authorized");
         }
         return null;
     }

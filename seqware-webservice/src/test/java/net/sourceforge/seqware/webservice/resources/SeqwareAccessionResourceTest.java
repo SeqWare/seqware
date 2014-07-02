@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.restlet.representation.Representation;
 
 /**

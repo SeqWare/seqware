@@ -19,7 +19,7 @@ package net.sourceforge.seqware.pipeline.tutorial;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;

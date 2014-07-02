@@ -17,11 +17,11 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.IOException;
-import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import org.apache.commons.lang.StringUtils;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.util.StringUtils;
 
 /**
  * These tests support the new simplified command-line tools.
@@ -56,7 +56,7 @@ public class CLI_ET {
     public void listBundles() throws IOException {
         String listCommand = " workflow list";
         String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
-        int countOccurrencesOf = StringUtils.countOccurrencesOf(listOutput, "RECORD");
+        int countOccurrencesOf = StringUtils.countMatches(listOutput, "RECORD");
         Assert.assertTrue("incorrect number of expected bundles", countOccurrencesOf == 20);
     }
 
@@ -64,7 +64,7 @@ public class CLI_ET {
     public void workflowRunReport() throws IOException {
         String listCommand = " workflow-run report --accession 6603";
         String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
-        int countOccurrencesOf = StringUtils.countOccurrencesOf(listOutput, "RECORD");
+        int countOccurrencesOf = StringUtils.countMatches(listOutput, "RECORD");
         Assert.assertTrue("incorrect number of expected bundles", countOccurrencesOf == 1);
     }
 }

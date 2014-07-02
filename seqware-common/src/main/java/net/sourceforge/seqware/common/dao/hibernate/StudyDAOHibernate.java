@@ -16,9 +16,10 @@ import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -32,7 +33,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
-    private Logger logger;
+    final Logger localLogger = LoggerFactory.getLogger(StudyDAOHibernate.class);
 
     /**
      * <p>
@@ -41,7 +42,6 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
      */
     public StudyDAOHibernate() {
         super();
-        logger = Logger.getLogger(StudyDAOHibernate.class);
     }
 
     /**
@@ -108,7 +108,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     @Override
     public List<Study> list(Registration registration, Boolean isAsc) {
         ArrayList<Study> studys = new ArrayList<>();
-        logger.debug("Get Study LIST for " + registration.getEmailAddress());
+        localLogger.debug("Get Study LIST for " + registration.getEmailAddress());
         /*
          * if(registration == null) return studys;
          */
@@ -121,7 +121,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
         /*
          * List studies = this.getHibernateTemplate().find( "from Study as study order by study.title desc");
          */
-        String query = "";
+        String query;
         Object[] parameters = { registration.getRegistrationId() };
 
         String sortValue = (isAsc) ? "asc" : "desc";
@@ -371,7 +371,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer studyId) {
-        boolean isHasFile = false;
+        boolean isHasFile;
 
         /*
          * String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id
@@ -521,7 +521,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
                 .setInteger(7, studyId).setInteger(8, studyId).setInteger(9, studyId).setInteger(10, studyId).setInteger(11, studyId)
                 .setInteger(12, studyId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
         return isHasFile;
     }
 
@@ -653,7 +653,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer studyId, String metaType) {
-        boolean isHasFile = false;
+        boolean isHasFile;
 
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id "
@@ -769,7 +769,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
                 .setInteger(7, studyId).setInteger(8, studyId).setInteger(9, studyId).setInteger(10, studyId).setInteger(11, studyId)
                 .setInteger(12, studyId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
         return isHasFile;
     }
 
@@ -957,7 +957,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
                 + "and pr_i.ius_id = i.ius_id and pf.processing_id = pr_i.processing_id and f.file_id=pf.file_id and f.meta_type=? )"
                 + ") q " + ") order by title " + sortValue;
 
-        List list = null;
+        List list;
 
         if (registration.isLIMSAdmin()) {
             list = this.getSession().createSQLQuery(query).addEntity(Study.class).setString(0, metaType).setString(1, metaType)
@@ -982,7 +982,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
                 }
             } catch (ObjectNotFoundException e) {
                 // Registration is deleted, but studies left.
-                logger.warn("Registration with #" + registration.getRegistrationId() + " not found");
+                localLogger.warn("Registration with #" + registration.getRegistrationId() + " not found");
             }
         }
 
@@ -1002,7 +1002,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             study = (Study) list.get(0);
-            logger.debug("In DAO. Study title = " + study.getTitle());
+            localLogger.debug("In DAO. Study title = " + study.getTitle());
         }
         return study;
     }
@@ -1111,10 +1111,8 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, study);
             return (Study) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Error updating detached study", e);
         }
         return null;
     }
@@ -1131,15 +1129,14 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     @Override
     public void update(Registration registration, Study study) {
         Study dbObject = reattachStudy(study);
-        Logger logger = Logger.getLogger(StudyDAOHibernate.class);
         if (registration == null) {
-            logger.error("StudyDAOHibernate update registration is null");
+            localLogger.error("StudyDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || (study.givesPermission(registration) && dbObject.givesPermission(registration))) {
-            logger.info("Updating study object");
+            localLogger.info("Updating study object");
             update(study);
             getSession().flush();
         } else {
-            logger.error("StudyDAOHibernate update Not authorized");
+            localLogger.error("StudyDAOHibernate update Not authorized");
         }
     }
 
@@ -1151,16 +1148,15 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     @Override
     public Integer insert(Registration registration, Study study) {
         Integer swAccession = 0;
-        Logger logger = Logger.getLogger(StudyDAOHibernate.class);
         if (registration == null) {
-            logger.error("StudyDAOHibernate insert registration is null");
+            localLogger.error("StudyDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || study.givesPermission(registration)) {
-            logger.info("insert study object");
+            localLogger.info("insert study object");
             insert(study);
             this.getSession().flush();
             swAccession = study.getSwAccession();
         } else {
-            logger.error("StudyDAOHibernate insert Not authorized");
+            localLogger.error("StudyDAOHibernate insert Not authorized");
         }
         return (swAccession);
     }
@@ -1169,14 +1165,13 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     @Override
     public Study updateDetached(Registration registration, Study study) {
         Study dbObject = reattachStudy(study);
-        Logger logger = Logger.getLogger(StudyDAOHibernate.class);
         if (registration == null) {
-            logger.error("StudyDAOHibernate updateDetached registration is null");
+            localLogger.error("StudyDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("updateDetached study object");
+            localLogger.info("updateDetached study object");
             return updateDetached(study);
         } else {
-            logger.error("StudyDAOHibernate updateDetached Not authorized");
+            localLogger.error("StudyDAOHibernate updateDetached Not authorized");
         }
 
         return null;

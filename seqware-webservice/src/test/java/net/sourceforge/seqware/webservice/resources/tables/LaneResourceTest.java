@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;

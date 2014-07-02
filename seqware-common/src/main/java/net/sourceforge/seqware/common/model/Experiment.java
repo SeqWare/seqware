@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -18,7 +19,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @XmlRootElement
 /**
@@ -79,6 +81,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
     // addition form fields
     private String strExpectedNumberRuns;
     private String strExpectedNumberReads;
+    final Logger logger = LoggerFactory.getLogger(Experiment.class);
 
     /**
      * <p>
@@ -100,7 +103,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
             return -1;
         }
 
-        if (that.getExperimentId() == this.getExperimentId()) // when both names are
+        if (Objects.equals(that.getExperimentId(), this.getExperimentId())) // when both names are
         // null
         {
             return 0;
@@ -1252,10 +1255,10 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
 
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      if (registration.isLIMSAdmin()) {
-        Log.debug("Skipping permissions admin on Experiment object " + swAccession);
-        return true;
-      }
+        if (registration.isLIMSAdmin()) {
+            Log.debug("Skipping permissions admin on Experiment object " + swAccession);
+            return true;
+        }
         boolean consideredBefore = considered.contains(this.getSwAccession());
         if (!consideredBefore) {
             considered.add(this.getSwAccession());
@@ -1265,25 +1268,25 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
             return true;
         }
 
-        boolean hasPermission = false;
+        boolean hasPermission;
         if (study != null) {
             StudyService ss = BeanFactory.getStudyServiceBean();
             Study newStudy = ss.findBySWAccession(study.getSwAccession());
             hasPermission = newStudy.givesPermission(registration, considered);
         } else {// orphaned Experiment
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                Logger.getLogger(Experiment.class).warn("Modifying Orphan Experiment: " + this.getName());
+                logger.warn("Modifying Orphan Experiment: " + this.getName());
                 hasPermission = true;
             } else if (owner == null) {
-                Logger.getLogger(Experiment.class).warn("Experiment has no owner! Modifying Orphan Experiment: " + this.getName());
+                logger.warn("Experiment has no owner! Modifying Orphan Experiment: " + this.getName());
                 hasPermission = true;
             } else {
-                Logger.getLogger(Experiment.class).warn("Not modifying Orphan Experiment: " + this.getName());
+                logger.warn("Not modifying Orphan Experiment: " + this.getName());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            Logger.getLogger(Experiment.class).info("Experiment does not give permission");
+            logger.info("Experiment does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.getName());
         }
         return hasPermission;

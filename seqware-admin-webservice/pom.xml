@@ -22,7 +22,11 @@
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>compile</scope>
+            <scope>runtime</scope>
+         </dependency> 
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
         </dependency> 
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
@@ -63,52 +67,41 @@
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-grizzly</artifactId>
-            <scope>provided</scope>
+            <artifactId>jersey-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
-            <artifactId>jersey-gf-statsproviders</artifactId>
-            <scope>provided</scope>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>seqware-meta-db</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.hk2.external</groupId>
-            <artifactId>asm-all-repackaged</artifactId>
-            <scope>provided</scope>
+            <artifactId>jackson-core-asl</artifactId>
+            <groupId>org.codehaus.jackson</groupId>
+            <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
-            <artifactId>jersey-gf-servlet</artifactId>
-            <scope>provided</scope>
+            <artifactId>jaxb-api</artifactId>
+            <groupId>javax.xml.bind</groupId>
+            <type>jar</type>
+            <version>2.2.2</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jettison</groupId>
-            <artifactId>jettison</artifactId>
-            <scope>provided</scope>
+            <artifactId>jaxb-impl</artifactId>
+            <groupId>com.sun.xml.bind</groupId>
+            <type>jar</type>
+            <version>2.2.3-1</version>
         </dependency>
         <dependency>
-            <groupId>org.jvnet.mimepull</groupId>
-            <artifactId>mimepull</artifactId>
+            <artifactId>bean-validator</artifactId>
+            <groupId>org.glassfish</groupId>
+            <type>jar</type>
+            <version>3.0-JBoss-4.0.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-multipart</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>seqware-meta-db</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
@@ -124,6 +117,13 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+            <type>jar</type>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
@@ -205,7 +205,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.1</version>
+                <configuration>
+                    <usedDependencies>
+                        <!-- not sure why maven-dependency-plugin misses this, we compile it explicitly -->
+                        <usedDependency>com.sun.jersey:jersey-json</usedDependency>
+                    </usedDependencies>
+                </configuration>
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>

@@ -4,6 +4,7 @@ import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.SequencerRunStatus;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -19,7 +20,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @XmlRootElement
 /**
@@ -72,6 +74,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
     private SortedSet<Lane> lanes = new TreeSet<>();
     // private Lane lane1, lane2, lane3, lane4, lane5, lane6, lane7, lane8;
     private String strRefLane;
+    final Logger logger = LoggerFactory.getLogger(SequencerRun.class);
 
     /**
      * <p>
@@ -97,7 +100,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
             return -1;
         }
 
-        if (that.getSequencerRunId() == this.getSequencerRunId()) // when both names
+        if (Objects.equals(that.getSequencerRunId(), this.getSequencerRunId())) // when both names
         // are null
         {
             return 0;
@@ -260,7 +263,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
      *            a {@link java.lang.Boolean} object.
      */
     public void setProcess(Boolean process) {
-        this.process = process == null ? false : true;
+        this.process = process != null;
     }
 
     /**
@@ -1219,7 +1222,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
      */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-        Logger.getLogger(SequencerRun.class).info("Sequencer run always gives permission");
+        logger.info("Sequencer run always gives permission");
         return true;
     }
 }

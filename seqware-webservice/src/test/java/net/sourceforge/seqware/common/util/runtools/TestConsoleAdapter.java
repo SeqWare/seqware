@@ -22,7 +22,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Iterator;
 import java.util.Map;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * Allows us to test the interactive console. To use, instantiate the object and call setLine(String) for each line that you want to read.

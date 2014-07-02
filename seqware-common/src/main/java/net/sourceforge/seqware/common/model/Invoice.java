@@ -10,7 +10,7 @@ import net.sourceforge.seqware.common.security.PermissionsAware;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger; import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -51,7 +51,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      */
     public Invoice() {
         super();
-        logger = Logger.getLogger(Invoice.class);
+        logger = logger;
     }
 
     /**
@@ -106,11 +106,11 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
         }
 
         if (!hasPermission) {
-            Logger.getLogger(Workflow.class).info("Invoice does not give permission");
+            logger.info("Invoice does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress()
                     + " does not have permission to modify aspects of invoice " + this.getSwAccession());
         } else {
-            Logger.getLogger(Workflow.class).info("Invoices are public by default");
+            logger.info("Invoices are public by default");
         }
         return hasPermission;
     }

@@ -22,9 +22,10 @@ import net.sourceforge.seqware.common.business.WorkflowService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow;
 import net.sourceforge.seqware.common.model.*;
-import org.apache.log4j.Logger;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reports on workflow run metadata, returning either all workflow runs, all runs of a particular workflow, or a specific workflow run. The
@@ -35,7 +36,7 @@ import org.restlet.resource.ResourceException;
  */
 public class WorkflowRunReport {
 
-    private Logger logger = Logger.getLogger(WorkflowRunReport.class);
+    private final Logger logger = LoggerFactory.getLogger(WorkflowRunReport.class);
     private Date earliestDate = new Date(0);
     private Date latestDate = new Date();
 
