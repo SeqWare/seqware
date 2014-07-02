@@ -848,6 +848,9 @@
                         <configuration>
                             <rules>
                                 <DependencyConvergence/>
+                                <requirePluginVersions>
+                                    <message>Best Practice is to always define plugin versions!</message>
+                                </requirePluginVersions>
                             </rules>
                         </configuration>
                         <goals>
