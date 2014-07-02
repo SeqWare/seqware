@@ -290,6 +290,10 @@
                     <artifactId>slf4j-simple</artifactId>
                     <groupId>org.slf4j</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-all</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -441,13 +445,47 @@
                     <artifactId>servlet-api</artifactId>
                     <groupId>javax.servlet</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-expression</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-asm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-dbcp</groupId>
+                    <artifactId>commons-dbcp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-pool</groupId>
+                    <artifactId>commons-pool</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>1.12</version>
+            <version>1.8</version>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- Validator is need for tests not running inside a web containter. -->
@@ -461,6 +499,12 @@
             <artifactId>system-rules</artifactId>
             <version>1.3.1</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -503,6 +547,12 @@
             <groupId>javax.xml.bind</groupId>
             <type>jar</type>
             <version>2.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <artifactId>jackson-mapper-asl</artifactId>
@@ -521,6 +571,12 @@
             <groupId>org.hibernate</groupId>
             <type>jar</type>
             <version>3.6.6.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>antlr</groupId>
+                    <artifactId>antlr</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <artifactId>seqware-meta-db</artifactId>
@@ -558,6 +614,12 @@
             <groupId>org.clojure</groupId>
             <artifactId>java.jdbc</artifactId>
             <version>0.3.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.clojure</groupId>
+                    <artifactId>clojure</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     
