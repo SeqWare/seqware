@@ -7,17 +7,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +30,8 @@ import org.springframework.web.multipart.MultipartFile;
  * @version $Id: $Id
  */
 public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
+
+    final Logger localLogger = LoggerFactory.getLogger(FileDAOHibernate.class);
 
     /**
      * <p>
@@ -170,7 +171,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
                 .replace(" ", "_"));
 
         // logger.debug("File name = " + fileDownlodName);
-        logger.debug("Full Path = " + targetPath);
+        localLogger.debug("Full Path = " + targetPath);
 
         InputStream inStream = uploadFile.getInputStream();
 
@@ -222,7 +223,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
             File file = iter.next();
             String fileName = null;
             String description = null;
-            String criteria = null;
+            String criteria;
             if (!isCaseSens) {
                 if (file.getFileName() != null) {
                     fileName = file.getFileName().toLowerCase();
@@ -237,13 +238,13 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
                 description = file.getDescription();
             }
             int matchesResults = 0;
-            if (fileName != null && fileName.indexOf(criteria) >= 0) {
+            if (fileName != null && fileName.contains(criteria)) {
                 matchesResults++;
             }
-            if (description != null && description.indexOf(criteria) >= 0) {
+            if (description != null && description.contains(criteria)) {
                 matchesResults++;
             }
-            if (file.getSwAccession().toString().indexOf(criteria) >= 0) {
+            if (file.getSwAccession().toString().contains(criteria)) {
                 matchesResults++;
             }
             if (matchesResults == 0) {
@@ -260,10 +261,8 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, file);
             return (File) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Could not update detached file", e);
         }
         return null;
     }
@@ -289,28 +288,26 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     @Override
     public void update(Registration registration, File file) {
         File dbObject = reattachFile(file);
-        Logger logger = Logger.getLogger(FileDAOHibernate.class);
         if (registration == null) {
-            logger.error("FileDAOHibernate update registration is null");
+            localLogger.error("FileDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || (file.givesPermission(registration) && dbObject.givesPermission(registration))) {
-            logger.info("updating file object");
+            localLogger.info("updating file object");
             update(file);
         } else {
-            logger.error("FileDAOHibernate update not authorized");
+            localLogger.error("FileDAOHibernate update not authorized");
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public void insert(Registration registration, File file) {
-        Logger logger = Logger.getLogger(FileDAOHibernate.class);
         if (registration == null) {
-            logger.error("FileDAOHibernate insert registration is null");
+            localLogger.error("FileDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || file.givesPermission(registration)) {
-            logger.info("insert file object");
+            localLogger.info("insert file object");
             insert(file);
         } else {
-            logger.error("FileDAOHibernate insert not authorized");
+            localLogger.error("FileDAOHibernate insert not authorized");
         }
     }
 
@@ -318,14 +315,13 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     @Override
     public File updateDetached(Registration registration, File file) {
         File dbObject = reattachFile(file);
-        Logger logger = Logger.getLogger(FileDAOHibernate.class);
         if (registration == null) {
-            logger.error("FileDAOHibernate updateDetached registration is null");
+            localLogger.error("FileDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("updateDetached file object");
+            localLogger.info("updateDetached file object");
             return updateDetached(file);
         } else {
-            logger.error("FileDAOHibernate updateDetached not authorized");
+            localLogger.error("FileDAOHibernate updateDetached not authorized");
         }
         return null;
     }

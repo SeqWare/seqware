@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.dao.IUSDAO;
@@ -17,8 +16,8 @@ import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -32,7 +31,7 @@ public class IUSServiceImpl implements IUSService {
 
     private IUSDAO dao = null;
     private FileDAO fileDAO = null;
-    private Logger log;
+    private final Logger log;
 
     /**
      * <p>
@@ -41,7 +40,7 @@ public class IUSServiceImpl implements IUSService {
      */
     public IUSServiceImpl() {
         super();
-        log = Logger.getLogger(IUSServiceImpl.class);
+        log = LoggerFactory.getLogger(IUSServiceImpl.class);
     }
 
     /** {@inheritDoc} */

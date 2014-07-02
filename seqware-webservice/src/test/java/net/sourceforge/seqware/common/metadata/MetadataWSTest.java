@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.*;

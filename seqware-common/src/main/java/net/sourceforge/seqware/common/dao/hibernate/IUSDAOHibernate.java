@@ -19,8 +19,9 @@ import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -33,6 +34,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @version $Id: $Id
  */
 public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
+
+    final Logger localLogger = LoggerFactory.getLogger(IUSDAOHibernate.class);
 
     /**
      * <p>
@@ -104,7 +107,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer iusId) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
                 + "where pr_i.ius_id = ?" + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
@@ -117,7 +120,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
 
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setInteger(1, iusId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -151,7 +154,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer iusId, String metaType) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
                 + "where pr_i.ius_id = ?" + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
@@ -165,7 +168,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setString(1, metaType)
                 .setInteger(2, iusId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -234,10 +237,8 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, ius);
             return (IUS) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            logger.error("Error updating detached ius", e);
         }
         return null;
     }
@@ -320,7 +321,6 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     @Override
     public void update(Registration registration, IUS ius) {
         IUS dbObject = reattachIUS(ius);
-        Logger logger = Logger.getLogger(IUSDAOHibernate.class);
         if (registration == null) {
             logger.error("IUSDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || (ius.givesPermission(registration) && dbObject.givesPermission(registration))) {
@@ -339,7 +339,6 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
      */
     @Override
     public Integer insert(Registration registration, IUS obj) {
-        Logger logger = Logger.getLogger(IUSDAOHibernate.class);
         if (registration == null) {
             logger.error("IUSDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || obj.givesPermission(registration)) {
@@ -356,7 +355,6 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     @Override
     public IUS updateDetached(Registration registration, IUS ius) {
         IUS dbObject = reattachIUS(ius);
-        Logger logger = Logger.getLogger(IUSDAOHibernate.class);
         if (registration == null) {
             logger.error("IUSDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {

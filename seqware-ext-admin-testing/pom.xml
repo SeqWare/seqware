@@ -16,21 +16,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.seqware</groupId>
-            <artifactId>seqware-distribution</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jasper-compiler</artifactId>
-                    <groupId>tomcat</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>jasper-runtime</artifactId>
-                    <groupId>tomcat</groupId>
-                </exclusion>
-            </exclusions>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>seqware-admin-webservice</artifactId>
             <classifier>classes</classifier>
@@ -45,6 +30,42 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.seqware</groupId>
+            <artifactId>seqware-common</artifactId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>commons-dbutils</artifactId>
+            <groupId>commons-dbutils</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>jopt-simple</artifactId>
+            <groupId>net.sf.jopt-simple</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>guava</artifactId>
+            <groupId>com.google.guava</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>commons-io</artifactId>
+            <groupId>commons-io</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>jersey-client</artifactId>
+            <groupId>com.sun.jersey</groupId>
+            <type>jar</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <properties>

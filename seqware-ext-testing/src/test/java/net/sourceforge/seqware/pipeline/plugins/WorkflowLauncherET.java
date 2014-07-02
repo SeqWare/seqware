@@ -18,7 +18,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.File;
 import java.io.IOException;
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.junit.BeforeClass;

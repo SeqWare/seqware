@@ -14,8 +14,9 @@ import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -28,6 +29,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @version $Id: $Id
  */
 public class ExperimentDAOHibernate extends HibernateDaoSupport implements ExperimentDAO {
+
+    final Logger localLogger = LoggerFactory.getLogger(ExperimentDAOHibernate.class);
 
     /**
      * <p>
@@ -104,7 +107,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
             return experiments;
         }
 
-        List expmts = null;
+        List expmts;
         if (registration.isLIMSAdmin()) {
             // The user can see all experiments
             expmts = this.getHibernateTemplate().find("from Experiment as experiment order by experiment.name desc");
@@ -138,7 +141,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
             return experiments;
         }
 
-        List expmts = null;
+        List expmts;
         // Limit the experiments to those owned by the user
         expmts = this.getHibernateTemplate().find("from Experiment as experiment where study = ? order by experiment.name desc", study);
 
@@ -258,7 +261,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer experimentId) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         /*
          * String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id
          * " + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) " + "inner join ius i on
@@ -379,7 +382,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
                 .setInteger(6, experimentId).setInteger(7, experimentId).setInteger(8, experimentId).setInteger(9, experimentId)
                 .setInteger(10, experimentId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -501,7 +504,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
      */
     @Override
     public boolean isHasFile(Integer experimentId, String metaType) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
@@ -596,7 +599,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
                 .setInteger(6, experimentId).setInteger(7, experimentId).setInteger(8, experimentId).setInteger(9, experimentId)
                 .setInteger(10, experimentId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -659,10 +662,8 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, experiment);
             return (Experiment) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Could not update detached experiment", e);
         }
         return null;
     }
@@ -718,15 +719,14 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     @Override
     public void update(Registration registration, Experiment experiment) {
         Experiment dbObject = reattachExperiment(experiment);
-        Logger logger = Logger.getLogger(ExperimentDAOHibernate.class);
         if (registration == null) {
-            logger.error("ExperimentDAOHibernate update registration is null");
+            localLogger.error("ExperimentDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || (experiment.givesPermission(registration) && dbObject.givesPermission(registration))) {
-            logger.info("updating experiment object");
+            localLogger.info("updating experiment object");
             update(experiment);
             getSession().flush();
         } else {
-            logger.error("ExperimentDAOHibernate update not authorized");
+            localLogger.error("ExperimentDAOHibernate update not authorized");
         }
     }
 
@@ -738,15 +738,14 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     @Override
     public Integer insert(Registration registration, Experiment experiment) {
         Integer swAccession = 0;
-        Logger logger = Logger.getLogger(ExperimentDAOHibernate.class);
         if (registration == null) {
-            logger.error("ExperimentDAOHibernate insert registration is null");
+            localLogger.error("ExperimentDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || experiment.givesPermission(registration)) {
-            logger.info("insert experiment object");
+            localLogger.info("insert experiment object");
             swAccession = insert(experiment);
             getSession().flush();
         } else {
-            logger.error("ExperimentDAOHibernate insert not authorized");
+            localLogger.error("ExperimentDAOHibernate insert not authorized");
         }
         return (swAccession);
     }
@@ -756,12 +755,12 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     public Experiment updateDetached(Registration registration, Experiment experiment) {
         Experiment dbObject = reattachExperiment(experiment);
         if (registration == null) {
-            logger.error("ExperimentDAOHibernate updateDetached registration is null");
+            localLogger.error("ExperimentDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("updateDetached experiment object");
+            localLogger.info("updateDetached experiment object");
             return updateDetached(experiment);
         } else {
-            logger.error("ExperimentDAOHibernate updateDetached not authorized");
+            localLogger.error("ExperimentDAOHibernate updateDetached not authorized");
         }
         return null;
     }

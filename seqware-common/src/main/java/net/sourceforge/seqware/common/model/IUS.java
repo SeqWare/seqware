@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,7 +16,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @XmlRootElement
 /**
@@ -46,6 +48,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     // not persist
     private Boolean isHasFile = false;
     private Boolean isSelected = false;
+    final Logger logger = LoggerFactory.getLogger(IUS.class);
 
     /**
      * <p>
@@ -67,7 +70,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
             return -1;
         }
 
-        if (that.getIusId() == this.getIusId()) // when both names are null
+        if (Objects.equals(that.getIusId(), this.getIusId())) // when both names are null
         {
             return 0;
         }
@@ -549,7 +552,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      *            a {@link java.lang.Boolean} object.
      */
     public void setSkip(Boolean skip) {
-        if (skip != null && this.skip != skip) {
+        if (skip != null && !Objects.equals(this.skip, skip)) {
             Log.debug("Skipping ius " + getSwAccession());
             this.skip = skip;
         }
@@ -570,23 +573,23 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
             return true;
         }
 
-        boolean hasPermission = true;
+        boolean hasPermission;
         if (sample != null) {
             hasPermission = sample.givesPermission(registration, considered);
         } else {// orphaned IUS
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                Logger.getLogger(IUS.class).warn("Modifying Orphan IUS: " + this.getTag());
+                logger.warn("Modifying Orphan IUS: " + this.getTag());
                 hasPermission = true;
             } else if (owner == null) {
-                Logger.getLogger(IUS.class).warn("Orphan IUS has no owner! Allowing modifications: " + this.getTag());
+                logger.warn("Orphan IUS has no owner! Allowing modifications: " + this.getTag());
                 hasPermission = true;
             } else {
-                Logger.getLogger(IUS.class).warn("Not modifying Orphan IUS: " + this.getTag());
+                logger.warn("Not modifying Orphan IUS: " + this.getTag());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            Logger.getLogger(IUS.class).info("IUS does not give permission");
+            logger.info("IUS does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.getTag());
         }
         return hasPermission;

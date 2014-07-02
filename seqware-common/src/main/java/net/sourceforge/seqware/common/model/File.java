@@ -10,7 +10,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -39,6 +40,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
     private Set<FileAttribute> fileAttributes = new TreeSet<>();
     private Long size;
     private Boolean skip;
+    final Logger logger = LoggerFactory.getLogger(File.class);
 
     /**
      * <p>
@@ -424,10 +426,10 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
 
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      if (registration.isLIMSAdmin()) {
-          Log.debug("Skipping permissions admin on File object " + swAccession);
-          return true;
-      }
+        if (registration.isLIMSAdmin()) {
+            Log.debug("Skipping permissions admin on File object " + swAccession);
+            return true;
+        }
         boolean consideredBefore = considered.contains(this.getSwAccession());
         if (!consideredBefore) {
             considered.add(this.getSwAccession());
@@ -447,19 +449,19 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
             }
         } else {// orphaned File
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                Logger.getLogger(File.class).warn("Modifying Orphan File: " + toString());
+                logger.warn("Modifying Orphan File: " + toString());
                 hasPermission = true;
 
             } else if (owner == null) {
-                Logger.getLogger(File.class).warn("File has no owner! Modifying Orphan File: " + toString());
+                logger.warn("File has no owner! Modifying Orphan File: " + toString());
                 hasPermission = true;
             } else {
-                Logger.getLogger(File.class).warn("Not modifying Orphan File: " + toString());
+                logger.warn("Not modifying Orphan File: " + toString());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            Logger.getLogger(File.class).info("File does not give permission");
+            logger.info("File does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + toString());
         }
         return hasPermission;

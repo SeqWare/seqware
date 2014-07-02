@@ -16,12 +16,12 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import junit.framework.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.AbstractResourceTest;
 import org.apache.log4j.Logger;
+import org.junit.Assert;
 import org.restlet.representation.Representation;
 
 /**

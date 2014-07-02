@@ -3,6 +3,7 @@ package net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -11,7 +12,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -41,6 +43,7 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     // none persistents(for Summary Launch Workflow Page)
     private Sample sample;
     private List<File> files;
+    final Logger logger = LoggerFactory.getLogger(WorkflowParam.class);
 
     /**
      * <p>
@@ -62,7 +65,7 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
             return -1;
         }
 
-        if (that.getWorkflowParamId() == this.getWorkflowParamId()) // when both names are null
+        if (Objects.equals(that.getWorkflowParamId(), this.getWorkflowParamId())) // when both names are null
         {
             return 0;
         }
@@ -491,22 +494,22 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
      */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-        boolean hasPermission = true;
+        boolean hasPermission;
 
         if (workflow != null) {
             hasPermission = workflow.givesPermission(registration, considered);
         } else {// orphaned WorkflowParam
             if (registration.isLIMSAdmin()) {
-                Logger.getLogger(WorkflowParam.class).warn("Modifying Orphan WorkflowParam: " + this.getDisplayName());
+                logger.warn("Modifying Orphan WorkflowParam: " + this.getDisplayName());
                 hasPermission = true;
             } else {
-                Logger.getLogger(WorkflowParam.class).warn("Not modifying Orphan WorkflowParam: " + this.getDisplayName());
+                logger.warn("Not modifying Orphan WorkflowParam: " + this.getDisplayName());
                 hasPermission = false;
             }
         }
 
         if (!hasPermission) {
-            Logger.getLogger(WorkflowParam.class).info("WorkflowParam does not give permission");
+            logger.info("WorkflowParam does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify "
                     + this.getDisplayName());
         }
