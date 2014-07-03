@@ -25,21 +25,15 @@ import net.sourceforge.seqware.webservice.resources.tables.ExperimentLibraryDesi
 import net.sourceforge.seqware.webservice.resources.tables.ExperimentResource;
 import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignReadSpecResource;
 import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignResource;
-import net.sourceforge.seqware.webservice.resources.tables.FileAttributeServerResource;
-import net.sourceforge.seqware.webservice.resources.tables.FileAttributesServerResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileLinkReportResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileReverseHierarchyDisplayResource;
-import net.sourceforge.seqware.webservice.resources.tables.IusFilesServerResource;
 import net.sourceforge.seqware.webservice.resources.tables.IusIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.IusResource;
-import net.sourceforge.seqware.webservice.resources.tables.IusSearchServerResource;
 import net.sourceforge.seqware.webservice.resources.tables.LaneIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.LaneResource;
-import net.sourceforge.seqware.webservice.resources.tables.LibrariesResource;
-import net.sourceforge.seqware.webservice.resources.tables.LibraryResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibrarySelectionResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibrarySourceResource;
 import net.sourceforge.seqware.webservice.resources.tables.LibraryStrategyResource;
@@ -168,28 +162,17 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/files", FileResource.class);
         router.attach("/files/", slashRedirect);
         router.attach("/files/{fileId}", FileIDResource.class);
-        // router.attach("/files/{ID}/processes", Resource.class);
-        // router.attach("/files/{ID}/processes/{ID}", Resource.class);
 
-        router.attach("/file/{swa}/attribute", FileAttributeServerResource.class);
-        router.attach("/file/{swa}/attribute/{id}", FileAttributeServerResource.class);
-        router.attach("/file/{swa}/attributes", FileAttributesServerResource.class);
-        //
         router.attach("/ius", IusResource.class);
         router.attach("/ius/", slashRedirect);
         router.attach("/ius/{iusId}", IusIDResource.class);
         router.attach("/ius/{iusId}/lane", LaneIDFilter.class);
 
-        router.attach("/iussearch", IusSearchServerResource.class);
-        router.attach("/ius/{id}/files", IusFilesServerResource.class);
-
         router.attach("/lanes", LaneResource.class);
         router.attach("/lanes/", slashRedirect);
         router.attach("/lanes/{laneId}", LaneIDResource.class);
         router.attach("/lanes/{laneId}/ius", IUSIDFilter.class);
-        // router.attach("/lanes/{ID}/processes", Resource.class);
-        // router.attach("/lanes/{ID}/processes/{ID}", Resource.class);
-        //
+
         router.attach("/processes", ProcessResource.class);
         router.attach("/processes/", slashRedirect);
         router.attach("/processes/{processId}", ProcessIDResource.class);
@@ -224,15 +207,6 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/studies/{studyId}", StudyIDResource.class);
         router.attach("/studies/{studyId}/experiments", ExperimentIDFilter.class);
 
-        router.attach("/x/library", LibraryResource.class);
-        router.attach("/x/library/{swa}", LibraryResource.class);
-        router.attach("/x/libraries", LibrariesResource.class);
-
-        // router.attach("/studies/{studyId}/experiments/{experimentId}", FilteredExperimentResource.class);
-        // router.attach("/studies/{ID}/experiments/{ID}/samples", Resource.class);
-        // router.attach("/studies/{ID}/experiments/{ID}/samples/{ID}", Resource.class);
-        // router.attach("/studies/{ID}/processes", Resource.class);
-        // router.attach("/studies/{ID}/processes/{ID}", Resource.class);
         //
         router.attach("/workflowruns", WorkflowRunResource.class);
         router.attach("/workflowruns/", slashRedirect);
