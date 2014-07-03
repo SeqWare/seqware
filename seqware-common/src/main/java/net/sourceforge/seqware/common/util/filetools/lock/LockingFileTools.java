@@ -63,19 +63,4 @@ public class LockingFileTools {
         return (false);
     }
 
-    /**
-     * <p>
-     * lockAndAppendLine.
-     * </p>
-     * 
-     * @param file
-     *            a {@link java.io.File} object.
-     * @param output
-     *            a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    public static boolean lockAndAppendLine(File file, String output) {
-        return (lockAndAppend(file, output + System.getProperty("line.separator")));
-    }
-
 }

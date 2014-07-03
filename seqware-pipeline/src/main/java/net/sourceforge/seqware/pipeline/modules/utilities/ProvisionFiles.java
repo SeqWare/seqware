@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,12 +48,6 @@ public class ProvisionFiles extends Module {
 
     protected OptionSet options = null;
     protected final int READ_ATTEMPTS = 1000;
-    protected long size = 0;
-    protected long position = 0;
-    protected String fileName = "";
-    protected File inputFile = null;
-    protected Key dataEncryptionKey = null;
-    protected HashMap metaMap = new HashMap();
     protected String algorithmName = "ProvisionFiles";
     private final ProvisionFilesUtil filesUtil = new ProvisionFilesUtil();
     private static final String DATA_ENCRYPTION_ALGORITHM = "DESede";
@@ -64,7 +57,6 @@ public class ProvisionFiles extends Module {
     protected int s3MaxConnections = ClientConfiguration.DEFAULT_MAX_CONNECTIONS;
     protected int s3MaxErrorRetry = ClientConfiguration.DEFAULT_MAX_RETRIES;
     protected int s3SocketTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
-    protected boolean useS3ServerSideEncryption = true;
 
     // FIXME: users have requested the ability to specify a single input file and
     // a single output file so they can copy and rename
@@ -401,9 +393,6 @@ public class ProvisionFiles extends Module {
             if (options.has("output-file")) {
                 Log.stdout("     output-file: " + options.valueOf("output-file"));
             }
-            this.size = 0;
-            this.position = 0;
-            this.fileName = "";
             if (!input.startsWith("http") && !input.startsWith("s3") && new File(input).isDirectory()) {
                 if (options.has("recursive")) {
                     ReturnValue currRet = recursivelyCopyDir(new File(input).getAbsolutePath(), new File(input).list(),

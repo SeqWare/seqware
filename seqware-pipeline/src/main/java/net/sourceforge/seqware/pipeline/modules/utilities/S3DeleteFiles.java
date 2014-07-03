@@ -46,10 +46,6 @@ public class S3DeleteFiles extends Module {
 
     protected OptionSet options = null;
     protected final int READ_ATTEMPTS = 1000;
-    protected long size = 0;
-    protected long position = 0;
-    protected String fileName = "";
-    protected File inputFile = null;
     protected String accessKey = null;
     protected String secretKey = null;
     private static final String[] Q = new String[] { "", "K", "M", "G", "T", "P", "E" };
