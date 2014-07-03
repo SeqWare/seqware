@@ -76,6 +76,8 @@ public class AttributeAnnotatorET {
     
     @Test
     public void testSequencerRunSkipOnly() throws IOException {
+        // need to reset database due to repeated accession
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
         toggleSkipOnly(AttributeType.SEQUENCER_RUN, 47150);
     }
 
@@ -177,6 +179,8 @@ public class AttributeAnnotatorET {
 
     @Test
     public void testSequencerRunAnnotateArbitrary() throws IOException {
+        // need to reset database due to repeated accession
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
         annotateAndReannotate(AttributeType.SEQUENCER_RUN, 47150);
     }
 
