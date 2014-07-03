@@ -38,7 +38,6 @@ import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface.L
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.openide.util.Lookup;
-
 import org.openide.util.lookup.ServiceProvider;
 import org.rendersnake.HtmlCanvas;
 

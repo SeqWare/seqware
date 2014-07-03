@@ -34,12 +34,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.sourceforge.seqware.common.metadata.MetadataNoConnection;
-import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.util.jsontools.JSONHelper;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
+import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.LaneInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMiseqFile;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
@@ -50,7 +50,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * 

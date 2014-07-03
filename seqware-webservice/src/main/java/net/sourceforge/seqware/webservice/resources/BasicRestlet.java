@@ -16,7 +16,11 @@
  */
 package net.sourceforge.seqware.webservice.resources;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Registration;
 import org.restlet.Context;

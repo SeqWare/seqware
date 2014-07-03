@@ -4,7 +4,6 @@ import java.util.List;
 import net.sourceforge.seqware.common.business.ExperimentSpotDesignReadSpecService;
 import net.sourceforge.seqware.common.dao.ExperimentSpotDesignReadSpecDAO;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

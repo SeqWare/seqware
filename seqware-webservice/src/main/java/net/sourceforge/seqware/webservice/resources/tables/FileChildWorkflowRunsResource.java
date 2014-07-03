@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.FileService;
@@ -35,13 +34,11 @@ import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.lists.WorkflowRunList;
 import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
-
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.ArrayUtils;

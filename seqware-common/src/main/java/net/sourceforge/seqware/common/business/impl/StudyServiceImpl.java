@@ -1,9 +1,9 @@
 package net.sourceforge.seqware.common.business.impl;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.dao.StudyDAO;
@@ -11,9 +11,6 @@ import net.sourceforge.seqware.common.dao.StudyTypeDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
-import io.seqware.common.model.WorkflowRunStatus;
-import net.sourceforge.seqware.common.module.ReturnValue;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

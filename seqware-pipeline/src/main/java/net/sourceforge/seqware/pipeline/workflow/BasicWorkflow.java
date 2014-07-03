@@ -1,14 +1,13 @@
 package net.sourceforge.seqware.pipeline.workflow;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.metadata.Metadata;
-import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;

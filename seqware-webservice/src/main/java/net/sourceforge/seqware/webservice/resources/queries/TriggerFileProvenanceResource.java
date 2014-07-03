@@ -2,15 +2,15 @@ package net.sourceforge.seqware.webservice.resources.queries;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import org.restlet.Context;
-import org.restlet.Request;
-import org.restlet.Response;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.IOUtils;
+import org.restlet.Context;
+import org.restlet.Request;
+import org.restlet.Response;
 import org.restlet.data.Status;
 
 public class TriggerFileProvenanceResource extends BasicRestlet {

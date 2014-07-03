@@ -7,7 +7,6 @@ package io.seqware.webservice.controller;
 import io.seqware.webservice.generated.controller.SampleAttributeFacadeREST;
 import io.seqware.webservice.generated.controller.SampleFacadeREST;
 import io.seqware.webservice.generated.model.SampleAttribute;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;

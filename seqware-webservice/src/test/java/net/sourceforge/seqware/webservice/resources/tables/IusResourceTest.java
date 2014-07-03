@@ -17,12 +17,12 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.util.Date;
-import org.junit.Assert;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import org.junit.Assert;
 import org.restlet.representation.Representation;
 import org.w3c.dom.Document;
 

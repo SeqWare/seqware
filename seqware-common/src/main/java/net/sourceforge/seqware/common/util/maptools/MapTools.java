@@ -1,7 +1,5 @@
 package net.sourceforge.seqware.common.util.maptools;
 
-import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,10 +16,9 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.xml.bind.DatatypeConverter;
-
 import net.sourceforge.seqware.common.util.Log;
+import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import org.apache.commons.io.IOUtils;
 
 /**

@@ -7,7 +7,6 @@ package io.seqware.webservice.controller;
 import io.seqware.webservice.generated.controller.LaneAttributeFacadeREST;
 import io.seqware.webservice.generated.controller.LaneFacadeREST;
 import io.seqware.webservice.generated.model.LaneAttribute;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;

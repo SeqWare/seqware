@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -21,7 +20,6 @@ import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import net.sourceforge.seqware.pipeline.plugins.Metadata;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**

@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.model.comparator;
 
 import java.util.Comparator;
-
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 
 /**

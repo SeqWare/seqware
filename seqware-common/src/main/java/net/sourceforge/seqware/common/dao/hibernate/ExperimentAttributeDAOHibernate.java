@@ -2,11 +2,9 @@ package net.sourceforge.seqware.common.dao.hibernate;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.ExperimentAttributeDAO;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
-
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**

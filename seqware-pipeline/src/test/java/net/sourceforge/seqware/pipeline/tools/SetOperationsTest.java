@@ -17,13 +17,13 @@
 package net.sourceforge.seqware.pipeline.tools;
 
 import java.util.TreeSet;
-import org.junit.Assert;
 import static net.sourceforge.seqware.pipeline.tools.SetOperations.difference;
 import static net.sourceforge.seqware.pipeline.tools.SetOperations.intersection;
 import static net.sourceforge.seqware.pipeline.tools.SetOperations.isSubset;
 import static net.sourceforge.seqware.pipeline.tools.SetOperations.isSuperset;
 import static net.sourceforge.seqware.pipeline.tools.SetOperations.symDifference;
 import static net.sourceforge.seqware.pipeline.tools.SetOperations.union;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**

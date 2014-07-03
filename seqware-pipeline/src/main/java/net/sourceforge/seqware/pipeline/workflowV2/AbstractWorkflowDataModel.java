@@ -1,12 +1,11 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
-import static net.sourceforge.seqware.common.util.Str.safe;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import static net.sourceforge.seqware.common.util.Str.safe;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Environment;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;

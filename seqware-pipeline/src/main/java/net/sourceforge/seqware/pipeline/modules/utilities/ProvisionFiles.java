@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.modules.utilities;
 
+import com.amazonaws.ClientConfiguration;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -11,9 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import javax.crypto.Cipher;
-
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -26,9 +25,6 @@ import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
 import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
-
-import com.amazonaws.ClientConfiguration;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**

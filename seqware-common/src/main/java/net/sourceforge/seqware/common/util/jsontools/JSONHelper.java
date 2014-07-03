@@ -8,12 +8,9 @@ import com.sdicons.json.parser.JSONParser;
 import com.sdicons.json.validator.JSONValidator;
 import com.sdicons.json.validator.ValidationException;
 import com.sdicons.json.validator.Validator;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 
 /**
  * JSON Helper Class Contains methods related to parsing/validating of JSON which one may find useful

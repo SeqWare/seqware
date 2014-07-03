@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.runner;
 
+import io.seqware.common.model.ProcessingStatus;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -19,7 +20,6 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -28,7 +28,6 @@ import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.model.Processing;
-import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;

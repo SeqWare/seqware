@@ -2,13 +2,11 @@ package net.sourceforge.seqware.common.business.impl;
 
 import java.util.List;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.business.WorkflowParamService;
 import net.sourceforge.seqware.common.dao.WorkflowParamDAO;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -3,12 +3,10 @@ package net.sourceforge.seqware.common.dao.hibernate;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.FileReportDAO;
 import net.sourceforge.seqware.common.model.FileReportRow;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
-
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**

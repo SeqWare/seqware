@@ -1,7 +1,6 @@
 package io.seqware.webservice.adapter;
 
 import java.sql.Timestamp;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**

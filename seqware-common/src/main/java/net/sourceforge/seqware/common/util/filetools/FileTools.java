@@ -1,22 +1,23 @@
 package net.sourceforge.seqware.common.util.filetools;
 
+import ch.enterag.utils.zip.EntryInputStream;
+import ch.enterag.utils.zip.EntryOutputStream;
+import ch.enterag.utils.zip.FileEntry;
+import ch.enterag.utils.zip.Zip64File;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,18 +26,9 @@ import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
+import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import ch.enterag.utils.zip.EntryInputStream;
-import ch.enterag.utils.zip.EntryOutputStream;
-import ch.enterag.utils.zip.FileEntry;
-import ch.enterag.utils.zip.Zip64File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.UserPrincipal;
-import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 
 /**

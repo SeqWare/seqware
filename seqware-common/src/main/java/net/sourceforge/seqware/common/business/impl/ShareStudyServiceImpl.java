@@ -2,11 +2,9 @@ package net.sourceforge.seqware.common.business.impl;
 
 import java.util.Date;
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.ShareStudyService;
 import net.sourceforge.seqware.common.dao.ShareStudyDAO;
 import net.sourceforge.seqware.common.model.ShareStudy;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

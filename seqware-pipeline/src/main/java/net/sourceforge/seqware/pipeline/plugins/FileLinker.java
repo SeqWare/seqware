@@ -16,27 +16,24 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import com.google.common.collect.Lists;
+import io.seqware.common.model.ProcessingStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import joptsimple.OptionSpec;
-import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.filelinker.FileLinkerParser;
-
 import org.openide.util.lookup.ServiceProvider;
-
-import com.google.common.collect.Lists;
-import java.sql.SQLException;
-import io.seqware.common.model.ProcessingStatus;
 
 /**
  * 
