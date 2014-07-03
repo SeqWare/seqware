@@ -1,5 +1,8 @@
 package net.sourceforge.seqware.common.metadata;
 
+import io.seqware.common.model.ProcessingStatus;
+import io.seqware.common.model.SequencerRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.Writer;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -16,9 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-
 import javax.sql.DataSource;
-
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
@@ -27,7 +28,6 @@ import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
-import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -36,15 +36,14 @@ import net.sourceforge.seqware.common.model.LibrarySelection;
 import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
-import io.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
@@ -53,18 +52,17 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
-import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Bool;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
-
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.NotImplementedException;
-import org.apache.log4j.Logger;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // FIXME: Have to record processing event (event), what the workflow it was, etc. 
 // FIXME: Need to add workflow table, and then have each processing event associated with a workflowID for this particular run of the workflow  
@@ -84,7 +82,7 @@ public class MetadataDB implements Metadata {
     // it to get the DB version to confirm the
     // connection in this example.
     private final Statement instance_sql;
-    private final Logger logger = Logger.getLogger(MetadataDB.class);
+    private final Logger logger = LoggerFactory.getLogger(MetadataDB.class);
 
     public MetadataDB(Connection conn) throws SQLException {
         this.db = conn;
@@ -333,7 +331,7 @@ public class MetadataDB implements Metadata {
         try {
             return executeQuery(sql, new IntByName("sw_accession", 0));
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString());
+            logger.error("SQL Command failed: " + sql);
             return (-1);
         }
     }
@@ -703,7 +701,7 @@ public class MetadataDB implements Metadata {
         try {
             return executeQuery(sql, new IntByName("sw_accession", 0));
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             return (-1);
         }
     }
@@ -717,7 +715,7 @@ public class MetadataDB implements Metadata {
         try {
             return executeQuery(sql, new IntByName("workflow_run_id", 0));
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             return (-1);
         }
     }
@@ -755,7 +753,7 @@ public class MetadataDB implements Metadata {
                 }
             });
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             return null;
         }
     }
@@ -1215,7 +1213,7 @@ public class MetadataDB implements Metadata {
                 }
             });
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             return (null);
         }
     }
@@ -1262,7 +1260,7 @@ public class MetadataDB implements Metadata {
                 }
             });
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -1277,9 +1275,9 @@ public class MetadataDB implements Metadata {
         ReturnValue ret = new ReturnValue();
 
         try {
-            executeUpdate(sql.toString());
+            executeUpdate(sql);
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             e.printStackTrace();
             ret.setExitStatus(ReturnValue.SQLQUERYFAILED);
         }
@@ -1312,7 +1310,7 @@ public class MetadataDB implements Metadata {
                 }
             });
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -1335,7 +1333,7 @@ public class MetadataDB implements Metadata {
         try {
             return executeQuery(sql, new IntByName("sw_accession", 0));
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             return (-1);
         }
     }
@@ -1478,7 +1476,7 @@ public class MetadataDB implements Metadata {
                 }
             });
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -1516,7 +1514,7 @@ public class MetadataDB implements Metadata {
                 }
             });
         } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql.toString() + ":" + e.getMessage());
+            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
             throw new RuntimeException(e);
         }
     }

@@ -13,13 +13,6 @@
 
     <name>seqware-distribution</name>
     <url>https://github.com/SeqWare/seqware</url>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.github.seqware</groupId>
-            <artifactId>seqware-pipeline</artifactId>
-        </dependency>
-    </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

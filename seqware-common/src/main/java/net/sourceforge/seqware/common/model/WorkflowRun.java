@@ -4,6 +4,7 @@ import io.seqware.common.model.WorkflowRunStatus;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -26,7 +27,8 @@ import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -78,6 +80,7 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     // this is an ugly hack, need to get a better solution
     private Integer workflowAccession;
     private String ownerUserName;
+    final Logger logger = LoggerFactory.getLogger(WorkflowRun.class);
 
     /**
      * <p>
@@ -102,7 +105,7 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
             return -1;
         }
 
-        if (that.getSwAccession() == this.getSwAccession()) // when both names are
+        if (Objects.equals(that.getSwAccession(), this.getSwAccession())) // when both names are
         // null
         {
             return 0;
@@ -934,7 +937,7 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
             return -1;
         }
 
-        if (that.getSwAccession() == this.getSwAccession()) // when both names are
+        if (Objects.equals(that.getSwAccession(), this.getSwAccession())) // when both names are
         // null
         {
             return 0;
@@ -957,10 +960,10 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
      */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      if (registration.isLIMSAdmin()) {
-          Log.debug("Skipping permissions admin on Workflow Run object " + swAccession);
-          return true;
-      }
+        if (registration.isLIMSAdmin()) {
+            Log.debug("Skipping permissions admin on Workflow Run object " + swAccession);
+            return true;
+        }
         boolean consideredBefore = considered.contains(this.getSwAccession());
         if (!consideredBefore) {
             considered.add(this.getSwAccession());
@@ -985,15 +988,15 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
             }
         } else {// orphaned WorkflowRun
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                Logger.getLogger(WorkflowRun.class).warn("Modifying Orphan WorkflowRun: " + this.getCommand());
+                logger.warn("Modifying Orphan WorkflowRun: " + this.getCommand());
                 hasPermission = true;
             } else {
-                Logger.getLogger(WorkflowRun.class).warn("Not modifying Orphan WorkflowRun: " + this.getCommand());
+                logger.warn("Not modifying Orphan WorkflowRun: " + this.getCommand());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            Logger.getLogger(WorkflowRun.class).info("WorkflowRun does not give permission");
+            logger.info("WorkflowRun does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify "
                     + this.getCommand());
         }

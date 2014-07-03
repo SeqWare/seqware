@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -16,7 +17,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @XmlRootElement
 /**
@@ -53,6 +55,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
     private Set<Processing> processings = new TreeSet<>();
     private Set<StudyLink> studyLinks = new TreeSet<>();
     private Set<StudyAttribute> studyAttributes = new TreeSet<>();
+    final Logger logger = LoggerFactory.getLogger(Study.class);
 
     /**
      * <p>
@@ -78,7 +81,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
             return -1;
         }
 
-        if (that.getStudyId() == this.getStudyId()) // when both names are null
+        if (Objects.equals(that.getStudyId(), this.getStudyId())) // when both names are null
         {
             return 0;
         }
@@ -781,48 +784,48 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
             return true;
         }
 
-        boolean hasPermission = false;
+        boolean hasPermission;
         if (registration == null) {
-            Logger.getLogger(Study.class).warn("Registration is null!");
+            logger.warn("Registration is null!");
             hasPermission = false;
         } else if (registration.isLIMSAdmin()) {
-            Logger.getLogger(Study.class).info("Study gives permission");
+            logger.info("Study gives permission");
             hasPermission = true;
         } else if (owner != null || sharedStudies != null) {
             hasPermission = false;
             if (owner != null && registration.equals(this.getOwner())) {
-                Logger.getLogger(Study.class).warn("User owns study");
+                logger.warn("User owns study");
                 hasPermission = true;
             }
             if (sharedStudies != null) {
                 for (ShareStudy ss : sharedStudies) {
                     if (registration.equals(ss.getRegistration())) {
-                        Logger.getLogger(Study.class).warn("User is linked to study");
+                        logger.warn("User is linked to study");
                         hasPermission = true;
                         break;
                     } else if (owner != null || sharedStudies != null) {
                         hasPermission = false;
                         if (owner != null && registration.equals(this.getOwner())) {
-                            Logger.getLogger(Study.class).info("User owns study");
+                            logger.info("User owns study");
                             hasPermission = true;
                         }
                         if (sharedStudies != null) {
                             for (ShareStudy shares : sharedStudies) {
                                 if (registration.equals(shares.getRegistration())) {
-                                    Logger.getLogger(Study.class).info("User is linked to study");
+                                    logger.info("User is linked to study");
                                     hasPermission = true;
                                     break;
                                 }
                             }
                         }
                     } else {
-                        Logger.getLogger(Study.class).warn("Study does not give permission");
+                        logger.warn("Study does not give permission");
                         hasPermission = false;
                     }
                 }
             }
         } else {
-            Logger.getLogger(Study.class).warn("Study does not give permission");
+            logger.warn("Study does not give permission");
             hasPermission = false;
         }
         if (!hasPermission) {

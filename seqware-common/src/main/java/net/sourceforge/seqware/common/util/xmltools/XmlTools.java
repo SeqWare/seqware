@@ -11,12 +11,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.log4j.Logger;
 
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.ext.xml.DomRepresentation;
 import org.restlet.resource.ResourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -30,10 +31,12 @@ import org.xml.sax.SAXException;
  */
 public class XmlTools {
 
+    static final Logger logger = LoggerFactory.getLogger(XmlTools.class);
+
     private static Document getDocument(String string) throws ParserConfigurationException, IOException, SAXException {
         Document document;
         if (string == null) {
-            Logger.getLogger(XmlTools.class).debug("String is :" + string);
+            logger.debug("String is :" + string);
             return null;
         }
         // UTF-8 Encoded strings occasionally have silly byte-order marks
@@ -62,7 +65,7 @@ public class XmlTools {
             serializer.transform(new DOMSource(doc), new StreamResult(out));
         } catch (TransformerException e) {
             // this is fatal, just dump the stack and throw a runtime exception
-            e.printStackTrace();
+            logger.error("Fatal error", e);
 
             throw new RuntimeException(e);
         }
@@ -80,10 +83,10 @@ public class XmlTools {
      * @return a boolean.
      */
     public static boolean prettyPrint(String filename) {
-        Logger.getLogger(XmlTools.class).info("start");
+        logger.info("start");
         // Parse input file
         DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
-        Document inputDOM = null;
+        Document inputDOM;
         try {
             DocumentBuilder parser = dFactory.newDocumentBuilder();
             inputDOM = parser.parse(new File(filename));
@@ -142,7 +145,7 @@ public class XmlTools {
         try {
             doc = jaxbTool.marshalToDocument(o);
         } catch (JAXBException e) {
-            e.printStackTrace();
+            logger.error("Error mashalling XML document", e);
         }
         return doc;
     }
@@ -187,14 +190,11 @@ public class XmlTools {
             Document document = XmlTools.getDocument(string);
             o = jaxbTool.unMarshal(document, expectedType);
 
-        } catch (ParserConfigurationException ex) {
-            ex.printStackTrace();
-            throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (ParserConfigurationException | IOException ex) {
+            logger.error(string, ex);
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
         } catch (JAXBException e) {
-            e.printStackTrace();
+            logger.error(string, e);
             throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
         }
         return o;

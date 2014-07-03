@@ -12,8 +12,9 @@ import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -27,7 +28,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class ProcessingDAOHibernate extends HibernateDaoSupport implements ProcessingDAO {
 
-    private Logger logger;
+    final Logger localLogger = LoggerFactory.getLogger(ProcessingDAOHibernate.class);
 
     /**
      * <p>
@@ -36,7 +37,6 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
      */
     public ProcessingDAOHibernate() {
         super();
-        logger = Logger.getLogger(ProcessingDAOHibernate.class);
     }
 
     /** {@inheritDoc} */
@@ -114,10 +114,10 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
          * logger.debug("CHILDREN == ? 0"); if(proc.getChildren() == null || proc.getChildren().size() == 0){
          * logger.debug("CHILDREN == NULL"); list.addAll(proc.getFiles()); }
          */
-        logger.debug("FILES:");
+        localLogger.debug("FILES:");
         for (Object file : list) {
             File fl = (File) file;
-            logger.debug(fl.getFileName());
+            localLogger.debug(fl.getFileName());
             files.add(fl);
 
         }
@@ -134,7 +134,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer processingId) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? " + "UNION ALL "
                 + "SELECT p.child_id, rl.parent_id " + "FROM processing_root_to_leaf rl, processing_relationship p "
@@ -149,7 +149,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
                                                                                                              */)
                 .setInteger(1, processingId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -185,7 +185,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer processingId, String metaType) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id FROM processing_relationship p where p.parent_id = ? " + "UNION ALL "
                 + "SELECT p.child_id, rl.parent_id "
@@ -203,7 +203,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
                                                                                                              */).setString(1, metaType)
                 .setInteger(2, processingId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -295,10 +295,8 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, processing);
             return (Processing) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Error updating detached processing", e);
         }
         return null;
     }
@@ -323,28 +321,26 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     @Override
     public void update(Registration registration, Processing processing) {
         Processing dbObject = reattachProcessing(processing);
-        Logger logger = Logger.getLogger(ProcessingDAOHibernate.class);
         if (registration == null) {
-            logger.error("ProcessingDAOHibernate update registration is null");
+            localLogger.error("ProcessingDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("Updating processing object");
+            localLogger.info("Updating processing object");
             update(processing);
         } else {
-            logger.error("ProcessingDAOHibernate update not authorized");
+            localLogger.error("ProcessingDAOHibernate update not authorized");
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, Processing processing) {
-        Logger logger = Logger.getLogger(ProcessingDAOHibernate.class);
         if (registration == null) {
-            logger.error("ProcessingDAOHibernate insert registration is null");
+            localLogger.error("ProcessingDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || processing.givesPermission(registration)) {
-            logger.info("insert processing object. person is " + registration.getEmailAddress());
+            localLogger.info("insert processing object. person is " + registration.getEmailAddress());
             return insert(processing);
         } else {
-            logger.error("ProcessingDAOHibernate insert not authorized");
+            localLogger.error("ProcessingDAOHibernate insert not authorized");
         }
         return null;
     }
@@ -353,14 +349,13 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     @Override
     public Processing updateDetached(Registration registration, Processing processing) {
         Processing dbObject = reattachProcessing(processing);
-        Logger logger = Logger.getLogger(ProcessingDAOHibernate.class);
         if (registration == null) {
-            logger.error("ProcessingDAOHibernate updateDetached registration is null");
+            localLogger.error("ProcessingDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("updateDetached processing object");
+            localLogger.info("updateDetached processing object");
             return updateDetached(processing);
         } else {
-            logger.error("ProcessingDAOHibernate updateDetached not authorized");
+            localLogger.error("ProcessingDAOHibernate updateDetached not authorized");
         }
         return null;
     }

@@ -13,8 +13,9 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -28,7 +29,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class SequencerRunDAOHibernate extends HibernateDaoSupport implements SequencerRunDAO {
 
-    private Logger logger;
+    final Logger localLogger = LoggerFactory.getLogger(SequencerRunDAOHibernate.class);
 
     /**
      * <p>
@@ -37,7 +38,6 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      */
     public SequencerRunDAOHibernate() {
         super();
-        logger = Logger.getLogger(SequencerRunDAOHibernate.class);
     }
 
     /**
@@ -81,183 +81,6 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         this.getHibernateTemplate().delete(sequencerRun);
     }
 
-    /*
-     * public Integer getErrorCnt(SequencerRun sequencerRun){ Integer errorCount = 0; return errorCount; }
-     * 
-     * public Integer getProcessingCnt(SequencerRun sequencerRun){ Integer processingCount = 0; return processingCount; }
-     */
-    /** {@inheritDoc} */
-    @Override
-    public List<Integer> getProcStatuses(SequencerRun sequencerRun) {
-        // FIXME: maybe?
-        throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
-        // List<Integer> procStatuses = Arrays.asList(0, 0, 0);
-        //
-        // String subQuery = "select COUNT(status)  from Processing myproc,( "
-        // + "select child_id id from processing_root_to_leaf p " + "UNION ALL "
-        // + "select distinct parent_id id from processing_root_to_leaf p "
-        // + "UNION ALL "
-        // + "select processing_id id from processing_ius pr_i "
-        // + "inner join ius i on (i.ius_id = pr_i.ius_id)"
-        // + "inner join lane ln on (ln.lane_id = i.lane_id) "
-        // + "where ln.sequencer_run_id = ? and processing_id not in (select parent_id from processing_relationship) "
-        // + // -- processing_sequencer_runs
-        // "UNION ALL "
-        // + "SELECT processing_id id FROM processing_sequencer_runs p_s_r "
-        // + "where p_s_r.sequencer_run_id = ? and processing_id not in (select parent_id from processing_relationship) "
-        // + // -- processing_lanes
-        // "UNION ALL " + "SELECT processing_id id FROM processing_lanes p_l "
-        // + "inner join lane l on (p_l.lane_id = l.lane_id) "
-        // + "where l.sequencer_run_id = ? and processing_id not in (select parent_id from processing_relationship)) ";
-        //
-        // String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-        // + "SELECT p.child_id as child_id, p.parent_id "
-        // + "FROM processing_relationship p "
-        // + "inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
-        // + "inner join ius i on (i.ius_id = pr_i.ius_id) "
-        // + "inner join lane ln on (ln.lane_id=i.lane_id)"
-        // + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-        // + "where sr.sequencer_run_id = ? "
-        // + // -- processing_sequencer_runs
-        // "UNION "
-        // + "SELECT p.child_id as child_id, p.parent_id "
-        // + "FROM processing_relationship p "
-        // + "inner join processing_sequencer_runs p_s_r on (p_s_r.processing_id = p.parent_id) "
-        // + "where p_s_r.sequencer_run_id = ? "
-        // + // -- processing_lanes
-        // "UNION " + "SELECT p.child_id as child_id, p.parent_id "
-        // + "FROM processing_relationship p inner join processing_lanes p_l on (p_l.processing_id = p.parent_id) "
-        // + "inner join lane l on (p_l.lane_id = l.lane_id) " + "where l.sequencer_run_id = ? "
-        // + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-        // + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id)  "
-        // + subQuery + "q where ( position(? in status) > 0) and myproc.processing_id=q.id " + "UNION ALL " + subQuery
-        // + "q where ( position(? in status) > 0 or position(? in status) > 0) and myproc.processing_id=q.id "
-        // + "UNION ALL " + subQuery + "q where ( position(? in status) > 0) and myproc.processing_id=q.id";
-        //
-        // List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1,
-        // sequencerRun.getSequencerRunId()).setInteger(2, sequencerRun.getSequencerRunId()).setInteger(3,
-        // sequencerRun.getSequencerRunId()).setInteger(4, sequencerRun.getSequencerRunId()).setInteger(5,
-        // sequencerRun.getSequencerRunId()).setString(6, "success").setInteger(7, sequencerRun.getSequencerRunId()).setInteger(8,
-        // sequencerRun.getSequencerRunId()).setInteger(9, sequencerRun.getSequencerRunId()).setString(10, "running").setString(11,
-        // "pending").setInteger(12, sequencerRun.getSequencerRunId()).setInteger(13, sequencerRun.getSequencerRunId()).setInteger(14,
-        // sequencerRun.getSequencerRunId()).setString(15, "failed").list();
-        //
-        // if (list.get(0) != null) {
-        // procStatuses.set(0, Integer.parseInt(list.get(0).toString()));
-        // }
-        // if (list.get(1) != null) {
-        // procStatuses.set(1, Integer.parseInt(list.get(1).toString()));
-        // }
-        // if (list.get(2) != null) {
-        // procStatuses.set(2, Integer.parseInt(list.get(2).toString()));
-        // }
-        //
-        // // logger.debug("Count =" + list.toString());
-        //
-        // return procStatuses;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Integer getProcessedCnt(SequencerRun sequencerRun) {
-        // FIXME: maybe?
-        throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
-
-        // Integer processedCount = 0;
-        //
-        // String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-        // + "SELECT p.child_id as child_id, p.parent_id " + "FROM processing_relationship p "
-        // + "inner join processing_lanes l on (l.processing_id = p.parent_id) "
-        // + "inner join lane ln on (ln.lane_id = l.lane_id) "
-        // + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-        // + "where sr.sequencer_run_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-        // + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
-        // + "select COUNT(status)  from Processing myproc, " + "(select child_id id from processing_root_to_leaf p "
-        // + "UNION ALL " + "select distinct parent_id id from processing_root_to_leaf p " + "UNION ALL "
-        // + "select processing_id id from processing_lanes l " + "inner join lane ln on (ln.lane_id = l.lane_id) "
-        // + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-        // + "where sr.sequencer_run_id = ? "
-        // + "and processing_id not in (select parent_id from processing_relationship)) q "
-        // + "where ( position(? in status) > 0) " + "and myproc.processing_id=q.id";
-        //
-        // List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1,
-        // sequencerRun.getSequencerRunId()).setString(2, "success").list();
-        //
-        // if (list.get(0) != null) {
-        // processedCount = Integer.parseInt(list.get(0).toString());
-        // }
-        //
-        // logger.debug("SUCCESS count =" + processedCount);
-        //
-        // return processedCount;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Integer getProcessingCnt(SequencerRun sequencerRun) {
-        // FIXME: maybe?
-        throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
-
-        // Integer processingCount = 0;
-        //
-        // String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-        // + "SELECT p.child_id as child_id, p.parent_id " + "FROM processing_relationship p "
-        // + "inner join processing_lanes l on (l.processing_id = p.parent_id) "
-        // + "inner join lane ln on (ln.lane_id = l.lane_id) "
-        // + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-        // + "where sr.sequencer_run_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-        // + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
-        // + "select COUNT(status)  from Processing myproc, " + "(select child_id id from processing_root_to_leaf p "
-        // + "UNION ALL " + "select distinct parent_id id from processing_root_to_leaf p " + "UNION ALL "
-        // + "select processing_id id from processing_lanes l " + "inner join lane ln on (ln.lane_id = l.lane_id) "
-        // + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-        // + "where sr.sequencer_run_id = ? "
-        // + "and processing_id not in (select parent_id from processing_relationship)) q "
-        // + "where ( position(? in status) > 0 or position(? in status) > 0) " + "and myproc.processing_id=q.id";
-        //
-        // List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1,
-        // sequencerRun.getSequencerRunId()).setString(2, "running").setString(3, "pending").list();
-        //
-        // if (list.get(0) != null) {
-        // processingCount = Integer.parseInt(list.get(0).toString());
-        // }
-        //
-        // return processingCount;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public Integer getErrorCnt(SequencerRun sequencerRun) {
-        // FIXME: maybe?
-        throw new RuntimeException("Current implementation known to be broken.  Fix if you need it.");
-
-        // Integer errorCount = 0;
-        //
-        // String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
-        // + "SELECT p.child_id as child_id, p.parent_id " + "FROM processing_relationship p "
-        // + "inner join processing_lanes l on (l.processing_id = p.parent_id) "
-        // + "inner join lane ln on (ln.lane_id = l.lane_id) "
-        // + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-        // + "where sr.sequencer_run_id = ? " + "UNION ALL " + "SELECT p.child_id, rl.parent_id "
-        // + "FROM processing_root_to_leaf rl, processing_relationship p " + "WHERE p.parent_id = rl.child_id) "
-        // + "select COUNT(status)  from Processing myproc, " + "(select child_id id from processing_root_to_leaf p "
-        // + "UNION ALL " + "select distinct parent_id id from processing_root_to_leaf p " + "UNION ALL "
-        // + "select processing_id id from processing_lanes l " + "inner join lane ln on (ln.lane_id = l.lane_id) "
-        // + "inner join sequencer_run sr on (sr.sequencer_run_id = ln.sequencer_run_id) "
-        // + "where sr.sequencer_run_id = ? "
-        // + "and processing_id not in (select parent_id from processing_relationship)) q "
-        // + "where ( position(? in status) > 0) " + "and myproc.processing_id=q.id";
-        //
-        // List list = this.getSession().createSQLQuery(query).setInteger(0, sequencerRun.getSequencerRunId()).setInteger(1,
-        // sequencerRun.getSequencerRunId()).setString(2, "failed").list();
-        //
-        // if (list.get(0) != null) {
-        // errorCount = Integer.parseInt(list.get(0).toString());
-        // }
-        //
-        // return errorCount;
-    }
-
     /** {@inheritDoc} */
     @Override
     public List<SequencerRun> list(Registration registration, Boolean isAsc) {
@@ -270,11 +93,11 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
          * List list = this.getHibernateTemplate().find( "from SequencerRun as sequencerRun order by create_tstmp desc" "from SequencerRun
          * as sequencerRun where sequencerRun.owner.registrationId=? order by create_tstmp desc" );
          */
-        String query = "";
+        String query;
         Object[] parameters = { registration.getRegistrationId() };
         String sortValue = (!isAsc) ? "asc" : "desc";
 
-        List list = null;
+        List list;
         if (registration.isLIMSAdmin()) {
             // select distinct f from Foo f
             query = "select * from sequencer_run as sr order by sr.create_tstmp " + sortValue + ";";
@@ -429,10 +252,8 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, sequencerRun);
             return (SequencerRun) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Error updating detached SequencerRun", e);
         }
         return null;
     }
@@ -462,14 +283,13 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     @Override
     public void update(Registration registration, SequencerRun sequencerRun) {
         SequencerRun dbObject = reattachSequencerRun(sequencerRun);
-        Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);
         if (registration == null) {
-            logger.error("SequencerRunDAOHibernate update registration is null");
+            localLogger.error("SequencerRunDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || (sequencerRun.givesPermission(registration) && dbObject.givesPermission(registration))) {
-            logger.info("Updating sequencer run object");
+            localLogger.info("Updating sequencer run object");
             update(sequencerRun);
         } else {
-            logger.error("sequencerRunDAOHibernate update not authorized");
+            localLogger.error("sequencerRunDAOHibernate update not authorized");
         }
     }
 
@@ -480,15 +300,14 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      */
     @Override
     public Integer insert(Registration registration, SequencerRun sequencerRun) {
-        Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);
         if (registration == null) {
-            logger.error("SequencerRunDAOHibernate insert SequencerRun registration is null");
+            localLogger.error("SequencerRunDAOHibernate insert SequencerRun registration is null");
         } else if (registration.isLIMSAdmin() || sequencerRun.givesPermission(registration)) {
-            logger.info("insert sequencer run object");
+            localLogger.info("insert sequencer run object");
             insert(sequencerRun);
             return (sequencerRun.getSwAccession());
         } else {
-            logger.error("sequencerRunDAOHibernate insert not authorized");
+            localLogger.error("sequencerRunDAOHibernate insert not authorized");
         }
         return (null);
     }
@@ -500,15 +319,14 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      */
     @Override
     public Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun) {
-        Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);
         if (registration == null) {
-            logger.error("SequencerRunDAOHibernate insert SequencerRunWizardDTO registration is null");
+            localLogger.error("SequencerRunDAOHibernate insert SequencerRunWizardDTO registration is null");
         } else if (registration.isLIMSAdmin() || sequencerRun.givesPermission(registration)) {
-            logger.info("insert SequencerRunWizardDTO object");
+            localLogger.info("insert SequencerRunWizardDTO object");
             insert(sequencerRun);
             return (sequencerRun.getSwAccession());
         } else {
-            logger.error("sequencerRunDAOHibernate insert not authorized");
+            localLogger.error("sequencerRunDAOHibernate insert not authorized");
         }
         return (null);
     }
@@ -517,14 +335,13 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     @Override
     public SequencerRun updateDetached(Registration registration, SequencerRun sequencerRun) {
         SequencerRun dbObject = reattachSequencerRun(sequencerRun);
-        Logger logger = Logger.getLogger(SequencerRunDAOHibernate.class);
         if (registration == null) {
-            logger.error("SequencerRunDAOHibernate updateDetached registration is null");
+            localLogger.error("SequencerRunDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("updateDetached SequencerRun object");
+            localLogger.info("updateDetached SequencerRun object");
             return updateDetached(sequencerRun);
         } else {
-            logger.error("sequencerRunDAOHibernate updateDetached not authorized");
+            localLogger.error("sequencerRunDAOHibernate updateDetached not authorized");
         }
         return null;
     }

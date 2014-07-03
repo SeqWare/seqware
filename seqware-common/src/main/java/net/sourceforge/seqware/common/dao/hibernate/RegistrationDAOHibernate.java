@@ -8,7 +8,8 @@ import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -21,7 +22,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class RegistrationDAOHibernate extends HibernateDaoSupport implements RegistrationDAO {
 
-    private Logger logger;
+    final Logger localLogger = LoggerFactory.getLogger(RegistrationDAOHibernate.class);
 
     /**
      * <p>
@@ -30,7 +31,6 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
      */
     public RegistrationDAOHibernate() {
         super();
-        logger = Logger.getLogger(RegistrationDAOHibernate.class);
     }
 
     /**
@@ -96,10 +96,8 @@ public class RegistrationDAOHibernate extends HibernateDaoSupport implements Reg
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, registration);
             return (Registration) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Error updating detached registration", e);
         }
         return null;
     }
