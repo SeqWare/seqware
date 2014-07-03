@@ -271,10 +271,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.seqware</groupId>
-            <artifactId>seqware-webservice-dto</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <exclusions>
