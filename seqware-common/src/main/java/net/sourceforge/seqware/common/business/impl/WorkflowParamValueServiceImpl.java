@@ -5,7 +5,6 @@ import net.sourceforge.seqware.common.business.WorkflowParamValueService;
 import net.sourceforge.seqware.common.dao.WorkflowParamValueDAO;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

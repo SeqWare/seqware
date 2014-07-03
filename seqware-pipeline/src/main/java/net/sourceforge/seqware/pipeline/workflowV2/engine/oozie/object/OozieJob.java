@@ -8,13 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import net.sourceforge.seqware.common.util.Log;
-
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_INTERVAL;
 import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_MAX;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import org.apache.commons.io.IOUtils;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

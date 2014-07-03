@@ -2,12 +2,10 @@ package net.sourceforge.seqware.common.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.module.ReturnValue;
 
 /**
  * <p>

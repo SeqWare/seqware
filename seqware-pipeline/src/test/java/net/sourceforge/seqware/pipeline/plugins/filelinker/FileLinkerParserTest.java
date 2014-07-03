@@ -1,12 +1,10 @@
 package net.sourceforge.seqware.pipeline.plugins.filelinker;
 
+import java.io.StringReader;
+import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-
-import java.io.StringReader;
-import java.util.List;
-
 import org.junit.Test;
 
 public class FileLinkerParserTest {

@@ -1,10 +1,8 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.SampleSearchDAO;
 import net.sourceforge.seqware.common.model.SampleSearch;
-
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;

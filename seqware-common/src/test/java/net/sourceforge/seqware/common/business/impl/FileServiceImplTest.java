@@ -1,14 +1,11 @@
 package net.sourceforge.seqware.common.business.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
-
 import net.sourceforge.seqware.common.BaseUnit;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.File;
-
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**

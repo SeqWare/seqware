@@ -16,15 +16,11 @@
  */
 package net.sourceforge.seqware.common.util.xmltools;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.junit.Assert;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.FileType;
@@ -48,9 +44,10 @@ import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

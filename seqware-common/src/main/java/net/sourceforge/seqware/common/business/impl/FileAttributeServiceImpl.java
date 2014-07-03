@@ -1,14 +1,12 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import java.util.Set;
-
 import net.sourceforge.seqware.common.business.FileAttributeService;
 import net.sourceforge.seqware.common.dao.FileAttributeDAO;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileAttribute;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

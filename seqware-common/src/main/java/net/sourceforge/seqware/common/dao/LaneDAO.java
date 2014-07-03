@@ -2,11 +2,9 @@ package net.sourceforge.seqware.common.dao;
 
 import java.util.List;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
-import net.sourceforge.seqware.common.module.ReturnValue;
 
 /**
  * <p>

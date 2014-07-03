@@ -16,11 +16,11 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import org.junit.Assert;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
+import org.junit.Assert;
 import org.restlet.representation.Representation;
 import org.w3c.dom.Document;
 

@@ -17,13 +17,17 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.Reports;
-import java.util.*;
+import io.seqware.common.model.SequencerRunStatus;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Lane;
-import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
-import io.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
@@ -31,7 +35,10 @@ import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Runs the tests for the Metadata plugin indicated on this page:https://wiki.oicr.on.ca/x/Jga5Ag

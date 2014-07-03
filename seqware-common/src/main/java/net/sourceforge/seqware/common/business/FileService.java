@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common.business;
 
 import java.util.List;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;

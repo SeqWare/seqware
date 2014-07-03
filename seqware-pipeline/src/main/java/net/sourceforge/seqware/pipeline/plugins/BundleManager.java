@@ -10,16 +10,14 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
-
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.TabExpansionUtil;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**

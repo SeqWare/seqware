@@ -16,7 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.util.*;
+import java.util.Arrays;
 import net.sourceforge.seqware.common.hibernate.CheckForCycles;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;

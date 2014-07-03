@@ -1,12 +1,12 @@
 package io.seqware;
 
-import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.metadata.MetadataFactory;
-import net.sourceforge.seqware.common.model.WorkflowRun;
 import io.seqware.common.model.WorkflowRunStatus;
 import static io.seqware.common.model.WorkflowRunStatus.pending;
 import static io.seqware.common.model.WorkflowRunStatus.running;
 import static io.seqware.common.model.WorkflowRunStatus.submitted;
+import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.metadata.MetadataFactory;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
 public class WorkflowRuns {

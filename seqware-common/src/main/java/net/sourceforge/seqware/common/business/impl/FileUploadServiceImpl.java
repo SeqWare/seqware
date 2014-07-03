@@ -1,10 +1,10 @@
 package net.sourceforge.seqware.common.business.impl;
 
+import io.seqware.common.model.ProcessingStatus;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.business.FileUploadService;
 import net.sourceforge.seqware.common.business.UploadFile;
 import net.sourceforge.seqware.common.dao.ExperimentDAO;
@@ -22,12 +22,10 @@ import net.sourceforge.seqware.common.model.FileType;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
-import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
