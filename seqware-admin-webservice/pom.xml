@@ -194,12 +194,14 @@
                     </webResources>
                         
                     <packagingExcludes>**/servlet*.jar,META-INF/context.xml</packagingExcludes>
+		    <!-- causes lots of exceptions on startup
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
+		    -->
                 </configuration>
             </plugin>
             <plugin>
