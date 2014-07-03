@@ -128,6 +128,8 @@ public class AttributeAnnotatorET {
     
     @Test
     public void testSequencerRunSkipValue() throws IOException {
+        // need to reset database due to repeated accession
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
         annotateSkipImplicitly(AttributeType.SEQUENCER_RUN, 4715);
     }
 
