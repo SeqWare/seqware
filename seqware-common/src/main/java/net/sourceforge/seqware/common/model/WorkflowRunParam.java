@@ -3,7 +3,6 @@ package net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;

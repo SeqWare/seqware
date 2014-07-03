@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.hibernate;
 
 import net.sourceforge.seqware.common.factory.BeanFactory;
-
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

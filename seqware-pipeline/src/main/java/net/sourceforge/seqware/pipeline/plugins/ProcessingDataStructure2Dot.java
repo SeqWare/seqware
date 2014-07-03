@@ -12,16 +12,14 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.commons.dbutils.ResultSetHandler;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.openide.util.lookup.ServiceProvider;
-
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = PluginInterface.class)
 public class ProcessingDataStructure2Dot extends Plugin {

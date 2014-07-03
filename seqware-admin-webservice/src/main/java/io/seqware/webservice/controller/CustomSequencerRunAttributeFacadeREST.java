@@ -7,7 +7,6 @@ package io.seqware.webservice.controller;
 import io.seqware.webservice.generated.controller.SequencerRunAttributeFacadeREST;
 import io.seqware.webservice.generated.controller.SequencerRunFacadeREST;
 import io.seqware.webservice.generated.model.SequencerRunAttribute;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;

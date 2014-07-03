@@ -4,14 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.security.PermissionsAware;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.slf4j.Logger; import org.slf4j.LoggerFactory;
-
+import org.slf4j.Logger;
 /**
  * <p>
  * Invoice class.

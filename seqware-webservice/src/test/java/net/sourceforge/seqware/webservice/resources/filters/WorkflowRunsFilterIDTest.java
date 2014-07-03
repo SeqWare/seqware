@@ -16,8 +16,8 @@
  */
 package net.sourceforge.seqware.webservice.resources.filters;
 
-import org.junit.Assert;
 import net.sourceforge.seqware.webservice.resources.AbstractResourceTest;
+import org.junit.Assert;
 import org.restlet.representation.Representation;
 
 /**

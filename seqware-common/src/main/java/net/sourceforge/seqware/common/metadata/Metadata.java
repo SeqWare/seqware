@@ -1,5 +1,8 @@
 package net.sourceforge.seqware.common.metadata;
 
+import io.seqware.common.model.ProcessingStatus;
+import io.seqware.common.model.SequencerRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.Writer;
 import java.sql.SQLException;
 import java.util.Date;
@@ -7,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
@@ -27,12 +29,10 @@ import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunAttribute;
-import io.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.model.StudyType;
@@ -41,8 +41,6 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
-import io.seqware.common.model.WorkflowRunStatus;
-import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 
 public interface Metadata {

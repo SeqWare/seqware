@@ -16,10 +16,10 @@
  */
 package net.sourceforge.seqware.common.util.testtools;
 
+import io.seqware.metadb.util.TestDatabaseCreator;
 import java.util.Map;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
-import io.seqware.metadb.util.TestDatabaseCreator;
 
 /**
  * This class controls configuration of the database used for integration tests.

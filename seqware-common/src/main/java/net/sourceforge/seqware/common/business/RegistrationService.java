@@ -4,7 +4,6 @@ import net.sourceforge.seqware.common.dao.RegistrationDAO;
 import net.sourceforge.seqware.common.invitation.InvitationParams;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.RegistrationDTO;
-
 import org.springframework.mail.MailSender;
 
 /**

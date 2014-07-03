@@ -19,7 +19,6 @@ package net.sourceforge.seqware.database;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Stack;
-
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
@@ -37,7 +36,6 @@ import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
-
 import org.junit.Test;
 
 /**

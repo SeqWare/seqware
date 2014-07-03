@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-
 import net.sourceforge.seqware.common.util.iotools.BufferedReaderThread;
 
 /**

@@ -5,13 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

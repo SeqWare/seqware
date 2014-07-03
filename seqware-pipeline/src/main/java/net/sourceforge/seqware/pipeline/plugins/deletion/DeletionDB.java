@@ -28,7 +28,6 @@ import org.apache.commons.io.FileUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.type.TypeReference;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**

@@ -1,7 +1,5 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,10 +12,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.factory.DBAccess;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
-
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

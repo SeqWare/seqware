@@ -1,12 +1,10 @@
 package net.sourceforge.seqware.common.business;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.StudyDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.module.ReturnValue;
 
 /**
  * <p>

@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

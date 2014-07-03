@@ -16,22 +16,19 @@
  */
 package net.sourceforge.seqware.webservice.resources;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Registration;
-
 import org.restlet.data.Form;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.WadlServerResource;
 import org.restlet.resource.ResourceException;
-
-import com.google.common.annotations.VisibleForTesting;
 
 /**
  * See https://sourceforge.net/apps/mediawiki/seqware/index.php?title=How_to_extend_the_web_service#Basic_Resource

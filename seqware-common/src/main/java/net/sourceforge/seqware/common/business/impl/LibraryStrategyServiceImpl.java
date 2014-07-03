@@ -1,13 +1,10 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.LibraryStrategyService;
 import net.sourceforge.seqware.common.dao.LibraryStrategyDAO;
-import net.sourceforge.seqware.common.dao.StudyTypeDAO;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
 import net.sourceforge.seqware.common.model.Registration;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

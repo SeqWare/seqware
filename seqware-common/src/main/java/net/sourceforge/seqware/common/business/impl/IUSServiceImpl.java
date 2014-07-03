@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common.business.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Set;

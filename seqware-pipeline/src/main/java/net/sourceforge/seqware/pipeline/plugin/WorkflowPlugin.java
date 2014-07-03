@@ -12,6 +12,7 @@
 package net.sourceforge.seqware.pipeline.plugin;
 
 import io.seqware.WorkflowRuns;
+import io.seqware.common.model.WorkflowRunStatus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,12 +20,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
@@ -37,7 +36,6 @@ import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowV2Utility;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**
