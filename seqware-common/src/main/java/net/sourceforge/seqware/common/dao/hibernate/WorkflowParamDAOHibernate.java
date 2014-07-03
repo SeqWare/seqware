@@ -10,7 +10,8 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -23,6 +24,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @version $Id: $Id
  */
 public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements WorkflowParamDAO {
+
+    final Logger localLogger = LoggerFactory.getLogger(InvoiceDAOHibernate.class);
 
     /**
      * <p>
@@ -73,10 +76,8 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, workflowParam);
             return (WorkflowParam) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Error updating detached WorkflowParam", e);
         }
         return null;
     }
@@ -110,28 +111,26 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
     @Override
     public void update(Registration registration, WorkflowParam workflowParam) {
         WorkflowParam dbObject = reattachWorkflowParam(workflowParam);
-        Logger logger = Logger.getLogger(WorkflowParamDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowParamDAOHibernate update: Registration is null - exiting");
+            localLogger.error("WorkflowParamDAOHibernate update: Registration is null - exiting");
         } else if (registration.isLIMSAdmin() || (workflowParam.givesPermission(registration) && dbObject.givesPermission(registration))) {
-            logger.info("WorkflowParamDAOHibernate Updating workflow param object");
+            localLogger.info("WorkflowParamDAOHibernate Updating workflow param object");
             update(workflowParam);
         } else {
-            logger.error("WorkflowParamDAOHibernate update not authorized");
+            localLogger.error("WorkflowParamDAOHibernate update not authorized");
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, WorkflowParam workflowParam) {
-        Logger logger = Logger.getLogger(WorkflowParamDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowParamDAOHibernate insert: Registration is null - exiting");
+            localLogger.error("WorkflowParamDAOHibernate insert: Registration is null - exiting");
         } else if (registration.isLIMSAdmin() || workflowParam.givesPermission(registration)) {
-            logger.info("insert workflow param object");
+            localLogger.info("insert workflow param object");
             return insert(workflowParam);
         } else {
-            logger.error("WorkflowParamDAOHibernate insert not authorized");
+            localLogger.error("WorkflowParamDAOHibernate insert not authorized");
         }
         return null;
     }
@@ -140,14 +139,13 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
     @Override
     public WorkflowParam updateDetached(Registration registration, WorkflowParam workflowParam) {
         WorkflowParam dbObject = reattachWorkflowParam(workflowParam);
-        Logger logger = Logger.getLogger(WorkflowParamDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowParamDAOHibernate updateDetached: Registration is null - exiting");
+            localLogger.error("WorkflowParamDAOHibernate updateDetached: Registration is null - exiting");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("updateDetached workflow param object");
+            localLogger.info("updateDetached workflow param object");
             return updateDetached(workflowParam);
         } else {
-            logger.error("WorkflowParamDAOHibernate updateDetached not authorized");
+            localLogger.error("WorkflowParamDAOHibernate updateDetached not authorized");
         }
         return null;
     }

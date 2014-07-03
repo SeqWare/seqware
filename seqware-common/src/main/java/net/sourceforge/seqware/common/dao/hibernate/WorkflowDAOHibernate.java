@@ -12,9 +12,10 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -26,6 +27,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @version $Id: $Id
  */
 public class WorkflowDAOHibernate extends HibernateDaoSupport implements WorkflowDAO {
+
+    final Logger localLogger = LoggerFactory.getLogger(WorkflowDAOHibernate.class);
 
     /**
      * <p>
@@ -68,7 +71,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     public List<Workflow> list() {
         ArrayList<Workflow> workflows = new ArrayList<>();
 
-        List expmts = null;
+        List expmts;
 
         // Limit the workflows to those owned by the user
         expmts = this.getHibernateTemplate().find("from Workflow as workflow order by workflow.name, workflow.version desc");
@@ -87,7 +90,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
         ArrayList<Workflow> workflows = new ArrayList<>();
 
         // Limit the workflows to those owned by the user
-        String query = "";
+        String query;
         Object[] parameters = { registration.getRegistrationId() };
 
         if (registration.isLIMSAdmin()) {
@@ -189,10 +192,8 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, workflow);
             return (Workflow) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Error updating detached workflow", e);
         }
         return null;
     }
@@ -201,25 +202,23 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     @Override
     public void update(Registration registration, Workflow workflow) {
         Workflow dbObject = reattachWorkflow(workflow);
-        Logger logger = Logger.getLogger(WorkflowDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowDAOHibernate update: Registration is null - exiting");
+            localLogger.error("WorkflowDAOHibernate update: Registration is null - exiting");
         } else if (registration.isLIMSAdmin() || (workflow.givesPermission(registration) && dbObject.givesPermission(registration))) {
-            logger.info("Updating workflow object");
+            localLogger.info("Updating workflow object");
             update(workflow);
         } else {
-            logger.error("WorkflowDAOHibernate update: Registration is incorrect - exiting");
+            localLogger.error("WorkflowDAOHibernate update: Registration is incorrect - exiting");
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, Workflow workflow) {
-        Logger logger = Logger.getLogger(WorkflowDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowDAOHibernate insert: Registration is null - exiting");
+            localLogger.error("WorkflowDAOHibernate insert: Registration is null - exiting");
         } else {
-            logger.info("insert workflow object");
+            localLogger.info("insert workflow object");
             return insert(workflow);
         }
         return null;
@@ -235,7 +234,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     /** {@inheritDoc} */
     @Override
     public List<Workflow> listWorkflows(SequencerRun sr) {
-        String query = null;
+        String query;
         if (sr != null) {
             query = "select distinct w.* from sequencer_run sr " + "join processing_sequencer_runs psr "
                     + "on (sr.sequencer_run_id = psr.sequencer_run_id) " + "join processing p "
@@ -274,14 +273,13 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     @Override
     public Workflow updateDetached(Registration registration, Workflow workflow) {
         Workflow dbObject = reattachWorkflow(workflow);
-        Logger logger = Logger.getLogger(WorkflowDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowDAOHibernate updateDetached: Registration is null - exiting");
+            localLogger.error("WorkflowDAOHibernate updateDetached: Registration is null - exiting");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("updateDetached workflow object");
+            localLogger.info("updateDetached workflow object");
             return updateDetached(workflow);
         } else {
-            logger.error("WorkflowDAOHibernate updateDetached: Registration is incorrect - exiting");
+            localLogger.error("WorkflowDAOHibernate updateDetached: Registration is incorrect - exiting");
         }
         return null;
     }

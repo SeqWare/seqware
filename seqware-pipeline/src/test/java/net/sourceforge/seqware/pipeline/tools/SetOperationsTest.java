@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.pipeline.tools;
 
 import java.util.TreeSet;
-import junit.framework.Assert;
+import org.junit.Assert;
 import static net.sourceforge.seqware.pipeline.tools.SetOperations.difference;
 import static net.sourceforge.seqware.pipeline.tools.SetOperations.intersection;
 import static net.sourceforge.seqware.pipeline.tools.SetOperations.isSubset;

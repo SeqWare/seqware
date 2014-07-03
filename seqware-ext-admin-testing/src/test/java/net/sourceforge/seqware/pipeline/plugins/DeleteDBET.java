@@ -34,7 +34,7 @@ import org.junit.Test;
  * @author dyuen
  */
 public class DeleteDBET {
-    private ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
+    private final ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
 
     @BeforeClass
     public static void resetDatabase() {

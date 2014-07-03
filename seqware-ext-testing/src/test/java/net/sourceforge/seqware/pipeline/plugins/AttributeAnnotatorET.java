@@ -19,12 +19,12 @@ package net.sourceforge.seqware.pipeline.plugins;
 import java.io.IOException;
 import java.util.List;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mortbay.log.Log;
 
 /**
  * These tests support command-line tools found in the SeqWare User Tutorial, in this case, AttributeAnnotator
@@ -33,7 +33,7 @@ import org.mortbay.log.Log;
  */
 public class AttributeAnnotatorET {
     public static final String COUNT_DB_SIZE = "SELECT (SELECT COUNT(*) FROM workflow), (SELECT COUNT(*) FROM workflow_run), (SELECT COUNT(*) FROM sequencer_run), (SELECT COUNT(*) FROM experiment), (SELECT COUNT(*) FROM ius), (SELECT COUNT(*) FROM lane), (SELECT COUNT(*) FROM processing), (SELECT COUNT(*) FROM sample), (SELECT COUNT(*) FROM sample_hierarchy), (SELECT COUNT(*) FROM processing_ius), (SELECT COUNT(*) FROM processing_files), (SELECT COUNT(*) FROM processing_relationship), (SELECT COUNT(*) FROM file), (SELECT COUNT(*) FROM study)";
-    private ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
+    private final ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
 
     public enum AttributeType {
         FILE("file", "file", "file", true), SEQUENCER_RUN("sequencer-run", "sequencer_run", "sample", true), LANE("lane", "lane", "lane",
@@ -70,6 +70,8 @@ public class AttributeAnnotatorET {
 
     @Test
     public void testSequencerRunSkipOnly() throws IOException {
+        // need to reset database due to repeated accession
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
         toggleSkipOnly(AttributeType.SEQUENCER_RUN, 47150);
     }
 
@@ -120,6 +122,8 @@ public class AttributeAnnotatorET {
 
     @Test
     public void testSequencerRunSkipValue() throws IOException {
+        // need to reset database due to repeated accession
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
         annotateSkipImplicitly(AttributeType.SEQUENCER_RUN, 4715);
     }
 
@@ -170,6 +174,8 @@ public class AttributeAnnotatorET {
 
     @Test
     public void testSequencerRunAnnotateArbitrary() throws IOException {
+        // need to reset database due to repeated accession
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
         annotateAndReannotate(AttributeType.SEQUENCER_RUN, 47150);
     }
 
@@ -265,7 +271,7 @@ public class AttributeAnnotatorET {
             List<Object[]> runQuery1 = dbCreator.runQuery(new ArrayListHandler(), query, accession);
             Assert.assertTrue("first annotation incorrect, found " + runQuery1.size(), runQuery1.size() == 1);
             Assert.assertTrue("first tag incorrect, found " + runQuery1.get(0)[1], runQuery1.get(0)[1].equals("skip"));
-            Assert.assertTrue("first value incorrect, found " + runQuery1.get(0)[2] , runQuery1.get(0)[2].equals(value));
+            Assert.assertTrue("first value incorrect, found " + runQuery1.get(0)[2], runQuery1.get(0)[2].equals(value));
         }
     }
 

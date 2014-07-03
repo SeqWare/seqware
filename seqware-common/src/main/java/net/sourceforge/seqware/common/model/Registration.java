@@ -6,7 +6,8 @@ import java.util.Set;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Registration
@@ -54,6 +55,7 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     private String invitationCode;
     private boolean joinUsersMailingList;
     private boolean joinDevelopersMailingList;
+    final Logger logger = LoggerFactory.getLogger(Registration.class);
 
     /**
      * <p>
@@ -153,19 +155,19 @@ public class Registration extends PermissionsAware implements Serializable, Comp
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
-            Logger.getLogger(Registration.class).warn("Compared-to object is null");
+            logger.warn("Compared-to object is null");
             return false;
         }
         if (!(obj instanceof Registration)) {
-            Logger.getLogger(Registration.class).warn("Compared-to object is different class");
+            logger.warn("Compared-to object is different class");
             return false;
         }
         final Registration other = (Registration) obj;
         if (this.compareTo((Registration) obj) != 0) {
-            Logger.getLogger(Registration.class).warn("Compared-to object has different email");
+            logger.warn("Compared-to object has different email");
             return false;
         }
-        Logger.getLogger(Registration.class).warn("Compared-to object is equivalent");
+        logger.warn("Compared-to object is equivalent");
         return true;
     }
 
@@ -455,7 +457,7 @@ public class Registration extends PermissionsAware implements Serializable, Comp
      */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-        boolean hasPermission = false;
+        boolean hasPermission;
         if (registration == null) {
             hasPermission = false;
         } else if (registration.equals(this) || registration.isLIMSAdmin()) {
@@ -464,7 +466,7 @@ public class Registration extends PermissionsAware implements Serializable, Comp
             hasPermission = false;
         }
         if (!hasPermission) {
-            Logger.getLogger(Registration.class).info("Registration does not give permission");
+            logger.info("Registration does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " not permitted to modify the account of "
                     + this.getEmailAddress());
         }

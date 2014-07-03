@@ -8,8 +8,9 @@ import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -23,7 +24,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements WorkflowRunDAO {
 
-    private Logger logger;
+    final Logger localLogger = LoggerFactory.getLogger(WorkflowRunDAOHibernate.class);
 
     /**
      * <p>
@@ -32,7 +33,6 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
      */
     public WorkflowRunDAOHibernate() {
         super();
-        logger = Logger.getLogger(WorkflowRunDAOHibernate.class);
     }
 
     /** {@inheritDoc} */
@@ -40,7 +40,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     public Integer insert(WorkflowRun workflowRun) {
         this.getHibernateTemplate().save(workflowRun);
         this.getSession().flush();
-        return (Integer) workflowRun.getSwAccession();
+        return workflowRun.getSwAccession();
     }
 
     /** {@inheritDoc} */
@@ -121,13 +121,13 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     @Override
     public List<WorkflowRun> list(Registration registration, Boolean isAsc) {
         ArrayList<WorkflowRun> workflowRuns = new ArrayList<>();
-        logger.debug("Get WFR LIST. " + registration.getEmailAddress());
+        localLogger.debug("Get WFR LIST. " + registration.getEmailAddress());
         /*
          * Criteria criteria = this.getSession().createCriteria(Study.class); criteria.add(Expression.eq("owner_id",
          * registration.getRegistrationId())); criteria.addOrder(Order.asc("create_tstmp")); criteria.setFirstResult(100);
          * criteria.setMaxResults(50); List pageResults=criteria.list();
          */
-        String query = "";
+        String query;
         Object[] parameters = { registration.getRegistrationId() };
         String sortValue = (!isAsc) ? "asc" : "desc";
         // Limit the workflows to those owned by the user
@@ -203,7 +203,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     @Override
     public List<WorkflowRun> listRunning(Registration registration, Boolean isAsc) {
         List<WorkflowRun> runningWorkflowRuns = new ArrayList<>();
-        String query = "";
+        String query;
         Object[] parameters = { registration.getRegistrationId() };
         String sortValue = (!isAsc) ? "asc" : "desc";
         if (registration.isLIMSAdmin()) {
@@ -342,10 +342,8 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbWf, workflowRun);
             return (WorkflowRun) this.getHibernateTemplate().merge(dbWf);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Error updating detached WorkflowRun", e);
         }
         return null;
     }
@@ -370,28 +368,26 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     @Override
     public void update(Registration registration, WorkflowRun workflowRun) {
         WorkflowRun dbWf = reattachWorkflowRun(workflowRun);
-        Logger logger = Logger.getLogger(WorkflowRunDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowRunDAOHibernate update registration is null");
+            localLogger.error("WorkflowRunDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || (dbWf.givesPermission(registration) && workflowRun.givesPermission(registration))) {
-            logger.info("Updating workflow run object");
+            localLogger.info("Updating workflow run object");
             update(workflowRun);
         } else {
-            logger.error("WorkflowRunDAOHibernate update not authorized");
+            localLogger.error("WorkflowRunDAOHibernate update not authorized");
         }
     }
 
     /** {@inheritDoc} */
     @Override
     public Integer insert(Registration registration, WorkflowRun workflowRun) {
-        Logger logger = Logger.getLogger(WorkflowRunDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowRunDAOHibernate insert registration is null");
+            localLogger.error("WorkflowRunDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || workflowRun.givesPermission(registration)) {
-            logger.info("insert workflow run object");
+            localLogger.info("insert workflow run object");
             return insert(workflowRun);
         } else {
-            logger.error("WorkflowRunDAOHibernate insert not authorized");
+            localLogger.error("WorkflowRunDAOHibernate insert not authorized");
         }
         return null;
     }
@@ -400,14 +396,13 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     @Override
     public WorkflowRun updateDetached(Registration registration, WorkflowRun workflowRun) {
         WorkflowRun dbWf = reattachWorkflowRun(workflowRun);
-        Logger logger = Logger.getLogger(WorkflowRunDAOHibernate.class);
         if (registration == null) {
-            logger.error("WorkflowRunDAOHibernate updateDetached registration is null");
+            localLogger.error("WorkflowRunDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || dbWf.givesPermission(registration)) {
-            logger.info("updateDetached workflow run object");
+            localLogger.info("updateDetached workflow run object");
             return updateDetached(workflowRun);
         } else {
-            logger.error("WorkflowRunDAOHibernate updateDetached not authorized");
+            localLogger.error("WorkflowRunDAOHibernate updateDetached not authorized");
         }
         return null;
     }

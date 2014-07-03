@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.business.impl;
 
+import io.seqware.common.model.ProcessingStatus;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.business.LaneService;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.dao.IUSDAO;
@@ -19,13 +19,12 @@ import net.sourceforge.seqware.common.model.FileType;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
-import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.UploadSequence;
 import net.sourceforge.seqware.common.module.ReturnValue;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -42,7 +41,7 @@ public class LaneServiceImpl implements LaneService {
     private ProcessingDAO processingDAO = null;
     private FileDAO fileDAO = null;
     private IUSDAO IUSDAO = null;
-    private Logger log = Logger.getLogger(LaneServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(LaneServiceImpl.class);
 
     /**
      * <p>
@@ -354,7 +353,7 @@ public class LaneServiceImpl implements LaneService {
     /** {@inheritDoc} */
     @Override
     public List<Lane> list(List<Integer> laneIds) {
-        if (laneIds == null || laneIds.size() == 0) return new ArrayList<>();
+        if (laneIds == null || laneIds.isEmpty()) return new ArrayList<>();
 
         return laneDAO.list(laneIds);
     }
