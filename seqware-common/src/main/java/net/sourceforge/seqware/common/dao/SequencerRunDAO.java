@@ -133,54 +133,6 @@ public interface SequencerRunDAO {
 
     /**
      * <p>
-     * getProcessedCnt.
-     * </p>
-     * 
-     * @param sequencerRun
-     *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
-     * @return a {@link java.lang.Integer} object.
-     */
-    @Deprecated
-    public Integer getProcessedCnt(SequencerRun sequencerRun);
-
-    /**
-     * <p>
-     * getProcessingCnt.
-     * </p>
-     * 
-     * @param sequencerRun
-     *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
-     * @return a {@link java.lang.Integer} object.
-     */
-    @Deprecated
-    public Integer getProcessingCnt(SequencerRun sequencerRun);
-
-    /**
-     * <p>
-     * getErrorCnt.
-     * </p>
-     * 
-     * @param sequencerRun
-     *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
-     * @return a {@link java.lang.Integer} object.
-     */
-    @Deprecated
-    public Integer getErrorCnt(SequencerRun sequencerRun);
-
-    /**
-     * <p>
-     * getProcStatuses.
-     * </p>
-     * 
-     * @param sequencerRun
-     *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
-     * @return a {@link java.util.List} object.
-     */
-    @Deprecated
-    public List<Integer> getProcStatuses(SequencerRun sequencerRun);
-
-    /**
-     * <p>
      * findBySWAccession.
      * </p>
      * 

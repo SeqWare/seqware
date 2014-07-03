@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.IOException;
-import junit.framework.Assert;
+import org.junit.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.junit.BeforeClass;
 import org.junit.Test;

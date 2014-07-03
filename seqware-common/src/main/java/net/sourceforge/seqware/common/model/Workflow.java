@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -12,7 +13,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -58,8 +60,8 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
 
     private SortedSet<WorkflowRun> workflowRuns;
     private SortedSet<WorkflowParam> workflowParams;
-    private Logger logger;
     private Set<WorkflowAttribute> workflowAttributes = new TreeSet<>();
+    private final Logger logger = LoggerFactory.getLogger(Workflow.class);
 
     /**
      * <p>
@@ -68,7 +70,6 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      */
     public Workflow() {
         super();
-        logger = Logger.getLogger(Workflow.class);
     }
 
     /**
@@ -80,8 +81,8 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     public int compareTo(Workflow that) {
         if (that == null) return -1;
 
-        if (that.getSwAccession() == this.getSwAccession()) // when both names are
-                                                            // null
+        if (Objects.equals(that.getSwAccession(), this.getSwAccession())) // when both names are
+            // null
             return 0;
 
         if (that.getSwAccession() == null) return -1; // when only the other name is null
@@ -828,11 +829,11 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
         // hasPermission = false;
         // }
         if (!hasPermission) {
-            Logger.getLogger(Workflow.class).info("Workflow does not give permission");
+            logger.info("Workflow does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress()
                     + " does not have permission to modify aspects of workflow " + this.getName());
         } else {
-            Logger.getLogger(Workflow.class).info("Workflows are public by default");
+            logger.info("Workflows are public by default");
         }
         return hasPermission;
     }

@@ -11,9 +11,10 @@ import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -27,7 +28,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
-    private Logger logger;
+    final Logger localLogger = LoggerFactory.getLogger(LaneDAOHibernate.class);
 
     /**
      * <p>
@@ -36,7 +37,6 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
      */
     public LaneDAOHibernate() {
         super();
-        logger = Logger.getLogger(LaneDAOHibernate.class);
     }
 
     /**
@@ -112,7 +112,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     /** {@inheritDoc} */
     @Override
     public boolean isHasFile(Integer laneId) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id) "
@@ -128,7 +128,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setInteger(1, laneId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -173,7 +173,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
      */
     @Override
     public boolean isHasFile(Integer laneId, String metaType) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id) "
@@ -190,7 +190,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setString(1, metaType)
                 .setInteger(2, laneId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -256,8 +256,8 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         }
 
         paramQuery = paramQuery + "?";
-        logger.debug("Delete lanes:");
-        logger.debug(paramQuery);
+        localLogger.debug("Delete lanes:");
+        localLogger.debug(paramQuery);
 
         // delete processing_lanes
         String query = "DELETE FROM processing_lanes as pl where pl.lane_id in (" + paramQuery + ")";
@@ -266,7 +266,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
         int iter = 0;
         for (Lane lane : lanes) {
-            logger.debug("iter: " + iter + "; laneId = " + lane.getLaneId());
+            localLogger.debug("iter: " + iter + "; laneId = " + lane.getLaneId());
             sql.setInteger(iter, lane.getLaneId());
             iter++;
         }
@@ -278,7 +278,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         sql = this.getSession().createSQLQuery(query);
         iter = 0;
         for (Lane lane : lanes) {
-            logger.debug("iter: " + iter + "; ius laneId = " + lane.getLaneId());
+            localLogger.debug("iter: " + iter + "; ius laneId = " + lane.getLaneId());
             sql.setInteger(iter, lane.getLaneId());
             iter++;
         }
@@ -330,7 +330,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
             iter++;
         }
         sql.executeUpdate();
-        logger.debug("END DELETE 2");
+        localLogger.debug("END DELETE 2");
 
         // delete lanes
         query = "DELETE FROM lane as l where l.lane_id in (" + paramQuery + ")";
@@ -341,7 +341,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
             iter++;
         }
         sql.executeUpdate();
-        logger.debug("END DELETE3");
+        localLogger.debug("END DELETE3");
     }
 
     /**
@@ -428,10 +428,8 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, lane);
             return (Lane) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Error updating detached lane", e);
         }
         return null;
     }
@@ -456,14 +454,13 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     @Override
     public void update(Registration registration, Lane lane) {
         Lane dbObject = reattachLane(lane);
-        Logger logger = Logger.getLogger(LaneDAOHibernate.class);
         if (registration == null) {
-            logger.error("LaneDAOHibernate update registration is null");
+            localLogger.error("LaneDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || (lane.givesPermission(registration) && dbObject.givesPermission(registration))) {
-            logger.info("updating Lane object");
+            localLogger.info("updating Lane object");
             update(lane);
         } else {
-            logger.error("LaneDAOHibernate update not authorized");
+            localLogger.error("LaneDAOHibernate update not authorized");
         }
     }
 
@@ -474,15 +471,14 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
      */
     @Override
     public Integer insert(Registration registration, Lane lane) {
-        Logger logger = Logger.getLogger(LaneDAOHibernate.class);
         if (registration == null) {
-            logger.error("LaneDAOHibernate insert registration is null");
+            localLogger.error("LaneDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || lane.givesPermission(registration)) {
-            logger.info("insert Lane object");
+            localLogger.info("insert Lane object");
             insert(lane);
             return (lane.getSwAccession());
         } else {
-            logger.error("LaneDAOHibernate insert not authorized");
+            localLogger.error("LaneDAOHibernate insert not authorized");
         }
         return (null);
     }
@@ -491,14 +487,13 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     @Override
     public Lane updateDetached(Registration registration, Lane lane) {
         Lane dbObject = reattachLane(lane);
-        Logger logger = Logger.getLogger(LaneDAOHibernate.class);
         if (registration == null) {
-            logger.error("LaneDAOHibernate updateDetached registration is null");
+            localLogger.error("LaneDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("updateDetached Lane object");
+            localLogger.info("updateDetached Lane object");
             return updateDetached(lane);
         } else {
-            logger.error("LaneDAOHibernate updateDetached not authorized");
+            localLogger.error("LaneDAOHibernate updateDetached not authorized");
         }
         return null;
     }

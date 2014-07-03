@@ -3,14 +3,14 @@ package net.sourceforge.seqware.common.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.security.PermissionsAware;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
     private Double addedSurcharge;
     private Integer swAccession;
     private Date finishedTimestamp;
-    private Logger logger;
+    private final Logger logger = LoggerFactory.getLogger(Expense.class);
 
     // private Set<ExpenseAttribute> invoiceAttributes = new TreeSet<ExpenseAttribute>();
 
@@ -46,7 +46,6 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      */
     public Expense() {
         super();
-        logger = Logger.getLogger(Expense.class);
     }
 
     /**
@@ -60,7 +59,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
             return -1;
         }
 
-        if (that.getSwAccession() == this.getSwAccession()) // when both names are
+        if (Objects.equals(that.getSwAccession(), this.getSwAccession())) // when both names are
         // null
         {
             return 0;
@@ -113,11 +112,11 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
         }
 
         if (!hasPermission) {
-            Logger.getLogger(Workflow.class).info("Expense does not give permission");
+            logger.info("Expense does not give permission");
             throw new SecurityException("User " + username + " does not have permission to modify aspects of invoice "
                     + this.getSwAccession());
         } else {
-            Logger.getLogger(Workflow.class).info("Expenses are public by default");
+            logger.info("Expenses are public by default");
         }
         return hasPermission;
     }

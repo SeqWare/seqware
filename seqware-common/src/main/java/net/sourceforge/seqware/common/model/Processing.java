@@ -41,7 +41,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.restlet.resource.ResourceException;
 
 @XmlRootElement
@@ -90,6 +91,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
     private String parameters;
     private String stdout;
     private String stderr;
+    final Logger logger = LoggerFactory.getLogger(Processing.class);
 
     /**
      * <p>
@@ -1082,7 +1084,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
     public static Processing cloneToHibernate(Processing newP) {
-        Logger logger = Logger.getLogger(Processing.class);
+        final Logger logger = LoggerFactory.getLogger(Processing.class);
         ProcessingService ps = BeanFactory.getProcessingServiceBean();
         Processing p = ps.findByID(newP.getProcessingId());
 
@@ -1291,10 +1293,10 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      if (registration.isLIMSAdmin()) {
-        Log.debug("Skipping permissions admin on Processing object " + swAccession);
-        return true;
-      }
+        if (registration.isLIMSAdmin()) {
+            Log.debug("Skipping permissions admin on Processing object " + swAccession);
+            return true;
+        }
         boolean consideredBefore = considered.contains(this.getSwAccession());
         if (!consideredBefore) {
             considered.add(this.getSwAccession());
@@ -1351,24 +1353,23 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             hasPermission = workflowRun.givesPermission(registration, considered);
         } else {
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                Logger.getLogger(Processing.class).warn("Modifying Orphan Processing: " + this.toString());
+                logger.warn("Modifying Orphan Processing: " + this.toString());
                 hasPermission = true;
             } else if (owner == null) {
-                Logger.getLogger(Processing.class).warn("Orphan Processing has no owner! Allowing write: " + this.toString());
+                logger.warn("Orphan Processing has no owner! Allowing write: " + this.toString());
                 hasPermission = true;
                 ;
             } else {
-                Logger.getLogger(Processing.class).warn("Not modifying Orphan Processing: " + this.toString());
+                logger.warn("Not modifying Orphan Processing: " + this.toString());
                 hasPermission = false;
             }
         }
 
         if (!hasPermission) {
-            Logger.getLogger(Processing.class).info("Processing does not give permission");
+            logger.info("Processing does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.toString());
         } else {
-            Logger.getLogger(Processing.class).info(
-                    "Processing gives permission to " + registration.getEmailAddress() + " " + registration.getPassword());
+            logger.info("Processing gives permission to " + registration.getEmailAddress() + " " + registration.getPassword());
         }
         return hasPermission;
     }

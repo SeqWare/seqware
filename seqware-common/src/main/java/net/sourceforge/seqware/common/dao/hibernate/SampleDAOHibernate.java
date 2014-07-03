@@ -10,8 +10,9 @@ import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.log4j.Logger;
 import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -25,7 +26,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO {
 
-    private Logger logger;
+    final Logger localLogger = LoggerFactory.getLogger(SampleDAOHibernate.class);
 
     /**
      * <p>
@@ -34,7 +35,6 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      */
     public SampleDAOHibernate() {
         super();
-        logger = Logger.getLogger(SampleDAOHibernate.class);
     }
 
     /**
@@ -193,7 +193,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      */
     @Override
     public boolean isHasFile(Integer sampleId) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         /*
          * String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( " + "SELECT p.child_id as child_id, p.parent_id
          * " + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) " + "inner join ius i on
@@ -284,7 +284,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
                 .setInteger(2, sampleId).setInteger(3, sampleId).setInteger(4, sampleId).setInteger(5, sampleId).setInteger(6, sampleId)
                 .setInteger(7, sampleId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -402,7 +402,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      */
     @Override
     public boolean isHasFile(Integer sampleId, String metaType) {
-        boolean isHasFile = false;
+        boolean isHasFile;
         String query = "WITH RECURSIVE processing_root_to_leaf (child_id, parent_id) AS ( "
                 + "SELECT p.child_id as child_id, p.parent_id "
                 + "FROM processing_relationship p inner join processing_ius pr_i on (pr_i.processing_id = p.parent_id) "
@@ -480,7 +480,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
                 .setInteger(2, sampleId).setInteger(3, sampleId).setString(4, metaType).setInteger(5, sampleId).setInteger(6, sampleId)
                 .setInteger(7, sampleId).setInteger(8, sampleId).list();
 
-        isHasFile = (list.size() > 0) ? true : false;
+        isHasFile = (list.size() > 0);
 
         return isHasFile;
     }
@@ -546,7 +546,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
             countFiles.put(sampleId, fileCount);
 
-            logger.debug("Sample id = " + sampleId + "; File Co = " + fileCount);
+            localLogger.debug("Sample id = " + sampleId + "; File Co = " + fileCount);
         }
         return countFiles;
     }
@@ -587,7 +587,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
 
             countFiles.put(sampleId, fileCount);
 
-            logger.debug("Sample id = " + sampleId + "; File Co = " + fileCount);
+            localLogger.debug("Sample id = " + sampleId + "; File Co = " + fileCount);
         }
         return countFiles;
     }
@@ -717,7 +717,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      */
     @Override
     public List<Sample> listComplete() {
-        List<Sample> list = null;
+        List<Sample> list;
         List<Sample> filteredList = new ArrayList<>();
         String query = "from Sample as sample";
         Object[] parameters = {};
@@ -743,7 +743,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      */
     @Override
     public List<Sample> listIncomplete() {
-        List<Sample> list = null;
+        List<Sample> list;
         List<Sample> filteredList = new ArrayList<>();
         String query = "from Sample as sample";
         Object[] parameters = {};
@@ -765,7 +765,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     @Override
     public List<Sample> listSample(Registration registaration) {
         Integer ownerId = registaration.getRegistrationId();
-        List<Sample> list = null;
+        List<Sample> list;
         String query = "from Sample as sample where sample.owner.registrationId = ?";
         Object[] parameters = { ownerId };
 
@@ -784,7 +784,7 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     @SuppressWarnings("unchecked")
     @Override
     public List<Sample> getRootSamples(Study study) {
-        List<Sample> list = null;
+        List<Sample> list;
         String query = "from Sample as sample where sample.experiment.study.studyId = ?";
         Object parameter = study.getStudyId();
         list = this.getHibernateTemplate().find(query, parameter);
@@ -833,10 +833,8 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, sample);
             return (Sample) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            localLogger.error("Error updating detached sample", e);
         }
         return null;
     }
@@ -865,14 +863,13 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     @Override
     public void update(Registration registration, Sample sample) {
         Sample dbObject = reattachSample(sample);
-        Logger logger = Logger.getLogger(SampleDAOHibernate.class);
         if (registration == null) {
-            logger.error("SampleDAOHibernate update registration is null");
+            localLogger.error("SampleDAOHibernate update registration is null");
         } else if (registration.isLIMSAdmin() || (sample.givesPermission(registration) && dbObject.givesPermission(registration))) {
-            logger.info("updating sample object");
+            localLogger.info("updating sample object");
             update(sample);
         } else {
-            logger.error("SampleDAOHibernate update not authorized");
+            localLogger.error("SampleDAOHibernate update not authorized");
         }
 
     }
@@ -882,17 +879,16 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
      */
     @Override
     public Integer insert(Registration registration, Sample sample) {
-        Logger logger = Logger.getLogger(SampleDAOHibernate.class);
         Integer swAccession = 0;
         if (registration == null) {
-            logger.error("SampleDAOHibernate insert registration is null");
+            localLogger.error("SampleDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || sample.givesPermission(registration)) {
-            logger.info("insert sample object");
+            localLogger.info("insert sample object");
             insert(sample);
             this.getSession().flush();
             swAccession = sample.getSwAccession();
         } else {
-            logger.error("SampleDAOHibernate insert not authorized");
+            localLogger.error("SampleDAOHibernate insert not authorized");
         }
         return (swAccession);
     }
@@ -903,14 +899,13 @@ public class SampleDAOHibernate extends HibernateDaoSupport implements SampleDAO
     @Override
     public Sample updateDetached(Registration registration, Sample sample) {
         Sample dbObject = reattachSample(sample);
-        Logger logger = Logger.getLogger(SampleDAOHibernate.class);
         if (registration == null) {
-            logger.error("SampleDAOHibernate updateDetached registration is null");
+            localLogger.error("SampleDAOHibernate updateDetached registration is null");
         } else if (registration.isLIMSAdmin() || dbObject.givesPermission(registration)) {
-            logger.info("updateDetached sample object");
+            localLogger.info("updateDetached sample object");
             return updateDetached(sample);
         } else {
-            logger.error("SampleDAOHibernate updateDetached not authorized");
+            localLogger.error("SampleDAOHibernate updateDetached not authorized");
         }
         return null;
     }

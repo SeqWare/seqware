@@ -1,12 +1,14 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -28,6 +30,7 @@ public class WorkflowRunParam extends PermissionsAware implements Serializable, 
     private String value;
     private Integer parentProcessingAccession;
     private WorkflowRun workflowRun;
+    final Logger logger = LoggerFactory.getLogger(WorkflowRunParam.class);
 
     /**
      * <p>
@@ -52,7 +55,7 @@ public class WorkflowRunParam extends PermissionsAware implements Serializable, 
             return key.compareTo(that.getKey()) + value.compareTo(that.getValue());
         }
 
-        if (that.getWorkflowRunParamId() == this.getWorkflowRunParamId()) // when both names are null
+        if (Objects.equals(that.getWorkflowRunParamId(), this.getWorkflowRunParamId())) // when both names are null
         {
             return 0;
         }
@@ -245,20 +248,20 @@ public class WorkflowRunParam extends PermissionsAware implements Serializable, 
      */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-        boolean hasPermission = true;
+        boolean hasPermission;
         if (workflowRun != null) {
             hasPermission = workflowRun.givesPermission(registration, considered);
         } else {// Orphaned WorkflowRunParam
             if (registration.isLIMSAdmin()) {
-                Logger.getLogger(WorkflowRunParam.class).warn("Modifying Orphan WorkflowRunParam: " + this.getKey());
+                logger.warn("Modifying Orphan WorkflowRunParam: " + this.getKey());
                 hasPermission = true;
             } else {
-                Logger.getLogger(WorkflowRunParam.class).warn("Not modifying Orphan WorkflowRunParam: " + this.getKey());
+                logger.warn("Not modifying Orphan WorkflowRunParam: " + this.getKey());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            Logger.getLogger(WorkflowRunParam.class).info("WorkflowRunParam does not give permission");
+            logger.info("WorkflowRunParam does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.getKey());
         }
         return hasPermission;

@@ -3,6 +3,7 @@ package net.sourceforge.seqware.common.model;
 import io.seqware.common.model.ProcessingStatus;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -17,7 +18,8 @@ import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @XmlRootElement
 /**
@@ -59,6 +61,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     private LibraryStrategy libraryStrategy;
     private LibrarySelection librarySelection;
     private LibrarySource librarySource;
+    final Logger logger = LoggerFactory.getLogger(Lane.class);
 
     /**
      * <p>
@@ -80,7 +83,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
             return -1;
         }
 
-        if (that.getLaneId() == this.getLaneId()) // when both names are null
+        if (Objects.equals(that.getLaneId(), this.getLaneId())) // when both names are null
         {
             return 0;
         }
@@ -734,7 +737,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      *            a {@link java.lang.Boolean} object.
      */
     public void setSkip(Boolean skip) {
-        if (skip != null && this.skip != skip) {
+        if (skip != null && !Objects.equals(this.skip, skip)) {
             Log.debug("Skipping lane " + getSwAccession());
             this.skip = skip;
             if (ius != null) {
@@ -910,10 +913,10 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-      if (registration.isLIMSAdmin()) {
-        Log.debug("Skipping permissions admin on Lane object " + swAccession);
-        return true;
-      }
+        if (registration.isLIMSAdmin()) {
+            Log.debug("Skipping permissions admin on Lane object " + swAccession);
+            return true;
+        }
         boolean consideredBefore = considered.contains(this.getSwAccession());
         if (!consideredBefore) {
             considered.add(this.getSwAccession());
@@ -942,19 +945,19 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
         // this object is orphaned, but does the person own it?
         if (sample == null && ius == null) {
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                Logger.getLogger(Lane.class).warn("Modifying Orphan Lane: " + toString());
+                logger.warn("Modifying Orphan Lane: " + toString());
                 hasPermission = true;
             } else if (owner == null) {
-                Logger.getLogger(Lane.class).warn("Orphan Lane has no owner! Allowing modifications: " + toString());
+                logger.warn("Orphan Lane has no owner! Allowing modifications: " + toString());
                 hasPermission = true;
             } else {
-                Logger.getLogger(Lane.class).warn("Not modifying Orphan Lane: " + toString());
+                logger.warn("Not modifying Orphan Lane: " + toString());
                 hasPermission = false;
             }
         }
 
         if (!hasPermission) {
-            Logger.getLogger(Lane.class).info("Lane does not give permission");
+            logger.info("Lane does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + toString());
         }
         return hasPermission;

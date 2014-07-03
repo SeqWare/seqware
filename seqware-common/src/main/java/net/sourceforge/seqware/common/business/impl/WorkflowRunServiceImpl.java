@@ -11,7 +11,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.Stack;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.dao.ProcessingDAO;
@@ -29,8 +28,8 @@ import net.sourceforge.seqware.common.model.WorkflowRunParam;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowManager;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -46,7 +45,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     private ProcessingDAO processingDAO = null;
     private WorkflowRunParamDAO workflowRunParamDAO = null;
     private FileDAO fileDAO = null;
-    private Logger log;
+    private final Logger log;
 
     /**
      * <p>
@@ -55,7 +54,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
      */
     public WorkflowRunServiceImpl() {
         super();
-        log = Logger.getLogger(WorkflowRunServiceImpl.class);
+        log = LoggerFactory.getLogger(WorkflowRunServiceImpl.class);
     }
 
     /**
@@ -298,16 +297,14 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> listMyShared(Registration registration) {
-        List<WorkflowRun> sharedWorkflowRuns = new ArrayList<>();
-        sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, true);
+        List<WorkflowRun> sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, true);
         return sharedWorkflowRuns;
     }
 
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> listSharedWithMe(Registration registration) {
-        List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<>();
-        sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, true);
+        List<WorkflowRun> sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, true);
         return sharedWithMeWorkflowRuns;
     }
 
@@ -326,16 +323,14 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc) {
-        List<WorkflowRun> sharedWorkflowRuns = new ArrayList<>();
-        sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, isAsc);
+        List<WorkflowRun> sharedWorkflowRuns = workflowRunDAO.listMyShared(registration, isAsc);
         return sharedWorkflowRuns;
     }
 
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc) {
-        List<WorkflowRun> sharedWithMeWorkflowRuns = new ArrayList<>();
-        sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, isAsc);
+        List<WorkflowRun> sharedWithMeWorkflowRuns = workflowRunDAO.listSharedWithMe(registration, isAsc);
         return sharedWithMeWorkflowRuns;
     }
 
@@ -460,8 +455,7 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
     public List<WorkflowRun> listSharedWithMeWithSample(Registration registration) {
         List<WorkflowRun> list = listSharedWithMe(registration);
         for (WorkflowRun workflowRun : list) {
-            SortedSet<Sample> samples = new TreeSet<>();
-            samples = getSamples(workflowRun);
+            SortedSet<Sample> samples = getSamples(workflowRun);
             workflowRun.setSamples(samples);
         }
         return list;

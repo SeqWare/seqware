@@ -16,6 +16,20 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <usedDependencies>
+                        <!-- referenced in context.xml -->
+                        <usedDependency>commons-dbcp:commons-dbcp</usedDependency>
+                        <!-- used by file provenance report -->
+                        <usedDependency>org.clojure:java.jdbc</usedDependency>
+                        <!-- clearly used by webresources, not sure why this isn't picked up -->
+                        <usedDependency>com.google.guava:guava</usedDependency>
+                    </usedDependencies>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>${maven-war-plugin.version}</version>
                 <configuration>
@@ -121,7 +135,7 @@
                 </executions>
 
                 <configuration>
-                    <argLine>${itCoverageAgent} -Xms512m -Xmx512m</argLine>
+                    <argLine>-Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
                     <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state --> 
 		    <runOrder>reversealphabetical</runOrder>
@@ -151,7 +165,7 @@
             <name>Repository for library Library[eclipselink]</name>
         </repository>-->
         <repository>
-            <url>http://download.java.net/maven/2/</url>
+            <url>https://maven.java.net/content/groups/public/</url>
             <id>restapi</id>
             <layout>default</layout>
             <name>Repository for library Library[restapi]</name>
@@ -163,7 +177,11 @@
     </repositories>
 
     <dependencies>
-        
+        <dependency>
+            <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.ext.jackson</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>net.sf.beanlib</groupId>
             <artifactId>beanlib</artifactId>
@@ -268,6 +286,14 @@
                     <groupId>javax.validation</groupId>
                     <artifactId>validation-api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-simple</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-all</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -279,6 +305,7 @@
                     <artifactId>cglib</artifactId>
                 </exclusion>
             </exclusions>
+            <scope>runtime</scope>
         </dependency>
  <!--       <dependency>
             <groupId>javax.servlet</groupId>
@@ -292,35 +319,36 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.1</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
             <type>jar</type>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <type>jar</type>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <scope>compile</scope> <!--Not sure what it is about this package, 
+            <scope>runtime</scope> <!--Not sure what it is about this package, 
             but if you remove the scoping tag, it doesn't find the dependency 
             any more -->
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
         <!--See http://forum.springsource.org/showthread.php?26713-Spring-2.0-AOP-ASM-Dependencies
         For information on asm, cglib and conflicting dependencies between Jersey and Hibernate.
@@ -329,7 +357,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <type>jar</type>
-            <scope>compile</scope>
+            <scope>runtime</scope>
             <exclusions>
                 <exclusion>
                     <groupId>asm</groupId>
@@ -348,7 +376,8 @@
         <dependency>
             <groupId>asm</groupId>
             <artifactId>asm</artifactId>
-            <version>3.3.1</version>                       
+            <version>3.3.1</version>  
+            <scope>runtime</scope>
         </dependency>
 <!--        <dependency>
             <groupId>cglib</groupId>
@@ -362,19 +391,8 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.8.3</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
+            <artifactId>junit</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-dbutils</groupId>
@@ -387,12 +405,6 @@
         End Hibernate test dependencies
         
         -->
-
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.2.2</version>
-        </dependency>
         <!-- Commented out while solving SEQWARE-848 -->
         <!-- <dependency>
             <groupId>org.restlet.jee</groupId>
@@ -401,15 +413,16 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
         </dependency>
         <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.fileupload</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.servlet</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.restlet.jee</groupId>
@@ -418,6 +431,12 @@
         <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <scope>test</scope>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>org.restlet.jee</groupId>
@@ -432,12 +451,55 @@
                     <artifactId>servlet-api</artifactId>
                     <groupId>javax.servlet</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-expression</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-asm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-dbcp</groupId>
+                    <artifactId>commons-dbcp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-pool</groupId>
+                    <artifactId>commons-pool</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.thoughtworks.xstream</groupId>
+                    <artifactId>xstream</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.inject</groupId>
+                    <artifactId>guice</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>1.12</version>
+            <version>1.8</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
         <!-- Validator is need for tests not running inside a web containter. -->
@@ -451,6 +513,12 @@
             <artifactId>system-rules</artifactId>
             <version>1.3.1</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -467,24 +535,83 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <artifactId>xml-apis</artifactId>
+            <groupId>xml-apis</groupId>
+            <type>jar</type>
+            <version>1.4.01</version>
+        </dependency>
+        <dependency>
+            <artifactId>org.restlet.lib.org.json</artifactId>
+            <groupId>org.restlet.jee</groupId>
+            <type>jar</type>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <artifactId>org.restlet</artifactId>
+            <groupId>org.restlet.jee</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>log4j</artifactId>
+            <groupId>log4j</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>jaxb-api</artifactId>
+            <groupId>javax.xml.bind</groupId>
+            <type>jar</type>
+            <version>2.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <groupId>org.codehaus.jackson</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>google-collections</artifactId>
+            <groupId>com.google.collections</groupId>
+            <type>jar</type>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>hibernate-core</artifactId>
+            <groupId>org.hibernate</groupId>
+            <type>jar</type>
+            <version>3.6.6.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>antlr</groupId>
+                    <artifactId>antlr</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <artifactId>seqware-meta-db</artifactId>
+            <groupId>com.github.seqware</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <artifactId>guava</artifactId>
+            <groupId>com.google.guava</groupId>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -500,7 +627,13 @@
         <dependency>
             <groupId>org.clojure</groupId>
             <artifactId>java.jdbc</artifactId>
-            <version>0.3.0-alpha4</version>
+            <version>0.3.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.clojure</groupId>
+                    <artifactId>clojure</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     

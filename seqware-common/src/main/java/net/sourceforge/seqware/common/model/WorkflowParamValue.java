@@ -1,13 +1,15 @@
 package net.sourceforge.seqware.common.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -25,6 +27,7 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
     private String displayName;
     private String value;
     private WorkflowParam workflowParam;
+    final Logger logger = LoggerFactory.getLogger(WorkflowParamValue.class);
 
     /**
      * <p>
@@ -46,7 +49,7 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
             return -1;
         }
 
-        if (that.getWorkflowParamValueId() == this.getWorkflowParamValueId()) // when both names are null
+        if (Objects.equals(that.getWorkflowParamValueId(), this.getWorkflowParamValueId())) // when both names are null
         {
             return 0;
         }
@@ -227,9 +230,10 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
      * {@inheritDoc}
      * 
      * @return
+     * @throws java.lang.CloneNotSupportedException
      */
     @Override
-    public WorkflowParamValue clone() {
+    public WorkflowParamValue clone() throws CloneNotSupportedException {
         WorkflowParamValue wp = this;
         try {
             wp = (WorkflowParamValue) super.clone();
@@ -237,7 +241,7 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
             WorkflowParam newParam = (workflowParam == null ? null : workflowParam.clone());
             wp.setWorkflowParam(newParam);
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            logger.error("CloneNotSupported", e);
         }
         return wp;
     }
@@ -249,20 +253,20 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
      */
     @Override
     public boolean givesPermissionInternal(Registration registration, Set<Integer> considered) {
-        boolean hasPermission = true;
+        boolean hasPermission;
         if (workflowParam != null) {
             hasPermission = workflowParam.givesPermission(registration, considered);
         } else {// orphaned WorkflowParamValue
             if (registration.isLIMSAdmin()) {
-                Logger.getLogger(WorkflowParamValue.class).warn("Modifying Orphan WorkflowParamValue: " + this.getDisplayName());
+                logger.warn("Modifying Orphan WorkflowParamValue: " + this.getDisplayName());
                 hasPermission = true;
             } else {
-                Logger.getLogger(WorkflowParamValue.class).warn("Not modifying Orphan WorkflowParamValue: " + this.getDisplayName());
+                logger.warn("Not modifying Orphan WorkflowParamValue: " + this.getDisplayName());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            Logger.getLogger(WorkflowParamValue.class).info("WorkflowParamValue does not give permission");
+            logger.info("WorkflowParamValue does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify "
                     + this.getDisplayName());
         }
