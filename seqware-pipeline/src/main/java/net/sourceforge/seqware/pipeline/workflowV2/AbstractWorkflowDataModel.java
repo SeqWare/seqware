@@ -13,18 +13,18 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
 public abstract class AbstractWorkflowDataModel {
-    private Workflow workflow;
+    private final Workflow workflow;
     private String name;
     private String version;
-    private Environment env;
+    private final Environment env;
     private String workflowBundleDir;
     private Map<String, String> tags;
     protected Map<String, String> configs;
     private boolean wait;
     private boolean metadataWriteBack;
     private Map<String, SqwFile> files;
-    private Collection<String> dirs;
-    private Collection<String> parentAccessions;
+    private final Collection<String> dirs;
+    private final Collection<String> parentAccessions;
     private String workflow_accession;
     private String workflow_run_accession;
     private String random;
@@ -73,7 +73,9 @@ public abstract class AbstractWorkflowDataModel {
     }
 
     /**
-     * to be Overridden by the workflow author
+     * to be Overridden by the workflow author.
+     * 
+     * Called via reflection in WorkflowDataModelFactory
      */
     public void setupDirectory() {
 
@@ -81,7 +83,7 @@ public abstract class AbstractWorkflowDataModel {
 
     /**
      * to be Overridden by the workflow author you generally don't call this as the workflow author since it promotes hardcoding this will
-     * typically be filled in by maven
+     * typically be filled in by maven Called via reflection in WorkflowDataModelFactory
      */
     public void setupWorkflow() {
 
@@ -89,6 +91,8 @@ public abstract class AbstractWorkflowDataModel {
 
     /**
      * to be Overridden by the workflow author generally people don't override this.
+     * 
+     * Called via reflection in WorkflowDataModelFactory
      */
     public void setupEnvironment() {
 
@@ -106,7 +110,7 @@ public abstract class AbstractWorkflowDataModel {
     }
 
     /**
-     * to be Overridden by the workflow author
+     * to be Overridden by the workflow author Called via reflection in WorkflowDataModelFactory
      */
     public abstract void buildWorkflow();
 
@@ -287,7 +291,7 @@ public abstract class AbstractWorkflowDataModel {
      * 
      * @param tags
      */
-    public void setTags(Map<String, String> tags) {
+    public final void setTags(Map<String, String> tags) {
         this.tags = tags;
     }
 

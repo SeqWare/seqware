@@ -35,10 +35,6 @@ public class FileLinkerParser {
 
     private static final Logger log = LoggerFactory.getLogger(FileLinkerParser.class);
 
-    public static Map<Integer, List<FileMetadata>> parse(String filename) throws FileNotFoundException, UnsupportedEncodingException {
-        return parse(filename, '\t');
-    }
-
     public static Map<Integer, List<FileMetadata>> parse(String filename, char separator) throws FileNotFoundException,
             UnsupportedEncodingException {
         checkNotNull(filename);

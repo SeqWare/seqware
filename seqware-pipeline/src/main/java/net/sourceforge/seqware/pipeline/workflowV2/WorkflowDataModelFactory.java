@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,6 @@ import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
-import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
 
 /**
  * a utils class for creating the AbstractWorkflowDataModel, by reading the metadata.xml file, will load a Java based objectModel or XML
@@ -34,10 +34,10 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.XmlWorkflowDataModel;
  */
 public class WorkflowDataModelFactory {
 
-    private Map<String, String> config;
-    private OptionSet options;
-    private String[] params;
-    private Metadata metadata;
+    private final Map<String, String> config;
+    private final OptionSet options;
+    private final String[] params;
+    private final Metadata metadata;
 
     public WorkflowDataModelFactory(OptionSet options, Map<String, String> config, String[] params, Metadata metadata) {
         this.options = options;
@@ -73,7 +73,7 @@ public class WorkflowDataModelFactory {
      * @return
      */
     public AbstractWorkflowDataModel getWorkflowDataModel(Integer workflowAccession, Integer workflowRunAccession) {
-        String bundlePath = null;
+        String bundlePath;
         Map<String, String> metaInfo = null;
         Log.info("factory attempting to find bundle");
         if (workflowAccession != null) {
@@ -94,14 +94,14 @@ public class WorkflowDataModelFactory {
         // change to absolute path
         bundlePath = bundle.getAbsolutePath();
         Log.info("Bundle Path: " + bundlePath);
-        if (bundle == null || !bundle.exists()) {
+        if (!bundle.exists()) {
 
             // then first try to see if we can get it from it's permenant location instead
             if (metaInfo.get("permanent_bundle_location") != null) {
                 bundle = new File(getAndProvisionBundle(metaInfo.get("permanent_bundle_location")));
             }
             // if we still can't get the bundle then error out
-            if (bundle == null || !bundle.exists()) {
+            if (!bundle.exists()) {
                 Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
                 return null;
             }
@@ -116,7 +116,7 @@ public class WorkflowDataModelFactory {
 
         // check FTL exist?
         boolean workflow_java = true;
-        if (metaInfo.get("workflow_template") != null && !metaInfo.get("workflow_template").toString().isEmpty()) {
+        if (metaInfo.get("workflow_template") != null && !metaInfo.get("workflow_template").isEmpty()) {
             workflow_java = false;
         }
 
@@ -138,20 +138,14 @@ public class WorkflowDataModelFactory {
                 try {
                     Object object = clazz.newInstance();
                     dataModel = (AbstractWorkflowDataModel) object;
-                } catch (InstantiationException ex) {
-                    Log.error(ex, ex);
-                } catch (IllegalAccessException ex) {
-                    Log.error(ex, ex);
-                } catch (SecurityException ex) {
-                    Log.error(ex, ex);
-                } catch (IllegalArgumentException ex) {
+                } catch (InstantiationException | IllegalAccessException | SecurityException | IllegalArgumentException ex) {
                     Log.error(ex, ex);
                 }
             } else {
                 Log.stdout("failed looking for classes at " + classpath);
             }
         } else {
-            dataModel = new XmlWorkflowDataModel();
+            throw new RuntimeException("Non-Java workflows not currently supported");
         }
         Log.info("datamodel generated");
         // load metadata.xml
@@ -228,8 +222,7 @@ public class WorkflowDataModelFactory {
         // parse XML or Java Object for
         if (workflow_java) {
             try {
-                Method m = null;
-                m = clazz.getMethod("setupDirectory");
+                Method m = clazz.getMethod("setupDirectory");
                 m.invoke(dataModel);
                 m = clazz.getMethod("setupFiles");
                 m.invoke(dataModel);
@@ -282,7 +275,7 @@ public class WorkflowDataModelFactory {
     private String getAndProvisionBundle(String permLoc) {
         String result = null;
         Bundle bundle = new Bundle(this.metadata, this.config);
-        ReturnValue ret = null;
+        ReturnValue ret;
         if (permLoc.startsWith("s3://")) {
             ret = bundle.unpackageBundleFromS3(permLoc);
         } else {
@@ -343,9 +336,7 @@ public class WorkflowDataModelFactory {
                 List opts = options.valuesOf("ini-files");
                 for (Object opt : opts) {
                     String[] tokens = ((String) opt).split(",");
-                    for (String t : tokens) {
-                        iniFiles.add(t);
-                    }
+                    iniFiles.addAll(Arrays.asList(tokens));
                 }
             }
             for (String ini : iniFiles) {
@@ -375,9 +366,7 @@ public class WorkflowDataModelFactory {
                 List opts = options.valuesOf("parent-accessions");
                 for (Object opt : opts) {
                     String[] tokens = ((String) opt).split(",");
-                    for (String t : tokens) {
-                        parentAccessions.add(t);
-                    }
+                    parentAccessions.addAll(Arrays.asList(tokens));
                 }
             }
             model.setParentAccessions(parentAccessions);
