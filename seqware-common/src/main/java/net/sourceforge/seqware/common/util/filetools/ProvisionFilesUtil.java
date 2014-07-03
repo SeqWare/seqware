@@ -61,13 +61,8 @@ import net.sourceforge.seqware.common.util.Log;
  */
 public class ProvisionFilesUtil {
 
-    // static {
-    // URL.setURLStreamHandlerFactory(new FsUrlStreamHandlerFactory());
-    // }
-
     protected final int READ_ATTEMPTS = 1000;
     protected long inputSize = 0L;
-    protected long outputSize = 0L;
     protected long position = 0L;
     protected String fileName = "";
     protected String originalFileName = "";
@@ -106,10 +101,6 @@ public class ProvisionFilesUtil {
         return fileName;
     }
 
-    public boolean createSymlink(String output, String input) {
-        return createSymlink(output, false, input);
-    }
-
     /**
      * Creates symlink of input to output.
      * 
@@ -124,15 +115,15 @@ public class ProvisionFilesUtil {
         boolean retry = true;
         int retryCount = 0;
 
-        while (retry && retryCount < this.MAXRETRY) {
+        while (retry && retryCount < ProvisionFilesUtil.MAXRETRY) {
             try {
                 // no point is having an input file stream since just make a sym link
                 Runtime rt = Runtime.getRuntime();
-                Process result = null;
+                Process result;
                 // FIXME: in JDK 7 this will be replaced with an API call
-                String exe = new String("ln" + " -s " + input + " " + output + File.separator + fileName);
+                String exe = "ln" + " -s " + input + " " + output + File.separator + fileName;
                 if (fullOutputPath) {
-                    exe = new String("ln" + " -s " + input + " " + output);
+                    exe = "ln" + " -s " + input + " " + output;
                 }
                 Log.debug(exe);
                 result = rt.exec(exe);
@@ -173,7 +164,7 @@ public class ProvisionFilesUtil {
      * @return Cipher object
      */
     public Cipher getDecryptCipher(String decryptKey) {
-        Cipher cipher = null;
+        Cipher cipher;
         setDataDecryptionKeyString(decryptKey);
         try {
             cipher = createDecryptCipherInternal();
@@ -192,7 +183,7 @@ public class ProvisionFilesUtil {
      * @return Cipher object
      */
     public Cipher getEncryptCipher(String encryptKey) {
-        Cipher cipher = null;
+        Cipher cipher;
         setDataEncryptionKeyString(encryptKey);
         try {
             cipher = createEncryptCipherInternal();
@@ -205,24 +196,6 @@ public class ProvisionFilesUtil {
 
     public File copyToFile(BufferedInputStream reader, String output, int bufLen, String input) {
         return copyToFile(reader, output, false, bufLen, input, null, null);
-    }
-
-    /**
-     * Copy reader into output.
-     * 
-     * @param reader
-     *            a {@link java.io.BufferedInputStream} object.
-     * @param output
-     *            a {@link java.lang.String} object.
-     * @param fullOutputPath
-     * @param bufLen
-     *            a int.
-     * @param input
-     *            a {@link java.lang.String} object.
-     * @return written File object
-     */
-    public File copyToFile(BufferedInputStream reader, String output, boolean fullOutputPath, int bufLen, String input) {
-        return copyToFile(reader, output, fullOutputPath, bufLen, input, null, null);
     }
 
     /**
@@ -527,8 +500,8 @@ public class ProvisionFilesUtil {
         Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
         Matcher m = p.matcher(output);
         boolean result = m.find();
-        String accessKey = null;
-        String secretKey = null;
+        String accessKey;
+        String secretKey;
         String URL = output;
         if (result) {
             accessKey = m.group(1);
@@ -645,8 +618,6 @@ public class ProvisionFilesUtil {
 
             // need to shut down the transfer manager
             tm.shutdownNow();
-            tm = null;
-            s3 = null;
 
             // this is how to do it without multipart, not usable for large files!
             // s3.putObject(bucket, key, reader, new ObjectMetadata());
@@ -862,7 +833,7 @@ public class ProvisionFilesUtil {
         Pattern p = Pattern.compile("(https*)://(\\S+):(\\S+)@(\\S+)");
         Matcher m = p.matcher(input);
         boolean result = m.find();
-        String protocol = null;
+        String protocol;
         String user = null;
         String pass = null;
         String URL = input;

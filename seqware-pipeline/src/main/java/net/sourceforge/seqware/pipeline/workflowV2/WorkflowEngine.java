@@ -16,12 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.workflowV2;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import net.sourceforge.seqware.common.module.ReturnValue;
-
 /**
  * <p>
  * WorkflowEngine interface.
@@ -32,30 +26,4 @@ import net.sourceforge.seqware.common.module.ReturnValue;
  */
 public interface WorkflowEngine {
 
-    /**
-     * <p>
-     * scheduleInstalledBundle.
-     * </p>
-     * 
-     * @param workflowAccession
-     *            a {@link java.lang.String} object.
-     * @param workflowRunAccession
-     *            a {@link java.lang.String} object.
-     * @param iniFiles
-     *            a {@link java.util.ArrayList} object.
-     * @param metadataWriteback
-     *            a boolean.
-     * @param parentAccessions
-     *            a {@link java.util.ArrayList} object.
-     * @param parentsLinkedToWR
-     *            a {@link java.util.ArrayList} object.
-     * @param wait
-     *            a boolean.
-     * @param cmdLineOptions
-     *            a {@link java.util.List} object.
-     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-     */
-    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles,
-            boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait,
-            List<String> cmdLineOptions);
 }

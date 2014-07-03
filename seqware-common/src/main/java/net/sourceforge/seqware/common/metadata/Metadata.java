@@ -652,23 +652,6 @@ public interface Metadata {
 
     /**
      * <p>
-     * saveFileForIus.
-     * </p>
-     * 
-     * @param workflowRunId
-     *            a int.
-     * @param iusAccession
-     *            a int.
-     * @param file
-     *            a {@link net.sourceforge.seqware.common.module.FileMetadata} object.
-     * @param processingId
-     *            Id of processing node File nodes will be attached to.
-     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-     */
-    public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file, int processingId);
-
-    /**
-     * <p>
      * isDuplicateFile.
      * </p>
      * 
@@ -688,17 +671,6 @@ public interface Metadata {
      * @return a {@link java.util.List} object.
      */
     public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status);
-
-    /**
-     * <p>
-     * getWorkflowRunsByHost.
-     * </p>
-     * 
-     * @param host
-     *            a {@link java.lang.String} object.
-     * @return a {@link java.util.List} object.
-     */
-    public List<WorkflowRun> getWorkflowRunsByHost(String host);
 
     /**
      * <p>

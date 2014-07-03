@@ -23,59 +23,12 @@ public class RunTools {
      * runCommand.
      * </p>
      * 
-     * @param env
-     *            a {@link java.util.Map} object.
-     * @param command
-     *            a {@link java.lang.String} object.
-     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-     */
-    public static ReturnValue runCommand(Map<String, String> env, String command) {
-        return (RunTools.runCommand(env, splitCommandPreserveQuote(command)));
-    }
-
-    /**
-     * <p>
-     * startCommand.
-     * </p>
-     * 
-     * @param env
-     *            a {@link java.util.Map} object.
-     * @param command
-     *            a {@link java.lang.String} object.
-     * @return a {@link java.lang.Process} object.
-     * @throws java.io.IOException
-     *             if any.
-     */
-    public static Process startCommand(Map<String, String> env, String command) throws IOException {
-        return (RunTools.startCommand(env, splitCommandPreserveQuote(command)));
-    }
-
-    /**
-     * <p>
-     * runCommand.
-     * </p>
-     * 
      * @param command
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public static ReturnValue runCommand(String command) {
         return (RunTools.runCommand(splitCommandPreserveQuote(command)));
-    }
-
-    /**
-     * <p>
-     * startCommand.
-     * </p>
-     * 
-     * @param command
-     *            a {@link java.lang.String} object.
-     * @return a {@link java.lang.Process} object.
-     * @throws java.io.IOException
-     *             if any.
-     */
-    public static Process startCommand(String command) throws IOException {
-        return (RunTools.startCommand(splitCommandPreserveQuote(command)));
     }
 
     /**
@@ -89,21 +42,6 @@ public class RunTools {
      */
     public static ReturnValue runCommand(String[] command) {
         return (RunTools.runCommand(null, command));
-    }
-
-    /**
-     * <p>
-     * startCommand.
-     * </p>
-     * 
-     * @param command
-     *            an array of {@link java.lang.String} objects.
-     * @return a {@link java.lang.Process} object.
-     * @throws java.io.IOException
-     *             if any.
-     */
-    public static Process startCommand(String[] command) throws IOException {
-        return (RunTools.startCommand(null, command));
     }
 
     public static ReturnValue runCommand(Map<String, String> env, String[] command) {
@@ -159,10 +97,6 @@ public class RunTools {
 
         ret = waitAndGetReturn(p, stdoutCapacity, stderrCapacity);
         return ret;
-    }
-
-    public static ReturnValue waitAndGetReturn(Process p) {
-        return waitAndGetReturn(p, 0, 0);
     }
 
     /**
@@ -279,9 +213,9 @@ public class RunTools {
      *            an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (String token : args) {
-            sb.append(token + " ");
+            sb.append(token).append(" ");
         }
         ReturnValue rv = RunTools.runCommand(sb.toString().trim());
         Log.info("Process status: " + rv.getProcessExitStatus());

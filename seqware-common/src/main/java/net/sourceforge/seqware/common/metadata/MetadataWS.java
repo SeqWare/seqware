@@ -1425,14 +1425,6 @@ public class MetadataWS implements Metadata {
      * {@inheritDoc}
      */
     @Override
-    public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file, int processingId) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Boolean isDuplicateFile(String filepath) {
         File file = null;
         try {
@@ -1601,22 +1593,6 @@ public class MetadataWS implements Metadata {
     public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
         try {
             String searchString = "?status=" + status.name() + "";
-            return ll.findWorkflowRuns(searchString);
-        } catch (IOException ex) {
-            Log.error("", ex);
-        } catch (JAXBException ex) {
-            Log.error("", ex);
-        }
-        return new ArrayList<>();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<WorkflowRun> getWorkflowRunsByHost(String host) {
-        try {
-            String searchString = "?host=" + host + "";
             return ll.findWorkflowRuns(searchString);
         } catch (IOException ex) {
             Log.error("", ex);
