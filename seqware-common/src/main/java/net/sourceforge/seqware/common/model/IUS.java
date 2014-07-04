@@ -40,7 +40,6 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     private Set<Processing> processings = new TreeSet<>();
     private Set<WorkflowRun> workflowRuns = new TreeSet<>();
     private Set<IUSAttribute> iusAttributes = new TreeSet<>();
-    private Set<IUSLink> iusLinks = new TreeSet<>();
     private Boolean skip;
     // not persist
     private Boolean isHasFile = false;
@@ -504,29 +503,6 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      */
     public void setIusAttributes(Set<IUSAttribute> iusAttributes) {
         this.iusAttributes = iusAttributes;
-    }
-
-    /**
-     * <p>
-     * Getter for the field <code>iusLinks</code>.
-     * </p>
-     * 
-     * @return a {@link java.util.Set} object.
-     */
-    public Set<IUSLink> getIusLinks() {
-        return iusLinks;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>iusLinks</code>.
-     * </p>
-     * 
-     * @param iusLinks
-     *            a {@link java.util.Set} object.
-     */
-    public void setIusLinks(Set<IUSLink> iusLinks) {
-        this.iusLinks = iusLinks;
     }
 
     /**
