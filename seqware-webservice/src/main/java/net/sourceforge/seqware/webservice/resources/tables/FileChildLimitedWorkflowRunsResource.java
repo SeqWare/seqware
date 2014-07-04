@@ -21,13 +21,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import net.sourceforge.seqware.common.model.lists.IntegerList;
-import net.sourceforge.seqware.common.model.lists.WorkflowRunList;
 import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
-
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Post;

@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,9 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.CascadeType;
-import org.hibernate.annotations.Cascade;
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.hibernate.annotations.Cascade;
 
 @Entity
 /**

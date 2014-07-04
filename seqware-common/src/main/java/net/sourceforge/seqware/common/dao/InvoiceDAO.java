@@ -1,10 +1,9 @@
 package net.sourceforge.seqware.common.dao;
 
 import java.util.List;
-
+import net.sourceforge.seqware.common.model.Invoice;
 import net.sourceforge.seqware.common.model.InvoiceState;
 import net.sourceforge.seqware.common.model.Registration;
-import net.sourceforge.seqware.common.model.Invoice;
 
 /**
  * <p>

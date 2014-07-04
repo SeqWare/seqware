@@ -1,11 +1,9 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.FileTypeService;
 import net.sourceforge.seqware.common.dao.FileTypeDAO;
 import net.sourceforge.seqware.common.model.FileType;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

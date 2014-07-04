@@ -16,12 +16,12 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
-import org.junit.Assert;
 import net.sourceforge.seqware.common.model.lists.ReturnValueList;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.webservice.resources.tables.DatabaseResourceIDTest;
+import org.junit.Assert;
 import org.junit.Ignore;
 
 /**

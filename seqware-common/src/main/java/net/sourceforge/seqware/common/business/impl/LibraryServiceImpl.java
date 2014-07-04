@@ -1,16 +1,13 @@
 package net.sourceforge.seqware.common.business.impl;
 
+import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
-
 import net.sourceforge.seqware.common.business.LibraryService;
 import net.sourceforge.seqware.common.dao.LibraryDAO;
 import net.sourceforge.seqware.common.model.Sample;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Lists;
 
 @Service
 /**

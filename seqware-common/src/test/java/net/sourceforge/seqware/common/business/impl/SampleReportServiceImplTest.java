@@ -1,16 +1,13 @@
 package net.sourceforge.seqware.common.business.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.SampleReportService;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.SampleReportRow;
 import net.sourceforge.seqware.common.model.SequencerRun;
-
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**

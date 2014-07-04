@@ -3,7 +3,6 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement.Type;
 
 public class AbstractJob implements Job {

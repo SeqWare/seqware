@@ -19,7 +19,6 @@ package net.sourceforge.seqware.webservice.resources.tables;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
-
 import org.junit.Ignore;
 
 /**

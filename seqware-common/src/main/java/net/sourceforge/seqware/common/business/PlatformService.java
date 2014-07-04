@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.business;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.PlatformDAO;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.Registration;

@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class BasicTestDatabaseCreatorWrapper {
 
-    private static BasicTestDatabaseCreator testDBCreator = new BasicTestDatabaseCreator();
+    private static final BasicTestDatabaseCreator testDBCreator = new BasicTestDatabaseCreator();
 
     /**
      * <p>
@@ -44,10 +44,10 @@ public class BasicTestDatabaseCreatorWrapper {
      * </p>
      */
     public static void markDatabaseChanged() {
-        testDBCreator.markDatabaseChanged();
+        BasicTestDatabaseCreator.markDatabaseChanged();
     }
 
     public static void resetDatabaseWithUsers() {
-        testDBCreator.resetDatabaseWithUsers();
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
     }
 }

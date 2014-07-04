@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common.business;
 
 import java.util.List;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.dao.IUSDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.IUS;

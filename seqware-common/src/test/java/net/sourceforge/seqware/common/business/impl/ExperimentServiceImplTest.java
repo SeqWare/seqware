@@ -1,13 +1,7 @@
 package net.sourceforge.seqware.common.business.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-
 import java.util.List;
-
 import javax.naming.NamingException;
-
 import net.sourceforge.seqware.common.BaseUnit;
 import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
@@ -15,9 +9,11 @@ import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
-
 import org.hibernate.Session;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 /**

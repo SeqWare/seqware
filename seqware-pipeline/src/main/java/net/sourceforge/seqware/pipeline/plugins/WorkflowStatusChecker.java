@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.Engines;
-
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringBufferInputStream;
@@ -38,10 +38,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
@@ -50,7 +48,6 @@ import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.tools.RunLock;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.oozie.client.OozieClient;
