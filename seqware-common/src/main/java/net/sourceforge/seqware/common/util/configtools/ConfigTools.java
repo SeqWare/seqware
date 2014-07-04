@@ -3,11 +3,9 @@ package net.sourceforge.seqware.common.util.configtools;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 
 /**

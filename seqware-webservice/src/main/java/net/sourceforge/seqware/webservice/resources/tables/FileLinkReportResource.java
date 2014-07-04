@@ -1,20 +1,17 @@
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.business.ValidationReportService;
 import net.sourceforge.seqware.common.business.impl.ValidationReportServiceImpl.ReportEntry;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * <p>

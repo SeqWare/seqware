@@ -46,7 +46,6 @@ import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
-import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,26 +78,6 @@ public class MetadataNoConnection implements Metadata {
     @Override
     public List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params) {
         return Collections.emptyList();
-    }
-
-    // FIXME: Need to tune these statements in case of null values. Need to figure
-    // what we exactly need
-    // FIXME: to require in a ReturnValue and gracefully exit on missing required
-    // value.
-    /**
-     * Find out the primary key for the last inserted record FIXME: This is hardcoded for Postgres, need to make DB agnostic
-     * 
-     * @param SequenceID
-     *            a {@link java.lang.String} object.
-     * @throws java.sql.SQLException
-     *             if any.
-     * @param sqlQuery
-     *            a {@link java.lang.String} object.
-     * @return a int.
-     */
-    public int InsertAndReturnNewPrimaryKey(String sqlQuery, String SequenceID) throws SQLException {
-        logger.info("No metadata connection");
-        return (0);
     }
 
     /** {@inheritDoc} */
@@ -233,24 +212,6 @@ public class MetadataNoConnection implements Metadata {
      */
     @Override
     public boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException {
-        logger.info("No metadata connection");
-        return (true);
-    }
-
-    /**
-     * <p>
-     * linkAccessionAndParent.
-     * </p>
-     * 
-     * @param accession
-     *            a int.
-     * @param processingID
-     *            a int.
-     * @return a boolean.
-     * @throws java.sql.SQLException
-     *             if any.
-     */
-    public boolean linkAccessionAndParent(int accession, int processingID) throws SQLException {
         logger.info("No metadata connection");
         return (true);
     }
@@ -411,13 +372,6 @@ public class MetadataNoConnection implements Metadata {
 
     /** {@inheritDoc} */
     @Override
-    public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file, int processingId) {
-        logger.info("No metadata connection");
-        return new ReturnValue();
-    }
-
-    /** {@inheritDoc} */
-    @Override
     public Boolean isDuplicateFile(String filepath) {
         logger.info("No metadata connection");
         return false;
@@ -454,13 +408,6 @@ public class MetadataNoConnection implements Metadata {
     /** {@inheritDoc} */
     @Override
     public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status) {
-        logger.info("No metadata connection");
-        return new ArrayList<>();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<WorkflowRun> getWorkflowRunsByHost(String host) {
         logger.info("No metadata connection");
         return new ArrayList<>();
     }

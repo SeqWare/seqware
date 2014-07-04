@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.dao.WorkflowRunDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.IUS;

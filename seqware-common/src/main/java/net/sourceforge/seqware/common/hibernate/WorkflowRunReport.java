@@ -16,12 +16,25 @@
  */
 package net.sourceforge.seqware.common.hibernate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.business.WorkflowService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow;
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 import org.slf4j.Logger;

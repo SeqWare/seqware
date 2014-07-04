@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflow;
 
 import java.util.Map;
-
 import net.sourceforge.seqware.common.metadata.Metadata;
 
 /**

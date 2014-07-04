@@ -1,11 +1,9 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.ProcessingAttributeDAO;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
-
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**

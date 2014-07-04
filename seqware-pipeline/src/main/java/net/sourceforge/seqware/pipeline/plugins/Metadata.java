@@ -16,23 +16,31 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.common.model.SequencerRunStatus;
+import io.seqware.common.model.WorkflowRunStatus;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
+import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
+import net.sourceforge.seqware.common.model.LibrarySelection;
+import net.sourceforge.seqware.common.model.LibrarySource;
+import net.sourceforge.seqware.common.model.LibraryStrategy;
+import net.sourceforge.seqware.common.model.Organism;
+import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.StudyType;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**

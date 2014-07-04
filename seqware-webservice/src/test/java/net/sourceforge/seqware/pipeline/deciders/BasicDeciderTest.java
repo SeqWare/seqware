@@ -48,7 +48,10 @@ import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.PluginTest;
 import org.apache.commons.io.FileUtils;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * <p>

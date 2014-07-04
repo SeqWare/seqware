@@ -5,7 +5,6 @@
 package io.seqware.webservice.controller;
 
 import io.seqware.webservice.generated.controller.OrganismFacadeREST;
-
 import javax.ejb.Stateless;
 import javax.ws.rs.Path;
 

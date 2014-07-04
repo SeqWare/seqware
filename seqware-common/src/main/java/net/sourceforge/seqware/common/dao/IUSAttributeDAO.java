@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.dao;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 

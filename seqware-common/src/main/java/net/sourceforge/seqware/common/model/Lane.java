@@ -7,15 +7,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;

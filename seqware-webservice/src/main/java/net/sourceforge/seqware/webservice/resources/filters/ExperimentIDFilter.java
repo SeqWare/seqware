@@ -16,7 +16,10 @@
  */
 package net.sourceforge.seqware.webservice.resources.filters;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.SortedSet;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;

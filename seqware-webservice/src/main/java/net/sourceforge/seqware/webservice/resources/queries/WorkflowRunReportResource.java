@@ -16,18 +16,16 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
-import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-
+import java.util.Collection;
+import java.util.Date;
 import net.sourceforge.seqware.common.hibernate.WorkflowRunReport;
 import net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Sample;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
-
 import org.apache.log4j.Logger;
 import org.restlet.Context;
 import org.restlet.Request;

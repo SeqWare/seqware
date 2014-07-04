@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Organism;
-import net.sourceforge.seqware.common.model.SampleAttribute;
 import org.apache.commons.lang.StringUtils;
 
 /**

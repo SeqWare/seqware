@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common.business;
 
 import java.util.List;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.dao.LaneDAO;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileType;
@@ -10,7 +9,6 @@ import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.UploadSequence;
-import net.sourceforge.seqware.common.module.ReturnValue;
 
 /**
  * <p>

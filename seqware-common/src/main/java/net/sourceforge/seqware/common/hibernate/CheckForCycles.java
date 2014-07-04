@@ -22,7 +22,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.Study;
 import org.restlet.data.Status;
 import org.restlet.resource.ResourceException;
 
@@ -36,7 +40,7 @@ import org.restlet.resource.ResourceException;
  */
 public class CheckForCycles {
 
-    private StringBuilder results = new StringBuilder();
+    private final StringBuilder results = new StringBuilder();
 
     /**
      * <p>

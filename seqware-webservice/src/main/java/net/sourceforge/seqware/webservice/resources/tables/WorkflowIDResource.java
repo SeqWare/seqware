@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.WorkflowService;
@@ -34,7 +33,6 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.queryengine.webservice.controller.SeqWareWebServiceApplication;
-
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;

@@ -18,7 +18,6 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.StudyService;
@@ -28,7 +27,6 @@ import net.sourceforge.seqware.common.model.StudyType;
 import net.sourceforge.seqware.common.model.lists.StudyList;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;

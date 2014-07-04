@@ -3,7 +3,6 @@ package net.sourceforge.seqware.common.dao.hibernate;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.SampleReportService.Status;
 import net.sourceforge.seqware.common.dao.SampleReportDAO;
 import net.sourceforge.seqware.common.model.IUS;
@@ -14,7 +13,6 @@ import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunReportId;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.Workflow;
-
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
