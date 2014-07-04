@@ -50,7 +50,6 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
     private SortedSet<Experiment> experiments;
     private SortedSet<ShareStudy> sharedStudies;
     private Set<Processing> processings = new TreeSet<>();
-    private Set<StudyLink> studyLinks = new TreeSet<>();
     private Set<StudyAttribute> studyAttributes = new TreeSet<>();
     final Logger logger = LoggerFactory.getLogger(Study.class);
 
@@ -715,29 +714,6 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      */
     public void setHtml(String html) {
         this.html = html;
-    }
-
-    /**
-     * <p>
-     * Getter for the field <code>studyLinks</code>.
-     * </p>
-     * 
-     * @return a {@link java.util.Set} object.
-     */
-    public Set<StudyLink> getStudyLinks() {
-        return studyLinks;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>studyLinks</code>.
-     * </p>
-     * 
-     * @param studyLinks
-     *            a {@link java.util.Set} object.
-     */
-    public void setStudyLinks(Set<StudyLink> studyLinks) {
-        this.studyLinks = studyLinks;
     }
 
     /**
