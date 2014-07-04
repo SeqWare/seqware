@@ -312,16 +312,14 @@ public class FileTools {
                 zipFileName.delete();
             }
             Zip64File zipFile = new Zip64File(zipFileName);
-            for (int i = 0; i < filesToZip.size(); i++) {
-
-                if (excludeRegEx == null || !filesToZip.get(i).getName().contains(excludeRegEx)) {
-                    try (FileInputStream in = new FileInputStream(filesToZip.get(i))) {
-                        String filePath = filesToZip.get(i).getPath();
+            for (File filesToZip1 : filesToZip) {
+                if (excludeRegEx == null || !filesToZip1.getName().contains(excludeRegEx)) {
+                    try (final FileInputStream in = new FileInputStream(filesToZip1)) {
+                        String filePath = filesToZip1.getPath();
                         if (relative) {
                             filePath = filePath.replaceFirst(path.getAbsolutePath() + File.separator, "");
                         }
-                        Log.info("Deflating: " + filePath);
-
+                        Log.debug("Deflating: " + filePath);
                         int method = FileEntry.iMETHOD_DEFLATED;
                         if (!compress) {
                             method = FileEntry.iMETHOD_STORED;
@@ -383,30 +381,24 @@ public class FileTools {
                 } else {
                     out.setLevel(Deflater.DEFAULT_COMPRESSION);
                 }
-                for (int i = 0; i < filesToZip.size(); i++) {
-                    if (excludeRegEx == null || !filesToZip.get(i).getName().contains(excludeRegEx)) {
-                        try (FileInputStream in = new FileInputStream(filesToZip.get(i))) {
-                            String filePath = filesToZip.get(i).getPath();
+                for (File filesToZip1 : filesToZip) {
+                    if (excludeRegEx == null || !filesToZip1.getName().contains(excludeRegEx)) {
+                        try (final FileInputStream in = new FileInputStream(filesToZip1)) {
+                            String filePath = filesToZip1.getPath();
                             // if (relative) {
                             // filePath = filePath.replaceFirst(path.getAbsolutePath() +
                             // File.separator, "");
                             // }
-
                             // cutting from file path folder store
                             filePath = filePath.substring(cutPrefix.length());
-
                             Log.info("Deflating: " + filePath);
-
                             out.putNextEntry(new ZipEntry(filePath));
-
                             // Transfer bytes from the current file to the ZIP file
                             // out.write(buffer, 0, in.read(buffer));
-
                             int len;
                             while ((len = in.read(buffer)) > 0) {
                                 out.write(buffer, 0, len);
                             }
-
                             // Close the current entry
                             out.closeEntry();
                         }
@@ -459,7 +451,7 @@ public class FileTools {
                     // only try to extract if doesn't already exist (dir is really the
                     // output file)
                     if (!dir.exists()) {
-                        Log.info("Extracting: " + entry);
+                        Log.debug("Extracting: " + entry);
                         // make directories
                         if (entry.getName().contains(File.separator)) {
                             // then this is within a directory path I guess
@@ -468,7 +460,7 @@ public class FileTools {
                             for (int i = 0; i < t.length - 1; i++) {
                                 newDir.append(t[i]).append(File.separator);
                             }
-                            Log.info("Creating Dir: " + outputDir.getAbsolutePath() + File.separator + newDir);
+                            Log.debug("Creating Dir: " + outputDir.getAbsolutePath() + File.separator + newDir);
                             File newDirFile = new File(outputDir.getAbsolutePath() + File.separator + newDir);
                             newDirFile.mkdirs();
                         }
