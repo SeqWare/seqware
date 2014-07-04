@@ -911,43 +911,6 @@ ALTER SEQUENCE experiment_library_design_experiment_library_design_id_seq OWNED 
 
 
 --
--- Name: experiment_link; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE experiment_link (
-    experiment_link_id integer NOT NULL,
-    experiment_id integer NOT NULL,
-    label text,
-    url text,
-    db text,
-    id text
-);
-
-
-ALTER TABLE public.experiment_link OWNER TO seqware;
-
---
--- Name: experiment_link_experiment_link_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE experiment_link_experiment_link_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.experiment_link_experiment_link_id_seq OWNER TO seqware;
-
---
--- Name: experiment_link_experiment_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: seqware
---
-
-ALTER SEQUENCE experiment_link_experiment_link_id_seq OWNED BY experiment_link.experiment_link_id;
-
-
---
 -- Name: experiment_spot_design; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
 --
 
@@ -1322,43 +1285,6 @@ ALTER SEQUENCE ius_ius_id_seq OWNED BY ius.ius_id;
 
 
 --
--- Name: ius_link; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE ius_link (
-    ius_link_id integer NOT NULL,
-    ius_id integer NOT NULL,
-    label text NOT NULL,
-    url text NOT NULL,
-    db text,
-    id text
-);
-
-
-ALTER TABLE public.ius_link OWNER TO seqware;
-
---
--- Name: ius_link_ius_link_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE ius_link_ius_link_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.ius_link_ius_link_id_seq OWNER TO seqware;
-
---
--- Name: ius_link_ius_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: seqware
---
-
-ALTER SEQUENCE ius_link_ius_link_id_seq OWNED BY ius_link.ius_link_id;
-
-
---
 -- Name: ius_workflow_runs; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
 --
 
@@ -1480,43 +1406,6 @@ ALTER TABLE public.lane_lane_id_seq OWNER TO seqware;
 --
 
 ALTER SEQUENCE lane_lane_id_seq OWNED BY lane.lane_id;
-
-
---
--- Name: lane_link; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE lane_link (
-    lane_link_id integer NOT NULL,
-    lane_id integer NOT NULL,
-    label text NOT NULL,
-    url text NOT NULL,
-    db text,
-    id text
-);
-
-
-ALTER TABLE public.lane_link OWNER TO seqware;
-
---
--- Name: lane_link_lane_link_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE lane_link_lane_link_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.lane_link_lane_link_id_seq OWNER TO seqware;
-
---
--- Name: lane_link_lane_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: seqware
---
-
-ALTER SEQUENCE lane_link_lane_link_id_seq OWNED BY lane_link.lane_link_id;
 
 
 --
@@ -2281,43 +2170,6 @@ COMMENT ON TABLE sample_hierarchy IS 'Relationship of samples as they pass throu
 
 
 --
--- Name: sample_link; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE sample_link (
-    sample_link_id integer NOT NULL,
-    sample_id integer NOT NULL,
-    label text NOT NULL,
-    url text NOT NULL,
-    db text,
-    id text
-);
-
-
-ALTER TABLE public.sample_link OWNER TO seqware;
-
---
--- Name: sample_link_sample_link_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE sample_link_sample_link_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.sample_link_sample_link_id_seq OWNER TO seqware;
-
---
--- Name: sample_link_sample_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: seqware
---
-
-ALTER SEQUENCE sample_link_sample_link_id_seq OWNED BY sample_link.sample_link_id;
-
-
---
 -- Name: sample_relationship; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
 --
 
@@ -2411,61 +2263,6 @@ ALTER TABLE public.sample_sample_id_seq OWNER TO seqware;
 
 ALTER SEQUENCE sample_sample_id_seq OWNED BY sample.sample_id;
 
-
---
--- Name: sample_search_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE sample_search_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.sample_search_id_seq OWNER TO seqware;
-
---
--- Name: sample_search; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE sample_search (
-    sample_search_id integer DEFAULT nextval('sample_search_id_seq'::regclass) NOT NULL,
-    sample_id integer NOT NULL,
-    create_tstmp timestamp without time zone NOT NULL
-);
-
-
-ALTER TABLE public.sample_search OWNER TO seqware;
-
---
--- Name: sample_search_attribute_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE sample_search_attribute_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.sample_search_attribute_id_seq OWNER TO seqware;
-
---
--- Name: sample_search_attribute; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE sample_search_attribute (
-    sample_search_attribute_id integer DEFAULT nextval('sample_search_attribute_id_seq'::regclass) NOT NULL,
-    sample_search_id integer NOT NULL,
-    tag character varying(255) NOT NULL,
-    value character varying(255) NOT NULL
-);
-
-
-ALTER TABLE public.sample_search_attribute OWNER TO seqware;
 
 --
 -- Name: sequencer_run; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
@@ -2701,43 +2498,6 @@ ALTER TABLE public.study_attribute_study_attribute_id_seq OWNER TO seqware;
 --
 
 ALTER SEQUENCE study_attribute_study_attribute_id_seq OWNED BY study_attribute.study_attribute_id;
-
-
---
--- Name: study_link; Type: TABLE; Schema: public; Owner: seqware; Tablespace: 
---
-
-CREATE TABLE study_link (
-    study_link_id integer NOT NULL,
-    study_id integer NOT NULL,
-    label text NOT NULL,
-    url text NOT NULL,
-    db text,
-    id text
-);
-
-
-ALTER TABLE public.study_link OWNER TO seqware;
-
---
--- Name: study_link_study_link_id_seq; Type: SEQUENCE; Schema: public; Owner: seqware
---
-
-CREATE SEQUENCE study_link_study_link_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.study_link_study_link_id_seq OWNER TO seqware;
-
---
--- Name: study_link_study_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: seqware
---
-
-ALTER SEQUENCE study_link_study_link_id_seq OWNED BY study_link.study_link_id;
 
 
 --
@@ -3138,13 +2898,6 @@ ALTER TABLE experiment_library_design ALTER COLUMN experiment_library_design_id 
 
 
 --
--- Name: experiment_link_id; Type: DEFAULT; Schema: public; Owner: seqware
---
-
-ALTER TABLE experiment_link ALTER COLUMN experiment_link_id SET DEFAULT nextval('experiment_link_experiment_link_id_seq'::regclass);
-
-
---
 -- Name: experiment_spot_design_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
@@ -3355,13 +3108,6 @@ ALTER TABLE sample_attribute ALTER COLUMN sample_attribute_id SET DEFAULT nextva
 
 
 --
--- Name: sample_link_id; Type: DEFAULT; Schema: public; Owner: seqware
---
-
-ALTER TABLE sample_link ALTER COLUMN sample_link_id SET DEFAULT nextval('sample_link_sample_link_id_seq'::regclass);
-
-
---
 -- Name: sample_relationship_id; Type: DEFAULT; Schema: public; Owner: seqware
 --
 
@@ -3415,13 +3161,6 @@ ALTER TABLE study ALTER COLUMN study_id SET DEFAULT nextval('study_study_id_seq'
 --
 
 ALTER TABLE study_attribute ALTER COLUMN study_attribute_id SET DEFAULT nextval('study_attribute_study_attribute_id_seq'::regclass);
-
-
---
--- Name: study_link_id; Type: DEFAULT; Schema: public; Owner: seqware
---
-
-ALTER TABLE study_link ALTER COLUMN study_link_id SET DEFAULT nextval('study_link_study_link_id_seq'::regclass);
 
 
 --
@@ -3503,14 +3242,6 @@ ALTER TABLE ONLY experiment_attribute
 
 ALTER TABLE ONLY experiment_library_design
     ADD CONSTRAINT experiment_library_design_pkey PRIMARY KEY (experiment_library_design_id);
-
-
---
--- Name: experiment_link_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY experiment_link
-    ADD CONSTRAINT experiment_link_pkey PRIMARY KEY (experiment_link_id);
 
 
 --
@@ -3682,27 +3413,11 @@ ALTER TABLE ONLY organism
 
 
 --
--- Name: pk_ius_link; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY ius_link
-    ADD CONSTRAINT pk_ius_link PRIMARY KEY (ius_link_id);
-
-
---
 -- Name: pk_ius_workflow_runs; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
 --
 
 ALTER TABLE ONLY ius_workflow_runs
     ADD CONSTRAINT pk_ius_workflow_runs PRIMARY KEY (ius_workflow_runs_id);
-
-
---
--- Name: pk_lane_link; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY lane_link
-    ADD CONSTRAINT pk_lane_link PRIMARY KEY (lane_link_id);
 
 
 --
@@ -3925,14 +3640,6 @@ CREATE UNIQUE INDEX sample_hierarchy_null
   WHERE parent_id IS NULL;
 
 --
--- Name: sample_link_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY sample_link
-    ADD CONSTRAINT sample_link_pkey PRIMARY KEY (sample_link_id);
-
-
---
 -- Name: sample_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
 --
 
@@ -3954,30 +3661,6 @@ ALTER TABLE ONLY sample_relationship
 
 ALTER TABLE ONLY sample_report
     ADD CONSTRAINT sample_report_pkey PRIMARY KEY (row_id);
-
-
---
--- Name: sample_search_attribute_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY sample_search_attribute
-    ADD CONSTRAINT sample_search_attribute_pkey PRIMARY KEY (sample_search_attribute_id);
-
-
---
--- Name: sample_search_attribute_sample_search_id_tag_value_key; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY sample_search_attribute
-    ADD CONSTRAINT sample_search_attribute_sample_search_id_tag_value_key UNIQUE (sample_search_id, tag, value);
-
-
---
--- Name: sample_search_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY sample_search
-    ADD CONSTRAINT sample_search_pkey PRIMARY KEY (sample_search_id);
 
 
 --
@@ -4018,14 +3701,6 @@ ALTER TABLE ONLY share_workflow_run
 
 ALTER TABLE ONLY study_attribute
     ADD CONSTRAINT study_attribute_pkey PRIMARY KEY (study_attribute_id);
-
-
---
--- Name: study_link_pkey; Type: CONSTRAINT; Schema: public; Owner: seqware; Tablespace: 
---
-
-ALTER TABLE ONLY study_link
-    ADD CONSTRAINT study_link_pkey PRIMARY KEY (study_link_id);
 
 
 --
@@ -4319,14 +3994,6 @@ ALTER TABLE ONLY experiment_library_design
 
 
 --
--- Name: experiment_link_experiment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY experiment_link
-    ADD CONSTRAINT experiment_link_experiment_id_fkey FOREIGN KEY (experiment_id) REFERENCES experiment(experiment_id);
-
-
---
 -- Name: experiment_platform_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
 --
 
@@ -4375,14 +4042,6 @@ ALTER TABLE ONLY workflow_run_attribute
 
 
 --
--- Name: fk48cd19ddcc73e37d; Type: FK CONSTRAINT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY sample_search
-    ADD CONSTRAINT fk48cd19ddcc73e37d FOREIGN KEY (sample_id) REFERENCES sample(sample_id);
-
-
---
 -- Name: fk7750ef99bb4f9efd; Type: FK CONSTRAINT; Schema: public; Owner: seqware
 --
 
@@ -4407,14 +4066,6 @@ ALTER TABLE ONLY file
 
 
 --
--- Name: fk_ius_link_ius_id; Type: FK CONSTRAINT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY ius_link
-    ADD CONSTRAINT fk_ius_link_ius_id FOREIGN KEY (ius_id) REFERENCES ius(ius_id);
-
-
---
 -- Name: fk_ius_owner_id; Type: FK CONSTRAINT; Schema: public; Owner: seqware
 --
 
@@ -4436,14 +4087,6 @@ ALTER TABLE ONLY ius_workflow_runs
 
 ALTER TABLE ONLY ius_workflow_runs
     ADD CONSTRAINT fk_ius_workflow_runs_workflow_run_id FOREIGN KEY (workflow_run_id) REFERENCES workflow_run(workflow_run_id);
-
-
---
--- Name: fk_lane_link_lane_id; Type: FK CONSTRAINT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY lane_link
-    ADD CONSTRAINT fk_lane_link_lane_id FOREIGN KEY (lane_id) REFERENCES lane(lane_id);
 
 
 --
@@ -4548,14 +4191,6 @@ ALTER TABLE ONLY workflow_run_param
 
 ALTER TABLE ONLY workflow_run
     ADD CONSTRAINT fk_workflow_run_registration_id FOREIGN KEY (owner_id) REFERENCES registration(registration_id);
-
-
---
--- Name: fkf378ceba921d0a72; Type: FK CONSTRAINT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY sample_search_attribute
-    ADD CONSTRAINT fkf378ceba921d0a72 FOREIGN KEY (sample_search_id) REFERENCES sample_search(sample_search_id);
 
 
 --
@@ -4887,14 +4522,6 @@ ALTER TABLE ONLY sample_hierarchy
 
 
 --
--- Name: sample_link_sample_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY sample_link
-    ADD CONSTRAINT sample_link_sample_id_fkey FOREIGN KEY (sample_id) REFERENCES sample(sample_id);
-
-
---
 -- Name: sample_relationship_child_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
 --
 
@@ -4940,14 +4567,6 @@ ALTER TABLE ONLY study_attribute
 
 ALTER TABLE ONLY study
     ADD CONSTRAINT study_existing_type_fkey FOREIGN KEY (existing_type) REFERENCES study_type(study_type_id);
-
-
---
--- Name: study_link_study_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: seqware
---
-
-ALTER TABLE ONLY study_link
-    ADD CONSTRAINT study_link_study_id_fkey FOREIGN KEY (study_id) REFERENCES study(study_id);
 
 
 --
