@@ -38,9 +38,9 @@ The decider from which all other deciders came
 |--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. |
 |--cf, --check-file-exists|Optional: only launch on the file if the file exists|
 |--check-wf-accessions|The comma-separated, no spaces, workflow accessions of the workflow that perform the same function (e.g. older versions). Any files that have been processed with these workflows will be skipped.|
-|--force-run-all|Forces the decider to run all matches regardless of whether they've been run before or not|
 |--group-by|Optional: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA. One of LANE_SWA or IUS_SWA.|
 |--ho, --host|Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host|
+|--ignore-previous-runs|Allows the decider to run all matches regardless of whether they've been run before or not|
 |--ignore-skip-flag|Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.|
 |--ius-SWID|ius-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --ius-SWID|
 |--lane-SWID|lane-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --lane-SWID|
