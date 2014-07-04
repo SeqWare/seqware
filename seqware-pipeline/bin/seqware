@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -o errexit
 
 # Ensure this file is executable via `chmod a+x seqware`, then place it
 # somewhere on your $PATH, like ~/bin. The rest of SeqWare will be
@@ -39,6 +40,7 @@ if $cygwin; then
 fi
 
 export SEQWARE_JAR="$SEQWARE_HOME/self-installs/seqware-distribution-$SEQWARE_VERSION-full.jar"
+export SEQWARE_CHECK_JAR="$SEQWARE_HOME/self-installs/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
 export SEQWARE_SETTINGS="${SEQWARE_SETTINGS:-"$SEQWARE_HOME/settings"}"
 
 # normalize $0 on certain BSDs
@@ -81,18 +83,25 @@ function add_path {
     done
 }
 
-add_path CLASSPATH "$SEQWARE_JAR"
+add_path CLASSPATH "$SEQWARE_JAR:$SEQWARE_CHECK_JAR"
 
-BOOTCLASSPATH="-Xbootclasspath/a:$SEQWARE_JAR"
+BOOTCLASSPATH="-Xbootclasspath/a:$SEQWARE_JAR,$SEQWARE_CHECK_JAR"
 
-if [ ! -r "$SEQWARE_JAR" -a "$1" != "self-install" -a "$1" != "init" ]; then
+if [ ! -r "$SEQWARE_JAR" -a "$1" != "self-install" -a "$1" != "self-check-install" -a "$1" != "init" ]; then
     "$0" self-install
     if [ $? != 0 ]; then
         exit $?
     fi
 fi
 
-if [ ! -r "$SEQWARE_SETTINGS" -a "$1" != "self-install" -a "$1" != "init" ]; then
+if [ ! -r "$SEQWARE_CHECK_JAR" -a "$1" != "self-install" -a "$1" != "self-check-install"  -a "$1" != "init" ]; then
+    "$0" self-check-install
+    if [ $? != 0 ]; then
+        exit $?
+    fi
+fi
+
+if [ ! -r "$SEQWARE_SETTINGS" -a "$1" != "self-install" -a "$1" != "self-check-install"  -a "$1" != "init" ]; then
     "$0" init
     exit $?
 fi
@@ -165,6 +174,34 @@ if [ "$1" = "self-install" ]; then
         mv -f "$SEQWARE_JAR.pending" "$SEQWARE_JAR"
     else
         rm "$SEQWARE_JAR.pending" 2> /dev/null
+        download_failed_message "$SEQWARE_URL"
+        exit 1
+    fi
+elif [ "$1" = "self-check-install" ]; then
+    if [ -r "$SEQWARE_CHECK_JAR" ]; then
+        echo "The self-install jar already exists at $SEQWARE_CHECK_JAR."
+        echo "If you wish to re-download, delete it and rerun \"$0 self-install\"."
+        exit 1
+    fi
+
+    echo "Downloading SeqWare Check to $SEQWARE_CHECK_JAR now..."
+    mkdir -p "$(dirname "$SEQWARE_CHECK_JAR")"
+    
+    if [ $SNAPSHOT = "YES" ]; then
+        SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
+    elif [ -r "/$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar" ]; then
+	# for testing, if you have a local release version, just use it
+        SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
+    else
+        SEQWARE_URL="http://wrench.res.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
+    fi
+
+    $HTTP_CLIENT "$SEQWARE_CHECK_JAR.pending" "$SEQWARE_URL"
+    if [ $? == 0 ]; then
+        # TODO: checksum
+        mv -f "$SEQWARE_CHECK_JAR.pending" "$SEQWARE_CHECK_JAR"
+    else
+        rm "$SEQWARE_CHECK_JAR.pending" 2> /dev/null
         download_failed_message "$SEQWARE_URL"
         exit 1
     fi
@@ -268,6 +305,16 @@ elif [ "$1" = "upgrade" ]; then
     fi
 elif [ "$1" = "version" -o "$1" = "-v" -o "$1" = "--version" ]; then
     echo "SeqWare version $SEQWARE_VERSION"
+elif [ "$1" = "check" ]; then
+    $JAVA_CMD $SEQWARE_JVM_OPTS io.seqware.pipeline.plugins.sanity.SanityCheck "$@"
+    
+    EXIT_CODE=$?
+
+    if $cygterm ; then
+        stty icanon echo > /dev/null 2>&1
+    fi
+
+    exit $EXIT_CODE
 else
     $JAVA_CMD $SEQWARE_JVM_OPTS io.seqware.cli.Main "$@"
     
