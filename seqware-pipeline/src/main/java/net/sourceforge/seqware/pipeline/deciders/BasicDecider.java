@@ -113,7 +113,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("parent-wf-accessions"), "The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("meta-types"), "The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("check-wf-accessions"), "The comma-separated, no spaces, workflow accessions of the workflow that perform the same function (e.g. older versions). Any files that have been processed with these workflows will be skipped.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList("ignore-previous-runs"), "Forces the decider to run all matches regardless of whether they've been run before or not");
+        parser.acceptsAll(Arrays.asList("ignore-previous-runs"), "Allows the decider to run all matches regardless of whether they've been run before or not");
         parser.acceptsAll(Arrays.asList("test"),
                 "Testing mode. Prints the INI files to standard out and does not submit the workflow.");
         parser.acceptsAll(Arrays.asList("no-meta-db", "no-metadata"),
@@ -230,7 +230,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         //see if the samples have been run through a particular workflow before.
         //These workflows will not be launched again
         //Optionally you can force the decider to re-run all possibilities in
-        //the database with force-run-all.
+        //the database with ignore-previous-runs.
         if (options.has("check-wf-accessions")) {
 
             String pas = (String) options.valueOf("check-wf-accessions");
@@ -246,7 +246,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             //workflowAccessionsToCheck.add(workflowAccession);
         }
         if (ignorePreviousRuns == null) {
-            ignorePreviousRuns = options.has("force-run-all");
+            ignorePreviousRuns = options.has("ignore-previous-runs");
         }
 
         //test turns off all of the submission functions and just prints to stdout
@@ -750,11 +750,21 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         Log.stdout(command);
         return ret;
     }
+    
+    public Boolean getIgnorePreviousRuns() {
+        return ignorePreviousRuns;
+    }
 
+    public void setIgnorePreviousRuns(Boolean ignorePreviousRuns) {
+        this.ignorePreviousRuns = ignorePreviousRuns;
+    }
+
+    @Deprecated
     public Boolean getForceRunAll() {
         return ignorePreviousRuns;
     }
 
+    @Deprecated
     public void setForceRunAll(Boolean forceRunAll) {
         this.ignorePreviousRuns = forceRunAll;
     }
