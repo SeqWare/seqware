@@ -4,10 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob.file;
-
-import org.jdom.Element;
-
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
+import org.jdom.Element;
 
 /**
  * Container for batching up jobs

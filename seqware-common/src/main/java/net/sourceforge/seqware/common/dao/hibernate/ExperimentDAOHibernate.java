@@ -3,7 +3,6 @@ package net.sourceforge.seqware.common.dao.hibernate;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.ExperimentDAO;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.File;
@@ -12,7 +11,6 @@ import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.hibernate.Query;
 import org.slf4j.Logger;

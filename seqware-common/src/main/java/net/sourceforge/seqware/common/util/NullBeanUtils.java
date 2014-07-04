@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.util;
 
 import java.lang.reflect.InvocationTargetException;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
 
 /**

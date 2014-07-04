@@ -3,10 +3,11 @@ package net.sourceforge.seqware.common.dao.hibernate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import net.sourceforge.seqware.common.dao.WorkflowRunParamDAO;
-import net.sourceforge.seqware.common.model.*;
-
+import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.model.WorkflowRunParam;
 import org.hibernate.SQLQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

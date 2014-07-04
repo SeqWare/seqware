@@ -1,19 +1,16 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie;
 
-import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Properties;
-
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;

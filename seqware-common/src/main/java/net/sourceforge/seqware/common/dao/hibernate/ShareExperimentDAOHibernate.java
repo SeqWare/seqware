@@ -2,11 +2,9 @@ package net.sourceforge.seqware.common.dao.hibernate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.ShareExperimentDAO;
 import net.sourceforge.seqware.common.model.ShareExperiment;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 

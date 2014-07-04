@@ -16,11 +16,17 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;

@@ -6,7 +6,6 @@ import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.ExperimentSpotDesignReadSpecService;
 import net.sourceforge.seqware.common.business.ExperimentSpotDesignService;
 import net.sourceforge.seqware.common.business.FileAttributeService;
-import net.sourceforge.seqware.common.business.StudyTypeService;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.LaneService;
@@ -30,12 +29,12 @@ import net.sourceforge.seqware.common.business.SampleSearchService;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.business.StudyService;
+import net.sourceforge.seqware.common.business.StudyTypeService;
 import net.sourceforge.seqware.common.business.ValidationReportService;
 import net.sourceforge.seqware.common.business.WorkflowParamService;
 import net.sourceforge.seqware.common.business.WorkflowParamValueService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.business.WorkflowService;
-
 import org.hibernate.SessionFactory;
 
 /**

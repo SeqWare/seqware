@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import java.util.Date;
-
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.dao.RegistrationDAO;
 import net.sourceforge.seqware.common.invitation.InvitationParams;
@@ -9,7 +8,6 @@ import net.sourceforge.seqware.common.invitation.RandomInvitationCode;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.RegistrationDTO;
 import net.sourceforge.seqware.common.util.Log;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;

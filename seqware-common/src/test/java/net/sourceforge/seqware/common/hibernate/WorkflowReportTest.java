@@ -17,8 +17,12 @@
 package net.sourceforge.seqware.common.hibernate;
 
 import net.sourceforge.seqware.common.util.Log;
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * <p>

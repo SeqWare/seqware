@@ -1,12 +1,10 @@
 package net.sourceforge.seqware.common.dao;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.util.List;
-
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
-import io.seqware.common.model.WorkflowRunStatus;
-import net.sourceforge.seqware.common.module.ReturnValue;
 
 /**
  * <p>

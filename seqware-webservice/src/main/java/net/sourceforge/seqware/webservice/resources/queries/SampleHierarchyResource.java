@@ -7,22 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import net.sourceforge.seqware.common.factory.DBAccess;
+import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchies;
+import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchy;
+import net.sourceforge.seqware.webservice.resources.BasicRestlet;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.Method;
 import org.restlet.ext.json.JsonRepresentation;
 import org.restlet.representation.Representation;
-
-import net.sourceforge.seqware.common.factory.DBAccess;
-import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchies;
-import net.sourceforge.seqware.queryengine.webservice.model.SampleHierarchy;
-import net.sourceforge.seqware.webservice.resources.BasicRestlet;
-
-import org.apache.commons.dbutils.ResultSetHandler;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class SampleHierarchyResource extends BasicRestlet {
 

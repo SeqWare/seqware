@@ -19,10 +19,8 @@ package net.sourceforge.seqware.webservice.resources.queries;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
-
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.restlet.Context;
 import org.restlet.Request;

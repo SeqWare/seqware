@@ -16,16 +16,16 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
+import io.seqware.common.model.SequencerRunStatus;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.model.Platform;
+import net.sourceforge.seqware.common.model.StudyType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import io.seqware.common.model.SequencerRunStatus;
 
 /**
  * 

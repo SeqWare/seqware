@@ -1,10 +1,10 @@
 package net.sourceforge.seqware.common.business.impl;
 
+import io.seqware.common.model.SequencerRunStatus;
 import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.dao.LaneDAO;
@@ -12,7 +12,6 @@ import net.sourceforge.seqware.common.dao.SequencerRunDAO;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
-import io.seqware.common.model.SequencerRunStatus;
 import net.sourceforge.seqware.common.model.SequencerRunWizardDTO;
 import net.sourceforge.seqware.common.util.Log;
 

@@ -1,11 +1,9 @@
 package net.sourceforge.seqware.queryengine.webservice.security;
 
 import net.sourceforge.seqware.common.business.RegistrationService;
-import net.sourceforge.seqware.common.model.Registration;
-
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.model.Registration;
 import org.apache.log4j.Logger;
-
 import org.restlet.security.SecretVerifier;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;

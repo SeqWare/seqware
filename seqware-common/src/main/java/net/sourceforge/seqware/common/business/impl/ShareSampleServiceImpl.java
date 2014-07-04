@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.ShareSampleService;
 import net.sourceforge.seqware.common.dao.ShareSampleDAO;
 import net.sourceforge.seqware.common.model.ShareSample;

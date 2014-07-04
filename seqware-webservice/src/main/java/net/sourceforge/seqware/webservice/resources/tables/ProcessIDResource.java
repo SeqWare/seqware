@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import io.seqware.common.model.ProcessingStatus;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.LaneService;
@@ -43,7 +43,6 @@ import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
@@ -52,7 +51,6 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;

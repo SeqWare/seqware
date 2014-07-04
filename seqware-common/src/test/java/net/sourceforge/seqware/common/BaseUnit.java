@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common;
 
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;

@@ -279,6 +279,10 @@
                     <groupId>tomcat</groupId>
                 </exclusion>
                 <exclusion>
+                    <artifactId>jasper-compiler</artifactId>
+                    <groupId>tomcat</groupId>
+                </exclusion>
+                <exclusion>
                     <artifactId>rendersnake</artifactId>
                     <groupId>org.rendersnake</groupId>
                 </exclusion>

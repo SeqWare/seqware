@@ -1,11 +1,9 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.SampleSearchService;
 import net.sourceforge.seqware.common.dao.SampleSearchDAO;
 import net.sourceforge.seqware.common.model.SampleSearch;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
