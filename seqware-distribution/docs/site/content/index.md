@@ -15,6 +15,7 @@ The "<a href="/docs/">Documentation</a>" pages show how to install and use
 SeqWare. In particular, we recommend new users begin with the three getting
 started guide found in the documentation section and linked to below.</p>
 
+Developers can reach the GitHub site "<a href="https://github.com/SeqWare/seqware">here</a>".
 <table>
 <tr>
 <th><h2><strong>Users</strong></h2></th>
