@@ -25,7 +25,6 @@ import net.sourceforge.seqware.common.business.ProcessingService;
 import net.sourceforge.seqware.common.business.ProcessingStudiesService;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.SampleReportService;
-import net.sourceforge.seqware.common.business.SampleSearchService;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.business.StudyService;
@@ -326,17 +325,6 @@ public abstract class BeanFactory {
      */
     public static ValidationReportService getFileValidationServiceBean() {
         return ContextImpl.getInstance().getValidationReportService();
-    }
-
-    /**
-     * <p>
-     * getSampleSearchServiceBean.
-     * </p>
-     * 
-     * @return a {@link net.sourceforge.seqware.common.business.SampleSearchService} object.
-     */
-    public static SampleSearchService getSampleSearchServiceBean() {
-        return ContextImpl.getInstance().getSampleSearchService();
     }
 
     /**
