@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+import net.sourceforge.seqware.common.util.Log;
 
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
@@ -916,6 +917,7 @@ public class Main {
       if ("report".equals(cmd)) {
         filesReport(args);
       } else if ("refresh".equals(cmd)){
+        Log.stdoutWithTime("Triggered provenance report" );
         Reports.triggerProvenanceReport();
       } else {
         invalid("files", cmd);
@@ -1100,8 +1102,6 @@ public class Main {
       out("Required parameters:");
       out("  --accession <swid>         The SWID of the workflow to be run");
       out("  --host <host>              The host on which to launch the workflow run");
-      out("  --ini <ini-file>           An ini file to configure the workflow run ");
-      out("                             Repeat this parameter to provide multiple files");
       out("");
       out("Optional parameters:");
       out("  --engine <type>            The engine that will process the workflow run.");
@@ -1111,11 +1111,13 @@ public class Main {
       out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
       out("                             Repeat this parameter to provide multiple parents");
       out("  --override <key=value>     Override specific parameters from the workflow.ini");
+      out("  --ini <ini-file>           An ini file to configure the workflow run ");
+      out("                             Repeat this parameter to provide multiple files");
       out("");
     } else {
       String wfId = reqVal(args, "--accession");
       String host = reqVal(args, "--host");
-      List<String> iniFiles = reqVals(args, "--ini");
+      List<String> iniFiles = optVals(args, "--ini");
       String engine = optVal(args, "--engine", null);
       List<String> parentIds = optVals(args, "--parent-accession");
       List<String> override = optVals(args, "--override");
@@ -1360,6 +1362,7 @@ public class Main {
         runnerArgs.add(cdl(ids));
       }
 
+      Log.stdoutWithTime("Propagated workflow engine statuses" );
       run(runnerArgs);
     }
   }
@@ -1567,6 +1570,7 @@ public class Main {
       out("  workflow      Interact with workflows");
       out("  workflow-run  Interact with workflow runs");
       out("  checkdb       Check the seqware database for convention errors");
+      out("  check         Check the seqware environment for configuration issues");
       out("");
       out("Flags:");
       out("  --help        Print help out");

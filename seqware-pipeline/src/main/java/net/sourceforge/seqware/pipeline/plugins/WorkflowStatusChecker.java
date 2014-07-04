@@ -57,6 +57,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
+import org.apache.xerces.util.XMLChar;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -618,7 +619,7 @@ public class WorkflowStatusChecker extends Plugin {
       sb.append(new Date(f.lastModified()));
       sb.append("\nContents:\n");
       try {
-        sb.append(FileUtils.readFileToString(f));
+        sb.append(stripInvalidXmlCharacters(FileUtils.readFileToString(f)));
       } catch (IOException ex) {
         sb.append(" *** ERROR READING FILE: ");
         sb.append(ex.getMessage());
@@ -643,5 +644,24 @@ public class WorkflowStatusChecker extends Plugin {
     }
     return extIds;
   }
+  
+    /**
+     * Stolen from
+     * https://stackoverflow.com/questions/93655/stripping-invalid-xml-characters-in-java/9635310#9635310
+     *
+     * @param input
+     * @return
+     */
+    public static String stripInvalidXmlCharacters(String input) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (XMLChar.isValid(c)) {
+                sb.append(c);
+            }
+        }
+
+        return sb.toString();
+    }
 
 }

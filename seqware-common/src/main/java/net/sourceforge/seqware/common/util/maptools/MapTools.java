@@ -335,7 +335,8 @@ public class MapTools {
         String[] lines = iniString.split("\n");
         for (String line : lines) {
             if (isLineMatchesKeyValue(line)) {
-                String[] kv = line.split("\\s*=\\s*");
+                // seqware-1911 allow for second = in value
+                String[] kv = line.split("\\s*=\\s*",2);
                 if (kv.length == 2) {
                     result.put(kv[0], kv[1]);
                 } else if (kv.length == 1){

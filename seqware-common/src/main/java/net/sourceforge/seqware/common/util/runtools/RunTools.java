@@ -81,6 +81,10 @@ public class RunTools {
         return (RunTools.startCommand(null, command));
     }
 
+    public static ReturnValue runCommand(Map<String, String> env, String[] command) {
+        return runCommand(env, command, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
+    
     /**
      * A simple command runner that captures the return value of the program. If
      * the command was OK it should (in most cases) return 0. This util assumes
@@ -93,9 +97,11 @@ public class RunTools {
      *
      * @param command an array of {@link java.lang.String} objects.
      * @param env a {@link java.util.Map} object.
+     * @param stdoutCapacity
+     * @param stderrCapacity
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public static ReturnValue runCommand(Map<String, String> env, String[] command) {
+    public static ReturnValue runCommand(Map<String, String> env, String[] command, int stdoutCapacity, int stderrCapacity) {
         ReturnValue ret = new ReturnValue();
 
         Process p = null;
@@ -127,17 +133,24 @@ public class RunTools {
             return ret;
         }
 
-        ret = waitAndGetReturn(p);
+        ret = waitAndGetReturn(p, stdoutCapacity, stderrCapacity);
         return ret;
+    }
+    
+    
+    public static ReturnValue waitAndGetReturn(Process p) {
+        return waitAndGetReturn(p, 0, 0);
     }
 
     /**
      * Wait on a process to finish, then parse information into return value
      *
      * @param p a {@link java.lang.Process} object.
+     * @param stdoutLineCapacity limit the number of lines stored or set to 0 to store everything
+     * @param stderrLineCapacity limit the number of lines stored or set to 0 to store everything
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public static ReturnValue waitAndGetReturn(Process p) {
+    public static ReturnValue waitAndGetReturn(Process p, int stdoutLineCapacity, int stderrLineCapacity) {
         ReturnValue ret = new ReturnValue();
 
         // Make sure we weren't passed a null process
@@ -147,8 +160,9 @@ public class RunTools {
 
         try {
             // Spawn reader threads to grab stdout and stderr
-            BufferedReaderThread stdOutThread = new BufferedReaderThread(p.getInputStream());
-            BufferedReaderThread stdErrThread = new BufferedReaderThread(p.getErrorStream());
+            
+            BufferedReaderThread stdOutThread = new BufferedReaderThread(p.getInputStream(), stdoutLineCapacity);
+            BufferedReaderThread stdErrThread = new BufferedReaderThread(p.getErrorStream(), stderrLineCapacity);
             stdOutThread.start();
             stdErrThread.start();
 

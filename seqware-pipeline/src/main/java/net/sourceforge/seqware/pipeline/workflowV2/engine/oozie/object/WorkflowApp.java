@@ -12,6 +12,7 @@ import java.util.Set;
 
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
@@ -34,11 +35,11 @@ public class WorkflowApp {
   public static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings().containsKey(BatchedOozieProvisionFileJob.OOZIE_BATCH_THRESHOLD)
                                 ? ConfigTools.getSettings().get(BatchedOozieProvisionFileJob.OOZIE_BATCH_THRESHOLD):"5");
 
-  private AbstractWorkflowDataModel wfdm;
+  private final AbstractWorkflowDataModel wfdm;
   /**
    * a list of all jobs in order
    */
-  private List<OozieJob> jobs;
+  private final List<OozieJob> jobs;
   /**
    * name of the last join job in a workflow
    */
@@ -47,13 +48,13 @@ public class WorkflowApp {
    * map of files that are attached directly to the workflow instead of to a specific job
    * used for constructing the graph
    */
-  private Map<SqwFile, OozieJob> fileJobMap;
-  private String uniqueWorkingDir;
-  private Path hdfsWorkDir;
-  private boolean useSge;
-  private File seqwareJar;
-  private String threadsSgeParamFormat;
-  private String maxMemorySgeParamFormat;
+  private final Map<SqwFile, OozieJob> fileJobMap;
+  private final String uniqueWorkingDir;
+  private final Path hdfsWorkDir;
+  private final boolean useSge;
+  private final File seqwareJar;
+  private final String threadsSgeParamFormat;
+  private final String maxMemorySgeParamFormat;
 
   public WorkflowApp(AbstractWorkflowDataModel wfdm, String nfsWorkDir, Path hdfsWorkDir, boolean useSge, File seqwareJar,
                      String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
@@ -246,6 +247,14 @@ public class WorkflowApp {
     this.setEndJob();
     // go through and 
     this.setAccessionFileRelations(oozieRootJob);
+    // go through and set stdout/stderr buffer sizes if they are not set by the workflow developer
+    if (wfdm.getConfigs().containsKey(ReservedIniKeys.SEQWARE_LINES_NUMBER.getKey())){
+      for(AbstractJob job : wfdm.getWorkflow().getJobs()){
+        if (job.getCommand().getOutputLineCapacity() == null){
+            job.getCommand().setOutputLineCapacity(Integer.valueOf(wfdm.getConfigs().get(ReservedIniKeys.SEQWARE_LINES_NUMBER.getKey())));
+        }
+      }
+    }
   }
 
   /**
