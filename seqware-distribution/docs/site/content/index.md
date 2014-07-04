@@ -16,7 +16,7 @@ SeqWare. In particular, we recommend new users begin with the three getting
 started guide found in the documentation section and linked to below.</p>
 
 <p>
-Developers can reach the GitHub site [here](https://github.com/SeqWare/seqware).
+Developers can reach the GitHub site "<a href="https://github.com/SeqWare/seqware">here</a>".
 </p>
 
 <table>
