@@ -61,8 +61,8 @@
         <res-auth>Container</res-auth>
     </resource-ref>
     
-    <taglib>
+    <jsp-config><taglib>
         <taglib-uri>http://seqware-portal/taglibs/tagutils</taglib-uri>
         <taglib-location>/WEB-INF/tld/tagutils.tld</taglib-location>
-    </taglib>
+    </taglib></jsp-config>
 </web-app>

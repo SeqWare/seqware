@@ -22,6 +22,10 @@ their types, and default values.  For example:
 	# files
 	manual_output=false
 
+	# Optional: This controls the default number of lines of stdout and stderr that jobs in a workflow will report as metadata
+	# Otherwise, the default in GenericCommandRunner will be used (currently, 10)
+	seqware-output-lines-number=20
+
 You access these variables in the Java workflow using the
 <tt>getProperty()</tt> method. When installing the workflow the ini file is
 parsed and extra metadata about each parameter is examined. This gives the
@@ -77,6 +81,17 @@ You can use <tt>s3://bucketname/</tt> or a local path as the prefix.
 
 <p class="warning"><strong>Note:</strong> While the above entries are required, it is STRONGLY suggested that workflow developers no longer rely on them to decide the output path of a provisioned file.  Instead we recommend explicitly providing in the ini file whatever paths you may require, possibly using the variables described below, and then assigning that path to the output file via <code>SqwFile.setOutputPath(String path)</code>.</p>
 
+#### Reserved INI Entries
+
+There are a number of entries that are used by SeqWare and should be avoided in your own workflows. They are:
+
+* parent_accessions
+* parent-accessions
+* parent_accession
+* workflow-run-accession
+* workflow_run_accession
+* metadata
+* workflow_bundle_dir
 
 ### INI Variables
 

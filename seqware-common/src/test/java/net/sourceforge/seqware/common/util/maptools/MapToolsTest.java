@@ -211,15 +211,15 @@ public class MapToolsTest {
     }
 
     private void testNormalValues(Map<String, Map<String, String>> hm) {
-        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("output_prefix").size() == 2 && hm.get("output_prefix").get("default_value").equals("./provisioned/"));
-        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("output_prefix").size() == 2 && hm.get("output_prefix").get("key").equals("output_prefix"));
-        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("output_dir").size() == 2 && hm.get("output_dir").get("default_value").equals("seqware-results"));
-        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("output_dir").size() == 2 && hm.get("output_dir").get("key").equals("output_dir"));
-        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("input_file").size() == 5 && hm.get("input_file").get("default_value").equals("${workflow_bundle_dir}/Workflow_Bundle_helloWorld/1.0-SNAPSHOT/data/input.txt"));
-        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("input_file").size() == 5 && hm.get("input_file").get("key").equals("input_file"));
-        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("input_file").size() == 5 && hm.get("input_file").get("file_meta_type").equals("text/plain"));
-        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("input_file").size() == 5 && hm.get("input_file").get("type").equals("file"));
-        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get("input_file").size() == 5 && hm.get("input_file").get("display").equals("F"));
+        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get(ReservedIniKeys.OUTPUT_PREFIX.getKey()).size() == 2 && hm.get(ReservedIniKeys.OUTPUT_PREFIX.getKey()).get("default_value").equals("./provisioned/"));
+        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get(ReservedIniKeys.OUTPUT_PREFIX.getKey()).size() == 2 && hm.get(ReservedIniKeys.OUTPUT_PREFIX.getKey()).get("key").equals(ReservedIniKeys.OUTPUT_PREFIX.getKey()));
+        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get(ReservedIniKeys.OUTPUT_DIR.getKey()).size() == 2 && hm.get(ReservedIniKeys.OUTPUT_DIR.getKey()).get("default_value").equals("seqware-results"));
+        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get(ReservedIniKeys.OUTPUT_DIR.getKey()).size() == 2 && hm.get(ReservedIniKeys.OUTPUT_DIR.getKey()).get("key").equals(ReservedIniKeys.OUTPUT_DIR.getKey()));
+        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get(ReservedIniKeys.INPUT_FILE.getKey()).size() == 5 && hm.get(ReservedIniKeys.INPUT_FILE.getKey()).get("default_value").equals("${workflow_bundle_dir}/Workflow_Bundle_helloWorld/1.0-SNAPSHOT/data/input.txt"));
+        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get(ReservedIniKeys.INPUT_FILE.getKey()).size() == 5 && hm.get(ReservedIniKeys.INPUT_FILE.getKey()).get("key").equals(ReservedIniKeys.INPUT_FILE.getKey()));
+        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get(ReservedIniKeys.INPUT_FILE.getKey()).size() == 5 && hm.get(ReservedIniKeys.INPUT_FILE.getKey()).get("file_meta_type").equals("text/plain"));
+        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get(ReservedIniKeys.INPUT_FILE.getKey()).size() == 5 && hm.get(ReservedIniKeys.INPUT_FILE.getKey()).get("type").equals("file"));
+        Assert.assertTrue("normal defaults for ini2RichMap failed", hm.get(ReservedIniKeys.INPUT_FILE.getKey()).size() == 5 && hm.get(ReservedIniKeys.INPUT_FILE.getKey()).get("display").equals("F"));
     }
 
     private StringBuffer createStringFromMap(Map<String, Map<String, String>> hm) {

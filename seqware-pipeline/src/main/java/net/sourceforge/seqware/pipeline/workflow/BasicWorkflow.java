@@ -22,6 +22,7 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
+import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowTools;
@@ -162,20 +163,29 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * workflows on a different host from where this command line tool is run but
      * requires an external process to launch workflows that have been scheduled.
      *
+     * @param workflowAccession
+     * @param workflowRunAccession
+     * @param iniFiles
+     * @param metadataWriteback
+     * @param parentAccessions
+     * @param parentsLinkedToWR
      * @param inputFiles the value of inputFiles
      * @param workflowEngine
+     * @param scheduledHost
+     * @param cmdLineOptions
+     * @param wait
      * @return 
      */
       public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession,
         ArrayList<String> iniFiles, boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait, List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
-    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
     Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
     WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
     scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, wait,
                      cmdLineOptions, scheduledHost, workflowEngine, inputFiles);
 
-    return (ret);
+    return localRet;
   }
 
     /**
@@ -255,8 +265,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
                             parentsLinkedToWR, wait, cmdLineOptions, inputFiles);
 
         } catch (Exception e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+          Log.error(e.getMessage(), e);
         }
 
         break;
@@ -286,9 +295,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
    */
   private ReturnValue runScheduledWorkflow(WorkflowInfo wi, String workflowRunAccession, boolean metadataWriteback,
                                            boolean wait) {
-
-    // the return value to use
-    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
     // get the workflow run
     WorkflowRun wr = this.metadata.getWorkflowRunWithWorkflow(workflowRunAccession);
@@ -337,10 +343,10 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     // at schedule time
     // ArrayList<String> parentsLinkedToWR = parseParentsLinkedToWR(map);
 
-    ret = runWorkflow(wi, workflowRunAccession, new ArrayList<String>(), map, metadataWriteback, parentAccessions,
+    ReturnValue localRet = runWorkflow(wi, workflowRunAccession, new ArrayList<String>(), map, metadataWriteback, parentAccessions,
                       new ArrayList<String>(), wait, new ArrayList<String>(), wr.getInputFileAccessions());
 
-    return (ret);
+    return localRet;
   }
 
     /**
@@ -357,10 +363,9 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     // keep this id handy
     int workflowRunId = 0;
     int workflowRunAccessionInt = 0;
-    int workflowAccession = 0;
 
     // the return value to use
-    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
     boolean first = true;
     StringBuilder iniFilesStr = new StringBuilder();
     for (String iniFile : iniFiles) {
@@ -380,9 +385,9 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     // ${workflow_bundle_dir} variable to be a real path (which
     // makes some of the calls below to replaceWBD redundant but harmless
     if (provisionBundleAndUpdateWorkflowInfo(wi).getExitStatus() != ReturnValue.SUCCESS) {
-      ret.setExitStatus(ReturnValue.FAILURE);
+      localRet.setExitStatus(ReturnValue.FAILURE);
       Log.error("Problem getting workflow bundle");
-      return (ret);
+      return (localRet);
     }
 
     // if we're doing metadata writeback will need to parameterize the
@@ -390,7 +395,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     if (metadataWriteback) {
 
       // need to figure out workflow_run_accession
-      workflowAccession = wi.getWorkflowAccession();
+      int workflowAccession = wi.getWorkflowAccession();
       // create the workflow_run row if it doesn't exist
       if (workflowRunAccession == null) {
         workflowRunId = this.metadata.add_workflow_run(workflowAccession);
@@ -406,7 +411,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         try {
           this.metadata.linkWorkflowRunAndParent(workflowRunId, Integer.parseInt(parentLinkedToWR));
         } catch (Exception e) {
-          Log.error(e.getMessage());
+          Log.error(e.getMessage(), e);
         }
       }
 
@@ -433,10 +438,10 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     try {
       dax = FileTools.createFileWithUniqueName(new File("/tmp"), "dax");
     } catch (IOException e) {
-      e.printStackTrace();
-      ret.setExitStatus(ReturnValue.FAILURE);
-      ret.setStderr("Can't write DAX file! " + e.getMessage());
-      return (ret);
+      Log.error(e.getMessage());
+      localRet.setExitStatus(ReturnValue.FAILURE);
+      localRet.setStderr("Can't write DAX file! " + e.getMessage());
+      return (localRet);
     }
 
     Map<String, String> map = this.prepareData(wi, workflowRunAccession, iniFiles, preParsedIni, metadataWriteback,
@@ -447,23 +452,17 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     ReturnValue daxReturn = this.generateDaxFile(wi, dax, iniFilesStr.toString(), map, cmdLineOptions);
 
     if (daxReturn.getExitStatus() != ReturnValue.SUCCESS) {
-      ret.setExitStatus(daxReturn.getExitStatus());
-      return (ret);
+      localRet.setExitStatus(daxReturn.getExitStatus());
+      return (localRet);
     }
-
-    // after running the daxGen.processTemplate above the map should be
-    // filled in with all the ini key/values
-    // save this and the DAX to the database
-    StringBuffer mapBuffer = new StringBuffer();
+    StringBuilder mapBuffer = new StringBuilder();
     for (String key : map.keySet()) {
       if (key != null && map.get(key.toString()) != null) {
         Log.stdout("  KEY: " + key + " VALUE: " + map.get(key.toString()).toString());
       }
-      mapBuffer.append(key + "=" + map.get(key) + "\n");
+      mapBuffer.append(key).append("=").append(map.get(key)).append("\n");
     }
-
-    // read the DAX into a string buffer
-    StringBuffer daxBuffer = new StringBuffer();
+    StringBuilder daxBuffer = new StringBuilder();
     try {
       BufferedReader daxReader = new BufferedReader(new FileReader(dax));
       String line = daxReader.readLine();
@@ -474,10 +473,10 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       }
       daxReader.close();
     } catch (Exception e) {
-      e.printStackTrace();
-      ret.setExitStatus(ReturnValue.FAILURE);
-      ret.setStderr("ERROR: Can't read DAX file! " + e.getMessage());
-      return (ret);
+      Log.error(e.getMessage(), e);
+      localRet.setExitStatus(ReturnValue.FAILURE);
+      localRet.setStderr("ERROR: Can't read DAX file! " + e.getMessage());
+      return (localRet);
     }
 
     // create the submission of the DAX to Pegasus
@@ -566,8 +565,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
                                        wi.getWorkflowDir(), daxBuffer.toString(), mapBuffer.toString(), wr.getHost(),
                                        watchedResult.getStderr(), watchedResult.getStdout(), wr.getWorkflowEngine(), wr.getInputFileAccessions());
         }
-        ret.setExitStatus(ReturnValue.FAILURE);
-        return (ret);
+        localRet.setExitStatus(ReturnValue.FAILURE);
+        return localRet;
       }
     }
 
@@ -575,11 +574,11 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       Log.error("ERROR: failure with running the pegasus command");
       // I previously saved this state to the DB so no need to do that
       // here
-      ret.setExitStatus(ReturnValue.FAILURE);
-      return (ret);
+      localRet.setExitStatus(ReturnValue.FAILURE);
+      return localRet;
     }
 
-    return (ret);
+    return localRet;
   }
 
   /**
@@ -607,37 +606,37 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
     // replace the workflow bundle dir in the file paths of ini files
     boolean first = true;
-    StringBuffer iniFilesStr = new StringBuffer();
+    StringBuilder iniFilesStr = new StringBuilder();
     for (String iniFile : iniFiles) {
       String newIniFiles = iniFile.replaceAll("\\$\\{workflow_bundle_dir\\}", wi.getWorkflowDir());
       if (first) {
         first = false;
         iniFilesStr.append(newIniFiles);
       } else {
-        iniFilesStr.append("," + newIniFiles);
+        iniFilesStr.append(",").append(newIniFiles);
       }
     }
 
-    map.put("workflow_bundle_dir", wi.getWorkflowDir());
-    int workflowAccession = 0;
-    StringBuffer parentAccessionsStr = new StringBuffer();
+    map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
+    //int workflowAccession = 0;
+    StringBuilder parentAccessionsStr = new StringBuilder();
 
     // starts with assumption of no metadata writeback
-    map.put("metadata", "no-metadata");
-    map.put("parent_accession", "0");
-    map.put("parent_accessions", "0");
+    map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
+    map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
+    map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
     // my new preferred variable name
-    map.put("parent-accessions", "0");
-    map.put("workflow_run_accession", "0");
+    map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
+    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
     // my new preferred variable name
-    map.put("workflow-run-accession", "0");
+    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
 
     // if we're doing metadata writeback will need to parameterize the
     // workflow correctly
     if (metadataWriteback) {
 
       // tells the workflow it should save its metadata
-      map.put("metadata", "metadata");
+      map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
 
       first = true;
 
@@ -648,35 +647,34 @@ public abstract class BasicWorkflow implements WorkflowEngine {
           first = false;
           parentAccessionsStr.append(id);
         } else {
-          parentAccessionsStr.append("," + id);
+          parentAccessionsStr.append(",").append(id);
         }
       }
 
       // check to make sure it contains something, save under various
       // names
       if (parentAccessionsStr.length() > 0) {
-        map.put("parent_accession", parentAccessionsStr.toString());
-        map.put("parent_accessions", parentAccessionsStr.toString());
+        map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
+        map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
         // my new preferred variable name
-        map.put("parent-accessions", parentAccessionsStr.toString());
+        map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
       }
 
       /* Load ini (thus ensuring it exists) prior to writing to the DB. */
-      String[] iniCompleteFilePaths = iniFilesStr.toString().split(",");
+      String[] iniCompleteFilePaths = iniFilesStr.toString().isEmpty() ? new String[]{} : iniFilesStr.toString().split(",");
       for (String currIniFile : iniCompleteFilePaths) {
         MapTools.ini2Map(currIniFile, map);
       }
       MapTools.cli2Map(cmdLineOptions.toArray(new String[0]), map);
-      // make a single string from the map
-      StringBuffer mapBuffer = new StringBuffer();
+      StringBuilder mapBuffer = new StringBuilder();
       for (String key : map.keySet()) {
         Log.info("KEY: " + key + " VALUE: " + map.get(key));
         // Log.error(key+"="+map.get(key));
-        mapBuffer.append(key + "=" + map.get(key) + "\n");
+        mapBuffer.append(key).append("=").append(map.get(key)).append("\n");
       }
 
       // need to figure out workflow_run_accession
-      workflowAccession = wi.getWorkflowAccession();
+      int workflowAccession = wi.getWorkflowAccession();
       // create the workflow_run row if it doesn't exist
       if (workflowRunAccession == null) {
         workflowRunId = this.metadata.add_workflow_run(workflowAccession);
@@ -685,9 +683,9 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       } else { // if the workflow_run row exists get the workflow_run_id
         workflowRunId = this.metadata.get_workflow_run_id(Integer.parseInt(workflowRunAccession));
       }
-      map.put("workflow_run_accession", workflowRunAccession);
+      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
       // my new preferred variable name
-      map.put("workflow-run-accession", workflowRunAccession);
+      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
       Log.stdout("Created workflow run with SWID: " + workflowRunAccession);
 
       // need to link all the parents to this workflow run accession
@@ -709,7 +707,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       ret.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
     }
 
-    return (ret);
+    return ret;
 
   }
 
@@ -760,7 +758,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
    */
   private ReturnValue provisionBundleAndUpdateWorkflowInfo(WorkflowInfo wi) {
 
-    ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
     // first, see if the workflow bundle dir is actually there, I'm assuming
     // if it is then I don't need to provision it
@@ -780,9 +778,9 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
       // if its null then something went wrong
       if (newWorkflowBundleDir == null) {
-        ret.setExitStatus(ReturnValue.FAILURE);
+        localRet.setExitStatus(ReturnValue.FAILURE);
         Log.error("Unable to provision the bundle from: " + permLoc);
-        return (ret);
+        return localRet;
       }
 
       // now update the variables to replace ${workflow_bundle_dir}
@@ -791,7 +789,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       wi.setTemplatePath(replaceWBD(wi.getTemplatePath(), newWorkflowBundleDir));
     }
 
-    return (ret);
+    return localRet;
   }
 
   /**
@@ -803,16 +801,16 @@ public abstract class BasicWorkflow implements WorkflowEngine {
   private String getAndProvisionBundle(String permLoc) {
     String result = null;
     Bundle bundle = new Bundle(this.metadata, this.config);
-    ReturnValue ret = null;
+    ReturnValue localRet;
     if (permLoc.startsWith("s3://")) {
-      ret = bundle.unpackageBundleFromS3(permLoc);
+      localRet = bundle.unpackageBundleFromS3(permLoc);
     } else {
-      ret = bundle.unpackageBundle(new File(permLoc));
+      localRet = bundle.unpackageBundle(new File(permLoc));
     }
-    if (ret != null) {
-      return (ret.getAttribute("outputDir"));
+    if (localRet != null) {
+      return localRet.getAttribute("outputDir");
     }
-    return (result);
+    return result;
   }
 
   /**
@@ -827,7 +825,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     HashMap<String, String> resultsDeDup = new HashMap<>();
 
     for (String key : map.keySet()) {
-      if ("parent_accession".equals(key) || "parent_accessions".equals(key) || "parent-accessions".equals(key)) {
+      if (ReservedIniKeys.PARENT_ACCESSION.getKey().equals(key) || ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey().equals(key) || ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey().equals(key)) {
         resultsDeDup.put(map.get(key), "null");
       }
     }
@@ -882,31 +880,31 @@ public abstract class BasicWorkflow implements WorkflowEngine {
       map.putAll(preParsedIni);
     }
     // update this in the map
-    map.put("workflow_bundle_dir", wi.getWorkflowDir());
+    map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
     // starts with assumption of no metadata writeback
     // GOTCHA: this is why you always need to specify the parentAccessions
     // array
-    map.put("metadata", "no-metadata");
-    map.put("parent_accession", "0");
-    map.put("parent_accessions", "0");
+    map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
+    map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
+    map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
     // my new preferred variable name
-    map.put("parent-accessions", "0");
-    map.put("workflow_run_accession", "0");
+    map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
+    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
     // my new preferred variable name
-    map.put("workflow-run-accession", "0");
+    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
     // if we're doing metadata writeback will need to parameterize the
     // workflow correctly
     // corrects the file paths for all the iniFiles
-    boolean first = true;
+    //boolean first = true;
 
     if (metadataWriteback) {
 
       // tells the workflow it should save its metadata
-      map.put("metadata", "metadata");
+      map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
 
       // figure out the unique list of parent accessions that were passed
       // in
-      first = true;
+      boolean first = true;
       Log.info("ARRAY SIZE: " + parentAccessions.size());
       HashMap<String, String> uniqParentAccessions = new HashMap<>();
       for (String id : parentAccessions) {
@@ -917,23 +915,23 @@ public abstract class BasicWorkflow implements WorkflowEngine {
           first = false;
           parentAccessionsStr.append(id);
         } else {
-          parentAccessionsStr.append("," + id);
+          parentAccessionsStr.append(",").append(id);
         }
       }
 
       // if this contains something override the value of "0"
       if (parentAccessionsStr.length() > 0) {
         Log.stdout("PARENT ACCESSIONS: " + parentAccessionsStr);
-        map.put("parent_accession", parentAccessionsStr.toString());
-        map.put("parent_accessions", parentAccessionsStr.toString());
+        map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
+        map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
         // my new preferred variable name
-        map.put("parent-accessions", parentAccessionsStr.toString());
+        map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
       }
 
       // need to figure out workflow_run_accession
-      map.put("workflow_run_accession", workflowRunAccession);
+      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
       // my new preferred variable name
-      map.put("workflow-run-accession", workflowRunAccession);
+      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
 
     }
     // done with metadata writeback variables

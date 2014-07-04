@@ -249,7 +249,7 @@ public class WorkflowPlugin extends Plugin {
     Log.info("EXTRA OPTIONS: " + nonOptions.size());
 
     // THE MAIN ACTION HAPPENS HERE
-    if (options.has("workflow-accession") && options.has("ini-files")) {
+    if (options.has("workflow-accession") /** && options.has("ini-files") */) {
 
       // then you're scheduling a workflow that has been installed
       if (options.has(SCHEDULE)) {
@@ -455,7 +455,7 @@ public class WorkflowPlugin extends Plugin {
     // launch all if accession not specified
     List<WorkflowRun> scheduledWorkflows = this.metadata.getWorkflowRunsByStatus(WorkflowRunStatus.submitted);
 
-    Log.stdout("Number of submitted workflows: " + scheduledWorkflows.size());
+    Log.stdoutWithTime("Number of submitted workflows: " + scheduledWorkflows.size());
 
     for (WorkflowRun wr : scheduledWorkflows) {
       Log.stdout("Working Run: " + wr.getSwAccession());

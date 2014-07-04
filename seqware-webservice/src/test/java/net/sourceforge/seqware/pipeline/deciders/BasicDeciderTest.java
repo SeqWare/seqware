@@ -44,6 +44,7 @@ import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.PluginTest;
 import org.apache.commons.io.FileUtils;
@@ -66,7 +67,7 @@ public class BasicDeciderTest extends PluginTest {
     
     private final List<String> fastq_gz = new ArrayList<>();
         
-    private BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+    private final BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
     
     @BeforeClass
     public static void beforeClass(){
@@ -462,7 +463,7 @@ public class BasicDeciderTest extends PluginTest {
 
     public class TestingDecider extends BasicDecider {
 
-        private Set<String> fileSet = new HashSet<>();
+        private final Set<String> fileSet = new HashSet<>();
         private int finalChecks = 0;
         private int launches = 0;
 
@@ -526,7 +527,7 @@ public class BasicDeciderTest extends PluginTest {
             Log.debug("INI FILE:" + commaSeparatedFilePaths);
 
             Map<String, String> iniFileMap = new TreeMap<>();
-            iniFileMap.put("input_file", commaSeparatedFilePaths);
+            iniFileMap.put(ReservedIniKeys.INPUT_FILE.getKey(), commaSeparatedFilePaths);
 
             return iniFileMap;
         }

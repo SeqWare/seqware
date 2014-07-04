@@ -34,6 +34,7 @@ import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 
 import org.apache.commons.lang.NotImplementedException;
 
@@ -89,16 +90,16 @@ public class WorkflowManager {
       }
     }
 
-    map.put("workflow_bundle_dir", wi.getWorkflowDir());
+    map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
     // starts with assumption of no metadata writeback
-    map.put("metadata", "no-metadata");
-    map.put("parent_accession", "0");
-    map.put("parent_accessions", "0");
+    map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
+    map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
+    map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
     // my new preferred variable name
-    map.put("parent-accessions", "0");
-    map.put("workflow_run_accession", "0");
+    map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
+    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
     // my new preferred variable name
-    map.put("workflow-run-accession", "0");
+    map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
     // have to pass in the cluster name
     // map.put("seqware_cluster", config.get("SW_CLUSTER"));
 
@@ -112,10 +113,10 @@ public class WorkflowManager {
         || parentsLinkedToWR.isEmpty()) {
         if (!noMetadata)
         {
-            map.put("metadata", "metadata");
-            map.put("workflow_run_accession", workflowRunAccession);
+            map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
+            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
             // my new preferred variable name
-            map.put("workflow-run-accession", workflowRunAccession);
+            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
         }
         else
         {
@@ -124,15 +125,15 @@ public class WorkflowManager {
       Log.info(ret.getStdout());
     } else {
       // tells the workflow it should save its metadata
-      map.put("metadata", "metadata");
-      map.put("parent_accession", parentAccessionsStr.toString());
-      map.put("parent_accessions", parentAccessionsStr.toString());
+      map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
+      map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
+      map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
       // my new preferred variable name
-      map.put("parent-accessions", parentAccessionsStr.toString());
+      map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
 
-      map.put("workflow_run_accession", workflowRunAccession);
+      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
       // my new preferred variable name
-      map.put("workflow-run-accession", workflowRunAccession);
+      map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
     }
 
     StringBuilder iniBuffer = createINI(map);
@@ -243,7 +244,7 @@ public class WorkflowManager {
 
           if (map.get(str) != null) {
             Log.info(str + " " + map.get(str));
-            if (str.equals("parent_accessions") || str.equals("parent_accession") || str.equals("parent-accessions")) {
+            if (str.equals(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey()) || str.equals(ReservedIniKeys.PARENT_ACCESSION.getKey()) || str.equals(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey())) {
               String[] pAcc = map.get(str).split(",");
               for (String parent : pAcc) {
                 WorkflowRunParam wrp = new WorkflowRunParam();
