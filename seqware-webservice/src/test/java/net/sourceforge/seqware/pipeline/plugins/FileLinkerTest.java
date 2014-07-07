@@ -21,8 +21,10 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
-import org.apache.commons.lang.StringUtils;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Runs the tests for the FileLinker

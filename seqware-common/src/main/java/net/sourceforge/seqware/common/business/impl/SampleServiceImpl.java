@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.dao.SampleDAO;
@@ -13,7 +12,6 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 
 /**

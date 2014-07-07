@@ -1,9 +1,7 @@
 package io.seqware.webservice.adapter;
 
 import java.util.Date;
-
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 

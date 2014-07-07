@@ -2,7 +2,6 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import net.sourceforge.seqware.common.business.ValidationReportService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
-
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;

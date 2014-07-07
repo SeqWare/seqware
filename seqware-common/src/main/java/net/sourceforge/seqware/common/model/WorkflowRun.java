@@ -8,9 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.LaneService;
 import net.sourceforge.seqware.common.business.ProcessingService;
@@ -22,7 +20,6 @@ import net.sourceforge.seqware.common.model.adapters.XmlizeXML;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
-
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

@@ -16,12 +16,12 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
-import org.junit.Assert;
 import net.sourceforge.seqware.common.model.lists.WorkflowRunList2;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import net.sourceforge.seqware.webservice.resources.tables.DatabaseResourceIDTest;
+import org.junit.Assert;
 import org.junit.Test;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;

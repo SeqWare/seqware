@@ -3,14 +3,12 @@ package net.sourceforge.seqware.common.dao.hibernate;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.WorkflowDAO;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;

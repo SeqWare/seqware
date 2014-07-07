@@ -441,7 +441,7 @@ div.b-col-1 .patternLeftBarPersonal ul {margin-top:0px;}
 .m-associated{display:inline-block; margin-left: 153px; top:-16px; width: 610px; position:relative;}
 
 /* ===========POPUP BROWSE============*/
-.b-popup-browse{ background:url(../i/bg/popup-browse-bg.png) no-repeat right top; padding:6px 0; float:left; width:198px; margin-top:}
+.b-popup-browse{ background:url(../i/bg/popup-browse-bg.png) no-repeat right top; padding:6px 0; float:left; width:198px}
 .b-popup-browse li{ float:left; display:inline;}
    .b-popup-browse li a{ display:block; width: 22px; height:20px; text-indent:-10000px;}
       .b-popup-browse li a.m-prev{ background:url(../i/btn/prev-btn.png); margin-left:13px;}

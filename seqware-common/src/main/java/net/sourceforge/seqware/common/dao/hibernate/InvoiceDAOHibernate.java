@@ -3,14 +3,12 @@ package net.sourceforge.seqware.common.dao.hibernate;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.InvoiceDAO;
+import net.sourceforge.seqware.common.model.Invoice;
 import net.sourceforge.seqware.common.model.InvoiceState;
 import net.sourceforge.seqware.common.model.Registration;
-import net.sourceforge.seqware.common.model.Invoice;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

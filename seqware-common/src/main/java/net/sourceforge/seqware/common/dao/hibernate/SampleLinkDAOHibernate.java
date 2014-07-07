@@ -1,11 +1,9 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.SampleLinkDAO;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleLink;
-
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**

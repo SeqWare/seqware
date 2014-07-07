@@ -16,9 +16,8 @@
  */
 package net.sourceforge.seqware.pipeline;
 
-import static org.junit.Assert.assertTrue;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
-
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**

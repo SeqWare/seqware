@@ -16,8 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
-import java.util.Comparator;
-
 public class TagValueUnit implements Comparable<TagValueUnit> {
 
     private String tag;

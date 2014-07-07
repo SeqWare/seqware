@@ -1,19 +1,17 @@
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import clojure.lang.RT;
+import clojure.lang.Symbol;
+import clojure.lang.Var;
 import java.io.IOException;
 import java.io.Writer;
-
+import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.MediaType;
-import org.restlet.representation.WriterRepresentation;
-
-import clojure.lang.RT;
-import clojure.lang.Symbol;
-import clojure.lang.Var;
-import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.restlet.data.Status;
+import org.restlet.representation.WriterRepresentation;
 import org.restlet.resource.ResourceException;
 
 public class FileProvenanceResource extends BasicRestlet {

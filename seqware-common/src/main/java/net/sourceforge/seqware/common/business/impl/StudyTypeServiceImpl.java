@@ -1,12 +1,10 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.StudyTypeService;
 import net.sourceforge.seqware.common.dao.StudyTypeDAO;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.StudyType;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

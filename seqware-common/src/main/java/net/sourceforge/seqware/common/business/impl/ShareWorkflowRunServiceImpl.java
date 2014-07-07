@@ -2,11 +2,9 @@ package net.sourceforge.seqware.common.business.impl;
 
 import java.util.Date;
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.ShareWorkflowRunService;
 import net.sourceforge.seqware.common.dao.ShareWorkflowRunDAO;
 import net.sourceforge.seqware.common.model.ShareWorkflowRun;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

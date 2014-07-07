@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common.business;
 
 import java.util.List;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.dao.ExperimentDAO;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.File;

@@ -1,10 +1,10 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.StudyDAO;
 import net.sourceforge.seqware.common.hibernate.PropagateOwnership;
 import net.sourceforge.seqware.common.model.Experiment;
@@ -12,9 +12,7 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Study;
-import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;

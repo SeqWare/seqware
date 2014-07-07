@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.pipeline.tools;
 
 import java.io.File;
-
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.util.filetools.FileTools;

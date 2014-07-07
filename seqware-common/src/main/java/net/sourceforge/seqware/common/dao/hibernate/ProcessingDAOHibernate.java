@@ -4,13 +4,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.ProcessingDAO;
 import net.sourceforge.seqware.common.model.File;
-import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.hibernate.Query;
 import org.slf4j.Logger;

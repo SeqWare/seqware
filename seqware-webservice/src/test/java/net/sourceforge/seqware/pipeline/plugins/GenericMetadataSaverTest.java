@@ -16,8 +16,14 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -26,7 +32,11 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.rules.TestRule;
 import org.junit.rules.TestWatcher;

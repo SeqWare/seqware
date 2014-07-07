@@ -1,17 +1,10 @@
 package net.sourceforge.seqware.common.util.xmltools;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import javax.xml.bind.JAXBException;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.ext.xml.DomRepresentation;
@@ -45,75 +38,6 @@ public class XmlTools {
 
         document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(string.getBytes()));
         return document;
-    }
-
-    // public static boolean validateXMLFile(String filename) {
-    //
-    // return true;
-    // }
-
-    public static boolean prettyPrint(Document doc, OutputStream out) {
-
-        TransformerFactory tfactory = TransformerFactory.newInstance();
-        Transformer serializer;
-        try {
-            serializer = tfactory.newTransformer();
-            // Setup indenting to "pretty print"
-            serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-            serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-
-            serializer.transform(new DOMSource(doc), new StreamResult(out));
-        } catch (TransformerException e) {
-            // this is fatal, just dump the stack and throw a runtime exception
-            logger.error("Fatal error", e);
-
-            throw new RuntimeException(e);
-        }
-
-        return true;
-    }
-
-    /**
-     * <p>
-     * prettyPrint.
-     * </p>
-     * 
-     * @param filename
-     *            a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    public static boolean prettyPrint(String filename) {
-        logger.info("start");
-        // Parse input file
-        DocumentBuilderFactory dFactory = DocumentBuilderFactory.newInstance();
-        Document inputDOM;
-        try {
-            DocumentBuilder parser = dFactory.newDocumentBuilder();
-            inputDOM = parser.parse(new File(filename));
-            return prettyPrint(inputDOM, new FileOutputStream(filename + "prettyprint"));
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    public static String prettyPrintString(Document doc) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        prettyPrint(doc, out);
-        return new String(out.toByteArray());
-    }
-
-    public static String prettyPrintString(String xml) {
-        try {
-            Document doc = XmlTools.getDocument(xml);
-            return prettyPrintString(doc);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**

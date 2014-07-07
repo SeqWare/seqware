@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.dao.LaneDAO;
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;

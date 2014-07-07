@@ -18,6 +18,7 @@ package io.seqware.webservice.controller;
 
 import com.sun.jersey.api.ConflictException;
 import com.sun.jersey.api.NotFoundException;
+import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.webservice.generated.controller.WorkflowRunFacadeREST;
 import io.seqware.webservice.generated.model.File;
 import io.seqware.webservice.generated.model.Ius;
@@ -35,21 +36,14 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import io.seqware.common.model.WorkflowRunStatus;
 
 /**
  * 

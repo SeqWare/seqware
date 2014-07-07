@@ -1,14 +1,22 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import net.sourceforge.seqware.common.dao.WorkflowRunDAO;
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.NullBeanUtils;
-
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.hibernate.*;
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
