@@ -387,7 +387,7 @@ public class WorkflowLauncher extends Plugin {
      * @throws NumberFormatException
      */
     public ReturnValue launchSingleWorkflow(boolean readFromDB) {
-        boolean newLauncherRequired = true;
+        boolean newLauncherRequired;
         Integer workflowAccession = null;
         try {
             if (readFromDB) {
@@ -563,7 +563,7 @@ public class WorkflowLauncher extends Plugin {
             }
         }
 
-        WorkflowRun wr = null;
+        WorkflowRun wr;
 
         // need to figure out workflow_run_accession
         // need to link all the parents to this workflow run accession
