@@ -163,21 +163,44 @@ public class BasicDeciderTest extends PluginTest {
     }
     
     @Test
-    public void testForceAll() {
+    public void testFinalCheckFailure() {
         // swap out the decider
-        instance = new HaltingDecider();
+        instance = new AlwaysBlockFinalCheckDecider();
         //instance = new BasicDecider();
         instance.setMetadata(metadata);
-        
-        // a halting decider should launch twice after denying one launch, but when force-run-all is used, it goes back to 3
-        String[] params = {"--all", "--wf-accession", "6685", "--parent-wf-accessions", "4767", "--force-run-all", "--test"};
+
+        // a AlwaysBlockFinalCheckDecider decider should never launch
+        String[] params = {"--all", "--wf-accession", "6685", "--parent-wf-accessions", "4767", "--ignore-previous-runs", "--test"};
         launchAndCaptureOutput(params);
         // we need to override handleGroupByAttribute in order to count the number of expected files
         TestingDecider decider = (TestingDecider) instance;
         // we expect to see 133 files in total
         Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 3);
         // we expect to never launch with the halting decider 
-        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 3);
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 0);
+
+        // swap back the decider
+        instance = new TestingDecider();
+        //instance = new BasicDecider();
+        instance.setMetadata(metadata);
+    }
+    
+    @Test
+    public void testIgnorePreviousRuns() {
+        // swap out the decider
+        instance = new HaltingDecider();
+        //instance = new BasicDecider();
+        instance.setMetadata(metadata);
+        
+        // a halting decider should launch twice after denying one launch
+        String[] params = {"--all", "--wf-accession", "6685", "--parent-wf-accessions", "4767", "--ignore-previous-runs", "--test"};
+        launchAndCaptureOutput(params);
+        // we need to override handleGroupByAttribute in order to count the number of expected files
+        TestingDecider decider = (TestingDecider) instance;
+        // we expect to see 133 files in total
+        Assert.assertTrue("output does not contain the correct number of files, we saw " + decider.getFileCount(), decider.getFileCount() == 3);
+        // we expect to never launch with the halting decider 
+        Assert.assertTrue("output does not contain the correct number of launches, we saw " + decider.getLaunches(), decider.getLaunches() == 2);
         
         // swap back the decider
         instance = new TestingDecider();
@@ -365,6 +388,14 @@ public class BasicDeciderTest extends PluginTest {
         instance = new TestingDecider();
         //instance = new BasicDecider();
         instance.setMetadata(metadata);
+    }
+    
+    public class AlwaysBlockFinalCheckDecider extends TestingDecider {
+        @Override
+        protected ReturnValue doFinalCheck(String commaSeparatedFilePaths, String commaSeparatedParentAccessions) {
+            return new ReturnValue(ReturnValue.FAILURE);
+        }
+
     }
     
     public class HaltingDecider extends TestingDecider{
