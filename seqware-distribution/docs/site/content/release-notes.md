@@ -9,6 +9,22 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+
+## 1.0.17 (2014-07-07)
+
+This release contains changes in order to address mainly issues for workflow/decider developers.
+ 
+### Improvement
+* [SEQWARE-1883] - Provision file module optimization
+* [SEQWARE-1921] - Add sorting of attributes in file provenance report
+
+### Task
+* [SEQWARE-1907] - Add seqware script and archetype catalog via github release API
+* [SEQWARE-1916] - Investigate issue with null parent in sample_hierarchy via JPA 
+* [SEQWARE-1918] - BasicDecider --rerun-max cannot be set as 0
+* [SEQWARE-1928] - BasicDecider: change --force-run-all to --ignore-previous-runs and fix finalCheck behaviour
+
+
 ## 1.0.16 (2014-06-17)
 
 This release contains changes in order to address two main areas in addition to various usability improvements. First, the Java workflow API and the GCR have been improved in order to control of the amount of stdout and stderr that is stored in the metadb. Second, various ini issues having to do with the installation and launching of workflows have been addressed. 
