@@ -67,7 +67,6 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
     private Integer expSpotDesignReadsPerSpot;
     private Set<Processing> processings = new TreeSet<>();
     private Set<ExperimentAttribute> experimentAttributes = new TreeSet<>();
-    private Set<ExperimentLink> experimentLinks = new TreeSet<>();
     // these are non-persisted fields used by the platform connection
     private Integer platformInt;
     private SortedSet<Sample> samples;
@@ -1225,29 +1224,6 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      */
     public void setExperimentAttributes(Set<ExperimentAttribute> experimentAttributes) {
         this.experimentAttributes = experimentAttributes;
-    }
-
-    /**
-     * <p>
-     * Getter for the field <code>experimentLinks</code>.
-     * </p>
-     * 
-     * @return a {@link java.util.Set} object.
-     */
-    public Set<ExperimentLink> getExperimentLinks() {
-        return experimentLinks;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>experimentLinks</code>.
-     * </p>
-     * 
-     * @param experimentLinks
-     *            a {@link java.util.Set} object.
-     */
-    public void setExperimentLinks(Set<ExperimentLink> experimentLinks) {
-        this.experimentLinks = experimentLinks;
     }
 
     @Override

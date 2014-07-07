@@ -41,10 +41,8 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileType;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
-import net.sourceforge.seqware.common.model.IUSLink;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.LaneAttribute;
-import net.sourceforge.seqware.common.model.LaneLink;
 import net.sourceforge.seqware.common.model.LibrarySelection;
 import net.sourceforge.seqware.common.model.LibrarySource;
 import net.sourceforge.seqware.common.model.LibraryStrategy;
@@ -55,12 +53,10 @@ import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SampleAttribute;
-import net.sourceforge.seqware.common.model.SampleLink;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunWizardDTO;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.StudyAttribute;
-import net.sourceforge.seqware.common.model.StudyLink;
 import net.sourceforge.seqware.common.model.StudyType;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowParam;
@@ -123,10 +119,8 @@ public class JaxbObject<T> {
                         FileType.class,
                         IUS.class,
                         IUSAttribute.class,
-                        IUSLink.class,
                         Lane.class,
                         LaneAttribute.class,
-                        LaneLink.class,
                         LibrarySelection.class,
                         LibrarySource.class,
                         LibraryStrategy.class,
@@ -140,12 +134,11 @@ public class JaxbObject<T> {
                         Registration.class,
                         Sample.class,
                         SampleAttribute.class,
-                        SampleLink.class,
                         SequencerRun.class,
                         SequencerRunWizardDTO.class,
                         // ShareExperiment.class, ShareFile.class, ShareLane.class,
                         // ShareProcessing.class, ShareSample.class, ShareStudy.class, ShareWorkflowRun.class,
-                        Study.class, StudyAttribute.class, StudyLink.class, StudyType.class, Workflow.class, WorkflowParam.class,
+                        Study.class, StudyAttribute.class, StudyType.class, Workflow.class, WorkflowParam.class,
                         WorkflowParamValue.class, WorkflowRun.class, WorkflowRunParam.class, ExperimentList.class,
                         ExperimentLibraryDesignList.class, ExperimentSpotDesignList.class, ExperimentSpotDesignReadSpecList.class,
                         FileList.class, IUSList.class, LaneList.class, LibrarySelectionList.class, LibrarySourceList.class,

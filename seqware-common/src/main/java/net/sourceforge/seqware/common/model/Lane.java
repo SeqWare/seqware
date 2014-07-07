@@ -50,7 +50,6 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     private Integer swAccession;
     private SortedSet<IUS> ius = new TreeSet<>();
     private Set<WorkflowRun> workflowRuns = new TreeSet<>();
-    private Set<LaneLink> laneLinks = new TreeSet<>();
     private Set<LaneAttribute> laneAttributes = new TreeSet<>();
     private Boolean isSelected = false;
     private Boolean isHasFile = false;
@@ -858,29 +857,6 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      */
     public void setWorkflowRuns(Set<WorkflowRun> workflowRuns) {
         this.workflowRuns = workflowRuns;
-    }
-
-    /**
-     * <p>
-     * Getter for the field <code>laneLinks</code>.
-     * </p>
-     * 
-     * @return a {@link java.util.Set} object.
-     */
-    public Set<LaneLink> getLaneLinks() {
-        return laneLinks;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>laneLinks</code>.
-     * </p>
-     * 
-     * @param laneLinks
-     *            a {@link java.util.Set} object.
-     */
-    public void setLaneLinks(Set<LaneLink> laneLinks) {
-        this.laneLinks = laneLinks;
     }
 
     /**
