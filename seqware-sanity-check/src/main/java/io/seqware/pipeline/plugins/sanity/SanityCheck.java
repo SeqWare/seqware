@@ -23,7 +23,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * A database validation tool for your SeqWare metadb
- *
+ * 
  * @author dyuen ProviderFor(PluginInterface.class)
  * @author Raunaq Suri
  * @version $Id: $Id
@@ -38,7 +38,8 @@ public final class SanityCheck extends Plugin {
 
     /**
      * <p>
-     * Constructor for HelloWorld.</p>
+     * Constructor for HelloWorld.
+     * </p>
      */
     public SanityCheck() {
         super();
@@ -47,12 +48,14 @@ public final class SanityCheck extends Plugin {
         parser.acceptsAll(Arrays.asList("tutorial", "t"), "Testing by running the tutorials as well");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#init()
      */
     /**
      * {@inheritDoc}
-     *
+     * 
      * @return
      */
     @Override
@@ -67,13 +70,12 @@ public final class SanityCheck extends Plugin {
 
                 HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
                 // do a defensive check to see if we have a direct database connection available
-                if (settings.get("SW_DB_SERVER") == null
-                        || settings.get("SW_DB") == null
-                        || settings.get("SW_DB_USER") == null
+                if (settings.get("SW_DB_SERVER") == null || settings.get("SW_DB") == null || settings.get("SW_DB_USER") == null
                         || settings.get("SW_DB_PASS") == null) {
                     hasDBSettings = false;
                     ReturnValue ret = new ReturnValue();
-                    System.out.println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
+                    System.out
+                            .println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
                     ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
                     return (ret);
                 }
@@ -86,12 +88,14 @@ public final class SanityCheck extends Plugin {
         return new ReturnValue();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_test()
      */
     /**
      * {@inheritDoc}
-     *
+     * 
      * @return
      */
     @Override
@@ -100,12 +104,14 @@ public final class SanityCheck extends Plugin {
         return new ReturnValue();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#do_run()
      */
     /**
      * {@inheritDoc}
-     *
+     * 
      * @return
      */
     @Override
@@ -119,14 +125,15 @@ public final class SanityCheck extends Plugin {
             System.out.println("--tutorial, t \t Include this parameter to test by going through the seqware tutorials ");
             ret.setExitStatus(ReturnValue.SUCCESS);
         } else {
-            if(options.has("tutorial") || options.has("t")){
+            if (options.has("tutorial") || options.has("t")) {
                 tutorialMode = true;
             }
             if (options.has("master") || options.has("m")) {
                 masterMode = true;
             }
 
-            Collection<SanityCheckPluginInterface> plugins = (Collection<SanityCheckPluginInterface>) Lookup.getDefault().lookupAll(SanityCheckPluginInterface.class);
+            Collection<SanityCheckPluginInterface> plugins = (Collection<SanityCheckPluginInterface>) Lookup.getDefault().lookupAll(
+                    SanityCheckPluginInterface.class);
             MetadataDB metadataDB = null;
             try {
                 metadataDB = DBAccess.get();
@@ -143,14 +150,14 @@ public final class SanityCheck extends Plugin {
             Comparator<SanityCheckPluginInterface> comp = new Comparator<SanityCheckPluginInterface>() {
                 @Override
                 public int compare(SanityCheckPluginInterface o1, SanityCheckPluginInterface o2) {
-                    Integer n1 = new Integer(o1.getPriority());
-                    Integer n2 = new Integer(o2.getPriority());
+                    Integer n1 = o1.getPriority();
+                    Integer n2 = o2.getPriority();
                     return n1.compareTo(n2);
                 }
             };
             Collections.sort(pluginList, comp);
 
-            //removes the tests that don't need to be ran
+            // removes the tests that don't need to be ran
             removeChecks(pluginList);
 
             List<Boolean> passedTests = new ArrayList<>();
@@ -178,9 +185,9 @@ public final class SanityCheck extends Plugin {
                     return ret;
                 }
             }
-            //Iterates through the array and sees if all the tests passed
+            // Iterates through the array and sees if all the tests passed
             for (Boolean b : passedTests) {
-                if (b.booleanValue() == false) {
+                if (b == false) {
                     System.err.println("One of the tests has failed. Exiting with an exit status of 1");
                     System.exit(1);
                 }
@@ -192,8 +199,9 @@ public final class SanityCheck extends Plugin {
 
     /**
      * Remove all checks that are not necessary
-     *
-     * @param pluginList the list of plugins
+     * 
+     * @param pluginList
+     *            the list of plugins
      */
     private void removeChecks(List<SanityCheckPluginInterface> pluginList) {
         for (int i = pluginList.size() - 1; i > -1; i--) {
@@ -213,8 +221,9 @@ public final class SanityCheck extends Plugin {
 
     /**
      * <p>
-     * get_description.</p>
-     *
+     * get_description.
+     * </p>
+     * 
      * @return a {@link java.lang.String} object.
      */
     @Override
@@ -229,7 +238,7 @@ public final class SanityCheck extends Plugin {
         mp.setParams(Arrays.asList(args));
         mp.parse_parameters();
         ReturnValue do_run = mp.do_run();
-        if(do_run.getExitStatus() == ReturnValue.FAILURE){
+        if (do_run.getExitStatus() == ReturnValue.FAILURE) {
             System.err.println("One of the tests has failed. Exiting with a non-zero exit status");
             System.exit(1);
         }

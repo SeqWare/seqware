@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.business;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.dao.ShareProcessingDAO;
 import net.sourceforge.seqware.common.model.ShareProcessing;
 

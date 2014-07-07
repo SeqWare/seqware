@@ -2,7 +2,6 @@ package net.sourceforge.seqware.common.business;
 
 import java.util.List;
 import java.util.Map;
-
 import net.sourceforge.seqware.common.model.Sample;
 
 /**

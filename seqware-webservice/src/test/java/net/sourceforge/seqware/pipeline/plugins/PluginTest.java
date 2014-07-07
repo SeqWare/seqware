@@ -20,7 +20,9 @@ import java.util.Arrays;
 import net.sourceforge.seqware.common.metadata.MetadataWSTest;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 
 /**
  * 

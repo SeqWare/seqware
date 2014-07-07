@@ -1,12 +1,9 @@
 package net.sourceforge.seqware.common.business.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import io.seqware.common.model.WorkflowRunStatus;
 import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
-
 import net.sourceforge.seqware.common.BaseUnit;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.LaneService;
@@ -16,8 +13,8 @@ import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import io.seqware.common.model.WorkflowRunStatus;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 
 /**

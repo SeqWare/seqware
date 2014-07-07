@@ -1,10 +1,9 @@
 package net.sourceforge.seqware.pipeline;
 
 import java.io.File;
-
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.lock.LockingFileTools;
 import net.sourceforge.seqware.common.util.processtools.ProcessTools;
-import net.sourceforge.seqware.common.util.Log;
 
 /**
  * <p>

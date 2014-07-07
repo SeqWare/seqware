@@ -1,12 +1,12 @@
 package net.sourceforge.seqware.common.business.impl;
 
+import io.seqware.common.model.ProcessingStatus;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.business.ProcessingService;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.dao.ProcessingDAO;
@@ -15,13 +15,11 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
-import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

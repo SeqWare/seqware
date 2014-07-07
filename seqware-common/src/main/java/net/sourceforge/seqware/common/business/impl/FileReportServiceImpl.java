@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.FileReportService;
 import net.sourceforge.seqware.common.dao.FileReportDAO;
 import net.sourceforge.seqware.common.model.FileReportRow;

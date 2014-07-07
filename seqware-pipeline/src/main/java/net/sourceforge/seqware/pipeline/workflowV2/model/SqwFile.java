@@ -3,7 +3,6 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

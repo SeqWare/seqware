@@ -21,10 +21,10 @@ package net.sourceforge.seqware.pipeline.module;
 import net.sourceforge.seqware.common.util.Log;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * User: xiao Date: 7/25/11 Time: 11:09 PM

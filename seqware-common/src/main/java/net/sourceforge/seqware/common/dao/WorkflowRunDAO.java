@@ -2,8 +2,10 @@ package net.sourceforge.seqware.common.dao;
 
 import java.util.List;
 import java.util.Set;
-
-import net.sourceforge.seqware.common.model.*;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.model.Workflow;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 
 /**
  * <p>

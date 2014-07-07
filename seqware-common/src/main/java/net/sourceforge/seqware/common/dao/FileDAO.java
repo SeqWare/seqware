@@ -2,10 +2,8 @@ package net.sourceforge.seqware.common.dao;
 
 import java.io.IOException;
 import java.util.List;
-
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
-
 import org.springframework.web.multipart.MultipartFile;
 
 /**

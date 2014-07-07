@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
 import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.dao.ExperimentDAO;
 import net.sourceforge.seqware.common.dao.FileDAO;
@@ -12,7 +11,6 @@ import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Study;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -7,13 +7,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import joptsimple.OptionException;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-
 import org.openide.util.lookup.ServiceProvider;
 
 /**

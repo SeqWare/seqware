@@ -1,19 +1,17 @@
 package net.sourceforge.seqware.pipeline.workflow;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.metadata.Metadata;
-import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
-import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
@@ -31,12 +29,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
     protected ReturnValue ret = new ReturnValue();
     protected Metadata metadata = null;
     protected Map<String, String> config = null;
-    protected String outputDir = null;
-    protected ArrayList<File> filesArray = new ArrayList<>();
-    protected Bundle bundleUtil = null;
-    protected int totalSteps = 0;
-    protected int currStep = 0;
-    protected int percentage = 0;
 
     /**
      * <p>
@@ -52,26 +44,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         super();
         this.metadata = metadata;
         this.config = config;
-        this.bundleUtil = new Bundle(metadata, config);
-    }
-
-    /**
-     * {@inheritDoc}
-     * 
-     * This method just needs a sw_accession value from the workflow table and an ini file(s) in order to schedule a workflow. All needed
-     * info is pulled from the workflow table which was populated when the workflow was installed. Keep in mind this does not actually
-     * trigger anything, it just schedules the workflow to run by adding to the workflow_run table. This lets you run workflows on a
-     * different host from where this command line tool is run but requires an external process to launch workflows that have been
-     * scheduled.
-     * 
-     */
-    @Override
-    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles,
-            boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait,
-            List<String> cmdLineOptions) {
-
-        return scheduleInstalledBundle(workflowAccession, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions,
-                parentsLinkedToWR, wait, cmdLineOptions, null, null, null);
     }
 
     // Yes, adding workflowEngine as a param makes no sense given that this class *is* a
@@ -215,7 +187,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
             if (workflowRunAccession == null) {
                 workflowRunId = this.metadata.add_workflow_run(workflowAccession);
                 int workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
-                workflowRunAccession = new Integer(workflowRunAccessionInt).toString();
+                workflowRunAccession = Integer.toString(workflowRunAccessionInt);
             } else { // if the workflow_run row exists get the workflow_run_id
                 workflowRunId = this.metadata.get_workflow_run_id(Integer.parseInt(workflowRunAccession));
             }
@@ -380,93 +352,4 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         return (results);
     }
 
-    /**
-     * <p>
-     * prepareData.
-     * </p>
-     * 
-     * @param wi
-     *            a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
-     * @param workflowRunAccession
-     *            a {@link java.lang.String} object.
-     * @param iniFiles
-     *            a {@link java.util.ArrayList} object.
-     * @param preParsedIni
-     *            a {@link java.util.Map} object.
-     * @param metadataWriteback
-     *            a boolean.
-     * @param parentAccessions
-     *            a {@link java.util.ArrayList} object.
-     * @return a {@link java.util.Map} object.
-     */
-    protected Map<String, String> prepareData(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
-            Map<String, String> preParsedIni, boolean metadataWriteback, ArrayList<String> parentAccessions) {
-        Map<String, String> map = new HashMap<>();
-        StringBuilder parentAccessionsStr = new StringBuilder();
-        // merge what came into this program to the map object
-        if (preParsedIni != null && !preParsedIni.isEmpty()) {
-            map.putAll(preParsedIni);
-        }
-        // update this in the map
-        map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
-        // starts with assumption of no metadata writeback
-        // GOTCHA: this is why you always need to specify the parentAccessions
-        // array
-        map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
-        map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), "0");
-        map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), "0");
-        // my new preferred variable name
-        map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), "0");
-        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), "0");
-        // my new preferred variable name
-        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
-        // if we're doing metadata writeback will need to parameterize the
-        // workflow correctly
-        // corrects the file paths for all the iniFiles
-        // boolean first = true;
-
-        if (metadataWriteback) {
-
-            // tells the workflow it should save its metadata
-            map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
-
-            // figure out the unique list of parent accessions that were passed
-            // in
-            boolean first = true;
-            Log.info("ARRAY SIZE: " + parentAccessions.size());
-            HashMap<String, String> uniqParentAccessions = new HashMap<>();
-            for (String id : parentAccessions) {
-                uniqParentAccessions.put(id, "null");
-            }
-            for (String id : uniqParentAccessions.keySet()) {
-                if (first) {
-                    first = false;
-                    parentAccessionsStr.append(id);
-                } else {
-                    parentAccessionsStr.append(",").append(id);
-                }
-            }
-
-            // if this contains something override the value of "0"
-            if (parentAccessionsStr.length() > 0) {
-                Log.stdout("PARENT ACCESSIONS: " + parentAccessionsStr);
-                map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
-                map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-                // my new preferred variable name
-                map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-            }
-
-            // need to figure out workflow_run_accession
-            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
-            // my new preferred variable name
-            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
-
-        }
-        // done with metadata writeback variables
-
-        // have to pass in the cluster name
-        map.put("seqware_cluster", config.get("SW_CLUSTER"));
-
-        return map;
-    }
 }

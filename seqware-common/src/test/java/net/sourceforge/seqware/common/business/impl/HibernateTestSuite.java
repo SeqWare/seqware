@@ -19,7 +19,6 @@ package net.sourceforge.seqware.common.business.impl;
 import junit.framework.TestCase;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 import net.sourceforge.seqware.common.util.testtools.JndiDatasourceCreator;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

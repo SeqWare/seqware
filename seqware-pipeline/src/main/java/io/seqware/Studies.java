@@ -3,7 +3,6 @@ package io.seqware;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.model.Study;

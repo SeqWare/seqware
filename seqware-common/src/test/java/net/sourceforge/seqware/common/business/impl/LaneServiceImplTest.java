@@ -1,17 +1,14 @@
 package net.sourceforge.seqware.common.business.impl;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.BaseUnit;
 import net.sourceforge.seqware.common.business.LaneService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**

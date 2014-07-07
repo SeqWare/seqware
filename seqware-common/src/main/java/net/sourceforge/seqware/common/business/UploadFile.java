@@ -1,9 +1,7 @@
 package net.sourceforge.seqware.common.business;
 
 import java.io.Serializable;
-
 import net.sourceforge.seqware.common.model.FileType;
-
 import org.springframework.web.multipart.MultipartFile;
 
 /**

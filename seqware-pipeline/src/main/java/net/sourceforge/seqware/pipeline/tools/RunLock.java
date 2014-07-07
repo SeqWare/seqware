@@ -1,8 +1,8 @@
 package net.sourceforge.seqware.pipeline.tools;
 
-import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
+import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
 /**

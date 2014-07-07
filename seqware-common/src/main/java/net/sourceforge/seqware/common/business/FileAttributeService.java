@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.business;
 
 import java.util.Set;
-
 import net.sourceforge.seqware.common.model.FileAttribute;
 
 /**

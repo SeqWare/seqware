@@ -16,14 +16,9 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
-import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
-import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
-
 import java.util.ArrayList;
 import java.util.SortedSet;
-
 import javax.xml.bind.JAXBException;
-
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
 import net.sourceforge.seqware.common.business.WorkflowService;
@@ -35,12 +30,17 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
-
 import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
-import org.restlet.data.*;
+import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import org.restlet.data.Method;
+import org.restlet.data.Parameter;
+import org.restlet.data.Status;
 
 /**
  * <p>

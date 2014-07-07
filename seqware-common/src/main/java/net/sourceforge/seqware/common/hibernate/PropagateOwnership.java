@@ -16,8 +16,19 @@
  */
 package net.sourceforge.seqware.common.hibernate;
 
-import java.util.*;
-import net.sourceforge.seqware.common.model.*;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Stack;
+import java.util.TreeSet;
+import net.sourceforge.seqware.common.model.Experiment;
+import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.IUS;
+import net.sourceforge.seqware.common.model.Processing;
+import net.sourceforge.seqware.common.model.Registration;
+import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.model.SequencerRun;
+import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
@@ -29,7 +40,7 @@ import net.sourceforge.seqware.common.util.Log;
  */
 public class PropagateOwnership {
 
-    private StringBuilder out = new StringBuilder();
+    private final StringBuilder out = new StringBuilder();
 
     /**
      * <p>

@@ -1,7 +1,6 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.SampleReportService;
 import net.sourceforge.seqware.common.dao.SampleReportDAO;
 import net.sourceforge.seqware.common.model.IUS;

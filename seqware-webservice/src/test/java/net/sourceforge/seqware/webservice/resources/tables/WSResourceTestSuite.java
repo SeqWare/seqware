@@ -18,7 +18,6 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 import net.sourceforge.seqware.common.util.testtools.JndiDatasourceCreator;
-
 import org.hibernate.SessionFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
