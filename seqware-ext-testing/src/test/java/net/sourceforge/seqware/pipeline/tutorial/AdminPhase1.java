@@ -67,7 +67,7 @@ public class AdminPhase1 {
             File targetDir = new File(workflowDir, "target");
             File bundleDir = new File(targetDir, "Workflow_Bundle_" + workflowName + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION);
 
-            String packageCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + packageDir + " -p "
+            String packageCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + packageDir + " -p "
                     + bundleDir.getAbsolutePath();
             String packageOutput = ITUtility.runSeqWareJar(packageCommand, ReturnValue.SUCCESS, null);
             Log.info(packageOutput);
@@ -102,7 +102,7 @@ public class AdminPhase1 {
     }
 
     protected String installBundle(File zippedBundle) throws IOException {
-        String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -b " + zippedBundle + " -i";
+        String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -b " + zippedBundle + " -i";
         String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS, null);
         return installOutput;
     }
