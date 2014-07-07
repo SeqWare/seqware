@@ -9,7 +9,7 @@ fi
 VERSION=$1
 TOKEN=$2
 
-git tag $VERSION
+git hf hotfix finish $VERSION
 git push --tags origin
 mvn release:perform -DconnectionUrl=scm:git:git@github.com:SeqWare/seqware.git -Dtag=$VERSION
 
