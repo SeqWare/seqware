@@ -667,49 +667,12 @@
             <many-to-many class="Processing" column="processing_id" unique="true"/>
         </set>
 
-        <set name="studyLinks" inverse="true" lazy="true" table="study_link" fetch="select">
-            <key>
-                <column name="study_id" not-null="true" />
-            </key>
-
-            <one-to-many class="StudyLink" />
-        </set>
-
         <set name="studyAttributes" inverse="true" lazy="true" table="study_attribute" fetch="select" cascade="all-delete-orphan">
             <key column="study_id" />
             <one-to-many class="StudyAttribute" />
         </set>
 
 
-    </class>
-
-  <!-- ********** **************** StudyLink **************** ********** -->
-    <class name="StudyLink" table="study_link" schema="public">
-        <id name="studyLinkId" type="int">
-            <column name="study_link_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="study" class="Study" fetch="select">
-            <column name="study_id" not-null="true" />
-        </many-to-one>
-
-        <property name="label" type="string">
-            <column name="label" not-null="true" />
-        </property>
-
-        <property name="url" type="string">
-            <column name="url" not-null="true" />
-        </property>
-
-        <property name="db" type="string">
-            <column name="db" />
-        </property>
-
-        <property name="id" type="string">
-            <column name="id" />
-        </property>
     </class>
 
   <!-- ********** **************** StudyAttribute **************** ********** -->
@@ -868,13 +831,6 @@
             <one-to-many class="Sample"/>
         </set>
 
-        <set name="experimentLinks" inverse="true" lazy="true" table="experiment_link" fetch="select">
-            <key>
-                <column name="experiment_id" not-null="true" />
-            </key>
-            <one-to-many class="ExperimentLink" />
-        </set>
-
         <set name="experimentAttributes" inverse="true" lazy="true" table="experiment_attribute" fetch="select" cascade="all-delete-orphan">
             <key column="experiment_id" />
             <one-to-many class="ExperimentAttribute" />
@@ -913,36 +869,6 @@
             <column name="units" />
         </property>
     </class>
-
-  <!-- ********** **************** ExperimentLink **************** ********** -->
-    <class name="ExperimentLink" table="experiment_link" schema="public">
-        <id name="experimentLinkId" type="int">
-            <column name="experiment_link_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="experiment" class="Experiment" cascade="all" fetch="select">
-            <column name="experiment_id" not-null="true" />
-        </many-to-one>
-
-        <property name="label" type="string">
-            <column name="label" />
-        </property>
-
-        <property name="url" type="string">
-            <column name="url" />
-        </property>
-
-        <property name="db" type="string">
-            <column name="db" />
-        </property>
-
-        <property name="id" type="string">
-            <column name="id" />
-        </property>
-    </class>
-
 
 
   <!-- ********** **************** ExperimentLibraryDesign **************** ********** -->
@@ -1207,14 +1133,6 @@
             <one-to-many class="SampleAttribute" />
         </set>
 
-        <set name="sampleLinks" inverse="true" lazy="true" table="sample_link" fetch="select">
-            <key>
-                <column name="sample_id" not-null="true" />
-            </key>
-
-            <one-to-many class="SampleLink" />
-        </set>
-
     </class>
 
   <!-- ********* End SRA ********* -->
@@ -1244,36 +1162,6 @@
             <column name="units" />
         </property>
     </class>
-
-  <!-- ********* **************** Sample_Link **************** ********* -->
-    <class name="SampleLink" table="sample_link" schema="public">
-        <id name="sampleLinkId" type="int">
-            <column name="sample_link_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="sample" class="Sample" fetch="select">
-            <column name="sample_id" not-null="true" />
-        </many-to-one>
-
-        <property name="label" type="string">
-            <column name="label" not-null="true" />
-        </property>
-
-        <property name="url" type="string">
-            <column name="url" not-null="true" />
-        </property>
-
-        <property name="db" type="string">
-            <column name="db" />
-        </property>
-
-        <property name="id" type="string">
-            <column name="id" />
-        </property>
-    </class>
-
 
 
   <!-- ********* **************** Registration **************** ********* -->
@@ -1737,13 +1625,6 @@
             <many-to-many class="WorkflowRun" column="workflow_run_id" unique="true"/>
         </set>
 
-        <set name="laneLinks" inverse="true" lazy="true" table="lane_link" fetch="select">
-            <key>
-                <column name="lane_id" not-null="true" />
-            </key>
-            <one-to-many class="LaneLink" />
-        </set>
-
         <set name="laneAttributes" inverse="true" lazy="true" table="lane_attribute" fetch="select" cascade="all-delete-orphan">
             <key column="lane_id" />
             <one-to-many class="LaneAttribute" />
@@ -1803,36 +1684,6 @@
 
         <property name="units" type="string">
             <column name="units" />
-        </property>
-    </class>
-
-
-  <!-- ************* **************** LaneLink **************** ************* -->
-    <class name="LaneLink" table="lane_link" schema="public">
-        <id name="laneLinkId" type="int">
-            <column name="lane_link_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="lane" class="Lane" fetch="select">
-            <column name="lane_id" not-null="true" />
-        </many-to-one>
-
-        <property name="label" type="string">
-            <column name="label" not-null="true" />
-        </property>
-
-        <property name="url" type="string">
-            <column name="url" not-null="true" />
-        </property>
-
-        <property name="db" type="string">
-            <column name="db" />
-        </property>
-
-        <property name="id" type="string">
-            <column name="id" />
         </property>
     </class>
 
@@ -1910,14 +1761,6 @@
             <one-to-many class="IUSAttribute" />
         </set>
 
-        <set name="iusLinks" inverse="true" lazy="true" table="ius_link" fetch="select">
-            <key>
-                <column name="ius_id" not-null="true" />
-            </key>
-            <one-to-many class="IUSLink" />
-        </set>
-
-
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
 
     </class>
@@ -1946,35 +1789,6 @@
 
         <property name="units" type="string">
             <column name="units" />
-        </property>
-    </class>
-
-  <!-- ************* **************** IUSLink **************** ************* -->
-    <class name="IUSLink" table="ius_link" schema="public">
-        <id name="iusLinkId" type="int">
-            <column name="ius_link_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="ius" class="IUS" fetch="select">
-            <column name="ius_id" not-null="true" />
-        </many-to-one>
-
-        <property name="label" type="string">
-            <column name="label" not-null="true" />
-        </property>
-
-        <property name="url" type="string">
-            <column name="url" not-null="true" />
-        </property>
-
-        <property name="db" type="string">
-            <column name="db" />
-        </property>
-
-        <property name="id" type="string">
-            <column name="id" />
         </property>
     </class>
 
@@ -2185,176 +1999,6 @@
             <column name="units" />
         </property>
     </class>
-
-
-  <!-- ********** **************** Share_Sample **************** ********** -->
-    <class name="ShareSample" table="share_sample" schema="public">
-        <id name="shareSampleId" type="int">
-            <column name="share_sample_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="sample" class="Sample" fetch="select">
-            <column name="sample_id" not-null="true" />
-        </many-to-one>
-
-        <many-to-one name="registration" class="Registration" fetch="select">
-            <column name="registration_id" not-null="true" />
-        </many-to-one>
-
-        <property name="active" type="java.lang.Boolean">
-            <column name="active" />
-        </property>
-
-        <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
-        </property>
-
-        <property name="createTstmp" type="timestamp">
-            <column name="create_tstmp" length="29" not-null="true" />
-        </property>
-
-        <property name="updateTstmp" type="timestamp">
-            <column name="update_tstmp" length="29" />
-        </property>
-    </class>
-
-
-  <!-- ********** **************** Share_Processing **************** ********** -->
-    <class name="ShareProcessing" table="share_processing" schema="public">
-        <id name="shareProcessingId" type="int">
-            <column name="share_processing_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="processing" class="Processing" fetch="select">
-            <column name="processing_id" not-null="true" />
-        </many-to-one>
-
-        <many-to-one name="registration" class="Registration" fetch="select">
-            <column name="registration_id" not-null="true" />
-        </many-to-one>
-
-        <property name="active" type="java.lang.Boolean">
-            <column name="active" />
-        </property>
-
-        <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
-        </property>
-
-        <property name="createTstmp" type="timestamp">
-            <column name="create_tstmp" length="29" not-null="true" />
-        </property>
-
-        <property name="updateTstmp" type="timestamp">
-            <column name="update_tstmp" length="29" />
-        </property>
-    </class>
-
-
-  <!-- ********** **************** Share_Lane **************** ********** -->
-    <class name="ShareLane" table="share_lane" schema="public">
-        <id name="shareLaneId" type="int">
-            <column name="share_lane_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="lane" class="Lane" fetch="select">
-            <column name="lane_id" not-null="true" />
-        </many-to-one>
-
-        <many-to-one name="registration" class="Registration" fetch="select">
-            <column name="registration_id" not-null="true" />
-        </many-to-one>
-
-        <property name="active" type="java.lang.Boolean">
-            <column name="active" />
-        </property>
-
-        <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
-        </property>
-
-        <property name="createTstmp" type="timestamp">
-            <column name="create_tstmp" length="29" not-null="true" />
-        </property>
-
-        <property name="updateTstmp" type="timestamp">
-            <column name="update_tstmp" length="29" />
-        </property>
-    </class>
-
-
-  <!-- ********** **************** Share_Experiment **************** ********** -->
-    <class name="ShareExperiment" table="share_experiment" schema="public">
-        <id name="shareExperimentId" type="int">
-            <column name="share_experiment_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="experiment" class="Experiment" fetch="select">
-            <column name="experiment_id" not-null="true" />
-        </many-to-one>
-
-        <many-to-one name="registration" class="Registration" fetch="select">
-            <column name="registration_id" not-null="true" />
-        </many-to-one>
-
-        <property name="active" type="java.lang.Boolean">
-            <column name="active" />
-        </property>
-
-        <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
-        </property>
-
-        <property name="createTstmp" type="timestamp">
-            <column name="create_tstmp" length="29" not-null="true" />
-        </property>
-
-        <property name="updateTstmp" type="timestamp">
-            <column name="update_tstmp" length="29" />
-        </property>
-    </class>
-
-  <!-- ********** **************** Share_File **************** ********** -->
-    <class name="ShareFile" table="share_file" schema="public">
-        <id name="shareFileId" type="int">
-            <column name="share_file_id" />
-
-            <generator class="assigned" />
-        </id>
-
-        <many-to-one name="file" class="File" fetch="select">
-            <column name="file_id" not-null="true" />
-        </many-to-one>
-
-        <many-to-one name="registration" class="Registration" fetch="select">
-            <column name="registration_id" not-null="true" />
-        </many-to-one>
-
-        <property name="active" type="java.lang.Boolean">
-            <column name="active" />
-        </property>
-
-        <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
-        </property>
-
-        <property name="createTstmp" type="timestamp">
-            <column name="create_tstmp" length="29" not-null="true" />
-        </property>
-
-        <property name="updateTstmp" type="timestamp">
-            <column name="update_tstmp" length="29" />
-        </property>
-    </class>
-
 
   <!-- ********** **************** Processing_Studies **************** ********** -->
     <class name="ProcessingStudies" table="processing_studies" schema="public">
