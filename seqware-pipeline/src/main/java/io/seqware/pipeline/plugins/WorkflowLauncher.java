@@ -9,7 +9,7 @@
  * --parent-accessions $parent_accessions --ini-files $temp_file --wait &
  *
  */
-package net.sourceforge.seqware.pipeline.plugin;
+package io.seqware.pipeline.plugins;
 
 import io.seqware.WorkflowRuns;
 import io.seqware.common.model.WorkflowRunStatus;
@@ -27,6 +27,8 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.pipeline.plugin.Plugin;
+import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.tools.RunLock;
 import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 import net.sourceforge.seqware.pipeline.workflow.Workflow;
@@ -45,7 +47,7 @@ import org.openide.util.lookup.ServiceProvider;
  * @author boconnor
  */
 @ServiceProvider(service = PluginInterface.class)
-public class WorkflowPlugin extends Plugin {
+public class WorkflowLauncher extends Plugin {
 
     public static final String FORCE_HOST = "force-host";
     public static final String HOST = "host";
@@ -60,7 +62,7 @@ public class WorkflowPlugin extends Plugin {
     protected String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
     private String hostname;
 
-    public WorkflowPlugin() {
+    public WorkflowLauncher() {
         super();
         /*
          * You should specify --workflow --version and --bundle or --workflow-accession since the latter will use the database to find all
@@ -247,7 +249,7 @@ public class WorkflowPlugin extends Plugin {
             }
         }
 
-        Set<Integer> inputFiles = WorkflowPlugin.collectInputFiles(options, metadata);
+        Set<Integer> inputFiles = WorkflowLauncher.collectInputFiles(options, metadata);
         if (options.has(INPUT_FILES) && (inputFiles == null || inputFiles.isEmpty())) {
             Log.error("Error parsing provided input files");
             ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
@@ -478,7 +480,7 @@ public class WorkflowPlugin extends Plugin {
                     throw new RuntimeException("SeqWare no longer supports running Pegasus bundles");
                 } else {
                     Log.stdout("Launching via new launcher: " + wr.getSwAccession());
-                    WorkflowPlugin.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession(),
+                    WorkflowLauncher.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession(),
                             wr.getWorkflowEngine());
                 }
 
@@ -527,7 +529,7 @@ public class WorkflowPlugin extends Plugin {
         Log.info("constructed dataModel");
 
         // set up workflow engine
-        AbstractWorkflowEngine engine = WorkflowPlugin.getWorkflowEngine(dataModel, config);
+        AbstractWorkflowEngine engine = WorkflowLauncher.getWorkflowEngine(dataModel, config);
 
         engine.prepareWorkflow(dataModel);
         if (options.has("no-run")) {
