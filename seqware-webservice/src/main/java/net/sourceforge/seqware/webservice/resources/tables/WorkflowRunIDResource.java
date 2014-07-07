@@ -41,7 +41,7 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.model.WorkflowRunParam;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowManager;
+import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.apache.commons.lang.ArrayUtils;
@@ -269,7 +269,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
                     }
                     map.put(lineSplit[0], lineSplit.length > 1 ? lineSplit[1] : "");
                 }
-                SortedSet<WorkflowRunParam> createWorkflowRunParameters = WorkflowManager.createWorkflowRunParameters(map);
+                SortedSet<WorkflowRunParam> createWorkflowRunParameters = MapTools.createWorkflowRunParameters(map);
                 // looks like the WorkflowManager code does not set workflow run
                 for (WorkflowRunParam p : createWorkflowRunParameters) {
                     p.setWorkflowRun(wr);
