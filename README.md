@@ -1,4 +1,6 @@
 [![DOI](https://zenodo.org/badge/4360/SeqWare/seqware.png)](http://dx.doi.org/10.5281/zenodo.10549)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.10785.png)](http://dx.doi.org/10.5281/zenodo.10785)
+
 
 ## Introduction 
 
