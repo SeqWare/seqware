@@ -35,30 +35,32 @@ The decider from which all other deciders came
 
 | Command-line option | Description |
 |--------------------|--------------|
-|--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. |
+|--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. |
 |--cf, --check-file-exists|Optional: only launch on the file if the file exists|
 |--check-wf-accessions|The comma-separated, no spaces, workflow accessions of the workflow that perform the same function (e.g. older versions). Any files that have been processed with these workflows will be skipped.|
+|--force-run-all|Forces the decider to run all matches regardless of whether they've been run before or not|
 |--group-by|Optional: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA. One of LANE_SWA or IUS_SWA.|
 |--ho, --host|Used only in combination with --schedule to schedule onto a specific host. If not provided, the default is the local host|
-|--ignore-previous-runs|Allows the decider to run all matches regardless of whether they've been run before or not|
 |--ignore-skip-flag|Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.|
-|--ius-SWID|ius-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --ius-SWID|
-|--lane-SWID|lane-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --lane-SWID|
+|--ius-SWID|ius-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --ius-SWID|
+|--lane-SWID|lane-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --lane-SWID|
 |--launch-max|The maximum number of jobs to launch at once.|
 |--meta-types|The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.|
 |--no-meta-db, --no-metadata|Optional: a flag that prevents metadata writeback (which is done by default) by the Decider and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.|
-|--organism|organism. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --organism|
+|--organism|organism. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --organism|
 |--parent-wf-accessions|The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.|
-|--processing-SWID|processing-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --processing-SWID|
+|--processing-SWID|processing-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --processing-SWID|
+|--processing-status|processing-status. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --processing-status|
 |--rerun-max|The maximum number of times to re-launch a workflowrun if failed.|
-|--root-sample-name|root-sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --root-sample-name|
+|--root-sample-name|root-sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --root-sample-name|
 |--run|Run this workflow now. This is the default behaviour. See also: --schedule|
-|--sample-name|sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --sample-name|
+|--sample-name|sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --sample-name|
 |--schedule|Schedule this workflow to be run rather than running it immediately. See also: --run|
-|--sequencer-run-name|sequencer-run-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --sequencer-run-name|
-|--study-name|study-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --study-name|
+|--sequencer-run-name|sequencer-run-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --sequencer-run-name|
+|--study-name|study-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --study-name|
 |--test|Testing mode. Prints the INI files to standard out and does not submit the workflow.|
 |--wf-accession|The workflow accession of the workflow|
+|--workflow-run-status|workflow-run-status. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --workflow-run-status|
 
 
 ##  BatchMetadataInjection
@@ -104,7 +106,6 @@ A plugin that lets you create, test, and install workflow bundles.
 |--list-params, --list-workflow-params|Optional: List the parameters for a given workflow and version. You need to supply a workflow accession and you need a database/webservice enabled in your .seqware/settings for this option to work.|
 |--m, --metadata|Specify the path to the metadata.xml file.|
 |--p, --path-to-package|Optional: When combined with a bundle zip file specified via --bundle this option specifies an input directory to zip to create a bundle output file.|
-|--t, --test|Optional: This will trigger the test setup in the metadata.xml within this bundle.|
 |--v, --validate|Optional: Run a light basic validation on this bundle.|
 |--version, --workflow-version|The workflow version to be used. This must be used in conjunction with a version and bundle. Will restrict action to this workflow and version if specified.|
 |--w, --workflow|The name of the workflow to be used. This must be used in conjunction with a version and bundle. Will restrict action to this workflow and version if specified.|
@@ -158,16 +159,18 @@ Generates a tab-delimited report of all output files (and their relationships an
 
 | Command-line option | Description |
 |--------------------|--------------|
-|--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. |
-|--ius-SWID|ius-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --ius-SWID|
-|--lane-SWID|lane-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --lane-SWID|
-|--organism|organism. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --organism|
+|--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. |
+|--ius-SWID|ius-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --ius-SWID|
+|--lane-SWID|lane-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --lane-SWID|
+|--organism|organism. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --organism|
 |--out|The file into which the report will be written.|
-|--processing-SWID|processing-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --processing-SWID|
-|--root-sample-name|root-sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --root-sample-name|
-|--sample-name|sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --sample-name|
-|--sequencer-run-name|sequencer-run-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --sequencer-run-name|
-|--study-name|study-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, processing-SWID]  or all is required. Specify multiple names by repeating --study-name|
+|--processing-SWID|processing-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --processing-SWID|
+|--processing-status|processing-status. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --processing-status|
+|--root-sample-name|root-sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --root-sample-name|
+|--sample-name|sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --sample-name|
+|--sequencer-run-name|sequencer-run-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --sequencer-run-name|
+|--study-name|study-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --study-name|
+|--workflow-run-status|workflow-run-status. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --workflow-run-status|
 
 
 ##  HelloWorld
@@ -232,38 +235,6 @@ This plugin will take in a sw_accession of a processing, and translate the hiera
 |--parent-accession|The SWID of the processing|
 
 
-##  SequencerRunReporter
-net.sourceforge.seqware.pipeline.plugins.SequencerRunReporter
-Prints a tab-delimited file describing the sequencer run, lane, sample, and algorithms run on every IUS in the database. For more information, see see http://seqware.github.com/docs/20-sequencer-run-reporter/
-
-| Command-line option | Description |
-|--------------------|--------------|
-|--output, --output-filename|Name of the output tab-delimited file.|
-
-
-##  SymLinkFileReporter
-net.sourceforge.seqware.pipeline.plugins.SymLinkFileReporter
-Create a nested tree structure of all of the output files from a particular sample, or all of the samples in a study by using the SymLinkFileReporter plugin. This plugin also creates a CSV file with all of the accompanying information for every file. For more information, see see http://seqware.github.com/docs/21-study-reporter/
-
-| Command-line option | Description |
-|--------------------|--------------|
-|--dump-all|Optional: Dumps all of the studies in the database to one file.|
-|--duplicates|Optional: Allow duplications at the file path level|
-|--f, --file-type|Optional: The file type to filter on. Only this type will be linked. Default is all files. Permissible file metatypes can found on our website under 'Module Conventions'|
-|--human|Optional: will print output in expanded human friendly format|
-|--l, --link|Optional: make hard links (P) or symlinks (s). Default is symlinks.|
-|--no-links|Optional: Create only the CSV file, not the symlinked directories.|
-|--output-filename|Optional: Name of the output CSV file (without the extension)|
-|--prod-format|Optional: print the directories in prod format|
-|--sample|Make symlinks for a sample|
-|--sequencer-run|Make symlinks for a sequencerRun|
-|--show-failed-and-running|Show all of the files regardless of the workflow run status. Default shows only successful runs.|
-|--show-status|Show the workflow run status in the output CSV.|
-|--stdout|Prints to standard out instead of to a file|
-|--study|Make symlinks for a study|
-|--w, --workflow-accession|Optional: List all workflow runs with this workflow accession|
-
-
 ##  WorkflowLauncher
 net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher
 A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.
@@ -288,7 +259,7 @@ A plugin that lets you launch workflow bundles once you have installed them via 
 |--w, --workflow|The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.|
 |--wa, --workflow-accession|Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.|
 |--wait|Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.|
-|--workflow-engine|Optional: Specifies a workflow engine, one of: pegasus, oozie, oozie-sge. Defaults to oozie.|
+|--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge. Defaults to oozie.|
 |--workflow-run-accession, --wra|Optional: The sw_accession of an existing workflow_run that should be used. This row is pre-created when another job schedules a workflow run by partially populating a workflow_run row and setting the status to 'scheduled'. If this is not specified then a new workflow_run row will be created. Specify this in addition to a workflow-accession.|
 
 
@@ -316,7 +287,7 @@ A plugin that lets you launch workflow bundles once you have installed them via 
 |--w, --workflow|The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.|
 |--wa, --workflow-accession|Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.|
 |--wait|Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.|
-|--workflow-engine|Optional: Specifies a workflow engine, one of: pegasus, oozie, oozie-sge. Defaults to oozie.|
+|--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge. Defaults to oozie.|
 |--workflow-run-accession, --wra|Optional: The sw_accession of an existing workflow_run that should be used. This row is pre-created when another job schedules a workflow run by partially populating a workflow_run row and setting the status to 'scheduled'. If this is not specified then a new workflow_run row will be created. Specify this in addition to a workflow-accession.|
 
 
@@ -355,7 +326,6 @@ This plugin lets you monitor the status of running workflows and updates the met
 |--------------------|--------------|
 |--cf, --check-failed|Optional: if specified, workflow runs that have previously failed will be re-checked.|
 |--fh, --force-host|Optional: if specified, workflow runs scheduled to this specified host will be checked even if this is not the current host (a dangerous option).|
-|--s, --status-cmd|Optional: the Pegasus status command, if you specify this option the command will be run, potentially displaying the summarized/parsed errors, but the database will not be updated.|
 |--threads-in-thread-pool, --tp|Optional: this will determine the number of threads to run with. Default: 1|
 |--wa, --workflow-accession|Optional: this will cause the program to only check the status of workflow runs that are this type of workflow.|
 |--workflow-run-accession, --wra|Optional: this will cause the program to only check the status of workflow run(s). For multiple runs, comma-separate with no spaces|
