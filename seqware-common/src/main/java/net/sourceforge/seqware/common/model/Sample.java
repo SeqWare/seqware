@@ -87,7 +87,6 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
     });
     private Set<Sample> children = new TreeSet<>();
     private Set<SampleAttribute> sampleAttributes = new TreeSet<>();
-    private Set<SampleLink> sampleLinks = new TreeSet<>();
     // non-persisted field to store organism_id
     private Integer organismId;
     final Logger logger = LoggerFactory.getLogger(Sample.class);
@@ -1022,29 +1021,6 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      */
     public void setSampleAttributes(Set<SampleAttribute> sampleAttributes) {
         this.sampleAttributes = sampleAttributes;
-    }
-
-    /**
-     * <p>
-     * Getter for the field <code>sampleLinks</code>.
-     * </p>
-     * 
-     * @return a {@link java.util.Set} object.
-     */
-    public Set<SampleLink> getSampleLinks() {
-        return sampleLinks;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>sampleLinks</code>.
-     * </p>
-     * 
-     * @param sampleLinks
-     *            a {@link java.util.Set} object.
-     */
-    public void setSampleLinks(Set<SampleLink> sampleLinks) {
-        this.sampleLinks = sampleLinks;
     }
 
     /**
