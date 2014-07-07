@@ -23,7 +23,7 @@ import org.junit.Test;
  * 
  * @author dyuen
  */
-public class BasicDeciderTest {
+public class BasicDeciderConditionsTest {
 
     @Test
     public void testPositiveRerunConditions() {
