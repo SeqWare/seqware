@@ -19,6 +19,7 @@ package net.sourceforge.seqware.pipeline.deciders;
 import com.google.common.collect.ImmutableList;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.pipeline.plugins.WorkflowLauncher;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -61,7 +62,6 @@ import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
 import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher;
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import net.sourceforge.seqware.pipeline.tools.SetOperations;
@@ -530,7 +530,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             return rerun;
         }
         // special case, when rerun max is 0, we still want to launch even if there are 0 failures
-        if (failures.isEmpty() && this.rerunMax == 0){
+        if (failures.isEmpty() && this.rerunMax == 0) {
             return rerun;
         }
         if (failures.size() >= this.rerunMax) {
