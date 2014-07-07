@@ -26,6 +26,5 @@ curl -u $TOKEN:x-oauth-basic -X POST --data-binary @seqware-pipeline/target/arch
 
 # if the following dies with a merge error, run git mergetool -t kdiff3
 git checkout develop
-git merge hotfix/$VERSION
 git push
-#git push origin --delete release/$VERSION
+git push origin --delete hotfix/$VERSION
