@@ -22,7 +22,7 @@ import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
-import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
+import io.seqware.pipeline.plugins.WorkflowLauncher;
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility.HumanProvenanceFilters;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
@@ -354,9 +354,9 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --engine <type>            The engine that will process the workflow run.");
-            out("                             May be one of: " + WorkflowPlugin.ENGINES_LIST);
+            out("                             May be one of: " + WorkflowLauncher.ENGINES_LIST);
             out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-            out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
+            out("                             or '" + WorkflowLauncher.DEFAULT_ENGINE + "' if not specified.");
             out("  --ini <ini-file>           An ini file to configure the workflow run.");
             out("                             Repeat this parameter to provide multiple files.");
             out("                             Defaults to the value of the 'config' node in metadata.xml.");
@@ -388,12 +388,11 @@ public class Main {
 
             String[] runParams;
             if (engine == null) {
-                runParams = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait",
-                        "--bundle", dir, "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata" };
+                runParams = new String[] { "--plugin", "io.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
+                        "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata" };
             } else {
-                runParams = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait",
-                        "--bundle", dir, "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata",
-                        "--workflow-engine", engine };
+                runParams = new String[] { "--plugin", "io.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait", "--bundle", dir,
+                        "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--workflow-engine", engine };
             }
             String[] addAll = ArrayUtils.addAll(runParams, overrideParams.toArray(new String[overrideParams.size()]));
             run(addAll);
@@ -428,9 +427,9 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --engine <type>     The engine that will process the workflow run.");
-            out("                      May be one of: " + WorkflowPlugin.ENGINES_LIST);
+            out("                      May be one of: " + WorkflowLauncher.ENGINES_LIST);
             out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-            out("                      or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
+            out("                      or '" + WorkflowLauncher.DEFAULT_ENGINE + "' if not specified.");
             out("  --ini <ini-file>    An ini file to configure the workflow run");
             out("                      Repeat this parameter to provide multiple files");
             out("                      Defaults to the value of the 'config' node in metadata.xml");
@@ -1082,9 +1081,9 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --engine <type>            The engine that will process the workflow run.");
-            out("                             May be one of: " + WorkflowPlugin.ENGINES_LIST);
+            out("                             May be one of: " + WorkflowLauncher.ENGINES_LIST);
             out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-            out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
+            out("                             or '" + WorkflowLauncher.DEFAULT_ENGINE + "' if not specified.");
             out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
             out("                             Repeat this parameter to provide multiple parents");
             out("  --override <key=value>     Override specific parameters from the workflow.ini");
