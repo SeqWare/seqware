@@ -9,7 +9,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
@@ -19,7 +18,6 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.BashJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.JobBatch;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
-
 import org.apache.hadoop.fs.Path;
 import org.jdom.Element;
 

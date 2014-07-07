@@ -6,14 +6,12 @@ package net.sourceforge.seqware.pipeline.plugins;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.runner.Runner;
-import net.sourceforge.seqware.common.util.Log;
-
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 

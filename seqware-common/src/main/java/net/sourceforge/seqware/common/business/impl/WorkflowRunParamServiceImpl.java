@@ -2,11 +2,9 @@ package net.sourceforge.seqware.common.business.impl;
 
 import java.util.List;
 import net.sourceforge.seqware.common.business.WorkflowRunParamService;
-import net.sourceforge.seqware.common.dao.WorkflowRunDAO;
 import net.sourceforge.seqware.common.dao.WorkflowRunParamDAO;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowRunParam;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

@@ -2,14 +2,11 @@ package net.sourceforge.seqware.common.business.impl;
 
 import java.util.Date;
 import java.util.List;
-
 import net.sourceforge.seqware.common.business.InvoiceService;
 import net.sourceforge.seqware.common.dao.InvoiceDAO;
+import net.sourceforge.seqware.common.model.Invoice;
 import net.sourceforge.seqware.common.model.InvoiceState;
 import net.sourceforge.seqware.common.model.Registration;
-import net.sourceforge.seqware.common.model.Invoice;
-//import net.sourceforge.seqware.common.model.InvoiceParam;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

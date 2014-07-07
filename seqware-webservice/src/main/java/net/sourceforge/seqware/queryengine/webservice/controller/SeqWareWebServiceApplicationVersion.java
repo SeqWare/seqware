@@ -1,5 +1,8 @@
 package net.sourceforge.seqware.queryengine.webservice.controller;
 
+import net.sf.beanlib.hibernate.UnEnhancer;
+import net.sourceforge.seqware.queryengine.webservice.security.SeqWareVerifier;
+import net.sourceforge.seqware.queryengine.webservice.view.VersionResource;
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -12,14 +15,11 @@ import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.DocumentationInfo;
+import org.restlet.ext.wadl.ResourceInfo;
+import org.restlet.ext.wadl.ResourcesInfo;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
-
-import net.sf.beanlib.hibernate.UnEnhancer;
-import net.sourceforge.seqware.queryengine.webservice.security.SeqWareVerifier;
-import net.sourceforge.seqware.queryengine.webservice.view.*;
-import org.restlet.ext.wadl.*;
 
 /**
  * <p>

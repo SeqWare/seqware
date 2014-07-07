@@ -14,6 +14,7 @@ import net.sourceforge.seqware.webservice.resources.queries.FileProvenanceResour
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
 import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
 import net.sourceforge.seqware.webservice.resources.queries.SampleHierarchyResource;
+import net.sourceforge.seqware.webservice.resources.queries.TriggerFileProvenanceResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowReportResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunIDProcessingsResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowRunIDWorkflowResource;
@@ -25,6 +26,7 @@ import net.sourceforge.seqware.webservice.resources.tables.ExperimentLibraryDesi
 import net.sourceforge.seqware.webservice.resources.tables.ExperimentResource;
 import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignReadSpecResource;
 import net.sourceforge.seqware.webservice.resources.tables.ExperimentSpotDesignResource;
+import net.sourceforge.seqware.webservice.resources.tables.FileChildLimitedWorkflowRunsResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileChildWorkflowRunsResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.FileLinkReportResource;
@@ -58,7 +60,6 @@ import net.sourceforge.seqware.webservice.resources.tables.WorkflowParamValueRes
 import net.sourceforge.seqware.webservice.resources.tables.WorkflowResource;
 import net.sourceforge.seqware.webservice.resources.tables.WorkflowRunIDResource;
 import net.sourceforge.seqware.webservice.resources.tables.WorkflowRunResource;
-
 import org.restlet.Component;
 import org.restlet.Context;
 import org.restlet.Request;
@@ -75,9 +76,6 @@ import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
-
-import net.sourceforge.seqware.webservice.resources.queries.TriggerFileProvenanceResource;
-import net.sourceforge.seqware.webservice.resources.tables.FileChildLimitedWorkflowRunsResource;
 
 /**
  * <p>

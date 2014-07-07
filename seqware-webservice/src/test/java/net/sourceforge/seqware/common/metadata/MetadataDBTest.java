@@ -16,16 +16,16 @@
  */
 package net.sourceforge.seqware.common.metadata;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.sql.Timestamp;
 import java.util.Date;
-
-import org.junit.Assert;
 import net.sourceforge.seqware.common.factory.DBAccess;
-import io.seqware.common.model.WorkflowRunStatus;
 import net.sourceforge.seqware.common.module.ReturnValue;
-
 import org.apache.log4j.Logger;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * 

@@ -40,7 +40,7 @@ public class ProvidedBundleUserPhase5 {
     public static final String WORKFLOW = "Workflow";
     
     @Test
-    public void installHandyProvidedBundle() throws IOException {
+    public void installHandyProvidedBundleTest() throws IOException {
         Collection<File> listFiles = FileUtils.listFiles(new File(System.getProperty("user.dir")), new String[]{"zip"}, false);
         Assert.assertTrue("could not find appropriate bundle for testing", listFiles.size() > 0);
         

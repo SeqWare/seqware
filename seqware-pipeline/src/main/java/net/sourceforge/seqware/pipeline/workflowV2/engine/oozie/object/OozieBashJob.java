@@ -3,13 +3,11 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.jdom.Element;
-
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.modules.GenericCommandRunner;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
+import org.jdom.Element;
 
 public class OozieBashJob extends OozieJob {
     public static final String OOZIE_RETRY_MAX = "OOZIE_RETRY_MAX";

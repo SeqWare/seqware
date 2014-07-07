@@ -1,10 +1,10 @@
 package net.sourceforge.seqware.common.business.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Set;
-
 import net.sourceforge.seqware.common.business.ValidationReportService;
 import net.sourceforge.seqware.common.dao.FileDAO;
 import net.sourceforge.seqware.common.model.Experiment;
@@ -17,12 +17,8 @@ import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 @Service
 /**

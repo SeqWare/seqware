@@ -19,14 +19,10 @@ package io.seqware.pipeline.plugins.sanity.checks;
 import io.seqware.pipeline.plugins.sanity.QueryRunner;
 import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 import org.openide.util.lookup.ServiceProvider;
 
 /**

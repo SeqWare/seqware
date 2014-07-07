@@ -16,9 +16,9 @@
  */
 package net.sourceforge.seqware.webservice.resources.filters;
 
-import org.junit.Assert;
 import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.webservice.resources.AbstractResourceTest;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;

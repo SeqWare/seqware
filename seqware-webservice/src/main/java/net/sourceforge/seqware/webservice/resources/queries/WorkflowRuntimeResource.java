@@ -16,18 +16,15 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
-import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
-
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.util.Log;
+import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
-
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.restlet.Context;
 import org.restlet.Request;

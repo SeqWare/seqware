@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -17,7 +16,6 @@ import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -34,7 +32,6 @@ public class Bundle {
     protected String bundleDir = null;
     protected ReturnValue ret = new ReturnValue();
     protected Metadata metadata = null;
-    protected Map<String, String> config = null;
     // this is used as the location of the workflow bundle location
     protected String outputDir = null;
     // this is used as the location of the workflow bundle zip
@@ -63,7 +60,6 @@ public class Bundle {
     public Bundle(Metadata metadata, Map<String, String> config) {
         super();
         this.metadata = metadata;
-        this.config = config;
         permanentBundleLocation = config.get("SW_BUNDLE_REPO_DIR");
         bundleDir = config.get("SW_BUNDLE_DIR");
     }
@@ -106,7 +102,7 @@ public class Bundle {
         }
 
         BundleInfo bi = new BundleInfo();
-        ReturnValue returned = new ReturnValue(ReturnValue.SUCCESS);
+        ReturnValue returned;
         // unbundle
         // FIXME: no need to unzip the bundle, replace with code to read metadata files directly from zip
         if (bundle.isDirectory()) {
@@ -176,15 +172,15 @@ public class Bundle {
 
         String bundleName = bundle.getName();
         bundleName = bundleName.replaceAll(".zip", "");
-        File outputDir = new File(bundleDir + File.separator + bundleName);
-        if (outputDir.exists()) {
+        File localOutputDir = new File(bundleDir + File.separator + bundleName);
+        if (localOutputDir.exists()) {
             Log.stdout("Expanded bundle directory already exists, skipping unzip.");
         } else {
-            FileTools.unzipFile(bundle, outputDir);
+            FileTools.unzipFile(bundle, localOutputDir);
         }
-        ret.setAttribute("outputDir", outputDir.getAbsolutePath());
-        setOutputDir(outputDir.getAbsolutePath());
-        FileTools.listFilesRecursive(outputDir, filesArray);
+        ret.setAttribute("outputDir", localOutputDir.getAbsolutePath());
+        setOutputDir(localOutputDir.getAbsolutePath());
+        FileTools.listFilesRecursive(localOutputDir, filesArray);
 
         return (ret);
     }
@@ -222,7 +218,7 @@ public class Bundle {
         String zipDownloadDir = permanentBundleLocation;
         if (permanentBundleLocation.startsWith("s3://")) {
             // then can't use it as a temp dir
-            File tempDir = null;
+            File tempDir;
             try {
                 tempDir = FileTools.createDirectoryWithUniqueName(new File(this.bundleDir), "wokflow_zip_temp");
             } catch (Exception e) {
@@ -441,20 +437,20 @@ public class Bundle {
      */
     public ReturnValue validateBundle(File bundle) {
 
-        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+        ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
         if (bundle == null || !bundle.exists()) {
-            ret.setExitStatus(ReturnValue.INVALIDFILE);
-            ret.setStderr("ERROR: the bundle path you're trying to zip up is either null or not a directory!");
-            return (ret);
+            localRet.setExitStatus(ReturnValue.INVALIDFILE);
+            localRet.setStderr("ERROR: the bundle path you're trying to zip up is either null or not a directory!");
+            return (localRet);
         }
 
         if (bundle.isDirectory()) {
             outputDir = bundle.getAbsolutePath();
             FileTools.listFilesRecursive(bundle, filesArray);
         } else {
-            ret = unpackageBundle(bundle);
-            outputDir = ret.getAttribute("outputDir");
+            localRet = unpackageBundle(bundle);
+            outputDir = localRet.getAttribute("outputDir");
         }
 
         try {
@@ -473,21 +469,21 @@ public class Bundle {
                     String abs = orig.replaceAll("\\$\\{workflow_bundle_dir\\}", outputDir);
                     File f = new File(abs);
                     if (!f.exists()) {
-                        ret.setExitStatus(ReturnValue.FAILURE);
-                        ret.setStderr("ERROR: Configuration file does not exist: " + orig);
+                        localRet.setExitStatus(ReturnValue.FAILURE);
+                        localRet.setStderr("ERROR: Configuration file does not exist: " + orig);
                     }
                 }
 
             }
         } catch (Exception e) {
-            ret.setExitStatus(ReturnValue.FAILURE);
-            ret.setStderr("ERROR: problems validating " + bundle.getAbsolutePath());
+            localRet.setExitStatus(ReturnValue.FAILURE);
+            localRet.setStderr("ERROR: problems validating " + bundle.getAbsolutePath());
         }
 
-        if (ret.getExitStatus() == ReturnValue.SUCCESS) {
+        if (localRet.getExitStatus() == ReturnValue.SUCCESS) {
             Log.info("Validated Bundle: " + bundle.getAbsolutePath());
         }
-        return (ret);
+        return (localRet);
     }
 
     /**
@@ -551,7 +547,7 @@ public class Bundle {
      */
     protected ReturnValue installBundle(File bundle, File metadataFile, boolean packageIntoZip, boolean unzipIntoDir) {
 
-        ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+        ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
         // installing from an unzipped workflow bundle directory
         if (bundle != null && bundle.isDirectory() && packageIntoZip) {
@@ -562,13 +558,13 @@ public class Bundle {
             } else if (permanentBundleLocation.startsWith("s3://")) {
                 Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the S3 location: "
                         + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
-                ret = packageBundleToS3(bundle, permanentBundleLocation);
+                localRet = packageBundleToS3(bundle, permanentBundleLocation);
             } else {
                 // then it's a directory
                 // now package this up
                 Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the directory: "
                         + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
-                ret = packageBundle(bundle, new File(permanentBundleLocation));
+                localRet = packageBundle(bundle, new File(permanentBundleLocation));
             }
         } // installing from a zip file (will be unzipped below by getBundleInfo) copy to permanent location
         else if (bundle != null && bundle.isFile() && bundle.getName().endsWith(".zip")) {
@@ -579,17 +575,17 @@ public class Bundle {
             } else if (permanentBundleLocation.startsWith("s3://")) {
                 Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the S3 location: "
                         + permanentBundleLocation + " Please be aware, this process can take hours if the bundle is many GB in size.");
-                ret = copyBundleToS3(bundle, permanentBundleLocation);
+                localRet = copyBundleToS3(bundle, permanentBundleLocation);
             } else {
                 Log.stdout("Now transferring " + bundle.getAbsolutePath() + " to the directory: " + permanentBundleLocation
                         + " Please be aware, this process can take hours if the bundle is many GB in size.");
-                ret = copyBundle(bundle.getAbsolutePath(), permanentBundleLocation);
+                localRet = copyBundle(bundle.getAbsolutePath(), permanentBundleLocation);
             }
         }
 
-        if (ret.getExitStatus() != ReturnValue.SUCCESS) {
+        if (localRet.getExitStatus() != ReturnValue.SUCCESS) {
             Log.error("The workflow install failed");
-            return (ret);
+            return (localRet);
         }
 
         // asumption here is this unbundles it, in the future this won't be the case!
@@ -604,32 +600,32 @@ public class Bundle {
             // String templatePath = w.getTemplatePath().replaceAll("\\$\\{workflow_bundle_dir\\}", getOutputDir());
 
             if (packageIntoZip && unzipIntoDir) {
-                ret = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
+                localRet = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
                         w.getTemplatePath(), this.outputDir, true, this.outputZip, true, w.getWorkflowClass(), w.getWorkflowType(),
                         w.getWorkflowEngine());
             } else if (packageIntoZip && !unzipIntoDir) {
-                ret = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
+                localRet = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
                         w.getTemplatePath(), this.outputDir, false, this.outputZip, true, w.getWorkflowClass(), w.getWorkflowType(),
                         w.getWorkflowEngine());
             } else if (!packageIntoZip && unzipIntoDir) {
-                ret = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
+                localRet = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
                         w.getTemplatePath(), this.outputDir, true, this.outputZip, false, w.getWorkflowClass(), w.getWorkflowType(),
                         w.getWorkflowEngine());
             } else {
                 Log.error("You need to specify an workflow bundle dir, workflow bundle zip file or both when you install a workflow.");
-                ret.setExitStatus(ReturnValue.FAILURE);
+                localRet.setExitStatus(ReturnValue.FAILURE);
             }
 
-            if (ret.getExitStatus() == ReturnValue.FAILURE) {
+            if (localRet.getExitStatus() == ReturnValue.FAILURE) {
                 Log.error("The workflow install failed for " + w.getName() + " version " + w.getVersion());
-                return (ret);
+                return (localRet);
             }
             /*
              * int workflowId = ret.getReturnValue(); String url = permanentBundleLocation + File.separator + bundle.getName(); ret =
              * metadata.updateWorkflow(workflowId, url);
              */
         }
-        return (ret);
+        return (localRet);
     }
 
     /**

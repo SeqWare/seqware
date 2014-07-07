@@ -1,11 +1,9 @@
 package net.sourceforge.seqware.common.business.impl;
 
-import static org.junit.Assert.assertEquals;
-
+import io.seqware.common.model.ProcessingStatus;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-
 import net.sourceforge.seqware.common.BaseUnit;
 import net.sourceforge.seqware.common.business.ProcessingService;
 import net.sourceforge.seqware.common.business.RegistrationService;
@@ -13,10 +11,9 @@ import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.hibernate.InSessionExecutions;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Processing;
-import io.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.RegistrationDTO;
 import net.sourceforge.seqware.common.util.Log;
-
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**

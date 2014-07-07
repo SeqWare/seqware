@@ -1222,34 +1222,6 @@ public class MetadataDB implements Metadata {
      * {@inheritDoc}
      */
     @Override
-    public ReturnValue saveFileForIus(int workflowRunId, int iusAccession, FileMetadata file, int processingId) {
-        ReturnValue returnVal = new ReturnValue(ReturnValue.SUCCESS);
-        try {
-            int fileId = insertFileRecord(file);
-            if (!linkWorkflowRunAndParent(workflowRunId, iusAccession)) {
-                update_processing_status(processingId, ProcessingStatus.failed);
-                returnVal = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
-                return returnVal;
-            }
-            update_processing_workflow_run(processingId, get_workflow_run_accession(workflowRunId));
-            linkProcessingAndFile(processingId, fileId);
-            update_processing_status(processingId, ProcessingStatus.success);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            returnVal = new ReturnValue(ReturnValue.SQLQUERYFAILED);
-            if (processingId != Integer.MIN_VALUE) {
-                update_processing_status(processingId, ProcessingStatus.failed);
-            }
-        }
-
-        return returnVal;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Boolean isDuplicateFile(String filepath) {
         String sql = "SELECT sw_accession FROM file WHERE file_path = '" + filepath + "';";
         try {
@@ -1470,44 +1442,6 @@ public class MetadataDB implements Metadata {
                         wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
                         wr.setCreateTimestamp(rs.getDate("create_tstmp"));
                         // FIXME: need to update with workflow engine etc
-                        results.add(wr);
-                    }
-                    return results;
-                }
-            });
-        } catch (SQLException e) {
-            logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<WorkflowRun> getWorkflowRunsByHost(String host) {
-
-        String sql = "select workflow_run_id, name, ini_file, cmd, workflow_template, dax, status, status_cmd, seqware_revision, host, current_working_dir, username, create_tstmp from workflow_run where host = '"
-                + host + "'";
-        ResultSet rs;
-        try {
-            return executeQuery(sql, new ResultSetHandler<List<WorkflowRun>>() {
-                @Override
-                public List<WorkflowRun> handle(ResultSet rs) throws SQLException {
-                    ArrayList<WorkflowRun> results = new ArrayList<>();
-                    while (rs.next()) {
-                        WorkflowRun wr = new WorkflowRun();
-                        wr.setWorkflowRunId(rs.getInt("workflow_run_id"));
-                        wr.setName(rs.getString("name"));
-                        wr.setIniFile(rs.getString("ini_file"));
-                        wr.setCommand(rs.getString("cmd"));
-                        wr.setTemplate(rs.getString("workflow_template"));
-                        wr.setDax(rs.getString("dax"));
-                        wr.setStatus(WorkflowRunStatus.valueOf(rs.getString("status")));
-                        wr.setStatusCmd(rs.getString("status_cmd"));
-                        wr.setHost(rs.getString("host"));
-                        wr.setCurrentWorkingDir(rs.getString("current_working_dir"));
-                        wr.setCreateTimestamp(rs.getDate("create_tstmp"));
                         results.add(wr);
                     }
                     return results;
