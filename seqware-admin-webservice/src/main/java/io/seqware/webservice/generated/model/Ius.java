@@ -92,8 +92,6 @@ public class Ius implements Serializable {
     private Lane laneId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "iusId")
     private Collection<ProcessingIus> processingIusCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "iusId")
-    private Collection<IusLink> iusLinkCollection;
 
     public Ius() {
     }
@@ -228,15 +226,6 @@ public class Ius implements Serializable {
 
     public void setProcessingIusCollection(Collection<ProcessingIus> processingIusCollection) {
         this.processingIusCollection = processingIusCollection;
-    }
-
-    @XmlTransient
-    public Collection<IusLink> getIusLinkCollection() {
-        return iusLinkCollection;
-    }
-
-    public void setIusLinkCollection(Collection<IusLink> iusLinkCollection) {
-        this.iusLinkCollection = iusLinkCollection;
     }
 
     @Override
