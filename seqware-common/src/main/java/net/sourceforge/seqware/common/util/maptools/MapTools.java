@@ -13,10 +13,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.DatatypeConverter;
+import net.sourceforge.seqware.common.model.WorkflowRunParam;
 import net.sourceforge.seqware.common.util.Log;
 import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import org.apache.commons.io.IOUtils;
@@ -364,5 +367,46 @@ public class MapTools {
 
     private static boolean isLineMatchesKeyValue(String line) {
         return !line.startsWith("#") && line.matches("\\S+\\s*=[^=]*");
+    }
+
+    /**
+     * Convert what looks like a map of ini key-value pairs into a SortedSet of WorkflowRunParams
+     * 
+     * @param map
+     * @return
+     * @throws NumberFormatException
+     */
+    public static SortedSet createWorkflowRunParameters(HashMap<String, String> map) throws NumberFormatException {
+        SortedSet<WorkflowRunParam> runParams = new TreeSet<>();
+        for (String str : map.keySet()) {
+            if (map.get(str) != null) {
+                Log.info(str + " " + map.get(str));
+                if (str.equals(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey())
+                        || str.equals(ReservedIniKeys.PARENT_ACCESSION.getKey())
+                        || str.equals(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey())) {
+                    String[] pAcc = map.get(str).split(",");
+                    for (String parent : pAcc) {
+                        WorkflowRunParam wrp = new WorkflowRunParam();
+                        wrp.setKey(str);
+                        wrp.setValue(parent);
+                        wrp.setParentProcessingAccession(Integer.parseInt(parent));
+                        wrp.setType("text");
+                        runParams.add(wrp);
+                    }
+                } else {
+                    if (str.trim().isEmpty() && map.get(str).trim().isEmpty()) {
+                        continue;
+                    }
+                    WorkflowRunParam wrp = new WorkflowRunParam();
+                    wrp.setKey(str);
+                    wrp.setValue(map.get(str));
+                    wrp.setType("text");
+                    runParams.add(wrp);
+                }
+            } else {
+                Log.info("Null: " + str + " " + map.get(str));
+            }
+        }
+        return runParams;
     }
 }
