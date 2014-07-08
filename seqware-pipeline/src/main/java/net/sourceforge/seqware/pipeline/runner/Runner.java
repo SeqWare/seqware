@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -67,6 +68,7 @@ public class Runner {
     private ArrayList<File> processingAccessionFiles;
     private File processingAccessionFileCheck = null;
     private int processingAccession = 0;
+    private NonOptionArgumentSpec<String> nonOptionSpec;
 
     public static interface Keys {
 
@@ -90,7 +92,7 @@ public class Runner {
     private StringBuffer stdout = new StringBuffer();
     private StringBuffer stderr = new StringBuffer();
 
-    static {
+    public Runner() {
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
         parser.accepts("module", "Required: Specifies the module to run. All modules implement the ModuleInterface.").withRequiredArg()
                 .ofType(String.class).describedAs("This is the module you wish to run.");
@@ -187,6 +189,8 @@ public class Runner {
                 .withRequiredArg().ofType(Integer.class).defaultsTo(0).describedAs("Time in Seconds (Default: 0)");
         parser.accepts("suppress-unimplemented-warnings", "Optional: For debugging, hide warnings about unimplemented methods");
         parser.accepts("verbose", "Show debug information");
+        this.nonOptionSpec = parser
+                .nonOptions("Specify arguments for the module by providding an additional -- and then --<key> <value> pairs");
     }
 
     /**
@@ -555,7 +559,7 @@ public class Runner {
             Log.error(e);
             System.exit(-1);
         }
-        app.setParameters(options.nonOptionArguments());
+        app.setParameters(options.valuesOf(nonOptionSpec));
     }
 
     private void preProcessMetadata() {

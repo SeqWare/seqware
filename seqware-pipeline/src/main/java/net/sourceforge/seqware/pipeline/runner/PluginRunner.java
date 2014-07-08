@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -62,6 +63,8 @@ public class PluginRunner {
         new PluginRunner().run(args);
     }
 
+    private NonOptionArgumentSpec<String> nonOptionSpec;
+
     /**
      * <p>
      * run.
@@ -111,6 +114,8 @@ public class PluginRunner {
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
         parser.acceptsAll(Arrays.asList("list", "l"), "Lists all the plugins available in this SeqWare Pipeline jar file.");
         parser.acceptsAll(Arrays.asList("plugin", "p"), "The plugin you wish to trigger.").withRequiredArg();
+        this.nonOptionSpec = parser
+                .nonOptions("Specify arguments for the plugin by providding an additional -- and then --<key> <value> pairs");
         parser.accepts("verbose", "Show debug information");
     }
 
@@ -235,7 +240,7 @@ public class PluginRunner {
             } else {
 
                 // try to parse the parameters after "--"
-                plugin.setParams(options.nonOptionArguments());
+                plugin.setParams(options.valuesOf(nonOptionSpec));
 
                 // pass in the config information from the settings file
                 plugin.setConfig(config);

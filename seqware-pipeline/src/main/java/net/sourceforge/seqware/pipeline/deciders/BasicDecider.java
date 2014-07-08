@@ -47,6 +47,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionSpec;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
@@ -98,6 +99,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private String host = null;
 
     private final Map<String, OptionSpec> configureFileProvenanceParams;
+    private final NonOptionArgumentSpec<String> nonOptionSpec;
 
     public BasicDecider() {
         super();
@@ -139,6 +141,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 .withRequiredArg();
         // SEQWARE-1622 - check whether files exist
         parser.acceptsAll(Arrays.asList("check-file-exists", "cf"), "Optional: only launch on the file if the file exists");
+        this.nonOptionSpec = parser
+                .nonOptions("Override ini options on the command like by providding an additional -- and then --<key> <value>");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
@@ -504,7 +508,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         runArgs.add(host);
 
         runArgs.add("--");
-        for (String s : options.nonOptionArguments()) {
+        for (String s : options.valuesOf(nonOptionSpec)) {
             runArgs.add(s);
         }
         return runArgs;

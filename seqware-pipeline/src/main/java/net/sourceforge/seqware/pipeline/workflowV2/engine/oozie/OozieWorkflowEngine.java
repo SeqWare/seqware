@@ -23,13 +23,13 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
 
     private String jobId;
     private AbstractWorkflowDataModel dataModel;
-    private boolean useSge;
-    private String threadsSgeParamFormat;
-    private String maxMemorySgeParamFormat;
+    private final boolean useSge;
+    private final String threadsSgeParamFormat;
+    private final String maxMemorySgeParamFormat;
 
-    private File nfsWorkDir;
-    private Configuration conf;
-    private Path hdfsWorkDir;
+    private final File nfsWorkDir;
+    private final Configuration conf;
+    private final Path hdfsWorkDir;
 
     public OozieWorkflowEngine(AbstractWorkflowDataModel objectModel, boolean useSge, String threadsSgeParamFormat,
             String maxMemorySgeParamFormat) {
