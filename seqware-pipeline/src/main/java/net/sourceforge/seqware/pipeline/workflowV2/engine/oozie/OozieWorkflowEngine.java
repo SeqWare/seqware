@@ -10,7 +10,7 @@ import net.sourceforge.seqware.common.util.Log;
 import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
-import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
+import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -19,7 +19,12 @@ import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
 import org.apache.oozie.client.WorkflowJob.Status;
 
-public class OozieWorkflowEngine extends AbstractWorkflowEngine {
+/**
+ * This is the implementation of the WorkflowEngine with a Oozie back-end.
+ * 
+ * @author dyuen
+ */
+public class OozieWorkflowEngine implements WorkflowEngine {
 
     private String jobId;
     private AbstractWorkflowDataModel dataModel;
