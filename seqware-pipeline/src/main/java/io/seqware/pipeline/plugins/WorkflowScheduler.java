@@ -1,5 +1,6 @@
 package io.seqware.pipeline.plugins;
 
+import io.seqware.pipeline.api.Scheduler;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -13,14 +14,12 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
-import net.sourceforge.seqware.pipeline.workflow.Workflow;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * The Workflow scheduler is only responsible for scheduling workflows.
+ * The Workflow Scheduler is only responsible for scheduling workflows.
  * 
- * This is a fork of the WorkflowLauncher intended to detangle the functions of launching, scheduling, waiting, etc.
+ * This is a fork of the WorkflowLauncher intended to de-tangle the functions of launching, scheduling, waiting, etc.
  * 
  * @author dyuen
  */
@@ -80,9 +79,10 @@ public class WorkflowScheduler extends Plugin {
                         "Optional: Specifies a workflow engine, one of: " + WorkflowLauncher.ENGINES_LIST + ". Defaults to "
                                 + WorkflowLauncher.DEFAULT_ENGINE + ".").withRequiredArg().ofType(String.class)
                 .describedAs("Workflow Engine").ofType(String.class);
-        this.nonOptionSpec = parser
-                .nonOptions("Override ini options on the command like by providding an additional -- and then --<key> <value>");
+        this.nonOptionSpec = parser.nonOptions(OVERRIDE_INI_DESC);
     }
+
+    public static final String OVERRIDE_INI_DESC = "Override ini options on the command after the separator \"--\" with pairs of \"--<key> <value>\"";
 
     private String getEngineParam() {
         String engine = options.valueOf(workflowEngineSpec);
@@ -131,7 +131,7 @@ public class WorkflowScheduler extends Plugin {
 
     @Override
     public ReturnValue do_run() {
-        BasicWorkflow w = new Workflow(metadata, config);
+        Scheduler w = new Scheduler(metadata, config);
 
         // parent accessions
         List<String> parentAccessions = options.valuesOf(parentAccessionsSpec);

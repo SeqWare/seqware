@@ -1,32 +1,30 @@
-package net.sourceforge.seqware.pipeline.workflow;
+package io.seqware.pipeline.api;
 
 import io.seqware.common.model.WorkflowRunStatus;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.module.ReturnValue.ExitStatus;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
-import net.sourceforge.seqware.pipeline.bundle.Bundle;
-import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
 
 /**
- * <p>
- * Abstract BasicWorkflow class.
- * </p>
+ * This class performs the actual work of scheduling a workflow.
  * 
  * @author boconnor
  * @version $Id: $Id
  */
-public abstract class BasicWorkflow implements WorkflowEngine {
+public class Scheduler {
 
-    protected ReturnValue ret = new ReturnValue();
+    /**
+     * 
+     */
     protected Metadata metadata = null;
     protected Map<String, String> config = null;
 
@@ -40,7 +38,7 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param config
      *            a {@link java.util.Map} object.
      */
-    public BasicWorkflow(Metadata metadata, Map<String, String> config) {
+    public Scheduler(Metadata metadata, Map<String, String> config) {
         super();
         this.metadata = metadata;
         this.config = config;
@@ -200,7 +198,8 @@ public abstract class BasicWorkflow implements WorkflowEngine {
                 try {
                     this.metadata.linkWorkflowRunAndParent(workflowRunId, Integer.parseInt(parentLinkedToWR));
                 } catch (Exception e) {
-                    Log.error(e.getMessage());
+                    Log.error("Could not link workflow run to its parents " + parentsLinkedToWR.toString());
+                    Rethrow.rethrow(e);
                 }
             }
 
@@ -209,11 +208,10 @@ public abstract class BasicWorkflow implements WorkflowEngine {
 
         } else {
             Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
-            ret.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
+            return new ReturnValue(ExitStatus.METADATAINVALIDIDCHAIN);
         }
 
-        return ret;
-
+        return new ReturnValue();
     }
 
     /**
@@ -237,117 +235,6 @@ public abstract class BasicWorkflow implements WorkflowEngine {
         wi.setWorkflowEngine(m.get("workflow_engine"));
         wi.setWorkflowType(m.get("workflow_type"));
         return (wi);
-    }
-
-    /**
-     * a simple method to replace the ${workflow_bundle_dir} variable
-     * 
-     * @param input
-     * @param wbd
-     * @return
-     */
-    private String replaceWBD(String input, String wbd) {
-        return (input.replaceAll("\\$\\{workflow_bundle_dir\\}", wbd));
-    }
-
-    /**
-     * This is a pretty key method. It takes the wi object, checks to see if the workflow is available and, if not, sets it up from the
-     * archive location it will also be responsible for correctly setting the workflow_bundle_dir in the wi object if it has changed and it
-     * will go through each field and update the ${workflow_bundle_dir} variable to be a real path (which makes some of the calls elsewhere
-     * to replaceWBD redundant but harmless).
-     * 
-     * @param wi
-     */
-    private ReturnValue provisionBundleAndUpdateWorkflowInfo(WorkflowInfo wi) {
-
-        ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
-
-        // first, see if the workflow bundle dir is actually there, I'm assuming
-        // if it is then I don't need to provision it
-        // FIXME: in the future we should do a more robust check
-        File workflowBundleDir = null;
-        if (wi.getWorkflowDir() != null) {
-            workflowBundleDir = new File(wi.getWorkflowDir());
-        }
-
-        // if any of these are true then need to reprovision workflow
-        if (workflowBundleDir == null || !workflowBundleDir.exists() || !workflowBundleDir.isDirectory() || !workflowBundleDir.canRead()) {
-
-            // find the perm loc
-            String permLoc = wi.getPermBundleLocation();
-            String newWorkflowBundleDir = getAndProvisionBundle(permLoc);
-
-            // if its null then something went wrong
-            if (newWorkflowBundleDir == null) {
-                localRet.setExitStatus(ReturnValue.FAILURE);
-                Log.error("Unable to provision the bundle from: " + permLoc);
-                return localRet;
-            }
-
-            // now update the variables to replace ${workflow_bundle_dir}
-            wi.setWorkflowDir(newWorkflowBundleDir);
-            wi.setConfigPath(replaceWBD(wi.getConfigPath(), newWorkflowBundleDir));
-            wi.setTemplatePath(replaceWBD(wi.getTemplatePath(), newWorkflowBundleDir));
-        }
-
-        return localRet;
-    }
-
-    /**
-     * will either copy or download from S3, unzip, and return unzip location
-     * 
-     * @param permLoc
-     * @return
-     */
-    private String getAndProvisionBundle(String permLoc) {
-        String result = null;
-        Bundle bundle = new Bundle(this.metadata, this.config);
-        ReturnValue localRet;
-        if (permLoc.startsWith("s3://")) {
-            localRet = bundle.unpackageBundleFromS3(permLoc);
-        } else {
-            localRet = bundle.unpackageBundle(new File(permLoc));
-        }
-        if (localRet != null) {
-            return localRet.getAttribute("outputDir");
-        }
-        return result;
-    }
-
-    /**
-     * reads a map and tries to find the parent accessions, the result is de-duplicated.
-     * 
-     * @param map
-     * @return
-     */
-    public static ArrayList<String> parseParentAccessions(Map<String, String> map) {
-        ArrayList<String> results = new ArrayList<>();
-        HashMap<String, String> resultsDeDup = new HashMap<>();
-
-        for (String key : map.keySet()) {
-            if (ReservedIniKeys.PARENT_ACCESSION.getKey().equals(key) || ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey().equals(key)
-                    || ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey().equals(key)) {
-                resultsDeDup.put(map.get(key), "null");
-            }
-        }
-
-        for (String accession : resultsDeDup.keySet()) {
-            results.add(accession);
-        }
-
-        // for hotfix 0.13.6.3
-        // GATK reveals an issue where parent_accession is setup with a correct list
-        // of accessions while parent-accessions and parent_accessions are set to 0
-        // when the three are mushed together, the rogue zero is transferred to
-        // parent_accession and causes it to crash the workflow
-        // I'm going to allow a single 0 in case (god forbid) some workflow relies
-        // upon this, but otherwise a 0 should not occur in a list of valid
-        // parent_accessions
-        if (results.contains("0") && results.size() > 1) {
-            results.remove("0");
-        }
-
-        return (results);
     }
 
 }

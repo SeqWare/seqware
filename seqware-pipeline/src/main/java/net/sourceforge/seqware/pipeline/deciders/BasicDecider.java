@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.plugins.WorkflowLauncher;
+import io.seqware.pipeline.plugins.WorkflowScheduler;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -141,8 +142,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 .withRequiredArg();
         // SEQWARE-1622 - check whether files exist
         parser.acceptsAll(Arrays.asList("check-file-exists", "cf"), "Optional: only launch on the file if the file exists");
-        this.nonOptionSpec = parser
-                .nonOptions("Override ini options on the command like by providding an additional -- and then --<key> <value>");
+        this.nonOptionSpec = parser.nonOptions(WorkflowScheduler.OVERRIDE_INI_DESC);
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
