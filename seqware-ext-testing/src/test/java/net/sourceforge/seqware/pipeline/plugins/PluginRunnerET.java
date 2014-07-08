@@ -145,13 +145,13 @@ public class PluginRunnerET {
             bundleLocations.put(workflow, bundleDir);
 
             // zip up the bundles first if we want the bundle locations to survive
-            String zipCommand = "--plugin net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- --path-to-package "
+            String zipCommand = "--plugin net.sourceforge.seqware.pipeline.plugins.BundleManager -- --path-to-package "
                     + bundleDir.getAbsolutePath() + " --bundle " + tempDir.getAbsolutePath();
             String zipOutput = ITUtility.runSeqWareJar(zipCommand, ReturnValue.SUCCESS, null);
             Log.info(zipOutput);
 
-            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b "
-                    + tempDir.getAbsolutePath() + File.separatorChar + workflow_name + ".zip";
+            String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- -i -b " + tempDir.getAbsolutePath()
+                    + File.separatorChar + workflow_name + ".zip";
             String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS, null);
             Log.info(installOutput);
 
