@@ -1088,47 +1088,10 @@
             </props>
         </property>
     </bean>  
-
-	<!-- WorkflowRun Service -->
-    <bean id="workflowRunServiceTarget"
-          class="net.sourceforge.seqware.common.business.impl.WorkflowRunServiceImpl">
-        <property name="workflowRunDAO">
-            <ref local="workflowRunDAO"/>
-        </property>
-        <property name="processingDAO">
-            <ref local="processingDAO"/>
-        </property>
-        <property name="workflowRunParamDAO">
-            <ref local="workflowRunParamDAO"/>
-        </property>
-        <property name="fileDAO">
-            <ref local="fileDAO"/>
-        </property>
-    </bean>
 	
     <bean id="workflowRunDAO" class="net.sourceforge.seqware.common.dao.hibernate.WorkflowRunDAOHibernate">
         <property name="sessionFactory">
             <ref local="sessionFactory"/>
-        </property>
-    </bean>
-	
-	<!-- Transaction declarations for WorkflowRun Service -->
-    <bean id="workflowRunService"
-          class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager">
-            <ref local="transactionManager"/>
-        </property>
-        <property name="target">
-            <ref local="workflowRunServiceTarget"/>
-        </property>
-        <property name="transactionAttributes">
-            <props>
-                <prop key="insert">PROPAGATION_REQUIRED</prop>
-                <prop key="update*">PROPAGATION_REQUIRED</prop>
-                <prop key="delete">PROPAGATION_REQUIRED</prop>
-                <prop key="runWorkflow">PROPAGATION_REQUIRED</prop>
-                <prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
-            </props>
         </property>
     </bean>
 
