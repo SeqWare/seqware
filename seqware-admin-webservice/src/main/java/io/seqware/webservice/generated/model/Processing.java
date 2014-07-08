@@ -131,8 +131,6 @@ public class Processing implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processingId")
     private Collection<ProcessingSequencerRuns> processingSequencerRunsCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processingId")
-    private Collection<ShareProcessing> shareProcessingCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "processingId")
     private Collection<ProcessingSamples> processingSamplesCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "processingId")
     private Collection<ProcessingIus> processingIusCollection;
@@ -365,15 +363,6 @@ public class Processing implements Serializable {
 
     public void setProcessingSequencerRunsCollection(Collection<ProcessingSequencerRuns> processingSequencerRunsCollection) {
         this.processingSequencerRunsCollection = processingSequencerRunsCollection;
-    }
-
-    @XmlTransient
-    public Collection<ShareProcessing> getShareProcessingCollection() {
-        return shareProcessingCollection;
-    }
-
-    public void setShareProcessingCollection(Collection<ShareProcessing> shareProcessingCollection) {
-        this.shareProcessingCollection = shareProcessingCollection;
     }
 
     @XmlTransient

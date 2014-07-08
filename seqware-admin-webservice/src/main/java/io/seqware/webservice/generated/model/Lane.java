@@ -96,10 +96,6 @@ public class Lane implements Serializable {
     @Version
     private Timestamp updateTstmp;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "laneId")
-    private Collection<ShareLane> shareLaneCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "laneId")
-    private Collection<LaneLink> laneLinkCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "laneId")
     private Collection<LaneAttribute> laneAttributeCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "laneId")
     private Collection<ProcessingLanes> processingLanesCollection;
@@ -257,24 +253,6 @@ public class Lane implements Serializable {
 
     public void setUpdateTstmp(Timestamp updateTstmp) {
         this.updateTstmp = updateTstmp;
-    }
-
-    @XmlTransient
-    public Collection<ShareLane> getShareLaneCollection() {
-        return shareLaneCollection;
-    }
-
-    public void setShareLaneCollection(Collection<ShareLane> shareLaneCollection) {
-        this.shareLaneCollection = shareLaneCollection;
-    }
-
-    @XmlTransient
-    public Collection<LaneLink> getLaneLinkCollection() {
-        return laneLinkCollection;
-    }
-
-    public void setLaneLinkCollection(Collection<LaneLink> laneLinkCollection) {
-        this.laneLinkCollection = laneLinkCollection;
     }
 
     @XmlTransient
