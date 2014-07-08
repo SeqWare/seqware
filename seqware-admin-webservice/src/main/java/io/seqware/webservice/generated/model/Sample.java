@@ -141,10 +141,6 @@ public class Sample implements Serializable, CycleRecoverable {
     private Collection<Sample> sampleCollection;
     @ManyToMany(mappedBy = "sampleCollection")
     private Collection<Sample> sampleCollection1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sampleId")
-    private Collection<SampleLink> sampleLinkCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sampleId")
-    private Collection<SampleSearch> sampleSearchCollection;
     @OneToMany(mappedBy = "sampleId")
     private Collection<Lane> laneCollection;
     @JoinColumn(name = "owner_id", referencedColumnName = "registration_id")
@@ -166,8 +162,6 @@ public class Sample implements Serializable, CycleRecoverable {
     private Collection<SampleRelationship> sampleRelationshipCollection;
     @OneToMany(mappedBy = "childId")
     private Collection<SampleRelationship> sampleRelationshipCollection1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sampleId")
-    private Collection<ShareSample> shareSampleCollection;
 
     public Sample() {
     }
@@ -365,31 +359,12 @@ public class Sample implements Serializable, CycleRecoverable {
         this.sampleCollection = sampleCollection;
     }
 
-  
     public Collection<Sample> getSampleCollection1() {
         return sampleCollection1;
     }
 
     public void setSampleCollection1(Collection<Sample> sampleCollection1) {
         this.sampleCollection1 = sampleCollection1;
-    }
-
-    @XmlTransient
-    public Collection<SampleLink> getSampleLinkCollection() {
-        return sampleLinkCollection;
-    }
-
-    public void setSampleLinkCollection(Collection<SampleLink> sampleLinkCollection) {
-        this.sampleLinkCollection = sampleLinkCollection;
-    }
-
-    @XmlTransient
-    public Collection<SampleSearch> getSampleSearchCollection() {
-        return sampleSearchCollection;
-    }
-
-    public void setSampleSearchCollection(Collection<SampleSearch> sampleSearchCollection) {
-        this.sampleSearchCollection = sampleSearchCollection;
     }
 
     @XmlTransient
@@ -470,15 +445,6 @@ public class Sample implements Serializable, CycleRecoverable {
         this.sampleRelationshipCollection1 = sampleRelationshipCollection1;
     }
 
-    @XmlTransient
-    public Collection<ShareSample> getShareSampleCollection() {
-        return shareSampleCollection;
-    }
-
-    public void setShareSampleCollection(Collection<ShareSample> shareSampleCollection) {
-        this.shareSampleCollection = shareSampleCollection;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -505,9 +471,8 @@ public class Sample implements Serializable, CycleRecoverable {
     }
 
     /**
-     * from
-     * http://wiki.eclipse.org/EclipseLink/Release/2.4.0/JAXB_RI_Extensions/Cycle_Recoverable
-     *
+     * from http://wiki.eclipse.org/EclipseLink/Release/2.4.0/JAXB_RI_Extensions/Cycle_Recoverable
+     * 
      * @param cntxt
      * @return
      */
@@ -517,8 +482,7 @@ public class Sample implements Serializable, CycleRecoverable {
     }
 
     /**
-     * For debugging (silly generated classes have no model base class)
-     * TODO: create a base class and fix this
+     * For debugging (silly generated classes have no model base class) TODO: create a base class and fix this
      */
     public void toXml() {
         try {
@@ -528,18 +492,18 @@ public class Sample implements Serializable, CycleRecoverable {
             marshaller.marshal(this, System.out);
         } catch (Exception e) {
 
-            //catch exception 
+            // catch exception
         }
     }
-    
+
     @PostLoad
-    public void loadRootSampleFlag(){
+    public void loadRootSampleFlag() {
         Logger.getLogger(Sample.class).info(this.getSampleId() + ": Attempting to find root sample flag");
         EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU");
         EntityManager em = emFactory.createEntityManager();
         Query query = selectNullParentCountQuery(em, this.getSampleId());
         Long firstResult = (Long) query.getSingleResult();
-        if (firstResult != null && firstResult > 0){
+        if (firstResult != null && firstResult > 0) {
             Logger.getLogger(Sample.class).info(this.getSampleId() + ": Found root sample flag");
             this.getSampleCollection1().add(null);
             return;
@@ -548,7 +512,7 @@ public class Sample implements Serializable, CycleRecoverable {
     }
 
     public static Query selectNullParentCountQuery(EntityManager em, int id) {
-        Query query = em.createNativeQuery("select count(*) from sample_hierarchy where sample_id = "+id+" and parent_id IS NULL;");
+        Query query = em.createNativeQuery("select count(*) from sample_hierarchy where sample_id = " + id + " and parent_id IS NULL;");
         return query;
     }
 }

@@ -138,8 +138,6 @@ public class Experiment implements Serializable {
     private ExperimentLibraryDesign experimentLibraryDesignId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "experimentId")
     private Collection<ProcessingExperiments> processingExperimentsCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "experimentId")
-    private Collection<ShareExperiment> shareExperimentCollection;
     @OneToMany(mappedBy = "experimentId")
     private Collection<Sample> sampleCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "experimentId")
@@ -373,15 +371,6 @@ public class Experiment implements Serializable {
 
     public void setProcessingExperimentsCollection(Collection<ProcessingExperiments> processingExperimentsCollection) {
         this.processingExperimentsCollection = processingExperimentsCollection;
-    }
-
-    @XmlTransient
-    public Collection<ShareExperiment> getShareExperimentCollection() {
-        return shareExperimentCollection;
-    }
-
-    public void setShareExperimentCollection(Collection<ShareExperiment> shareExperimentCollection) {
-        this.shareExperimentCollection = shareExperimentCollection;
     }
 
     @XmlTransient
