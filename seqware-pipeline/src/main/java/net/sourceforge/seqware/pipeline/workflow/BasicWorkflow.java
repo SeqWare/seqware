@@ -71,17 +71,16 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param workflowEngine
      * @param scheduledHost
      * @param cmdLineOptions
-     * @param wait
      * @return
      */
-    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, ArrayList<String> iniFiles,
-            boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait,
-            List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
+    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, List<String> iniFiles,
+            boolean metadataWriteback, List<String> parentAccessions, List<String> parentsLinkedToWR, List<String> cmdLineOptions,
+            String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
         Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
         WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
-        scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, wait, cmdLineOptions,
+        scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, cmdLineOptions,
                 scheduledHost, workflowEngine, inputFiles);
 
         return localRet;
@@ -95,16 +94,15 @@ public abstract class BasicWorkflow implements WorkflowEngine {
      * @param metadataWriteback
      * @param parentAccessions
      * @param parentsLinkedToWR
-     * @param wait
      * @param cmdLineOptions
      * @param scheduledHost
      * @param workflowEngine
      * @param inputFiles
      * @return
      */
-    private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, ArrayList<String> iniFiles,
-            boolean metadataWriteback, ArrayList<String> parentAccessions, ArrayList<String> parentsLinkedToWR, boolean wait,
-            List<String> cmdLineOptions, String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
+    private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, List<String> iniFiles, boolean metadataWriteback,
+            List<String> parentAccessions, List<String> parentsLinkedToWR, List<String> cmdLineOptions, String scheduledHost,
+            String workflowEngine, Set<Integer> inputFiles) {
 
         // keep this id handy
         int workflowRunId = 0;
