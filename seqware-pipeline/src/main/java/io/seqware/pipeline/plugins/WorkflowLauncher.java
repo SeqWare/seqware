@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.File;
@@ -61,6 +62,7 @@ public class WorkflowLauncher extends Plugin {
     // time
     protected String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
     private String hostname;
+    private final NonOptionArgumentSpec<String> nonOptionSpec;
 
     public WorkflowLauncher() {
         super();
@@ -77,9 +79,6 @@ public class WorkflowLauncher extends Plugin {
                 Arrays.asList("workflow-accession", "wa"),
                 "Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.")
                 .withRequiredArg();
-        parser.acceptsAll(
-                Arrays.asList(SCHEDULE, "s"),
-                "Optional: If this, the workflow-accession, and ini-files are all specified this will cause the workflow to be scheduled in the workflow run table rather than directly run. Useful if submitting the workflow to a remote server.");
         parser.acceptsAll(
                 Arrays.asList(LAUNCH_SCHEDULED, "ls"),
                 "Optional: If this parameter is given (which can optionally have a comma separated list of workflow run accessions) all the workflows that have been scheduled in the database will have their commands constructed and executed on this machine (thus launching those workflows). This command can only be run on a machine capable of submitting workflows (e.g. a cluster submission host!). If you're submitting a workflow remotely you want to use the --schedule option instead.")
@@ -133,6 +132,8 @@ public class WorkflowLauncher extends Plugin {
                 "Optional: Specifies a workflow engine, one of: " + ENGINES_LIST + ". Defaults to " + DEFAULT_ENGINE + ".")
                 .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
         parser.accepts("no-run", "Optional: Terminates the launch process immediately prior to running. Useful for debugging.");
+        this.nonOptionSpec = parser
+                .nonOptions("Override ini options on the command like by providding an additional -- and then --<key> <value>");
 
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
@@ -219,79 +220,15 @@ public class WorkflowLauncher extends Plugin {
             metadataWriteback = false;
         }
 
-        // parent accessions
-        ArrayList<String> parentAccessions = new ArrayList<>();
-        if (options.has("parent-accessions")) {
-            List opts = options.valuesOf("parent-accessions");
-            for (Object opt : opts) {
-                String[] tokens = ((String) opt).split(",");
-                parentAccessions.addAll(Arrays.asList(tokens));
-            }
-        }
-
-        // link-workflow-run-to-parents
-        ArrayList<String> parentsLinkedToWR = new ArrayList<>();
-        if (options.has("link-workflow-run-to-parents")) {
-            List opts = options.valuesOf("link-workflow-run-to-parents");
-            for (Object opt : opts) {
-                String[] tokens = ((String) opt).split(",");
-                parentsLinkedToWR.addAll(Arrays.asList(tokens));
-            }
-        }
-
-        // ini-files
-        ArrayList<String> iniFiles = new ArrayList<>();
-        if (options.has("ini-files")) {
-            List opts = options.valuesOf("ini-files");
-            for (Object opt : opts) {
-                String[] tokens = ((String) opt).split(",");
-                iniFiles.addAll(Arrays.asList(tokens));
-            }
-        }
-
-        Set<Integer> inputFiles = WorkflowLauncher.collectInputFiles(options, metadata);
-        if (options.has(INPUT_FILES) && (inputFiles == null || inputFiles.isEmpty())) {
-            Log.error("Error parsing provided input files");
-            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
-            return ret;
-        }
-
         // extra params, these will be passed directly to the FTL layer
         // so you can use this to override key/values from the ini files
         // very useful if you're calling the workflow from another system
         // and want to pass in arguments on the command line rather than ini
         // file
-        List<String> nonOptions = options.nonOptionArguments();
+        List<String> nonOptions = options.valuesOf(nonOptionSpec);
         Log.info("EXTRA OPTIONS: " + nonOptions.size());
 
-        // THE MAIN ACTION HAPPENS HERE
-        if (options.has("workflow-accession") /** && options.has("ini-files") */
-        ) {
-
-            // then you're scheduling a workflow that has been installed
-            if (options.has(SCHEDULE)) {
-                if (!options.has(HOST)) {
-                    Log.error("host parameter is required when scheduling");
-                    Log.info(this.get_syntax());
-                    ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
-                    return ret;
-                }
-                String host = (String) options.valueOf(HOST);
-                String engine = getEngineParam();
-                Log.info("You are scheduling a workflow to run on " + host + " by adding it to the metadb.");
-                ret = w.scheduleInstalledBundle((String) options.valueOf("workflow-accession"),
-                        (String) options.valueOf("workflow-run-accession"), iniFiles, metadataWriteback, parentAccessions,
-                        parentsLinkedToWR, false, nonOptions, host, engine, inputFiles);
-            } else {
-                throw new RuntimeException("SeqWare no longer supports running Pegasus bundles");
-            }
-
-        } else if ((options.has("bundle") || options.has("provisioned-bundle-dir")) && options.has("workflow") && options.has("version")
-                && options.has("ini-files")) {
-
-            throw new RuntimeException("SeqWare no longer supports running Pegasus bundles");
-
-        } else if (options.has(LAUNCH_SCHEDULED)) {
+        if (options.has(LAUNCH_SCHEDULED)) {
             RunLock.acquire();
             launchScheduledWorkflows(w, metadataWriteback);
         } else {
@@ -490,6 +427,25 @@ public class WorkflowLauncher extends Plugin {
         }
     }
 
+    private static String determineBundlePath(OptionSet options, Integer workflowAccession, Metadata metadata) {
+        Map<String, String> metaInfo = null;
+        Log.info("factory attempting to find bundle");
+        if (workflowAccession != null) {
+            Log.info("factory attempting to find bundle from DB");
+            // this execution path is hacked in for running from the database and can be refactored into BasicWorkflow
+            metaInfo = metadata.get_workflow_info(workflowAccession);
+            // we've found out the bundle location as of this point
+            // we need to grab the current_working_dir out
+            // use it to follow the same method determining a bundle path like below, the WorkflowV2Utility.parseMetaInfo does the
+            // substitution instead of BasicWorkflow in
+            // Yong's code
+            return metaInfo.get("current_working_dir");
+        } else {
+            Log.info("factory attempting to find bundle from options");
+            return WorkflowV2Utility.determineRelativeBundlePath(options);
+        }
+    }
+
     /**
      * Separating out the launching of a new workflow. This way, we can eventually refactor this to the Workflow object.
      * 
@@ -510,7 +466,8 @@ public class WorkflowLauncher extends Plugin {
         AbstractWorkflowDataModel dataModel;
         try {
             final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
-            dataModel = factory.getWorkflowDataModel(workflowAccession, workflowRunAccession);
+            String bundlePath = determineBundlePath(options, workflowAccession, metadata);
+            dataModel = factory.getWorkflowDataModel(bundlePath, workflowAccession, workflowRunAccession);
             if (workflowEngine != null) {
                 dataModel.setWorkflow_engine(workflowEngine);
             } else {

@@ -39,6 +39,16 @@ public class WorkflowDataModelFactory {
     private final String[] params;
     private final Metadata metadata;
 
+    /**
+     * 
+     * @param options
+     *            options from the WorkflowLauncher
+     * @param config
+     *            config generated from the .seqware/settings
+     * @param params
+     *            ini parameters on the command-line
+     * @param metadata
+     */
     public WorkflowDataModelFactory(OptionSet options, Map<String, String> config, String[] params, Metadata metadata) {
         this.options = options;
         this.config = config;
@@ -67,32 +77,18 @@ public class WorkflowDataModelFactory {
     /**
      * load metadata.xml and load the class.
      * 
+     * @param bundlePath
      * @param workflowAccession
      *            if this is present, we grab metadata information from the database, not the options
      * @param workflowRunAccession
      * @return
      */
-    public AbstractWorkflowDataModel getWorkflowDataModel(Integer workflowAccession, Integer workflowRunAccession) {
-        String bundlePath;
-        Map<String, String> metaInfo = null;
-        Log.info("factory attempting to find bundle");
-        if (workflowAccession != null) {
-            Log.info("factory attempting to find bundle from DB");
-            // this execution path is hacked in for running from the database and can be refactored into BasicWorkflow
-            metaInfo = this.metadata.get_workflow_info(workflowAccession);
-            // we've found out the bundle location as of this point
-            // we need to grab the current_working_dir out
-            // use it to follow the same method determining a bundle path like below, the WorkflowV2Utility.parseMetaInfo does the
-            // substitution instead of BasicWorkflow in
-            // Yong's code
-            bundlePath = metaInfo.get("current_working_dir");
-        } else {
-            Log.info("factory attempting to find bundle from options");
-            bundlePath = WorkflowV2Utility.determineRelativeBundlePath(options);
-        }
+    public AbstractWorkflowDataModel getWorkflowDataModel(String bundlePath, Integer workflowAccession, Integer workflowRunAccession) {
+
         File bundle = new File(bundlePath);
         // change to absolute path
         bundlePath = bundle.getAbsolutePath();
+        Map<String, String> metaInfo = metadata.get_workflow_info(workflowAccession);
         Log.info("Bundle Path: " + bundlePath);
         if (!bundle.exists()) {
 

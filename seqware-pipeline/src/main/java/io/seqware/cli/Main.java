@@ -457,11 +457,11 @@ public class Main {
             out("Performing dry-run of workflow '" + name + "' version '" + version + "'");
 
             if (engine == null) {
-                run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name,
-                        "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--no-run");
+                run("--plugin", "io.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name, "--version",
+                        version, "--ini-files", cdl(inis), "--no-run");
             } else {
-                run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name,
-                        "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--no-run", "--workflow-engine", engine);
+                run("--plugin", "io.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name, "--version",
+                        version, "--ini-files", cdl(inis), "--no-run", "--workflow-engine", engine);
             }
         }
     }
@@ -1102,9 +1102,8 @@ public class Main {
 
             List<String> runnerArgs = new ArrayList<>();
             runnerArgs.add("--plugin");
-            runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
+            runnerArgs.add("io.seqware.pipeline.plugins.WorkflowScheduler");
             runnerArgs.add("--");
-            runnerArgs.add("--schedule");
             runnerArgs.add("--workflow-accession");
             runnerArgs.add(wfId);
             if (engine != null) {
@@ -1275,7 +1274,7 @@ public class Main {
 
             List<String> runnerArgs = new ArrayList<>();
             runnerArgs.add("--plugin");
-            runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
+            runnerArgs.add("io.seqware.pipeline.plugins.WorkflowLauncher");
             runnerArgs.add("--");
 
             if (host != null) {
