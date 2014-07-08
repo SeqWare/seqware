@@ -110,8 +110,6 @@ public class Registration implements Serializable {
     @NotNull
     @Column(name = "payee")
     private boolean payee;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registrationId")
-    private Collection<ShareLane> shareLaneCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ownerId")
     private Collection<Invoice> invoiceCollection;
     @OneToMany(mappedBy = "ownerId")
@@ -126,14 +124,8 @@ public class Registration implements Serializable {
     private Collection<WorkflowRun> workflowRunCollection;
     @OneToMany(mappedBy = "ownerId")
     private Collection<SequencerRun> sequencerRunCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registrationId")
-    private Collection<ShareExperiment> shareExperimentCollection;
     @OneToMany(mappedBy = "ownerId")
     private Collection<Workflow> workflowCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registrationId")
-    private Collection<ShareProcessing> shareProcessingCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registrationId")
-    private Collection<ShareFile> shareFileCollection;
     @OneToMany(mappedBy = "ownerId")
     private Collection<Lane> laneCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "registrationId")
@@ -144,8 +136,6 @@ public class Registration implements Serializable {
     private Collection<ShareStudy> shareStudyCollection;
     @OneToMany(mappedBy = "ownerId")
     private Collection<Ius> iusCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registrationId")
-    private Collection<ShareSample> shareSampleCollection;
 
     public Registration() {
     }
@@ -281,15 +271,6 @@ public class Registration implements Serializable {
     }
 
     @XmlTransient
-    public Collection<ShareLane> getShareLaneCollection() {
-        return shareLaneCollection;
-    }
-
-    public void setShareLaneCollection(Collection<ShareLane> shareLaneCollection) {
-        this.shareLaneCollection = shareLaneCollection;
-    }
-
-    @XmlTransient
     public Collection<Invoice> getInvoiceCollection() {
         return invoiceCollection;
     }
@@ -353,39 +334,12 @@ public class Registration implements Serializable {
     }
 
     @XmlTransient
-    public Collection<ShareExperiment> getShareExperimentCollection() {
-        return shareExperimentCollection;
-    }
-
-    public void setShareExperimentCollection(Collection<ShareExperiment> shareExperimentCollection) {
-        this.shareExperimentCollection = shareExperimentCollection;
-    }
-
-    @XmlTransient
     public Collection<Workflow> getWorkflowCollection() {
         return workflowCollection;
     }
 
     public void setWorkflowCollection(Collection<Workflow> workflowCollection) {
         this.workflowCollection = workflowCollection;
-    }
-
-    @XmlTransient
-    public Collection<ShareProcessing> getShareProcessingCollection() {
-        return shareProcessingCollection;
-    }
-
-    public void setShareProcessingCollection(Collection<ShareProcessing> shareProcessingCollection) {
-        this.shareProcessingCollection = shareProcessingCollection;
-    }
-
-    @XmlTransient
-    public Collection<ShareFile> getShareFileCollection() {
-        return shareFileCollection;
-    }
-
-    public void setShareFileCollection(Collection<ShareFile> shareFileCollection) {
-        this.shareFileCollection = shareFileCollection;
     }
 
     @XmlTransient
@@ -431,15 +385,6 @@ public class Registration implements Serializable {
 
     public void setIusCollection(Collection<Ius> iusCollection) {
         this.iusCollection = iusCollection;
-    }
-
-    @XmlTransient
-    public Collection<ShareSample> getShareSampleCollection() {
-        return shareSampleCollection;
-    }
-
-    public void setShareSampleCollection(Collection<ShareSample> shareSampleCollection) {
-        this.shareSampleCollection = shareSampleCollection;
     }
 
     @Override

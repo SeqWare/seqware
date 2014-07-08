@@ -120,8 +120,6 @@ public class Study implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "studyId")
     private Collection<ShareStudy> shareStudyCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "studyId")
-    private Collection<StudyLink> studyLinkCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "studyId")
     private Collection<ProcessingStudies> processingStudiesCollection;
 
     public Study() {
@@ -293,15 +291,6 @@ public class Study implements Serializable {
 
     public void setShareStudyCollection(Collection<ShareStudy> shareStudyCollection) {
         this.shareStudyCollection = shareStudyCollection;
-    }
-
-    @XmlTransient
-    public Collection<StudyLink> getStudyLinkCollection() {
-        return studyLinkCollection;
-    }
-
-    public void setStudyLinkCollection(Collection<StudyLink> studyLinkCollection) {
-        this.studyLinkCollection = studyLinkCollection;
     }
 
     @XmlTransient
