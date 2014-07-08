@@ -1,6 +1,5 @@
 package net.sourceforge.seqware.common.business;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,8 +13,6 @@ import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunParam;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 
 /**
  * <p>
@@ -433,30 +430,6 @@ public interface WorkflowRunService {
      * @return a {@link java.util.Set} object.
      */
     public Set<WorkflowRun> findRunsForSample(Sample sample);
-
-    /**
-     * <p>
-     * runWorkflow.
-     * </p>
-     * 
-     * @param wi
-     *            a {@link net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo} object.
-     * @param workflowRunAccession
-     *            a {@link java.lang.String} object.
-     * @param iniFilesStr
-     *            a {@link java.lang.String} object.
-     * @param noMetadata
-     *            a boolean.
-     * @param parentAccessionsStr
-     *            a {@link java.lang.String} object.
-     * @param parentsLinkedToWR
-     *            a {@link java.util.ArrayList} object.
-     * @param owner
-     *            a {@link net.sourceforge.seqware.common.model.Registration} object.
-     * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
-     */
-    public ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, String iniFilesStr, boolean noMetadata,
-            String parentAccessionsStr, ArrayList<String> parentsLinkedToWR, Registration owner);
 
     /**
      * <p>
