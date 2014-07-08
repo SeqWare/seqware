@@ -23,7 +23,6 @@ import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
-import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
 
 /**
  * a utils class for creating the AbstractWorkflowDataModel, by reading the metadata.xml file, will load a Java based objectModel or XML
@@ -166,7 +165,7 @@ public class WorkflowDataModelFactory {
 
         // 0.13.6.5 : The Java workflow launcher was not originally designed to schedule, hence it is not properly getting
         // parent accessions from saved ini files (as opposed to on the command line)
-        ArrayList<String> parseParentAccessions = BasicWorkflow.parseParentAccessions(configs);
+        ArrayList<String> parseParentAccessions = parseParentAccessions(configs);
         dataModel.setParentAccessions(parseParentAccessions);
 
         // merge command line option with configs, command-line options should override parent accession set above if present
@@ -440,5 +439,41 @@ public class WorkflowDataModelFactory {
         if (options.has("workflow-engine")) {
             model.setWorkflow_engine((String) options.valueOf("workflow-engine"));
         }
+    }
+
+    /**
+     * reads a map and tries to find the parent accessions, the result is de-duplicated.
+     * 
+     * @param map
+     * @return
+     */
+    private static ArrayList<String> parseParentAccessions(Map<String, String> map) {
+        ArrayList<String> results = new ArrayList<>();
+        HashMap<String, String> resultsDeDup = new HashMap<>();
+
+        for (String key : map.keySet()) {
+            if (ReservedIniKeys.PARENT_ACCESSION.getKey().equals(key) || ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey().equals(key)
+                    || ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey().equals(key)) {
+                resultsDeDup.put(map.get(key), "null");
+            }
+        }
+
+        for (String accession : resultsDeDup.keySet()) {
+            results.add(accession);
+        }
+
+        // for hotfix 0.13.6.3
+        // GATK reveals an issue where parent_accession is setup with a correct list
+        // of accessions while parent-accessions and parent_accessions are set to 0
+        // when the three are mushed together, the rogue zero is transferred to
+        // parent_accession and causes it to crash the workflow
+        // I'm going to allow a single 0 in case (god forbid) some workflow relies
+        // upon this, but otherwise a 0 should not occur in a list of valid
+        // parent_accessions
+        if (results.contains("0") && results.size() > 1) {
+            results.remove("0");
+        }
+
+        return (results);
     }
 }

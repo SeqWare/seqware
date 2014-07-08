@@ -1,18 +1,8 @@
-/**
- * @author briandoconnor@gmail.com
- *
- * The WorkflowPlugin is responsible for launching workflows with or without
- * metadata writeback.
- *
- * rules for command construction cd $cwd && $command --workflow-accession
- * $workflow_accession --workflow-run-accession $workflow_run_accession
- * --parent-accessions $parent_accessions --ini-files $temp_file --wait &
- *
- */
 package io.seqware.pipeline.plugins;
 
 import io.seqware.WorkflowRuns;
 import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.pipeline.api.Scheduler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,11 +21,9 @@ import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.tools.RunLock;
-import net.sourceforge.seqware.pipeline.workflow.BasicWorkflow;
-import net.sourceforge.seqware.pipeline.workflow.Workflow;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
-import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
+import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowV2Utility;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
@@ -43,7 +31,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * 
- * TODO: validate at all the option below (especially link-parent-to-workflow-run) actually work!
+ * The WorkflowLauncher is responsible for launching scheduled workflows.
+ * 
+ * Previously, it was responsible for launching, scheduling, waiting, etc. This is the subject of refactoring in order to reduce this.
  * 
  * @author boconnor
  */
@@ -52,7 +42,6 @@ public class WorkflowLauncher extends Plugin {
 
     public static final String FORCE_HOST = "force-host";
     public static final String HOST = "host";
-    public static final String SCHEDULE = "schedule";
     public static final String LAUNCH_SCHEDULED = "launch-scheduled";
     public static final String WAIT = "wait";
     public static final String INPUT_FILES = "input-files";
@@ -72,10 +61,6 @@ public class WorkflowLauncher extends Plugin {
          */
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
         parser.acceptsAll(
-                Arrays.asList("parent-accessions", "pa"),
-                "Optional: Typically this is the sw_accession of the processing record that is the parent for this workflow e.g. whose file is used as the input. You can actually specify multiple parent accessions by using this parameter multiple times or providing a comma-delimited list, no space. You may want multiple parents when your workflow takes multiple input files. Most of the time the accession is from a processing row but can be an ius, lane, sequencer_run, study, experiment, or sample.")
-                .withRequiredArg();
-        parser.acceptsAll(
                 Arrays.asList("workflow-accession", "wa"),
                 "Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.")
                 .withRequiredArg();
@@ -83,10 +68,6 @@ public class WorkflowLauncher extends Plugin {
                 Arrays.asList(LAUNCH_SCHEDULED, "ls"),
                 "Optional: If this parameter is given (which can optionally have a comma separated list of workflow run accessions) all the workflows that have been scheduled in the database will have their commands constructed and executed on this machine (thus launching those workflows). This command can only be run on a machine capable of submitting workflows (e.g. a cluster submission host!). If you're submitting a workflow remotely you want to use the --schedule option instead.")
                 .withOptionalArg();
-        parser.acceptsAll(
-                Arrays.asList("workflow-run-accession", "wra"),
-                "Optional: The sw_accession of an existing workflow_run that should be used. This row is pre-created when another job schedules a workflow run by partially populating a workflow_run row and setting the status to 'scheduled'. If this is not specified then a new workflow_run row will be created. Specify this in addition to a workflow-accession.")
-                .withRequiredArg();
         parser.acceptsAll(
                 Arrays.asList("workflow", "w"),
                 "The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.")
@@ -96,10 +77,6 @@ public class WorkflowLauncher extends Plugin {
                 .withRequiredArg();
         parser.acceptsAll(Arrays.asList("bundle", "b", "provisioned-bundle-dir"),
                 "The path to a bundle zip file. You can specify this or the workflow-accession of an already installed bundle.")
-                .withRequiredArg();
-        parser.acceptsAll(
-                Arrays.asList("link-workflow-run-to-parents", "lwrp"),
-                "Optional: The sw_accession of the sequencer_run, lane, ius, processing, study, experiment, or sample (NOTE: only currently supports ius and lane) that should be linked to the workflow_run row created by this tool. This is optional but useful since it simplifies future queries on the metadb. Can be specified multiple times if there are multiple parents or comma-delimited with no spaces (or both).")
                 .withRequiredArg();
         parser.acceptsAll(
                 Arrays.asList("ini-files", "i"),
@@ -114,9 +91,6 @@ public class WorkflowLauncher extends Plugin {
         parser.acceptsAll(
                 Arrays.asList(WAIT),
                 "Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.");
-        parser.acceptsAll(Arrays.asList("metadata", "m"), "Specify the path to the metadata.xml file.").withRequiredArg();
-        parser.acceptsAll(Arrays.asList(HOST, "ho"), "Used only in combination with --schedule to schedule onto a specific host")
-                .withRequiredArg();
         parser.acceptsAll(
                 Arrays.asList(FORCE_HOST, "fh"),
                 "If specified, the scheduled workflow will only be launched if this parameter value and the host field in the workflow run table match. This is a mechanism to target workflows to particular servers for launching.")
@@ -132,8 +106,7 @@ public class WorkflowLauncher extends Plugin {
                 "Optional: Specifies a workflow engine, one of: " + ENGINES_LIST + ". Defaults to " + DEFAULT_ENGINE + ".")
                 .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
         parser.accepts("no-run", "Optional: Terminates the launch process immediately prior to running. Useful for debugging.");
-        this.nonOptionSpec = parser
-                .nonOptions("Override ini options on the command like by providding an additional -- and then --<key> <value>");
+        this.nonOptionSpec = parser.nonOptions(WorkflowScheduler.OVERRIDE_INI_DESC);
 
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
@@ -210,7 +183,7 @@ public class WorkflowLauncher extends Plugin {
          */
 
         // setup workflow object
-        BasicWorkflow w = this.createWorkflow();
+        Scheduler w = new Scheduler(metadata, config);
 
         // figure out what was passed as params and make structs to pass to the
         // workflow layer
@@ -240,12 +213,8 @@ public class WorkflowLauncher extends Plugin {
         return ret;
     }
 
-    /*
-     * (non-Javadoc) @see net.sourceforge.seqware.pipeline.plugin.PluginInterface#clean_up()
-     */
     @Override
     public ReturnValue clean_up() {
-        // TODO Auto-generated method stub
         return ret;
     }
 
@@ -254,15 +223,11 @@ public class WorkflowLauncher extends Plugin {
         return "A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.";
     }
 
-    protected BasicWorkflow createWorkflow() {
-        return new Workflow(metadata, config);
-    }
-
     @Override
     public ReturnValue do_run() {
         ReturnValue oldReturnValue = null;
         // ensure that scheduling is done in conjunction with a host
-        if (options.has(SCHEDULE) || options.has(LAUNCH_SCHEDULED)) {
+        if (options.has(LAUNCH_SCHEDULED)) {
             // this needs cleanup, but if we want to schedule just defer to the old
             // launcher
             // we also need to handle scheduled runs that are relevant to the new
@@ -288,8 +253,8 @@ public class WorkflowLauncher extends Plugin {
 
     }
 
-    public static AbstractWorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel, Map<String, String> config) {
-        AbstractWorkflowEngine wfEngine = null;
+    public static WorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel, Map<String, String> config) {
+        WorkflowEngine wfEngine = null;
         String engine = dataModel.getWorkflow_engine();
         if (engine == null || engine.equalsIgnoreCase("pegasus")) {
             throw new RuntimeException("Pegasus workflow engine is no longer supported");
@@ -374,7 +339,7 @@ public class WorkflowLauncher extends Plugin {
      * @param w
      * @param metadataWriteback
      */
-    private void launchScheduledWorkflows(BasicWorkflow w, boolean metadataWriteback) {
+    private void launchScheduledWorkflows(Scheduler w, boolean metadataWriteback) {
         // LEFT OFF HERE, not sure if the workflow will come back from the
         // web service!?
 
@@ -486,7 +451,7 @@ public class WorkflowLauncher extends Plugin {
         Log.info("constructed dataModel");
 
         // set up workflow engine
-        AbstractWorkflowEngine engine = WorkflowLauncher.getWorkflowEngine(dataModel, config);
+        WorkflowEngine engine = WorkflowLauncher.getWorkflowEngine(dataModel, config);
 
         engine.prepareWorkflow(dataModel);
         if (options.has("no-run")) {
