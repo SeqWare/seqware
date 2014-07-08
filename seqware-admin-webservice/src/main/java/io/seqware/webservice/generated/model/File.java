@@ -95,8 +95,6 @@ public class File implements Serializable {
     @ManyToOne
     private FileType fileTypeId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fileId")
-    private Collection<ShareFile> shareFileCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fileId")
     private Collection<ProcessingFiles> processingFilesCollection;
 
     public File() {
@@ -222,15 +220,6 @@ public class File implements Serializable {
 
     public void setFileTypeId(FileType fileTypeId) {
         this.fileTypeId = fileTypeId;
-    }
-
-    @XmlTransient
-    public Collection<ShareFile> getShareFileCollection() {
-        return shareFileCollection;
-    }
-
-    public void setShareFileCollection(Collection<ShareFile> shareFileCollection) {
-        this.shareFileCollection = shareFileCollection;
     }
 
     @XmlTransient

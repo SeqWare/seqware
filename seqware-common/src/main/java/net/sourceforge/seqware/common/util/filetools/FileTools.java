@@ -391,7 +391,7 @@ public class FileTools {
                             // }
                             // cutting from file path folder store
                             filePath = filePath.substring(cutPrefix.length());
-                            Log.info("Deflating: " + filePath);
+                            Log.debug("Deflating: " + filePath);
                             out.putNextEntry(new ZipEntry(filePath));
                             // Transfer bytes from the current file to the ZIP file
                             // out.write(buffer, 0, in.read(buffer));
