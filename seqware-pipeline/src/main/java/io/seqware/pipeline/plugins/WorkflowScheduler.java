@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Set;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.NonOptionArgumentSpec;
+import joptsimple.OptionSpecBuilder;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.module.ReturnValue.ExitStatus;
 import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
@@ -33,10 +33,10 @@ public class WorkflowScheduler extends Plugin {
     private final ArgumentAcceptingOptionSpec<Long> inputFilesSpec;
     private final ArgumentAcceptingOptionSpec<String> iniFilesSpec;
     private final ArgumentAcceptingOptionSpec<String> linkWorkflowRunToParentsSpec;
-    private final ArgumentAcceptingOptionSpec<String> reuseWorkflowRunAccessionSpec;
     private final ArgumentAcceptingOptionSpec<String> workflowAccessionSpec;
     private final ArgumentAcceptingOptionSpec<String> parentAccessionsSpec;
     private final NonOptionArgumentSpec<String> nonOptionSpec;
+    private final OptionSpecBuilder metadataWriteBackSpec;
 
     public WorkflowScheduler() {
         super();
@@ -49,13 +49,8 @@ public class WorkflowScheduler extends Plugin {
         this.workflowAccessionSpec = parser
                 .acceptsAll(
                         Arrays.asList("workflow-accession", "wa"),
-                        "Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.")
-                .withRequiredArg().ofType(String.class);
-        this.reuseWorkflowRunAccessionSpec = parser
-                .acceptsAll(
-                        Arrays.asList("workflow-run-accession", "wra"),
-                        "Optional: The sw_accession of an existing workflow_run that should be used. This row is pre-created when another job schedules a workflow run by partially populating a workflow_run row and setting the status to 'scheduled'. If this is not specified then a new workflow_run row will be created. Specify this in addition to a workflow-accession.")
-                .withRequiredArg().ofType(String.class);
+                        "Required: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.")
+                .withRequiredArg().ofType(String.class).required();
         this.linkWorkflowRunToParentsSpec = parser
                 .acceptsAll(
                         Arrays.asList("link-workflow-run-to-parents", "lwrp"),
@@ -78,8 +73,13 @@ public class WorkflowScheduler extends Plugin {
                 .accepts(
                         "workflow-engine",
                         "Optional: Specifies a workflow engine, one of: " + Engines.ENGINES_LIST + ". Defaults to "
-                                + Engines.DEFAULT_ENGINE + ".").withRequiredArg().ofType(String.class)
-                .describedAs("Workflow Engine").ofType(String.class);
+                                + Engines.DEFAULT_ENGINE + ".").withRequiredArg().ofType(String.class).describedAs("Workflow Engine")
+                .ofType(String.class);
+        this.metadataWriteBackSpec = parser
+                .acceptsAll(
+                        Arrays.asList("no-meta-db", "no-metadata"),
+                        "Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.");
+
         this.nonOptionSpec = parser.nonOptions(OVERRIDE_INI_DESC);
     }
 
@@ -99,10 +99,6 @@ public class WorkflowScheduler extends Plugin {
 
     @Override
     public ReturnValue init() {
-        FileTools.LocalhostPair localhost = FileTools.getLocalhost(options);
-        if (localhost.returnValue.getExitStatus() != ReturnValue.SUCCESS) {
-            return (localhost.returnValue);
-        }
 
         if (options.has(workflowEngineSpec)) {
             if (!Engines.ENGINES.contains((String) options.valueOf(workflowEngineSpec))) {
@@ -134,15 +130,6 @@ public class WorkflowScheduler extends Plugin {
     public ReturnValue do_run() {
         Scheduler w = new Scheduler(metadata, config);
 
-        // parent accessions
-        List<String> parentAccessions = options.valuesOf(parentAccessionsSpec);
-
-        // link-workflow-run-to-parents
-        List<String> parentsLinkedToWR = options.valuesOf(linkWorkflowRunToParentsSpec);
-
-        // ini-files
-        List<String> iniFiles = options.valuesOf(iniFilesSpec);
-
         Set<Integer> inputFiles = collectInputFiles();
         if (options.has(inputFilesSpec) && (inputFiles == null || inputFiles.isEmpty())) {
             Log.error("Error parsing provided input files");
@@ -169,8 +156,9 @@ public class WorkflowScheduler extends Plugin {
             String host = options.valueOf(hostSpec);
             String engine = getEngineParam();
             Log.info("You are scheduling a workflow to run on " + host + " by adding it to the metadb.");
-            return w.scheduleInstalledBundle(options.valueOf(workflowAccessionSpec), options.valueOf(reuseWorkflowRunAccessionSpec),
-                    iniFiles, true, parentAccessions, parentsLinkedToWR, nonOptions, host, engine, inputFiles);
+            return w.scheduleInstalledBundle(options.valueOf(workflowAccessionSpec), options.valuesOf(iniFilesSpec),
+                    options.has(metadataWriteBackSpec), options.valuesOf(parentAccessionsSpec),
+                    options.valuesOf(linkWorkflowRunToParentsSpec), options.valuesOf(nonOptionSpec), host, engine, inputFiles);
 
         } else {
             Log.error("I don't understand the combination of arguments you gave!");
