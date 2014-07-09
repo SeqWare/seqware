@@ -19,7 +19,6 @@ package net.sourceforge.seqware.pipeline.deciders;
 import com.google.common.collect.ImmutableList;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.WorkflowRunStatus;
-import io.seqware.pipeline.plugins.WorkflowLauncher;
 import io.seqware.pipeline.plugins.WorkflowScheduler;
 import java.io.File;
 import java.io.FileWriter;
@@ -93,7 +92,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Collection<Integer> fileSWIDsToRun;
     private Set<String> studyReporterOutput;
     private ArrayList<String> iniFiles;
-    private Boolean runNow = null;
     private Boolean skipStuff = null;
     private int launchMax = Integer.MAX_VALUE, launched = 0;
     private int rerunMax = 5;
@@ -115,7 +113,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("parent-wf-accessions"),
                 "The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.")
                 .withRequiredArg();
-        parser.acceptsAll(Arrays.asList("ignore-previous-runs"), "Forces the decider to run all matches regardless of whether they've been run before or not");
+        parser.acceptsAll(Arrays.asList("ignore-previous-runs"),
+                "Forces the decider to run all matches regardless of whether they've been run before or not");
         parser.acceptsAll(Arrays.asList("meta-types"),
                 "The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.")
                 .withRequiredArg();
@@ -283,10 +282,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             metadataWriteback = !(options.has("no-metadata") || options.has("no-meta-db"));
         }
 
-        if (runNow == null) {
-            runNow = !options.has("schedule");
-        }
-
         LocalhostPair localhostPair = FileTools.getLocalhost(options);
         String localhost = localhostPair.hostname;
         if (host == null) {
@@ -409,7 +404,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         Log.warn("Final check failed, aborting run. Return value was: " + newRet.getExitStatus());
                         rerun = false;
                     }
-                    
+
                     // if we're in testing mode or we don't want to rerun and we don't want to force the re-processing
                     if (test || !rerun) {
                         // we need to simplify the logic and make it more readable here for testing
@@ -446,7 +441,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     }
                     // separate this out so that it is reachable when in --test
                     if (launched >= launchMax) {
-                        Log.info("The maximum number of jobs has been " + (runNow ? "launched" : "scheduled")
+                        Log.info("The maximum number of jobs has been scheduled"
                                 + ". The next jobs will be launched when the decider runs again.");
                         ret.setExitStatus(ReturnValue.QUEUED);
                         // SEQWARE-1666 - short-circuit and exit when the maximum number of jobs have been launched
@@ -467,14 +462,14 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     protected ArrayList<String> constructCommand() {
         ArrayList<String> runArgs = new ArrayList<>();
         runArgs.add("--plugin");
-        runArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
+        runArgs.add("io.seqware.pipeline.plugins");
         runArgs.add("--");
         runArgs.add("--workflow-accession");
         runArgs.add(workflowAccession);
         runArgs.add("--ini-files");
         runArgs.add(commaSeparateMy(iniFiles));
         Collection<String> fileSWIDs = new ArrayList<>();
-        runArgs.add("--" + WorkflowLauncher.INPUT_FILES);
+        runArgs.add("--" + WorkflowScheduler.INPUT_FILES);
         for (Integer fileSWID : fileSWIDsToRun) {
             fileSWIDs.add(String.valueOf(fileSWID));
         }
@@ -486,9 +481,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         runArgs.add(commaSeparateMy(parentAccessionsToRun));
         runArgs.add("--link-workflow-run-to-parents");
         runArgs.add(commaSeparateMy(workflowParentAccessionsToRun));
-        if (!runNow) {
-            runArgs.add("--schedule");
-        }
         runArgs.add("--host");
         runArgs.add(host);
 

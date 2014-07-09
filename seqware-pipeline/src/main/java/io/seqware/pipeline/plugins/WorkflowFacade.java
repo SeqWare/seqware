@@ -45,10 +45,6 @@ public class WorkflowFacade extends Plugin {
                 "Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.")
                 .withRequiredArg();
         parser.acceptsAll(
-                Arrays.asList(LAUNCH_SCHEDULED, "ls"),
-                "Optional: If this parameter is given (which can optionally have a comma separated list of workflow run accessions) all the workflows that have been scheduled in the database will have their commands constructed and executed on this machine (thus launching those workflows). This command can only be run on a machine capable of submitting workflows (e.g. a cluster submission host!). If you're submitting a workflow remotely you want to use the --schedule option instead.")
-                .withOptionalArg();
-        parser.acceptsAll(
                 Arrays.asList("workflow", "w"),
                 "The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.")
                 .withRequiredArg();
@@ -75,13 +71,6 @@ public class WorkflowFacade extends Plugin {
                 Arrays.asList(FORCE_HOST, "fh"),
                 "If specified, the scheduled workflow will only be launched if this parameter value and the host field in the workflow run table match. This is a mechanism to target workflows to particular servers for launching.")
                 .withRequiredArg();
-        // options ported over from WorkflowLauncherV2
-        parser.accepts("metadata-output-file-prefix",
-                "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-                .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
-        parser.accepts("metadata-output-dir",
-                "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
-                .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
         parser.accepts("workflow-engine",
                 "Optional: Specifies a workflow engine, one of: " + Engines.ENGINES_LIST + ". Defaults to " + Engines.DEFAULT_ENGINE + ".")
                 .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");

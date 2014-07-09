@@ -59,7 +59,6 @@ public class Scheduler {
      * scheduled.
      * 
      * @param workflowAccession
-     * @param workflowRunAccession
      * @param iniFiles
      * @param metadataWriteback
      * @param parentAccessions
@@ -71,15 +70,15 @@ public class Scheduler {
      * @param cmdLineOptions
      * @return
      */
-    public ReturnValue scheduleInstalledBundle(String workflowAccession, String workflowRunAccession, List<String> iniFiles,
-            boolean metadataWriteback, List<String> parentAccessions, List<String> parentsLinkedToWR, List<String> cmdLineOptions,
-            String scheduledHost, String workflowEngine, Set<Integer> inputFiles) {
+    public ReturnValue scheduleInstalledBundle(String workflowAccession, List<String> iniFiles, boolean metadataWriteback,
+            List<String> parentAccessions, List<String> parentsLinkedToWR, List<String> cmdLineOptions, String scheduledHost,
+            String workflowEngine, Set<Integer> inputFiles) {
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
         Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
         WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
-        scheduleWorkflow(wi, workflowRunAccession, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, cmdLineOptions,
-                scheduledHost, workflowEngine, inputFiles);
+        scheduleWorkflow(wi, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, cmdLineOptions, scheduledHost,
+                workflowEngine, inputFiles);
 
         return localRet;
     }
@@ -98,9 +97,9 @@ public class Scheduler {
      * @param inputFiles
      * @return
      */
-    private ReturnValue scheduleWorkflow(WorkflowInfo wi, String workflowRunAccession, List<String> iniFiles, boolean metadataWriteback,
-            List<String> parentAccessions, List<String> parentsLinkedToWR, List<String> cmdLineOptions, String scheduledHost,
-            String workflowEngine, Set<Integer> inputFiles) {
+    private ReturnValue scheduleWorkflow(WorkflowInfo wi, List<String> iniFiles, boolean metadataWriteback, List<String> parentAccessions,
+            List<String> parentsLinkedToWR, List<String> cmdLineOptions, String scheduledHost, String workflowEngine,
+            Set<Integer> inputFiles) {
 
         // keep this id handy
         int workflowRunId = 0;
@@ -180,13 +179,11 @@ public class Scheduler {
             // need to figure out workflow_run_accession
             int workflowAccession = wi.getWorkflowAccession();
             // create the workflow_run row if it doesn't exist
-            if (workflowRunAccession == null) {
-                workflowRunId = this.metadata.add_workflow_run(workflowAccession);
-                int workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
-                workflowRunAccession = Integer.toString(workflowRunAccessionInt);
-            } else { // if the workflow_run row exists get the workflow_run_id
-                workflowRunId = this.metadata.get_workflow_run_id(Integer.parseInt(workflowRunAccession));
-            }
+
+            workflowRunId = this.metadata.add_workflow_run(workflowAccession);
+            int workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
+            String workflowRunAccession = Integer.toString(workflowRunAccessionInt);
+
             map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
             // my new preferred variable name
             map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);

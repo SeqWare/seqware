@@ -3,7 +3,6 @@ package io.seqware.pipeline.plugins;
 import io.seqware.pipeline.api.WorkflowEngine;
 import io.seqware.pipeline.api.WorkflowTools;
 import java.util.Arrays;
-import java.util.Map;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -64,15 +63,11 @@ public class WorkflowWatcher extends Plugin {
         String workflowRunAccession = options.valueOf(workflowRunAccessionSpec);
         WorkflowRun workflowRunWithWorkflow = metadata.getWorkflowRunWithWorkflow(workflowRunAccession);
         Integer workflowAccession = workflowRunWithWorkflow.getWorkflowAccession();
-        Map<String, String> metaInfo = metadata.get_workflow_info(workflowAccession);
-        // TODO get rid of this magic variable
-        String bundleDir = metaInfo.get("current_working_dir");
-
-        final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(config, metadata);
+        String bundleDir = workflowRunWithWorkflow.getCurrentWorkingDir();
+        WorkflowDataModelFactory factory = new WorkflowDataModelFactory(config, metadata);
 
         AbstractWorkflowDataModel dataModel = factory.getWorkflowDataModel(bundleDir, workflowAccession,
-                Integer.valueOf(workflowRunAccession), false, workflowRunWithWorkflow.getWorkflowEngine());
-
+                Integer.valueOf(workflowRunAccession), workflowRunWithWorkflow.getWorkflowEngine());
         WorkflowEngine workflowEngine = WorkflowTools.getWorkflowEngine(dataModel, config);
 
         return workflowEngine.watchWorkflow(workflowRunWithWorkflow.getStatusCmd());
