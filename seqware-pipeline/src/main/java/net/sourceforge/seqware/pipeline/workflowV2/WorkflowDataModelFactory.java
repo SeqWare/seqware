@@ -52,13 +52,12 @@ public class WorkflowDataModelFactory {
      * 
      * @param bundlePath
      * @param workflowAccession
-     *            if this is present, we grab metadata information from the database, not the options
      * @param workflowRunAccession
      * @param workflowEngine
      * @return
      */
-    public synchronized AbstractWorkflowDataModel getWorkflowDataModel(String bundlePath, Integer workflowAccession,
-            Integer workflowRunAccession, String workflowEngine) {
+    public synchronized AbstractWorkflowDataModel getWorkflowDataModel(String bundlePath, int workflowAccession, int workflowRunAccession,
+            String workflowEngine) {
 
         File bundle = new File(bundlePath);
         // change to absolute path
@@ -111,12 +110,17 @@ public class WorkflowDataModelFactory {
                     dataModel = (AbstractWorkflowDataModel) object;
                 } catch (InstantiationException | IllegalAccessException | SecurityException | IllegalArgumentException ex) {
                     Log.error(ex, ex);
+                    throw Rethrow.rethrow(ex);
                 }
             } else {
                 Log.stdout("failed looking for classes at " + classpath);
+                throw new RuntimeException("Unable to construct workflow class");
             }
         } else {
             throw new RuntimeException("Non-Java workflows not currently supported");
+        }
+        if (dataModel == null) {
+            throw new RuntimeException("Unable to construct datamodel");
         }
         Log.info("datamodel generated");
         // load metadata.xml
@@ -175,17 +179,8 @@ public class WorkflowDataModelFactory {
 
         // get workflow-run-accession
         // in 1.1 we're going to make metadata writeback of at least workflow runs mandatory
-        if (workflowAccession != null && workflowRunAccession == null) {
-            int workflowrunid = metadata.add_workflow_run(workflowAccession);
-            int workflowrunaccession = metadata.get_workflow_run_accession(workflowrunid);
-            dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
-        } else if (workflowAccession != null && workflowRunAccession != null) {
-            dataModel.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
-        } else {
-            assert (false);
-            Log.error("This condition should never be reached");
-            throw new UnsupportedOperationException();
-        }
+        dataModel.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
+        dataModel.setWorkflow_accession(String.valueOf(workflowAccession));
 
         // parse XML or Java Object for
         if (workflow_java) {
@@ -202,6 +197,9 @@ public class WorkflowDataModelFactory {
                 m.invoke(dataModel);
                 m = clazz.getMethod("buildWorkflow");
                 m.invoke(dataModel);
+            } catch (NullPointerException e) {
+                Log.error("NullPointerException", e);
+                throw Rethrow.rethrow(e);
             } catch (SecurityException e) {
                 Log.error("SecurityException", e);
                 throw Rethrow.rethrow(e);
@@ -404,6 +402,6 @@ public class WorkflowDataModelFactory {
             results.remove("0");
         }
 
-        return (results);
+        return results;
     }
 }
