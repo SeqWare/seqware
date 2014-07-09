@@ -14,17 +14,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.workflowV2;
+package io.seqware.pipeline.api;
 
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 
 /**
  * <p>
  * WorkflowEngine interface.
  * </p>
  * 
+ * This interface will eventually encompass all the methods that a workflow engine should have to implement including preparation of
+ * workflows, watching workflows, and status checking.
+ * 
  * @author yongliang
- * @version $Id: $Id
+ * @since 1.1
  */
 public interface WorkflowEngine {
 
@@ -57,6 +61,15 @@ public interface WorkflowEngine {
      */
     public String getWorkingDirectory();
 
+    /**
+     * Watch a workflow and return running information until it completes.
+     * 
+     * The exact nature of the output is arbitrary and likely dependent on the workflow engine.
+     * 
+     * @return
+     */
+    public ReturnValue watchWorkflow(String jobToken);
+
     // /**
     // * Obtain the status of the workflow run.
     // *
@@ -64,7 +77,7 @@ public interface WorkflowEngine {
     // * the token created during launch of the workflow
     // * @return the workflow run status
     // */
-    // public abstract String lookupStatus(String token);
+    // public String lookupStatus(String token);
     //
     // /**
     // * Obtain the stdout of the workflow run.

@@ -4,16 +4,13 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -25,7 +22,7 @@ import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 
 /**
- * a utils class for creating the AbstractWorkflowDataModel, by reading the metadata.xml file, will load a Java based objectModel or XML
+ * a utils class for creating the AbstractWorkflowDataModel, by reading the metadata.xml file, will load a Java based objectModel or XML-
  * based ObjectModel
  * 
  * @author yliang
@@ -34,55 +31,36 @@ import net.sourceforge.seqware.pipeline.bundle.Bundle;
 public class WorkflowDataModelFactory {
 
     private final Map<String, String> config;
-    private final OptionSet options;
-    private final String[] params;
     private final Metadata metadata;
 
     /**
+     * This constructs the factory with only the parameters which shouldn't change from workflow to workflow.
      * 
-     * @param options
-     *            options from the WorkflowLauncher
      * @param config
      *            config generated from the .seqware/settings
-     * @param params
-     *            ini parameters on the command-line
      * @param metadata
      */
-    public WorkflowDataModelFactory(OptionSet options, Map<String, String> config, String[] params, Metadata metadata) {
-        this.options = options;
+    public WorkflowDataModelFactory(Map<String, String> config, Metadata metadata) {
         this.config = config;
-        this.params = params;
         this.metadata = metadata;
-
-        // need to do options ret
-    }
-
-    /**
-     * a simple method to replace the ${workflow_bundle_dir} variable (copied from BasicWorkflow)
-     * 
-     * @param input
-     * @param wbd
-     * @return
-     */
-    private String replaceWBD(String input, String wbd) {
-        if (input != null) {
-            return (input.replaceAll("\\$\\{" + MapTools.VAR_BUNDLE_DIR + "\\}", wbd).replaceAll("\\$\\{" + MapTools.LEGACY_VAR_BUNDLE_DIR
-                    + "\\}", wbd));
-        } else {
-            return null;
-        }
     }
 
     /**
      * load metadata.xml and load the class.
      * 
+     * This method still needs work because it requires a lot of parameters which
+     * 
      * @param bundlePath
      * @param workflowAccession
      *            if this is present, we grab metadata information from the database, not the options
      * @param workflowRunAccession
+     * @param metadatawriteback
+     *            are we going to track metadata for processing events
+     * @param workflowEngine
      * @return
      */
-    public AbstractWorkflowDataModel getWorkflowDataModel(String bundlePath, Integer workflowAccession, Integer workflowRunAccession) {
+    public synchronized AbstractWorkflowDataModel getWorkflowDataModel(String bundlePath, Integer workflowAccession,
+            Integer workflowRunAccession, boolean metadatawriteback, String workflowEngine) {
 
         File bundle = new File(bundlePath);
         // change to absolute path
@@ -169,7 +147,7 @@ public class WorkflowDataModelFactory {
         dataModel.setParentAccessions(parseParentAccessions);
 
         // merge command line option with configs, command-line options should override parent accession set above if present
-        this.mergeCmdOptions(dataModel);
+        this.mergeCmdOptions(dataModel, workflowAccession, workflowRunAccession, metadatawriteback, workflowEngine);
         // merge version, and name ??? TODO
 
         // set random, date, wait
@@ -198,20 +176,17 @@ public class WorkflowDataModelFactory {
         dataModel.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
 
         // get workflow-run-accession
-        if (options.has("status") == false && dataModel.isMetadataWriteBack()) {
-            if (workflowAccession != null && workflowRunAccession == null) {
-                int workflowrunid = this.metadata.add_workflow_run(workflowAccession);
-                int workflowrunaccession = this.metadata.get_workflow_run_accession(workflowrunid);
-                dataModel.setWorkflow_accession(Integer.toString(workflowAccession));
-                dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
-            } else if (workflowAccession != null && workflowRunAccession != null) {
-                dataModel.setWorkflow_accession(Integer.toString(workflowAccession));
-                dataModel.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
-            } else {
-                assert (false);
-                Log.error("This condition should never be reached");
-                throw new UnsupportedOperationException();
-            }
+        // in 1.1 we're going to make metadata writeback of at least workflow runs mandatory
+        if (workflowAccession != null && workflowRunAccession == null) {
+            int workflowrunid = metadata.add_workflow_run(workflowAccession);
+            int workflowrunaccession = metadata.get_workflow_run_accession(workflowrunid);
+            dataModel.setWorkflow_run_accession(String.valueOf(workflowrunaccession));
+        } else if (workflowAccession != null && workflowRunAccession != null) {
+            dataModel.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
+        } else {
+            assert (false);
+            Log.error("This condition should never be reached");
+            throw new UnsupportedOperationException();
         }
 
         // parse XML or Java Object for
@@ -231,26 +206,24 @@ public class WorkflowDataModelFactory {
                 m.invoke(dataModel);
             } catch (SecurityException e) {
                 Log.error("SecurityException", e);
-                Rethrow.rethrow(e);
+                throw Rethrow.rethrow(e);
             } catch (NoSuchMethodException e) {
                 Log.error("NoSuchMethodException", e);
-                Rethrow.rethrow(e);
+                throw Rethrow.rethrow(e);
             } catch (IllegalArgumentException e) {
                 Log.error("IllegalArgumentException", e);
-                Rethrow.rethrow(e);
+                throw Rethrow.rethrow(e);
             } catch (IllegalAccessException e) {
                 Log.error("IllegalAccessException", e);
-                Rethrow.rethrow(e);
+                throw Rethrow.rethrow(e);
             } catch (InvocationTargetException e) {
                 Log.error("InvocationTargetException", e);
-                Rethrow.rethrow(e);
+                throw Rethrow.rethrow(e);
             }
         } else {
             throw new RuntimeException("No other workflow engine is currently supported.");
         }
         AbstractWorkflowDataModel.prepare(dataModel);
-        // set wait
-        dataModel.setWait(this.options.has("wait"));
         Log.info("returning datamodel");
         return dataModel;
     }
@@ -269,7 +242,7 @@ public class WorkflowDataModelFactory {
      */
     private String getAndProvisionBundle(String permLoc) {
         String result = null;
-        Bundle bundle = new Bundle(this.metadata, this.config);
+        Bundle bundle = new Bundle(metadata, config);
         ReturnValue ret;
         if (permLoc.startsWith("s3://")) {
             ret = bundle.unpackageBundleFromS3(permLoc);
@@ -323,121 +296,72 @@ public class WorkflowDataModelFactory {
         } else {
             Log.info("loading ini files from options");
 
-            Map<String, String> ret = new HashMap<>();
-            // set conifg, pass the config files to Map<String,String>, also put the .settings to Map<String,String>
-            // ini-files
-            ArrayList<String> iniFiles = new ArrayList<>();
-            if (options.has("ini-files")) {
-                List opts = options.valuesOf("ini-files");
-                for (Object opt : opts) {
-                    String[] tokens = ((String) opt).split(",");
-                    iniFiles.addAll(Arrays.asList(tokens));
-                }
-            }
-            for (String ini : iniFiles) {
-                // the ini file path might actually have ${workflow_bundle_dir} in the name
-                String newIni = replaceWBD(ini, bundlePath);
-                Log.debug("  INI FILE: " + ini);
-                if ((new File(ini)).exists()) {
-                    MapTools.ini2Map(ini, map);
-                }
-            }
+            // if we always schedule, we should never need ini files from the command line when launching
+            // // set conifg, pass the config files to Map<String,String>, also put the .settings to Map<String,String>
+            // // ini-files
+            // for (String ini : iniFiles) {
+            // // the ini file path might actually have ${workflow_bundle_dir} in the name
+            // Log.debug("  INI FILE: " + ini);
+            // if ((new File(ini)).exists()) {
+            // MapTools.ini2Map(ini, map);
+            // }
+            // }
         }
         // allow the command line options to override options in the map
         // Parse command line options for additional configuration. Note that we
         // do it last so it takes precedence over the INI
-        MapTools.cli2Map(this.params, map);
+        // if we always schedule, we never override here
+        // MapTools.cli2Map(params, map);
+
         return MapTools.expandVariables(map, MapTools.providedMap(bundlePath));
     }
 
     // FIXME should iterate all options automatically
-    private void mergeCmdOptions(AbstractWorkflowDataModel model) {
+    /**
+     * This method is badly named now. There are no command-line options if we always schedule. Instead we only need to retain the process
+     * of getting information from the DB into the workflow data model so that we can use it.
+     * 
+     * @param model
+     * @param workflowAccession
+     * @param workflowRunAccession
+     * @param metadataWriteback
+     * @param metadataOutputFilePrefix
+     * @param metadataOutputDir
+     * @param workflowEngine
+     */
+    private void mergeCmdOptions(AbstractWorkflowDataModel model, int workflowAccession, int workflowRunAccession,
+            boolean metadataWriteback, String workflowEngine) {
         Map<String, String> map = model.getConfigs();
         // merge parent-accessions
-        if (options.has("parent-accessions")) {
-            // parent accessions
-            ArrayList<String> parentAccessions = new ArrayList<>();
-            if (options.has("parent-accessions")) {
-                List opts = options.valuesOf("parent-accessions");
-                for (Object opt : opts) {
-                    String[] tokens = ((String) opt).split(",");
-                    parentAccessions.addAll(Arrays.asList(tokens));
-                }
-            }
-            model.setParentAccessions(parentAccessions);
-        }
-        // merge
-        // link-workflow-run-to-parents
-        /*
-         * if (options.has("link-workflow-run-to-parents")) { ArrayList<String> parentsLinkedToWR = new ArrayList<String>(); List opts =
-         * options.valuesOf("link-workflow-run-to-parents"); for (Object opt : opts) { String[] tokens = ((String) opt).split(","); for
-         * (String t : tokens) { parentsLinkedToWR.add(t); } } map.put("link-workflow-run-to-parents",
-         * org.apache.commons.lang.StringUtils.join(parentsLinkedToWR,",")); }
-         */
-        // merge workflow-accession
-        if (options.has("workflow-accession")) {
-            model.setWorkflow_accession((String) options.valueOf("workflow-accession"));
-        }
-        // merge "workflow-run-accession"
-        if (options.has("workflow-run-accession")) {
-            model.setWorkflow_run_accession((String) options.valueOf("workflow-run-accession"));
-        }
-        // merge schedule
-        if (options.has("schedule")) {
-            map.put("schedule", "true");
-        }
-        // merge bundle
-        if (options.has("bundle")) {
-            map.put("bundle", (String) options.valueOf("bundle"));
-        }
-        // bundle "provisioned-bundle-dir"
-        if (options.has("provisioned-bundle-dir")) {
-            map.put("provisioned-bundle-dir", (String) options.valueOf("provisioned-bundle-dir"));
-        }
-        // launch-scheduled
-        if (options.has("launch-scheduled")) {
-            List<String> scheduledAccessions = (List<String>) options.valuesOf("launch-scheduled");
-            map.put("launch-scheduled", org.apache.commons.lang.StringUtils.join(scheduledAccessions, ","));
-        }
-        // host
-        if (options.has("host")) {
-            map.put("host", (String) options.valueOf("host"));
-        }
-        // metadatawriteback
-        boolean metadataWriteback = true;
-        if (options.has("no-metadata") || options.has("no-meta-db") || options.has("status")) {
-            metadataWriteback = false;
-        }
+        model.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
+        model.setWorkflow_accession(String.valueOf(workflowAccession));
+
         map.put(ReservedIniKeys.METADATA.getKey(), Boolean.toString(metadataWriteback));
         model.setMetadataWriteBack(metadataWriteback);
         // metadata-output-file-prefix
-        if (options.has("metadata-output-file-prefix")) {
-            model.setMetadata_output_file_prefix((String) options.valueOf("metadata-output-file-prefix"));
-        } else if (model.hasPropertyAndNotNull(ReservedIniKeys.OUTPUT_PREFIX.getKey())) {
+        if (model.hasPropertyAndNotNull(ReservedIniKeys.OUTPUT_PREFIX.getKey())) {
             try {
                 model.setMetadata_output_file_prefix(model.getProperty(ReservedIniKeys.OUTPUT_PREFIX.getKey()));
             } catch (Exception ex) {
                 Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            Log.error("You need to specify the output prefix for your workflow using either --metadata-output-file-prefix as a WorkflowLauncher param or in your workflow INI file as "
+            Log.error("You need to specify the output prefix for your workflow using either an override parameter at schedule-time or in your workflow INI file as "
                     + ReservedIniKeys.OUTPUT_PREFIX.getKey());
         }
         // metadata-output-dir
-        if (options.has("metadata-output-dir")) {
-            model.setMetadata_output_dir((String) options.valueOf("metadata-output-dir"));
-        } else if (model.hasPropertyAndNotNull(ReservedIniKeys.OUTPUT_DIR.getKey())) {
+        if (model.hasPropertyAndNotNull(ReservedIniKeys.OUTPUT_DIR.getKey())) {
             try {
                 model.setMetadata_output_dir(model.getProperty(ReservedIniKeys.OUTPUT_DIR.getKey()));
             } catch (Exception ex) {
                 Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            Log.error("You need to specify the output dir for your workflow using either --metadata-output-dir as a WorkflowLauncher param or in your workflow INI file as output_dir!");
+            Log.error("You need to specify the output dir for your workflow using either an override parameter at schedule-time or in your workflow INI file as output_dir!");
         }
         // workflow_engine
-        if (options.has("workflow-engine")) {
-            model.setWorkflow_engine((String) options.valueOf("workflow-engine"));
+        if (workflowEngine != null) {
+            model.setWorkflow_engine(workflowEngine);
         }
     }
 
