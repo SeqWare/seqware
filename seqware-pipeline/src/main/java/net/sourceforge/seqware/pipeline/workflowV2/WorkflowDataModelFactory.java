@@ -54,13 +54,11 @@ public class WorkflowDataModelFactory {
      * @param workflowAccession
      *            if this is present, we grab metadata information from the database, not the options
      * @param workflowRunAccession
-     * @param metadatawriteback
-     *            are we going to track metadata for processing events
      * @param workflowEngine
      * @return
      */
     public synchronized AbstractWorkflowDataModel getWorkflowDataModel(String bundlePath, Integer workflowAccession,
-            Integer workflowRunAccession, boolean metadatawriteback, String workflowEngine) {
+            Integer workflowRunAccession, String workflowEngine) {
 
         File bundle = new File(bundlePath);
         // change to absolute path
@@ -147,7 +145,7 @@ public class WorkflowDataModelFactory {
         dataModel.setParentAccessions(parseParentAccessions);
 
         // merge command line option with configs, command-line options should override parent accession set above if present
-        this.mergeCmdOptions(dataModel, workflowAccession, workflowRunAccession, metadatawriteback, workflowEngine);
+        this.mergeCmdOptions(dataModel, workflowAccession, workflowRunAccession, workflowEngine);
         // merge version, and name ??? TODO
 
         // set random, date, wait
@@ -324,20 +322,28 @@ public class WorkflowDataModelFactory {
      * @param model
      * @param workflowAccession
      * @param workflowRunAccession
-     * @param metadataWriteback
      * @param metadataOutputFilePrefix
      * @param metadataOutputDir
      * @param workflowEngine
      */
-    private void mergeCmdOptions(AbstractWorkflowDataModel model, int workflowAccession, int workflowRunAccession,
-            boolean metadataWriteback, String workflowEngine) {
+    private void mergeCmdOptions(AbstractWorkflowDataModel model, int workflowAccession, int workflowRunAccession, String workflowEngine) {
         Map<String, String> map = model.getConfigs();
         // merge parent-accessions
         model.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
         model.setWorkflow_accession(String.valueOf(workflowAccession));
 
-        map.put(ReservedIniKeys.METADATA.getKey(), Boolean.toString(metadataWriteback));
-        model.setMetadataWriteBack(metadataWriteback);
+        if (model.hasPropertyAndNotNull(ReservedIniKeys.METADATA.getKey())) {
+            try {
+                // TODO: fix this magic name
+                boolean metadataWriteBack = model.getProperty(ReservedIniKeys.METADATA.getKey()).equals("metadata");
+                Log.info("Launching with metadataWriteback = " + metadataWriteBack + " since property was "
+                        + model.getProperty(ReservedIniKeys.METADATA.getKey()));
+                model.setMetadataWriteBack(metadataWriteBack);
+            } catch (Exception ex) {
+                Logger.getLogger(WorkflowDataModelFactory.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
         // metadata-output-file-prefix
         if (model.hasPropertyAndNotNull(ReservedIniKeys.OUTPUT_PREFIX.getKey())) {
             try {
