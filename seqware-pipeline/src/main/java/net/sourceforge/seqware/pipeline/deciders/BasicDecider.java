@@ -82,7 +82,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private Set<String> parentWorkflowAccessions = new TreeSet<>();
     private Set<String> workflowAccessionsToCheck = new TreeSet<>();
     private List<String> metaTypes = null;
-    private Boolean forceRunAll = null;
+    private Boolean ignorePreviousRuns = null;
     private Boolean test = null;
     private String workflowAccession = null;
     protected Random random = new Random(System.currentTimeMillis());
@@ -115,6 +115,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("parent-wf-accessions"),
                 "The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.")
                 .withRequiredArg();
+        parser.acceptsAll(Arrays.asList("ignore-previous-runs"), "Forces the decider to run all matches regardless of whether they've been run before or not");
         parser.acceptsAll(Arrays.asList("meta-types"),
                 "The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.")
                 .withRequiredArg();
@@ -256,8 +257,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             // Separate out this logic
             // workflowAccessionsToCheck.add(workflowAccession);
         }
-        if (forceRunAll == null) {
-            forceRunAll = options.has("force-run-all");
+        if (ignorePreviousRuns == null) {
+            ignorePreviousRuns = options.has("force-run-all");
         }
 
         // test turns off all of the submission functions and just prints to stdout
@@ -283,11 +284,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         }
 
         if (runNow == null) {
-            if (options.has("schedule")) {
-                runNow = false;
-            } else {
-                runNow = true;
-            }
+            runNow = !options.has("schedule");
         }
 
         LocalhostPair localhostPair = FileTools.getLocalhost(options);
@@ -399,21 +396,20 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                     final String fileString = commaSeparateMy(filesToRun);
                     Log.debug("FileString: " + fileString);
                     // SEQWARE-1773 short-circuit this with forceRunAll to ensure that sample fingerprinting workflow launches
-                    boolean rerun = forceRunAll || rerunWorkflowRun(filesToRun, fileSWIDsToRun);
+                    if (ignorePreviousRuns) {
+                        Log.debug("Ignoring previous runs because --ignore-previous-runs was enabled");
+                    }
+                    boolean rerun = ignorePreviousRuns || rerunWorkflowRun(filesToRun, fileSWIDsToRun);
 
                     // SEQWARE-1728 - move creation of ini to launches (and test launches) to conserve disk space
                     iniFiles = new ArrayList<>();
 
                     ReturnValue newRet = this.doFinalCheck(fileString, parentAccessionString);
                     if (newRet.getExitStatus() != ReturnValue.SUCCESS) {
-                        Log.warn("Final check failed. Return value was: " + newRet.getExitStatus());
+                        Log.warn("Final check failed, aborting run. Return value was: " + newRet.getExitStatus());
                         rerun = false;
                     }
-
-                    if (forceRunAll) {
-                        Log.debug("Forcing the running of this workflow because --force-run-all was enabled");
-                        rerun = true;
-                    }
+                    
                     // if we're in testing mode or we don't want to rerun and we don't want to force the re-processing
                     if (test || !rerun) {
                         // we need to simplify the logic and make it more readable here for testing
@@ -441,17 +437,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                             Log.stdout(line);
                         }
                         Log.debug("RUNNING");
-                        // // setup workflow object
-                        // Workflow w = new Workflow(metadata, config);
-                        // if (runNow) {
-                        // ret = w.launchInstalledBundle(workflowAccession, null,
-                        // iniFiles, metadataWriteback, new ArrayList(parentAccessionsToRun),
-                        // new ArrayList(workflowParentAccessionsToRun), false, options.nonOptionArguments());
-                        // } else {
-                        // ret = w.scheduleInstalledBundle(workflowAccession, null,
-                        // iniFiles, metadataWriteback, new ArrayList(parentAccessionsToRun),
-                        // new ArrayList(workflowParentAccessionsToRun), false, options.nonOptionArguments());
-                        // }
                         // construct the INI and run it
                         ArrayList<String> runArgs = constructCommand();
                         PluginRunner.main(runArgs.toArray(new String[runArgs.size()]));
@@ -783,11 +768,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
 
     public Boolean getForceRunAll() {
-        return forceRunAll;
+        return ignorePreviousRuns;
     }
 
     public void setForceRunAll(Boolean forceRunAll) {
-        this.forceRunAll = forceRunAll;
+        this.ignorePreviousRuns = forceRunAll;
     }
 
     /**
