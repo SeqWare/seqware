@@ -1,5 +1,6 @@
 package io.seqware.pipeline.plugins;
 
+import io.seqware.Engines;
 import io.seqware.pipeline.api.Scheduler;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -76,8 +77,8 @@ public class WorkflowScheduler extends Plugin {
         this.workflowEngineSpec = parser
                 .accepts(
                         "workflow-engine",
-                        "Optional: Specifies a workflow engine, one of: " + WorkflowLauncher.ENGINES_LIST + ". Defaults to "
-                                + WorkflowLauncher.DEFAULT_ENGINE + ".").withRequiredArg().ofType(String.class)
+                        "Optional: Specifies a workflow engine, one of: " + Engines.ENGINES_LIST + ". Defaults to "
+                                + Engines.DEFAULT_ENGINE + ".").withRequiredArg().ofType(String.class)
                 .describedAs("Workflow Engine").ofType(String.class);
         this.nonOptionSpec = parser.nonOptions(OVERRIDE_INI_DESC);
     }
@@ -90,7 +91,7 @@ public class WorkflowScheduler extends Plugin {
             engine = config.get("SW_DEFAULT_WORKFLOW_ENGINE");
         }
         if (engine == null) {
-            engine = WorkflowLauncher.DEFAULT_ENGINE;
+            engine = Engines.DEFAULT_ENGINE;
         }
 
         return engine;
@@ -104,8 +105,8 @@ public class WorkflowScheduler extends Plugin {
         }
 
         if (options.has(workflowEngineSpec)) {
-            if (!WorkflowLauncher.ENGINES.contains((String) options.valueOf(workflowEngineSpec))) {
-                Log.error("Invalid workflow-engine value. Must be one of: " + WorkflowLauncher.ENGINES_LIST);
+            if (!Engines.ENGINES.contains((String) options.valueOf(workflowEngineSpec))) {
+                Log.error("Invalid workflow-engine value. Must be one of: " + Engines.ENGINES_LIST);
                 return new ReturnValue(ExitStatus.INVALIDARGUMENT);
             }
         }

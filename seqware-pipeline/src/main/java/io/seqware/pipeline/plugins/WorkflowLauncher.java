@@ -1,11 +1,11 @@
 package io.seqware.pipeline.plugins;
 
+import io.seqware.Engines;
 import io.seqware.WorkflowRuns;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.api.Scheduler;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +23,9 @@ import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.tools.RunLock;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowDataModelFactory;
-import net.sourceforge.seqware.pipeline.workflowV2.WorkflowEngine;
+import io.seqware.pipeline.api.WorkflowEngine;
+import io.seqware.pipeline.api.WorkflowTools;
 import net.sourceforge.seqware.pipeline.workflowV2.WorkflowV2Utility;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -103,7 +102,7 @@ public class WorkflowLauncher extends Plugin {
                 "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
                 .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
         parser.accepts("workflow-engine",
-                "Optional: Specifies a workflow engine, one of: " + ENGINES_LIST + ". Defaults to " + DEFAULT_ENGINE + ".")
+                "Optional: Specifies a workflow engine, one of: " + Engines.ENGINES_LIST + ". Defaults to " + Engines.DEFAULT_ENGINE + ".")
                 .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
         parser.accepts("no-run", "Optional: Terminates the launch process immediately prior to running. Useful for debugging.");
         this.nonOptionSpec = parser.nonOptions(WorkflowScheduler.OVERRIDE_INI_DESC);
@@ -111,14 +110,10 @@ public class WorkflowLauncher extends Plugin {
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
-    public static final String ENGINES_LIST = "oozie, oozie-sge";
-    public static final String DEFAULT_ENGINE = "oozie";
-    public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ENGINES_LIST.split(", "))));
-
     private String getEngineParam() {
         String engine = (String) options.valueOf("workflow-engine");
         if (engine == null) engine = config.get("SW_DEFAULT_WORKFLOW_ENGINE");
-        if (engine == null) engine = DEFAULT_ENGINE;
+        if (engine == null) engine = Engines.DEFAULT_ENGINE;
 
         return engine;
     }
@@ -136,8 +131,8 @@ public class WorkflowLauncher extends Plugin {
         }
 
         if (options.has("workflow-engine")) {
-            if (!ENGINES.contains((String) options.valueOf("workflow-engine"))) {
-                Log.error("Invalid workflow-engine value. Must be one of: " + ENGINES_LIST);
+            if (!Engines.ENGINES.contains((String) options.valueOf("workflow-engine"))) {
+                Log.error("Invalid workflow-engine value. Must be one of: " + Engines.ENGINES_LIST);
                 ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
                 return ret;
             }
@@ -253,33 +248,6 @@ public class WorkflowLauncher extends Plugin {
 
     }
 
-    public static WorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel, Map<String, String> config) {
-        WorkflowEngine wfEngine = null;
-        String engine = dataModel.getWorkflow_engine();
-        if (engine == null || engine.equalsIgnoreCase("pegasus")) {
-            throw new RuntimeException("Pegasus workflow engine is no longer supported");
-        } else if (engine.equalsIgnoreCase("oozie")) {
-            wfEngine = new OozieWorkflowEngine(dataModel, false, null, null);
-        } else if (engine.equalsIgnoreCase("oozie-sge")) {
-            String threadsSgeParamFormat = config.get("OOZIE_SGE_THREADS_PARAM_FORMAT");
-            String maxMemorySgeParamFormat = config.get("OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT");
-            if (threadsSgeParamFormat == null) {
-                System.err
-                        .println("WARNING: No entry in settings for OOZIE_SGE_THREADS_PARAM_FORMAT, omitting threads option from qsub. Fix by providing the format of qsub threads option, using the '"
-                                + OozieJob.SGE_THREADS_PARAM_VARIABLE + "' variable.");
-            }
-            if (maxMemorySgeParamFormat == null) {
-                System.err
-                        .println("WARNING: No entry in settings for OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT, omitting max-memory option from qsub. Fix by providing the format of qsub max-memory option, using the '"
-                                + OozieJob.SGE_MAX_MEMORY_PARAM_VARIABLE + "' variable.");
-            }
-            wfEngine = new OozieWorkflowEngine(dataModel, true, threadsSgeParamFormat, maxMemorySgeParamFormat);
-        } else {
-            throw new IllegalArgumentException("Unknown workflow engine: " + engine);
-        }
-        return wfEngine;
-    }
-
     /**
      * Processes a single workflow
      * 
@@ -382,7 +350,7 @@ public class WorkflowLauncher extends Plugin {
                     throw new RuntimeException("SeqWare no longer supports running Pegasus bundles");
                 } else {
                     Log.stdout("Launching via new launcher: " + wr.getSwAccession());
-                    WorkflowLauncher.launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession(),
+                    launchNewWorkflow(options, config, params, metadata, wr.getWorkflowAccession(), wr.getSwAccession(),
                             wr.getWorkflowEngine());
                 }
 
@@ -420,38 +388,44 @@ public class WorkflowLauncher extends Plugin {
      * @param metadata
      * @param workflowAccession
      * @param workflowRunAccession
-     * @param workflowEngine
+     * @param workflowEngineString
      * @return
      */
-    public static ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params, Metadata metadata,
-            Integer workflowAccession, Integer workflowRunAccession, String workflowEngine) {
+    public ReturnValue launchNewWorkflow(OptionSet options, Map<String, String> config, String[] params, Metadata metadata,
+            Integer workflowAccession, Integer workflowRunAccession, String workflowEngineString) {
         Log.info("launching new workflow");
         boolean scheduled = workflowRunAccession != null;
-        ReturnValue ret = new ReturnValue();
+        ReturnValue localRet = new ReturnValue();
         AbstractWorkflowDataModel dataModel;
         try {
-            final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(options, config, params, metadata);
+            final WorkflowDataModelFactory factory = new WorkflowDataModelFactory(config, metadata);
             String bundlePath = determineBundlePath(options, workflowAccession, metadata);
-            dataModel = factory.getWorkflowDataModel(bundlePath, workflowAccession, workflowRunAccession);
-            if (workflowEngine != null) {
-                dataModel.setWorkflow_engine(workflowEngine);
+            // metadatawriteback
+            boolean metadataWriteback = true;
+            if (options.has("no-metadata") || options.has("no-meta-db") || options.has("status")) {
+                metadataWriteback = false;
+            }
+            dataModel = factory.getWorkflowDataModel(bundlePath, workflowAccession, workflowRunAccession, metadataWriteback,
+                    workflowEngineString);
+            if (workflowEngineString != null) {
+                dataModel.setWorkflow_engine(workflowEngineString);
             } else {
                 // maintain consistency between the two ways of accessing the engine value
-                workflowEngine = dataModel.getWorkflow_engine();
+                workflowEngineString = dataModel.getWorkflow_engine();
             }
         } catch (Exception e) {
             if (workflowRunAccession != null) {
                 Log.fatal("Exception constructing data model, failing workflow " + workflowRunAccession, e);
                 WorkflowRuns.failWorkflow(workflowRunAccession);
             }
-            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
-            return ret;
+            localRet.setExitStatus(ReturnValue.INVALIDARGUMENT);
+            return localRet;
         }
 
         Log.info("constructed dataModel");
 
         // set up workflow engine
-        WorkflowEngine engine = WorkflowLauncher.getWorkflowEngine(dataModel, config);
+        WorkflowEngine engine = WorkflowTools.getWorkflowEngine(dataModel, config);
 
         engine.prepareWorkflow(dataModel);
         if (options.has("no-run")) {
@@ -500,8 +474,8 @@ public class WorkflowLauncher extends Plugin {
         Set<Integer> inputFiles = collectInputFiles(options, metadata);
         if (options.has(INPUT_FILES) && (inputFiles == null || inputFiles.isEmpty())) {
             Log.error("Error parsing provided input files");
-            ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
-            return ret;
+            localRet.setExitStatus(ReturnValue.INVALIDARGUMENT);
+            return localRet;
         }
 
         // need to pull back the workflow run object since some fields may
@@ -523,11 +497,11 @@ public class WorkflowLauncher extends Plugin {
             return localReturn;
         } else {
             // determine status based on object model
-            WorkflowRunStatus status = dataModel.isWait() ? WorkflowRunStatus.completed : WorkflowRunStatus.pending;
+            WorkflowRunStatus status = options.has("wait") ? WorkflowRunStatus.completed : WorkflowRunStatus.pending;
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
                     dataModel.getTags().get("workflow_template"), status, workflowRunToken, engine.getWorkingDirectory(), wr.getDax(),
                     wr.getIniFile(), host, localReturn.getStderr(), localReturn.getStdout(), dataModel.getWorkflow_engine(), inputFiles);
-            return ret;
+            return localRet;
         }
     }
 
