@@ -1,6 +1,7 @@
 package io.seqware.cli;
 
 import com.google.common.collect.ObjectArrays;
+import io.seqware.Engines;
 import io.seqware.Reports;
 import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
@@ -22,7 +23,6 @@ import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
-import io.seqware.pipeline.plugins.WorkflowLauncher;
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility.HumanProvenanceFilters;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
@@ -354,9 +354,9 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --engine <type>            The engine that will process the workflow run.");
-            out("                             May be one of: " + WorkflowLauncher.ENGINES_LIST);
+            out("                             May be one of: " + Engines.ENGINES_LIST);
             out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-            out("                             or '" + WorkflowLauncher.DEFAULT_ENGINE + "' if not specified.");
+            out("                             or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
             out("  --ini <ini-file>           An ini file to configure the workflow run.");
             out("                             Repeat this parameter to provide multiple files.");
             out("                             Defaults to the value of the 'config' node in metadata.xml.");
@@ -427,9 +427,9 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --engine <type>     The engine that will process the workflow run.");
-            out("                      May be one of: " + WorkflowLauncher.ENGINES_LIST);
+            out("                      May be one of: " + Engines.ENGINES_LIST);
             out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-            out("                      or '" + WorkflowLauncher.DEFAULT_ENGINE + "' if not specified.");
+            out("                      or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
             out("  --ini <ini-file>    An ini file to configure the workflow run");
             out("                      Repeat this parameter to provide multiple files");
             out("                      Defaults to the value of the 'config' node in metadata.xml");
@@ -1081,9 +1081,9 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --engine <type>            The engine that will process the workflow run.");
-            out("                             May be one of: " + WorkflowLauncher.ENGINES_LIST);
+            out("                             May be one of: " + Engines.ENGINES_LIST);
             out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-            out("                             or '" + WorkflowLauncher.DEFAULT_ENGINE + "' if not specified.");
+            out("                             or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
             out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
             out("                             Repeat this parameter to provide multiple parents");
             out("  --override <key=value>     Override specific parameters from the workflow.ini");

@@ -11,6 +11,13 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Environment;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Workflow;
 
+/**
+ * This is the base class for workflows.
+ * 
+ * Methods in this class can be called by workflow authors and this can be detected as dead code when not really dead code.
+ * 
+ * @author dyuen
+ */
 public abstract class AbstractWorkflowDataModel {
     private final Workflow workflow;
     private String name;
@@ -18,8 +25,7 @@ public abstract class AbstractWorkflowDataModel {
     private final Environment env;
     private String workflowBundleDir;
     private Map<String, String> tags;
-    protected Map<String, String> configs;
-    private boolean wait;
+    private Map<String, String> configs;
     private boolean metadataWriteBack;
     private Map<String, SqwFile> files;
     private final Collection<String> dirs;
@@ -249,24 +255,6 @@ public abstract class AbstractWorkflowDataModel {
      */
     public Map<String, SqwFile> getFiles() {
         return files;
-    }
-
-    /**
-     * wait for the workflow to finished, user can override this by using --wait from command line
-     * 
-     * @return
-     */
-    public boolean isWait() {
-        return wait;
-    }
-
-    /**
-     * wait for the workflow to finished, user can override this by using --wait from command line
-     * 
-     * @param wait
-     */
-    public void setWait(boolean wait) {
-        this.wait = wait;
     }
 
     /**
