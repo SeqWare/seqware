@@ -36,7 +36,7 @@ public class WorkflowScheduler extends Plugin {
     private final ArgumentAcceptingOptionSpec<String> workflowAccessionSpec;
     private final ArgumentAcceptingOptionSpec<String> parentAccessionsSpec;
     private final NonOptionArgumentSpec<String> nonOptionSpec;
-    private final OptionSpecBuilder metadataWriteBackSpec;
+    private final OptionSpecBuilder metadataWriteBackOffSpec;
 
     public WorkflowScheduler() {
         super();
@@ -75,7 +75,7 @@ public class WorkflowScheduler extends Plugin {
                         "Optional: Specifies a workflow engine, one of: " + Engines.ENGINES_LIST + ". Defaults to "
                                 + Engines.DEFAULT_ENGINE + ".").withRequiredArg().ofType(String.class).describedAs("Workflow Engine")
                 .ofType(String.class);
-        this.metadataWriteBackSpec = parser
+        this.metadataWriteBackOffSpec = parser
                 .acceptsAll(
                         Arrays.asList("no-meta-db", "no-metadata"),
                         "Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.");
@@ -157,7 +157,7 @@ public class WorkflowScheduler extends Plugin {
             String engine = getEngineParam();
             Log.info("You are scheduling a workflow to run on " + host + " by adding it to the metadb.");
             return w.scheduleInstalledBundle(options.valueOf(workflowAccessionSpec), options.valuesOf(iniFilesSpec),
-                    options.has(metadataWriteBackSpec), options.valuesOf(parentAccessionsSpec),
+                    !options.has(metadataWriteBackOffSpec), options.valuesOf(parentAccessionsSpec),
                     options.valuesOf(linkWorkflowRunToParentsSpec), options.valuesOf(nonOptionSpec), host, engine, inputFiles);
 
         } else {

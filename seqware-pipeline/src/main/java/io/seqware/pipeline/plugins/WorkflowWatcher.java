@@ -63,7 +63,7 @@ public class WorkflowWatcher extends Plugin {
         String workflowRunAccession = options.valueOf(workflowRunAccessionSpec);
         WorkflowRun workflowRunWithWorkflow = metadata.getWorkflowRunWithWorkflow(workflowRunAccession);
         Integer workflowAccession = workflowRunWithWorkflow.getWorkflowAccession();
-        String bundleDir = workflowRunWithWorkflow.getCurrentWorkingDir();
+        String bundleDir = workflowRunWithWorkflow.getWorkflow().getCwd();
         WorkflowDataModelFactory factory = new WorkflowDataModelFactory(config, metadata);
 
         AbstractWorkflowDataModel dataModel = factory.getWorkflowDataModel(bundleDir, workflowAccession,
