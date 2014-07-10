@@ -210,7 +210,7 @@ public class WorkflowLifecycle extends Plugin {
         a.add(plugin.getCanonicalName());
         a.add("--");
         a.addAll(Arrays.asList(params));
-        Log.info(Arrays.deepToString(a.toArray()));
+        Log.stdout(Arrays.deepToString(a.toArray()));
         p.run(a.toArray(new String[a.size()]));
     }
 }
