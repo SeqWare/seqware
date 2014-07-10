@@ -2,12 +2,14 @@ package io.seqware.pipeline.plugins;
 
 import io.seqware.Engines;
 import io.seqware.pipeline.api.Scheduler;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.NonOptionArgumentSpec;
+import joptsimple.OptionParser;
 import joptsimple.OptionSpecBuilder;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -15,6 +17,7 @@ import net.sourceforge.seqware.common.module.ReturnValue.ExitStatus;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -37,6 +40,7 @@ public class WorkflowScheduler extends Plugin {
     private final ArgumentAcceptingOptionSpec<String> parentAccessionsSpec;
     private final NonOptionArgumentSpec<String> nonOptionSpec;
     private final OptionSpecBuilder metadataWriteBackOffSpec;
+    private final ArgumentAcceptingOptionSpec<String> outFile;
 
     public WorkflowScheduler() {
         super();
@@ -56,11 +60,6 @@ public class WorkflowScheduler extends Plugin {
                         Arrays.asList("link-workflow-run-to-parents", "lwrp"),
                         "Optional: The sw_accession of the sequencer_run, lane, ius, processing, study, experiment, or sample (NOTE: only currently supports ius and lane) that should be linked to the workflow_run row created by this tool. This is optional but useful since it simplifies future queries on the metadb. Can be specified multiple times if there are multiple parents or comma-delimited with no spaces (or both).")
                 .withRequiredArg().ofType(String.class).withValuesSeparatedBy(',');
-        this.iniFilesSpec = parser
-                .acceptsAll(
-                        Arrays.asList("ini-files", "i"),
-                        "One or more ini files can be specified, these contain the parameters needed by the workflow template. Use commas to delimit a list of ini files.")
-                .withRequiredArg().ofType(String.class).withValuesSeparatedBy(',');
         this.inputFilesSpec = parser
                 .acceptsAll(
                         Arrays.asList(INPUT_FILES, "if"),
@@ -69,18 +68,36 @@ public class WorkflowScheduler extends Plugin {
                 .withValuesSeparatedBy(',');
         this.hostSpec = parser.acceptsAll(Arrays.asList("host", "ho"), "Used to schedule onto a specific host").withRequiredArg()
                 .ofType(String.class);
-        this.workflowEngineSpec = parser
+
+        this.iniFilesSpec = createIniFileSpec(parser);
+        this.workflowEngineSpec = createWorkflowEngineSpec(parser);
+        this.metadataWriteBackOffSpec = createMetadataWriteBackOffSpec(parser);
+        this.nonOptionSpec = parser.nonOptions(OVERRIDE_INI_DESC);
+        this.outFile = parser.acceptsAll(Arrays.asList("out"), "Optional: Will output a workflow-run by sw_accession").withRequiredArg();
+    }
+
+    public static final OptionSpecBuilder createMetadataWriteBackOffSpec(OptionParser parser) {
+        return parser
+                .acceptsAll(
+                        Arrays.asList("no-meta-db", "no-metadata"),
+                        "Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.");
+    }
+
+    public static final ArgumentAcceptingOptionSpec<String> createWorkflowEngineSpec(OptionParser parser) {
+        return parser
                 .accepts(
                         "workflow-engine",
                         "Optional: Specifies a workflow engine, one of: " + Engines.ENGINES_LIST + ". Defaults to "
                                 + Engines.DEFAULT_ENGINE + ".").withRequiredArg().ofType(String.class).describedAs("Workflow Engine")
                 .ofType(String.class);
-        this.metadataWriteBackOffSpec = parser
-                .acceptsAll(
-                        Arrays.asList("no-meta-db", "no-metadata"),
-                        "Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.");
+    }
 
-        this.nonOptionSpec = parser.nonOptions(OVERRIDE_INI_DESC);
+    public static final ArgumentAcceptingOptionSpec<String> createIniFileSpec(OptionParser parser) {
+        return parser
+                .acceptsAll(
+                        Arrays.asList("ini-files", "i"),
+                        "One or more ini files can be specified, these contain the parameters needed by the workflow template. Use commas to delimit a list of ini files.")
+                .withRequiredArg().ofType(String.class).withValuesSeparatedBy(',');
     }
 
     public static final String OVERRIDE_INI_DESC = "Override ini options on the command after the separator \"--\" with pairs of \"--<key> <value>\"";
@@ -99,12 +116,16 @@ public class WorkflowScheduler extends Plugin {
 
     @Override
     public ReturnValue init() {
-
         if (options.has(workflowEngineSpec)) {
-            if (!Engines.ENGINES.contains((String) options.valueOf(workflowEngineSpec))) {
-                Log.error("Invalid workflow-engine value. Must be one of: " + Engines.ENGINES_LIST);
-                return new ReturnValue(ExitStatus.INVALIDARGUMENT);
-            }
+            return validateEngineString(options.valueOf(workflowEngineSpec));
+        }
+        return new ReturnValue(ExitStatus.SUCCESS);
+    }
+
+    public static ReturnValue validateEngineString(String engine) {
+        if (!Engines.ENGINES.contains(engine)) {
+            Log.error("Invalid workflow-engine value. Must be one of: " + Engines.ENGINES_LIST);
+            return new ReturnValue(ExitStatus.INVALIDARGUMENT);
         }
         return new ReturnValue(ExitStatus.SUCCESS);
     }
@@ -156,9 +177,17 @@ public class WorkflowScheduler extends Plugin {
             String host = options.valueOf(hostSpec);
             String engine = getEngineParam();
             Log.info("You are scheduling a workflow to run on " + host + " by adding it to the metadb.");
-            return w.scheduleInstalledBundle(options.valueOf(workflowAccessionSpec), options.valuesOf(iniFilesSpec),
+            ReturnValue ret = w.scheduleInstalledBundle(options.valueOf(workflowAccessionSpec), options.valuesOf(iniFilesSpec),
                     !options.has(metadataWriteBackOffSpec), options.valuesOf(parentAccessionsSpec),
                     options.valuesOf(linkWorkflowRunToParentsSpec), options.valuesOf(nonOptionSpec), host, engine, inputFiles);
+
+            try {
+                java.io.File file = new java.io.File(options.valueOf(this.outFile));
+                FileUtils.write(file, String.valueOf(ret.getReturnValue()));
+            } catch (IOException ex) {
+                return new ReturnValue(ExitStatus.FILENOTWRITABLE);
+            }
+            return ret;
 
         } else {
             Log.error("I don't understand the combination of arguments you gave!");
