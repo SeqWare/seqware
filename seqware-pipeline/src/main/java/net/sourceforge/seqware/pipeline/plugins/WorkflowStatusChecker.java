@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.module.ReturnValue.ExitStatus;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
@@ -65,9 +66,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowStatusChecker extends Plugin {
     public static final String WORKFLOW_RUN_ACCESSION = "workflow-run-accession";
-    private ReturnValue classReturnValue = new ReturnValue();
-    // NOTE: this is shared with WorkflowLauncher so only one can run at a time
-    public static final String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
     private static final String metadata_sync = "synch_for_metadata";
     // variables for use in the app
     private String hostname = null;
@@ -94,8 +92,6 @@ public class WorkflowStatusChecker extends Plugin {
                 "Optional: if specified, workflow runs that have previously failed will be re-checked.");
         parser.acceptsAll(Arrays.asList("threads-in-thread-pool", "tp"),
                 "Optional: this will determine the number of threads to run with. Default: 1").withRequiredArg().ofType(Integer.class);
-
-        classReturnValue.setExitStatus(ReturnValue.SUCCESS);
     }
 
     /**
@@ -108,10 +104,6 @@ public class WorkflowStatusChecker extends Plugin {
 
         RunLock.acquire();
 
-        // bail out if failed
-        if (classReturnValue.getExitStatus() != ReturnValue.SUCCESS) {
-            return (classReturnValue);
-        }
         LocalhostPair localhost = FileTools.getLocalhost(options);
         // returnValue can be null if we use forcehost
         if (localhost.returnValue != null && localhost.returnValue.getExitStatus() != ReturnValue.SUCCESS) {
@@ -123,13 +115,11 @@ public class WorkflowStatusChecker extends Plugin {
         // figure out the username
         if (this.config.get("SW_REST_USER") == null || "".equals(this.config.get("SW_REST_USER"))) {
             Log.error("You must define SW_REST_USER in your SeqWare settings file!");
-            classReturnValue.setExitStatus(ReturnValue.FAILURE);
+            return new ReturnValue(ExitStatus.FAILURE);
         }
         this.username = this.config.get("SW_REST_USER");
 
-        classReturnValue.setExitStatus(ReturnValue.SUCCESS);
-
-        return classReturnValue;
+        return new ReturnValue();
 
     }
 
@@ -140,7 +130,7 @@ public class WorkflowStatusChecker extends Plugin {
      */
     @Override
     public ReturnValue do_test() {
-        return classReturnValue;
+        return new ReturnValue();
     }
 
     /**
@@ -212,7 +202,8 @@ public class WorkflowStatusChecker extends Plugin {
      */
     @Override
     public ReturnValue clean_up() {
-        return classReturnValue;
+        RunLock.release();
+        return new ReturnValue();
     }
 
     /**
@@ -530,10 +521,12 @@ public class WorkflowStatusChecker extends Plugin {
         List<WorkflowAction> actions = wf.getActions();
         final Set<String> extIds = new HashSet<>();
         for (WorkflowAction a : actions) {
-            String extId = a.getExternalId();
-            if (a != null) {
-                extIds.add(extId);
+            if (a == null) {
+                Log.fatal("Null action in Oozie provided list of actions in " + wf.toString());
+                continue;
             }
+            String extId = a.getExternalId();
+            extIds.add(extId);
         }
         return extIds;
     }
