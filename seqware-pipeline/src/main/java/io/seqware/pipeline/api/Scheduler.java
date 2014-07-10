@@ -73,14 +73,12 @@ public class Scheduler {
     public ReturnValue scheduleInstalledBundle(String workflowAccession, List<String> iniFiles, boolean metadataWriteback,
             List<String> parentAccessions, List<String> parentsLinkedToWR, List<String> cmdLineOptions, String scheduledHost,
             String workflowEngine, Set<Integer> inputFiles) {
-        ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
         Map<String, String> workflowMetadata = this.metadata.get_workflow_info(Integer.parseInt(workflowAccession));
         WorkflowInfo wi = parseWorkflowMetadata(workflowMetadata);
-        scheduleWorkflow(wi, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, cmdLineOptions, scheduledHost,
+        return scheduleWorkflow(wi, iniFiles, metadataWriteback, parentAccessions, parentsLinkedToWR, cmdLineOptions, scheduledHost,
                 workflowEngine, inputFiles);
 
-        return localRet;
     }
 
     /**
@@ -203,12 +201,14 @@ public class Scheduler {
             this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.submitted, null,
                     null, null, mapBuffer.toString(), scheduledHost, null, null, workflowEngine, inputFiles);
 
+            ReturnValue ret = new ReturnValue();
+            ret.setReturnValue(Integer.valueOf(workflowRunAccession));
+            return ret;
+
         } else {
             Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
             return new ReturnValue(ExitStatus.METADATAINVALIDIDCHAIN);
         }
-
-        return new ReturnValue();
     }
 
     /**
