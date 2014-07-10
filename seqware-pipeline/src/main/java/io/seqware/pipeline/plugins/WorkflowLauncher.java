@@ -27,7 +27,8 @@ import org.openide.util.lookup.ServiceProvider;
  * 
  * The WorkflowLauncher is responsible for launching scheduled workflows.
  * 
- * Previously, it was responsible for launching, scheduling, waiting, etc. This was the subject of refactoring in order to reduce this.
+ * Previously, it was responsible for launching, scheduling, waiting, etc. This was the subject of refactoring in order to reduce this to
+ * just launching of scheduled workflows.
  * 
  * @author boconnor
  */
@@ -36,9 +37,6 @@ public class WorkflowLauncher extends Plugin {
 
     public static final String LAUNCH_SCHEDULED = "launch-scheduled";
 
-    // NOTE: this is shared with WorkflowStatusChecker so only one can run at a
-    // time
-    protected String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
     private String hostname;
     private final ArgumentAcceptingOptionSpec<String> launchScheduledSpec;
     private final ArgumentAcceptingOptionSpec<String> forceHostSpec;
@@ -85,12 +83,13 @@ public class WorkflowLauncher extends Plugin {
 
     @Override
     public ReturnValue clean_up() {
+        RunLock.release();
         return new ReturnValue();
     }
 
     @Override
     public String get_description() {
-        return "A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.";
+        return "A plugin that lets you launch scheduled workflow bundles.";
     }
 
     @Override

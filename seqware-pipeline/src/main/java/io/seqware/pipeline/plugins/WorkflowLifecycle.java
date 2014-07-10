@@ -10,15 +10,15 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * 
- * The WorkflowFacade is responsible for performing aggregations of tasks.
+ * The WorkflowLifecycle is responsible for performing aggregations of tasks.
  * 
  * Specifically, it will install a bundle, schedule a bundle, launch the bundle, and watch it thus replicating the current lifecycle of
- * WorkflowLauncher in a modular fashion
+ * WorkflowLauncher in a modular fashion for testing and development purposes.
  * 
  * @author dyuen
  */
 @ServiceProvider(service = PluginInterface.class)
-public class WorkflowFacade extends Plugin {
+public class WorkflowLifecycle extends Plugin {
 
     public static final String FORCE_HOST = "force-host";
     public static final String HOST = "host";
@@ -33,7 +33,7 @@ public class WorkflowFacade extends Plugin {
     private String hostname;
     private final NonOptionArgumentSpec<String> nonOptionSpec;
 
-    public WorkflowFacade() {
+    public WorkflowLifecycle() {
         super();
         /*
          * You should specify --workflow --version and --bundle or --workflow-accession since the latter will use the database to find all
