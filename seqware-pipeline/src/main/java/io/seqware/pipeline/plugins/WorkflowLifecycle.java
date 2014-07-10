@@ -1,11 +1,27 @@
 package io.seqware.pipeline.plugins;
 
-import io.seqware.Engines;
+import com.google.common.collect.Lists;
+import static io.seqware.pipeline.plugins.WorkflowScheduler.OVERRIDE_INI_DESC;
+import static io.seqware.pipeline.plugins.WorkflowScheduler.validateEngineString;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.NonOptionArgumentSpec;
+import joptsimple.OptionSpecBuilder;
+import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import net.sourceforge.seqware.pipeline.plugins.BundleManager;
+import net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker;
+import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import net.sourceforge.seqware.pipeline.runner.PluginRunner.ExitException;
+import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -26,65 +42,50 @@ public class WorkflowLifecycle extends Plugin {
     public static final String WAIT = "wait";
     public static final String INPUT_FILES = "input-files";
 
-    protected ReturnValue ret = new ReturnValue();
-    // NOTE: this is shared with WorkflowStatusChecker so only one can run at a
-    // time
-    protected String appID = "net.sourceforge.seqware.pipeline.plugins.WorkflowStatusCheckerOrLauncher";
-    private String hostname;
     private final NonOptionArgumentSpec<String> nonOptionSpec;
+    private final ArgumentAcceptingOptionSpec<String> workflowNameSpec;
+    private final ArgumentAcceptingOptionSpec<String> workflowVersionSpec;
+    private final ArgumentAcceptingOptionSpec<String> bundleDirSpec;
+    private final OptionSpecBuilder metadataWriteBackOffSpec;
+    private final OptionSpecBuilder waitSpec;
+    private final ArgumentAcceptingOptionSpec<String> iniFilesSpec;
+    private final ArgumentAcceptingOptionSpec<String> workflowEngineSpec;
+    private String workflowRunAccession;
+    private String workflowAccession;
 
     public WorkflowLifecycle() {
         super();
-        /*
-         * You should specify --workflow --version and --bundle or --workflow-accession since the latter will use the database to find all
-         * the needed info
-         */
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
-        parser.acceptsAll(
-                Arrays.asList("workflow-accession", "wa"),
-                "Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.")
-                .withRequiredArg();
-        parser.acceptsAll(
-                Arrays.asList("workflow", "w"),
-                "The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.")
-                .withRequiredArg();
-        parser.acceptsAll(Arrays.asList("version", "v", "workflow-version"),
+        this.workflowNameSpec = parser
+                .acceptsAll(
+                        Arrays.asList("workflow", "w"),
+                        "The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.")
+                .withRequiredArg().ofType(String.class);
+        this.workflowVersionSpec = parser.acceptsAll(Arrays.asList("version", "v", "workflow-version"),
                 "The workflow version to be used. You can specify this or the workflow-accession of an already installed bundle.")
                 .withRequiredArg();
-        parser.acceptsAll(Arrays.asList("bundle", "b", "provisioned-bundle-dir"),
-                "The path to a bundle zip file. You can specify this or the workflow-accession of an already installed bundle.")
+        this.bundleDirSpec = this.parser.acceptsAll(Arrays.asList("bundle", "b", "provisioned-bundle-dir"),
+                "The path to an unzipped bundle. Specify a name and version as well if the bundle contains multiple workflows.")
                 .withRequiredArg();
-        parser.acceptsAll(
-                Arrays.asList("ini-files", "i"),
-                "One or more ini files can be specified, these contain the parameters needed by the workflow template. Use commas without space to delimit a list of ini files.")
-                .withRequiredArg();
-        parser.acceptsAll(Arrays.asList(INPUT_FILES, "if"),
-                "One or more input files can be specified as sw_accessions. Use commas without space to delimit a list of input files.")
-                .withRequiredArg();
-        parser.acceptsAll(
-                Arrays.asList("no-meta-db", "no-metadata"),
-                "Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.");
-        parser.acceptsAll(
-                Arrays.asList(WAIT),
-                "Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.");
-        parser.acceptsAll(
-                Arrays.asList(FORCE_HOST, "fh"),
-                "If specified, the scheduled workflow will only be launched if this parameter value and the host field in the workflow run table match. This is a mechanism to target workflows to particular servers for launching.")
-                .withRequiredArg();
-        parser.accepts("workflow-engine",
-                "Optional: Specifies a workflow engine, one of: " + Engines.ENGINES_LIST + ". Defaults to " + Engines.DEFAULT_ENGINE + ".")
-                .withRequiredArg().ofType(String.class).describedAs("Workflow Engine");
-        parser.accepts("no-run", "Optional: Terminates the launch process immediately prior to running. Useful for debugging.");
-        this.nonOptionSpec = parser.nonOptions(WorkflowScheduler.OVERRIDE_INI_DESC);
+        this.waitSpec = parser
+                .acceptsAll(
+                        Arrays.asList("wait"),
+                        "Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.");
+        this.iniFilesSpec = WorkflowScheduler.createIniFileSpec(parser);
+        this.workflowEngineSpec = WorkflowScheduler.createWorkflowEngineSpec(parser);
+        this.metadataWriteBackOffSpec = WorkflowScheduler.createMetadataWriteBackOffSpec(parser);
+        this.nonOptionSpec = parser.nonOptions(OVERRIDE_INI_DESC);
 
-        ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
     /*
      */
     @Override
     public ReturnValue init() {
-        return new ReturnValue();
+        if (options.has(workflowEngineSpec)) {
+            return validateEngineString(options.valueOf(workflowEngineSpec));
+        }
+        return new ReturnValue(ReturnValue.ExitStatus.SUCCESS);
     }
 
     /*
@@ -106,7 +107,110 @@ public class WorkflowLifecycle extends Plugin {
 
     @Override
     public ReturnValue do_run() {
+        try {
+            File tempBundleFile = File.createTempFile("bundle_manager", "out");
+            tempBundleFile.deleteOnExit();
+            File tempSchedulerFile = File.createTempFile("scheduler", "out");
+            tempSchedulerFile.deleteOnExit();
+
+            // install the workflow
+            runBundleManagerPlugin(options.valueOf(this.bundleDirSpec), tempBundleFile);
+            // schedule the workflow
+            runWorkflowSchedulerPlugin(tempBundleFile, tempSchedulerFile);
+            // launch the workflow
+            runWorkflowLauncherPlugin(tempSchedulerFile);
+            // watch the workflow
+            if (options.has(this.waitSpec)) {
+                runWatcherPlugin();
+                runStatusCheckerPlugin();
+            }
+            // watch the workflow if necessary
+        } catch (ExitException e) {
+            System.exit(e.getExitCode());
+        } catch (IOException e) {
+            System.exit(ReturnValue.FILENOTWRITABLE);
+        }
         return new ReturnValue();
     }
 
+    private void runBundleManagerPlugin(String bundlePath, File outFile) {
+        String[] bundleManagerParams = { "--install-dir-only", "--bundle", bundlePath, "--out", outFile.getAbsolutePath() };
+        runPlugin(BundleManager.class, bundleManagerParams);
+    }
+
+    private void runWatcherPlugin() {
+        String[] watcherParams = { "--workflow-run-accession", workflowRunAccession };
+        runPlugin(WorkflowWatcher.class, watcherParams);
+    }
+
+    private void runStatusCheckerPlugin() {
+        String[] statusCheckerParams = { "--workflow-run-accession", workflowRunAccession };
+        runPlugin(WorkflowStatusChecker.class, statusCheckerParams);
+    }
+
+    private void runWorkflowSchedulerPlugin(File outFile, File tempSchedulerFile) throws IOException {
+        // if there is only one workflow in the file, use it. Otherwise ask for name and version
+        List<String> readLines = FileUtils.readLines(outFile);
+        this.workflowAccession = null;
+        if (readLines.size() == 1) {
+            workflowAccession = readLines.get(0);
+        } else {
+            for (String accession : readLines) {
+                Workflow workflow = metadata.getWorkflow(Integer.valueOf(accession));
+                if (workflow.getName().equals(options.valueOf(this.workflowNameSpec))
+                        && workflow.getVersion().equals(options.valueOf(this.workflowVersionSpec))) {
+                    workflowAccession = accession;
+                }
+            }
+            if (workflowAccession == null) {
+                Log.fatal("Unexpected output from installer " + readLines.toString());
+                throw new ExitException(ReturnValue.FAILURE);
+            }
+        }
+
+        String[] schedulerParams = { "--workflow-accession", workflowAccession, "--host", FileTools.getLocalhost(options).hostname,
+                "--out", tempSchedulerFile.getAbsolutePath() };
+        List<String> totalParams = Lists.newArrayList(schedulerParams);
+        if (options.has(this.iniFilesSpec)) {
+            for (String val : options.valuesOf(this.iniFilesSpec)) {
+                totalParams.add("--" + this.iniFilesSpec.options().iterator().next());
+                totalParams.add(val);
+            }
+        }
+        if (options.has(this.metadataWriteBackOffSpec)) {
+            totalParams.add("--" + this.metadataWriteBackOffSpec.options().iterator().next());
+        }
+        if (options.has(this.nonOptionSpec)) {
+            for (String val : options.valuesOf(this.nonOptionSpec)) {
+                totalParams.add(val);
+            }
+        }
+        runPlugin(WorkflowScheduler.class, schedulerParams);
+    }
+
+    private void runWorkflowLauncherPlugin(File outFile) throws IOException {
+        // if there is only one workflow in the file, use it. Otherwise ask for name and version
+        List<String> readLines = FileUtils.readLines(outFile);
+        this.workflowRunAccession = null;
+        if (readLines.size() == 1) {
+            workflowRunAccession = readLines.get(0);
+        } else {
+            Log.fatal("Unexpected output from scheduler " + readLines.toString());
+            throw new ExitException(ReturnValue.FAILURE);
+        }
+
+        String[] schedulerParams = { "--launch-scheduled", workflowRunAccession };
+        runPlugin(WorkflowLauncher.class, schedulerParams);
+    }
+
+    private void runPlugin(Class plugin, String[] params) {
+        PluginRunner p = new PluginRunner();
+        List<String> a = new ArrayList<>();
+        a.add("--plugin");
+        a.add(plugin.getCanonicalName());
+        a.add("--");
+        a.addAll(Arrays.asList(params));
+        Log.info(Arrays.deepToString(a.toArray()));
+        p.run(a.toArray(new String[a.size()]));
+    }
 }
