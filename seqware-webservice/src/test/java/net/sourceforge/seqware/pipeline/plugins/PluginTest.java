@@ -19,6 +19,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 import java.util.Arrays;
 import net.sourceforge.seqware.common.metadata.MetadataWSTest;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import org.junit.After;
 import org.junit.Assert;
@@ -43,6 +44,7 @@ public class PluginTest {
     // //////////////////////////////////////////////////////////////////////////////////////////////////
     protected void launchPlugin(String... params) {
         instance.setParams(Arrays.asList(params));
+        instance.setConfig(ConfigTools.getSettings());
         checkReturnValue(ReturnValue.SUCCESS, instance.parse_parameters());
         checkReturnValue(ReturnValue.SUCCESS, instance.init());
         checkReturnValue(ReturnValue.SUCCESS, instance.do_run());

@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.module.ReturnValue.ExitStatus;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
@@ -103,21 +104,9 @@ public class Scheduler {
         int workflowRunId = 0;
 
         // will be handed off to the template layer
-        HashMap<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
 
-        // replace the workflow bundle dir in the file paths of ini files
-        boolean first = true;
-        StringBuilder iniFilesStr = new StringBuilder();
-        for (String iniFile : iniFiles) {
-            String newIniFiles = iniFile.replaceAll("\\$\\{workflow_bundle_dir\\}", wi.getWorkflowDir());
-            if (first) {
-                first = false;
-                iniFilesStr.append(newIniFiles);
-            } else {
-                iniFilesStr.append(",").append(newIniFiles);
-            }
-        }
-
+        // populate our reserved ini keys
         map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
         // int workflowAccession = 0;
         StringBuilder parentAccessionsStr = new StringBuilder();
@@ -132,83 +121,134 @@ public class Scheduler {
         // my new preferred variable name
         map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), "0");
 
+        // load up default ini values from installed workflow
+        Map<String, String> defaultIniConfig = this.loadIniConfigs(wi.getWorkflowAccession());
+        map.putAll(defaultIniConfig);
+
         // if we're doing metadata writeback will need to parameterize the
         // workflow correctly
         if (metadataWriteback) {
-
             // tells the workflow it should save its metadata
             map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
-
-            first = true;
-
-            // make parent accession string
-            Log.info("ARRAY SIZE: " + parentAccessions.size());
-            for (String id : parentAccessions) {
-                if (first) {
-                    first = false;
-                    parentAccessionsStr.append(id);
-                } else {
-                    parentAccessionsStr.append(",").append(id);
-                }
-            }
-
-            // check to make sure it contains something, save under various
-            // names
-            if (parentAccessionsStr.length() > 0) {
-                map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
-                map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-                // my new preferred variable name
-                map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-            }
-
-            /* Load ini (thus ensuring it exists) prior to writing to the DB. */
-            String[] iniCompleteFilePaths = iniFilesStr.toString().isEmpty() ? new String[] {} : iniFilesStr.toString().split(",");
-            for (String currIniFile : iniCompleteFilePaths) {
-                MapTools.ini2Map(currIniFile, map);
-            }
-            MapTools.cli2Map(cmdLineOptions.toArray(new String[0]), map);
-            StringBuilder mapBuffer = new StringBuilder();
-            for (String key : map.keySet()) {
-                Log.info("KEY: " + key + " VALUE: " + map.get(key));
-                // Log.error(key+"="+map.get(key));
-                mapBuffer.append(key).append("=").append(map.get(key)).append("\n");
-            }
-
-            // need to figure out workflow_run_accession
-            int workflowAccession = wi.getWorkflowAccession();
-            // create the workflow_run row if it doesn't exist
-
-            workflowRunId = this.metadata.add_workflow_run(workflowAccession);
-            int workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
-            String workflowRunAccession = Integer.toString(workflowRunAccessionInt);
-
-            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
-            // my new preferred variable name
-            map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
-            Log.stdout("Created workflow run with SWID: " + workflowRunAccession);
-
-            // need to link all the parents to this workflow run accession
-            // this is actually linking them in the DB
-            for (String parentLinkedToWR : parentsLinkedToWR) {
-                try {
-                    this.metadata.linkWorkflowRunAndParent(workflowRunId, Integer.parseInt(parentLinkedToWR));
-                } catch (Exception e) {
-                    Log.error("Could not link workflow run to its parents " + parentsLinkedToWR.toString());
-                    Rethrow.rethrow(e);
-                }
-            }
-
-            this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.submitted, null,
-                    null, null, mapBuffer.toString(), scheduledHost, null, null, workflowEngine, inputFiles);
-
-            ReturnValue ret = new ReturnValue();
-            ret.setReturnValue(Integer.valueOf(workflowRunAccession));
-            return ret;
-
-        } else {
-            Log.error("you can't schedule a workflow run unless you have metadata writeback turned on.");
-            return new ReturnValue(ExitStatus.METADATAINVALIDIDCHAIN);
         }
+
+        boolean first = true;
+
+        // make parent accession string
+        Log.info("ARRAY SIZE: " + parentAccessions.size());
+        for (String id : parentAccessions) {
+            if (first) {
+                first = false;
+                parentAccessionsStr.append(id);
+            } else {
+                parentAccessionsStr.append(",").append(id);
+            }
+        }
+
+        // check to make sure it contains something, save under various
+        // names
+        if (parentAccessionsStr.length() > 0) {
+            map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
+            map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+            // my new preferred variable name
+            map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+        }
+
+        /* Load ini (thus ensuring it exists) prior to writing to the DB. */
+        for (String currIniFile : iniFiles) {
+            MapTools.ini2Map(currIniFile, map);
+        }
+        MapTools.cli2Map(cmdLineOptions.toArray(new String[0]), map);
+
+        // perform variable substituion on any bundle path variables
+        Log.info("Attempting to substitute workflow_bundle_dir " + wi.getWorkflowDir());
+        map = MapTools.expandVariables(map, MapTools.providedMap(wi.getWorkflowDir()));
+
+        // create the final ini for upload to the web service
+        StringBuilder mapBuffer = new StringBuilder();
+        for (String key : map.keySet()) {
+            Log.info("KEY: " + key + " VALUE: " + map.get(key));
+            // Log.error(key+"="+map.get(key));
+            mapBuffer.append(key).append("=").append(map.get(key)).append("\n");
+        }
+
+        // need to figure out workflow_run_accession
+        int workflowAccession = wi.getWorkflowAccession();
+        // create the workflow_run row if it doesn't exist
+
+        workflowRunId = this.metadata.add_workflow_run(workflowAccession);
+        int workflowRunAccessionInt = this.metadata.get_workflow_run_accession(workflowRunId);
+        String workflowRunAccession = Integer.toString(workflowRunAccessionInt);
+
+        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_UNDERSCORES.getKey(), workflowRunAccession);
+        // my new preferred variable name
+        map.put(ReservedIniKeys.WORKFLOW_RUN_ACCESSION_DASHED.getKey(), workflowRunAccession);
+        Log.stdout("Created workflow run with SWID: " + workflowRunAccession);
+
+        // need to link all the parents to this workflow run accession
+        // this is actually linking them in the DB
+        for (String parentLinkedToWR : parentsLinkedToWR) {
+            try {
+                this.metadata.linkWorkflowRunAndParent(workflowRunId, Integer.parseInt(parentLinkedToWR));
+            } catch (Exception e) {
+                Log.error("Could not link workflow run to its parents " + parentsLinkedToWR.toString());
+                throw Rethrow.rethrow(e);
+            }
+        }
+
+        this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.submitted, null, null,
+                null, mapBuffer.toString(), scheduledHost, null, null, workflowEngine, inputFiles);
+
+        ReturnValue ret = new ReturnValue();
+        ret.setReturnValue(Integer.valueOf(workflowRunAccession));
+        return ret;
+    }
+
+    /**
+     * @param workflowAccession
+     * @param bundlePath
+     * @return
+     */
+    private Map<String, String> loadIniConfigs(Integer workflowAccession) {
+        assert (workflowAccession != null);
+        // the map
+        HashMap<String, String> map = new HashMap<>();
+        Log.info("loading ini files from DB");
+        // iterate over all the generic default params
+        // these params are created when a workflow is installed
+        SortedSet<WorkflowParam> workflowParams = this.metadata.getWorkflowParams(workflowAccession.toString());
+        for (WorkflowParam param : workflowParams) {
+            // SEQWARE-1909 - for installed workflows, interpret a null default as blank
+            map.put(param.getKey(), param.getDefaultValue() == null ? "" : param.getDefaultValue());
+        }
+
+        // FIXME: this needs to be implemented otherwise portal submitted won't
+        // work!
+        // now iterate over the params specific for this workflow run
+        // this is where the SeqWare Portal will populate parameters for
+        // a scheduled workflow
+        /*
+         * workflowParams = this.metadata.getWorkflowRunParams(workflowRunAccession); for(WorkflowParam param : workflowParams) {
+         * map.put(param.getKey(), param.getValue()); }
+         */
+        // Workflow Runs that are scheduled by the web service don't populate
+        // their
+        // params into the workflow_run_params table but, instead, directly
+        // write
+        // to the ini field.
+        // FIXME: the web service should just use the same approach as the
+        // Portal
+        // and this will make it more robust to pass in the
+        // parent_processing_accession
+        // via the DB rather than ini_file field
+
+        // allow the command line options to override options in the map
+        // Parse command line options for additional configuration. Note that we
+        // do it last so it takes precedence over the INI
+        // if we always schedule, we never override here
+        // MapTools.cli2Map(params, map);
+
+        return map;
     }
 
     /**

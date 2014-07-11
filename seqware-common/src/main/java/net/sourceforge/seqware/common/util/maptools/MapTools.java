@@ -102,7 +102,7 @@ public class MapTools {
                 }
             }
         } catch (Exception e) {
-            rethrow(e);
+            throw rethrow(e);
         }
 
     }
@@ -126,7 +126,7 @@ public class MapTools {
             iStream = new FileInputStream(iniFile);
             ini2Map(iStream, hm, keyToUpper);
         } catch (Exception e) {
-            rethrow(e);
+            throw rethrow(e);
         } finally {
             IOUtils.closeQuietly(iStream);
         }
@@ -179,11 +179,11 @@ public class MapTools {
         }
         // Parse command line arguments for --key=value
         String currKey = "";
-        for (int i = 0; i < args.length; i++) {
-            Log.info("CURR KEY: " + args[i]);
+        for (String arg : args) {
+            Log.info("CURR KEY: " + arg);
             // If it starts with --, try to split on =
-            if (args[i].startsWith("--")) {
-                String[] split = args[i].split("\\=");
+            if (arg.startsWith("--")) {
+                String[] split = arg.split("\\=");
                 // If had =, turn key into args
                 if (split.length == 2) {
                     // Strip starting --
@@ -191,12 +191,12 @@ public class MapTools {
                     currKey = "";
                 } else {
                     Log.info("FOUND KEY " + currKey);
-                    currKey = args[i].substring(2);
+                    currKey = arg.substring(2);
                 }
             } else {
                 if (!"".equals(currKey)) {
-                    Log.info("PUTTING KEY VALUE " + currKey + " " + args[i]);
-                    hm.put(currKey, args[i]);
+                    Log.info("PUTTING KEY VALUE " + currKey + " " + arg);
+                    hm.put(currKey, arg);
                 }
             }
         }

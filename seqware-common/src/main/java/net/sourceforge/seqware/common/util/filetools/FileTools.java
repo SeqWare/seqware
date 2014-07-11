@@ -624,6 +624,7 @@ public class FileTools {
      * Get the localhost and a return value describing the failure condition if we are unable to get the localhost
      * 
      * @param options
+     *            (looks for force-host as an override, will ignore if null)
      * @return
      */
     public static LocalhostPair getLocalhost(OptionSet options) {
@@ -631,7 +632,7 @@ public class FileTools {
         // need to initialize regardless
         ReturnValue returnValue = new ReturnValue(ReturnValue.SUCCESS);
         // find the hostname or use --force-host
-        if (options.has(FORCE_HOST) && options.valueOf(FORCE_HOST) != null) {
+        if (options != null && options.has(FORCE_HOST) && options.valueOf(FORCE_HOST) != null) {
             hostname = (String) options.valueOf(FORCE_HOST);
             returnValue = new ReturnValue(ReturnValue.SUCCESS);
         } else {
