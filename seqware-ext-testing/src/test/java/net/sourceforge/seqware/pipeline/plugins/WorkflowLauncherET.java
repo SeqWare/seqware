@@ -41,13 +41,13 @@ public class WorkflowLauncherET {
     @Test
     public void runInvalidParameters() throws IOException {
         // this should not NullPointerException SEQWARE-1646
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher "
+        String listCommand = "-p io.seqware.pipeline.plugins.WorkflowLifecycle "
                 + "-- --no-metadata --provisioned-bundle-dir /random/funky/dir --workflow Test --version 1.0-SNAPSHOT --ini-files /.mounts/labs/PDE/private/mtaschuk/tmp/Test/target/Workflow_Bundle_Test_1.0-SNAPSHOT_SeqWare_0.13.6.6/Workflow_Bundle_Test/1.0-SNAPSHOT/config/workflow.ini --metadata-output-dir /u/mtaschuk --metadata-file-output-prefix TestTest";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
 
         // this should not NullPointerException SEQWARE-1516
-        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher " + "-- --wa 1 --test ";
+        listCommand = "-p io.seqware.pipeline.plugins.WorkflowLifecycle " + "-- --wa 1 --test ";
         listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
     }
@@ -55,9 +55,8 @@ public class WorkflowLauncherET {
     @Test
     public void scheduleWithOneInputFile() throws IOException {
         File workflowIni = File.createTempFile("workflow", "ini");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher "
-                + "-- --workflow-accession 6594 --schedule --ini-file " + workflowIni.getAbsolutePath()
-                + " --host seqware --input-files 835";
+        String listCommand = "-p io.seqware.pipeline.plugins.WorkflowScheduler " + "-- --workflow-accession 6594 --schedule --ini-file "
+                + workflowIni.getAbsolutePath() + " --host seqware --input-files 835";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
         int wr_accession = ITUtility.extractSwid(listOutput);
@@ -73,9 +72,8 @@ public class WorkflowLauncherET {
     @Test
     public void scheduleWithManyInputFiles() throws IOException {
         File workflowIni = File.createTempFile("workflow", "ini");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher "
-                + "-- --workflow-accession 6594 --schedule --ini-file " + workflowIni.getAbsolutePath()
-                + " --host seqware --input-files 835,838,866,867,870";
+        String listCommand = "-p io.seqware.pipeline.plugins.WorkflowScheduler " + "-- --workflow-accession 6594 --schedule --ini-file "
+                + workflowIni.getAbsolutePath() + " --host seqware --input-files 835,838,866,867,870";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
         int wr_accession = ITUtility.extractSwid(listOutput);
@@ -91,9 +89,8 @@ public class WorkflowLauncherET {
     @Test
     public void scheduleWithInvalidInputFiles() throws IOException {
         File workflowIni = File.createTempFile("workflow", "ini");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher "
-                + "-- --workflow-accession 6594 --schedule --ini-file " + workflowIni.getAbsolutePath()
-                + " --host seqware --input-files 835,foobar";
+        String listCommand = "-p io.seqware.pipeline.plugins.WorkflowScheduler " + "-- --workflow-accession 6594 --schedule --ini-file "
+                + workflowIni.getAbsolutePath() + " --host seqware --input-files 835,foobar";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
     }
@@ -101,9 +98,8 @@ public class WorkflowLauncherET {
     @Test
     public void scheduleWithNonExistentInputFiles() throws IOException {
         File workflowIni = File.createTempFile("workflow", "ini");
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher "
-                + "-- --workflow-accession 6594 --schedule --ini-file " + workflowIni.getAbsolutePath()
-                + " --host seqware --input-files 10000,11000";
+        String listCommand = "-p io.seqware.pipeline.plugins.WorkflowScheduler " + "-- --workflow-accession 6594 --schedule --ini-file "
+                + workflowIni.getAbsolutePath() + " --host seqware --input-files 10000,11000";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.INVALIDARGUMENT, null);
         Assert.assertTrue("output contains exception", !listOutput.contains("Exception"));
     }

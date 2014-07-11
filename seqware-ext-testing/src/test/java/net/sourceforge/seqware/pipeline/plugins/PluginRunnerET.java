@@ -54,7 +54,7 @@ public class PluginRunnerET {
 
     private static Map<String, Integer> installedWorkflows = new HashMap<>();
     private static Map<String, File> bundleLocations = new HashMap<>();
-    private static List<Integer> launchedWorkflowRuns = new ArrayList<>();
+    private static final List<Integer> launchedWorkflowRuns = new ArrayList<>();
     private final static boolean DEBUG_SKIP = false;
     private final static int PARENT = 4707;
 
@@ -223,7 +223,7 @@ public class PluginRunnerET {
             String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
-            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath
+            String listCommand = "-p io.seqware.pipeline.plugins.WorkflowScheduler -- --ini-files " + workflowPath
                     + " --workflow-accession " + accession + " --schedule --parent-accessions " + PARENT + " --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
@@ -235,7 +235,7 @@ public class PluginRunnerET {
         }
 
         // launch-scheduled
-        String schedCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled";
+        String schedCommand = "-p io.seqware.pipeline.plugins.WorkflowLauncher -- --launch-scheduled";
         String schedOutput = ITUtility.runSeqWareJar(schedCommand, ReturnValue.SUCCESS, null);
         Log.info(schedOutput);
 
@@ -267,7 +267,7 @@ public class PluginRunnerET {
             String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
-            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath
+            String listCommand = "-p io.seqware.pipeline.plugins.WorkflowLifecycle -- --ini-files " + workflowPath
                     + " --workflow-accession " + accession + " --parent-accessions " + PARENT + " --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
@@ -286,7 +286,7 @@ public class PluginRunnerET {
             String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
-            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath
+            String listCommand = "-p io.seqware.pipeline.plugins.WorkflowLifecycle -- --ini-files " + workflowPath
                     + " --workflow-accession " + accession + " --parent-accessions " + PARENT + " --wait --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
@@ -305,7 +305,7 @@ public class PluginRunnerET {
             String workflowPath = iniParams.get(e.getKey()).getAbsolutePath();
             String accession = Integer.toString(e.getValue());
 
-            String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + workflowPath
+            String listCommand = "-p io.seqware.pipeline.plugins.WorkflowLifecycle -- --ini-files " + workflowPath
                     + " --workflow-accession " + accession + " --no-metadata --parent-accessions " + PARENT + " --wait --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
@@ -404,9 +404,7 @@ public class PluginRunnerET {
         for (Entry<String, WorkflowInfo> e : latestWorkflows.entrySet()) {
             try {
                 pool.take().get();
-            } catch (InterruptedException ex) {
-                Log.error(ex);
-            } catch (ExecutionException ex) {
+            } catch (InterruptedException | ExecutionException ex) {
                 Log.error(ex);
             }
         }
@@ -432,15 +430,15 @@ public class PluginRunnerET {
         // go through output and dump out the workflow.ini
         File workflowIni = File.createTempFile("workflow", "ini");
         String[] lines = listOutput.split(System.getProperty("line.separator"));
-        PrintWriter out = new PrintWriter(new FileWriter(workflowIni));
-        for (String line : lines) {
-            if (line.startsWith("-") || line.startsWith("=") || line.startsWith("$") || line.startsWith("Running Plugin")
-                    || line.startsWith("Setting Up Plugin")) {
-                continue;
+        try (PrintWriter out = new PrintWriter(new FileWriter(workflowIni))) {
+            for (String line : lines) {
+                if (line.startsWith("-") || line.startsWith("=") || line.startsWith("$") || line.startsWith("Running Plugin")
+                        || line.startsWith("Setting Up Plugin")) {
+                    continue;
+                }
+                out.println(line);
             }
-            out.println(line);
         }
-        out.close();
         return workflowIni;
     }
 
@@ -472,8 +470,8 @@ public class PluginRunnerET {
         @Override
         public String call() {
             try {
-                String tOutput = ITUtility.runSeqWareJar(
-                        "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- " + command.toString(), ReturnValue.SUCCESS, null);
+                String tOutput = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- " + command,
+                        ReturnValue.SUCCESS, null);
                 Log.error(command + " completed, writing output to " + output.getAbsolutePath());
                 FileUtils.write(output, tOutput);
                 return tOutput;
