@@ -7,8 +7,29 @@ import java.util.Set;
 
 public class Engines {
 
-    public static final String ENGINES_LIST = "oozie, oozie-sge";
-    public static final String DEFAULT_ENGINE = "oozie";
+    public enum TYPES {
+        oozie("oozie"), oozie_sge("oozie-sge");
+        private final String cliString;
+
+        TYPES(String cliString) {
+            this.cliString = cliString;
+        }
+
+        /**
+         * @return the cliString
+         */
+        public String getCliString() {
+            return cliString;
+        }
+
+        @Override
+        public String toString() {
+            return cliString;
+        }
+    }
+
+    public static final String ENGINES_LIST = Engines.TYPES.oozie + ", " + Engines.TYPES.oozie_sge;
+    public static final String DEFAULT_ENGINE = Engines.TYPES.oozie.toString();
     public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ENGINES_LIST.split(", "))));
 
     /**

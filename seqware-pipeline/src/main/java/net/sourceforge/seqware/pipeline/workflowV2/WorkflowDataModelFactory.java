@@ -8,11 +8,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -140,12 +138,13 @@ public class WorkflowDataModelFactory {
 
         Log.info("loading ini files");
         // load ini config
-        Map<String, String> configs = this.loadIniConfigs(workflowAccession, workflowRunAccession, bundlePath);
-        dataModel.setConfigs(configs);
+        WorkflowRun workflowRun = metadata.getWorkflowRun(workflowRunAccession);
+        Map<String, String> iniString2Map = MapTools.iniString2Map(workflowRun.getIniFile());
+        dataModel.setConfigs(iniString2Map);
 
         // 0.13.6.5 : The Java workflow launcher was not originally designed to schedule, hence it is not properly getting
         // parent accessions from saved ini files (as opposed to on the command line)
-        ArrayList<String> parseParentAccessions = parseParentAccessions(configs);
+        ArrayList<String> parseParentAccessions = parseParentAccessions(dataModel.getConfigs());
         dataModel.setParentAccessions(parseParentAccessions);
 
         // merge command line option with configs, command-line options should override parent accession set above if present
@@ -251,67 +250,6 @@ public class WorkflowDataModelFactory {
         return (result);
     }
 
-    private Map<String, String> loadIniConfigs(Integer workflowAccession, Integer workflowRunAccession, String bundlePath) {
-        // the map
-        HashMap<String, String> map = new HashMap<>();
-        if (workflowRunAccession != null) {
-            Log.info("loading ini files from DB");
-            // TODO: this code is from BasicWorkflow, make a notice of that when refactoring
-
-            // get the workflow run
-            WorkflowRun wr = this.metadata.getWorkflowRunWithWorkflow(workflowRunAccession.toString());
-            // iterate over all the generic default params
-            // these params are created when a workflow is installed
-            SortedSet<WorkflowParam> workflowParams = this.metadata.getWorkflowParams(workflowAccession.toString());
-            for (WorkflowParam param : workflowParams) {
-                // SEQWARE-1909 - for installed workflows, interpret a null default as blank
-                map.put(param.getKey(), param.getDefaultValue() == null ? "" : param.getDefaultValue());
-            }
-
-            // FIXME: this needs to be implemented otherwise portal submitted won't
-            // work!
-            // now iterate over the params specific for this workflow run
-            // this is where the SeqWare Portal will populate parameters for
-            // a scheduled workflow
-            /*
-             * workflowParams = this.metadata.getWorkflowRunParams(workflowRunAccession); for(WorkflowParam param : workflowParams) {
-             * map.put(param.getKey(), param.getValue()); }
-             */
-
-            // Workflow Runs that are scheduled by the web service don't populate
-            // their
-            // params into the workflow_run_params table but, instead, directly
-            // write
-            // to the ini field.
-            // FIXME: the web service should just use the same approach as the
-            // Portal
-            // and this will make it more robust to pass in the
-            // parent_processing_accession
-            // via the DB rather than ini_file field
-            map.putAll(MapTools.iniString2Map(wr.getIniFile()));
-        } else {
-            Log.info("loading ini files from options");
-
-            // if we always schedule, we should never need ini files from the command line when launching
-            // // set conifg, pass the config files to Map<String,String>, also put the .settings to Map<String,String>
-            // // ini-files
-            // for (String ini : iniFiles) {
-            // // the ini file path might actually have ${workflow_bundle_dir} in the name
-            // Log.debug("  INI FILE: " + ini);
-            // if ((new File(ini)).exists()) {
-            // MapTools.ini2Map(ini, map);
-            // }
-            // }
-        }
-        // allow the command line options to override options in the map
-        // Parse command line options for additional configuration. Note that we
-        // do it last so it takes precedence over the INI
-        // if we always schedule, we never override here
-        // MapTools.cli2Map(params, map);
-
-        return MapTools.expandVariables(map, MapTools.providedMap(bundlePath));
-    }
-
     // FIXME should iterate all options automatically
     /**
      * This method is badly named now. There are no command-line options if we always schedule. Instead we only need to retain the process
@@ -325,7 +263,6 @@ public class WorkflowDataModelFactory {
      * @param workflowEngine
      */
     private void mergeCmdOptions(AbstractWorkflowDataModel model, int workflowAccession, int workflowRunAccession, String workflowEngine) {
-        Map<String, String> map = model.getConfigs();
         // merge parent-accessions
         model.setWorkflow_run_accession(String.valueOf(workflowRunAccession));
         model.setWorkflow_accession(String.valueOf(workflowAccession));

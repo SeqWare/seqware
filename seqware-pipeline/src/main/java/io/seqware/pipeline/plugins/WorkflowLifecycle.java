@@ -36,12 +36,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowLifecycle extends Plugin {
 
-    public static final String FORCE_HOST = "force-host";
-    public static final String HOST = "host";
-    public static final String LAUNCH_SCHEDULED = "launch-scheduled";
-    public static final String WAIT = "wait";
-    public static final String INPUT_FILES = "input-files";
-
     private final NonOptionArgumentSpec<String> nonOptionSpec;
     private final ArgumentAcceptingOptionSpec<String> workflowNameSpec;
     private final ArgumentAcceptingOptionSpec<String> workflowVersionSpec;
