@@ -181,11 +181,13 @@ public class WorkflowScheduler extends Plugin {
                     !options.has(metadataWriteBackOffSpec), options.valuesOf(parentAccessionsSpec),
                     options.valuesOf(linkWorkflowRunToParentsSpec), options.valuesOf(nonOptionSpec), host, engine, inputFiles);
 
-            try {
-                java.io.File file = new java.io.File(options.valueOf(this.outFile));
-                FileUtils.write(file, String.valueOf(ret.getReturnValue()));
-            } catch (IOException ex) {
-                return new ReturnValue(ExitStatus.FILENOTWRITABLE);
+            if (options.has(outFile)) {
+                try {
+                    java.io.File file = new java.io.File(options.valueOf(this.outFile));
+                    FileUtils.write(file, String.valueOf(ret.getReturnValue()));
+                } catch (IOException ex) {
+                    return new ReturnValue(ExitStatus.FILENOTWRITABLE);
+                }
             }
             return ret;
 
