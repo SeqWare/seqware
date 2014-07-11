@@ -109,7 +109,6 @@ public class Scheduler {
         // populate our reserved ini keys
         map.put(ReservedIniKeys.WORKFLOW_BUNDLE_DIR.getKey(), wi.getWorkflowDir());
         // int workflowAccession = 0;
-        StringBuilder parentAccessionsStr = new StringBuilder();
 
         // starts with assumption of no metadata writeback
         map.put(ReservedIniKeys.METADATA.getKey(), "no-metadata");
@@ -132,33 +131,13 @@ public class Scheduler {
             map.put(ReservedIniKeys.METADATA.getKey(), "metadata");
         }
 
-        boolean first = true;
-
-        // make parent accession string
-        Log.info("ARRAY SIZE: " + parentAccessions.size());
-        for (String id : parentAccessions) {
-            if (first) {
-                first = false;
-                parentAccessionsStr.append(id);
-            } else {
-                parentAccessionsStr.append(",").append(id);
-            }
-        }
-
-        // check to make sure it contains something, save under various
-        // names
-        if (parentAccessionsStr.length() > 0) {
-            map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
-            map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-            // my new preferred variable name
-            map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
-        }
-
         /* Load ini (thus ensuring it exists) prior to writing to the DB. */
         for (String currIniFile : iniFiles) {
             MapTools.ini2Map(currIniFile, map);
         }
         MapTools.cli2Map(cmdLineOptions.toArray(new String[0]), map);
+
+        substituteParentAccessions(parentAccessions, map);
 
         // perform variable substituion on any bundle path variables
         Log.info("Attempting to substitute workflow_bundle_dir " + wi.getWorkflowDir());
@@ -202,6 +181,36 @@ public class Scheduler {
         ReturnValue ret = new ReturnValue();
         ret.setReturnValue(Integer.valueOf(workflowRunAccession));
         return ret;
+    }
+
+    /**
+     * Merge the parent accession parameters provided and insert them into the ini file
+     * 
+     * @param parentAccessions
+     * @param map
+     */
+    private void substituteParentAccessions(List<String> parentAccessions, Map<String, String> map) {
+        StringBuilder parentAccessionsStr = new StringBuilder();
+        boolean first = true;
+
+        // make parent accession string
+        Log.info("ARRAY SIZE: " + parentAccessions.size());
+        for (String id : parentAccessions) {
+            if (first) {
+                first = false;
+                parentAccessionsStr.append(id);
+            } else {
+                parentAccessionsStr.append(",").append(id);
+            }
+        }
+        // check to make sure it contains something, save under various
+        // names
+        if (parentAccessionsStr.length() > 0) {
+            map.put(ReservedIniKeys.PARENT_ACCESSION.getKey(), parentAccessionsStr.toString());
+            map.put(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+            // my new preferred variable name
+            map.put(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey(), parentAccessionsStr.toString());
+        }
     }
 
     /**
