@@ -46,6 +46,7 @@ public class WorkflowLifecycle extends Plugin {
     private final ArgumentAcceptingOptionSpec<String> workflowEngineSpec;
     private String workflowRunAccession;
     private String workflowAccession;
+    private final ArgumentAcceptingOptionSpec<Integer> workflowAccessionSpec;
 
     public WorkflowLifecycle() {
         super();
@@ -55,12 +56,20 @@ public class WorkflowLifecycle extends Plugin {
                         Arrays.asList("workflow", "w"),
                         "The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.")
                 .withRequiredArg().ofType(String.class);
-        this.workflowVersionSpec = parser.acceptsAll(Arrays.asList("version", "v", "workflow-version"),
-                "The workflow version to be used. You can specify this or the workflow-accession of an already installed bundle.")
-                .withRequiredArg();
-        this.bundleDirSpec = this.parser.acceptsAll(Arrays.asList("bundle", "b", "provisioned-bundle-dir"),
-                "The path to an unzipped bundle. Specify a name and version as well if the bundle contains multiple workflows.")
-                .withRequiredArg();
+        this.workflowVersionSpec = parser
+                .acceptsAll(Arrays.asList("version", "v", "workflow-version"),
+                        "The workflow version to be used. You can specify this or the workflow-accession of an already installed bundle.")
+                .requiredIf(workflowNameSpec).withRequiredArg();
+        this.bundleDirSpec = this.parser
+                .acceptsAll(Arrays.asList("bundle", "b", "provisioned-bundle-dir"),
+                        "The path to an unzipped bundle. Specify a name and version as well if the bundle contains multiple workflows.")
+                .requiredIf(workflowNameSpec).withRequiredArg();
+
+        this.workflowAccessionSpec = this.parser
+                .acceptsAll(Arrays.asList("workflow-accession"),
+                        "The accession for an installed workflow, must be provided unless a bundle is.")
+                .requiredUnless(workflowNameSpec, workflowVersionSpec, bundleDirSpec).withRequiredArg().ofType(Integer.class);
+
         this.waitSpec = parser
                 .acceptsAll(
                         Arrays.asList("wait"),
@@ -107,8 +116,13 @@ public class WorkflowLifecycle extends Plugin {
             File tempSchedulerFile = File.createTempFile("scheduler", "out");
             tempSchedulerFile.deleteOnExit();
 
-            // install the workflow
-            runBundleManagerPlugin(options.valueOf(this.bundleDirSpec), tempBundleFile);
+            if (!options.has(workflowAccessionSpec)) {
+                // install the workflow
+                runBundleManagerPlugin(options.valueOf(this.bundleDirSpec), tempBundleFile);
+            } else {
+                // otherwise simulate a workflow installed by placing a sw_accession in the bundle_manager output file
+                FileUtils.write(tempBundleFile, String.valueOf(options.valueOf(workflowAccessionSpec)));
+            }
             // schedule the workflow
             runWorkflowSchedulerPlugin(tempBundleFile, tempSchedulerFile);
             // launch the workflow
