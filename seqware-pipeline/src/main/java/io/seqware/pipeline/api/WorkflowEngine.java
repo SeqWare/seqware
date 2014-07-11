@@ -66,6 +66,7 @@ public interface WorkflowEngine {
      * 
      * The exact nature of the output is arbitrary and likely dependent on the workflow engine.
      * 
+     * @param jobToken
      * @return
      */
     public ReturnValue watchWorkflow(String jobToken);

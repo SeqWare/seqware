@@ -28,8 +28,8 @@ import org.openide.util.lookup.ServiceProvider;
  * 
  * The WorkflowLifecycle is responsible for performing aggregations of tasks.
  * 
- * Specifically, it will install a bundle, schedule a bundle, launch the bundle, and watch it thus replicating the current lifecycle of
- * WorkflowLauncher in a modular fashion for testing and development purposes.
+ * Specifically, it will install a bundle, schedule a bundle, launch the bundle, watch it, and status check it thus replicating the current
+ * lifecycle of WorkflowLauncher in a modular fashion for testing and development purposes.
  * 
  * @author dyuen
  */
@@ -44,8 +44,8 @@ public class WorkflowLifecycle extends Plugin {
     private final OptionSpecBuilder waitSpec;
     private final ArgumentAcceptingOptionSpec<String> iniFilesSpec;
     private final ArgumentAcceptingOptionSpec<String> workflowEngineSpec;
-    private String workflowRunAccession;
-    private String workflowAccession;
+    private String workflowRunAccession = null;
+    private String workflowAccession = null;
     private final ArgumentAcceptingOptionSpec<Integer> workflowAccessionSpec;
 
     public WorkflowLifecycle() {
@@ -105,7 +105,7 @@ public class WorkflowLifecycle extends Plugin {
 
     @Override
     public String get_description() {
-        return "A plugin that lets you install/schedule/launch/watch workflows in one fell swoop";
+        return "A plugin that lets you (install)/schedule/launch/watch/status check workflows in one fell swoop";
     }
 
     @Override
@@ -130,13 +130,12 @@ public class WorkflowLifecycle extends Plugin {
             // watch the workflow
             if (options.has(this.waitSpec)) {
                 runWatcherPlugin();
-                runStatusCheckerPlugin();
             }
             // watch the workflow if necessary
-        } catch (ExitException e) {
-            System.exit(e.getExitCode());
         } catch (IOException e) {
-            System.exit(ReturnValue.FILENOTWRITABLE);
+            throw new ExitException(ReturnValue.FILENOTWRITABLE);
+        } finally {
+            runStatusCheckerPlugin();
         }
         return new ReturnValue();
     }
@@ -152,6 +151,9 @@ public class WorkflowLifecycle extends Plugin {
     }
 
     private void runStatusCheckerPlugin() {
+        if (this.workflowRunAccession == null) {
+            return;
+        }
         String[] statusCheckerParams = { "--workflow-run-accession", workflowRunAccession };
         runPlugin(WorkflowStatusChecker.class, statusCheckerParams);
     }
