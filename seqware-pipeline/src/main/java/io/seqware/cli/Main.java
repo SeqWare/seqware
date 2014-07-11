@@ -7,6 +7,7 @@ import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility.HumanProvenanceFilters;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 /*
@@ -1204,6 +1206,38 @@ public class Main {
         }
     }
 
+    private static void workflowRunIni(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware workflow-run ini --help");
+            out("       seqware workflow-run ini <params>");
+            out("");
+            out("Description:");
+            out("  Display the ini file used to run a workflow run.");
+            out("");
+            out("Required parameters:");
+            out("  --accession <swid>  The SWID of the workflow run");
+            out("Optional parameters:");
+            out("  --out <file>        The name of the ini file");
+            out("");
+        } else {
+            String swid = reqVal(args, "--accession");
+            String out = optVal(args, "--out", null);
+
+            extras(args, "workflow-run ini");
+
+            if (out != null) {
+                try {
+                    FileUtils.writeStringToFile(new File(out), WorkflowRuns.workflowRunIni(Integer.valueOf(swid)));
+                } catch (IOException ex) {
+                    kill("seqware: cannot write to '%s'.", out);
+                }
+            } else {
+                out(WorkflowRuns.workflowRunIni(Integer.valueOf(swid)));
+            }
+        }
+    }
+
     private static void workflowRunReport(List<String> args) {
         if (isHelp(args, true)) {
             out("");
@@ -1555,6 +1589,7 @@ public class Main {
             out("  stdout              Obtain the stdout output of the run");
             out("  report              The details of a given workflow-run");
             out("  watch               Watch a workflow-run in progress");
+            out("  ini                 Output the effective ini for a workflow run");
             out("  delete              Recursively delete workflow-runs");
             out("");
         } else {
@@ -1583,6 +1618,9 @@ public class Main {
                 break;
             case "watch":
                 workflowRunWatch(args);
+                break;
+            case "ini":
+                workflowRunIni(args);
                 break;
             case "delete":
                 workflowRunDelete(args);
