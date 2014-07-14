@@ -127,6 +127,7 @@
 
                         <configuration>
 	        	    <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/unstable.seqware.io.git</pubScmUrl>	
+			    <scmBranch>gh-pages</scmBranch>
                             <content>docs/site/output/</content>
                             <ignorePathsToDelete>
                                 <ignorePathToDelete>apidocs</ignorePathToDelete>
