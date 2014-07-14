@@ -133,20 +133,19 @@ Please refer to SeqWare's [Coding Standards](https://seqware.github.io/docs/100-
 
 ### Building Our Site
 
-In order to publish to legacy.seqware.github.com, checkout our current master and publish our site:
+In order to publish to seqware.io , checkout our current master and publish our site:
 
     git checkout master 
-    cd seqware-distribution 
     mvn site-deploy
 
-Then you would look at the site at: http://seqware.github.io/legacy.seqware.github.com/
+Then you would look at the site at: http://seqware.io
 
-In order to publish to our current docs supporting the 1.0.x, checkout from develop and publish:
+In order to publish our docs leading up to 1.1.x , checkout from develop and publish:
 
     git checkout develop 
     mvn site-deploy
 
-Then you would look at the site at: http://seqware.github.io
+Then you would look at the site at: http://seqware.github.io/unstable.seqware.io/
 
 ###Problems with Maven
 
