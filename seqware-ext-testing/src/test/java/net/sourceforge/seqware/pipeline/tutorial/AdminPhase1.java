@@ -109,7 +109,7 @@ public class AdminPhase1 {
 
     protected String launchScheduled() throws IOException {
         // launch-scheduled
-        String schedCommand = "-p io.seqware.pipeline.plugins.WorkflowScheduler";
+        String schedCommand = "-p io.seqware.pipeline.plugins.WorkflowLauncher";
         String schedOutput = ITUtility.runSeqWareJar(schedCommand, ReturnValue.SUCCESS, null);
         return schedOutput;
     }
