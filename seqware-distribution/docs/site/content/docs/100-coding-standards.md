@@ -7,9 +7,9 @@ markdown: advanced
 
 For developers on the actual SeqWare project, these are the proposed standards for code committed for development toward 1.1.X. 
 
-First, an [Eclipse code formatting file](https://raw.githubusercontent.com/SeqWare/seqware/develop_1_1/seqware-eclipse-code-style.xml) is provided for users of the Eclipse IDE. Please look in the develop branch for updates. In addition, for users of the NetBeans IDE, the [Eclipse Code Formatter plugin](http://plugins.netbeans.org/plugin/50877/eclipse-code-formatter-for-java) must be configured with the same file. 
+First, an [Eclipse code formatting file](https://raw.githubusercontent.com/SeqWare/seqware/develop/seqware-eclipse-code-style.xml) is provided for users of the Eclipse IDE. Please look in the develop branch for updates. In addition, for users of the NetBeans IDE, the [Eclipse Code Formatter plugin](http://plugins.netbeans.org/plugin/50877/eclipse-code-formatter-for-java) must be configured with the same file. 
 
-Second, a [Checkstyle configuration file](https://raw.githubusercontent.com/SeqWare/seqware/develop_1_1/checkstyle.xml) is available. This will be tightened during the run-up toward 1.1.X but currently it will do some light validation on your code and will reject a build if your issues are particularly egregious.
+Second, a [Checkstyle configuration file](https://raw.githubusercontent.com/SeqWare/seqware/develop/checkstyle.xml) is available. This will be tightened during the run-up toward 1.1.X but currently it will do some light validation on your code and will reject a build if your issues are particularly egregious.
 
 <!-- Checkstyle cannot currently enforce identation, the plugin is not configurable enough to match our coding standards. See https://stackoverflow.com/questions/18308208/indentation-check-not-working-properly-for-statement-label for an example -->
 
