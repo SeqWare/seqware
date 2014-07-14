@@ -158,6 +158,7 @@ public class WorkflowLauncher extends Plugin {
                 boolean requiresNewLauncher = WorkflowV2Utility.requiresNewLauncher(wrWithWorkflow.getWorkflow());
                 if (!requiresNewLauncher) {
                     Log.stdout("Launching via old launcher: " + wr.getSwAccession());
+                    WorkflowRuns.failWorkflow(wr.getSwAccession());
                     throw new RuntimeException("SeqWare no longer supports running Pegasus bundles");
                 } else {
                     Log.stdout("Launching via new launcher: " + wr.getSwAccession());
