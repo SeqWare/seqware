@@ -397,7 +397,8 @@ public class PluginRunnerET {
             StringBuilder params = new StringBuilder();
             params.append("--bundle ").append(e.getValue().path).append(" ");
             params.append("--version ").append(e.getValue().version).append(" ");
-            params.append("--test ");
+            params.append("--wait ");
+            params.append("--workflow").append(e.getValue().name);
             File tempFile = File.createTempFile(e.getValue().name, ".out");
             pool.submit(new TestingThread(params.toString(), tempFile));
         }
@@ -470,7 +471,7 @@ public class PluginRunnerET {
         @Override
         public String call() {
             try {
-                String tOutput = ITUtility.runSeqWareJar("-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- " + command,
+                String tOutput = ITUtility.runSeqWareJar("-p io.seqware.pipeline.plugins.WorkflowLifecycle -- " + command,
                         ReturnValue.SUCCESS, null);
                 Log.error(command + " completed, writing output to " + output.getAbsolutePath());
                 FileUtils.write(output, tOutput);
