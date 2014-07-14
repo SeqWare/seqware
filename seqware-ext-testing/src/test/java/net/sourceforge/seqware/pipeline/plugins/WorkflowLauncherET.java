@@ -31,7 +31,7 @@ import org.junit.Test;
  */
 public class WorkflowLauncherET {
 
-    private ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
+    private final ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
 
     @BeforeClass
     public static void resetDatabase() {
