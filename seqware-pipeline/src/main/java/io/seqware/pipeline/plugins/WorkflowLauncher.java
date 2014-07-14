@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import joptsimple.ArgumentAcceptingOptionSpec;
+import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpecBuilder;
 import net.sourceforge.seqware.common.metadata.Metadata;
@@ -55,8 +56,11 @@ public class WorkflowLauncher extends Plugin {
                         Arrays.asList(FileTools.FORCE_HOST, "fh"),
                         "If specified, the scheduled workflow will only be launched if this parameter value and the host field in the workflow run table match. This is a mechanism to target workflows to particular servers for launching.")
                 .withRequiredArg();
-        this.noRunSpec = parser.accepts("no-run",
-                "Optional: Terminates the launch process immediately prior to running. Useful for debugging.");
+        this.noRunSpec = createNoRunSpec(parser);
+    }
+
+    public static final OptionSpecBuilder createNoRunSpec(OptionParser parser) {
+        return parser.accepts("no-run", "Optional: Terminates the launch process immediately prior to running. Useful for debugging.");
     }
 
     /*
