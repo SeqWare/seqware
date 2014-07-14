@@ -45,11 +45,7 @@ public class WorkflowScheduler extends Plugin {
     public WorkflowScheduler() {
         super();
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
-        this.parentAccessionsSpec = parser
-                .acceptsAll(
-                        Arrays.asList("parent-accessions", "pa"),
-                        "Optional: Typically this is the sw_accession of the processing record that is the parent for this workflow e.g. whose file is used as the input. You can actually specify multiple parent accessions by using this parameter multiple times or providing a comma-delimited list, no space. You may want multiple parents when your workflow takes multiple input files. Most of the time the accession is from a processing row but can be an ius, lane, sequencer_run, study, experiment, or sample.")
-                .withRequiredArg().ofType(String.class).withValuesSeparatedBy(',');
+
         this.workflowAccessionSpec = parser
                 .acceptsAll(
                         Arrays.asList("workflow-accession", "wa"),
@@ -69,11 +65,20 @@ public class WorkflowScheduler extends Plugin {
         this.hostSpec = parser.acceptsAll(Arrays.asList("host", "ho"), "Used to schedule onto a specific host").withRequiredArg()
                 .ofType(String.class);
 
+        this.parentAccessionsSpec = createParentAccessionSpec(parser);
         this.iniFilesSpec = createIniFileSpec(parser);
         this.workflowEngineSpec = createWorkflowEngineSpec(parser);
         this.metadataWriteBackOffSpec = createMetadataWriteBackOffSpec(parser);
         this.nonOptionSpec = parser.nonOptions(OVERRIDE_INI_DESC);
         this.outFile = parser.acceptsAll(Arrays.asList("out"), "Optional: Will output a workflow-run by sw_accession").withRequiredArg();
+    }
+
+    public static final ArgumentAcceptingOptionSpec<String> createParentAccessionSpec(OptionParser parser) {
+        return parser
+                .acceptsAll(
+                        Arrays.asList("parent-accessions", "pa"),
+                        "Optional: Typically this is the sw_accession of the processing record that is the parent for this workflow e.g. whose file is used as the input. You can actually specify multiple parent accessions by using this parameter multiple times or providing a comma-delimited list, no space. You may want multiple parents when your workflow takes multiple input files. Most of the time the accession is from a processing row but can be an ius, lane, sequencer_run, study, experiment, or sample.")
+                .withRequiredArg().ofType(String.class).withValuesSeparatedBy(',');
     }
 
     public static final OptionSpecBuilder createMetadataWriteBackOffSpec(OptionParser parser) {
@@ -150,10 +155,15 @@ public class WorkflowScheduler extends Plugin {
     @Override
     public ReturnValue do_run() {
         Scheduler w = new Scheduler(metadata, config);
-
-        Set<Integer> inputFiles = collectInputFiles();
-        if (options.has(inputFilesSpec) && (inputFiles == null || inputFiles.isEmpty())) {
-            Log.error("Error parsing provided input files");
+        Set<Integer> inputFiles;
+        try {
+            inputFiles = collectInputFiles();
+            if (options.has(inputFilesSpec) && (inputFiles == null || inputFiles.isEmpty())) {
+                Log.error("Error parsing provided input files");
+                return new ReturnValue(ExitStatus.INVALIDARGUMENT);
+            }
+        } catch (Exception e) {
+            Log.error("Error checking provided input files");
             return new ReturnValue(ExitStatus.INVALIDARGUMENT);
         }
 
@@ -198,7 +208,7 @@ public class WorkflowScheduler extends Plugin {
         }
     }
 
-    private Set<Integer> collectInputFiles() {
+    private Set<Integer> collectInputFiles() throws Exception {
         Set<Integer> inputFiles = null;
         if (options.has(inputFilesSpec)) {
             List<Long> fileAccessions = options.valuesOf(inputFilesSpec);
