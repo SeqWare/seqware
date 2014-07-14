@@ -126,7 +126,7 @@
                         </goals>
 
                         <configuration>
-	        	    <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/seqware.github.com.git</pubScmUrl>	
+	        	    <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/unstable.seqware.io.git</pubScmUrl>	
                             <content>docs/site/output/</content>
                             <ignorePathsToDelete>
                                 <ignorePathToDelete>apidocs</ignorePathToDelete>
