@@ -48,6 +48,7 @@ public class WorkflowLifecycle extends Plugin {
     private String workflowAccession = null;
     private final ArgumentAcceptingOptionSpec<Integer> workflowAccessionSpec;
     private final ArgumentAcceptingOptionSpec<String> parentAccessionSpec;
+    private final OptionSpecBuilder noRunSpec;
 
     public WorkflowLifecycle() {
         super();
@@ -80,13 +81,17 @@ public class WorkflowLifecycle extends Plugin {
         this.workflowEngineSpec = WorkflowScheduler.createWorkflowEngineSpec(parser);
         this.metadataWriteBackOffSpec = WorkflowScheduler.createMetadataWriteBackOffSpec(parser);
         this.nonOptionSpec = parser.nonOptions(OVERRIDE_INI_DESC);
-
+        this.noRunSpec = WorkflowLauncher.createNoRunSpec(parser);
     }
 
     /*
      */
     @Override
     public ReturnValue init() {
+        if (options.has(noRunSpec) && options.has(waitSpec)) {
+            Log.error("Waiting and no-run do not make sense together, remove one");
+            return new ReturnValue(ReturnValue.ExitStatus.INVALIDARGUMENT);
+        }
         if (options.has(workflowEngineSpec)) {
             return validateEngineString(options.valueOf(workflowEngineSpec));
         }
@@ -217,8 +222,13 @@ public class WorkflowLifecycle extends Plugin {
             throw new ExitException(ReturnValue.FAILURE);
         }
 
-        String[] schedulerParams = { "--launch-scheduled", workflowRunAccession };
-        runPlugin(WorkflowLauncher.class, schedulerParams);
+        List<String> schedulerParams = new ArrayList<>();
+        schedulerParams.add("--launch-scheduled");
+        schedulerParams.add(workflowRunAccession);
+        if (options.has(noRunSpec)) {
+            schedulerParams.add("--" + noRunSpec.options().iterator().next());
+        }
+        runPlugin(WorkflowLauncher.class, schedulerParams.toArray(new String[schedulerParams.size()]));
     }
 
     private void runPlugin(Class plugin, String[] params) {
