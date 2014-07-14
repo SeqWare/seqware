@@ -224,7 +224,7 @@ public class PluginRunnerET {
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
             String listCommand = "-p io.seqware.pipeline.plugins.WorkflowScheduler -- --ini-files " + workflowPath
-                    + " --workflow-accession " + accession + " --schedule --parent-accessions " + PARENT + " --host " + localhost;
+                    + " --workflow-accession " + accession + " --schedule --parent-accessions " + PARENT;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
 
@@ -268,7 +268,7 @@ public class PluginRunnerET {
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
             String listCommand = "-p io.seqware.pipeline.plugins.WorkflowLifecycle -- --ini-files " + workflowPath
-                    + " --workflow-accession " + accession + " --parent-accessions " + PARENT + " --host " + localhost;
+                    + " --workflow-accession " + accession + " --parent-accessions " + PARENT;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
         }
@@ -287,7 +287,7 @@ public class PluginRunnerET {
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
             String listCommand = "-p io.seqware.pipeline.plugins.WorkflowLifecycle -- --ini-files " + workflowPath
-                    + " --workflow-accession " + accession + " --parent-accessions " + PARENT + " --wait --host " + localhost;
+                    + " --workflow-accession " + accession + " --parent-accessions " + PARENT + " --wait";
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
         }
@@ -306,7 +306,7 @@ public class PluginRunnerET {
             String accession = Integer.toString(e.getValue());
 
             String listCommand = "-p io.seqware.pipeline.plugins.WorkflowLifecycle -- --ini-files " + workflowPath
-                    + " --workflow-accession " + accession + " --no-metadata --parent-accessions " + PARENT + " --wait --host " + localhost;
+                    + " --workflow-accession " + accession + " --no-metadata --parent-accessions " + PARENT + " --wait";
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
         }

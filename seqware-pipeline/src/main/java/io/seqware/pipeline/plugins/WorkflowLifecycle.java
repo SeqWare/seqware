@@ -47,6 +47,7 @@ public class WorkflowLifecycle extends Plugin {
     private String workflowRunAccession = null;
     private String workflowAccession = null;
     private final ArgumentAcceptingOptionSpec<Integer> workflowAccessionSpec;
+    private final ArgumentAcceptingOptionSpec<String> parentAccessionSpec;
 
     public WorkflowLifecycle() {
         super();
@@ -74,6 +75,7 @@ public class WorkflowLifecycle extends Plugin {
                 .acceptsAll(
                         Arrays.asList("wait"),
                         "Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.");
+        this.parentAccessionSpec = WorkflowScheduler.createParentAccessionSpec(parser);
         this.iniFilesSpec = WorkflowScheduler.createIniFileSpec(parser);
         this.workflowEngineSpec = WorkflowScheduler.createWorkflowEngineSpec(parser);
         this.metadataWriteBackOffSpec = WorkflowScheduler.createMetadataWriteBackOffSpec(parser);
@@ -184,6 +186,12 @@ public class WorkflowLifecycle extends Plugin {
         if (options.has(this.iniFilesSpec)) {
             for (String val : options.valuesOf(this.iniFilesSpec)) {
                 totalParams.add("--" + this.iniFilesSpec.options().iterator().next());
+                totalParams.add(val);
+            }
+        }
+        if (options.has(this.parentAccessionSpec)) {
+            for (String val : options.valuesOf(this.parentAccessionSpec)) {
+                totalParams.add("--" + this.parentAccessionSpec.options().iterator().next());
                 totalParams.add(val);
             }
         }
