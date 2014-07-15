@@ -224,7 +224,7 @@ public class PluginRunnerET {
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
             String listCommand = "-p io.seqware.pipeline.plugins.WorkflowScheduler -- --ini-files " + workflowPath
-                    + " --workflow-accession " + accession + " --schedule --parent-accessions " + PARENT;
+                    + " --workflow-accession " + accession + " --schedule --parent-accessions " + PARENT + " --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
 

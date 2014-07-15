@@ -23,7 +23,9 @@ import org.openide.util.lookup.ServiceProvider;
 /**
  * The Workflow Scheduler is only responsible for scheduling workflows.
  * 
- * This is a fork of the WorkflowLauncher intended to de-tangle the functions of launching, scheduling, waiting, etc.
+ * This is a fork of the WorkflowLauncher intended to de-tangle the functions of launching, scheduling, waiting, etc. Typically, after
+ * scheduling a workflow, you would use WorkflowLauncher in order to launch scheduled workflows on a host with connectivity to HDFS and
+ * Oozie. WorkflowScheduler itself only needs access to the web service in order to schedule.
  * 
  * @author dyuen
  */
