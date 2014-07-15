@@ -29,7 +29,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * <p>
- * This plugin does the initial population of workflow run files in order to track input files
+ * This plugin does the initial population of workflow run files in order to track input files when migrating from SeqWare 0.13.6.X to
+ * 1.0.X.
+ * 
  * </p>
  * 
  * @author dyuen ProviderFor(PluginInterface.class)

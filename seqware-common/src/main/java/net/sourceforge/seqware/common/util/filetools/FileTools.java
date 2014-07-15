@@ -42,6 +42,7 @@ import net.sourceforge.seqware.common.util.runtools.RunTools;
 public class FileTools {
 
     public static final String COMPRESSION_SETTING = "BUNDLE_COMPRESSION";
+    public static final String FORCE_HOST = "force-host";
 
     /*
      * Convert byte array to string representing hex Taken from http://www.rgagnon.com/javadetails/java-0416.html
@@ -623,6 +624,7 @@ public class FileTools {
      * Get the localhost and a return value describing the failure condition if we are unable to get the localhost
      * 
      * @param options
+     *            (looks for force-host as an override, will ignore if null)
      * @return
      */
     public static LocalhostPair getLocalhost(OptionSet options) {
@@ -630,8 +632,8 @@ public class FileTools {
         // need to initialize regardless
         ReturnValue returnValue = new ReturnValue(ReturnValue.SUCCESS);
         // find the hostname or use --force-host
-        if (options.has("force-host") && options.valueOf("force-host") != null) {
-            hostname = (String) options.valueOf("force-host");
+        if (options != null && options.has(FORCE_HOST) && options.valueOf(FORCE_HOST) != null) {
+            hostname = (String) options.valueOf(FORCE_HOST);
             returnValue = new ReturnValue(ReturnValue.SUCCESS);
         } else {
             try {

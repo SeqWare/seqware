@@ -25,9 +25,6 @@ import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunParam;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
-import net.sourceforge.seqware.common.util.workflowtools.WorkflowManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -600,14 +597,6 @@ public class WorkflowRunServiceImpl implements WorkflowRunService {
             }
         }
         return runs;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public ReturnValue runWorkflow(WorkflowInfo wi, String workflowRunAccession, String iniFilesStr, boolean noMetadata,
-            String parentAccessionsStr, ArrayList<String> parentsLinkedToWR, Registration owner) {
-        return new WorkflowManager().runWorkflow(wi, workflowRunAccession, iniFilesStr, noMetadata, parentAccessionsStr, parentsLinkedToWR,
-                owner);
     }
 
     /** {@inheritDoc} */

@@ -58,11 +58,11 @@ public class UserPhase5 {
         File exportINIFile = exportINI(pit, accessions);
 
         String localhost = ITUtility.getLocalhost();
-        Log.info("Attempting to launch with wait on host: " + localhost);
+        Log.info("Attempting to launch with wait");
         // launch, slightly unlike the tutorial, I'm going to wait to ensure that we have results to export in the next phase
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files "
-                + exportINIFile.getAbsolutePath() + " --workflow-accession " + accessions.get(0) + " --parent-accessions "
-                + AccessionMap.accessionMap.get(UserPhase4.FILE) + " --wait --host " + localhost;
+        String listCommand = "-p io.seqware.pipeline.plugins.WorkflowLifecycle -- --ini-files " + exportINIFile.getAbsolutePath()
+                + " --workflow-accession " + accessions.get(0) + " --parent-accessions " + AccessionMap.accessionMap.get(UserPhase4.FILE)
+                + " --wait";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
     }

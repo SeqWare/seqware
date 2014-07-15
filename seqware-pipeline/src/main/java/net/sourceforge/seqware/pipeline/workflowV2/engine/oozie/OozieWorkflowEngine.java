@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie;
 
+import io.seqware.pipeline.api.WorkflowEngine;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,37 +11,56 @@ import net.sourceforge.seqware.common.util.Log;
 import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
-import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowEngine;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.oozie.client.OozieClient;
+import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
 import org.apache.oozie.client.WorkflowJob.Status;
 
-public class OozieWorkflowEngine extends AbstractWorkflowEngine {
+/**
+ * This is the implementation of the WorkflowEngine with a Oozie back-end.
+ * 
+ * @author dyuen
+ */
+public class OozieWorkflowEngine implements WorkflowEngine {
 
     private String jobId;
     private AbstractWorkflowDataModel dataModel;
-    private boolean useSge;
-    private String threadsSgeParamFormat;
-    private String maxMemorySgeParamFormat;
+    private final boolean useSge;
+    private final String threadsSgeParamFormat;
+    private final String maxMemorySgeParamFormat;
 
-    private File nfsWorkDir;
-    private Configuration conf;
-    private Path hdfsWorkDir;
+    private final File nfsWorkDir;
+    private final Configuration conf;
+    private final Path hdfsWorkDir;
 
+    /**
+     * 
+     * @param objectModel
+     * @param useSge
+     * @param threadsSgeParamFormat
+     * @param maxMemorySgeParamFormat
+     * @param createDirectories
+     *            true when creating the engine to launch a job
+     */
     public OozieWorkflowEngine(AbstractWorkflowDataModel objectModel, boolean useSge, String threadsSgeParamFormat,
-            String maxMemorySgeParamFormat) {
+            String maxMemorySgeParamFormat, boolean createDirectories) {
         this.dataModel = objectModel;
         this.useSge = useSge;
         this.threadsSgeParamFormat = threadsSgeParamFormat;
         this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
-
-        this.nfsWorkDir = initNfsWorkDir(objectModel);
         this.conf = initConf(objectModel);
-        this.hdfsWorkDir = initHdfsWorkDir(objectModel, conf, this.nfsWorkDir);
+
+        if (createDirectories) {
+            this.nfsWorkDir = initNfsWorkDir(objectModel);
+            this.hdfsWorkDir = initHdfsWorkDir(objectModel, conf, this.nfsWorkDir);
+        } else {
+            this.nfsWorkDir = null;
+            this.hdfsWorkDir = null;
+        }
     }
 
     public static File initNfsWorkDir(AbstractWorkflowDataModel model) {
@@ -105,56 +125,74 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
         OozieClient wc = this.getOozieClient();
 
         try {
-            Properties conf = wc.createConfiguration();
-            conf.setProperty(OozieClient.APP_PATH, hdfsWorkDir.toString());
-            conf.setProperty("jobTracker", this.dataModel.getEnv().getOOZIE_JOBTRACKER());
-            conf.setProperty("nameNode", this.dataModel.getEnv().getOOZIE_NAMENODE());
-            conf.setProperty("queueName", this.dataModel.getEnv().getOOZIE_QUEUENAME());
+            Properties propertiesConf = wc.createConfiguration();
+            propertiesConf.setProperty(OozieClient.APP_PATH, hdfsWorkDir.toString());
+            propertiesConf.setProperty("jobTracker", this.dataModel.getEnv().getOOZIE_JOBTRACKER());
+            propertiesConf.setProperty("nameNode", this.dataModel.getEnv().getOOZIE_NAMENODE());
+            propertiesConf.setProperty("queueName", this.dataModel.getEnv().getOOZIE_QUEUENAME());
 
-            jobId = wc.run(conf);
+            jobId = wc.run(propertiesConf);
             Log.stdout("Submitted Oozie job: " + jobId);
 
-            if (dataModel.isWait()) {
-                Log.stdout("");
-                Log.stdout("Polling workflow run status every 10 seconds.");
-                Log.stdout("Terminating this program will NOT affect the running workflow.");
-                Thread.sleep(2 * 1000);
-
-                // Ensure that we can pull the job info from oozie
-                int maxwait = 5;
-                while (maxwait-- > 0) {
-                    try {
-                        wc.getJobInfo(jobId);
-                        // job info available
-                        break;
-                    } catch (Exception e) {
-                        if (maxwait == 0) {
-                            Log.stdout("\nTimed out waiting for workflow job to be available.");
-                            rethrow(e);
-                        } else {
-                            Log.stdout("\nWorkflow job pending ...");
-                            Thread.sleep(5 * 1000);
-                        }
-                    }
-                }
-
-                while (wc.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) {
-                    Log.stdout("\nWorkflow job running ...");
-                    printWorkflowInfo(wc.getJobInfo(jobId));
-                    Thread.sleep(10 * 1000);
-                }
-                Log.stdout("\nWorkflow job completed ...");
-                WorkflowJob job = wc.getJobInfo(jobId);
-                printWorkflowInfo(job);
-                if (job.getStatus() != Status.SUCCEEDED) {
-                    ret = new ReturnValue(ReturnValue.FAILURE);
-                }
-            }
-
         } catch (Exception e) {
-            rethrow(e);
+            throw rethrow(e);
         }
 
+        return ret;
+    }
+
+    @Override
+    public ReturnValue watchWorkflow(String jobToken) {
+        OozieClient wc = this.getOozieClient();
+
+        try {
+            Properties localConf = wc.createConfiguration();
+            // localConf.setProperty(OozieClient.APP_PATH, hdfsWorkDir.toString());
+            localConf.setProperty("jobTracker", this.dataModel.getEnv().getOOZIE_JOBTRACKER());
+            localConf.setProperty("nameNode", this.dataModel.getEnv().getOOZIE_NAMENODE());
+            localConf.setProperty("queueName", this.dataModel.getEnv().getOOZIE_QUEUENAME());
+
+            return watchWorkflowInternal(wc, jobToken, new ReturnValue());
+
+        } catch (Exception e) {
+            throw rethrow(e);
+        }
+    }
+
+    private ReturnValue watchWorkflowInternal(OozieClient wc, String jobId, ReturnValue ret) throws OozieClientException,
+            InterruptedException {
+        Log.stdout("");
+        Log.stdout("Polling workflow run status every 10 seconds.");
+        Log.stdout("Terminating this program will NOT affect the running workflow.");
+        Thread.sleep(2 * 1000);
+        // Ensure that we can pull the job info from oozie
+        int maxwait = 5;
+        while (maxwait-- > 0) {
+            try {
+                wc.getJobInfo(jobId);
+                // job info available
+                break;
+            } catch (Exception e) {
+                if (maxwait == 0) {
+                    Log.stdout("\nTimed out waiting for workflow job to be available.");
+                    throw rethrow(e);
+                } else {
+                    Log.stdout("\nWorkflow job pending ...");
+                    Thread.sleep(5 * 1000);
+                }
+            }
+        }
+        while (wc.getJobInfo(jobId).getStatus() == WorkflowJob.Status.RUNNING) {
+            Log.stdout("\nWorkflow job running ...");
+            printWorkflowInfo(wc.getJobInfo(jobId));
+            Thread.sleep(10 * 1000);
+        }
+        Log.stdout("\nWorkflow job completed ...");
+        WorkflowJob job = wc.getJobInfo(jobId);
+        printWorkflowInfo(job);
+        if (job.getStatus() != Status.SUCCEEDED) {
+            ret = new ReturnValue(ReturnValue.FAILURE);
+        }
         return ret;
     }
 
@@ -218,7 +256,7 @@ public class OozieWorkflowEngine extends AbstractWorkflowEngine {
             lib.mkdir();
 
         } catch (IOException e) {
-            rethrow(e);
+            throw rethrow(e);
         }
     }
 
