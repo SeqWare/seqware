@@ -208,7 +208,7 @@ public class WorkflowLifecycle extends Plugin {
                 totalParams.add(val);
             }
         }
-        runPlugin(WorkflowScheduler.class, schedulerParams);
+        runPlugin(WorkflowScheduler.class, totalParams.toArray(new String[totalParams.size()]));
     }
 
     private void runWorkflowLauncherPlugin(File outFile) throws IOException {
