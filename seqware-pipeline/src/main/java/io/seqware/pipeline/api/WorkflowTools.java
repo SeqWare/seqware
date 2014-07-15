@@ -29,13 +29,22 @@ import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
  */
 public class WorkflowTools {
 
-    public static WorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel, Map<String, String> config) {
+    /**
+     * 
+     * @param dataModel
+     * @param config
+     * @param createDirectories
+     *            when constructing the engine to launch a job, we need to create a NFS and HDFS directory
+     * @return
+     */
+    public static WorkflowEngine getWorkflowEngine(AbstractWorkflowDataModel dataModel, Map<String, String> config,
+            boolean createDirectories) {
         WorkflowEngine wfEngine = null;
         String engine = dataModel.getWorkflow_engine();
         if (engine == null || engine.equalsIgnoreCase("pegasus")) {
             throw new RuntimeException("Pegasus workflow engine is no longer supported");
         } else if (engine.equalsIgnoreCase("oozie")) {
-            wfEngine = new OozieWorkflowEngine(dataModel, false, null, null);
+            wfEngine = new OozieWorkflowEngine(dataModel, false, null, null, createDirectories);
         } else if (engine.equalsIgnoreCase("oozie-sge")) {
             String threadsSgeParamFormat = config.get("OOZIE_SGE_THREADS_PARAM_FORMAT");
             String maxMemorySgeParamFormat = config.get("OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT");
@@ -49,7 +58,7 @@ public class WorkflowTools {
                         .println("WARNING: No entry in settings for OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT, omitting max-memory option from qsub. Fix by providing the format of qsub max-memory option, using the '"
                                 + OozieJob.SGE_MAX_MEMORY_PARAM_VARIABLE + "' variable.");
             }
-            wfEngine = new OozieWorkflowEngine(dataModel, true, threadsSgeParamFormat, maxMemorySgeParamFormat);
+            wfEngine = new OozieWorkflowEngine(dataModel, true, threadsSgeParamFormat, maxMemorySgeParamFormat, createDirectories);
         } else {
             throw new IllegalArgumentException("Unknown workflow engine: " + engine);
         }
