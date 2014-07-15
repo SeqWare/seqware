@@ -308,11 +308,20 @@
             <artifactId>validation-api</artifactId>
             <version>1.0.0.GA</version>
             <type>jar</type>
-            <scope>runtime</scope>
         </dependency>
     </dependencies>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <usedDependencies>
+                        <!-- compile time warning if this isn't in the path due to admin-webservice -->
+                        <usedDependency>javax.validation:validation-api</usedDependency>
+                    </usedDependencies>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

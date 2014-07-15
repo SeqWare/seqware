@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -495,10 +496,11 @@ public class Bundle {
      *            a {@link java.io.File} object.
      * @param metadataFile
      *            a {@link java.io.File} object.
+     * @param workflows
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue installBundleZipOnly(File bundle, File metadataFile) {
-        return (installBundle(bundle, metadataFile, true, false));
+    public ReturnValue installBundleZipOnly(File bundle, File metadataFile, List<String> workflows) {
+        return installBundle(bundle, metadataFile, true, false, workflows);
     }
 
     /**
@@ -510,10 +512,11 @@ public class Bundle {
      *            a {@link java.io.File} object.
      * @param metadataFile
      *            a {@link java.io.File} object.
+     * @param workflows
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue installBundleDirOnly(File bundle, File metadataFile) {
-        return (installBundle(bundle, metadataFile, false, true));
+    public ReturnValue installBundleDirOnly(File bundle, File metadataFile, List<String> workflows) {
+        return installBundle(bundle, metadataFile, false, true, workflows);
     }
 
     /**
@@ -527,8 +530,8 @@ public class Bundle {
      *            a {@link java.io.File} object.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue installBundle(File bundle, File metadataFile) {
-        return (installBundle(bundle, metadataFile, true, true));
+    public ReturnValue installBundle(File bundle, File metadataFile, List<String> workflows) {
+        return installBundle(bundle, metadataFile, true, true, workflows);
     }
 
     /**
@@ -543,9 +546,11 @@ public class Bundle {
      *            a boolean.
      * @param unzipIntoDir
      *            a boolean.
+     * @param workflows
+     *            a list to store installed workflows for output
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    protected ReturnValue installBundle(File bundle, File metadataFile, boolean packageIntoZip, boolean unzipIntoDir) {
+    protected ReturnValue installBundle(File bundle, File metadataFile, boolean packageIntoZip, boolean unzipIntoDir, List<String> workflows) {
 
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -585,7 +590,7 @@ public class Bundle {
 
         if (localRet.getExitStatus() != ReturnValue.SUCCESS) {
             Log.error("The workflow install failed");
-            return (localRet);
+            return localRet;
         }
 
         // asumption here is this unbundles it, in the future this won't be the case!
@@ -619,13 +624,17 @@ public class Bundle {
             if (localRet.getExitStatus() == ReturnValue.FAILURE) {
                 Log.error("The workflow install failed for " + w.getName() + " version " + w.getVersion());
                 return (localRet);
+            } else {
+                // record the bundle
+                String workflowAccession = localRet.getAttribute("sw_accession");
+                workflows.add(workflowAccession);
             }
             /*
              * int workflowId = ret.getReturnValue(); String url = permanentBundleLocation + File.separator + bundle.getName(); ret =
              * metadata.updateWorkflow(workflowId, url);
              */
         }
-        return (localRet);
+        return localRet;
     }
 
     /**

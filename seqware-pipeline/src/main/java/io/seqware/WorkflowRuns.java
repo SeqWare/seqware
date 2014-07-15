@@ -51,4 +51,10 @@ public class WorkflowRuns {
         }
     }
 
+    public static String workflowRunIni(int workflowRunAccession) {
+        Metadata md = MetadataFactory.get(ConfigTools.getSettings());
+        WorkflowRun workflowRun = md.getWorkflowRun(workflowRunAccession);
+        return workflowRun.getIniFile();
+    }
+
 }

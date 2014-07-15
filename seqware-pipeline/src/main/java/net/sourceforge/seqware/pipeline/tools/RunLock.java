@@ -27,7 +27,7 @@ public class RunLock {
         try {
             JUnique.acquireLock(id());
         } catch (AlreadyLockedException e) {
-            rethrow(e);
+            throw rethrow(e);
         }
     }
 

@@ -13,10 +13,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.DatatypeConverter;
+import net.sourceforge.seqware.common.model.WorkflowRunParam;
 import net.sourceforge.seqware.common.util.Log;
 import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import org.apache.commons.io.IOUtils;
@@ -99,7 +102,7 @@ public class MapTools {
                 }
             }
         } catch (Exception e) {
-            rethrow(e);
+            throw rethrow(e);
         }
 
     }
@@ -123,7 +126,7 @@ public class MapTools {
             iStream = new FileInputStream(iniFile);
             ini2Map(iStream, hm, keyToUpper);
         } catch (Exception e) {
-            rethrow(e);
+            throw rethrow(e);
         } finally {
             IOUtils.closeQuietly(iStream);
         }
@@ -176,11 +179,11 @@ public class MapTools {
         }
         // Parse command line arguments for --key=value
         String currKey = "";
-        for (int i = 0; i < args.length; i++) {
-            Log.info("CURR KEY: " + args[i]);
+        for (String arg : args) {
+            Log.info("CURR KEY: " + arg);
             // If it starts with --, try to split on =
-            if (args[i].startsWith("--")) {
-                String[] split = args[i].split("\\=");
+            if (arg.startsWith("--")) {
+                String[] split = arg.split("\\=");
                 // If had =, turn key into args
                 if (split.length == 2) {
                     // Strip starting --
@@ -188,12 +191,12 @@ public class MapTools {
                     currKey = "";
                 } else {
                     Log.info("FOUND KEY " + currKey);
-                    currKey = args[i].substring(2);
+                    currKey = arg.substring(2);
                 }
             } else {
                 if (!"".equals(currKey)) {
-                    Log.info("PUTTING KEY VALUE " + currKey + " " + args[i]);
-                    hm.put(currKey, args[i]);
+                    Log.info("PUTTING KEY VALUE " + currKey + " " + arg);
+                    hm.put(currKey, arg);
                 }
             }
         }
@@ -364,5 +367,46 @@ public class MapTools {
 
     private static boolean isLineMatchesKeyValue(String line) {
         return !line.startsWith("#") && line.matches("\\S+\\s*=[^=]*");
+    }
+
+    /**
+     * Convert what looks like a map of ini key-value pairs into a SortedSet of WorkflowRunParams
+     * 
+     * @param map
+     * @return
+     * @throws NumberFormatException
+     */
+    public static SortedSet createWorkflowRunParameters(HashMap<String, String> map) throws NumberFormatException {
+        SortedSet<WorkflowRunParam> runParams = new TreeSet<>();
+        for (String str : map.keySet()) {
+            if (map.get(str) != null) {
+                Log.info(str + " " + map.get(str));
+                if (str.equals(ReservedIniKeys.PARENT_UNDERSCORE_ACCESSIONS.getKey())
+                        || str.equals(ReservedIniKeys.PARENT_ACCESSION.getKey())
+                        || str.equals(ReservedIniKeys.PARENT_DASH_ACCESSIONS.getKey())) {
+                    String[] pAcc = map.get(str).split(",");
+                    for (String parent : pAcc) {
+                        WorkflowRunParam wrp = new WorkflowRunParam();
+                        wrp.setKey(str);
+                        wrp.setValue(parent);
+                        wrp.setParentProcessingAccession(Integer.parseInt(parent));
+                        wrp.setType("text");
+                        runParams.add(wrp);
+                    }
+                } else {
+                    if (str.trim().isEmpty() && map.get(str).trim().isEmpty()) {
+                        continue;
+                    }
+                    WorkflowRunParam wrp = new WorkflowRunParam();
+                    wrp.setKey(str);
+                    wrp.setValue(map.get(str));
+                    wrp.setType("text");
+                    runParams.add(wrp);
+                }
+            } else {
+                Log.info("Null: " + str + " " + map.get(str));
+            }
+        }
+        return runParams;
     }
 }

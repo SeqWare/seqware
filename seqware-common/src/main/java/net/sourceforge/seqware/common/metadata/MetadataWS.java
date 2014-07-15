@@ -152,6 +152,7 @@ public class MetadataWS implements Metadata {
      * 
      * @param workflow_engine
      * @param workflow_type
+     * @param workflow_class
      */
     @Override
     public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
