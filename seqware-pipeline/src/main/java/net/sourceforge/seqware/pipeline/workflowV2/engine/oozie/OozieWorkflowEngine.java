@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie;
 
+import io.seqware.pipeline.api.WorkflowEngine;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,7 +11,6 @@ import net.sourceforge.seqware.common.util.Log;
 import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
-import io.seqware.pipeline.api.WorkflowEngine;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -37,16 +37,30 @@ public class OozieWorkflowEngine implements WorkflowEngine {
     private final Configuration conf;
     private final Path hdfsWorkDir;
 
+    /**
+     * 
+     * @param objectModel
+     * @param useSge
+     * @param threadsSgeParamFormat
+     * @param maxMemorySgeParamFormat
+     * @param createDirectories
+     *            true when creating the engine to launch a job
+     */
     public OozieWorkflowEngine(AbstractWorkflowDataModel objectModel, boolean useSge, String threadsSgeParamFormat,
-            String maxMemorySgeParamFormat) {
+            String maxMemorySgeParamFormat, boolean createDirectories) {
         this.dataModel = objectModel;
         this.useSge = useSge;
         this.threadsSgeParamFormat = threadsSgeParamFormat;
         this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
-
-        this.nfsWorkDir = initNfsWorkDir(objectModel);
         this.conf = initConf(objectModel);
-        this.hdfsWorkDir = initHdfsWorkDir(objectModel, conf, this.nfsWorkDir);
+
+        if (createDirectories) {
+            this.nfsWorkDir = initNfsWorkDir(objectModel);
+            this.hdfsWorkDir = initHdfsWorkDir(objectModel, conf, this.nfsWorkDir);
+        } else {
+            this.nfsWorkDir = null;
+            this.hdfsWorkDir = null;
+        }
     }
 
     public static File initNfsWorkDir(AbstractWorkflowDataModel model) {
@@ -133,7 +147,7 @@ public class OozieWorkflowEngine implements WorkflowEngine {
 
         try {
             Properties localConf = wc.createConfiguration();
-            localConf.setProperty(OozieClient.APP_PATH, hdfsWorkDir.toString());
+            // localConf.setProperty(OozieClient.APP_PATH, hdfsWorkDir.toString());
             localConf.setProperty("jobTracker", this.dataModel.getEnv().getOOZIE_JOBTRACKER());
             localConf.setProperty("nameNode", this.dataModel.getEnv().getOOZIE_NAMENODE());
             localConf.setProperty("queueName", this.dataModel.getEnv().getOOZIE_QUEUENAME());

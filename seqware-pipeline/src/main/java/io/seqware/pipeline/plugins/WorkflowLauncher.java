@@ -232,7 +232,7 @@ public class WorkflowLauncher extends Plugin {
         Log.info("constructed dataModel");
 
         // set up workflow engine
-        WorkflowEngine engine = WorkflowTools.getWorkflowEngine(dataModel, config);
+        WorkflowEngine engine = WorkflowTools.getWorkflowEngine(dataModel, config, true);
 
         engine.prepareWorkflow(dataModel);
         if (options.has(noRunSpec)) {
