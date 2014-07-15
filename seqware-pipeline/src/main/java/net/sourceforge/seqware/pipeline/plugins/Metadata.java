@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.SequencerRunStatus;
 import io.seqware.common.model.WorkflowRunStatus;
 import java.io.BufferedWriter;
@@ -375,6 +376,7 @@ public class Metadata extends Plugin {
 
             // LEFT OFF WITH: need to link process with workflow_run
             metadata.update_processing_workflow_run(processingId, workflowRunAccession);
+            metadata.update_processing_status(processingId, ProcessingStatus.success);
             // SEQWARE-1692 - need to update workflow with the status
             WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccession);
             String statusField = fields.get("status");
@@ -433,6 +435,7 @@ public class Metadata extends Plugin {
             newRet.setAlgorithm(fields.get("algorithm"));
             // send up the files via ReturnValue (ewww)
             metadata.update_processing_event(procID, newRet);
+            metadata.update_processing_status(procID, ProcessingStatus.success);
             int mapProcessingIdToAccession = metadata.mapProcessingIdToAccession(procID);
             print("Created file processing with SWID: " + mapProcessingIdToAccession);
 
