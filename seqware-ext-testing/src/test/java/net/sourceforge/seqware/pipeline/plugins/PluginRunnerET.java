@@ -224,7 +224,7 @@ public class PluginRunnerET {
             String accession = Integer.toString(installedWorkflows.get(e.getKey()));
 
             String listCommand = "-p io.seqware.pipeline.plugins.WorkflowScheduler -- --ini-files " + workflowPath
-                    + " --workflow-accession " + accession + " --schedule --parent-accessions " + PARENT + " --host " + localhost;
+                    + " --workflow-accession " + accession + " --parent-accessions " + PARENT + " --host " + localhost;
             String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
             Log.info(listOutput);
 
@@ -398,7 +398,7 @@ public class PluginRunnerET {
             params.append("--bundle ").append(e.getValue().path).append(" ");
             params.append("--version ").append(e.getValue().version).append(" ");
             params.append("--wait ");
-            params.append("--workflow").append(e.getValue().name);
+            params.append("--workflow ").append(e.getValue().name);
             File tempFile = File.createTempFile(e.getValue().name, ".out");
             pool.submit(new TestingThread(params.toString(), tempFile));
         }
