@@ -507,6 +507,20 @@ public class ReturnValue implements Serializable {
      * Constructor for ReturnValue.
      * </p>
      * 
+     * @param exitStatus
+     */
+    public ReturnValue(ExitStatus exitStatus) {
+        this.stdout = null;
+        this.stderr = null;
+        this.exitStatus = exitStatus.getStatus();
+        files = new ArrayList<>();
+    }
+
+    /**
+     * <p>
+     * Constructor for ReturnValue.
+     * </p>
+     * 
      * @param startStdout
      *            a {@link java.lang.String} object.
      * @param startStderr

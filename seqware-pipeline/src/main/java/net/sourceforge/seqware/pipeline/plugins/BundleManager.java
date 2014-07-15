@@ -7,10 +7,15 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import joptsimple.ArgumentAcceptingOptionSpec;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.module.ReturnValue.ExitStatus;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
@@ -18,6 +23,7 @@ import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -37,6 +43,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class BundleManager extends Plugin {
 
     ReturnValue ret = new ReturnValue();
+    private final ArgumentAcceptingOptionSpec<String> outFile;
 
     /**
      * <p>
@@ -89,6 +96,8 @@ public class BundleManager extends Plugin {
         parser.acceptsAll(Arrays.asList("metadata", "m"), "Specify the path to the metadata.xml file.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("human-expanded", "he"), "Optional: will print output in expanded human friendly format");
         parser.acceptsAll(Arrays.asList("human-aligned", "ha"), "Optional: will print output in aligned human friendly format");
+        this.outFile = parser.acceptsAll(Arrays.asList("out"), "Optional: Will output a list of workflows installed by sw_accession")
+                .withRequiredArg();
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
@@ -152,6 +161,7 @@ public class BundleManager extends Plugin {
             specificMetadataFile = new File(specificMetadataStr);
         }
 
+        List<String> workflowsInstalled = new ArrayList<>();
         // list the contents of the bundle
         if (options.has("bundle") && (options.has("list") || options.has("help"))) {
             String bundlePath = (String) options.valueOf("bundle");
@@ -202,7 +212,7 @@ public class BundleManager extends Plugin {
             println("Installing Bundle");
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
-            ret = b.installBundle(new File(bundleFile), specificMetadataFile);
+            ret = b.installBundle(new File(bundleFile), specificMetadataFile, workflowsInstalled);
             if (ret.getExitStatus() == ReturnValue.SUCCESS) {
                 println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
             }
@@ -216,13 +226,13 @@ public class BundleManager extends Plugin {
             String bundleFile = (String) options.valueOf("bundle");
             println("Bundle: " + bundleFile);
             if (bundleFile.endsWith(".zip")) {
-                ret = b.installBundleZipOnly(new File(bundleFile), specificMetadataFile);
+                ret = b.installBundleZipOnly(new File(bundleFile), specificMetadataFile, workflowsInstalled);
                 if (ret.getExitStatus() == ReturnValue.SUCCESS) {
                     println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
                 }
             } else {
                 Log.error("Attempting to install a workflow bundle zip file but the bundle does not end in .zip! " + bundleFile);
-                ret.setExitStatus(ret.FAILURE);
+                ret.setExitStatus(ReturnValue.FAILURE);
             }
         } else if (options.has("bundle") && options.has("install-dir-only")) {
 
@@ -235,43 +245,43 @@ public class BundleManager extends Plugin {
             println("Bundle: " + bundleFile);
             File bundleDir = new File(bundleFile);
             if (bundleDir.exists() && bundleDir.isDirectory()) {
-                ret = b.installBundleDirOnly(bundleDir, specificMetadataFile);
+                ret = b.installBundleDirOnly(bundleDir, specificMetadataFile, workflowsInstalled);
                 if (ret.getExitStatus() == ReturnValue.SUCCESS) {
                     println("Bundle Has Been Installed to the MetaDB and Provisioned to " + options.valueOf("bundle") + "!");
                 }
             } else {
                 Log.error("Attempting to install a workflow bundle from an unzipped bundle directory but the bundle does not exit or point to a directory! "
                         + bundleFile);
-                ret.setExitStatus(ret.FAILURE);
+                ret.setExitStatus(ReturnValue.FAILURE);
             }
         } else if (options.has("list-installed")) {
-            String params = metadata.listInstalledWorkflows();
+            String localParams = metadata.listInstalledWorkflows();
             final String nameVersionCreation_DateSeqWare_Accession = "Name\tVersion\tCreation Date\tSeqWare Accession\tDescription\tCurrent Working Directory\tBundle Location";
             if (options.has("human-expanded")) {
-                params = nameVersionCreation_DateSeqWare_Accession + "\n" + params;
-                params = TabExpansionUtil.expansion(params);
-                if (params.trim().equals("")) {
+                localParams = nameVersionCreation_DateSeqWare_Accession + "\n" + localParams;
+                localParams = TabExpansionUtil.expansion(localParams);
+                if (localParams.trim().equals("")) {
                     println("No workflows installed.");
                 } else {
-                    println(params);
+                    println(localParams);
                 }
             } else if (options.has("human-aligned")) {
-                params = nameVersionCreation_DateSeqWare_Accession + "\n" + params;
-                params = TabExpansionUtil.aligned(params);
-                println(params);
+                localParams = nameVersionCreation_DateSeqWare_Accession + "\n" + localParams;
+                localParams = TabExpansionUtil.aligned(localParams);
+                println(localParams);
             } else {
                 println("=====================================================");
                 println("===============INSTALLED WORKFLOWS===================");
                 println("=====================================================");
                 println(nameVersionCreation_DateSeqWare_Accession);
                 println("-----------------------------------------------------");
-                println(params);
+                println(localParams);
                 println("-----------------------------------------------------");
             }
             // ((options.has("workflow") && options.has("version") && options.has("bundle")) || options.has("workflow-accession"))
         } else if (options.has("list-workflow-params") && options.has("workflow-accession")) {
-            String params = metadata.listInstalledWorkflowParams((String) options.valueOf("workflow-accession"));
-            println(params);
+            String localParams = metadata.listInstalledWorkflowParams((String) options.valueOf("workflow-accession"));
+            println(localParams);
         } else if (options.has("workflow") && options.has("version") && options.has("download")) {
             println("Downloading Bundle");
             String workflowName = (String) options.valueOf("workflow");
@@ -301,6 +311,15 @@ public class BundleManager extends Plugin {
             println("Combination of parameters not recognized!");
             println(this.get_syntax());
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
+        }
+
+        if (workflowsInstalled.size() > 0 && options.has(this.outFile)) {
+            try {
+                File file = new File(options.valueOf(this.outFile));
+                FileUtils.writeLines(file, workflowsInstalled);
+            } catch (IOException ex) {
+                return new ReturnValue(ExitStatus.FILENOTWRITABLE);
+            }
         }
 
         return ret;

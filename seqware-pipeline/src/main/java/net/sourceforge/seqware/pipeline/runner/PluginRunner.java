@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -59,8 +60,14 @@ public class PluginRunner {
      *            an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
-        new PluginRunner().run(args);
+        try {
+            new PluginRunner().run(args);
+        } catch (ExitException e) {
+            System.exit(e.getExitCode());
+        }
     }
+
+    private NonOptionArgumentSpec<String> nonOptionSpec;
 
     /**
      * <p>
@@ -71,7 +78,6 @@ public class PluginRunner {
      *            an array of {@link java.lang.String} objects.
      */
     public void run(String[] args) {
-
         // Specific to the Plugin Runner
         // Setup the command line options supported by the PluginRunner
         setupOptions();
@@ -101,7 +107,6 @@ public class PluginRunner {
 
         // Call each method
         invokePluginMethods();
-
     }
 
     /**
@@ -111,6 +116,8 @@ public class PluginRunner {
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
         parser.acceptsAll(Arrays.asList("list", "l"), "Lists all the plugins available in this SeqWare Pipeline jar file.");
         parser.acceptsAll(Arrays.asList("plugin", "p"), "The plugin you wish to trigger.").withRequiredArg();
+        this.nonOptionSpec = parser
+                .nonOptions("Specify arguments for the plugin by providding an additional -- and then --<key> <value> pairs");
         parser.accepts("verbose", "Show debug information");
     }
 
@@ -140,7 +147,7 @@ public class PluginRunner {
         } catch (IOException e) {
             e.printStackTrace(System.err);
         }
-        System.exit(ReturnValue.INVALIDARGUMENT);
+        throw new ExitException(ReturnValue.INVALIDARGUMENT);
     }
 
     /**
@@ -151,19 +158,19 @@ public class PluginRunner {
         // Check if help was requested
         if ((options.has("help") || options.has("h") || options.has("?")) && !options.has("plugin") && !options.has("p")) {
             getSyntax(parser, "");
-            System.exit(ReturnValue.RETURNEDHELPMSG);
+            throw new ExitException(ReturnValue.RETURNEDHELPMSG);
         }
 
         // FIXME: check single char options too
         if (options.has("list") && options.has("plugin")) {
             Log.error("You can't have both --list and --plugin defined at the same time!");
-            System.exit(ReturnValue.INVALIDARGUMENT);
+            throw new ExitException(ReturnValue.INVALIDARGUMENT);
         }
 
         // FIXME: check single char options too
         if (!(options.has("list") || options.has("plugin") || options.has("help"))) {
             getSyntax(parser, "You need to specify at least one of --list, --plugin, or --help!");
-            System.exit(ReturnValue.INVALIDARGUMENT);
+            throw new ExitException(ReturnValue.INVALIDARGUMENT);
         }
 
         // check if verbose was requested, then override the log4j.properties
@@ -221,11 +228,11 @@ public class PluginRunner {
 
             } catch (ClassNotFoundException e) {
                 Log.error("Could not find the Plugin class for '" + PluginName + "'");
-                System.exit(ReturnValue.INVALIDPLUGIN);
+                throw new ExitException(ReturnValue.INVALIDPLUGIN);
             } catch (Throwable e) {
                 e.printStackTrace();
                 Log.error(e);
-                System.exit(ReturnValue.FAILURE);
+                throw new ExitException(ReturnValue.FAILURE);
             }
 
             if (options.has("help") || options.has("h")) {
@@ -235,7 +242,7 @@ public class PluginRunner {
             } else {
 
                 // try to parse the parameters after "--"
-                plugin.setParams(options.nonOptionArguments());
+                plugin.setParams(options.valuesOf(nonOptionSpec));
 
                 // pass in the config information from the settings file
                 plugin.setConfig(config);
@@ -253,7 +260,7 @@ public class PluginRunner {
                     + "-full.jar --plugin <plugin_name> --help\" to see options for each.\n");
         } else {
             getSyntax(parser, "You must specifiy a plugin with option --plugin");
-            System.exit(ReturnValue.INVALIDARGUMENT);
+            throw new ExitException(ReturnValue.INVALIDARGUMENT);
         }
 
     }
@@ -307,7 +314,7 @@ public class PluginRunner {
             Log.stderr("Module caught exception during method: " + methodName + ":" + e.getMessage());
             Log.stderr(ExceptionTools.stackTraceToString(e));
             // Exit on error
-            System.exit(ReturnValue.RUNNERERR);
+            throw new ExitException(ReturnValue.RUNNERERR);
         }
 
         // On failure, update metadb and exit
@@ -318,7 +325,7 @@ public class PluginRunner {
                 Log.stderr("The method '" + methodName + "' exited abnormally so the Runner will terminate here!");
                 Log.stderr("Return value was: " + newReturn.getExitStatus());
             }
-            System.exit(newReturn.getExitStatus());
+            throw new ExitException(newReturn.getExitStatus());
         }
 
         // Otherwise we will continue, after updating metadata
@@ -340,8 +347,8 @@ public class PluginRunner {
             this.config = ConfigTools.getSettings();
         } catch (Exception e) {
             Log.stderr("Error reading settings file: " + e.getMessage());
-            e.printStackTrace();
-            System.exit(ReturnValue.SETTINGSFILENOTFOUND);
+            Log.fatal("Error readind settings file", e);
+            throw new ExitException(ReturnValue.SETTINGSFILENOTFOUND);
         }
     }
 
@@ -349,4 +356,22 @@ public class PluginRunner {
         this.meta = MetadataFactory.get(config);
     }
 
+    /**
+     * The exit code exception is used to communicate exit code values to methods that may wish to call the PluginRunner without running
+     * into System.exit calls
+     */
+    public static class ExitException extends RuntimeException {
+        private final int exitCode;
+
+        public ExitException(int exitCode) {
+            this.exitCode = exitCode;
+        }
+
+        /**
+         * @return the exitCode
+         */
+        public int getExitCode() {
+            return exitCode;
+        }
+    }
 }

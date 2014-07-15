@@ -55,7 +55,6 @@ import org.junit.runners.Suite;
         net.sourceforge.seqware.webservice.resources.tables.SequencerRunIDResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.ExperimentResourceTest.class,
         net.sourceforge.seqware.webservice.resources.tables.LaneResourceTest.class,
-        net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResourceTest.class,
         net.sourceforge.seqware.common.metadata.MetadataWSTest.class, net.sourceforge.seqware.common.metadata.MetadataDBTest.class })
 public class WSResourceTestSuite {
 

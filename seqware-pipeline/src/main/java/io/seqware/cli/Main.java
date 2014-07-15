@@ -1,11 +1,13 @@
 package io.seqware.cli;
 
 import com.google.common.collect.ObjectArrays;
+import io.seqware.Engines;
 import io.seqware.Reports;
 import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,10 +24,10 @@ import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
-import net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin;
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility.HumanProvenanceFilters;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 /*
@@ -302,6 +304,27 @@ public class Main {
         }
     }
 
+    private static void bundleInstallDirOnly(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware bundle install-dir-only [--help]");
+            out("       seqware bundle install-dir-only --dir <bundle-dir>");
+            out("");
+            out("Description:");
+            out("  Inform the Seqware system of the availability of a bundle.");
+            out("");
+            out("Parameters:");
+            out("  --dir <bundle-dir>  The zip file of the bundle");
+            out("");
+        } else {
+            String zip = reqVal(args, "--dir");
+
+            extras(args, "bundle install-dir-only");
+
+            run("--plugin", "net.sourceforge.seqware.pipeline.plugins.BundleManager", "--", "--install-dir-only", "--bundle", zip);
+        }
+    }
+
     private static WorkflowInfo findWorkflowInfo(File dir, String name, String version) {
         BundleInfo bi = Bundle.findBundleInfo(dir);
 
@@ -354,9 +377,9 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --engine <type>            The engine that will process the workflow run.");
-            out("                             May be one of: " + WorkflowPlugin.ENGINES_LIST);
+            out("                             May be one of: " + Engines.ENGINES_LIST);
             out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-            out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
+            out("                             or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
             out("  --ini <ini-file>           An ini file to configure the workflow run.");
             out("                             Repeat this parameter to provide multiple files.");
             out("                             Defaults to the value of the 'config' node in metadata.xml.");
@@ -388,12 +411,11 @@ public class Main {
 
             String[] runParams;
             if (engine == null) {
-                runParams = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait",
-                        "--bundle", dir, "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata" };
+                runParams = new String[] { "--plugin", "io.seqware.pipeline.plugins.WorkflowLifecycle", "--", "--wait", "--bundle", dir,
+                        "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata" };
             } else {
-                runParams = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--wait",
-                        "--bundle", dir, "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata",
-                        "--workflow-engine", engine };
+                runParams = new String[] { "--plugin", "io.seqware.pipeline.plugins.WorkflowLifecycle", "--", "--wait", "--bundle", dir,
+                        "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--workflow-engine", engine };
             }
             String[] addAll = ArrayUtils.addAll(runParams, overrideParams.toArray(new String[overrideParams.size()]));
             run(addAll);
@@ -428,9 +450,9 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --engine <type>     The engine that will process the workflow run.");
-            out("                      May be one of: " + WorkflowPlugin.ENGINES_LIST);
+            out("                      May be one of: " + Engines.ENGINES_LIST);
             out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-            out("                      or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
+            out("                      or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
             out("  --ini <ini-file>    An ini file to configure the workflow run");
             out("                      Repeat this parameter to provide multiple files");
             out("                      Defaults to the value of the 'config' node in metadata.xml");
@@ -458,11 +480,11 @@ public class Main {
             out("Performing dry-run of workflow '" + name + "' version '" + version + "'");
 
             if (engine == null) {
-                run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name,
-                        "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--no-run");
+                run("--plugin", "io.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name, "--version",
+                        version, "--ini-files", cdl(inis), "--no-run");
             } else {
-                run("--plugin", "net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name,
-                        "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--no-run", "--workflow-engine", engine);
+                run("--plugin", "io.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name, "--version",
+                        version, "--ini-files", cdl(inis), "--no-run", "--workflow-engine", engine);
             }
         }
     }
@@ -531,26 +553,37 @@ public class Main {
             out("  Interact with a workflow bundle.");
             out("");
             out("Sub-commands:");
-            out("  dry-run   Perform all steps to prepare for a launch, but not actually launch");
-            out("  install   Inform the Seqware system of the availability of a bundle");
-            out("  launch    Launch a specified workflow in a bundle directory");
-            out("  list      List workflows within a bundle directory");
-            out("  package   Package a bundle directory into a zip file");
+            out("  dry-run           Perform all steps to prepare for a launch, but not actually launch");
+            out("  install           Inform the Seqware system of the availability of a standard bundle");
+            out("  install-dir-only  Inform the Seqware system of the availability of an unzipped bundle");
+            out("  launch            Launch a specified workflow in a bundle directory");
+            out("  list              List workflows within a bundle directory");
+            out("  package           Package a bundle directory into a zip file");
             out("");
         } else {
             String cmd = args.remove(0);
-            if ("dry-run".equals(cmd)) {
+            if (null != cmd) switch (cmd) {
+            case "dry-run":
                 bundleDryRun(args);
-            } else if ("install".equals(cmd)) {
+                break;
+            case "install":
                 bundleInstall(args);
-            } else if ("launch".equals(cmd)) {
+                break;
+            case "install-dir-only":
+                bundleInstallDirOnly(args);
+                break;
+            case "launch":
                 bundleLaunch(args);
-            } else if ("list".equals(cmd)) {
+                break;
+            case "list":
                 bundleList(args);
-            } else if ("package".equals(cmd)) {
+                break;
+            case "package":
                 bundlePackage(args);
-            } else {
+                break;
+            default:
                 invalid("bundle", cmd);
+                break;
             }
         }
     }
@@ -597,10 +630,10 @@ public class Main {
             runnerArgs.add(table);
             runnerArgs.add("--create");
 
-            for (int i = 0; i < cols.length; i++) {
+            for (String col : cols) {
                 runnerArgs.add("--field");
-                String key = "--" + cols[i].replace('_', '-');
-                String arg = String.format("%s::%s", cols[i], reqVal(args, key));
+                String key = "--" + col.replace('_', '-');
+                String arg = String.format("%s::%s", col, reqVal(args, key));
                 runnerArgs.add(arg);
             }
 
@@ -798,22 +831,31 @@ public class Main {
             out("");
         } else {
             String obj = args.remove(0);
-            if ("experiment".equals(obj)) {
+            if (null != obj) switch (obj) {
+            case "experiment":
                 createExperiment(args);
-            } else if ("file".equals(obj)) {
+                break;
+            case "file":
                 createFile(args);
-            } else if ("ius".equals(obj)) {
+                break;
+            case "ius":
                 createIus(args);
-            } else if ("lane".equals(obj)) {
+                break;
+            case "lane":
                 createLane(args);
-            } else if ("sample".equals(obj)) {
+                break;
+            case "sample":
                 createSample(args);
-            } else if ("sequencer-run".equals(obj)) {
+                break;
+            case "sequencer-run":
                 createSequencerRun(args);
-            } else if ("study".equals(obj)) {
+                break;
+            case "study":
                 createStudy(args);
-            } else {
+                break;
+            default:
                 kill("seqware: '%s' is not a valid object type.  See 'seqware create --help'.", obj);
+                break;
             }
         }
     }
@@ -892,13 +934,17 @@ public class Main {
             out("");
         } else {
             String cmd = args.remove(0);
-            if ("report".equals(cmd)) {
+            if (null != cmd) switch (cmd) {
+            case "report":
                 filesReport(args);
-            } else if ("refresh".equals(cmd)) {
+                break;
+            case "refresh":
                 Log.stdoutWithTime("Triggered provenance report");
                 Reports.triggerProvenanceReport();
-            } else {
+                break;
+            default:
                 invalid("files", cmd);
+                break;
             }
         }
     }
@@ -1082,9 +1128,9 @@ public class Main {
             out("");
             out("Optional parameters:");
             out("  --engine <type>            The engine that will process the workflow run.");
-            out("                             May be one of: " + WorkflowPlugin.ENGINES_LIST);
+            out("                             May be one of: " + Engines.ENGINES_LIST);
             out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
-            out("                             or '" + WorkflowPlugin.DEFAULT_ENGINE + "' if not specified.");
+            out("                             or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
             out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
             out("                             Repeat this parameter to provide multiple parents");
             out("  --override <key=value>     Override specific parameters from the workflow.ini");
@@ -1103,9 +1149,8 @@ public class Main {
 
             List<String> runnerArgs = new ArrayList<>();
             runnerArgs.add("--plugin");
-            runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
+            runnerArgs.add("io.seqware.pipeline.plugins.WorkflowScheduler");
             runnerArgs.add("--");
-            runnerArgs.add("--schedule");
             runnerArgs.add("--workflow-accession");
             runnerArgs.add(wfId);
             if (engine != null) {
@@ -1130,6 +1175,66 @@ public class Main {
             String[] totalArgs = ArrayUtils.addAll(runnerArgs.toArray(new String[runnerArgs.size()]),
                     overrideParams.toArray(new String[overrideParams.size()]));
             run(totalArgs);
+        }
+    }
+
+    private static void workflowRunWatch(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware workflow-run watch --help");
+            out("       seqware workflow-run watch <params>");
+            out("");
+            out("Description:");
+            out("  Watch a workflow run in progress.");
+            out("");
+            out("Required parameters:");
+            out("  --accession <swid>  The SWID of the workflow run");
+            out("");
+        } else {
+            String swid = reqVal(args, "--accession");
+
+            extras(args, "workflow-run watch");
+
+            List<String> runnerArgs = new ArrayList<>();
+            runnerArgs.add("--plugin");
+            runnerArgs.add("io.seqware.pipeline.plugins.WorkflowWatcher");
+            runnerArgs.add("--");
+            runnerArgs.add("--workflow-run-accession");
+            runnerArgs.add(swid);
+
+            run(runnerArgs);
+        }
+    }
+
+    private static void workflowRunIni(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware workflow-run ini --help");
+            out("       seqware workflow-run ini <params>");
+            out("");
+            out("Description:");
+            out("  Display the ini file used to run a workflow run.");
+            out("");
+            out("Required parameters:");
+            out("  --accession <swid>  The SWID of the workflow run");
+            out("Optional parameters:");
+            out("  --out <file>        The name of the ini file");
+            out("");
+        } else {
+            String swid = reqVal(args, "--accession");
+            String out = optVal(args, "--out", null);
+
+            extras(args, "workflow-run ini");
+
+            if (out != null) {
+                try {
+                    FileUtils.writeStringToFile(new File(out), WorkflowRuns.workflowRunIni(Integer.valueOf(swid)));
+                } catch (IOException ex) {
+                    kill("seqware: cannot write to '%s'.", out);
+                }
+            } else {
+                out(WorkflowRuns.workflowRunIni(Integer.valueOf(swid)));
+            }
         }
     }
 
@@ -1235,16 +1340,22 @@ public class Main {
             out("");
         } else {
             String cmd = args.remove(0);
-            if ("ini".equals(cmd)) {
+            if (null != cmd) switch (cmd) {
+            case "ini":
                 workflowIni(args);
-            } else if ("list".equals(cmd)) {
+                break;
+            case "list":
                 workflowList(args);
-            } else if ("report".equals(cmd)) {
+                break;
+            case "report":
                 workflowReport(args);
-            } else if ("schedule".equals(cmd)) {
+                break;
+            case "schedule":
                 workflowSchedule(args);
-            } else {
+                break;
+            default:
                 invalid("workflow", cmd);
+                break;
             }
         }
     }
@@ -1276,7 +1387,7 @@ public class Main {
 
             List<String> runnerArgs = new ArrayList<>();
             runnerArgs.add("--plugin");
-            runnerArgs.add("net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher");
+            runnerArgs.add("io.seqware.pipeline.plugins.WorkflowLauncher");
             runnerArgs.add("--");
 
             if (host != null) {
@@ -1477,28 +1588,46 @@ public class Main {
             out("  stderr              Obtain the stderr output of the run");
             out("  stdout              Obtain the stdout output of the run");
             out("  report              The details of a given workflow-run");
+            out("  watch               Watch a workflow-run in progress");
+            out("  ini                 Output the effective ini for a workflow run");
             out("  delete              Recursively delete workflow-runs");
             out("");
         } else {
             String cmd = args.remove(0);
-            if ("cancel".equals(cmd)) {
+            if (null != cmd) switch (cmd) {
+            case "cancel":
                 workflowRunCancel(args);
-            } else if ("launch-scheduled".equals(cmd)) {
+                break;
+            case "launch-scheduled":
                 workflowRunLaunchScheduled(args);
-            } else if ("propagate-statuses".equals(cmd)) {
+                break;
+            case "propagate-statuses":
                 workflowRunPropagateStatuses(args);
-            } else if ("retry".equals(cmd)) {
+                break;
+            case "retry":
                 workflowRunRetry(args);
-            } else if ("stderr".equals(cmd)) {
+                break;
+            case "stderr":
                 workflowRunStderr(args);
-            } else if ("stdout".equals(cmd)) {
+                break;
+            case "stdout":
                 workflowRunStdout(args);
-            } else if ("report".equals(cmd)) {
+                break;
+            case "report":
                 workflowRunReport(args);
-            } else if ("delete".equals(cmd)) {
+                break;
+            case "watch":
+                workflowRunWatch(args);
+                break;
+            case "ini":
+                workflowRunIni(args);
+                break;
+            case "delete":
                 workflowRunDelete(args);
-            } else {
+                break;
+            default:
                 invalid("workflow-run", cmd);
+                break;
             }
         }
     }
@@ -1557,28 +1686,41 @@ public class Main {
         } else {
             try {
                 String cmd = args.remove(0);
-                if ("-v".equals(cmd) || "--version".equals(cmd)) {
+                if (null != cmd) switch (cmd) {
+                case "-v":
+                case "--version":
                     kill("seqware: version information is provided by the wrapper script.");
-                } else if ("annotate".equals(cmd)) {
+                    break;
+                case "annotate":
                     annotate(args);
-                } else if ("bundle".equals(cmd)) {
+                    break;
+                case "bundle":
                     bundle(args);
-                } else if ("copy".equals(cmd)) {
+                    break;
+                case "copy":
                     copy(args);
-                } else if ("create".equals(cmd)) {
+                    break;
+                case "create":
                     create(args);
-                } else if ("files".equals(cmd)) {
+                    break;
+                case "files":
                     files(args);
-                } else if ("study".equals(cmd)) {
+                    break;
+                case "study":
                     study(args);
-                } else if ("workflow".equals(cmd)) {
+                    break;
+                case "workflow":
                     workflow(args);
-                } else if ("workflow-run".equals(cmd)) {
+                    break;
+                case "workflow-run":
                     workflowRun(args);
-                } else if ("checkdb".equals(cmd)) {
+                    break;
+                case "checkdb":
                     checkdb(args);
-                } else {
+                    break;
+                default:
                     invalid(cmd);
+                    break;
                 }
             } catch (Kill k) {
                 System.exit(1);
