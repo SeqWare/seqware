@@ -29,7 +29,8 @@ import org.openide.util.lookup.ServiceProvider;
  * The WorkflowLauncher is responsible for launching scheduled workflows.
  * 
  * Previously, it was responsible for launching, scheduling, waiting, etc. This was the subject of refactoring in order to reduce this to
- * just launching of scheduled workflows.
+ * just launching of scheduled workflows. Combinations of tasks now live within WorkflowLifecycle. WorkflowLauncher requires access to Oozie
+ * and HDFS.
  * 
  * @author boconnor
  */

@@ -214,11 +214,9 @@ public class WorkflowStatusChecker extends Plugin {
     @Override
     public String get_description() {
         return "This plugin lets you monitor the status of running workflows and updates "
-                + "the metadata object with their status.  Keep in mind a few things: 1) if the status command is specified no data "
-                + "will be saved to the DB, this tool is just useful for gathering error reports, 2) status commands that are malformed "
-                + "or whose status directory is not present on the filesystem will be skipped and an error noted, 3) by default every running or unknown "
+                + "the metadata object with their status. By default every running or unknown "
                 + "workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file "
-                + "and the hostname is the same as 'hostname --long', and 4) you can force the checking of workflows with a particular "
+                + "and the hostname is the same as 'hostname --long'. You can force the checking of workflows with a particular "
                 + "host value but be careful with that.";
     }
 
