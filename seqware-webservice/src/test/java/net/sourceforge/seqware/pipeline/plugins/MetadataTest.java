@@ -17,10 +17,15 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.Reports;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.Lane;
-import net.sourceforge.seqware.common.metadata.MetadataWS;
+import net.sourceforge.seqware.common.model.ProcessingStatus;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.SequencerRunStatus;
@@ -31,7 +36,11 @@ import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
-import org.junit.*;
+import org.apache.commons.dbutils.handlers.ArrayListHandler;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Runs the tests for the Metadata plugin indicated on this
@@ -40,13 +49,13 @@ import org.junit.*;
  * @author mtaschuk
  */
 public class MetadataTest extends ExtendedPluginTest {
-    
+
     @BeforeClass
-    public static void beforeClass(){
+    public static void beforeClass() {
         BasicTestDatabaseCreator.resetDatabaseWithUsers();
         Reports.triggerProvenanceReport();
     }
-    
+
     @Before
     @Override
     public void setUp() {
@@ -54,7 +63,6 @@ public class MetadataTest extends ExtendedPluginTest {
         super.setUp();
     }
 
-    
     public MetadataTest() {
     }
 
@@ -109,7 +117,6 @@ public class MetadataTest extends ExtendedPluginTest {
         expectedFields.put("experiment_library_design_id", "Integer");
         expectedFields.put("experiment_spot_design_id", "Integer");
 
-
         launchPlugin("--table", "experiment", "--list-fields");
         checkFields(expectedFields);
     }
@@ -143,8 +150,6 @@ public class MetadataTest extends ExtendedPluginTest {
         expectedFields.put("platform_accession", "Integer");
         expectedFields.put("file_path", "String");
         expectedFields.put("status", "String");
-
-
 
         launchPlugin("--table", "sequencer_run", "--list-fields");
 
@@ -221,7 +226,7 @@ public class MetadataTest extends ExtendedPluginTest {
         experimentAccession = getAndCheckSwid(s);
     }
     private String sampleAccession = null;
-    
+
     @Test
     public void testCreateExperimentWithLibraryDesignAndSpotDesign() {
         String sAcc = studyAccession;
@@ -236,7 +241,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--field", "platform_id::9",
                 "--field", "experiment_spot_design_id::7",
                 "--field", "experiment_library_design_id::8"
-                );
+        );
         String s = getOut();
         String localExperimentAccession = getAndCheckSwid(s);
         // SEQWARE-1713 check that the two optional fields make it into the database
@@ -246,7 +251,7 @@ public class MetadataTest extends ExtendedPluginTest {
         // check that we can get them back via metadata methods as well
         Experiment e = metadata.getExperiment(Integer.valueOf(localExperimentAccession));
         Assert.assertTrue("could not retrieve optional fields via metadata", e.getExperimentLibraryDesign() != null && e.getExperimentSpotDesign() != null);
-        Assert.assertTrue("optional fields via metadata were incorrect, found " + e.getExperimentLibraryDesign().getExperimentLibraryDesignId() + ":" + e.getExperimentSpotDesign().getExperimentSpotDesignId(), 
+        Assert.assertTrue("optional fields via metadata were incorrect, found " + e.getExperimentLibraryDesign().getExperimentLibraryDesignId() + ":" + e.getExperimentSpotDesign().getExperimentSpotDesignId(),
                 e.getExperimentLibraryDesign().getExperimentLibraryDesignId() == 8 && e.getExperimentSpotDesign().getExperimentSpotDesignId() == 7);
     }
 
@@ -274,7 +279,7 @@ public class MetadataTest extends ExtendedPluginTest {
             }
         }
         Assert.assertTrue("Did not find the sample attached to the experiment", foundIt);
-        
+
         // SEQWARE-1716 : omitting the parent sample should result in a "production"-like root sample with a null parent in the sample hierarchy
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select h.sample_id, h.parent_id, count(*) from sample s, sample_hierarchy h "
@@ -282,7 +287,7 @@ public class MetadataTest extends ExtendedPluginTest {
         Assert.assertTrue("parent values were incorrect", runQuery[0] != null && runQuery[1] == null);
         Assert.assertTrue("duplicate parents in sample hierarchy found, " + runQuery[2], runQuery[2].equals(1L));
     }
-    
+
     @Test
     public void testCreateSampleWithExperimentWrongOrganismFail() {
         String eAcc = experimentAccession;
@@ -336,8 +341,8 @@ public class MetadataTest extends ExtendedPluginTest {
         String s = getOut();
         runAccession = getAndCheckSwid(s);
     }
-    
-       private String laneAccession = null;
+
+    private String laneAccession = null;
 
     @Test
     public void testCreateSequencerRunWithStatus() {
@@ -349,10 +354,10 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--field", "paired_end::true",
                 "--field", "skip::false",
                 "--field", "file_path::/home/user/mysequencerrun",
-                "--field", "status::"+funky_status.name());
+                "--field", "status::" + funky_status.name());
         String s = getOut();
         String accession = getAndCheckSwid(s);
-        
+
         // SEQWARE-1561 check that library strategy, selection, and source make it into the database
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select status from sequencer_run WHERE sw_accession=?", Integer.valueOf(accession));
@@ -362,7 +367,6 @@ public class MetadataTest extends ExtendedPluginTest {
         Assert.assertTrue("could not retrieve lane via metadata", r != null);
         Assert.assertTrue("could not retrieve lane status", r.getStatus().equals(funky_status));
     }
-
 
     @Test
     public void testCreateLane() {
@@ -384,7 +388,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--field", "lane_number::1");
         String s = getOut();
         laneAccession = getAndCheckSwid(s);
-        
+
         // SEQWARE-1561 check that library strategy, selection, and source make it into the database
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select library_strategy, library_selection, library_source from lane WHERE sw_accession=?", Integer.valueOf(laneAccession));
@@ -396,7 +400,7 @@ public class MetadataTest extends ExtendedPluginTest {
         Assert.assertTrue("could not retrieve lane library values", l.getLibrarySelection().getLibrarySelectionId() == 3);
         Assert.assertTrue("could not retrieve lane library values", l.getLibrarySource().getLibrarySourceId() == 4);
     }
-    
+
     @Test
     public void testCreateLaneWrongStudyTypeFail() {
         String rAcc = runAccession;
@@ -417,7 +421,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--field", "lane_number::1"));
         checkExpectedIncorrectParameters();
     }
-    
+
     @Test
     public void testCreateLaneWrongLibraryStrategyFail() {
         String rAcc = runAccession;
@@ -438,7 +442,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--field", "lane_number::1"));
         checkExpectedIncorrectParameters();
     }
-    
+
     @Test
     public void testCreateLaneWrongLibrarySelectionFail() {
         String rAcc = runAccession;
@@ -459,7 +463,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--field", "lane_number::1"));
         checkExpectedIncorrectParameters();
     }
-    
+
     @Test
     public void testCreateLaneWrongLibrarySourceFail() {
         String rAcc = runAccession;
@@ -503,7 +507,7 @@ public class MetadataTest extends ExtendedPluginTest {
         getAndCheckSwid(s);
 
     }
-    
+
     @Test
     public void testCreateWorkflowRun() {
         launchPlugin("--table", "workflow_run", "--create",
@@ -514,9 +518,9 @@ public class MetadataTest extends ExtendedPluginTest {
         int integer = Integer.valueOf(swid);
         WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
         Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
-        
+
     }
-    
+
     @Test
     public void testCreateWorkflowRunWrongWorkflowFail() {
         instance.setParams(Arrays.asList("--table", "workflow_run", "--create",
@@ -525,31 +529,47 @@ public class MetadataTest extends ExtendedPluginTest {
         String s = getOut();
         checkExpectedIncorrectParameters();
     }
-    
+
     @Test
     public void testCreateWorkflowRunWithFiles() {
         launchPlugin("--table", "workflow_run", "--create",
                 "--field", "workflow_accession::4",
                 "--field", "status::completed",
-                "--file","cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
-                "--file","hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
+                "--file", "cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
+                "--file", "hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
         String s = getOut();
         String swid = getAndCheckSwid(s);
         int integer = Integer.valueOf(swid);
         // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator, so 
         // let's try some workflow run reporter parsing
         WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
-        String workflowRunReport = ((MetadataWS)metadata).getWorkflowRunReport(integer);
+        String workflowRunReport = ((MetadataWS) metadata).getWorkflowRunReport(integer);
         Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
         Assert.assertTrue("could not find files", workflowRunReport.contains("/datastore/adamantium.gz") && workflowRunReport.contains("/datastore/corbomite.gz"));
+
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        List<Object[]> runQuery = dbCreator.runQuery(new ArrayListHandler(),
+                "select f.sw_accession, p.algorithm, p.status from file f, processing p, processing_files pf, workflow_run r "
+                + "WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id "
+                + "AND (r.workflow_run_id=p.workflow_run_id OR r.workflow_run_id=p.ancestor_workflow_run_id )"
+                + "AND r.sw_accession =?", integer);
+        Assert.assertTrue("incorrect number of files " + runQuery.size(), runQuery.size() == 2);
+        for (Object[] row : runQuery) {
+            int file_sw_accession = (Integer) row[0];
+            String processingStatus = (String) row[2];
+
+            net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
+            Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
+            Assert.assertTrue("processing status incorrect", processingStatus.equals(ProcessingStatus.success.toString()));
+        }
     }
-    
+
     @Test
     public void testCreateWorkflowRunWithParentAccessions() {
         launchPlugin("--table", "workflow_run", "--create",
                 "--field", "workflow_accession::4",
                 "--field", "status::completed",
-                "--parent-accession","834", // experiment
+                "--parent-accession", "834", // experiment
                 "--parent-accession", "4765", // ius 
                 "--parent-accession", "4707", // lane
                 "--parent-accession", "4760", // sample
@@ -566,7 +586,7 @@ public class MetadataTest extends ExtendedPluginTest {
         String workflowRunReport = metadata.getWorkflowRunReport(integer);
         Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
     }
-    
+
     @Test
     public void testCreateFile() {
         final String algorithm = "kryptonite_algorithm1";
@@ -575,25 +595,27 @@ public class MetadataTest extends ExtendedPluginTest {
         final String file_path = "/datastore/kryptonite.gz";
         final String description = "glowing_metal";
         launchPlugin("--table", "file", "--create",
-                "--file",type+"::"+meta_type+"::"+file_path + "::" + description,
+                "--file", type + "::" + meta_type + "::" + file_path + "::" + description,
                 "--field", "algorithm::" + algorithm
-                );
+        );
         String s = getOut();
         String swid = getAndCheckSwid(s);
-        int integer = Integer.valueOf(swid); 
+        int integer = Integer.valueOf(swid);
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
-        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select f.sw_accession, p.algorithm from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?", Integer.valueOf(integer));
-        int file_sw_accession = (Integer)runQuery[0];
-        String dbAlgorithm = (String)runQuery[1];
-        
+        Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select f.sw_accession, p.algorithm, p.status from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?", Integer.valueOf(integer));
+        int file_sw_accession = (Integer) runQuery[0];
+        String dbAlgorithm = (String) runQuery[1];
+        String processingStatus = (String) runQuery[2];
+
         net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
         Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
-        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) 
+        Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path)
                 && file.getMetaType().equals(meta_type) && file.getDescription().equals(description)
                 && file.getType().equals(type));
         Assert.assertTrue("algorithm incorrect", dbAlgorithm.equals(algorithm));
+        Assert.assertTrue("processing status incorrect", processingStatus.equals(ProcessingStatus.success.toString()));
     }
-    
+
     @Test
     public void testCreateFileWithParentAccessions() {
         final String algorithm = "kryptonite_algorithm1";
@@ -601,8 +623,8 @@ public class MetadataTest extends ExtendedPluginTest {
         final String meta_type = "adamantium/gzip";
         final String file_path = "/datastore/adamantium.gz";
         launchPlugin("--table", "file", "--create",
-                "--file",type+"::"+meta_type+"::"+file_path,
-                "--parent-accession","834", // experiment
+                "--file", type + "::" + meta_type + "::" + file_path,
+                "--parent-accession", "834", // experiment
                 "--parent-accession", "4765", // ius 
                 "--parent-accession", "4707", // lane
                 "--parent-accession", "4760", // sample
@@ -614,11 +636,11 @@ public class MetadataTest extends ExtendedPluginTest {
         String s = getOut();
         String swid = getAndCheckSwid(s);
         int integer = Integer.valueOf(swid);
-        
+
         BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
         Object[] runQuery = dbCreator.runQuery(new ArrayHandler(), "select f.sw_accession, p.processing_id from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?", Integer.valueOf(integer));
-        int file_sw_accession = (Integer)runQuery[0];
-        int processing_id = (Integer)runQuery[1];
+        int file_sw_accession = (Integer) runQuery[0];
+        int processing_id = (Integer) runQuery[1];
 
         net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
         Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
@@ -632,9 +654,8 @@ public class MetadataTest extends ExtendedPluginTest {
                 + "(select count(*) from processing_samples WHERE processing_id = ?),"
                 + "(select count(*) from processing_sequencer_runs WHERE processing_id = ?),"
                 + "(select count(*) from processing_studies WHERE processing_id = ?),"
-                + "(select count(*) from processing_relationship WHERE child_id = ?)"
-                + ")", Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id)
-                , Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id));
+                + "(select count(*) from processing_relationship WHERE child_id = ?)" + ")", processing_id, processing_id, processing_id,
+                processing_id, processing_id, processing_id, processing_id, processing_id);
         String result = runQuery[0].toString();
         Assert.assertTrue("parent links not created", result.equals("(1,1,1,1,1,1,1,1)"));
 
@@ -645,45 +666,41 @@ public class MetadataTest extends ExtendedPluginTest {
         launchPlugin("--table", "workflow_run", "--create",
                 "--field", "workflow_accession::4",
                 "--field", "status::completed",
-                 "--parent-accession","834", // experiment
+                "--parent-accession", "834", // experiment
                 "--parent-accession", "4765", // ius 
                 "--parent-accession", "4707", // lane
                 "--parent-accession", "4760", // sample
                 "--parent-accession", "4715", // sequencer_run
                 "--parent-accession", "120", //study
                 "--parent-accession", "10", //processing
-                "--file","cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
-                "--file","hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
+                "--file", "cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz",
+                "--file", "hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
         String s = getOut();
         String swid = getAndCheckSwid(s);
         int integer = Integer.valueOf(swid);
         // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator, so 
         // let's try some workflow run reporter parsing
         WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
-        String workflowRunReport = ((MetadataWS)metadata).getWorkflowRunReport(integer);
+        String workflowRunReport = ((MetadataWS) metadata).getWorkflowRunReport(integer);
         Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
         Assert.assertTrue("could not find files", workflowRunReport.contains("/datastore/adamantium.gz") && workflowRunReport.contains("/datastore/corbomite.gz"));
     }
-    
-    
-    
+
     @Test
     public void testCreateWorkflow() {
         launchPlugin("--table", "workflow", "--create",
                 "--field", "name::CalculateMeaningOfLife",
                 "--field", "version::1",
                 "--field", "description::'Workflow that simulates the Earth'"
-                );
+        );
         String s = getOut();
         String swid = getAndCheckSwid(s);
         int integer = Integer.valueOf(swid);
         Workflow workflow = metadata.getWorkflow(integer);
         Assert.assertTrue("could not find workflow", workflow != null && workflow.getSwAccession() == integer);
-        
+
     }
-    
-    
-    
+
     @Test
     public void testCreateSampleWithExperimentFail() {
         instance.setParams(Arrays.asList("--table", "sample", "--create",
@@ -697,7 +714,7 @@ public class MetadataTest extends ExtendedPluginTest {
     @Test
     public void testCreateSampleWithParentFail() {
         instance.setParams(Arrays.asList("--table", "sample", "--create",
-                "--field", "parent_sample_accession::100000" ,
+                "--field", "parent_sample_accession::100000",
                 "--field", "title::sampletitle",
                 "--field", "description::sampledescription",
                 "--field", "organism_id::31"));
@@ -751,7 +768,9 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--field", "study_type::42"));
         checkExpectedIncorrectParameters();
     }
+
     // See SEQWARE-1374
+
     @Test
     public void testCreateExperimentFail() {
         String sAcc = "120";
@@ -763,7 +782,9 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--field", "platform_id::42"));
         checkExpectedIncorrectParameters();
     }
+
     // See SEQWARE-1374
+
     @Test
     public void testCreateSequencerRunFail() {
         instance.setParams(Arrays.asList("--table", "sequencer_run", "--create",
@@ -773,9 +794,10 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--field", "paired_end::true",
                 "--field", "skip::false",
                 "--field", "file_path::/funky/filepath"
-                ));
+        ));
         checkExpectedIncorrectParameters();
     }
+
     @Test
     public void testCreateLaneFail() {
         String rAcc = "20000";
@@ -803,7 +825,6 @@ public class MetadataTest extends ExtendedPluginTest {
             sAcc = "4760";
         }
 
-
         instance.setParams(Arrays.asList("--table", "ius", "--create",
                 "--field", "name::ius",
                 "--field", "description::des",
@@ -822,7 +843,6 @@ public class MetadataTest extends ExtendedPluginTest {
         }
         // set an invalid accession
         String sAcc = "20000";
-        
 
         instance.setParams(Arrays.asList("--table", "ius", "--create",
                 "--field", "name::ius",
@@ -878,7 +898,6 @@ public class MetadataTest extends ExtendedPluginTest {
         params.put("platform_id", "9");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
 
-
         launchPlugin("--table", "experiment", "--create",
                 //                "--field", "study_accession::" + sAcc,
                 //                "--field", "title::experimenttitle" + System.currentTimeMillis(),
@@ -924,7 +943,7 @@ public class MetadataTest extends ExtendedPluginTest {
         params.put("platform_accession", "20");
         params.put("paired_end", "true");
         params.put("skip", "false");
-        params.put("file_path","/home/user/mysequencerrun");
+        params.put("file_path", "/home/user/mysequencerrun");
         TestConsoleAdapter.initializeTestInstance().setLine(params);
 
         launchPlugin("--table", "sequencer_run", "--create",
@@ -1009,7 +1028,7 @@ public class MetadataTest extends ExtendedPluginTest {
         getAndCheckSwid(s);
 
     }
-    
+
     @Test
     public void testPromptBoolean() {
         //can test the error checking by extending the TestConsoleAdapter to

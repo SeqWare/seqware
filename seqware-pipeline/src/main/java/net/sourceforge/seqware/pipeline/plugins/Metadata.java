@@ -141,44 +141,40 @@ public class Metadata extends Plugin {
         } else if (options.has("table") && options.has("create") && 
                 (options.has("field") || options.has("interactive"))) {
 
-            // create a row with these fields
-            if ("study".equals((String) options.valueOf("table"))) {
-                ret = addStudy();
-                return ret;
-
-            } else if ("experiment".equals((String) options.valueOf("table"))) {
-                ret = addExperiment();
-                return ret;
-
-            } else if ("sample".equals((String) options.valueOf("table"))) {
-                ret = addSample();
-                return ret;
-
-            } else if ("sequencer_run".equals((String) options.valueOf("table"))) {
-                ret = addSequencerRun();
-                return ret;
-
-            } else if ("lane".equals((String) options.valueOf("table"))) {
-                ret = addLane();
-                return ret;
-
-            } else if ("ius".equals((String) options.valueOf("table"))) {
-                ret = addIUS();
-                return ret;
-
-            } else if ("workflow".equals((String) options.valueOf("table"))) {
-                ret = addWorkflow();
-                return ret;
-
-            }  else if ("workflow_run".equals((String) options.valueOf("table"))) {
-                ret = addWorkflowRun();
-                return ret;
-            } else if ("file".equals((String) options.valueOf("table"))) {
-                ret = addFile();
-                return ret;
-            } else {
-                Log.error("This tool does not know how to save to the " + options.valueOf("table") + " table.");
-            }
+            if (null != (String) options.valueOf("table")) // create a row with these fields
+                // create a row with these fields
+                switch ((String) options.valueOf("table")) {
+                case "study":
+                    ret = addStudy();
+                    return ret;
+                case "experiment":
+                    ret = addExperiment();
+                    return ret;
+                case "sample":
+                    ret = addSample();
+                    return ret;
+                case "sequencer_run":
+                    ret = addSequencerRun();
+                    return ret;
+                case "lane":
+                    ret = addLane();
+                    return ret;
+                case "ius":
+                    ret = addIUS();
+                    return ret;
+                case "workflow":
+                    ret = addWorkflow();
+                    return ret;
+                case "workflow_run":
+                    ret = addWorkflowRun();
+                    return ret;
+                case "file":
+                    ret = addFile();
+                    return ret;
+                default:
+                    Log.error("This tool does not know how to save to the " + options.valueOf("table") + " table.");
+                    break;
+                }
 
         } else {
             println("Combination of parameters not recognized!");
@@ -196,86 +192,95 @@ public class Metadata extends Plugin {
     protected ReturnValue listFields(String table) {
         final String fileDescription = "\nThis takes one file encoded as --file type::file-meta-type::file-path[::description] \n";
         ReturnValue rv = new ReturnValue(ReturnValue.SUCCESS);
-        if ("study".equals(table)) {
-            List<StudyType> studyTypes = this.metadata.getStudyTypes();
-            print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\ncenter_name\tString\ncenter_project_name\tString\nstudy_type\tInteger\t[");
-            for (StudyType st : studyTypes) {
-                print(st.getStudyTypeId() + ": " + st.getName() + ", ");
+        if (null != table)
+            switch (table) {
+            case "study":
+                List<StudyType> studyTypes = this.metadata.getStudyTypes();
+                print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\ncenter_name\tString\ncenter_project_name\tString\nstudy_type\tInteger\t[");
+                for (StudyType st : studyTypes) {
+                    print(st.getStudyTypeId() + ": " + st.getName() + ", ");
+                } // "1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other"
+                print("]\n");
+                break;
+            case "experiment": {
+                print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nstudy_accession\tInteger\nplatform_id\tInteger\t[");
+                List<Platform> platforms = this.metadata.getPlatforms();
+                for (Platform obj : platforms) {
+                    print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
+                }
+                print("]\n");
+                print("experiment_library_design_id\tInteger\t[");
+                List<ExperimentLibraryDesign> elds = this.metadata.getExperimentLibraryDesigns();
+                for (ExperimentLibraryDesign obj : elds) {
+                    print(obj.getExperimentLibraryDesignId() + ": " + obj.getName() + ", ");
+                }
+                print("]\n");
+                print("experiment_spot_design_id\tInteger\t[");
+                List<ExperimentSpotDesign> esds = this.metadata.getExperimentSpotDesigns();
+                for (ExperimentSpotDesign obj : esds) {
+                    print(obj.getExperimentSpotDesignId() + ": " + obj.getReadSpec() + ", ");
+                }
+                print("]\n");
+                break;
             }
-            //"1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other"
-            print("]\n");
-        } else if ("experiment".equals(table)) {
-            print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nstudy_accession\tInteger\nplatform_id\tInteger\t[");
-            List<Platform> platforms = this.metadata.getPlatforms();
-            for (Platform obj : platforms) {
-                print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
+            case "sample": {
+                print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nexperiment_accession\tInteger\nparent_sample_accession\tInteger\norganism_id\tInteger\t[\n");
+                List<Organism> objs = this.metadata.getOrganisms();
+                for (Organism obj : objs) {
+                    print(obj.getOrganismId() + ": " + obj.getName() + ", ");
+                }
+                print("]\n");
+                break;
             }
-            print("]\n");
-            print("experiment_library_design_id\tInteger\t[");
-            List<ExperimentLibraryDesign> elds = this.metadata.getExperimentLibraryDesigns();
-            for (ExperimentLibraryDesign obj : elds) {
-                print(obj.getExperimentLibraryDesignId()+ ": " + obj.getName() + ", ");
+            case "sequencer_run": {
+                print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nfile_path\tString\nstatus\tString\nplatform_accession\tInteger\t[");
+                List<Platform> platforms = this.metadata.getPlatforms();
+                for (Platform obj : platforms) {
+                    print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
+                }
+                print("]\n");
+                break;
             }
-            print("]\n");
-            print("experiment_spot_design_id\tInteger\t[");
-            List<ExperimentSpotDesign> esds = this.metadata.getExperimentSpotDesigns();
-            for (ExperimentSpotDesign obj : esds) {
-                print(obj.getExperimentSpotDesignId()+ ": " + obj.getReadSpec()+ ", ");
+            case "lane": {
+                print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\ncycle_descriptor\tString\t[e.g. {F*120}{..}{R*120}]\nskip\tBoolean\t[true, false]\nsequencer_run_accession\tInteger\nlane_number\tInteger\nstudy_type_accession\tInteger\t[");
+                List<Platform> platforms = this.metadata.getPlatforms();
+                for (Platform obj : platforms) {
+                    print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
+                }
+                print("]\nlibrary_strategy_accession\tInteger\t[");
+                List<LibraryStrategy> objs = this.metadata.getLibraryStrategies();
+                for (LibraryStrategy obj : objs) {
+                    print(obj.getLibraryStrategyId() + ": " + obj.getName() + " " + obj.getDescription() + ", ");
+                }
+                print("]\nlibrary_selection_accession\tInteger\t[");
+                List<LibrarySelection> libSelections = this.metadata.getLibrarySelections();
+                for (LibrarySelection obj : libSelections) {
+                    print(obj.getLibrarySelectionId() + ": " + obj.getName() + " " + obj.getDescription() + ", ");
+                }
+                print("]\nlibrary_source_accession\tInteger\t[");
+                List<LibrarySource> libSources = this.metadata.getLibrarySource();
+                for (LibrarySource obj : libSources) {
+                    print(obj.getLibrarySourceId() + ": " + obj.getName() + " " + obj.getDescription() + ", ");
+                }
+                print("]\n");
+                break;
             }
-            print("]\n");
-        } else if ("sample".equals(table)) {
-            print("Field\tType\tPossible_Values\ntitle\tString\ndescription\tString\nexperiment_accession\tInteger\nparent_sample_accession\tInteger\norganism_id\tInteger\t[\n");
-            List<Organism> objs = this.metadata.getOrganisms();
-            for (Organism obj : objs) {
-                print(obj.getOrganismId() + ": " + obj.getName() + ", ");
+            case "ius":
+                print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\nbarcode\tString\nskip\tBoolean\t[true, false]\nsample_accession\tInteger\nlane_accession\tInteger\n");
+                break;
+            case "workflow":
+                print("Field\tType\tPossible_Values\nname\tString\nversion\tString\ndescription\tString\n");
+                break;
+            case "workflow_run":
+                print("Field\tType\tPossible_Values\nworkflow_accession\tInteger\nstatus\tString\t[completed, failed]\nstdout\tString\nstderr\tString\n");
+                print(fileDescription);
+                print("\nThis also takes one or more --parent-accession options.\n");
+                print("\nThis command will result in one workflow_run, one processing tied to the parents specified, and n files attached to that processing event.\n");
+                break;
+            default:
+                Log.error("This tool does not know how to list the fields for the " + table + " table.");
+                break;
             }
-            print("]\n");
-        } else if ("sequencer_run".equals(table)) {
-            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\npaired_end\tBoolean\t[true, false]\nskip\tBoolean\t[true, false]\nfile_path\tString\nstatus\tString\nplatform_accession\tInteger\t[");
-            List<Platform> platforms = this.metadata.getPlatforms();
-            for (Platform obj : platforms) {
-                print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
-            }
-            print("]\n");
-        } else if ("lane".equals(table)) {
-            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\ncycle_descriptor\tString\t[e.g. {F*120}{..}{R*120}]\nskip\tBoolean\t[true, false]\nsequencer_run_accession\tInteger\nlane_number\tInteger\nstudy_type_accession\tInteger\t[");
-            List<Platform> platforms = this.metadata.getPlatforms();
-            for (Platform obj : platforms) {
-                print(obj.getPlatformId() + ": " + obj.getName() + " " + obj.getInstrumentModel() + ", ");
-            }
-            print("]\nlibrary_strategy_accession\tInteger\t[");
-            List<LibraryStrategy> objs = this.metadata.getLibraryStrategies();
-            for (LibraryStrategy obj : objs) {
-                print(obj.getLibraryStrategyId() + ": " + obj.getName() + " " + obj.getDescription() + ", ");
-            }
-            print("]\nlibrary_selection_accession\tInteger\t[");
-            List<LibrarySelection> libSelections = this.metadata.getLibrarySelections();
-            for (LibrarySelection obj : libSelections) {
-                print(obj.getLibrarySelectionId() + ": " + obj.getName() + " " + obj.getDescription() + ", ");
-            }
-            print("]\nlibrary_source_accession\tInteger\t[");
-            List<LibrarySource> libSources = this.metadata.getLibrarySource();
-            for (LibrarySource obj : libSources) {
-                print(obj.getLibrarySourceId() + ": " + obj.getName() + " " + obj.getDescription() + ", ");
-            }
-            print("]\n");
-        } else if ("ius".equals(table)) {
-            print("Field\tType\tPossible_Values\nname\tString\ndescription\tString\nbarcode\tString\nskip\tBoolean\t[true, false]\nsample_accession\tInteger\nlane_accession\tInteger\n");
-
-        } else if ("workflow".equals(table)) {
-            print("Field\tType\tPossible_Values\nname\tString\nversion\tString\ndescription\tString\n");
-        }  else if ("workflow_run".equals(table)) {
-            print("Field\tType\tPossible_Values\nworkflow_accession\tInteger\nstatus\tString\t[completed, failed]\nstdout\tString\nstderr\tString\n");
-            print(fileDescription);
-            print("\nThis also takes one or more --parent-accession options.\n");
-            print("\nThis command will result in one workflow_run, one processing tied to the parents specified, and n files attached to that processing event.\n");
-        }  else if ("file".equals(table)) {
-            print("Field\tType\tPossible_Values\nalgorithm\tString\n"); 
-            print(fileDescription);
-            print("\nThis also takes one or more --parent-accession options.\n");
-        } else {
-            Log.error("This tool does not know how to list the fields for the " + table + " table.");
-        }
         return (rv);
     }
 
@@ -737,7 +742,7 @@ public class Metadata extends Plugin {
       }
       int[] localRet = new int[parents.size()];
       for (int i=0; i< localRet.length; i++) {
-        localRet[i] = parents.get(i).intValue();
+            localRet[i] = parents.get(i);
       }
       return(localRet);
     }
