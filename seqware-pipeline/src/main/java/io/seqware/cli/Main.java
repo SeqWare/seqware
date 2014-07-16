@@ -666,6 +666,16 @@ public class Main {
                     runnerArgs.add("--file");
                     runnerArgs.add(file);
                 }
+
+                // workflow runs should also have parent accessions in order to be visible to deciders
+                List<String> parentAccessions = optVals(args, "--parent-accession");
+                if (parentAccessions.size() < 1) {
+                    kill("seqware: by convention, workflow runs should be hooked up to parent accessions for metadata tracking and deciders.");
+                }
+                for (String parentAccession : parentAccessions) {
+                    runnerArgs.add("--parent-accession");
+                    runnerArgs.add(parentAccession);
+                }
             }
 
             extras(args, "create " + table.replace('_', '-'));
@@ -694,37 +704,6 @@ public class Main {
             runCreateTable(args, "experiment", "description", "platform_id", "study_accession", "title");
         }
     }
-
-    // private static void createFile(List<String> args) {
-    // if (isHelp(args, true)) {
-    // out("");
-    // out("Usage: seqware create file [--help]");
-    // out("       seqware create file --interactive");
-    // out("       seqware create file <fields>");
-    // out("");
-    // out("Required fields:");
-    // out("  --file <val>");
-    // out("  --meta-type <val>");
-    // out("  --parent-accession <val>");
-    // out("");
-    // out("Optional fields:");
-    // out("  --description <val>");
-    // out("");
-    // } else {
-    // String file = reqVal(args, "--file");
-    // String meta = reqVal(args, "--meta-type");
-    // String parentId = reqVal(args, "--parent-accession");
-    // String type = optVal(args, "--type", "");
-    // String description = optVal(args, "--description", "");
-    //
-    // extras(args, "create file");
-    //
-    // String concat = String.format("%s::%s::%s::%s", type, meta, file, description);
-    //
-    // run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--parent-accession", parentId, "--create",
-    // "--table", "file", "--field", "algorithm::ManualProvisionFile", "--file", concat);
-    // }
-    // }
 
     private static void createIus(List<String> args) {
         if (isHelp(args, true)) {
@@ -851,6 +830,8 @@ public class Main {
             out("");
             out("Required fields:");
             out("  --workflow-accession <val>");
+            out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
+            out("                             Repeat this parameter to provide multiple parents");
             out("Optional fields:");
             out("  --file <type::meta-type::path>       Add files as a part of the workflow run.");
             out("                                       Repeat this parameter to add multiple files");

@@ -48,11 +48,6 @@ public class GenericMetadataSaverET {
         saveGenericMetadataFileForSample("10", false);
     }
 
-    @Test
-    public void testGenericMetadataSaverNewCLI() throws IOException {
-        saveGenericMetadataFileForSample("10", true);
-    }
-
     public String saveGenericMetadataFileForSample(String sampleAccession, boolean cli) throws IOException {
         File createTempDir = Files.createTempDir();
         // create a random new file and check that the file we want to save metadata about exists
@@ -62,8 +57,7 @@ public class GenericMetadataSaverET {
 
         Random generator = new Random();
         String random = String.valueOf(generator.nextInt());
-        String listOutput = cli ? runNewCommand(sampleAccession, inputFile, createTempDir) : runOldCommand(sampleAccession, inputFile,
-                createTempDir);
+        String listOutput = runOldCommand(sampleAccession, inputFile, createTempDir);
         Log.info(listOutput);
         return listOutput;
     }
@@ -75,13 +69,6 @@ public class GenericMetadataSaverET {
                 + " -- --gms-output-file text::text/plain::"
                 + inputFile.getAbsolutePath() + " --gms-algorithm UploadText --gms-suppress-output-file-check";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
-        return listOutput;
-    }
-
-    protected String runNewCommand(String sampleAccession, File inputFile, File createTempDir) throws IOException {
-        String listCommand = " create file " + " --parent-accession  " + sampleAccession + " --meta-type text/plain " + " --file "
-                + inputFile.getAbsolutePath();
-        String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, createTempDir);
         return listOutput;
     }
 

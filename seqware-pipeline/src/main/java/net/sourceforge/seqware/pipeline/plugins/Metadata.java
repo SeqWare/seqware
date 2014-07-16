@@ -363,7 +363,6 @@ public class Metadata extends Plugin {
                 return localRet;
             }
             int workflowRunAccession = metadata.get_workflow_run_accession(workflowRunId);
-            print("Created workflow run with SWID: " + workflowRunAccession);
 
             // create and update processing
             ReturnValue metaret = metadata.add_empty_processing_event_by_parent_accession(parents);
@@ -378,6 +377,9 @@ public class Metadata extends Plugin {
             // newRet.setExitStatus(fields.get("status"));
 
             metadata.update_processing_event(processingId, newRet);
+            int mapProcessingIdToAccession = metadata.mapProcessingIdToAccession(processingId);
+            print("Created processing with SWID: " + mapProcessingIdToAccession);
+            print("Created workflow run with SWID: " + workflowRunAccession);
 
             // LEFT OFF WITH: need to link process with workflow_run
             metadata.update_processing_workflow_run(processingId, workflowRunAccession);
