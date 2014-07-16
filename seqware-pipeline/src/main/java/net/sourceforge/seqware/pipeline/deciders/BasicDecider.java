@@ -430,11 +430,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         for (String line : studyReporterOutput) {
                             Log.stdout(line);
                         }
-                        Log.debug("RUNNING");
+                        Log.debug("Scheduling");
                         //construct the INI and run it                     
                         ArrayList<String> runArgs = constructCommand();
                         PluginRunner.main(runArgs.toArray(new String[runArgs.size()]));
-                        Log.stdout("Launching.");
+                        Log.stdout("Scheduling.");
                         do_summary();
                         
                     } 

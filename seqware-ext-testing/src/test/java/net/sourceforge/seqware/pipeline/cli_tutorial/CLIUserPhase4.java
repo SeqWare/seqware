@@ -18,7 +18,7 @@ package net.sourceforge.seqware.pipeline.cli_tutorial;
 
 import net.sourceforge.seqware.pipeline.tutorial.*;
 import java.io.IOException;
-import net.sourceforge.seqware.pipeline.plugins.GenericMetadataSaverET;
+import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.plugins.ProvisionFilesET;
 import org.junit.Test;
@@ -39,10 +39,17 @@ public class CLIUserPhase4 extends UserPhase4{
     @Test
     @Override
     public void testExistingFileInAndAssociateWithSample() throws IOException {
-        GenericMetadataSaverET it = new GenericMetadataSaverET();
-        String output = it.saveGenericMetadataFileForSample(AccessionMap.accessionMap.get(UserPhase3.SAMPLE), true);
-        String sw_accession = String.valueOf(ITUtility.extractSwid(output));
-        AccessionMap.accessionMap.put(UserPhase4.FILE, sw_accession);
+        // create a dummy workflow and then a workflow run
+        String workflowOut = ITUtility.runSeqwareCLI("seqware create workflow --name FileImport --version 1.0 --description description",
+                ReturnValue.SUCCESS, null);
+        String workflowAccession = String.valueOf(ITUtility.extractSwid(workflowOut));
+        String workflowRunOut = ITUtility.runSeqwareCLI(
+                "seqware create workflow-run  --workflow-accession " + workflowAccession
+                        + " --file imported_file::text/plain::/datastore/input.txt --parent-accession "
+                        + AccessionMap.accessionMap.get(UserPhase3.SAMPLE), ReturnValue.SUCCESS, null);
+        String processingAccession = String.valueOf(ITUtility.extractSwid(workflowRunOut));
+
+        AccessionMap.accessionMap.put(UserPhase4.FILE, processingAccession);
     }
    
 }
