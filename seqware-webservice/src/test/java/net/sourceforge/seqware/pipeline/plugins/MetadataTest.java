@@ -458,7 +458,7 @@ public class MetadataTest extends ExtendedPluginTest {
     public void testCreateWorkflowRun() {
         launchPlugin("--table", "workflow_run", "--create", "--field", "workflow_accession::4", "--field", "status::completed");
         String s = getOut();
-        String swid = getAndCheckSwid(s);
+        String swid = getAndCheckSwid(s, 2);
         int integer = Integer.valueOf(swid);
         WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
         Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
@@ -479,7 +479,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz", "--file",
                 "hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
         String s = getOut();
-        String swid = getAndCheckSwid(s);
+        String swid = getAndCheckSwid(s, 2);
         int integer = Integer.valueOf(swid);
         // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator,
         // so
@@ -519,7 +519,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--parent-accession", "10" // processing
         );
         String s = getOut();
-        String swid = getAndCheckSwid(s);
+        String swid = getAndCheckSwid(s, 2);
         int integer = Integer.valueOf(swid);
         // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator,
         // so
@@ -625,7 +625,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--file", "cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz", "--file",
                 "hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
         String s = getOut();
-        String swid = getAndCheckSwid(s);
+        String swid = getAndCheckSwid(s, 2);
         int integer = Integer.valueOf(swid);
         // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator,
         // so
