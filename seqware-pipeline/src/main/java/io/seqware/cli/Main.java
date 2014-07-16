@@ -5,6 +5,7 @@ import io.seqware.Engines;
 import io.seqware.Reports;
 import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -28,6 +29,7 @@ import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility.HumanProvenanceFilters;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 /*
@@ -36,6 +38,13 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public class Main {
 
+    /**
+     * Take a List and create a 'delim' delimited String.
+     * 
+     * @param tokens
+     * @param delim
+     * @return
+     */
     private static String dl(List<String> tokens, String delim) {
         if (tokens.isEmpty()) {
             return "";
@@ -49,6 +58,12 @@ public class Main {
         }
     }
 
+    /**
+     * Create a comma delimited string from a List
+     * 
+     * @param tokens
+     * @return
+     */
     private static String cdl(List<String> tokens) {
         return dl(tokens, ",");
     }
@@ -637,6 +652,22 @@ public class Main {
                 runnerArgs.add(arg);
             }
 
+            // workflow-run tables can have (potentially multiple) file parameters, pass these through after doing some validation
+            if (table.equals("workflow_run")) {
+                List<String> files = optVals(args, "--file");
+                for (String file : files) {
+                    // do validation
+                    if (StringUtils.countMatches(file, "::") != 2) {
+                        kill("seqware: improper number of separator :: in '%s'.", file);
+                    }
+                    if (file.split("::").length != 3) {
+                        kill("seqware: improper format of file values in '%s'.", file);
+                    }
+                    runnerArgs.add("--file");
+                    runnerArgs.add(file);
+                }
+            }
+
             extras(args, "create " + table.replace('_', '-'));
 
             run(runnerArgs);
@@ -664,36 +695,36 @@ public class Main {
         }
     }
 
-    private static void createFile(List<String> args) {
-        if (isHelp(args, true)) {
-            out("");
-            out("Usage: seqware create file [--help]");
-            out("       seqware create file --interactive");
-            out("       seqware create file <fields>");
-            out("");
-            out("Required fields:");
-            out("  --file <val>");
-            out("  --meta-type <val>");
-            out("  --parent-accession <val>");
-            out("");
-            out("Optional fields:");
-            out("  --description <val>");
-            out("");
-        } else {
-            String file = reqVal(args, "--file");
-            String meta = reqVal(args, "--meta-type");
-            String parentId = reqVal(args, "--parent-accession");
-            String type = optVal(args, "--type", "");
-            String description = optVal(args, "--description", "");
-
-            extras(args, "create file");
-
-            String concat = String.format("%s::%s::%s::%s", type, meta, file, description);
-
-            run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--parent-accession", parentId, "--create",
-                    "--table", "file", "--field", "algorithm::ManualProvisionFile", "--file", concat);
-        }
-    }
+    // private static void createFile(List<String> args) {
+    // if (isHelp(args, true)) {
+    // out("");
+    // out("Usage: seqware create file [--help]");
+    // out("       seqware create file --interactive");
+    // out("       seqware create file <fields>");
+    // out("");
+    // out("Required fields:");
+    // out("  --file <val>");
+    // out("  --meta-type <val>");
+    // out("  --parent-accession <val>");
+    // out("");
+    // out("Optional fields:");
+    // out("  --description <val>");
+    // out("");
+    // } else {
+    // String file = reqVal(args, "--file");
+    // String meta = reqVal(args, "--meta-type");
+    // String parentId = reqVal(args, "--parent-accession");
+    // String type = optVal(args, "--type", "");
+    // String description = optVal(args, "--description", "");
+    //
+    // extras(args, "create file");
+    //
+    // String concat = String.format("%s::%s::%s::%s", type, meta, file, description);
+    //
+    // run("--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--parent-accession", parentId, "--create",
+    // "--table", "file", "--field", "algorithm::ManualProvisionFile", "--file", concat);
+    // }
+    // }
 
     private static void createIus(List<String> args) {
         if (isHelp(args, true)) {
@@ -811,6 +842,43 @@ public class Main {
         }
     }
 
+    private static void createWorkflowRun(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware create workflow-run [--help]");
+            out("       seqware create workflow-run --interactive");
+            out("       seqware create workflow-run <fields>");
+            out("");
+            out("Required fields:");
+            out("  --workflow-accession <val>");
+            out("Optional fields:");
+            out("  --file <type::meta-type::path>       Add files as a part of the workflow run.");
+            out("                                       Repeat this parameter to add multiple files");
+            out("");
+        } else {
+            args.add("--status");
+            args.add(WorkflowRunStatus.completed.toString());
+            runCreateTable(args, "workflow_run", "workflow_accession", "status");
+        }
+    }
+
+    private static void createWorkflow(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware create workflow [--help]");
+            out("       seqware create workflow --interactive");
+            out("       seqware create workflow <fields>");
+            out("");
+            out("Required fields:");
+            out("  --name <val>");
+            out("  --version <val>");
+            out("  --description <val>");
+            out("");
+        } else {
+            runCreateTable(args, "workflow", "name", "version", "description");
+        }
+    }
+
     private static void create(List<String> args) {
         if (isHelp(args, true)) {
             out("");
@@ -828,15 +896,14 @@ public class Main {
             out("  sample");
             out("  sequencer-run");
             out("  study");
+            out("  workflow");
+            out("  workflow-run");
             out("");
         } else {
             String obj = args.remove(0);
             if (null != obj) switch (obj) {
             case "experiment":
                 createExperiment(args);
-                break;
-            case "file":
-                createFile(args);
                 break;
             case "ius":
                 createIus(args);
@@ -852,6 +919,12 @@ public class Main {
                 break;
             case "study":
                 createStudy(args);
+                break;
+            case "workflow":
+                createWorkflow(args);
+                break;
+            case "workflow-run":
+                createWorkflowRun(args);
                 break;
             default:
                 kill("seqware: '%s' is not a valid object type.  See 'seqware create --help'.", obj);
