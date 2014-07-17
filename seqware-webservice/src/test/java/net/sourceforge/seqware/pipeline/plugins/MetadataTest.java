@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.Reports;
+import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.SequencerRunStatus;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ import net.sourceforge.seqware.common.util.runtools.TestConsoleAdapter;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
+import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -456,7 +458,7 @@ public class MetadataTest extends ExtendedPluginTest {
     public void testCreateWorkflowRun() {
         launchPlugin("--table", "workflow_run", "--create", "--field", "workflow_accession::4", "--field", "status::completed");
         String s = getOut();
-        String swid = getAndCheckSwid(s);
+        String swid = getAndCheckSwid(s, 2);
         int integer = Integer.valueOf(swid);
         WorkflowRun workflowRun = metadata.getWorkflowRun(integer);
         Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
@@ -477,7 +479,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz", "--file",
                 "hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
         String s = getOut();
-        String swid = getAndCheckSwid(s);
+        String swid = getAndCheckSwid(s, 2);
         int integer = Integer.valueOf(swid);
         // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator,
         // so
@@ -487,6 +489,22 @@ public class MetadataTest extends ExtendedPluginTest {
         Assert.assertTrue("could not find workflowRun", workflowRun != null && workflowRun.getSwAccession() == integer);
         Assert.assertTrue("could not find files",
                 workflowRunReport.contains("/datastore/adamantium.gz") && workflowRunReport.contains("/datastore/corbomite.gz"));
+
+        BasicTestDatabaseCreator dbCreator = new BasicTestDatabaseCreator();
+        List<Object[]> runQuery = dbCreator.runQuery(new ArrayListHandler(),
+                "select f.sw_accession, p.algorithm, p.status from file f, processing p, processing_files pf, workflow_run r "
+                        + "WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id "
+                        + "AND (r.workflow_run_id=p.workflow_run_id OR r.workflow_run_id=p.ancestor_workflow_run_id )"
+                        + "AND r.sw_accession =?", integer);
+        Assert.assertTrue("incorrect number of files " + runQuery.size(), runQuery.size() == 2);
+        for (Object[] row : runQuery) {
+            int file_sw_accession = (Integer) row[0];
+            String processingStatus = (String) row[2];
+
+            net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
+            Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
+            Assert.assertTrue("processing status incorrect", processingStatus.equals(ProcessingStatus.success.toString()));
+        }
     }
 
     @Test
@@ -501,7 +519,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--parent-accession", "10" // processing
         );
         String s = getOut();
-        String swid = getAndCheckSwid(s);
+        String swid = getAndCheckSwid(s, 2);
         int integer = Integer.valueOf(swid);
         // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator,
         // so
@@ -527,16 +545,18 @@ public class MetadataTest extends ExtendedPluginTest {
         Object[] runQuery = dbCreator
                 .runQuery(
                         new ArrayHandler(),
-                        "select f.sw_accession, p.algorithm from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?",
+                        "select f.sw_accession, p.algorithm, p.status from file f, processing p, processing_files pf WHERE f.file_id=pf.file_id AND pf.processing_id = p.processing_id AND p.sw_accession =?",
                         Integer.valueOf(integer));
         int file_sw_accession = (Integer) runQuery[0];
         String dbAlgorithm = (String) runQuery[1];
+        String processingStatus = (String) runQuery[2];
 
         net.sourceforge.seqware.common.model.File file = metadata.getFile(file_sw_accession);
         Assert.assertTrue("could not find file", file != null && file.getSwAccession() == file_sw_accession);
         Assert.assertTrue("file values incorrect", file.getFilePath().equals(file_path) && file.getMetaType().equals(meta_type)
                 && file.getDescription().equals(description) && file.getType().equals(type));
         Assert.assertTrue("algorithm incorrect", dbAlgorithm.equals(algorithm));
+        Assert.assertTrue("processing status incorrect", processingStatus.equals(ProcessingStatus.success.toString()));
     }
 
     @Test
@@ -578,10 +598,8 @@ public class MetadataTest extends ExtendedPluginTest {
                 + "(select count(*) from processing_samples WHERE processing_id = ?),"
                 + "(select count(*) from processing_sequencer_runs WHERE processing_id = ?),"
                 + "(select count(*) from processing_studies WHERE processing_id = ?),"
-                + "(select count(*) from processing_relationship WHERE child_id = ?)" + ")", Integer.valueOf(processing_id),
-                Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id),
-                Integer.valueOf(processing_id), Integer.valueOf(processing_id), Integer.valueOf(processing_id),
-                Integer.valueOf(processing_id));
+                + "(select count(*) from processing_relationship WHERE child_id = ?)" + ")", processing_id, processing_id, processing_id,
+                processing_id, processing_id, processing_id, processing_id, processing_id);
         String result = runQuery[0].toString();
         Assert.assertTrue("parent links not created", result.equals("(1,1,1,1,1,1,1,1)"));
 
@@ -607,7 +625,7 @@ public class MetadataTest extends ExtendedPluginTest {
                 "--file", "cool_algorithm1::adamantium/gzip::/datastore/adamantium.gz", "--file",
                 "hot_algorithm1::corbomite/gzip::/datastore/corbomite.gz");
         String s = getOut();
-        String swid = getAndCheckSwid(s);
+        String swid = getAndCheckSwid(s, 2);
         int integer = Integer.valueOf(swid);
         // check that file records were created correctly and linked in properly, 0.13.13.6.x does not have access to TestDatabaseCreator,
         // so

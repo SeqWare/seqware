@@ -194,12 +194,7 @@ associated sample:
 
 At this point you should have a nice study/experiment/sample hierarchy.  You
 can, of course, add multiple samples per experiment and multiple experiments
-per study.  For each of the samples you can now upload one or more files.  You
-will need the SWID from the sample creation above for this step (or visible in
-the Portal).  Here is a screenshot of what the above commands produce in the
-[Portal](/docs/5-portal/) (note, the SWIDs do not match but these are just examples):
-
-<img src="/assets/images/final_exp.png" width="600px"/>
+per study.  For each of the samples you can now upload one or more files.  
 
 
 ### Associating Files with a Sample
@@ -212,13 +207,17 @@ Notice that we placed the file inside `/datastore` so that it can be visible to 
 information on setting the shared directory it expects to find uploaded files
 in.
 
-Now we can associate that file with the sample:
+Now we can associate that file with a workflow and a run of a workflow (in this case, a stub 'import' workflow and a run of it): 
 
-    $ seqware create file --parent-accession 4 --meta-type text/plain --file /datastore/input.txt
+    $ seqware create workflow --name FileImport --version 1.0 --description description
+    Added 'FileImport' (SWID: 5)
+    Created workflow 'FileImport' version 1.0 with SWID: 5
 
-    Created file processing with SWID: 5
+    $ seqware create workflow-run  --workflow-accession 5 --file imported_file::text/plain::/datastore/input.txt --parent-accession 4
+    Created processing with SWID: 7
+    Created workflow run with SWID: 6
 
-Note that the SWID returned is for a processing event, not the file itself (which has its own SWID).  This processing SWID is what will be used below to attach a workflow run into the existing hierarchy.
+Note that the SWID returned is for a processing event, not the file itself (which has its own SWID). This processing SWID is what will be used below to attach a workflow run into the existing hierarchy.
 
 <p class="warning"><strong>Tip:</strong> you can find a list of the meta types
 (like `chemical/seq-na-text-gzip` or `text/plain` above) at <a
@@ -314,11 +313,11 @@ to the following:
 At this point you know what workflow you are going to run and you have a
 customized ini file that contains the <tt>input_file</tt> and
 <tt>output_prefix</tt>. The next step is to schedule the workflow using the ini
-file you prepared ("schedule" because the actual launching of the workflow will be performed asynchronously by a background process). Make sure you use the correct workflow accession (SWID: 1) and input file accession (SWID: 5).
+file you prepared ("schedule" because the actual launching of the workflow will be performed asynchronously by a background process). Make sure you use the correct workflow accession (SWID: 1) and input file accession (SWID: 7).
 
-    $ seqware workflow schedule --accession 1 --parent-accession 5 --ini workflow.ini --host `hostname --long` 
+    $ seqware workflow schedule --accession 1 --parent-accession 7 --ini workflow.ini --host `hostname --long` 
 
-    Created workflow run with SWID: 8
+    Created workflow run with SWID: 10 
 
 <p class="warning"><strong>Tip:</strong> the accession specifies which workflow to run, and the parent-accession is the SWID of the processing event that associated the input file with the sample.  This allows the workflow run to be linked into the study hierarchy. You MUST specify this
 otherwise the workflow's results will not be linked to anything (they will be
@@ -335,7 +334,7 @@ of workflow runs. After about ten minutes, the workflow should complete.
     $ seqware workflow report --accession 1
     -[ RECORD 0 ]------------------+-------------------------------------
     Workflow                       | HelloWorld 1.0-SNAPSHOT
-    Workflow Run SWID              | 8
+    Workflow Run SWID              | 10 
     Workflow Run Status            | completed
     Workflow Run Create Timestamp  | 2013-09-30 17:51:56.547
     Workflow Run Host              | master
@@ -346,10 +345,10 @@ of workflow runs. After about ten minutes, the workflow should complete.
     Identity Sample Names          | New Test Sample
     Identity Sample SWIDs          | 4
     Input File Meta-Types          | text/plain
-    Input File SWIDs               | 7
+    Input File SWIDs               | 9 
     Input File Paths               | /datastore/input.txt
     Immediate Input File Meta-Types| text/plain
-    Immediate Input File SWIDs     | 7
+    Immediate Input File SWIDs     | 9 
     Immediate Input File Paths     | /datastore/input.txt
     Output File Meta-Types         | text/plain
     Output File SWIDs              | 15
@@ -361,13 +360,13 @@ workflow, the output file types, and their locations. See the `--help` for more 
 
 The above reports all runs for the specified workflow. Alternately, you can just get the status of a particular workflow-run, e.g.:
 
-	seqware workflow-run report --accession 8
+	seqware workflow-run report --accession 10 
 
 You can download the stderr and stdout from the
 workflow run, which can be useful for debugging failed runs:
 
-	seqware workflow-run stderr --accession 8
-	seqware workflow-run stdout --accession 8
+	seqware workflow-run stderr --accession 10 
+	seqware workflow-run stdout --accession 10 
 
 By default this command automatically creates output files for stderr and stdout,
 for example <tt>20130930_175543__workflowrun_8_STDERR.csv</tt>.  You can
