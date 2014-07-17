@@ -129,8 +129,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 + "by default) by the Decider and that is subsequently "
                 + "passed to the called workflow which can use it to determine if "
                 + "they should write metadata at runtime on the cluster.");
-        parser.acceptsAll(Arrays.asList("schedule"), "Schedule this workflow to be run rather than running it immediately. See also: --run");
-        parser.acceptsAll(Arrays.asList("run"), "Run this workflow now. This is the default behaviour. See also: --schedule");
         parser.acceptsAll(Arrays.asList("ignore-skip-flag"),
                 "Ignores any 'skip' flags on lanes, IUSes, sequencer runs, samples, etc. Use caution.");
         parser.acceptsAll(Arrays.asList("launch-max"), "The maximum number of jobs to launch at once.").withRequiredArg()
@@ -431,11 +429,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                         for (String line : studyReporterOutput) {
                             Log.stdout(line);
                         }
-                        Log.debug("RUNNING");
+                        Log.debug("Scheduling");
                         // construct the INI and run it
                         ArrayList<String> runArgs = constructCommand();
                         PluginRunner.main(runArgs.toArray(new String[runArgs.size()]));
-                        Log.stdout("Launching.");
+                        Log.stdout("Scheduling.");
                         do_summary();
 
                     }
@@ -462,7 +460,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     protected ArrayList<String> constructCommand() {
         ArrayList<String> runArgs = new ArrayList<>();
         runArgs.add("--plugin");
-        runArgs.add("io.seqware.pipeline.plugins");
+        runArgs.add("io.seqware.pipeline.plugins.WorkflowScheduler");
         runArgs.add("--");
         runArgs.add("--workflow-accession");
         runArgs.add(workflowAccession);
