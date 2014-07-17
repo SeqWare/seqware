@@ -40,11 +40,11 @@ public class CLIUserPhase4 extends UserPhase4 {
     @Override
     public void testExistingFileInAndAssociateWithSample() throws IOException {
         // create a dummy workflow and then a workflow run
-        String workflowOut = ITUtility.runSeqwareCLI("seqware create workflow --name FileImport --version 1.0 --description description",
+        String workflowOut = ITUtility.runSeqwareCLI(" create workflow --name FileImport --version 1.0 --description description",
                 ReturnValue.SUCCESS, null);
         String workflowAccession = String.valueOf(ITUtility.extractSwid(workflowOut));
         String workflowRunOut = ITUtility.runSeqwareCLI(
-                "seqware create workflow-run  --workflow-accession " + workflowAccession
+                " create workflow-run  --workflow-accession " + workflowAccession
                         + " --file imported_file::text/plain::/datastore/input.txt --parent-accession "
                         + AccessionMap.accessionMap.get(UserPhase3.SAMPLE), ReturnValue.SUCCESS, null);
         String processingAccession = String.valueOf(ITUtility.extractSwid(workflowRunOut));
