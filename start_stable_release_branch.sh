@@ -9,7 +9,7 @@ fi
 VERSION=$2
 OLD_VERSION=$1
 git checkout master
-git hf release start $VERSION
+git hf hotfix start $VERSION
 mvn versions:set -DnewVersion=$VERSION
 find . -name "pom.xml" -type f -exec  sed -i "s/<seqware-version>$OLD_VERSION<\/seqware-version>/<seqware-version>$VERSION<\/seqware-version>/g" {} \;
 git add pom.xml \*/pom.xml
