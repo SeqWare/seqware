@@ -27,13 +27,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * These tests support command-line tools found in the SeqWare User Tutorial,
- * in this case, GenericMetadataSaver
+ * These tests support command-line tools found in the SeqWare User Tutorial, in
+ * this case, GenericMetadataSaver
  *
  * @author dyuen
  */
 public class GenericMetadataSaverET {
-    
+
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
@@ -49,7 +49,7 @@ public class GenericMetadataSaverET {
     public void testGenericMetadataSaverOldCLI() throws IOException {
         saveGenericMetadataFileForSample("10", false);
     }
-    
+
     public String saveGenericMetadataFileForSample(String sampleAccession, boolean cli) throws IOException {
         File createTempDir = Files.createTempDir();
         // create a random new file and check that the file we want to save metadata about exists 
@@ -66,14 +66,10 @@ public class GenericMetadataSaverET {
 
     protected String runOldCommand(String sampleAccession, File inputFile, File createTempDir) throws IOException {
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.ModuleRunner -- --module net.sourceforge.seqware.pipeline.modules.GenericMetadataSaver "
-                + " --metadata-parent-accession  "+sampleAccession
+                + " --metadata-parent-accession  " + sampleAccession
                 + " -- --gms-output-file text::text/plain::" + inputFile.getAbsolutePath()
                 + " --gms-algorithm UploadText --gms-suppress-output-file-check";
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         return listOutput;
     }
-
-                + " --meta-type text/plain "
-                + " --file " + inputFile.getAbsolutePath();
-    
 }
