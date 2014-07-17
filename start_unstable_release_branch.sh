@@ -8,7 +8,7 @@ if [ "$#" -ne 1 ]; then
 fi
 VERSION=$1
 git hf release start $VERSION
-mvn versions:set -DnewVersion= $VERSION
+mvn versions:set -DnewVersion=$VERSION
 find . -name "pom.xml" -type f -exec  sed -i "s/<seqware-version>$VERSION-SNAPSHOT<\/seqware-version>/<seqware-version>$VERSION<\/seqware-version>/g" {} \;
 git add pom.xml \*/pom.xml
 git commit -m "Iterate version numbers to $VERSION"
