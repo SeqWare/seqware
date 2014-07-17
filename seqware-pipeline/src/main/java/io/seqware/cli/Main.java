@@ -871,8 +871,9 @@ public class Main {
                 createWorkflow(args);
             } else if ("workflow-run".equals(obj)) {
                 createWorkflowRun(args);
+            } else {
+                kill("seqware: '%s' is not a valid object type.  See 'seqware create --help'.", obj);
             }
-            kill("seqware: '%s' is not a valid object type.  See 'seqware create --help'.", obj);
         }
     }
 
