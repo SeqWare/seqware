@@ -131,6 +131,10 @@ You can also build individual components such as the new query engine with:
 
 Please refer to SeqWare's [Coding Standards](https://seqware.github.io/docs/100-coding-standards/). 
 
+### Coding Standards
+
+Please refer to SeqWare's [Coding Standards](https://seqware.github.io/docs/100-coding-standards/). 
+
 ### Building Our Site
 
 In order to publish to seqware.io , checkout our current master and publish our site:
