@@ -844,7 +844,6 @@ public class Main {
             out("");
             out("Objects:");
             out("  experiment");
-            out("  file");
             out("  ius");
             out("  lane");
             out("  sample");
@@ -857,7 +856,7 @@ public class Main {
             String obj = args.remove(0);
             if ("experiment".equals(obj)) {
                 createExperiment(args);
-            } else if ("file".equals(obj)) {
+            } else if ("ius".equals(obj)) {
                 createIus(args);
             } else if ("lane".equals(obj)) {
                 createLane(args);
