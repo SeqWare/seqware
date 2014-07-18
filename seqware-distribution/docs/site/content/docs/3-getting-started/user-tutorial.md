@@ -43,10 +43,6 @@ you will be able to:
 * debug workflows by downloading stdout and stderr for your workflows
 * cancel and restart workflows
 
-<p class="warning"><strong>Tip:</strong>If you want to see how to do the same
-steps covered in this tutorial via the Portal web GUI instead of command line
-tools see the <a href="/docs/5-portal/user-guide/">Portal User Guide</a>.</p>
-
 ## First Steps
 
 <%= render '/includes/launch_vm/' %>

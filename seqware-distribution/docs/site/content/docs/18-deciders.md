@@ -86,7 +86,7 @@ As a pre-requisite, you need a clean meta-db. You can clean your postgres databa
     ~/seqware_github/seqware-meta-db$ psql test_seqware_meta_db < seqware_meta_db.sql
     ~/seqware_github/seqware-meta-db$ psql test_seqware_meta_db < seqware_meta_db_data.sql
 
-Next, create required metadata that represents the way your experiments are organized. These steps mimic the start of the user tutorial [User Tutorial](/docs/3-getting-started/user-tutorial/):
+Next, create required metadata that represents the way your experiments are organized. These steps mimic the start of the [User Tutorial](/docs/3-getting-started/user-tutorial/):
 
     $ seqware create study --title 'Study1' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4
 
@@ -127,6 +127,7 @@ Next, you need to inject your input file that will be used as input for the work
     Created workflow 'FileImport' version 1.0 with SWID: 7
 
     $ seqware create workflow-run  --workflow-accession 7 --file imported_file::text/plain::/datastore/input.txt --parent-accession 5 --parent-accession 6
+    Created processing with SWID: 9
     Created workflow run with SWID: 8 
 
     
@@ -311,12 +312,12 @@ Next, deciders rely upon an up-to-date files report. Refresh this with the follo
 
 Now, you are ready to use the basic decider to configure and schedule your workflows. The following command lets the BasicDecider run across the entire database, looking for plain text files that have been imported, in order to schedule TarWorkflows. 
 
-	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types text/plain --wf-accession 13 
+	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types text/plain --wf-accession 13 --schedule 
 
 	Created workflow run with SWID: 15
 	Scheduling.
 
-	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin io.seqware.pipeline.plugins.WorkflowScheduler -- -- --workflow-accession 13 --ini-files /tmp/7745435635015076544835954197.ini --input-files 12 --parent-accessions 9 --link-workflow-run-to-parents 6 --host master 
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin io.seqware.pipeline.plugins.WorkflowScheduler -- -- --workflow-accession 13 --ini-files /tmp/7745435635015076544835954197.ini --input-files 12 --parent-accessions 9 --link-workflow-run-to-parents 6 --host master --schedule
  
 	$ seqware workflow-run launch-scheduled 
 
@@ -335,10 +336,9 @@ Next, wait for the workflow to run to completion, you can use either the 'seqwar
 	$ seqware files refresh
 	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types application/x-tar --wf-accession 14 --schedule
 
-	Created workflow run with SWID: 21
-	Launching.
+	Scheduling.
 
-	java -jar seqware-distribution-1.0.11-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 14 --ini-files /tmp/-15384347942082223855192608272.ini --input-files 20 --parent-accessions 19 --link-workflow-run-to-parents 6 --schedule --host master --
+	java -jar seqware-distribution-1.0.11-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 14 --ini-files /tmp/-15384347942082223855192608272.ini --input-files 20 --parent-accessions 19 --link-workflow-run-to-parents 6 --host master --schedule --
 
 	$ seqware workflow-run launch-scheduled 
 	
