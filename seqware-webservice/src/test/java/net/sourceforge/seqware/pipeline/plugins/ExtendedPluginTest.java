@@ -98,9 +98,15 @@ public class ExtendedPluginTest extends PluginTest {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    protected String getAndCheckSwid(String s) throws NumberFormatException {
+    protected String getAndCheckSwid(String s) {
+        return getAndCheckSwid(s, 1);
+    }
+
+    protected String getAndCheckSwid(String s, int index) throws NumberFormatException {
         Matcher match = swidPattern.matcher(s);
-        Assert.assertTrue("SWID not found in output.", match.find());
+        for (int i = 0; i < index; i++) {
+            Assert.assertTrue("SWID not found in output.", match.find());
+        }
         String swid = match.group(1);
         Assert.assertFalse("The SWID was empty", swid.trim().isEmpty());
         Integer.parseInt(swid.trim());
