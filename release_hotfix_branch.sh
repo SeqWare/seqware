@@ -23,9 +23,3 @@ rm release.json
 GITHUB_RELEASE_NUMBER=`curl -i https://api.github.com/repos/SeqWare/seqware/releases | grep \"id\" | head -n1 | cut -d':' -f2 | cut -d',' -f1 | tr -d ' '`
 curl -u $TOKEN:x-oauth-basic -X POST --data-binary @seqware-pipeline/target/seqware https://uploads.github.com/repos/SeqWare/seqware/releases/$GITHUB_RELEASE_NUMBER/assets?name=seqware --header "Content-Type:text/plain" 
 curl -u $TOKEN:x-oauth-basic -X POST --data-binary @seqware-pipeline/target/archetype-catalog.xml https://uploads.github.com/repos/SeqWare/seqware/releases/$GITHUB_RELEASE_NUMBER/assets?name=archetype-catalog.xml --header "Content-Type:text/xml" 
-
-# if the following dies with a merge error, run git mergetool -t kdiff3
-git checkout develop
-git merge hotfix/$VERSION
-git push
-#git push origin --delete release/$VERSION

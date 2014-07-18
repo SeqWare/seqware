@@ -86,7 +86,7 @@ As a pre-requisite, you need a clean meta-db. You can clean your postgres databa
     ~/seqware_github/seqware-meta-db$ psql test_seqware_meta_db < seqware_meta_db.sql
     ~/seqware_github/seqware-meta-db$ psql test_seqware_meta_db < seqware_meta_db_data.sql
 
-Next, create required metadata that represents the way your experiments are organized. These steps mimic the start of the user tutorial [User Tutorial](/docs/3-getting-started/user-tutorial/):
+Next, create required metadata that represents the way your experiments are organized. These steps mimic the start of the [User Tutorial](/docs/3-getting-started/user-tutorial/):
 
     $ seqware create study --title 'Study1' --description 'This is a test description' --accession 'InternalID123' --center-name 'SeqWare' --center-project-name 'SeqWare Test Project' --study-type 4
 
@@ -122,14 +122,14 @@ First, create a sequencer_run, lane, and ius. These structures represent a lane 
 
 Next, you need to inject your input file that will be used as input for the workflows that you are about to create. When using the decider framework, the starting point for your deciders is a root workflow run. So we create a "root" workflow and create a workflow run that has as its output the input file from the tutorial. 
 
-    $ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --create --table workflow --field name::FileImport --field version::1.0 --field description::description
-
+    $ seqware create workflow --name FileImport --version 1.0 --description description
     Added 'FileImport' (SWID: 7)
     Created workflow 'FileImport' version 1.0 with SWID: 7
 
-    $ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar  -p net.sourceforge.seqware.pipeline.plugins.Metadata -- --create --table workflow_run --field workflow_accession::7 --field status::completed --file imported_file::text/plain::/datastore/input.txt --parent-accession 5 --parent-accession 6 
+    $ seqware create workflow-run  --workflow-accession 7 --file imported_file::text/plain::/datastore/input.txt --parent-accession 5 --parent-accession 6
+    Created processing with SWID: 9
+    Created workflow run with SWID: 8 
 
-    Created workflow run with SWID: 8
     
 Next, we create two workflows, one which converts text files to tar format, and a second which converts tar files to tar.gz format. Here, we assume that you have already run through the [Developer Tutorial](/docs/3-getting-started/developer-tutorial/). Use Maven Archetypes to generate two workflows in the workflow-dev directory called TarWorkflow and GZWorkflow. Use the following parameters for your archetypes.
 
@@ -315,20 +315,32 @@ Now, you are ready to use the basic decider to configure and schedule your workf
 	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types text/plain --wf-accession 13 --schedule 
 
 	Created workflow run with SWID: 15
-	Launching.
+	Scheduling.
 
-	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 13 --ini-files /tmp/5416907367403361290137472468.ini --input-files 12 --parent-accessions 9 --link-workflow-run-to-parents 6 --schedule --host master --
- 	
+	java -jar seqware-distribution-<%= seqware_release_version %>-full.jar --plugin io.seqware.pipeline.plugins.WorkflowScheduler -- -- --workflow-accession 13 --ini-files /tmp/7745435635015076544835954197.ini --input-files 12 --parent-accessions 9 --link-workflow-run-to-parents 6 --host master --schedule
+ 
+	$ seqware workflow-run launch-scheduled 
+
+	[2014/07/16 13:58:48] | Number of submitted workflows: 1
+	Working Run: 15
+	Valid run by host check: 15
+	Launching via new launcher: 15
+	WARNING: No entry in settings for OOZIE_SGE_THREADS_PARAM_FORMAT, omitting threads option from qsub. Fix by providing the format of qsub threads option, using the '${threads}' variable.
+	Using working directory: /usr/tmp/oozie/oozie-f2b1939f-d9cc-46f9-b09e-a3640695fd28
+	[SeqWare Pipeline] WARN [2014/07/16 13:58:48] | Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+	Files copied to /usr/tmp/oozie/oozie-f2b1939f-d9cc-46f9-b09e-a3640695fd28
+	Submitted Oozie job: 0000071-140609173140913-oozie-oozi-W
 
 Next, wait for the workflow to run to completion, you can use either the 'seqware workflow-run report' or refresh the files report in order to determine when the workflow is complete, but it should take roughly 2 minutes. Another option is the Oozie web interface at http://localhost:11000/oozie/  You may also need to run 'seqware workflow-run propagate-statuses' in order to update the seqware meta-db with workflow run statuses if it is not already in your crontab. 
 
 	$ seqware files refresh
 	$ java -jar ~/.seqware/self-installs/seqware-distribution-<%= seqware_release_version %>-full.jar -p net.sourceforge.seqware.pipeline.deciders.BasicDecider -- --all --meta-types application/x-tar --wf-accession 14 --schedule
 
-	Created workflow run with SWID: 21
-	Launching.
+	Scheduling.
 
-	java -jar seqware-distribution-1.0.11-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 14 --ini-files /tmp/-15384347942082223855192608272.ini --input-files 20 --parent-accessions 19 --link-workflow-run-to-parents 6 --schedule --host master --
+	java -jar seqware-distribution-1.0.11-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --workflow-accession 14 --ini-files /tmp/-15384347942082223855192608272.ini --input-files 20 --parent-accessions 19 --link-workflow-run-to-parents 6 --host master --schedule --
+
+	$ seqware workflow-run launch-scheduled 
 	
 
 ### Results

@@ -16,7 +16,7 @@ toc_includes_sections: true
 SeqWare already. If you have not, please install SeqWare by either downloading
 the VirtualBox VM or launching the AMI on the Amazon cloud.  See <a
 href="/docs/2-installation/">Installation</a> for directions. We also recommend you
-follow the [User Tutorial](/docs/3-getting-started/user-tutorial/) before this guide.</p>
+follow the <a href="/docs/3-getting-started/user-tutorial/">User Tutorial</a> before this guide.</p>
 
 This guide picks up where the [User
 Tutorial](/docs/3-getting-started/user-tutorial/) left off. In that previous
@@ -257,7 +257,7 @@ dateJob is now the final job that manipulates the dir1/output file.
         // a simple bash job to cat a file into a test file
         // the file is not saved to the metadata database
         Job copyJob1 = this.getWorkflow().createBashJob("bash_cp");
-        copyJob1.setCommand(catPath + " " + inputFilePath + "> test1");
+        copyJob1.setCommand(catPath + " " + inputFilePath + "> test1/test.out");
         copyJob1.addParent(mkdirJob);
 
         // a simple bash job to echo to an output file and concat an input file

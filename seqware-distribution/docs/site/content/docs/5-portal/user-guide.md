@@ -24,6 +24,11 @@ with the SeqWare MetaDB and Pipeline systems.  Using the Portal a user can:
 * download files produced by a workflow
 * debug workflows by downloading stdout and stderr for your workflows
 
+<p class="warning"><strong>Warning:</strong>
+The SeqWare Portal is not currently in production use and is unmaintained in favour of 
+the command-line tools. We are currently working on a replacement so use at your own risk. 
+</p>
+
 <p class="warning"><strong>Note:</strong>These goals are very similar to the
 command line-powered [User Tutorial](/docs/3-getting-started/user-tutorial/)
 and that is on purpose.  We designed the Portal to provide the same
