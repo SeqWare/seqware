@@ -144,7 +144,7 @@ In addition to the the user's ~/.seqware/settings file the only other configurat
 automatic retry. Like the Pegasus workflow engine, it is possible to control the number of attempts
 that should be made before a job is considered failed in a workflow. 
 
-Edit the Oozie site XML to the error codes that are listed. 
+Edit the Oozie site XML and add and/or add to the error codes that are listed. 
 
         <property>
             <name>oozie.service.LiteWorkflowStoreService.user.retry.error.code.ext</name>
