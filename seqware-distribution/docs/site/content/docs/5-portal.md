@@ -25,6 +25,11 @@ LIMS collects various bits of metadata related to each flowcell and lane used
 in the sequencer and passes this information via a common database backend to
 the SeqWare Pipeline software.
 
+<p class="warning"><strong>Warning:</strong>
+The SeqWare Portal is not currently in production use and is unmaintained in favour of 
+the command-line tools. We are currently working on a replacement so use at your own risk. 
+</p>
+
 SeqWare Pipeline then records the status of each step in the processing
 pipeline back to the database.  These "processing" messages are then displayed
 in the LIMS system.  This makes it very easy for researchers to both follow the
