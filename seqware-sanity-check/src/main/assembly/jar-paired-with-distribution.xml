@@ -17,6 +17,7 @@
           <include>com.github.seqware:seqware-sanity-check</include>
           <include>com.github.seqware:seqware-ext-admin-testing</include>
           <include>com.github.seqware:seqware-ext-testing</include>
+          <include>org.apache.commons:commons-exec</include>
       </includes>
     </dependencySet>
   </dependencySets>
