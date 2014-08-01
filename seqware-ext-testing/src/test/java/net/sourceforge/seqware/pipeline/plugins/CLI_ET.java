@@ -67,4 +67,12 @@ public class CLI_ET {
         int countOccurrencesOf = StringUtils.countMatches(listOutput, "RECORD");
         Assert.assertTrue("incorrect number of expected bundles", countOccurrencesOf == 1);
     }
+
+    @Test
+    public void runSeqwareCheck() throws IOException {
+        String listCommand = " check";
+        String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
+        int countOccurrencesOf = StringUtils.countMatches(listOutput, "Crashed and failed check");
+        Assert.assertTrue("Crashed and failed checks", countOccurrencesOf == 0);
+    }
 }
