@@ -13,6 +13,7 @@ Experimental plugin. Allows the annotation of objects in the database with 'skip
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--e, --experiment-accession|The SWID of the Experiment to annotate. One of the -accession options is required.|
 |--f, --file-accession|The SWID of the file to annotate. One of the -accession options is required.|
 |--file|The CSV file for bulk insert|
@@ -35,6 +36,7 @@ The decider from which all other deciders came
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]|Override ini options on the command after the separator "--" with pairs of "--<key> <value>"|
 |--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. |
 |--cf, --check-file-exists|Optional: only launch on the file if the file exists|
 |--check-wf-accessions|The comma-separated, no spaces, workflow accessions of the workflow that perform the same function (e.g. older versions). Any files that have been processed with these workflows will be skipped.|
@@ -53,9 +55,7 @@ The decider from which all other deciders came
 |--processing-status|processing-status. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --processing-status|
 |--rerun-max|The maximum number of times to re-launch a workflowrun if failed.|
 |--root-sample-name|root-sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --root-sample-name|
-|--run|Run this workflow now. This is the default behaviour. See also: --schedule|
 |--sample-name|sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --sample-name|
-|--schedule|Schedule this workflow to be run rather than running it immediately. See also: --run|
 |--sequencer-run-name|sequencer-run-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --sequencer-run-name|
 |--study-name|study-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --study-name|
 |--test|Testing mode. Prints the INI files to standard out and does not submit the workflow.|
@@ -69,6 +69,7 @@ Import objects into the database using different file formats.
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--c, --create|Optional: indicates you want to create a new row, must supply --table and all the required --field params.|
 |--export-json-sequencer-run|The location to export the RunInfo json output file.|
 |--f, --field|Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
@@ -93,6 +94,7 @@ A plugin that lets you create, test, and install workflow bundles.
 | Command-line option | Description |
 |--------------------|--------------|
 |--?, --h, --help|Optional: Provides this help message.|
+|--[arguments]||
 |--b, --bundle|The path to a bundle zip file, can specify this or the workflow-run-accession of an already-installed bundle.|
 |--download|Downloads a workflow bundle zip. This must be used in conjunction with a workflow name and version.|
 |--download-url|Downloads a workflow bundle zip from a URL to the local directory.|
@@ -105,6 +107,7 @@ A plugin that lets you create, test, and install workflow bundles.
 |--list-install, --list-installed|Optional: List the workflows contained in this bundle. The database/webservice must be enabled in your .seqware/settings for this option to work.|
 |--list-params, --list-workflow-params|Optional: List the parameters for a given workflow and version. You need to supply a workflow accession and you need a database/webservice enabled in your .seqware/settings for this option to work.|
 |--m, --metadata|Specify the path to the metadata.xml file.|
+|--out|Optional: Will output a list of workflows installed by sw_accession|
 |--p, --path-to-package|Optional: When combined with a bundle zip file specified via --bundle this option specifies an input directory to zip to create a bundle output file.|
 |--v, --validate|Optional: Run a light basic validation on this bundle.|
 |--version, --workflow-version|The workflow version to be used. This must be used in conjunction with a version and bundle. Will restrict action to this workflow and version if specified.|
@@ -119,6 +122,7 @@ A database validation tool for your SeqWare metadb.
 | Command-line option | Description |
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
+|--[arguments]||
 
 
 ##  CycleChecker
@@ -127,6 +131,7 @@ Checks for cycles in the sample hierarchy and processing hierarchy of a particul
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--study-accession|The SeqWare accession of the study you want to check|
 
 
@@ -137,6 +142,7 @@ A database deletion tool for your SeqWare metadb.
 | Command-line option | Description |
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
+|--[arguments]||
 |--k, --key|An existing key file will be used to guide an actual deletion process|
 |--o, --out|The filename of the output key file|
 |--r, --workflowrun|Give a sequencer run, lane, or workflow run SWID in order to determine which workflow runs (processings,files) should be deleted.|
@@ -148,7 +154,7 @@ Takes a list of files and enters them into the database, linking them with the a
 
 | Command-line option | Description |
 |--------------------|--------------|
-|--csv-separator||
+|--[arguments]||
 |--file-list-file|A file containing the necessary information, with each line in the format parent_sw_accession, file path and mime-type. parent_sw_accession is either an IUS or a Lane.|
 |--workflow-accession|The sw_accession of the Import files workflow|
 
@@ -159,6 +165,7 @@ Generates a tab-delimited report of all output files (and their relationships an
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. |
 |--ius-SWID|ius-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --ius-SWID|
 |--lane-SWID|lane-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --lane-SWID|
@@ -180,6 +187,7 @@ A very simple HelloWorld to show how to make plugins.
 | Command-line option | Description |
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
+|--[arguments]||
 
 
 ##  MarkdownPlugin
@@ -189,6 +197,7 @@ A plugin that generates markdown documentation for all plugins.
 | Command-line option | Description |
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
+|--[arguments]||
 |--m, --modules|Optional: if provided will list out modules instead of plugins.|
 |--s, --skip|Optional: comma separated list of module/plugin names to skip|
 
@@ -199,6 +208,7 @@ This plugin lets you list, read, and write to a collection of tables in the unde
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--c, --create|Optional: indicates you want to create a new row, must supply --table and all the required --field params.|
 |--f, --field|Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
 |--file|Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.|
@@ -214,6 +224,9 @@ This plugin lets you list, read, and write to a collection of tables in the unde
 net.sourceforge.seqware.pipeline.plugins.ModuleRunner
 Description: A wrapper around Runner which will either list all Modules in the classpath (if no args are passed) or trigger a specific Module. Great for running Modules standalone.
 
+| Command-line option | Description |
+|--------------------|--------------|
+|--[arguments]||
 
 
 ##  OozieXML2Dot
@@ -222,7 +235,7 @@ This take an input file of oozie workflow xml, and translate the relation of all
 
 | Command-line option | Description |
 |--------------------|--------------|
-|--input||
+|--[arguments]||
 
 
 ##  ProcessingDataStructure2Dot
@@ -231,64 +244,42 @@ This plugin will take in a sw_accession of a processing, and translate the hiera
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--output-file|Optional: file name|
 |--parent-accession|The SWID of the processing|
 
 
 ##  WorkflowLauncher
-net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher
-A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.
+io.seqware.pipeline.plugins.WorkflowLauncher
+A plugin that lets you launch scheduled workflow bundles.
 
 | Command-line option | Description |
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
-|--b, --bundle, --provisioned-bundle-dir|The path to a bundle zip file. You can specify this or the workflow-accession of an already installed bundle.|
+|--[arguments]||
 |--fh, --force-host|If specified, the scheduled workflow will only be launched if this parameter value and the host field in the workflow run table match. This is a mechanism to target workflows to particular servers for launching.|
-|--ho, --host|Used only in combination with --schedule to schedule onto a specific host|
-|--i, --ini-files|One or more ini files can be specified, these contain the parameters needed by the workflow template. Use commas without space to delimit a list of ini files.|
-|--if, --input-files|One or more input files can be specified as sw_accessions. Use commas without space to delimit a list of input files.|
-|--launch-scheduled, --ls|Optional: If this parameter is given (which can optionally have a comma separated list of workflow run accessions) all the workflows that have been scheduled in the database will have their commands constructed and executed on this machine (thus launching those workflows). This command can only be run on a machine capable of submitting workflows (e.g. a cluster submission host!). If you're submitting a workflow remotely you want to use the --schedule option instead.|
-|--link-workflow-run-to-parents, --lwrp|Optional: The sw_accession of the sequencer_run, lane, ius, processing, study, experiment, or sample (NOTE: only currently supports ius and lane) that should be linked to the workflow_run row created by this tool. This is optional but useful since it simplifies future queries on the metadb. Can be specified multiple times if there are multiple parents or comma-delimited with no spaces (or both).|
-|--m, --metadata|Specify the path to the metadata.xml file.|
-|--metadata-output-dir|Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.|
-|--no-meta-db, --no-metadata|Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.|
+|--launch-scheduled, --ls|Optional: If this parameter is given (which can optionally have a comma separated list of workflow run accessions) all the workflows that have been scheduled in the database will have their commands constructed and executed on this machine (thus launching those workflows). This command can only be run on a machine capable of submitting workflows (e.g. a cluster submission host!).|
 |--no-run|Optional: Terminates the launch process immediately prior to running. Useful for debugging.|
-|--pa, --parent-accessions|Optional: Typically this is the sw_accession of the processing record that is the parent for this workflow e.g. whose file is used as the input. You can actually specify multiple parent accessions by using this parameter multiple times or providing a comma-delimited list, no space. You may want multiple parents when your workflow takes multiple input files. Most of the time the accession is from a processing row but can be an ius, lane, sequencer_run, study, experiment, or sample.|
-|--s, --schedule|Optional: If this, the workflow-accession, and ini-files are all specified this will cause the workflow to be scheduled in the workflow run table rather than directly run. Useful if submitting the workflow to a remote server.|
-|--v, --version, --workflow-version|The workflow version to be used. You can specify this or the workflow-accession of an already installed bundle.|
-|--w, --workflow|The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.|
-|--wa, --workflow-accession|Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.|
-|--wait|Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.|
-|--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge. Defaults to oozie.|
-|--workflow-run-accession, --wra|Optional: The sw_accession of an existing workflow_run that should be used. This row is pre-created when another job schedules a workflow run by partially populating a workflow_run row and setting the status to 'scheduled'. If this is not specified then a new workflow_run row will be created. Specify this in addition to a workflow-accession.|
 
 
-##  WorkflowPlugin
-net.sourceforge.seqware.pipeline.plugin.WorkflowPlugin
-A plugin that lets you launch workflow bundles once you have installed them via the BundleManager.
+##  WorkflowLifecycle
+io.seqware.pipeline.plugins.WorkflowLifecycle
+A plugin that lets you (install)/schedule/launch/watch/status check workflows in one fell swoop
 
 | Command-line option | Description |
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
-|--b, --bundle, --provisioned-bundle-dir|The path to a bundle zip file. You can specify this or the workflow-accession of an already installed bundle.|
-|--fh, --force-host|If specified, the scheduled workflow will only be launched if this parameter value and the host field in the workflow run table match. This is a mechanism to target workflows to particular servers for launching.|
-|--ho, --host|Used only in combination with --schedule to schedule onto a specific host|
-|--i, --ini-files|One or more ini files can be specified, these contain the parameters needed by the workflow template. Use commas without space to delimit a list of ini files.|
-|--if, --input-files|One or more input files can be specified as sw_accessions. Use commas without space to delimit a list of input files.|
-|--launch-scheduled, --ls|Optional: If this parameter is given (which can optionally have a comma separated list of workflow run accessions) all the workflows that have been scheduled in the database will have their commands constructed and executed on this machine (thus launching those workflows). This command can only be run on a machine capable of submitting workflows (e.g. a cluster submission host!). If you're submitting a workflow remotely you want to use the --schedule option instead.|
-|--link-workflow-run-to-parents, --lwrp|Optional: The sw_accession of the sequencer_run, lane, ius, processing, study, experiment, or sample (NOTE: only currently supports ius and lane) that should be linked to the workflow_run row created by this tool. This is optional but useful since it simplifies future queries on the metadb. Can be specified multiple times if there are multiple parents or comma-delimited with no spaces (or both).|
-|--m, --metadata|Specify the path to the metadata.xml file.|
-|--metadata-output-dir|Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.|
+|--[arguments]|Override ini options on the command after the separator "--" with pairs of "--<key> <value>"|
+|--b, --bundle, --provisioned-bundle-dir|The path to an unzipped bundle. Specify a name and version as well if the bundle contains multiple workflows.|
+|--i, --ini-files|One or more ini files can be specified, these contain the parameters needed by the workflow template. Use commas to delimit a list of ini files.|
 |--no-meta-db, --no-metadata|Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.|
 |--no-run|Optional: Terminates the launch process immediately prior to running. Useful for debugging.|
 |--pa, --parent-accessions|Optional: Typically this is the sw_accession of the processing record that is the parent for this workflow e.g. whose file is used as the input. You can actually specify multiple parent accessions by using this parameter multiple times or providing a comma-delimited list, no space. You may want multiple parents when your workflow takes multiple input files. Most of the time the accession is from a processing row but can be an ius, lane, sequencer_run, study, experiment, or sample.|
-|--s, --schedule|Optional: If this, the workflow-accession, and ini-files are all specified this will cause the workflow to be scheduled in the workflow run table rather than directly run. Useful if submitting the workflow to a remote server.|
 |--v, --version, --workflow-version|The workflow version to be used. You can specify this or the workflow-accession of an already installed bundle.|
 |--w, --workflow|The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.|
-|--wa, --workflow-accession|Optional: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.|
 |--wait|Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.|
+|--workflow-accession|The accession for an installed workflow, must be provided unless a bundle is.|
 |--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge. Defaults to oozie.|
-|--workflow-run-accession, --wra|Optional: The sw_accession of an existing workflow_run that should be used. This row is pre-created when another job schedules a workflow run by partially populating a workflow_run row and setting the status to 'scheduled'. If this is not specified then a new workflow_run row will be created. Specify this in addition to a workflow-accession.|
 
 
 ##  WorkflowRunFilesInitialPopulationPlugin
@@ -298,6 +289,7 @@ This plugin does the initial population of workflow run files in order to track 
 | Command-line option | Description |
 |--------------------|--------------|
 |--?, --h, --help|Provides this help message.|
+|--[arguments]||
 |--m, --modules|Optional: if provided will list out modules instead of plugins.|
 |--s, --skip|Optional: comma separated list of module/plugin names to skip|
 
@@ -308,6 +300,7 @@ This plugin creates a tab-separated file that describes one or more workflow run
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--human|Optional: will print output in expanded human friendly format|
 |--o, --output-filename|Optional: The output filename|
 |--stdout|Prints to standard out instead of to a file|
@@ -318,14 +311,45 @@ This plugin creates a tab-separated file that describes one or more workflow run
 |--wr-stdout|Optional: will print the stdout of the workflow run, must specify the --workflow-run-accession|
 
 
-##  WorkflowStatusChecker
-net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker
-This plugin lets you monitor the status of running workflows and updates the metadata object with their status.  Keep in mind a few things: 1) if the status command is specified no data will be saved to the DB, this tool is just useful for gathering error reports, 2) status commands that are malformed or whose status directory is not present on the filesystem will be skipped and an error noted, 3) by default every running or unknown workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file and the hostname is the same as 'hostname --long', and 4) you can force the checking of workflows with a particular host value but be careful with that.
+##  WorkflowScheduler
+io.seqware.pipeline.plugins.WorkflowScheduler
+A plugin that lets you schedule installed workflow bundles.
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--?, --h, --help|Provides this help message.|
+|--[arguments]|Override ini options on the command after the separator "--" with pairs of "--<key> <value>"|
+|--ho, --host|Used to schedule onto a specific host|
+|--i, --ini-files|One or more ini files can be specified, these contain the parameters needed by the workflow template. Use commas to delimit a list of ini files.|
+|--if, --input-files|One or more input files can be specified as sw_accessions for metadata tracking of input files. Use commas to delimit a list of input files.|
+|--link-workflow-run-to-parents, --lwrp|Optional: The sw_accession of the sequencer_run, lane, ius, processing, study, experiment, or sample (NOTE: only currently supports ius and lane) that should be linked to the workflow_run row created by this tool. This is optional but useful since it simplifies future queries on the metadb. Can be specified multiple times if there are multiple parents or comma-delimited with no spaces (or both).|
+|--no-meta-db, --no-metadata|Optional: a flag that prevents metadata writeback (which is done by default) by the WorkflowLauncher and that is subsequently passed to the called workflow which can use it to determine if they should write metadata at runtime on the cluster.|
+|--out|Optional: Will output a workflow-run by sw_accession|
+|--pa, --parent-accessions|Optional: Typically this is the sw_accession of the processing record that is the parent for this workflow e.g. whose file is used as the input. You can actually specify multiple parent accessions by using this parameter multiple times or providing a comma-delimited list, no space. You may want multiple parents when your workflow takes multiple input files. Most of the time the accession is from a processing row but can be an ius, lane, sequencer_run, study, experiment, or sample.|
+|--wa, --workflow-accession|Required: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.|
+|--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge. Defaults to oozie.|
+
+
+##  WorkflowStatusChecker
+net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker
+This plugin lets you monitor the status of running workflows and updates the metadata object with their status. By default every running or unknown workflow_run in the database will be checked if they are owned by the username in your .seqware/settings file and the hostname is the same as 'hostname --long'. You can force the checking of workflows with a particular host value but be careful with that.
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--[arguments]||
 |--cf, --check-failed|Optional: if specified, workflow runs that have previously failed will be re-checked.|
 |--fh, --force-host|Optional: if specified, workflow runs scheduled to this specified host will be checked even if this is not the current host (a dangerous option).|
 |--threads-in-thread-pool, --tp|Optional: this will determine the number of threads to run with. Default: 1|
 |--wa, --workflow-accession|Optional: this will cause the program to only check the status of workflow runs that are this type of workflow.|
 |--workflow-run-accession, --wra|Optional: this will cause the program to only check the status of workflow run(s). For multiple runs, comma-separate with no spaces|
+
+
+##  WorkflowWatcher
+io.seqware.pipeline.plugins.WorkflowWatcher
+A plugin that lets you watch running workflow_runs.
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--?, --h, --help|Provides this help message.|
+|--[arguments]||
+|--r, --workflow-run-accession, --wra|Required: The sw_accession of the workflow run to watch|
