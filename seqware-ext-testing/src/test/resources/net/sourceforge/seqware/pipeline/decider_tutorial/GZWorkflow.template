@@ -1,0 +1,40 @@
+package com.github.seqware;
+
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
+import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
+import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
+
+public class GZWorkflow extends AbstractWorkflowDataModel {
+
+    @Override
+    public Map<String, SqwFile> setupFiles() {
+	try {
+	    // register an input file
+	    SqwFile file0 = this.createFile("file_in_0");
+	    file0.setSourcePath(getProperty("input_files"));
+	    file0.setType("application/x-tar");
+	    file0.setIsInput(true);
+	    // register an output file
+	    SqwFile file1 = this.createFile("file_out");
+	    file1.setSourcePath("input.tar.gz");
+	    file1.setType("application/gzip");
+	    file1.setIsOutput(true);
+	    file1.setForceCopy(true);
+ 		    // determines an output path based on the contents of the workflow.ini to follow and a random number (to avoid overwriting) 
+ 		    file1.setOutputPath(this.getMetadata_output_file_prefix() + getMetadata_output_dir() + "/" + this.getName() + "_" + this.getVersion() + "/" + this.getRandom() + "/" + "input.tar.gz");
+	    return this.getFiles();
+	} catch (Exception ex) {
+	    Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+	    return (null);
+	}
+    }
+
+    @Override
+    public void buildWorkflow() {
+	Job job11 = this.getWorkflow().createBashJob("bash_gz");
+	job11.setCommand("tar -zcvf input.tar.gz " + this.getFiles().get("file_in_0").getProvisionedPath());
+    }
+}

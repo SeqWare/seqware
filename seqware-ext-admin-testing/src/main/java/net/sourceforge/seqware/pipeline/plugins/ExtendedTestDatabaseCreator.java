@@ -97,7 +97,16 @@ public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
      * Unfortunately, postgres does not allow the straight dropdb and createdb when tomcat is used (perhaps we leave open a connection)
      */
     public static void resetDatabaseWithUsers() {
+        resetDatabaseWithUsers(true);
+    }
+
+    /**
+     * Unfortunately, postgres does not allow the straight dropdb and createdb when tomcat is used (perhaps we leave open a connection)
+     * 
+     * @param loadTestingData
+     */
+    public static void resetDatabaseWithUsers(boolean loadTestingData) {
         ExtendedTestDatabaseCreator creator = new ExtendedTestDatabaseCreator();
-        creator.basicResetDatabaseWithUsers();
+        creator.basicResetDatabaseWithUsers(loadTestingData);
     }
 }

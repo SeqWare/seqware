@@ -54,6 +54,20 @@ public class TestDatabaseCreator {
      */
     public void createDatabase() throws SQLException {
 
+        createDatabase(true);
+    }
+
+    /**
+     * <p>
+     * createDatabase.
+     * </p>
+     * 
+     * @param loadTestingData
+     *            load the provided testing data
+     * @throws java.sql.SQLException
+     *             if any.
+     */
+    public void createDatabase(boolean loadTestingData) throws SQLException {
         if (!first_time_created && !database_changed) {
             logger.info("TestDatabaseCreator.createDatabase: database not changed or not first time so not creating DB");
             return;
@@ -66,7 +80,7 @@ public class TestDatabaseCreator {
             // connectionToPostgres = createConnection(POSTGRE_DB, POSTGRE_USER, POSTGRE_PASSWORD);
             // loadDatabase(connectionToPostgres);
             connectionToSeqware = createConnection(getSEQWARE_DB(), getPOSTGRE_USER(), getPOSTGRE_PASSWORD());
-            loadDBStructure(connectionToSeqware);
+            loadDBStructure(connectionToSeqware, loadTestingData);
         } catch (Exception e) {
             logger.info("TestDatabaseCreator.createDatabase " + e.getMessage());
         } finally {
@@ -210,14 +224,20 @@ public class TestDatabaseCreator {
     }
 
     private static void loadDBStructure(Connection connection) throws SQLException {
+        loadDBStructure(connection, true);
+    }
+
+    private static void loadDBStructure(Connection connection, boolean loadTestingData) throws SQLException {
         System.out.println("----------------Loading dump into PostgreSQL--------------------");
         try {
             System.out.println("Loading schema");
             connection.createStatement().execute(getClassPathFileToString("seqware_meta_db.sql"));
             System.out.println("Loading basic data");
             connection.createStatement().execute(getClassPathFileToString("seqware_meta_db_data.sql"));
-            System.out.println("Loading testing data");
-            connection.createStatement().execute(getClassPathFileToString("seqware_meta_db_testdata.sql"));
+            if (loadTestingData) {
+                System.out.println("Loading testing data");
+                connection.createStatement().execute(getClassPathFileToString("seqware_meta_db_testdata.sql"));
+            }
         } catch (IOException e) {
             logger.error("could not load testing database", e);
         }
@@ -285,10 +305,19 @@ public class TestDatabaseCreator {
      * Unfortunately, postgres does not allow the straight dropdb and createdb when tomcat is used (perhaps we leave open a connection)
      */
     protected void basicResetDatabaseWithUsers() {
+        basicResetDatabaseWithUsers(true);
+    }
+
+    /**
+     * Unfortunately, postgres does not allow the straight dropdb and createdb when tomcat is used (perhaps we leave open a connection)
+     * 
+     * @param loadTestingData
+     */
+    protected void basicResetDatabaseWithUsers(boolean loadTestingData) {
         try {
             this.dropDatabaseWithUsers();
             TestDatabaseCreator.markDatabaseChanged();
-            this.createDatabase();
+            this.createDatabase(loadTestingData);
         } catch (SQLException e) {
             throw new RuntimeException();
         }
