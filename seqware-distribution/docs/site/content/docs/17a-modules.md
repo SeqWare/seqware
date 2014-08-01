@@ -13,6 +13,7 @@ This is a simple command runner.
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--gcr-algorithm|You can pass in an algorithm name that will be recorded in the metadb if you are writing back to the metadb, otherwise GenericCommandRunner is used.|
 |--gcr-check-output-file|Specify the path to the file.|
 |--gcr-command|The command being executed (quote as needed).|
@@ -31,6 +32,7 @@ This is a simple metadata saver.
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--gms-algorithm|You can pass in an algorithm name that will be recorded in the metadb if you are writing back to the metadb.|
 |--gms-output-file|Specify this option one or more times for each output file created by the command called by this module. The argument is a '::' delimited list of type, meta_type, and file_path.|
 |--gms-suppress-output-file-check|If provided, this will suppress checking that the gms-output-file options contain valid file paths. Useful if these are remote resources like HTTP or S3 file URLs.|
@@ -42,6 +44,7 @@ net.sourceforge.seqware.pipeline.modules.utilities.ProvisionDependenciesBundle
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--i, --input-file|Required: input file, multiple should be specified seperately|
 |--o, --output-dir|Required: output file location|
 
@@ -52,6 +55,7 @@ net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--a, --algorithm|Optional: by default the algorithm is 'ProvisionFiles' but you can override here if you like.|
 |--d, --decrypt-key|Optional: if specified this key will be used to decrypt data when reading from its source.|
 |--decrypt-key-from-settings, --dkfs|Optional: if flag is specified then the key will be read from the SW_DECRYPT_KEY field in your SeqWare settings file and used to decrypt data as its pulled from the source.  If this option is specified along with --decrypt-key the key provided by the latter will be used.|
@@ -79,6 +83,7 @@ net.sourceforge.seqware.pipeline.modules.utilities.S3CreateFileURLs
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--a, --all-files|Optional: if specified, the --s3-url should take the form s3://<bucket>. This option indicates all files in that bucket should have URLs created.|
 |--l, --lifetime|How long (in minutes) should this URL be valid for (129600 = 90 days, 86400 = 60 days, 43200 = 30 days, 10080 = 7 days, 1440 = 1 day).|
 |--u, --s3-url|A URL of the form s3://<bucket>/<path>/<file> or s3://<bucket> if using the --all-files option|
@@ -90,6 +95,7 @@ net.sourceforge.seqware.pipeline.modules.utilities.S3DeleteFiles
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--f, --s3-url-file|Optional: a file containing one URL per line of the form s3://<bucket>/<path>/<file>|
 |--u, --s3-url|Optional: a URL of the form s3://<bucket>/<path>/<file>|
 
@@ -100,6 +106,7 @@ net.sourceforge.seqware.pipeline.modules.utilities.S3ListFiles
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--in-bytes|Optional: flag, if set values print in bytes rather than human friendsly|
 |--l, --list-buckets|Optional: list all the buckets you own.|
 |--reset-owner-permissions|Optional: this will give the bucket owner full read/write permissions, useful if many different people have been writing to the same bucket.|
@@ -114,6 +121,7 @@ net.sourceforge.seqware.pipeline.modules.utilities.S3UploadDirectory
 
 | Command-line option | Description |
 |--------------------|--------------|
+|--[arguments]||
 |--b, --output-bucket|Required: the output bucket name in S3|
 |--i, --input-dir|Required: the directory to copy recursively|
 |--p, --output-prefix|Required: the prefix to add after the bucket name.|
