@@ -25,7 +25,6 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -131,7 +130,7 @@ public class DebugWorkflowTutorialET {
         // cat stderr and check for error
         command = "cat 2.err";
         genOutput = ITUtility.runArbitraryCommand(command, 0, tempDir);
-        Assert.assertTrue("Did not see error in error output", genOutput.contains("missing operand"));
+        Assert.assertTrue("Did not see error in error output, saw: " + genOutput, genOutput.contains("missing operand"));
 
         // clean-up on the way out
         tempDir.deleteOnExit();
