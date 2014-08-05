@@ -1,0 +1,6 @@
+# the output_prefix is used to specify the root of the absolute output path or an S3 bucket name 
+# you should pick a path that is available on all cluster nodes and can be written by your user
+output_prefix=/datastore/
+# this indicates in what directory your results will be placed into under the output_prefix, in this example
+# your results will reside in /datastore/seqware-results
+output_dir=seqware-results
