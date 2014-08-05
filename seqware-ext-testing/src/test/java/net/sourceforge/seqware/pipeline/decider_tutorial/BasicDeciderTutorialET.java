@@ -84,7 +84,8 @@ public class BasicDeciderTutorialET {
         Assert.assertTrue("Workflow with accession 7 not created" + listOutput,
                 listOutput.contains("Created workflow 'FileImport' version 1.0 with SWID: 7"));
 
-        listCommand = " create workflow-run  --workflow-accession 7 --file imported_file::text/plain::/datastore/input.txt --parent-accession 5 --parent-accession 6";
+        listCommand = " create workflow-run  --workflow-accession 7 --file imported_file::text/plain::" + tempFile.getAbsolutePath()
+                + " --parent-accession 5 --parent-accession 6";
         listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
         Assert.assertTrue("Workflow run not created", listOutput.contains("Created workflow run with SWID"));
         Assert.assertTrue("Processing not created", listOutput.contains("Created processing with SWID"));
