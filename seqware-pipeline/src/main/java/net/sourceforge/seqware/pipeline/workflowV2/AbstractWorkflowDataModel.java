@@ -309,7 +309,7 @@ public abstract class AbstractWorkflowDataModel {
     }
 
     /**
-     * create a sqwfile
+     * Creates a sqwfile attached to the workflow as a whole for provisioning.
      * 
      * @param name
      * @return the created sqwfile
@@ -319,6 +319,7 @@ public abstract class AbstractWorkflowDataModel {
         if (this.files.containsKey(name)) {
             throw new RuntimeException("Cannot register more than one file to the same name");
         }
+        file.setAttached(true);
         this.files.put(name, file);
         return file;
     }
