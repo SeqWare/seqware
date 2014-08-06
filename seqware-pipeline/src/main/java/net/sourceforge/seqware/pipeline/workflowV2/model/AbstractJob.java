@@ -85,13 +85,14 @@ public class AbstractJob implements Job {
     }
 
     /**
-     * add a job specific file for provision
+     * This adds a file specifically to a job for provisioning.
      */
     @Override
     public void addFile(SqwFile file) {
         if (file.isAttached()) {
             throw new RuntimeException("cannot add file, file is already attached to a job");
         }
+        file.setAttached(true);
         this.files.add(file);
     }
 
