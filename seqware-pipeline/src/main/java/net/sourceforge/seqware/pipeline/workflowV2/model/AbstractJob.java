@@ -77,6 +77,7 @@ public class AbstractJob implements Job {
     }
 
     /**
+     * This should only be called from the back-end and should not be called by workflow developers.
      * 
      * @return all the files for this job
      */
@@ -85,13 +86,14 @@ public class AbstractJob implements Job {
     }
 
     /**
-     * add a job specific file for provision
+     * This adds a file specifically to a job for provisioning.
      */
     @Override
     public void addFile(SqwFile file) {
         if (file.isAttached()) {
             throw new RuntimeException("cannot add file, file is already attached to a job");
         }
+        file.setAttached(true);
         this.files.add(file);
     }
 
