@@ -77,6 +77,7 @@ public class AbstractJob implements Job {
     }
 
     /**
+     * This should only be called from the back-end and should not be called by workflow developers.
      * 
      * @return all the files for this job
      */
