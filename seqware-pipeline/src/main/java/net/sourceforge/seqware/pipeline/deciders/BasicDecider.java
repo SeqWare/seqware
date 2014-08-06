@@ -76,7 +76,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class BasicDecider extends Plugin implements DeciderInterface {
 
-    protected ReturnValue ret = new ReturnValue();
     private Header header = Header.FILE_SWA;
     private Set<String> parentWorkflowAccessions = new TreeSet<>();
     private Set<String> workflowAccessionsToCheck = new TreeSet<>();
@@ -141,7 +140,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         // SEQWARE-1622 - check whether files exist
         parser.acceptsAll(Arrays.asList("check-file-exists", "cf"), "Optional: only launch on the file if the file exists");
         this.nonOptionSpec = parser.nonOptions(WorkflowScheduler.OVERRIDE_INI_DESC);
-        ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
     /**
@@ -158,7 +156,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * method.
      */
     public ReturnValue init() {
-
+        ReturnValue ret = new ReturnValue();
         if (!ProvenanceUtility.checkForValidOptions(options)) {
             println("One of the various contraints or '--all' must be specified.");
             println(this.get_syntax());
@@ -335,11 +333,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         List<ReturnValue> vals = createListOfRelevantFilePaths();
 
         mappedFiles = separateFiles(vals, groupBy);
-        ret = launchWorkflows(mappedFiles);
-        return ret;
+        return launchWorkflows(mappedFiles);
     }
 
     private ReturnValue launchWorkflows(Map<String, List<ReturnValue>> mappedFiles) {
+        ReturnValue ret = new ReturnValue();
         if (mappedFiles != null) {
 
             List<Entry<String, List<ReturnValue>>> entryList = new ArrayList<>();
@@ -754,7 +752,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     public ReturnValue do_summary() {
         String command = do_summary_command();
         Log.stdout(command);
-        return ret;
+        return new ReturnValue();
     }
 
     public Boolean getForceRunAll() {
@@ -894,11 +892,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         if (fileStatus == FILE_STATUS.PAST_SUBSET_OR_INTERSECTION) {
             doRerun = true;
         } else if (fileStatus == FILE_STATUS.SAME_FILES || fileStatus == FILE_STATUS.PAST_SUPERSET) {
-            if (previousStatus == PREVIOUS_RUN_STATUS.FAILED) {
-                doRerun = true;
-            } else {
-                doRerun = false;
-            }
+            doRerun = previousStatus == PREVIOUS_RUN_STATUS.FAILED;
         }
         return doRerun;
     }

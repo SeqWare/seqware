@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import org.apache.commons.lang.StringUtils;
 
@@ -38,8 +37,6 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ParseMiseqFile extends BatchMetadataParser {
 
-    private ReturnValue ret = new ReturnValue();
-
     public ParseMiseqFile(Metadata metadata, Map<String, String> fields, boolean interactive) {
         super(metadata, fields, interactive);
     }
@@ -48,26 +45,26 @@ public class ParseMiseqFile extends BatchMetadataParser {
         RunInfo run = null;
         File file = new File(filepath);
         try {
-            BufferedReader freader = new BufferedReader(new FileReader(file));
-            run = parseMiseqHeader(freader, file);
-            String runName = promptString("Sequencer run name", run.getRunName(), Field.sequencer_run_name);
-            String studyName = promptString("Study name", run.getStudyTitle(), Field.study_name);
-            String expName = promptString("Experiment name", run.getExperimentName(), Field.experiment_name);
-            run.setRunName(runName);
-            run.setStudyTitle(studyName);
-            run.setExperimentName(expName);
-
-            Set<LaneInfo> lanes = parseMiseqData(freader);
-            freader.close();
+            Set<LaneInfo> lanes;
+            try (BufferedReader freader = new BufferedReader(new FileReader(file))) {
+                run = parseMiseqHeader(freader, file);
+                String runName = promptString("Sequencer run name", run.getRunName(), Field.sequencer_run_name);
+                String studyName = promptString("Study name", run.getStudyTitle(), Field.study_name);
+                String expName = promptString("Experiment name", run.getExperimentName(), Field.experiment_name);
+                run.setRunName(runName);
+                run.setStudyTitle(studyName);
+                run.setExperimentName(expName);
+                lanes = parseMiseqData(freader);
+            }
 
             run.setLanes(lanes);
 
         } catch (FileNotFoundException e) {
             Log.error(filepath, e);
-            ret.setExitStatus(ReturnValue.FILENOTREADABLE);
+            throw new RuntimeException(e);
         } catch (IOException ex) {
             Log.error(filepath, ex);
-            ret.setExitStatus(ReturnValue.FILENOTREADABLE);
+            throw new RuntimeException(ex);
         }
         return run;
     }
@@ -128,7 +125,7 @@ public class ParseMiseqFile extends BatchMetadataParser {
     }
 
     public RunInfo parseMiseqHeader(BufferedReader freader, File file) throws IOException {
-        String line = null;
+        String line;
 
         Map<String, String> headerInfo = new HashMap<>();
         while (!(line = freader.readLine()).startsWith("[Data]")) {
