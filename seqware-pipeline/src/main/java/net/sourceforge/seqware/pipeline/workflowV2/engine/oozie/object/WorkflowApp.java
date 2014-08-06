@@ -209,8 +209,7 @@ public class WorkflowApp {
         // mutates parents to store all provision in jobs
         handleUnattachedProvisionFileEvents(wfdm, metadatawriteback, workflowRunAccession, parents, abstractRootJob);
 
-        // need to remember the provisionOut and reset the job's children to
-        // provisionout's children
+        // pre-create all Oozie jobs so that we can reference them when attaching parents
         for (AbstractJob job : wfdm.getWorkflow().getJobs()) {
             OozieJob oozieActualJob = this.createOozieJobObject(job, wfdm);
             oozieActualJob.setMetadataWriteback(metadatawriteback);
@@ -222,8 +221,14 @@ public class WorkflowApp {
             if (!job.getParentAccessions().isEmpty()) {
                 oozieActualJob.setParentAccessions(job.getParentAccessions());
             }
-
             this.jobs.add(oozieActualJob);
+        }
+
+        // need to remember the provisionOut and reset the job's children to
+        // provisionout's children
+        for (AbstractJob job : wfdm.getWorkflow().getJobs()) {
+            OozieJob oozieActualJob = this.getOozieJobObject(job);
+            Log.debug("Manipulating parents for " + oozieActualJob.getName());
             for (Job parent : job.getParents()) {
                 oozieActualJob.addParent(this.getOozieJobObject((AbstractJob) parent));
             }
