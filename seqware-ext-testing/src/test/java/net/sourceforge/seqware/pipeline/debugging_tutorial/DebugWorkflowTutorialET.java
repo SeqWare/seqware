@@ -114,6 +114,7 @@ public class DebugWorkflowTutorialET {
         String listCommand = " bundle launch --dir BuggyWorkflow/target/Workflow_Bundle_BuggyWorkflow_1.0-SNAPSHOT_SeqWare_"
                 + SEQWARE_VERSION + "/";
         String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.RUNNERERR, tempDir);
+        Log.stderr(listOutput);
         Assert.assertTrue("Workflow did not fail as expected",
                 listOutput.contains("The method 'do_run' exited abnormally so the Runner will terminate here!"));
 
@@ -124,12 +125,13 @@ public class DebugWorkflowTutorialET {
         // check whether the error output contains the expected error
         listCommand = " workflow-run stderr --accession 2";
         listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, tempDir);
-        Log.stdout(listOutput);
+        Log.stderr(listOutput);
         Assert.assertTrue("Did not create error output", listOutput.contains("Created file 2.err"));
 
         // cat stderr and check for error
         command = "cat 2.err";
         genOutput = ITUtility.runArbitraryCommand(command, 0, tempDir);
+        Log.stderr(genOutput);
         Assert.assertTrue("Did not see error in error output, saw: " + genOutput, genOutput.contains("missing operand"));
 
         // clean-up on the way out
