@@ -471,7 +471,7 @@ public class WorkflowApp {
             Set<OozieJob> newParents = new LinkedHashSet<>();
             for (Map.Entry<String, SqwFile> entry : wfdm.getFiles().entrySet()) {
                 AbstractJob abstractProvisionXJob = new BashJob("provisionFile_" + entry.getKey().replaceAll("\\.", "_"));
-                abstractProvisionXJob.addFile(entry.getValue());
+                abstractProvisionXJob.getFiles().add(entry.getValue());
                 OozieProvisionFileJob oozieProvisionXJob = new OozieProvisionFileJob(abstractProvisionXJob, entry.getValue(),
                         abstractProvisionXJob.getAlgo() + "_" + this.jobs.size(), this.uniqueWorkingDir, this.useSge, this.seqwareJar,
                         this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
@@ -564,7 +564,7 @@ public class WorkflowApp {
                 if (file.isInput()) {
                     // create a provisionFileJob;
                     AbstractJob abstractProvisionInJob = new BashJob("provisionFile_in");
-                    abstractProvisionInJob.addFile(file);
+                    abstractProvisionInJob.getFiles().add(file);
                     OozieProvisionFileJob oozieProvisionInJob = new OozieProvisionFileJob(abstractProvisionInJob, file,
                             abstractProvisionInJob.getAlgo() + "_" + jobs.size(), this.uniqueWorkingDir, this.useSge, this.seqwareJar,
                             this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
@@ -598,7 +598,7 @@ public class WorkflowApp {
                 } else {
                     // create a provisionFileJob;
                     AbstractJob abstractProvisionOutJob = new BashJob("provisionFile_out");
-                    abstractProvisionOutJob.addFile(file);
+                    abstractProvisionOutJob.getFiles().add(file);
                     OozieProvisionFileJob oozieProvisionOutJob = new OozieProvisionFileJob(abstractProvisionOutJob, file,
                             abstractProvisionOutJob.getAlgo() + "_" + jobs.size(), this.uniqueWorkingDir, this.useSge, this.seqwareJar,
                             this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
