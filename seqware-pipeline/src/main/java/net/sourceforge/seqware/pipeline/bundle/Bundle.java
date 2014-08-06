@@ -31,7 +31,6 @@ public class Bundle {
 
     protected String permanentBundleLocation = null;
     protected String bundleDir = null;
-    protected ReturnValue ret = new ReturnValue();
     protected Metadata metadata = null;
     // this is used as the location of the workflow bundle location
     protected String outputDir = null;
@@ -145,20 +144,21 @@ public class Bundle {
      */
     public ReturnValue unpackageBundle(File bundle) {
 
+        ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
 
         // check the bundleDir
         if (bundleDir == null || "".equals(bundleDir)) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             ret.setStderr("ERROR: the SW_BUNDLE_DIR variable in your SEQWARE_SETTINGS (default .seqware/settings) file appears to be undefined!");
-            return (ret);
+            return ret;
         }
 
         // check the bundleDir
         if (bundle == null || !bundle.isFile()) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             ret.setStderr("ERROR: the bundle you passed is either null or is not a file. It must be a zip file!");
-            return (ret);
+            return ret;
         }
 
         // check the bundle dir
@@ -183,7 +183,7 @@ public class Bundle {
         setOutputDir(localOutputDir.getAbsolutePath());
         FileTools.listFilesRecursive(localOutputDir, filesArray);
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -197,20 +197,21 @@ public class Bundle {
      */
     public ReturnValue unpackageBundleFromS3(String bundleURL) {
 
+        ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
 
         // check the bundleDir
         if (bundleDir == null || "".equals(bundleDir)) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             ret.setStderr("ERROR: the SW_BUNDLE_DIR variable in your SEQWARE_SETTINGS (default .seqware/settings) file appears to be undefined!");
-            return (ret);
+            return ret;
         }
 
         // check the bundleDir
         if (bundleURL == null) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             ret.setStderr("ERROR: the bundle you passed is either null or is not a file. It must be a zip file!");
-            return (ret);
+            return ret;
         }
 
         // attempt to find output location, use the perm bundle location
@@ -225,7 +226,7 @@ public class Bundle {
             } catch (Exception e) {
                 Log.error("Problem creating a temp directory to use for zipping workflow " + e.getMessage());
                 ret.setExitStatus(ReturnValue.FAILURE);
-                return (ret);
+                return ret;
             }
             zipDownloadDir = tempDir.getAbsolutePath();
         }
@@ -236,7 +237,7 @@ public class Bundle {
         pf.do_verify_parameters();
         ret = pf.do_run();
         if (ret.getExitStatus() != ReturnValue.SUCCESS) {
-            return (ret);
+            return ret;
         }
 
         // name
@@ -250,7 +251,7 @@ public class Bundle {
         setOutputDir(bundleDir + File.separator + bundleName);
         FileTools.listFilesRecursive(new File(bundleDir + File.separator + bundleName), filesArray);
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -265,12 +266,14 @@ public class Bundle {
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue packageBundle(File bundlePath, File bundleOutput) {
+        
+        ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
 
         if (bundlePath == null || !bundlePath.isDirectory()) {
             ret.setExitStatus(ReturnValue.INVALIDFILE);
             ret.setStderr("ERROR: the bundle path you're trying to zip up is either null or not a directory!");
-            return (ret);
+            return ret;
         }
 
         File outputZipFile = new File(bundleOutput.getAbsolutePath() + File.separator + bundlePath.getName() + ".zip");
@@ -289,7 +292,7 @@ public class Bundle {
         // FIXME: correct?
         this.outputZip = outputZipFile.getAbsolutePath();
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -304,12 +307,13 @@ public class Bundle {
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue packageBundleToS3(File bundlePath, String bundleOutputPrefix) {
+        ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
 
         if (bundlePath == null || !bundlePath.isDirectory()) {
             ret.setExitStatus(ReturnValue.INVALIDFILE);
             ret.setStderr("ERROR: the bundle path you're trying to zip up is either null or not a directory!");
-            return (ret);
+            return ret;
         }
 
         File tempDir = null;
@@ -318,7 +322,7 @@ public class Bundle {
         } catch (Exception e) {
             Log.error("Problem creating a temp directory to use for zipping workflow " + e.getMessage());
             ret.setExitStatus(ReturnValue.FAILURE);
-            return (ret);
+            return ret;
         }
 
         boolean compression = true;
@@ -341,7 +345,7 @@ public class Bundle {
         if (!result) {
             Log.error("Failed to copy file to S3!");
             ret.setExitStatus(ReturnValue.FAILURE);
-            return (ret);
+            return ret;
         }
 
         // save the location of the zip file
@@ -355,7 +359,7 @@ public class Bundle {
         Log.stdout("Finished copying file to S3!");
         Log.stdout("You should delete (or archive locally) the local zip file: " + zipFile);
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -370,11 +374,12 @@ public class Bundle {
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue copyBundleToS3(File bundle, String bundleOutputPrefix) {
+        ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
         if (bundle == null || !bundle.isFile() || !bundle.getName().endsWith(".zip")) {
             ret.setExitStatus(ReturnValue.INVALIDFILE);
             ret.setStderr("ERROR: the bundle zip you're trying to copy up is either null or not a zip file!");
-            return (ret);
+            return ret;
         }
 
         ProvisionFilesUtil fileUtil = new ProvisionFilesUtil();
@@ -386,7 +391,7 @@ public class Bundle {
         if (!result) {
             Log.error("Failed to copy file to S3!");
             ret.setExitStatus(ReturnValue.FAILURE);
-            return (ret);
+            return ret;
         }
 
         // save the location of the zip file
@@ -397,7 +402,7 @@ public class Bundle {
         Log.stdout("Finished copying file to S3!");
         Log.stdout("You may want to delete (or archive locally) the local zip file: " + bundle.getAbsolutePath());
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -528,6 +533,7 @@ public class Bundle {
      *            a {@link java.io.File} object.
      * @param metadataFile
      *            a {@link java.io.File} object.
+     * @param workflows
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue installBundle(File bundle, File metadataFile, List<String> workflows) {
