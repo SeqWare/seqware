@@ -20,6 +20,8 @@ package io.seqware.pipeline;
 /**
  * This binds together all of the keys in the .seqware/settings file as a precursor to auto-generating documentation for them.
  * 
+ * TODO: Remove keys with periods in them
+ * 
  * @author dyuen
  */
 public enum SqwKeys {

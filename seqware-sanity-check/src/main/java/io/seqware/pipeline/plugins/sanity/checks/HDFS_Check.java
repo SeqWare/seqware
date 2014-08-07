@@ -16,6 +16,7 @@
  */
 package io.seqware.pipeline.plugins.sanity.checks;
 
+import io.seqware.pipeline.SqwKeys;
 import io.seqware.pipeline.plugins.sanity.QueryRunner;
 import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.io.IOException;
@@ -31,9 +32,8 @@ import org.apache.hadoop.fs.Path;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Checks to ensure that you are connected to hdfs by creating a file and
- * deleting it on exit
- *
+ * Checks to ensure that you are connected to hdfs by creating a file and deleting it on exit
+ * 
  * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
@@ -61,22 +61,18 @@ public class HDFS_Check implements SanityCheckPluginInterface {
         HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
         if (settings.isEmpty()) {
             return false;
-        } else if (!settings.containsKey("FS.DEFAULTFS") || !settings.containsKey("FS.HDFS.IMPL")) {
-            return false;
-        } else if (!settings.containsKey("HBASE.ZOOKEEPER.QUORUM") || !settings.containsKey("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT") || !settings.containsKey("HBASE.MASTER") || !settings.containsKey("MAPRED.JOB.TRACKER")) {
+        } else if (!settings.containsKey(SqwKeys.OOZIE_NAMENODE.getSettingKey())
+                || !settings.containsKey(SqwKeys.FS_HDFS_IMPL.getSettingKey())) {
             return false;
         }
 
         try {
             Configuration conf = new Configuration();
 
-            conf.set("hbase.zookeeper.quorum", settings.get("HBASE.ZOOKEEPER.QUORUM"));
-            conf.set("hbase.zookeeper.property.clientPort", settings.get("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT"));
-            conf.set("hbase.master", settings.get("HBASE.MASTER"));
-            conf.set("mapred.job.tracker", settings.get("MAPRED.JOB.TRACKER"));
-            conf.set("fs.default.name", settings.get("FS.DEFAULTFS"));
-            conf.set("fs.defaultfs", settings.get("FS.DEFAULTFS"));
-            conf.set("fs.hdfs.impl", settings.get("FS.HDFS.IMPL"));
+            conf.set("mapred.job.tracker", settings.get(SqwKeys.OOZIE_JOBTRACKER.getSettingKey()));
+            conf.set("fs.default.name", settings.get(SqwKeys.OOZIE_NAMENODE.getSettingKey()));
+            conf.set("fs.defaultfs", settings.get(SqwKeys.OOZIE_NAMENODE.getSettingKey()));
+            conf.set("fs.hdfs.impl", settings.get(SqwKeys.FS_HDFS_IMPL.getSettingKey()));
             fileSystem = FileSystem.get(conf);
             Path path = new Path("test");
             fileSystem.mkdirs(path);
