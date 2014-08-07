@@ -24,8 +24,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class ProcessingDataStructure2Dot extends Plugin {
 
-    private ReturnValue ret = new ReturnValue();
-
     public ProcessingDataStructure2Dot() {
         super();
         parser.accepts("parent-accession", "The SWID of the processing").withRequiredArg().ofType(String.class)
@@ -36,14 +34,12 @@ public class ProcessingDataStructure2Dot extends Plugin {
 
     @Override
     public ReturnValue init() {
-        // TODO Auto-generated method stub
-        return ret;
+        return new ReturnValue();
     }
 
     @Override
     public ReturnValue do_test() {
-        // TODO Auto-generated method stub
-        return ret;
+        return new ReturnValue();
     }
 
     @Override
@@ -66,7 +62,7 @@ public class ProcessingDataStructure2Dot extends Plugin {
             }
         }
 
-        return ret;
+        return new ReturnValue();
     }
 
     @Override
@@ -76,13 +72,12 @@ public class ProcessingDataStructure2Dot extends Plugin {
 
     @Override
     public ReturnValue clean_up() {
-        // TODO Auto-generated method stub
-        return ret;
+        return new ReturnValue();
     }
 
     class DotNode {
-        private List<DotNode> children;
-        private String processingId;
+        private final List<DotNode> children;
+        private final String processingId;
 
         public DotNode(String pid) {
             this.children = new ArrayList<>();
@@ -151,14 +146,13 @@ public class ProcessingDataStructure2Dot extends Plugin {
             this.addSubNodes(metadb, child);
         }
         // construct dot file
-
-        FileWriter fw = new FileWriter(file);
-        fw.write("digraph dag {\n");
-        // avoid duplicated
-        Set<String> allEdge = new HashSet<>();
-        this.visitNode(root, fw, allEdge);
-        fw.write("}\n");
-        fw.close();
+        try (FileWriter fw = new FileWriter(file)) {
+            fw.write("digraph dag {\n");
+            // avoid duplicated
+            Set<String> allEdge = new HashSet<>();
+            this.visitNode(root, fw, allEdge);
+            fw.write("}\n");
+        }
     }
 
     private void addSubNodes(MetadataDB db, DotNode parent) throws SQLException {

@@ -40,8 +40,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
 
-    private ReturnValue ret = new ReturnValue();
-
     /**
      * <p>
      * Constructor for HelloWorld.
@@ -52,7 +50,6 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         parser.acceptsAll(Arrays.asList("skip", "s"), "Optional: comma separated list of module/plugin names to skip").requiresArgument();
         parser.acceptsAll(Arrays.asList("modules", "m"), "Optional: if provided will list out modules instead of plugins.");
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
-        ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
     /*
@@ -137,7 +134,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     @Override
     public ReturnValue parse_parameters() {
-
+        ReturnValue ret = new ReturnValue();
         try {
             options = parser.parse(params);
         } catch (OptionException e) {
@@ -159,7 +156,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     @Override
     public ReturnValue init() {
-        return ret;
+        return new ReturnValue();
     }
 
     /*
@@ -174,8 +171,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     @Override
     public ReturnValue do_test() {
-        // TODO Auto-generated method stub
-        return ret;
+        return new ReturnValue();
     }
 
     /*
@@ -190,6 +186,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     @Override
     public ReturnValue do_run() {
+        ReturnValue ret = new ReturnValue();
         ResultSet rs = null;
         MetadataDB mdb = null;
         try {
@@ -315,7 +312,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
      */
     @Override
     public ReturnValue clean_up() {
-        // TODO Auto-generated method stub
+        ReturnValue ret = new ReturnValue();
         return ret;
     }
 
