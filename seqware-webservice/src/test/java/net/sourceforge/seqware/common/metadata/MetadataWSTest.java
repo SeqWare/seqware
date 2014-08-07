@@ -18,6 +18,7 @@ package net.sourceforge.seqware.common.metadata;
 
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.pipeline.SqwKeys;
 import java.net.URISyntaxException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -73,10 +74,10 @@ public class MetadataWSTest {
     }
 
     public static boolean useEmbeddedWebService(Map<String, String> settings) {
-        return !settings.containsKey(BasicTestDatabaseCreator.BASIC_TEST_DB_HOST_KEY);
+        return !settings.containsKey(SqwKeys.BASIC_TEST_DB_HOST.getSettingKey());
     }
 
-    private Logger logger;
+    private final Logger logger;
 
     public MetadataWSTest() {
         logger = Logger.getLogger(MetadataWSTest.class);

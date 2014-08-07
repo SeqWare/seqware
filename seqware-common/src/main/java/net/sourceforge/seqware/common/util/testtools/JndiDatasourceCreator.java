@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.util.testtools;
 
+import io.seqware.pipeline.SqwKeys;
 import java.util.HashMap;
 import java.util.Map;
 import javax.naming.InitialContext;
@@ -53,11 +54,11 @@ public class JndiDatasourceCreator {
             } catch (Exception e) {
                 Log.stderr("Error reading settings file: " + e.getMessage());
             }
-            if (settings.containsKey(BasicTestDatabaseCreator.BASIC_TEST_DB_HOST_KEY)) {
-                ds.setUsername(settings.get(BasicTestDatabaseCreator.BASIC_TEST_USERNAME_KEY));
-                ds.setPassword(settings.get(BasicTestDatabaseCreator.BASIC_TEST_PASSWORD_KEY));
-                ds.setUrl("jdbc:postgresql://" + settings.get(BasicTestDatabaseCreator.BASIC_TEST_DB_HOST_KEY) + ":5432/"
-                        + settings.get(BasicTestDatabaseCreator.BASIC_TEST_DB_NAME_KEY));
+            if (settings.containsKey(SqwKeys.BASIC_TEST_DB_HOST.getSettingKey())) {
+                ds.setUsername(settings.get(SqwKeys.BASIC_TEST_DB_USER.getSettingKey()));
+                ds.setPassword(settings.get(SqwKeys.BASIC_TEST_DB_PASSWORD.getSettingKey()));
+                ds.setUrl("jdbc:postgresql://" + settings.get(SqwKeys.BASIC_TEST_DB_HOST.getSettingKey()) + ":5432/"
+                        + settings.get(SqwKeys.BASIC_TEST_DB_NAME.getSettingKey()));
             }
 
             // PGPoolingDataSource ds = new PGPoolingDataSource();
