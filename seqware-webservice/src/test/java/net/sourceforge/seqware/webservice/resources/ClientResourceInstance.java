@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.webservice.resources;
 
+import io.seqware.pipeline.SqwKeys;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -51,7 +52,7 @@ public class ClientResourceInstance {
                 Log.stderr("Error reading settings file: " + e.getMessage());
             }
             if (settings.containsKey(BasicTestDatabaseCreator.BASIC_TEST_DB_HOST_KEY)) {
-                String restURL = settings.get("SW_REST_URL");
+                String restURL = settings.get(SqwKeys.SW_REST_URL.getSettingKey());
                 Pattern pattern = Pattern.compile("(https?://.*)(/.*)");
                 Matcher matcher = pattern.matcher(restURL);
                 matcher.find();

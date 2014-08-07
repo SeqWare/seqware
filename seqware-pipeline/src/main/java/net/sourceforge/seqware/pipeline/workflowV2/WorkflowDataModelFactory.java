@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2;
 
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -161,20 +162,16 @@ public class WorkflowDataModelFactory {
         int randInt = rand.nextInt(100000000);
         dataModel.setRandom("" + randInt);
         // copy some properties from .settings to configs
-        dataModel.getEnv().setOOZIE_URL(config.get("OOZIE_URL"));
-        dataModel.getEnv().setOOZIE_APP_ROOT(config.get("OOZIE_APP_ROOT"));
-        dataModel.getEnv().setOOZIE_JOBTRACKER(config.get("OOZIE_JOBTRACKER"));
-        dataModel.getEnv().setOOZIE_NAMENODE(config.get("OOZIE_NAMENODE"));
-        dataModel.getEnv().setOOZIE_QUEUENAME(config.get("OOZIE_QUEUENAME"));
-        dataModel.getEnv().setHbase_master(config.get("HBASE.MASTER"));
-        dataModel.getEnv().setHbase_zookeeper_quorum(config.get("HBASE.ZOOKEEPER.QUORUM"));
-        dataModel.getEnv().setHbase_zookeeper_property_clientPort(config.get("HBASE.ZOOKEEPER.PROPERTY.CLIENTPORT"));
-        dataModel.getEnv().setMapred_job_tracker(config.get("MAPRED.JOB.TRACKER"));
+        dataModel.getEnv().setOOZIE_URL(config.get(SqwKeys.OOZIE_URL.getSettingKey()));
+        dataModel.getEnv().setOOZIE_APP_ROOT(config.get(SqwKeys.OOZIE_APP_ROOT.getSettingKey()));
+        dataModel.getEnv().setOOZIE_JOBTRACKER(config.get(SqwKeys.OOZIE_JOBTRACKER.getSettingKey()));
+        dataModel.getEnv().setOOZIE_NAMENODE(config.get(SqwKeys.OOZIE_NAMENODE.getSettingKey()));
+        dataModel.getEnv().setOOZIE_QUEUENAME(config.get(SqwKeys.OOZIE_QUEUENAME.getSettingKey()));
+        dataModel.getEnv().setMapred_job_tracker(config.get(SqwKeys.OOZIE_JOBTRACKER.getSettingKey()));
         dataModel.getEnv().setFs_default_name(config.get("FS.DEFAULT.NAME"));
-        dataModel.getEnv().setFs_defaultFS(config.get("FS.DEFAULTFS"));
-        dataModel.getEnv().setFs_hdfs_impl(config.get("FS.HDFS.IMPL"));
-        dataModel.getEnv().setOOZIE_WORK_DIR(config.get("OOZIE_WORK_DIR"));
-        dataModel.getEnv().setOOZIE_APP_PATH(config.get("OOZIE_APP_PATH"));
+        dataModel.getEnv().setFs_defaultFS(config.get(SqwKeys.OOZIE_NAMENODE.getSettingKey()));
+        dataModel.getEnv().setFs_hdfs_impl(config.get(SqwKeys.FS_HDFS_IMPL.getSettingKey()));
+        dataModel.getEnv().setOOZIE_WORK_DIR(config.get(SqwKeys.OOZIE_WORK_DIR.getSettingKey()));
 
         // get workflow-run-accession
         // in 1.1 we're going to make metadata writeback of at least workflow runs mandatory

@@ -16,6 +16,7 @@
  */
 package io.seqware.pipeline.plugins.sanity.checks;
 
+import io.seqware.pipeline.SqwKeys;
 import io.seqware.pipeline.plugins.sanity.QueryRunner;
 import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.io.IOException;
@@ -28,13 +29,11 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Ensures that oozie is working by connecting to oozie url and checking the
- * response code
- *
+ * Ensures that oozie is working by connecting to oozie url and checking the response code
+ * 
  * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
-
 public class Oozie_Check implements SanityCheckPluginInterface {
 
     @Override
@@ -57,12 +56,12 @@ public class Oozie_Check implements SanityCheckPluginInterface {
         HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
         if (settings.isEmpty()) {
             return false;
-        } else if (!settings.containsKey("OOZIE_URL")) {
+        } else if (!settings.containsKey(SqwKeys.OOZIE_URL.getSettingKey())) {
             return false;
         }
         try {
-            //Attempts to connect to the oozie webservice
-            URL url = new URL(settings.get("OOZIE_URL"));
+            // Attempts to connect to the oozie webservice
+            URL url = new URL(settings.get(SqwKeys.OOZIE_URL.getSettingKey()));
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
             if (http.getResponseCode() == 200) {

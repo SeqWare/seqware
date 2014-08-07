@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -197,8 +198,8 @@ public class ProvisionDependenciesBundle extends Module {
                 // get the access/secret key from the .seqware/settings file
                 try {
                     HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                    accessKey = settings.get("AWS_ACCESS_KEY");
-                    secretKey = settings.get("AWS_SECRET_KEY");
+                    accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+                    secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
                 } catch (Exception e) {
                     ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
                     ret.setProcessExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
