@@ -26,16 +26,17 @@ package io.seqware.pipeline;
  */
 public enum SqwKeys {
     // @formatter:off
-    SW_METADATA_METHOD(null, Categories.COMMON, "SeqWare MetaDB communication method", "webservice", "database", "webservice", "none"), 
-    SW_REST_URL(null, Categories.COMMON, "Specify the URL for the seqware-webservice", "http://localhost:8080/SeqWareWebService"),
-    SW_REST_USER(null, Categories.COMMON, "Specify the username for the seqware-webservice", "admin"), 
-    SW_REST_PASS(null, Categories.COMMON, "Specify the password for the seqware-webservice", "admin@admin.com"), 
+    SW_METADATA_METHOD(null, Categories.COMMON, "SeqWare MetaDB communication method, can be 'database' or 'webservice' or 'none'", "webservice", "database", "webservice", "none"), 
+    AWS_ACCESS_KEY(null, Categories.COMMON, "Amazon cloud settings. Only used if reading and writing to S3 buckets.", "FILLMEIN"), 
+    AWS_SECRET_KEY(null, Categories.COMMON, "Amazon cloud settings. Only used if reading and writing to S3 buckets.", "FILLMEIN"), 
+    
+    SW_REST_URL(null, Categories.COMMON_WS, "Specify the URL for the seqware-webservice", "http://localhost:8080/SeqWareWebService"),
+    SW_REST_USER(null, Categories.COMMON_WS, "Specify the username for the seqware-webservice", "admin"), 
+    SW_REST_PASS(null, Categories.COMMON_WS, "Specify the password for the seqware-webservice", "admin@admin.com"), 
     SW_DB_USER(null, Categories.COMMON_DB, "JDBC user for the seqware metadb", "seqware"), 
     SW_DB_PASS(null, Categories.COMMON_DB, "JDBC password for the seqware metadb", "seqware"), 
     SW_DB_SERVER(null, Categories.COMMON_DB, "Host for the metadb", "localhost"), 
     SW_DB(null, Categories.COMMON_DB, "database name", "seqware_meta_db"), 
-    AWS_ACCESS_KEY(null, Categories.COMMON, "Amazon cloud settings. Only used if reading and writing to S3 buckets.", "FILLMEIN"), 
-    AWS_SECRET_KEY(null, Categories.COMMON, "Amazon cloud settings. Only used if reading and writing to S3 buckets.", "FILLMEIN"), 
     SW_DEFAULT_WORKFLOW_ENGINE(null, Categories.SCHEDULE_LAUNCH,
             "the default engine to use if otherwise unspecified (one of: oozie, oozie-sge, pegasus)", "oozie-sge"), 
     SW_BUNDLE_DIR(null, Categories.INSTALL_LAUNCH, "The directory containing bundle directories (into which bundle archives are unzipped)",
@@ -142,7 +143,7 @@ public enum SqwKeys {
     public enum Categories {
         // @formatter:off
         COMMON("Common Seqware settings"), 
-        COMMON_WS("used only if SW_METADATA_METHOD=webservice"), 
+        COMMON_WS("Seqware webservice settings. Only used if SW_METADATA_METHOD=webservice"), 
         COMMON_DB(
                 "Seqware database settings. Only used if SW_METADATA_METHOD=database and by the database check utility"), 
         SCHEDULE_LAUNCH(
@@ -155,7 +156,7 @@ public enum SqwKeys {
                 "Oozie engine settings. Only used for both 'oozie' and 'oozie-sge' engines."), 
         OOZIE_SGE(
                 "Oozie-SGE engine settings. Only used for 'oozie-sge' engine."), 
-        ADMIN("Admin web service, currently used for deletion"),
+        ADMIN("Settings used for administrators"),
         TESTING("Used for regression testing");
         // @formatter:on
 
