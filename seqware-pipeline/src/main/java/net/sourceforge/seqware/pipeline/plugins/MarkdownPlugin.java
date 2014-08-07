@@ -44,8 +44,6 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class MarkdownPlugin extends Plugin {
 
-    private ReturnValue ret = new ReturnValue();
-
     /**
      * <p>
      * Constructor for HelloWorld.
@@ -56,7 +54,6 @@ public class MarkdownPlugin extends Plugin {
         parser.acceptsAll(Arrays.asList("skip", "s"), "Optional: comma separated list of module/plugin names to skip").requiresArgument();
         parser.acceptsAll(Arrays.asList("modules", "m"), "Optional: if provided will list out modules instead of plugins.");
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
-        ret.setExitStatus(ReturnValue.SUCCESS);
     }
 
     /*
@@ -141,7 +138,7 @@ public class MarkdownPlugin extends Plugin {
      */
     @Override
     public ReturnValue parse_parameters() {
-
+        ReturnValue ret = new ReturnValue();
         try {
             options = parser.parse(params);
         } catch (OptionException e) {
@@ -163,7 +160,7 @@ public class MarkdownPlugin extends Plugin {
      */
     @Override
     public ReturnValue init() {
-        return ret;
+        return new ReturnValue();
     }
 
     /*
@@ -178,8 +175,7 @@ public class MarkdownPlugin extends Plugin {
      */
     @Override
     public ReturnValue do_test() {
-        // TODO Auto-generated method stub
-        return ret;
+        return new ReturnValue();
     }
 
     /*
@@ -218,7 +214,7 @@ public class MarkdownPlugin extends Plugin {
             handlePlugins(bufferedWriter, modsList, toSkip);
         }
 
-        return ret;
+        return new ReturnValue();
     }
 
     private static Field getField(Class clazz, String fieldName) throws NoSuchFieldException {
@@ -246,8 +242,7 @@ public class MarkdownPlugin extends Plugin {
      */
     @Override
     public ReturnValue clean_up() {
-        // TODO Auto-generated method stub
-        return ret;
+        return new ReturnValue();
     }
 
     /**
@@ -274,11 +269,7 @@ public class MarkdownPlugin extends Plugin {
                     writeModuleDescription(plug, bufferedWriter);
                 }
 
-            } catch (NoSuchFieldException ex) {
-                Log.fatal(ex, ex);
-            } catch (IllegalAccessException ex) {
-                Log.fatal(ex, ex);
-            } catch (IOException ex) {
+            } catch (NoSuchFieldException | IllegalAccessException | IOException ex) {
                 Log.fatal(ex, ex);
             }
 
