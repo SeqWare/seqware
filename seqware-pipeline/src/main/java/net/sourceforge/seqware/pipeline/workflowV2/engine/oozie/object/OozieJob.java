@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
 import com.google.common.collect.Lists;
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,8 +10,6 @@ import java.util.Collection;
 import java.util.List;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
-import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_INTERVAL;
-import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieBashJob.OOZIE_RETRY_MAX;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -95,10 +94,12 @@ public abstract class OozieJob {
     public final Element serializeXML() {
         Element element = new Element("action", WorkflowApp.NAMESPACE);
         element.setAttribute("name", this.name);
-        element.setAttribute("retry-max",
-                ConfigTools.getSettings().containsKey(OOZIE_RETRY_MAX) ? ConfigTools.getSettings().get(OOZIE_RETRY_MAX) : "1");
-        element.setAttribute("retry-interval",
-                ConfigTools.getSettings().containsKey(OOZIE_RETRY_INTERVAL) ? ConfigTools.getSettings().get(OOZIE_RETRY_INTERVAL) : "1");
+        element.setAttribute("retry-max", ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_RETRY_MAX.getSettingKey()) ? ConfigTools
+                .getSettings().get(SqwKeys.OOZIE_RETRY_MAX.getSettingKey()) : "1");
+        element.setAttribute(
+                "retry-interval",
+                ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_RETRY_INTERVAL.getSettingKey()) ? ConfigTools.getSettings().get(
+                        SqwKeys.OOZIE_RETRY_INTERVAL.getSettingKey()) : "1");
 
         if (useSge) {
             element.addContent(createSgeElement());

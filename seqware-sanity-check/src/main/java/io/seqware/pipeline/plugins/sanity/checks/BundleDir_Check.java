@@ -16,6 +16,7 @@
  */
 package io.seqware.pipeline.plugins.sanity.checks;
 
+import io.seqware.pipeline.SqwKeys;
 import io.seqware.pipeline.plugins.sanity.QueryRunner;
 import io.seqware.pipeline.plugins.sanity.SanityCheckPluginInterface;
 import java.io.File;
@@ -26,7 +27,7 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- *
+ * 
  * @author Raunaq Suri
  */
 @ServiceProvider(service = SanityCheckPluginInterface.class)
@@ -53,18 +54,19 @@ public class BundleDir_Check implements SanityCheckPluginInterface {
         HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
         if (settings.isEmpty()) {
             return false;
-        } else if (!settings.containsKey("SW_BUNDLE_DIR") || !settings.containsKey("SW_BUNDLE_REPO_DIR")) {
+        } else if (!settings.containsKey(SqwKeys.SW_BUNDLE_DIR.getSettingKey())
+                || !settings.containsKey(SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey())) {
             return false;
         }
 
-        File bundleDir = new File(settings.get("SW_BUNDLE_DIR"));
-        File bundleRepoDir = new File(settings.get("SW_BUNDLE_REPO_DIR"));
+        File bundleDir = new File(settings.get(SqwKeys.SW_BUNDLE_DIR.getSettingKey()));
+        File bundleRepoDir = new File(settings.get(SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey()));
         if (bundleDir.exists() && bundleRepoDir.exists()) {
             if (bundleDir.canRead() && bundleDir.canWrite() && bundleRepoDir.canRead() && bundleRepoDir.canWrite()) {
             } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
 

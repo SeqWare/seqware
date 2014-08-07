@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.plugins.checkdb;
 
+import io.seqware.pipeline.SqwKeys;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -75,14 +76,11 @@ public final class CheckDB extends Plugin {
     public final ReturnValue init() {
         try {
             HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-            // do a defensive check to see if we have a direct database connection available
-            if (settings.get("SW_DB_SERVER") == null || settings.get("SW_DB") == null || settings.get("SW_DB_USER") == null
-                    || settings.get("SW_DB_PASS") == null) {
+            if (!ConfigTools.isValidDBConnectionParam(settings)) {
                 ReturnValue ret = new ReturnValue();
-                System.out
-                        .println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
+                System.out.println(MetadataFactory.NO_DATABASE_CONFIG);
                 ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-                return (ret);
+                return ret;
             }
         } catch (Exception e) {
             ReturnValue ret = new ReturnValue();
@@ -214,7 +212,7 @@ public final class CheckDB extends Plugin {
      */
     public static void processOutput(SortedMap<Level, Set<String>> result, Level level, String description, List<Integer> list) {
         if (list.size() > 0) {
-            String SW_REST_URL = ConfigTools.getSettings().get("SW_REST_URL");
+            String swRestUrl = ConfigTools.getSettings().get(SqwKeys.SW_REST_URL.getSettingKey());
             Metadata md = MetadataFactory.get(ConfigTools.getSettings());
             Collections.sort(list);
             // shorten list if required
@@ -230,25 +228,25 @@ public final class CheckDB extends Plugin {
             for (int i = 0; i < parentModels.size(); i++) {
                 String url = null;
                 if (parentModels.get(i) instanceof Experiment) {
-                    url = SW_REST_URL + "/experiments/" + parentAccessions[i];
+                    url = swRestUrl + "/experiments/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof net.sourceforge.seqware.common.model.File) {
-                    url = SW_REST_URL + "/files/" + parentAccessions[i];
+                    url = swRestUrl + "/files/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof IUS) {
-                    url = SW_REST_URL + "/ius/" + parentAccessions[i];
+                    url = swRestUrl + "/ius/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof Lane) {
-                    url = SW_REST_URL + "/lanes/" + parentAccessions[i];
+                    url = swRestUrl + "/lanes/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof Processing) {
-                    url = SW_REST_URL + "/processes/" + parentAccessions[i];
+                    url = swRestUrl + "/processes/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof Sample) {
-                    url = SW_REST_URL + "/samples/" + parentAccessions[i];
+                    url = swRestUrl + "/samples/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof SequencerRun) {
-                    url = SW_REST_URL + "/sequencerruns/" + parentAccessions[i];
+                    url = swRestUrl + "/sequencerruns/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof Study) {
-                    url = SW_REST_URL + "/studies/" + parentAccessions[i];
+                    url = swRestUrl + "/studies/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof WorkflowRun) {
-                    url = SW_REST_URL + "/workflowruns/" + parentAccessions[i];
+                    url = swRestUrl + "/workflowruns/" + parentAccessions[i];
                 } else if (parentModels.get(i) instanceof Workflow) {
-                    url = SW_REST_URL + "/workflows/" + parentAccessions[i];
+                    url = swRestUrl + "/workflows/" + parentAccessions[i];
                 }
                 if (url != null) {
                     warnings.append(" <a href=\"").append(url).append("\">").append(parentAccessions[i]).append("</a> ");

@@ -4,6 +4,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.transfer.MultipleFileUpload;
 import com.amazonaws.services.s3.transfer.TransferManager;
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -117,8 +118,8 @@ public class S3UploadDirectory extends Module {
 
         try {
             HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-            accessKey = settings.get("AWS_ACCESS_KEY");
-            secretKey = settings.get("AWS_SECRET_KEY");
+            accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+            secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
         } catch (Exception e) {
             Log.error(e.getMessage());
             ret.setExitStatus(ReturnValue.FAILURE);
