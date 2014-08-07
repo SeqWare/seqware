@@ -72,11 +72,10 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class BatchMetadataInjection extends Metadata {
 
-    private ReturnValue ret = new ReturnValue();
-    private StringBuffer whatWeDid = new StringBuffer();
-    private Map<Integer, String> names;
-    private boolean interactive = false;
-    private static InputStream schema = BatchMetadataInjection.class.getResourceAsStream("bmischema.json");
+    private final StringBuffer whatWeDid = new StringBuffer();
+    private final Map<Integer, String> names;
+    private boolean instanceInteractive = false;
+    private static final InputStream schema = BatchMetadataInjection.class.getResourceAsStream("bmischema.json");
     JSONHelper jsonHelper = new JSONHelper();
 
     // private boolean createStudy = false;
@@ -106,7 +105,7 @@ public class BatchMetadataInjection extends Metadata {
     @Override
     public ReturnValue init() {
 
-        interactive = options.has("interactive");
+        instanceInteractive = options.has("interactive");
 
         whatWeDid.append("digraph dag {");
         return ret;
@@ -141,7 +140,7 @@ public class BatchMetadataInjection extends Metadata {
             if (options.has("miseq-sample-sheet")) {
                 parseFields();
                 String filepath = (String) options.valueOf("miseq-sample-sheet");
-                ParseMiseqFile MiseqParser = new ParseMiseqFile(metadata, (Map<String, String>) fields.clone(), interactive);
+                ParseMiseqFile MiseqParser = new ParseMiseqFile(metadata, (Map<String, String>) fields.clone(), instanceInteractive);
                 try {
                     run = MiseqParser.parseMiseqFile(filepath);
                     inject(run);
@@ -152,7 +151,7 @@ public class BatchMetadataInjection extends Metadata {
             } else if (options.has("new")) {
                 try {
                     parseFields();
-                    CreateFromScratch create = new CreateFromScratch(metadata, (Map<String, String>) fields.clone(), interactive);
+                    CreateFromScratch create = new CreateFromScratch(metadata, (Map<String, String>) fields.clone(), instanceInteractive);
                     run = create.getRunInfo();
                     inject(run);
                 } catch (Exception ex) {
@@ -204,9 +203,9 @@ public class BatchMetadataInjection extends Metadata {
                 }
                 Log.stdout("JSON sequencer run file is valid.");
                 return ret;
-            } else if ((options.has("export-json-sequencer-run") && interactive) && !options.has("new")) {
+            } else if ((options.has("export-json-sequencer-run") && instanceInteractive) && !options.has("new")) {
                 parseFields();
-                CreateFromScratch create = new CreateFromScratch(metadata, (Map<String, String>) fields.clone(), interactive);
+                CreateFromScratch create = new CreateFromScratch(metadata, (Map<String, String>) fields.clone(), instanceInteractive);
                 run = create.getRunInfo();
             } else {
                 Log.stdout("Combination of parameters not recognized!");
@@ -222,10 +221,10 @@ public class BatchMetadataInjection extends Metadata {
                     filename = run.getRunName() + System.currentTimeMillis();
                 }
                 try {
-                    FileWriter writer = new FileWriter(filename);
-                    run.print(writer, metadata);
-                    writer.flush();
-                    writer.close();
+                    try (FileWriter writer = new FileWriter(filename)) {
+                        run.print(writer, metadata);
+                        writer.flush();
+                    }
                 } catch (IOException ex) {
                     Log.warn("Error while writing to the record file " + filename, ex);
                 }
@@ -292,7 +291,7 @@ public class BatchMetadataInjection extends Metadata {
         Set<LaneInfo> lanes = run.getLanes();
 
         List<Lane> existingLanes = metadata.getLanesFrom(sequencerRunAccession);
-        if (existingLanes != null && !existingLanes.isEmpty() && interactive) {
+        if (existingLanes != null && !existingLanes.isEmpty() && instanceInteractive) {
             Boolean yorn = ConsoleAdapter.getInstance().promptBoolean(
                     "This sequencer run already has " + existingLanes.size() + " lanes. Continue?", Boolean.TRUE);
             if (yorn.equals(Boolean.FALSE)) {
@@ -444,7 +443,7 @@ public class BatchMetadataInjection extends Metadata {
         fields.put("title", name);
         fields.put("description", description);
 
-        this.interactive = interactive;
+        this.instanceInteractive = interactive;
 
         // if (interactive) {
         // printDefaults();
@@ -668,7 +667,7 @@ public class BatchMetadataInjection extends Metadata {
     private <SeqwareObjectType, AttributeType extends Attribute<SeqwareObjectType>> Set<AttributeType> convertTagValueUnitSetToAttributeSet(
             Set<TagValueUnit> tagValueUnits, Class<AttributeType> attributeTypeClass) throws InstantiationException, IllegalAccessException {
 
-        Set<AttributeType> attributes = new HashSet<AttributeType>();
+        Set<AttributeType> attributes = new HashSet<>();
 
         for (TagValueUnit tvu : tagValueUnits) {
             AttributeType at = attributeTypeClass.newInstance();
@@ -688,7 +687,7 @@ public class BatchMetadataInjection extends Metadata {
         // BatchMetadataInjection b = new BatchMetadataInjection();
         // b.setParams(Arrays.asList(args));
         PluginRunner p = new PluginRunner();
-        List<String> a = new ArrayList<String>();
+        List<String> a = new ArrayList<>();
         a.add("--plugin");
         a.add(BatchMetadataInjection.class.getCanonicalName());
         a.add("--");
