@@ -3,6 +3,7 @@ package net.sourceforge.seqware.pipeline.plugins.deletion;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
+import io.seqware.pipeline.SqwKeys;
 import io.seqware.webservice.client.SeqWareWebServiceClient;
 import io.seqware.webservice.controller.ModelAccessionIDTuple;
 import io.seqware.webservice.generated.model.WorkflowRun;
@@ -81,7 +82,7 @@ public final class DeletionDB extends Plugin {
     public final ReturnValue init() {
         try {
             HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-            this.adminUrl = settings.get("SW_ADMIN_REST_URL");
+            this.adminUrl = settings.get(SqwKeys.SW_ADMIN_REST_URL.getSettingKey());
         } catch (Exception e) {
             ReturnValue ret = new ReturnValue();
             ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
@@ -89,8 +90,8 @@ public final class DeletionDB extends Plugin {
         }
         if (this.adminUrl == null) {
             ReturnValue ret = new ReturnValue();
-            System.out
-                    .println("This utility requires access to the admin web service. Configure SW_ADMIN_REST_URL in your .seqware/setttings");
+            System.out.println("This utility requires access to the admin web service. Configure "
+                    + SqwKeys.SW_ADMIN_REST_URL.getSettingKey() + " in your .seqware/setttings");
             ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
             return (ret);
         }

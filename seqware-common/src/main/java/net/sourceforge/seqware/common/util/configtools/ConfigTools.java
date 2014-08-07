@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.util.configtools;
 
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,5 +103,17 @@ public class ConfigTools {
             settings = ConfigTools.getProperty("user.home") + File.separator + ".seqware/settings";
         }
         return settings;
+    }
+
+    public static boolean isValidDBConnectionParam(HashMap<String, String> settings) {
+        // do a defensive check to see if we have a direct database connection available
+        String server = settings.get(SqwKeys.SW_DB_SERVER.getSettingKey());
+        String dbName = settings.get(SqwKeys.SW_DB.getSettingKey());
+        String user = settings.get(SqwKeys.SW_DB_USER.getSettingKey());
+        String pass = settings.get(SqwKeys.SW_DB_PASS.getSettingKey());
+        if (server == null || dbName == null || user == null || pass == null) {
+            return false;
+        }
+        return true;
     }
 }

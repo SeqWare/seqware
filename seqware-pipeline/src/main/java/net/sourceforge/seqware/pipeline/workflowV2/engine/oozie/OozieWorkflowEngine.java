@@ -76,9 +76,6 @@ public class OozieWorkflowEngine implements WorkflowEngine {
 
     public static Configuration initConf(AbstractWorkflowDataModel model) {
         Configuration conf = new Configuration();
-        conf.set("hbase.zookeeper.quorum", model.getEnv().getHbase_zookeeper_quorum());
-        conf.set("hbase.zookeeper.property.clientPort", model.getEnv().getHbase_zookeeper_property_clientPort());
-        conf.set("hbase.master", model.getEnv().getHbase_master());
         conf.set("mapred.job.tracker", model.getEnv().getMapred_job_tracker());
         if (model.getEnv().getFs_default_name() != null) conf.set("fs.default.name", model.getEnv().getFs_default_name());
         if (model.getEnv().getFs_defaultFS() != null) conf.set("fs.defaultFS", model.getEnv().getFs_defaultFS());

@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.pipeline.modules.utilities;
 
 import com.amazonaws.ClientConfiguration;
+import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -618,7 +619,7 @@ public class ProvisionFiles extends Module {
         } else if (options.has("decrypt-key-from-settings")) {
             try {
                 HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                return (filesUtil.getDecryptCipher(settings.get("SW_DECRYPT_KEY")));
+                return (filesUtil.getDecryptCipher(settings.get(SqwKeys.SW_DECRYPT_KEY.getSettingKey())));
             } catch (Exception e) {
                 Log.error(e.getMessage());
                 return null;
@@ -640,7 +641,7 @@ public class ProvisionFiles extends Module {
         } else if (options.has("encrypt-key-from-settings")) {
             try {
                 HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                return (filesUtil.getEncryptCipher(settings.get("SW_ENCRYPT_KEY")));
+                return (filesUtil.getEncryptCipher(settings.get(SqwKeys.SW_ENCRYPT_KEY.getSettingKey())));
             } catch (Exception e) {
                 Log.error(e.getMessage());
                 return null;

@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.bundle;
 
+import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.nio.file.Files;
@@ -61,8 +62,8 @@ public class Bundle {
     public Bundle(Metadata metadata, Map<String, String> config) {
         super();
         this.metadata = metadata;
-        permanentBundleLocation = config.get("SW_BUNDLE_REPO_DIR");
-        bundleDir = config.get("SW_BUNDLE_DIR");
+        permanentBundleLocation = config.get(SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey());
+        bundleDir = config.get(SqwKeys.SW_BUNDLE_DIR.getSettingKey());
     }
 
     public static BundleInfo findBundleInfo(File bundleDir) {
@@ -150,7 +151,8 @@ public class Bundle {
         // check the bundleDir
         if (bundleDir == null || "".equals(bundleDir)) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-            ret.setStderr("ERROR: the SW_BUNDLE_DIR variable in your SEQWARE_SETTINGS (default .seqware/settings) file appears to be undefined!");
+            ret.setStderr("ERROR: the " + SqwKeys.SW_BUNDLE_DIR.getSettingKey()
+                    + " variable in your SEQWARE_SETTINGS (default .seqware/settings) file appears to be undefined!");
             return (ret);
         }
 
@@ -202,7 +204,8 @@ public class Bundle {
         // check the bundleDir
         if (bundleDir == null || "".equals(bundleDir)) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-            ret.setStderr("ERROR: the SW_BUNDLE_DIR variable in your SEQWARE_SETTINGS (default .seqware/settings) file appears to be undefined!");
+            ret.setStderr("ERROR: the " + SqwKeys.SW_BUNDLE_DIR.getSettingKey()
+                    + " variable in your SEQWARE_SETTINGS (default .seqware/settings) file appears to be undefined!");
             return (ret);
         }
 
@@ -277,7 +280,8 @@ public class Bundle {
 
         boolean compression = true;
         Map<String, String> settings = ConfigTools.getSettings();
-        if (settings.containsKey(FileTools.COMPRESSION_SETTING) && settings.get(FileTools.COMPRESSION_SETTING).equals("OFF")) {
+        if (settings.containsKey(SqwKeys.BUNDLE_COMPRESSION.getSettingKey())
+                && settings.get(SqwKeys.BUNDLE_COMPRESSION.getSettingKey()).equals("OFF")) {
             compression = false;
         }
         if (!FileTools.zipDirectoryRecursive(bundlePath, outputZipFile, null, true, compression)) {
@@ -323,7 +327,8 @@ public class Bundle {
 
         boolean compression = true;
         Map<String, String> settings = ConfigTools.getSettings();
-        if (settings.containsKey(FileTools.COMPRESSION_SETTING) && settings.get(FileTools.COMPRESSION_SETTING).equals("OFF")) {
+        if (settings.containsKey(SqwKeys.BUNDLE_COMPRESSION.getSettingKey())
+                && settings.get(SqwKeys.BUNDLE_COMPRESSION.getSettingKey()).equals("OFF")) {
             compression = false;
         }
         if (!FileTools.zipDirectoryRecursive(bundlePath, new File(tempDir.getAbsolutePath() + File.separator + bundlePath.getName()
@@ -558,7 +563,9 @@ public class Bundle {
         if (bundle != null && bundle.isDirectory() && packageIntoZip) {
 
             if (permanentBundleLocation == null) {
-                Log.error("You tried to install a bundle and create a .zip file of the bundle without having a SW_BUNDLE_REPO_DIR defined in your seqware settings file! This needs to be defined and pointed to a location where a .zip file can be written.");
+                Log.error("You tried to install a bundle and create a .zip file of the bundle without having a "
+                        + SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey()
+                        + " defined in your seqware settings file! This needs to be defined and pointed to a location where a .zip file can be written.");
                 return (new ReturnValue(ReturnValue.FAILURE));
             } else if (permanentBundleLocation.startsWith("s3://")) {
                 Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the S3 location: "
@@ -575,7 +582,9 @@ public class Bundle {
         else if (bundle != null && bundle.isFile() && bundle.getName().endsWith(".zip")) {
             // FIXME: the getBundleInfo will unzip this below, should only do that if the request is for unzip
             if (permanentBundleLocation == null) {
-                Log.error("You tried to install a bundle from a .zip file without having a SW_BUNDLE_REPO_DIR defined in your seqware settings file! This needs to be defined and pointed to a location where a .zip file can be copied to.");
+                Log.error("You tried to install a bundle from a .zip file without having a "
+                        + SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey()
+                        + " defined in your seqware settings file! This needs to be defined and pointed to a location where a .zip file can be copied to.");
                 return (new ReturnValue(ReturnValue.FAILURE));
             } else if (permanentBundleLocation.startsWith("s3://")) {
                 Log.stdout("Now packaging " + bundle.getAbsolutePath() + " to a zip file and transferring to the S3 location: "
