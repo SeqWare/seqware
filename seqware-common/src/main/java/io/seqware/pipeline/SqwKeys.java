@@ -26,7 +26,6 @@ package io.seqware.pipeline;
  */
 public enum SqwKeys {
     // @formatter:off
-// @formatter:off
     SW_METADATA_METHOD(null, Categories.COMMON, "SeqWare MetaDB communication method", "webservice", "database", "webservice", "none"), 
     SW_REST_URL(null, Categories.COMMON, "Specify the URL for the seqware-webservice", "http://localhost:8080/SeqWareWebService"),
     SW_REST_USER(null, Categories.COMMON, "Specify the username for the seqware-webservice", "admin"), 
@@ -66,8 +65,15 @@ public enum SqwKeys {
     SW_ADMIN_REST_URL(null, Categories.ADMIN, "Location of the admin web service, currently used for deletion", "http://localhost:38080/seqware-admin-webservice"),
     SW_LOCK_ID(null, Categories.ADMIN, "Used to override the JUnique lock used to ensure that utilities don't run concurrently","seqware"),
     SW_ENCRYPT_KEY(null, Categories.ADMIN, "Legacy key used to encrypt provisioned files", "seqware"),
-    SW_DECRYPT_KEY(null, Categories.ADMIN, "Legacy key used to decrypt provisioned files", "seqware")
-
+    SW_DECRYPT_KEY(null, Categories.ADMIN, "Legacy key used to decrypt provisioned files", "seqware"),
+    BASIC_TEST_DB_HOST(null, Categories.TESTING, "Used to designate a database for integration tests","localhost"),
+    BASIC_TEST_DB_NAME(null, Categories.TESTING, "Used to designate a database name for integration tests","seqware_meta_db"),
+    BASIC_TEST_DB_USER(null, Categories.TESTING, "Used to designate a database username for integration tests","seqware"),
+    BASIC_TEST_DB_PASSWORD(null, Categories.TESTING, "Used to designate a database password for integration tests","seqware"),
+    EXTENDED_TEST_DB_HOST(null, Categories.TESTING, "Used to designate a database for extended integration tests","localhost"),
+    EXTENDED_TEST_DB_NAME(null, Categories.TESTING, "Used to designate a database name for extended integration tests","seqware_meta_db"),
+    EXTENDED_TEST_DB_USER(null, Categories.TESTING, "Used to designate a database username for extended integration tests","seqware"),
+    EXTENDED_TEST_DB_PASSWORD(null, Categories.TESTING, "Used to designate a database password for extended integration tests","seqware")
     ;
     // @formatter:on
 
@@ -149,7 +155,8 @@ public enum SqwKeys {
                 "Oozie engine settings. Only used for both 'oozie' and 'oozie-sge' engines."), 
         OOZIE_SGE(
                 "Oozie-SGE engine settings. Only used for 'oozie-sge' engine."), 
-        ADMIN("Admin web service, currently used for deletion");
+        ADMIN("Admin web service, currently used for deletion"),
+        TESTING("Used for regression testing");
         // @formatter:on
 
         private final String categoryDescription;
