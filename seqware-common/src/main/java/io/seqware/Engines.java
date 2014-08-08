@@ -8,7 +8,7 @@ import java.util.Set;
 public class Engines {
 
     public enum TYPES {
-        oozie("oozie"), oozie_sge("oozie-sge");
+        oozie("oozie"), oozie_sge("oozie-sge"), whitestar("whitestar"), whitestar_sge("whitestar-sge");
         private final String cliString;
 
         TYPES(String cliString) {
@@ -28,7 +28,8 @@ public class Engines {
         }
     }
 
-    public static final String ENGINES_LIST = Engines.TYPES.oozie + ", " + Engines.TYPES.oozie_sge;
+    public static final String ENGINES_LIST = Engines.TYPES.oozie + ", " + Engines.TYPES.oozie_sge + ", " + Engines.TYPES.whitestar + ", "
+            + Engines.TYPES.whitestar_sge;
     public static final String DEFAULT_ENGINE = Engines.TYPES.oozie.toString();
     public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ENGINES_LIST.split(", "))));
 
@@ -40,6 +41,16 @@ public class Engines {
      */
     public static boolean isOozie(final String engine) {
         return engine != null && engine.startsWith("oozie");
+    }
+
+    /**
+     * Check whether the workflow engine is whitestar-based.
+     * 
+     * @param engine
+     * @return
+     */
+    public static boolean isWhiteStar(final String engine) {
+        return engine != null && engine.startsWith("whitestar");
     }
 
     /**
