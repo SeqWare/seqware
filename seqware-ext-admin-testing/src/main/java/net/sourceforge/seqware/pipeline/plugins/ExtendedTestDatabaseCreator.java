@@ -84,7 +84,7 @@ public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
     @Override
     protected String getDEFAULT_DB_HOST() {
         if (settings.containsKey(SqwKeys.EXTENDED_TEST_DB_HOST.getSettingKey())) {
-            return settings.get(SqwKeys.EXTENDED_TEST_DB_USER.getSettingKey());
+            return settings.get(SqwKeys.EXTENDED_TEST_DB_HOST.getSettingKey());
         }
         Log.debug("Could not retrieve extended test db host, using default from unit tests");
         return super.getDEFAULT_DB_HOST();
