@@ -643,6 +643,13 @@ public class WorkflowApp {
     }
 
     /**
+     * @return the jobs
+     */
+    public List<OozieJob> getJobs() {
+        return jobs;
+    }
+
+    /**
      * Encapsulates logic for the generation and iteration of buckets
      */
     public class BucketGenerator {

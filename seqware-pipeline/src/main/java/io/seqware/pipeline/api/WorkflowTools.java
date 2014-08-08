@@ -17,7 +17,9 @@
 
 package io.seqware.pipeline.api;
 
+import io.seqware.Engines;
 import io.seqware.pipeline.SqwKeys;
+import io.seqware.pipeline.engines.whitestar.WhiteStarWorkflowEngine;
 import java.util.Map;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
@@ -60,10 +62,24 @@ public class WorkflowTools {
                         + OozieJob.SGE_MAX_MEMORY_PARAM_VARIABLE + "' variable.");
             }
             wfEngine = new OozieWorkflowEngine(dataModel, true, threadsSgeParamFormat, maxMemorySgeParamFormat, createDirectories);
+        } else if (Engines.isWhiteStar(engine)) {
+            String threadsSgeParamFormat = config.get(SqwKeys.OOZIE_SGE_THREADS_PARAM_FORMAT.getSettingKey());
+            String maxMemorySgeParamFormat = config.get(SqwKeys.OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT.getSettingKey());
+            if (threadsSgeParamFormat == null) {
+                System.err.println("WARNING: No entry in settings for " + SqwKeys.OOZIE_SGE_THREADS_PARAM_FORMAT.getSettingKey()
+                        + ", omitting threads option from qsub. Fix by providing the format of qsub threads option, using the '"
+                        + OozieJob.SGE_THREADS_PARAM_VARIABLE + "' variable.");
+            }
+            if (maxMemorySgeParamFormat == null) {
+                System.err.println("WARNING: No entry in settings for " + SqwKeys.OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT.getSettingKey()
+                        + ", omitting max-memory option from qsub. Fix by providing the format of qsub max-memory option, using the '"
+                        + OozieJob.SGE_MAX_MEMORY_PARAM_VARIABLE + "' variable.");
+            }
+            return new WhiteStarWorkflowEngine(dataModel, engine.contains("sge"), threadsSgeParamFormat, maxMemorySgeParamFormat,
+                    createDirectories);
         } else {
             throw new IllegalArgumentException("Unknown workflow engine: " + engine);
         }
         return wfEngine;
     }
-
 }
