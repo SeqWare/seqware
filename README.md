@@ -155,7 +155,7 @@ deleting your ~/.m2 directory and running the build process again.
 
 ## Citations
 
-Browse DOI codes for SeqWare and related software for software engineering at OICR at [Software Engineering at Zenodo(https://zenodo.org/collection/user-softeng-at-oicr)
+Browse DOI codes for SeqWare and related software for software engineering at OICR at [Software Engineering at Zenodo](https://zenodo.org/collection/user-softeng-at-oicr)
 
 
 ## Installing
