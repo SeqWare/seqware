@@ -79,10 +79,10 @@ public class ProcessingStructureResource extends BasicRestlet {
 
             @Override
             public void write(OutputStream out) throws IOException {
-                Writer writer = new BufferedWriter(new OutputStreamWriter(out));
-                writer.write(sb.toString());
-                writer.flush();
-                writer.close();
+                try (Writer writer = new BufferedWriter(new OutputStreamWriter(out))) {
+                    writer.write(sb.toString());
+                    writer.flush();
+                }
             }
         };
         response.setEntity(output);

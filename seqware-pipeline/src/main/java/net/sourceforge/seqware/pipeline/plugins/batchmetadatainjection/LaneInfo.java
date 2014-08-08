@@ -62,7 +62,7 @@ public class LaneInfo implements Comparable<LaneInfo> {
 
     public Set<TagValueUnit> getLaneAttributes() {
         if (laneAttributes == null) {
-            laneAttributes = new HashSet<TagValueUnit>();
+            laneAttributes = new HashSet<>();
         }
         return laneAttributes;
     }

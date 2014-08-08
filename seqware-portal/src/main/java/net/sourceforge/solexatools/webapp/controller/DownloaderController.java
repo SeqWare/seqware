@@ -89,10 +89,9 @@ public class DownloaderController extends BaseCommandController {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + shortName + "\"");
                 response.setContentLength(fileSize);
 
-                BufferedInputStream in = new BufferedInputStream(new FileInputStream(realFile));
-
-                FileCopyUtils.copy(in, response.getOutputStream());
-                in.close();
+                try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(realFile))) {
+                    FileCopyUtils.copy(in, response.getOutputStream());
+                }
                 response.getOutputStream().flush();
                 response.getOutputStream().close();
             } else {

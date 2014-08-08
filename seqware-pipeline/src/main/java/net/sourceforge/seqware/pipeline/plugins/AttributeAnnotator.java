@@ -317,24 +317,24 @@ public class AttributeAnnotator extends Plugin {
         String filepath = (String) options.valueOf("file");
         File file = new File(filepath);
         try {
-            BufferedReader freader = new BufferedReader(new FileReader(file));
-            String line = null;
-            while ((line = freader.readLine()) != null) {
-                String[] args = line.split(",");
-                if (!checkArgs(args)) return false;
-                Map<String, Map<String, String>> types = bulkMap.get(args[0]);
-                if (types == null) {
-                    types = new HashMap<>();
-                    bulkMap.put(args[0], types);
+            try (BufferedReader freader = new BufferedReader(new FileReader(file))) {
+                String line = null;
+                while ((line = freader.readLine()) != null) {
+                    String[] args = line.split(",");
+                    if (!checkArgs(args)) return false;
+                    Map<String, Map<String, String>> types = bulkMap.get(args[0]);
+                    if (types == null) {
+                        types = new HashMap<>();
+                        bulkMap.put(args[0], types);
+                    }
+                    Map<String, String> ids = types.get(args[1]);
+                    if (ids == null) {
+                        ids = new LinkedHashMap<>();
+                        types.put(args[1], ids);
+                    }
+                    ids.put(args[2], args[3]);
                 }
-                Map<String, String> ids = types.get(args[1]);
-                if (ids == null) {
-                    ids = new LinkedHashMap<>();
-                    types.put(args[1], ids);
-                }
-                ids.put(args[2], args[3]);
             }
-            freader.close();
         } catch (FileNotFoundException e) {
             Log.error("Input file was not found", e);
             return false;

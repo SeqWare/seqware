@@ -80,14 +80,13 @@ public class OozieXML2Dot extends Plugin {
         this.addSubNode(rootNode, root);
 
         // construct dot file
-
-        FileWriter fw = new FileWriter(output);
-        fw.write("digraph dag {\n");
-        // avoid duplicated
-        Set<String> allEdge = new HashSet<>();
-        this.visitNode(rootNode, fw, allEdge);
-        fw.write("}\n");
-        fw.close();
+        try (FileWriter fw = new FileWriter(output)) {
+            fw.write("digraph dag {\n");
+            // avoid duplicated
+            Set<String> allEdge = new HashSet<>();
+            this.visitNode(rootNode, fw, allEdge);
+            fw.write("}\n");
+        }
     }
 
     private Element findElementByName(String name, Element root) {
@@ -111,23 +110,29 @@ public class OozieXML2Dot extends Plugin {
 
     private void addSubNode(DotNode parent, Element root) {
         Element element = this.findElementByName(parent.getName(), root);
-        if (element.getName().equals("action")) {
+        switch (element.getName()) {
+        case "action": {
             Element child = element.getChild("ok", NAMESPACE);
             String okTo = child.getAttributeValue("to");
             DotNode childNode = new DotNode(okTo);
             parent.addChild(childNode);
             this.addSubNode(childNode, root);
-        } else if (element.getName().equals("fork")) {
+            break;
+        }
+        case "fork":
             List<Element> forks = element.getChildren();
             for (Element fork : forks) {
                 DotNode childNode = new DotNode(fork.getAttributeValue("start"));
                 parent.addChild(childNode);
                 this.addSubNode(childNode, root);
             }
-        } else if (element.getName().equals("join")) {
+            break;
+        case "join": {
             DotNode childNode = new DotNode(element.getAttributeValue("to"));
             parent.addChild(childNode);
             this.addSubNode(childNode, root);
+            break;
+        }
         }
     }
 

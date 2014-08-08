@@ -92,9 +92,7 @@ public class WorkflowClassFinder {
                 Log.info("CLASS LOADED " + qPath);
                 return cls;
 
-            } catch (IOException ex) {
-                Log.error(ex, ex);
-            } catch (ClassNotFoundException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Log.error(ex, ex);
             }
         }

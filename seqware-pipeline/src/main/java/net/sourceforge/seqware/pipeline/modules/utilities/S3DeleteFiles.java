@@ -199,15 +199,15 @@ public class S3DeleteFiles extends Module {
             if (options.has("s3-url-file")) {
                 List<String> lists = (List<String>) options.valuesOf("s3-url-file");
                 for (String list : lists) {
-                    BufferedReader reader = new BufferedReader(new FileReader(list));
-                    String line = reader.readLine();
-                    while (line != null) {
-                        if (line.startsWith("s3://")) {
-                            remoteFiles.add(line);
+                    try (BufferedReader reader = new BufferedReader(new FileReader(list))) {
+                        String line = reader.readLine();
+                        while (line != null) {
+                            if (line.startsWith("s3://")) {
+                                remoteFiles.add(line);
+                            }
+                            line = reader.readLine();
                         }
-                        line = reader.readLine();
                     }
-                    reader.close();
                 }
             }
         } catch (Exception e) {

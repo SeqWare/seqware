@@ -459,7 +459,7 @@ public class S3ListFiles extends Module {
                     path = path.substring(1);
                 }
                 // Log.info(path);
-                fileMap.put(path, new Long(size));
+                fileMap.put(path, size);
             }
         }
     }

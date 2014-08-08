@@ -29,7 +29,7 @@ public class ExperimentUpdateValidator extends ExperimentValidator {
 
             Experiment inDbExperiment = this.getExperimentService().findByTitle(experiment.getTitle());
 
-            if (inDbExperiment != null && inDbExperiment.getSwAccession().intValue() != experiment.getSwAccession().intValue()) {
+            if (inDbExperiment != null && inDbExperiment.getSwAccession() != experiment.getSwAccession()) {
                 errors.reject("error.match.title");
             }
         }

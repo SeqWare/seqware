@@ -93,9 +93,7 @@ public class FileChildLimitedWorkflowRunsResource extends DatabaseResource {
             final Document line = XmlTools.marshalToDocument(jaxbTool, runs);
             getResponse().setEntity(XmlTools.getRepresentation(line));
             getResponse().setStatus(Status.SUCCESS_CREATED);
-        } catch (IOException e) {
-            getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
-        } catch (SQLException e) {
+        } catch (IOException | SQLException e) {
             getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
         }
     }

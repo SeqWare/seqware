@@ -416,14 +416,14 @@ public class Runner {
 
                     // write the current file to disk
                     FileOutputStream fos = new FileOutputStream(destFile);
-                    BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
-
                     // read and write until last byte is encountered
-                    while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-                        dest.write(data, 0, currentByte);
+                    try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER)) {
+                        // read and write until last byte is encountered
+                        while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+                            dest.write(data, 0, currentByte);
+                        }
+                        dest.flush();
                     }
-                    dest.flush();
-                    dest.close();
                 }
             }
             if (currentEntry.endsWith(".zip")) {

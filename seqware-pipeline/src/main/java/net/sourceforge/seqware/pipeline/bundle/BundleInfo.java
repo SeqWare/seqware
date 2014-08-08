@@ -109,13 +109,7 @@ public class BundleInfo {
                 }
             }
 
-        } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
