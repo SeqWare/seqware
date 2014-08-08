@@ -34,7 +34,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
  */
 public class WorkflowClassFinder {
 
-    private final static String FOLDERS_SEPARATOR_AS_STRING = System.getProperty("file.separator");
+    private static final String FOLDERS_SEPARATOR_AS_STRING = System.getProperty("file.separator");
 
     private final ResourcePatternResolver resourceResolver;
 

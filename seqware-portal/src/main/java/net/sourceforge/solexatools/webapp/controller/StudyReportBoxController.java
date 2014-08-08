@@ -42,17 +42,17 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 public class StudyReportBoxController extends BaseCommandController {
 
     /** Constant <code>STUDY_ID="study_id"</code> */
-    public final static String STUDY_ID = "study_id";
+    public static final String STUDY_ID = "study_id";
     /** Constant <code>JSON="json"</code> */
-    public final static String JSON = "json";
+    public static final String JSON = "json";
     /** Constant <code>SORT_NAME="sortname"</code> */
-    public final static String SORT_NAME = "sortname";
+    public static final String SORT_NAME = "sortname";
     /** Constant <code>SORT_ORDER="sortorder"</code> */
-    public final static String SORT_ORDER = "sortorder";
+    public static final String SORT_ORDER = "sortorder";
     /** Constant <code>CSV_TYPE="csvtype"</code> */
-    public final static String CSV_TYPE = "csvtype";
+    public static final String CSV_TYPE = "csvtype";
     /** Constant <code>CHECK="check"</code> */
-    public final static String CHECK = "check";
+    public static final String CHECK = "check";
 
     private StudyService studyService;
     private SampleService sampleService;

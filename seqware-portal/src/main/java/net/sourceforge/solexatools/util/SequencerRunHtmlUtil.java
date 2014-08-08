@@ -20,7 +20,7 @@ import net.sourceforge.seqware.common.util.Log;
  */
 public class SequencerRunHtmlUtil {
     /** Constant <code>TYPE_TREE="sr"</code> */
-    public final static String TYPE_TREE = "sr";
+    public static final String TYPE_TREE = "sr";
 
     /**
      * <p>

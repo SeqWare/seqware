@@ -17,11 +17,11 @@ public class StudySampleReportLineItem implements Comparable<StudySampleReportLi
             throw new Error(
                     "This class needs to have the status strings changed to some enum, but it's not clear what they should refer to.");
     }
-    private final static String SUCCESS = "completed";
-    private final static String PENDING = "pending";
-    private final static String RUNNING = "running";
-    private final static String FAILED = "failed";
-    private final static String NOT_RUNNING = "notrunned";
+    private static final String SUCCESS = "completed";
+    private static final String PENDING = "pending";
+    private static final String RUNNING = "running";
+    private static final String FAILED = "failed";
+    private static final String NOT_RUNNING = "notrunned";
 
     private Sample sample;
     private Sample childSample;
