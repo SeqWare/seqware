@@ -586,7 +586,7 @@ public class FileTools {
         theCommand.add("-lc");
         theCommand.add("whoami");
 
-        ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[0]));
+        ReturnValue ret = RunTools.runCommand(theCommand.toArray(new String[theCommand.size()]));
         if (ret.getExitStatus() == ReturnValue.SUCCESS) {
             String stdout = ret.getStdout();
             stdout = stdout.trim();

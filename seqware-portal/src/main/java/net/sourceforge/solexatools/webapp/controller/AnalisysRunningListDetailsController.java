@@ -241,7 +241,7 @@ public class AnalisysRunningListDetailsController extends BaseCommandController 
             openWorkflowRunId = Constant.getId(getEndId(listWorkflowRunNodeId));
             objId = getSecondId(listWorkflowRunNodeId);
 
-            if (objId.equals("")) {
+            if (objId.isEmpty()) {
                 Log.info("It is ASS Node");
                 objId = "wfrs_" + openWorkflowRunId;
             }

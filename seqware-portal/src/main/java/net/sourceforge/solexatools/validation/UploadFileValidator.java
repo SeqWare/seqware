@@ -54,7 +54,7 @@ public class UploadFileValidator implements Validator {
     public void validate(Object obj, Errors errors) {
         UploadFile uploadFile = (UploadFile) obj;
 
-        if (getFileTypeService().list().size() == 0) {
+        if (getFileTypeService().list().isEmpty()) {
             errors.reject("error.upload.file.file.type.empty");
         }
 
@@ -189,9 +189,9 @@ public class UploadFileValidator implements Validator {
      */
     protected String getExtension(String name) {
         String extension = "";
-        int dotPos = name.lastIndexOf(".");
+        int dotPos = name.lastIndexOf('.');
         if (dotPos > -1) {
-            extension = name.substring(name.lastIndexOf(".") + 1);
+            extension = name.substring(name.lastIndexOf('.') + 1);
         }
         return extension;
     }

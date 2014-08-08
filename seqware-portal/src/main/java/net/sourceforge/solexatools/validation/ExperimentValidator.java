@@ -79,7 +79,7 @@ public class ExperimentValidator implements Validator {
         if (errors.getFieldError("strExpectedNumberRuns") == null) {
             boolean isHasError = false;
             String strRuns = experiment.getStrExpectedNumberRuns();
-            if (strRuns != null && !strRuns.equals("")) {
+            if (strRuns != null && !strRuns.isEmpty()) {
                 Integer runs = null;
                 try {
                     runs = Integer.parseInt(strRuns);
@@ -114,7 +114,7 @@ public class ExperimentValidator implements Validator {
         if (errors.getFieldError("strExpectedNumberReads") == null) {
             boolean isHasError = false;
             String strReads = experiment.getStrExpectedNumberReads();
-            if (strReads != null && !strReads.equals("")) {
+            if (strReads != null && !strReads.isEmpty()) {
                 Long reads = null;
                 try {
                     reads = Long.parseLong(strReads);

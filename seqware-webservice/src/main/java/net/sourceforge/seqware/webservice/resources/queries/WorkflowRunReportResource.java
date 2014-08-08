@@ -84,7 +84,7 @@ public class WorkflowRunReportResource extends BasicRestlet {
             logger.debug("queryValues: " + key + " " + queryValues.get(key));
         }
         if (queryValues.containsKey("earliestDate")) {
-            String dateString = queryValues.get("earliestDate").toString();
+            String dateString = queryValues.get("earliestDate");
             try {
                 earliestDate = dateFormat.parse(dateString);
                 logger.debug("Earliest date: " + earliestDate.toString());
@@ -95,7 +95,7 @@ public class WorkflowRunReportResource extends BasicRestlet {
             }
         }
         if (queryValues.containsKey("latestDate")) {
-            String dateString = queryValues.get("latestDate").toString();
+            String dateString = queryValues.get("latestDate");
             try {
                 latestDate = dateFormat.parse(dateString);
                 logger.debug("Earliest date: " + latestDate.toString());

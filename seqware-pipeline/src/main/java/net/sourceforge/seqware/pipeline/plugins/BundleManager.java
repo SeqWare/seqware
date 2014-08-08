@@ -269,7 +269,7 @@ public class BundleManager extends Plugin {
             if (options.has("human-expanded")) {
                 localParams = nameVersionCreation_DateSeqWare_Accession + "\n" + localParams;
                 localParams = TabExpansionUtil.expansion(localParams);
-                if (localParams.trim().equals("")) {
+                if (localParams.trim().isEmpty()) {
                     println("No workflows installed.");
                 } else {
                     println(localParams);

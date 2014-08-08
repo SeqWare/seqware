@@ -326,10 +326,10 @@ public class SequencerRunReportTableController implements Serializable {
         if (!orderTypeSeqRun.equals("asc") && !orderTypeSeqRun.equals("desc")) {
             orderTypeSeqRun = "asc";
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("Sequencer_Run\tLane\tIUS\tSample\t");
         for (Workflow workflow : workflows) {
-            sb.append(workflow.getName() + " " + workflow.getVersion()).append("\t");
+            sb.append(workflow.getName()).append(" ").append(workflow.getVersion()).append("\t");
         }
 
         sb.append("\n");
@@ -364,7 +364,7 @@ public class SequencerRunReportTableController implements Serializable {
         if (!orderTypeFile.equals("asc") && !orderTypeFile.equals("desc")) {
             orderTypeFile = "asc";
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("Sequencer_Run\tLane\tIUS\tSample\tExperiment\tStudy\tWorkflow\tWorkflow_Run\tProcessing\tFile\n");
         List<FileReportRow> rows = fileReportService.getReportForSequencerRun(seqRun, sortField, orderTypeFile);
         for (FileReportRow row : rows) {
@@ -450,7 +450,7 @@ public class SequencerRunReportTableController implements Serializable {
                 if (Status.notstarted == status) {
                     sStatus = "not started";
                 }
-                out.append("['" + sStatus + "'," + count + "]");
+                out.append("['").append(sStatus).append("',").append(count).append("]");
                 if (current != statusCount.keySet().size()) {
                     out.append(",");
                 }
@@ -482,7 +482,7 @@ public class SequencerRunReportTableController implements Serializable {
             if (Status.notstarted == status) {
                 sStatus = "not started";
             }
-            out.append("['" + sStatus + "'," + count + "]");
+            out.append("['").append(sStatus).append("',").append(count).append("]");
             if (current != statusCount.keySet().size()) {
                 out.append(",");
             }
