@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.tools;
 
+import io.seqware.pipeline.SqwKeys;
 import it.sauronsoftware.junique.AlreadyLockedException;
 import it.sauronsoftware.junique.JUnique;
 import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
@@ -40,7 +41,7 @@ public class RunLock {
 
     private static String id() {
         // SEQWARE-1732 custom lock ID
-        String id = ConfigTools.getSettings().get("SW_LOCK_ID");
+        String id = ConfigTools.getSettings().get(SqwKeys.SW_LOCK_ID.getSettingKey());
         if (id == null) {
             id = "seqware";
         }

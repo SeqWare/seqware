@@ -20,6 +20,7 @@ import java.util.Map;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import io.seqware.metadb.util.TestDatabaseCreator;
+import io.seqware.pipeline.SqwKeys;
 
 /**
  * This class controls configuration of the database used for extended integration tests.
@@ -31,10 +32,6 @@ import io.seqware.metadb.util.TestDatabaseCreator;
  */
 public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
 
-    public static final String EXTENDED_TEST_DB_HOST_KEY = "EXTENDED_TEST_DB_HOST";
-    public static final String EXTENDED_TEST_DB_NAME_KEY = "EXTENDED_TEST_DB_NAME";
-    public static final String EXTENDED_TEST_USERNAME_KEY = "EXTENDED_TEST_DB_USER";
-    public static final String EXTENDED_TEST_PASSWORD_KEY = "EXTENDED_TEST_DB_PASSWORD";
     private static Map<String, String> settings = null;
 
     public ExtendedTestDatabaseCreator() {
@@ -50,8 +47,8 @@ public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getSEQWARE_DB() {
-        if (settings.containsKey(EXTENDED_TEST_DB_NAME_KEY)) {
-            return settings.get(EXTENDED_TEST_DB_NAME_KEY);
+        if (settings.containsKey(SqwKeys.EXTENDED_TEST_DB_NAME.getSettingKey())) {
+            return settings.get(SqwKeys.EXTENDED_TEST_DB_NAME.getSettingKey());
         }
         Log.debug("Could not retrieve extended test db, using default from unit tests");
         return super.getSEQWARE_DB();
@@ -62,8 +59,8 @@ public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getSEQWARE_USER() {
-        if (settings.containsKey(EXTENDED_TEST_USERNAME_KEY)) {
-            return settings.get(EXTENDED_TEST_USERNAME_KEY);
+        if (settings.containsKey(SqwKeys.EXTENDED_TEST_DB_USER.getSettingKey())) {
+            return settings.get(SqwKeys.EXTENDED_TEST_DB_USER.getSettingKey());
         }
         Log.debug("Could not retrieve extended test db username, using default from unit tests");
         return super.getSEQWARE_USER();
@@ -74,8 +71,8 @@ public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getSEQWARE_PASSWORD() {
-        if (settings.containsKey(EXTENDED_TEST_PASSWORD_KEY)) {
-            return settings.get(EXTENDED_TEST_PASSWORD_KEY);
+        if (settings.containsKey(SqwKeys.EXTENDED_TEST_DB_PASSWORD.getSettingKey())) {
+            return settings.get(SqwKeys.EXTENDED_TEST_DB_PASSWORD.getSettingKey());
         }
         Log.debug("Could not retrieve extended test db password, using default from unit tests");
         return super.getSEQWARE_PASSWORD();
@@ -86,8 +83,8 @@ public class ExtendedTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getDEFAULT_DB_HOST() {
-        if (settings.containsKey(EXTENDED_TEST_DB_HOST_KEY)) {
-            return settings.get(EXTENDED_TEST_DB_HOST_KEY);
+        if (settings.containsKey(SqwKeys.EXTENDED_TEST_DB_HOST.getSettingKey())) {
+            return settings.get(SqwKeys.EXTENDED_TEST_DB_HOST.getSettingKey());
         }
         Log.debug("Could not retrieve extended test db host, using default from unit tests");
         return super.getDEFAULT_DB_HOST();

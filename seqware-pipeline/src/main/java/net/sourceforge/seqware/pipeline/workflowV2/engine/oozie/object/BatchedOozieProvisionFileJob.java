@@ -13,16 +13,8 @@ import org.jdom.Element;
  * @author dyuen
  */
 public class BatchedOozieProvisionFileJob extends OozieJob {
-    /**
-     * When the number of provision file events rooted at a job or in the workflow as a whole is above this threshold, start to use buckets
-     */
-    public static final String OOZIE_BATCH_THRESHOLD = "OOZIE_BATCH_THRESHOLD";
-    /**
-     * Determines size of buckets to use when batching provision file events
-     */
-    public static final String OOZIE_BATCH_SIZE = "OOZIE_BATCH_SIZE";
 
-    private List<OozieProvisionFileJob> provisionJobs = new ArrayList<>();
+    private final List<OozieProvisionFileJob> provisionJobs = new ArrayList<>();
 
     public BatchedOozieProvisionFileJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
             String threadsSgeParamFormat, String maxMemorySgeParamFormat) {

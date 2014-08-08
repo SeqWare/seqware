@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.pipeline.SqwKeys;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +77,7 @@ public class WorkflowStatusCheckerTest {
         MockitoAnnotations.initMocks(this);
         when(options.has("force-host")).thenReturn(true);
         when(options.valueOf("force-host")).thenReturn("localhost");
-        when(config.get("SW_REST_USER")).thenReturn("user");
+        when(config.get(SqwKeys.SW_REST_USER.getSettingKey())).thenReturn("user");
     }
 
     @After

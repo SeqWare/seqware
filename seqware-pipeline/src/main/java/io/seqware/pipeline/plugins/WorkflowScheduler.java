@@ -1,6 +1,7 @@
 package io.seqware.pipeline.plugins;
 
 import io.seqware.Engines;
+import io.seqware.pipeline.SqwKeys;
 import io.seqware.pipeline.api.Scheduler;
 import java.io.IOException;
 import java.util.Arrays;
@@ -112,7 +113,7 @@ public class WorkflowScheduler extends Plugin {
     private String getEngineParam() {
         String engine = options.valueOf(workflowEngineSpec);
         if (engine == null) {
-            engine = config.get("SW_DEFAULT_WORKFLOW_ENGINE");
+            engine = config.get(SqwKeys.SW_DEFAULT_WORKFLOW_ENGINE.getSettingKey());
         }
         if (engine == null) {
             engine = Engines.DEFAULT_ENGINE;
