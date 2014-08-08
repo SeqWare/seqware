@@ -38,8 +38,18 @@ In order to ignore the next N lines (-ve means previous lines)
     ... ignored
     ... checked
 
+## Code Formatting
 
-## Eclipse Code Formatter
+Note that is is possible to turn on and off the Eclipse code formatter for sections of code that 
+may be manually formatted in a way that is superior to what we can configure in Eclipse. 
+The relevant tags are as follows:
+
+    // @formatter:off
+    ...
+    // @formatter:on
+
+
+### Eclipse Code Formatter
 
 Using the above eclipse code formatting file, open preferences in Eclipse and search for "format".
 
@@ -68,7 +78,7 @@ Make the changes specified in the screen shot below.
 
 <img src="/assets/images/eclipse_format_5.png"/>
 
-## NetBeans Code Formatting (with the Eclipse Code Formatter plugin)
+### NetBeans Code Formatting (with the Eclipse Code Formatter plugin)
 
 Follow the instructions available at [Eclipse Java Code Formatter in NetBeans Plugin Manager](https://blogs.oracle.com/geertjan/entry/eclipse_java_code_formatter_in)
 
