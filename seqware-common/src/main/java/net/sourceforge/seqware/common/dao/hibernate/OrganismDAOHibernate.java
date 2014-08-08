@@ -67,9 +67,7 @@ public class OrganismDAOHibernate extends HibernateDaoSupport implements Organis
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, organism);
             return (Organism) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return null;

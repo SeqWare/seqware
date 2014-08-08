@@ -233,16 +233,16 @@ public class ProvisionDependenciesBundle extends Module {
                     Log.info("Downloading an S3 object from bucket: " + bucket + " with key: " + key);
                     BufferedInputStream reader = new BufferedInputStream(object.getObjectContent(), bufLen);
                     try {
-                        BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(output), bufLen);
-                        while (true) {
-                            int data = reader.read();
-                            if (data == -1) {
-                                break;
+                        try (BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(output), bufLen)) {
+                            while (true) {
+                                int data = reader.read();
+                                if (data == -1) {
+                                    break;
+                                }
+                                writer.write(data);
                             }
-                            writer.write(data);
+                            reader.close();
                         }
-                        reader.close();
-                        writer.close();
                     } catch (FileNotFoundException e) {
                         Log.error(e.getMessage());
                     } catch (IOException e) {
@@ -294,16 +294,17 @@ public class ProvisionDependenciesBundle extends Module {
                         // FIXME: I haven't tested this...
                         if (!output.exists() || output.length() != urlConn.getContentLength()) {
                             Log.info("Downloading an http object from URL: " + URL);
-                            BufferedInputStream reader = new BufferedInputStream(urlConn.getInputStream(), bufLen);
-                            BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(output), bufLen);
-                            while (true) {
-                                int data = reader.read();
-                                if (data == -1) {
-                                    break;
+                            BufferedOutputStream writer;
+                            try (BufferedInputStream reader = new BufferedInputStream(urlConn.getInputStream(), bufLen)) {
+                                writer = new BufferedOutputStream(new FileOutputStream(output), bufLen);
+                                while (true) {
+                                    int data = reader.read();
+                                    if (data == -1) {
+                                        break;
+                                    }
+                                    writer.write(data);
                                 }
-                                writer.write(data);
                             }
-                            reader.close();
                             writer.close();
                         } else {
                             Log.info("Skipping download of http object from URL: " + URL + " since local output exists: "

@@ -121,8 +121,8 @@ public class UNCKerberos extends Authentication {
 
         if (!rval) {
             StackTraceElement[] E = e.getStackTrace();
-            for (int i = 0; i < E.length; i++) {
-                String s = E[i].getClassName();
+            for (StackTraceElement E1 : E) {
+                String s = E1.getClassName();
                 if ("sun.security.krb5.Config".equals(s)) {
                     rval = true;
                     break;
@@ -147,8 +147,7 @@ public class UNCKerberos extends Authentication {
         public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
             boolean n = false;
             boolean p = false;
-            for (int i = 0; i < callbacks.length; i++) {
-                Callback C = callbacks[i];
+            for (Callback C : callbacks) {
                 if (C instanceof NameCallback) {
                     NameCallback nc = (NameCallback) C;
                     nc.setName(username);

@@ -181,33 +181,35 @@ public class SelectInputListController extends BaseCommandController {
             Integer nodeId = Integer.parseInt(getRequestedNodeId(request));
             List<String> nodeIds = new LinkedList<>();
 
-            if (typeNode.equals("study")) {
-                files = getStudyService().getFiles(nodeId, metaType);
-                // lanes = getStudyService().listLaneWithHasFile(nodeId, metaType);
-                nodeIds = FindChildUtil.getNodeIds(getStudyService().findByID(nodeId));
-            } else if (typeNode.equals("exp")) {
-                files = getExperimentService().getFiles(nodeId, metaType);
-                // lanes = getExperimentService().listLaneWithHasFile(nodeId, metaType);
-                nodeIds = FindChildUtil.getNodeIds(getExperimentService().findByID(nodeId));
-            } else if (typeNode.equals("sam")) {
-                files = getSampleService().getFiles(nodeId, metaType);
-                // lanes = getSampleService().listLaneWithHasFile(nodeId, metaType);
-                nodeIds = FindChildUtil.getNodeIds(getSampleService().findByID(nodeId));
-            } else
-            /*
-             * if(typeNode.equals("lane")){ files = getLaneService().getFiles(nodeId, metaType); //
-             * lanes.add(getLaneService().findByID(nodeId)); nodeIds.add(nodeId.toString()); }else
-             */
-            if (typeNode.equals("ius")) {
-                files = getIUSService().getFiles(nodeId, metaType);
-                // lanes.add(getLaneService().findByID(nodeId));
-                nodeIds.add(nodeId.toString());
-            } else if (typeNode.equals("ae")) {
-                files = getProcessingService().getFiles(nodeId, metaType);
-                nodeIds = FindChildUtil.getNodeIds(getProcessingService().findByID(nodeId));
-            } else if (typeNode.equals("file")) {
-                files = getFileService().getFiles(nodeId, metaType);
-                nodeIds.add(nodeId.toString());
+            switch (typeNode) {
+                case "study":
+                    files = getStudyService().getFiles(nodeId, metaType);
+                    // lanes = getStudyService().listLaneWithHasFile(nodeId, metaType);
+                    nodeIds = FindChildUtil.getNodeIds(getStudyService().findByID(nodeId));
+                    break;
+                case "exp":
+                    files = getExperimentService().getFiles(nodeId, metaType);
+                    // lanes = getExperimentService().listLaneWithHasFile(nodeId, metaType);
+                    nodeIds = FindChildUtil.getNodeIds(getExperimentService().findByID(nodeId));
+                    break;
+                case "sam":
+                    files = getSampleService().getFiles(nodeId, metaType);
+                    // lanes = getSampleService().listLaneWithHasFile(nodeId, metaType);
+                    nodeIds = FindChildUtil.getNodeIds(getSampleService().findByID(nodeId));
+                    break;
+                case "ius":
+                    files = getIUSService().getFiles(nodeId, metaType);
+                    // lanes.add(getLaneService().findByID(nodeId));
+                    nodeIds.add(nodeId.toString());
+                    break;
+                case "ae":
+                    files = getProcessingService().getFiles(nodeId, metaType);
+                    nodeIds = FindChildUtil.getNodeIds(getProcessingService().findByID(nodeId));
+                    break;
+                case "file":
+                    files = getFileService().getFiles(nodeId, metaType);
+                    nodeIds.add(nodeId.toString());
+                    break;
             }
             if (typeNode.equals("wfr")) {
                 // Integer processingId = getWorkflowRunService().getRootProcessing(nodeId).getProcessingId();

@@ -76,9 +76,7 @@ public class ProcessingIUSDAOHibernate extends HibernateDaoSupport implements Pr
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, processingIus);
             return (ProcessingIus) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return null;

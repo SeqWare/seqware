@@ -172,7 +172,7 @@ public class StudyReportBoxController extends BaseCommandController {
                     for (Sample sample : childSamples) {
                         Sample rootSample = sampleService.getRootSample(sample);
                         sb.append(rootSample.getTitle() + "\t");
-                        sb.append(rootSample.getSampleId().intValue() != sample.getSampleId().intValue() ? sample.getTitle() + "\t"
+                        sb.append(rootSample.getSampleId() != sample.getSampleId() ? sample.getTitle() + "\t"
                                 : "no child" + "\t");
                         for (Workflow workflow : workflows) {
                             Status status = sampleReportService.getStatus(currentStudy, sample, workflow);
