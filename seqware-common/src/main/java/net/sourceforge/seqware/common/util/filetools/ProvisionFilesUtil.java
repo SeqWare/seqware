@@ -15,6 +15,7 @@ import com.amazonaws.services.s3.transfer.Transfer;
 import com.amazonaws.services.s3.transfer.Transfer.TransferState;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -508,8 +509,8 @@ public class ProvisionFilesUtil {
             // get the access/secret key from the .seqware/settings file
             try {
                 HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                accessKey = settings.get("AWS_ACCESS_KEY");
-                secretKey = settings.get("AWS_SECRET_KEY");
+                accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+                secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
             } catch (Exception e) {
                 Log.error(e.getMessage());
                 return false;
@@ -686,8 +687,8 @@ public class ProvisionFilesUtil {
                 // get the access/secret key from the .seqware/settings file
                 try {
                     HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                    accessKey = settings.get("AWS_ACCESS_KEY");
-                    secretKey = settings.get("AWS_SECRET_KEY");
+                    accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+                    secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
                 } catch (Exception e) {
                     e.printStackTrace();
                     return (null);
@@ -1013,8 +1014,8 @@ public class ProvisionFilesUtil {
             // get the access/secret key from the .seqware/settings file
             try {
                 HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                accessKey = settings.get("AWS_ACCESS_KEY");
-                secretKey = settings.get("AWS_SECRET_KEY");
+                accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+                secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
             } catch (Exception e) {
                 Log.error(e.getMessage());
                 return (null);
@@ -1204,8 +1205,8 @@ public class ProvisionFilesUtil {
             } else {
                 try {
                     HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                    accessKey = settings.get("AWS_ACCESS_KEY");
-                    secretKey = settings.get("AWS_SECRET_KEY");
+                    accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+                    secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
                 } catch (Exception e) {
                     e.printStackTrace();
                     throw e;

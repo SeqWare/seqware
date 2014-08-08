@@ -68,29 +68,17 @@ public class Runner {
     private ArrayList<File> processingAccessionFiles;
     private File processingAccessionFileCheck = null;
     private int processingAccession = 0;
-    private NonOptionArgumentSpec<String> nonOptionSpec;
+    private final NonOptionArgumentSpec<String> nonOptionSpec;
 
-    public static interface Keys {
-
-        String DB_USER = "SW_DB_USER";
-        String DB_PASS = "SW_DB_PASS";
-        String DB_NAME = "SW_DB";
-        String DB_SERVER = "SW_DB_SERVER";
-        String DB_CONN_STRING = "SW_DB_CONN_STRING";
-        String WS_URL = "SW_REST_URL";
-        String WS_USER = "SW_REST_USER";
-        String WS_PASS = "SW_REST_PASS";
-    }
-
-    private static OptionParser parser = new OptionParser();
+    private static final OptionParser parser = new OptionParser();
     private OptionSet options = null;
     private Module app = null;
     private Metadata meta = null;
     // I (Xiaoshu Wang) am not sure if it is a good idea to make these two
     // property static because if the same JVM calls
     // Runner twice, the value of the previous stdout/stderr will be kept.
-    private StringBuffer stdout = new StringBuffer();
-    private StringBuffer stderr = new StringBuffer();
+    private final StringBuffer stdout = new StringBuffer();
+    private final StringBuffer stderr = new StringBuffer();
 
     public Runner() {
         parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
@@ -253,7 +241,7 @@ public class Runner {
      *            a {@link java.lang.String} object.
      */
     public void printAndAppendtoStderr(String buffer) {
-        stderr.append(buffer + "\n");
+        stderr.append(buffer).append("\n");
         System.err.print(buffer + "\n");
     }
 
@@ -266,7 +254,7 @@ public class Runner {
      *            a {@link java.lang.String} object.
      */
     public void printAndAppendtoStdout(String buffer) {
-        stdout.append(buffer + "\n");
+        stdout.append(buffer).append("\n");
         System.out.print(buffer + "\n");
     }
 
@@ -307,8 +295,8 @@ public class Runner {
             if (options.has("metadata-output-file-prefix")) {
                 ArrayList<FileMetadata> files = newReturn.getFiles();
                 if (files != null) {
-                    for (int i = 0; i < files.size(); i++) {
-                        files.get(i).prependToFilePath((String) options.valueOf("metadata-output-file-prefix"));
+                    for (FileMetadata file : files) {
+                        file.prependToFilePath((String) options.valueOf("metadata-output-file-prefix"));
                     }
                 }
             }
@@ -421,22 +409,22 @@ public class Runner {
             // create the parent directory structure if needed
             destinationParent.mkdirs();
             if (!entry.isDirectory()) {
-                BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry));
-                int currentByte;
-                // establish buffer for writing file
-                byte data[] = new byte[BUFFER];
+                try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry))) {
+                    int currentByte;
+                    // establish buffer for writing file
+                    byte data[] = new byte[BUFFER];
 
-                // write the current file to disk
-                FileOutputStream fos = new FileOutputStream(destFile);
-                BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
+                    // write the current file to disk
+                    FileOutputStream fos = new FileOutputStream(destFile);
+                    BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
 
-                // read and write until last byte is encountered
-                while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-                    dest.write(data, 0, currentByte);
+                    // read and write until last byte is encountered
+                    while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+                        dest.write(data, 0, currentByte);
+                    }
+                    dest.flush();
+                    dest.close();
                 }
-                dest.flush();
-                dest.close();
-                is.close();
             }
             if (currentEntry.endsWith(".zip")) {
                 // found a zip file, try to open
@@ -620,11 +608,8 @@ public class Runner {
                                 System.exit(ReturnValue.SUCCESS);
                             }
                         }
-                    } catch (NumberFormatException ne) {
+                    } catch (NumberFormatException | NotFoundException ne) {
                         // means that the file doesn't contain a valid processing sw_accession, proceed
-                        Log.error("Lock file exists with an invalid processing accession, continuing");
-                    } catch (NotFoundException nfe) {
-                        // metadatawriteback on a previous run was not successful, continue
                         Log.error("Lock file exists with an invalid processing accession, continuing");
                     }
                     Log.error("Lock file exists with a non-success, continuing");
@@ -704,7 +689,7 @@ public class Runner {
         for (String file : (List<String>) options.valuesOf("metadata-parentID-file")) {
             try {
                 BufferedReader r;
-                String line = null;
+                String line;
                 r = new BufferedReader(new FileReader(file));
 
                 while ((line = r.readLine()) != null) {
@@ -732,7 +717,7 @@ public class Runner {
         for (String file : (List<String>) options.valuesOf("metadata-parent-accession-file")) {
             try {
                 BufferedReader r;
-                String line = null;
+                String line;
                 r = new BufferedReader(new FileReader(file));
 
                 while ((line = r.readLine()) != null) {
@@ -760,7 +745,7 @@ public class Runner {
         for (String file : (List<String>) options.valuesOf("metadata-workflow-run-ancestor-accession-input-file")) {
             try {
                 BufferedReader r;
-                String line = null;
+                String line;
                 r = new BufferedReader(new FileReader(file));
 
                 while ((line = r.readLine()) != null) {
@@ -835,7 +820,7 @@ public class Runner {
             }
 
             // adding based on processing IDs (deprecated, should use sw_accession)
-            ReturnValue metaret = new ReturnValue(ReturnValue.FAILURE);
+            ReturnValue metaret;
             // adding based on sw_accession
             if (parentAccessionsArray.length > 0) {
                 metaret = meta.add_empty_processing_event_by_parent_accession(parentAccessionsArray);
@@ -933,8 +918,8 @@ public class Runner {
         outStart = outAnn == null ? ModuleMethod.do_run : outAnn.startsBefore();
         outEnd = outAnn == null ? ModuleMethod.do_run : outAnn.endsAfter();
 
-        ModuleMethod errStart = null;
-        ModuleMethod errEnd = null;
+        ModuleMethod errStart;
+        ModuleMethod errEnd;
         StderrRedirect errAnn = app.getClass().getAnnotation(StderrRedirect.class);
         errStart = errAnn == null ? ModuleMethod.do_run : errAnn.startsBefore();
         errEnd = errAnn == null ? ModuleMethod.do_run : errAnn.endsAfter();
@@ -945,7 +930,6 @@ public class Runner {
         for (ModuleMethod m : ModuleMethod.values()) {
             // check stdout redirect
             if ((m == outStart) && (app.getStdoutFile() != null)) {
-                old_out = System.out;
                 try {
                     old_out = System.out;
                     System.setOut(new PrintStream(new FileOutputStream(app.getStdoutFile())));

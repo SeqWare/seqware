@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import com.google.common.io.Files;
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -200,7 +201,7 @@ public class PluginRunnerET {
     private static void createSharedTempDir() {
         // need to create in a shared location for seqware installs with multiple nodes
         // tempDir = Files.createTempDir();
-        String parentDir = ConfigTools.getSettings().get("OOZIE_WORK_DIR");
+        String parentDir = ConfigTools.getSettings().get(SqwKeys.OOZIE_WORK_DIR.getSettingKey());
         tempDir = new File(parentDir, String.valueOf(Math.abs(new Random().nextInt())));
         tempDir.mkdir();
     }

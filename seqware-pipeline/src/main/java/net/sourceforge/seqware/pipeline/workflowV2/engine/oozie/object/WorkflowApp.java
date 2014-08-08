@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,12 +28,12 @@ import org.jdom.Element;
 public class WorkflowApp {
     public static final String URIOOZIEWORKFLOW = "uri:oozie:workflow:0.4";
     public static org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace(URIOOZIEWORKFLOW);
-    public static final int BUCKET_SIZE = Integer.valueOf(ConfigTools.getSettings().containsKey(
-            BatchedOozieProvisionFileJob.OOZIE_BATCH_SIZE) ? ConfigTools.getSettings().get(BatchedOozieProvisionFileJob.OOZIE_BATCH_SIZE)
-            : "100");
-    public static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings().containsKey(
-            BatchedOozieProvisionFileJob.OOZIE_BATCH_THRESHOLD) ? ConfigTools.getSettings().get(
-            BatchedOozieProvisionFileJob.OOZIE_BATCH_THRESHOLD) : "5");
+    public static final int BUCKET_SIZE = Integer
+            .valueOf(ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_BATCH_SIZE.getSettingKey()) ? ConfigTools.getSettings().get(
+                    SqwKeys.OOZIE_BATCH_SIZE.getSettingKey()) : "100");
+    public static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings()
+            .containsKey(SqwKeys.OOZIE_BATCH_THRESHOLD.getSettingKey()) ? ConfigTools.getSettings().get(
+            SqwKeys.OOZIE_BATCH_THRESHOLD.getSettingKey()) : "5");
 
     private final AbstractWorkflowDataModel wfdm;
     /**

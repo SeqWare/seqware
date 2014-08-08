@@ -23,11 +23,7 @@ public class Environment {
     private String OOZIE_QUEUENAME;
 
     private String OOZIE_WORK_DIR;
-    private String OOZIE_APP_PATH;
 
-    private String hbase_zookeeper_quorum;
-    private String hbase_zookeeper_property_clientPort;
-    private String hbase_master;
     private String mapred_job_tracker;
     private String fs_default_name;
     private String fs_defaultFS;
@@ -153,38 +149,6 @@ public class Environment {
 
     public void setOOZIE_WORK_DIR(String oOZIE_WORK_DIR) {
         OOZIE_WORK_DIR = oOZIE_WORK_DIR;
-    }
-
-    public String getOOZIE_APP_PATH() {
-        return OOZIE_APP_PATH;
-    }
-
-    public void setOOZIE_APP_PATH(String oOZIE_APP_PATH) {
-        OOZIE_APP_PATH = oOZIE_APP_PATH;
-    }
-
-    public String getHbase_zookeeper_quorum() {
-        return hbase_zookeeper_quorum;
-    }
-
-    public void setHbase_zookeeper_quorum(String hbase_zookeeper_quorum) {
-        this.hbase_zookeeper_quorum = hbase_zookeeper_quorum;
-    }
-
-    public String getHbase_zookeeper_property_clientPort() {
-        return hbase_zookeeper_property_clientPort;
-    }
-
-    public void setHbase_zookeeper_property_clientPort(String hbase_zookeeper_property_clientPort) {
-        this.hbase_zookeeper_property_clientPort = hbase_zookeeper_property_clientPort;
-    }
-
-    public String getHbase_master() {
-        return hbase_master;
-    }
-
-    public void setHbase_master(String hbase_master) {
-        this.hbase_master = hbase_master;
     }
 
     public String getMapred_job_tracker() {

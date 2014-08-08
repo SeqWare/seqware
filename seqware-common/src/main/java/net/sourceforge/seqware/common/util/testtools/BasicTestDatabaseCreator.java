@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.common.util.testtools;
 
 import io.seqware.metadb.util.TestDatabaseCreator;
+import io.seqware.pipeline.SqwKeys;
 import java.util.Map;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
@@ -31,10 +32,6 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
  */
 public class BasicTestDatabaseCreator extends TestDatabaseCreator {
 
-    public static final String BASIC_TEST_DB_HOST_KEY = "BASIC_TEST_DB_HOST";
-    public static final String BASIC_TEST_DB_NAME_KEY = "BASIC_TEST_DB_NAME";
-    public static final String BASIC_TEST_USERNAME_KEY = "BASIC_TEST_DB_USER";
-    public static final String BASIC_TEST_PASSWORD_KEY = "BASIC_TEST_DB_PASSWORD";
     private static Map<String, String> settings = null;
 
     public BasicTestDatabaseCreator() {
@@ -50,8 +47,8 @@ public class BasicTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getSEQWARE_DB() {
-        if (settings.containsKey(BASIC_TEST_DB_NAME_KEY)) {
-            return settings.get(BASIC_TEST_DB_NAME_KEY);
+        if (settings.containsKey(SqwKeys.BASIC_TEST_DB_NAME.getSettingKey())) {
+            return settings.get(SqwKeys.BASIC_TEST_DB_NAME.getSettingKey());
         }
         Log.debug("Could not retrieve basic test db, using default from unit tests");
         return super.getSEQWARE_DB();
@@ -62,8 +59,8 @@ public class BasicTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getSEQWARE_USER() {
-        if (settings.containsKey(BASIC_TEST_USERNAME_KEY)) {
-            return settings.get(BASIC_TEST_USERNAME_KEY);
+        if (settings.containsKey(SqwKeys.BASIC_TEST_DB_USER.getSettingKey())) {
+            return settings.get(SqwKeys.BASIC_TEST_DB_USER.getSettingKey());
         }
         Log.debug("Could not retrieve basic test db username, using default from unit tests");
         return super.getSEQWARE_USER();
@@ -74,8 +71,8 @@ public class BasicTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getSEQWARE_PASSWORD() {
-        if (settings.containsKey(BASIC_TEST_PASSWORD_KEY)) {
-            return settings.get(BASIC_TEST_PASSWORD_KEY);
+        if (settings.containsKey(SqwKeys.BASIC_TEST_DB_PASSWORD.getSettingKey())) {
+            return settings.get(SqwKeys.BASIC_TEST_DB_PASSWORD.getSettingKey());
         }
         Log.debug("Could not retrieve basic test db password, using default from unit tests");
         return super.getSEQWARE_PASSWORD();
@@ -86,8 +83,8 @@ public class BasicTestDatabaseCreator extends TestDatabaseCreator {
      */
     @Override
     protected String getDEFAULT_DB_HOST() {
-        if (settings.containsKey(BASIC_TEST_DB_HOST_KEY)) {
-            return settings.get(BASIC_TEST_DB_HOST_KEY);
+        if (settings.containsKey(SqwKeys.BASIC_TEST_DB_HOST.getSettingKey())) {
+            return settings.get(SqwKeys.BASIC_TEST_DB_HOST.getSettingKey());
         }
         Log.debug("Could not retrieve basic test db host, using default from unit tests");
         return super.getDEFAULT_DB_HOST();
