@@ -116,7 +116,7 @@ public class StudyReportController extends BaseCommandController {
                     HashMap<String, Workflow> sampleWorkflows = new HashMap<>();
                     mainSampleHash.put(sample.getName(), sample);
                     totalSamples++;
-                    if (sample.getParents() == null || sample.getParents().size() == 0) {
+                    if (sample.getParents() == null || sample.getParents().isEmpty()) {
                         rootSamples++;
                     } else {
                         nonRootSamples++;

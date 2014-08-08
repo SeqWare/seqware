@@ -197,7 +197,7 @@ public class FileFinder {
             throw new Exception("Error: Directory dont exists");
         }
 
-        if (!mask.equals("")) {
+        if (!mask.isEmpty()) {
             p = Pattern.compile(mask, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
         }
         filesNumber = 0;

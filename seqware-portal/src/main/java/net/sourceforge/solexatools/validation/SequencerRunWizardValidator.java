@@ -66,7 +66,7 @@ public class SequencerRunWizardValidator extends SequencerRunValidator {
         if (errors.getFieldError("strLaneCount") == null) {
             boolean isHasError = false;
             String strLaneCount = sequencerRunWizardDTO.getStrLaneCount();
-            if (strLaneCount != null && !strLaneCount.equals("")) {
+            if (strLaneCount != null && !strLaneCount.isEmpty()) {
                 Integer laneCount = null;
                 try {
                     laneCount = Integer.parseInt(strLaneCount);

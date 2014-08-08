@@ -80,7 +80,7 @@ public class BulkDownloaderController extends BaseCommandController {
 
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        StringBuilder strNow = new StringBuilder(dateFormat.format(dateNow));
+        String strNow = dateFormat.format(dateNow);
 
         String pathToTempStore = "webapps" + contextPath + SEPARATOR + "temp" + SEPARATOR + registration.getEmailAddress() + SEPARATOR
                 + strNow + SEPARATOR;

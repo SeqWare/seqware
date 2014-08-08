@@ -136,7 +136,7 @@ public class AnalisysListDetailsController extends BaseCommandController {
                 listView = loadNode(listView, registration, request);
                 pageInfo = PaginationUtil.getPageInfo(request, "myAnalisysesPage", listView, listAll, nameOneItem, nameLotOfItem, ma);
 
-                if (listAll.size() == 0 && getWorkflowRunService().listRunning(registration).size() == 0) {
+                if (listAll.isEmpty() && getWorkflowRunService().listRunning(registration).isEmpty()) {
                     isHasError = true;
                     errorMessage = this.getMessageSourceAccessor().getMessage("analysis.list.required.one.item");
                 }
@@ -263,7 +263,7 @@ public class AnalisysListDetailsController extends BaseCommandController {
             openWorkflowRunId = Constant.getId(getEndId(listWorkflowRunNodeId));
             objId = getSecondId(listWorkflowRunNodeId);
 
-            if (objId.equals("")) {
+            if (objId.isEmpty()) {
                 Log.info("It is ASSot Node");
                 objId = "wfrs_" + openWorkflowRunId;
             }

@@ -164,7 +164,7 @@ public class StudyListDetailsController extends BaseCommandController {
                 pageInfo = PaginationUtil.getPageInfo(request, "myStudiesPage", listView, listAll, nameOneItem, nameLotOfItem, ma);
 
                 // set error if want
-                if (listAll.size() == 0) {
+                if (listAll.isEmpty()) {
                     isHasError = true;
                     errorMessage = this.getMessageSourceAccessor().getMessage("study.list.required.one.item");
                 }

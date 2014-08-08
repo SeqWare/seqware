@@ -201,7 +201,7 @@ public class StudyTableControllerDetails extends BaseCommandController {
      * @param sampleStrs
      */
     private void getSampleStrings(String currString, Sample s, ArrayList<String> sampleStrs) {
-        if (s.getChildren() == null || s.getChildren().size() == 0) {
+        if (s.getChildren() == null || s.getChildren().isEmpty()) {
             sampleStrs.add(currString);
         } else {
             for (Sample s2 : s.getChildren()) {
@@ -260,7 +260,7 @@ public class StudyTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getTitle() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getTitle()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -275,7 +275,7 @@ public class StudyTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getName()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -290,7 +290,7 @@ public class StudyTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getName()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }

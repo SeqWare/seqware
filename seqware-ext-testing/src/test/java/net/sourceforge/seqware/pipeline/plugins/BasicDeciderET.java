@@ -61,7 +61,7 @@ public class BasicDeciderET {
         Log.info(genOutput);
         // run the decider
         File seqwareJar = ITUtility.retrieveFullAssembledJar();
-        String SEQWARE_VERSION = new ReturnValue().getClass().getPackage().getImplementationVersion();
+        String SEQWARE_VERSION = ReturnValue.class.getPackage().getImplementationVersion();
         command = "java -cp "
                 + createTempDir.getAbsolutePath()
                 + "/decider-HelloWorld/target/Decider_1.0-SNAPSHOT_HelloWorld_1.0_SeqWare_"

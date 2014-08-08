@@ -177,7 +177,7 @@ public class GenericCommandRunner extends Module {
                 }
             }
 
-            options = parser.parse(myParameters.toArray(new String[0]));
+            options = parser.parse(myParameters.toArray(new String[myParameters.size()]));
 
             stdoutQueueLength = Integer.valueOf(options.valueOf(GCR_STDOUT_BUFFERSIZE).toString());
             stderrQueueLength = Integer.valueOf(options.valueOf(GCR_STDERR_BUFFERSIZE).toString());
@@ -365,7 +365,7 @@ public class GenericCommandRunner extends Module {
         }
         theCommand.add(cmdBuff.toString());
         Log.stdout("Command run: \nbash -lc " + cmdBuff.toString());
-        ReturnValue result = RunTools.runCommand(null, theCommand.toArray(new String[0]), stdoutQueueLength, stderrQueueLength);
+        ReturnValue result = RunTools.runCommand(null, theCommand.toArray(new String[theCommand.size()]), stdoutQueueLength, stderrQueueLength);
         Log.stdout("Command exit code: " + result.getExitStatus());
         // ReturnValue result = RunTools.runCommand(new String[] { "bash", "-c",
         // (String)options.valueOf("gcr-command"), cmdParameters.toArray(new

@@ -141,7 +141,7 @@ public class BulkDownloadListDetailsController extends BaseCommandController {
                 pageInfo = PaginationUtil.getPageInfo(request, "myBulkDownloadPage", listView, listAll, nameOneItem, nameLotOfItem, ma);
 
                 // set error
-                if (listAll.size() == 0) {
+                if (listAll.isEmpty()) {
                     isHasError = true;
                     errorMessage = this.getMessageSourceAccessor().getMessage("study.list.required.one.item");
                 }
@@ -162,7 +162,7 @@ public class BulkDownloadListDetailsController extends BaseCommandController {
                 getProcessingService().setWithHasFile(proc.getChildren());
                 fillWorkflowProcessingMap(proc, wfrProc);
             } else if (root.indexOf("ius_") != -1) {
-                Integer iusID = Integer.parseInt(root.substring(root.lastIndexOf("_") + 1, root.length()));
+                Integer iusID = Integer.parseInt(root.substring(root.lastIndexOf('_') + 1, root.length()));
                 ius = getIUSService().findByID(iusID);
                 BulkUtil.selectProcessingNode(selectedIds, ius);
                 getProcessingService().setWithHasFile(ius.getProcessings());

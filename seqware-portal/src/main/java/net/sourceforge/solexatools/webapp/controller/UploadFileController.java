@@ -484,7 +484,7 @@ public class UploadFileController extends MultiActionController {
     private Integer getRequestedId(HttpServletRequest request) {
         Integer id = null;
         String strId = request.getParameter("id");
-        if (strId != null && !strId.equals("")) {
+        if (strId != null && !strId.isEmpty()) {
             id = Integer.parseInt(strId);
         }
         return id;

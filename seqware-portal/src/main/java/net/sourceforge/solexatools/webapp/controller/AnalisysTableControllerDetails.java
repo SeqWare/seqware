@@ -206,7 +206,7 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getTitle() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getTitle()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -221,7 +221,7 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getName()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -236,7 +236,7 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getName()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }

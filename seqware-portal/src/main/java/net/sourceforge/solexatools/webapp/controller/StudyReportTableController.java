@@ -380,7 +380,7 @@ public class StudyReportTableController extends BaseCommandController {
             StringBuffer attributes = new StringBuffer();
             // get all the sample attributes
             for (SampleAttribute attribute : row.getSample().getSampleAttributes()) {
-                attributes.append(attribute.getTag() + "=" + attribute.getValue() + "<br />");
+                attributes.append(attribute.getTag()).append("=").append(attribute.getValue()).append("<br />");
             }
             cellsModel.add(attributes.toString());
             cellsModel.add(wrapSwAccession(row.getChildSample().getSwAccession(), row.getChildSample().getName()));
@@ -388,7 +388,7 @@ public class StudyReportTableController extends BaseCommandController {
             attributes = new StringBuffer();
             // get all the child sample attributes
             for (SampleAttribute attribute : row.getChildSample().getSampleAttributes()) {
-                attributes.append(attribute.getTag() + "=" + attribute.getValue() + "<br />");
+                attributes.append(attribute.getTag()).append("=").append(attribute.getValue()).append("<br />");
             }
             cellsModel.add(attributes.toString());
 
@@ -415,7 +415,7 @@ public class StudyReportTableController extends BaseCommandController {
                 attributes = new StringBuffer();
                 // get all the lane attributes
                 for (LaneAttribute attribute : lane.getLaneAttributes()) {
-                    attributes.append(attribute.getTag() + "=" + attribute.getValue() + "<br />");
+                    attributes.append(attribute.getTag()).append("=").append(attribute.getValue()).append("<br />");
                 }
                 cellsModel.add(attributes.toString());
             } else {

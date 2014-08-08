@@ -238,11 +238,11 @@ public class LaunchWorkflowController extends SimpleFormController {
         String displayValue = workflowParam.getDisplayName();
 
         // if single param DEFAULT VALUE
-        if (workflowParam.getValues().size() == 0 && !value.equals("")) {
+        if (workflowParam.getValues().size() == 0 && !value.isEmpty()) {
 
         } else
         // if single param ONE PARAM VALUE
-        if (workflowParam.getValues().size() == 1 && value.equals("")) {
+        if (workflowParam.getValues().size() == 1 && value.isEmpty()) {
             // get first param value
             value = workflowParam.getValues().first().getValue();
             displayValue = workflowParam.getValues().first().getDisplayName();

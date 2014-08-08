@@ -180,7 +180,7 @@ public class SequencerRunListDetailsController extends BaseCommandController {
             System.err.println("RENDERING ALL FLOWCELLS");
             modelAndView = new ModelAndView("SequencerRunListRoot");
             modelAndView.addObject("pageInfo", pageInfo);
-            if (listAll.size() == 0) {
+            if (listAll.isEmpty()) {
                 isHasError = true;
                 errorMessage = this.getMessageSourceAccessor().getMessage("sequencerRun.list.required.one.item");
             }
