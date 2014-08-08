@@ -173,7 +173,7 @@ public class ProcessingStructureResource extends BasicRestlet {
             String w = node.toString() + "  ->  " + child.toString();
             if (all.contains(w)) continue;
             all.add(w);
-            fw.append(w + "\n");
+            fw.append(w).append("\n");
             this.visitNode(child, fw, all);
         }
     }

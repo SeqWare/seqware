@@ -32,13 +32,13 @@ public class Debug {
         boolean implAlsoDefinesInterfaceP = instanceClassName.equals(implClassName);
         int afterLastDot;
 
-        afterLastDot = instanceClassName.lastIndexOf(".") + 1;
+        afterLastDot = instanceClassName.lastIndexOf('.') + 1;
         if (afterLastDot < 0) {
             afterLastDot = 0;
         }
         instanceClassName = instanceClassName.substring(afterLastDot);
 
-        afterLastDot = implClassName.lastIndexOf(".") + 1;
+        afterLastDot = implClassName.lastIndexOf('.') + 1;
         if (afterLastDot < 0) {
             afterLastDot = 0;
         }

@@ -1401,7 +1401,7 @@ public class MetadataWS implements Metadata {
     private String[] convertIDs(int[] ids, String prefix) {
         String[] stringIds = new String[ids.length];
         for (int i = 0; i < ids.length; i++) {
-            stringIds[i] = prefix + new Integer(ids[i]).toString();
+            stringIds[i] = prefix + Integer.toString(ids[i]);
         }
         return stringIds;
     }
@@ -1539,7 +1539,7 @@ public class MetadataWS implements Metadata {
         try {
             Workflow workflow = ll.findWorkflowParams(workflowAccession);
             params = workflow.getWorkflowParams();
-            testNull(params, new TreeSet<WorkflowParam>().getClass(), workflowAccession);
+            testNull(params, TreeSet.class, workflowAccession);
         } catch (IOException | JAXBException ex) {
             Log.error(ex);
         }

@@ -58,7 +58,7 @@ public class UploadSequenceValidator extends UploadFileValidator implements Vali
         }
 
         if (!errors.hasErrors()) {
-            if (getFileTypeService().list().size() == 0) {
+            if (getFileTypeService().list().isEmpty()) {
                 errors.reject("error.upload.file.file.type.empty");
             }
         }

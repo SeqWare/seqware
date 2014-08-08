@@ -443,7 +443,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     private String parseSWID(String output) {
         String swid;
 
-        swid = output.substring(output.indexOf(":") + 2);
+        swid = output.substring(output.indexOf(':') + 2);
 
         return swid;
 

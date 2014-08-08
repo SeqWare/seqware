@@ -145,7 +145,7 @@ public class LaunchWorkflowListDetailsController extends BaseCommandController {
                 // listAll = getStudyService().list(registration);
 
                 // set error if want
-                if (getStudyService().list(registration).size() == 0) {
+                if (getStudyService().list(registration).isEmpty()) {
                     isHasError = true;
                     errorMessage = this.getMessageSourceAccessor().getMessage("study.list.required.one.item");
                 }
@@ -157,7 +157,7 @@ public class LaunchWorkflowListDetailsController extends BaseCommandController {
                 listAll = getStudyService().listStudyHasFile(registration, metaType, isAsc);
 
                 // set error if want
-                if (!isHasError && listAll.size() == 0) {
+                if (!isHasError && listAll.isEmpty()) {
                     isHasError = true;
                     errorMessage = this.getMessageSourceAccessor().getMessage("launchWorkflow.list.no.item", new Object[] { metaType });
                 }

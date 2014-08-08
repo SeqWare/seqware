@@ -136,23 +136,23 @@ public class MapToolsTest {
         testNormalValues(hm);
 
         Assert.assertTrue("blank defaults for ini2RichMap failed",
-                hm.get("boogydown").size() == 2 && hm.get("boogydown").get("default_value").equals(""));
+                hm.get("boogydown").size() == 2 && hm.get("boogydown").get("default_value").isEmpty());
         Assert.assertTrue("blank defaults for ini2RichMap failed", hm.get("boogydown").size() == 2
                 && hm.get("boogydown").get("key").equals("boogydown"));
         Assert.assertTrue("blank defaults for ini2RichMap failed",
                 hm.get("funkyparameter_with_extraSpace").size() == 2
-                        && hm.get("funkyparameter_with_extraSpace").get("default_value").equals(""));
+                        && hm.get("funkyparameter_with_extraSpace").get("default_value").isEmpty());
         Assert.assertTrue(
                 "blank defaults for ini2RichMap failed",
                 hm.get("funkyparameter_with_extraSpace").size() == 2
                         && hm.get("funkyparameter_with_extraSpace").get("key").equals("funkyparameter_with_extraSpace"));
         Assert.assertTrue("blank defaults for ini2RichMap failed",
-                hm.get("funkyparameter").size() == 2 && hm.get("funkyparameter").get("default_value").equals(""));
+                hm.get("funkyparameter").size() == 2 && hm.get("funkyparameter").get("default_value").isEmpty());
         Assert.assertTrue("blank defaults for ini2RichMap failed",
                 hm.get("funkyparameter").size() == 2 && hm.get("funkyparameter").get("key").equals("funkyparameter"));
 
         Assert.assertTrue("blank annotated defaults for ini2RichMap failed",
-                hm.get("funky_annotated").size() == 5 && hm.get("funky_annotated").get("default_value").equals(""));
+                hm.get("funky_annotated").size() == 5 && hm.get("funky_annotated").get("default_value").isEmpty());
         Assert.assertTrue("blank annotated defaults for ini2RichMap failed",
                 hm.get("funky_annotated").size() == 5 && hm.get("funky_annotated").get("key").equals("funky_annotated"));
         Assert.assertTrue("blank annotated defaults for ini2RichMap failed",
@@ -289,7 +289,7 @@ public class MapToolsTest {
         for (String key : hm.keySet()) {
             Log.info("KEY: " + key + " VALUE: " + hm.get(key));
             // Log.error(key+"="+map.get(key));
-            mapBuffer.append(key + "=" + hm.get(key).get("default_value") + "\n");
+            mapBuffer.append(key).append("=").append(hm.get(key).get("default_value")).append("\n");
         }
         return mapBuffer;
     }

@@ -132,7 +132,7 @@ public class AnalisysBulkDownloadListDetailsController extends BaseCommandContro
                         ma);
 
                 // set error if user dont owned Workflow Run
-                if (listAll.size() == 0) {
+                if (listAll.isEmpty()) {
                     isHasError = true;
                     errorMessage = this.getMessageSourceAccessor().getMessage("analysis.list.required.one.item");
                 }

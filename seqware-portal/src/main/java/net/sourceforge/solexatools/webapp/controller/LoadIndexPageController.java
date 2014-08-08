@@ -224,7 +224,7 @@ public class LoadIndexPageController extends BaseCommandController {
 
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        StringBuilder strNow = new StringBuilder(dateFormat.format(dateNow));
+        String strNow = dateFormat.format(dateNow);
 
         if (!userTempFolder.exists()) {
             userTempFolder.mkdir();
@@ -244,7 +244,7 @@ public class LoadIndexPageController extends BaseCommandController {
 
         String action = getRequestedAction(request);
 
-        if (action != null && !action.equals("")) {
+        if (action != null && !action.isEmpty()) {
             Log.info("Do OPERATION -> " + action);
             String currPage = getCurrentPage(request, action);
             if (!currPage.endsWith(".html")) {
@@ -372,7 +372,7 @@ public class LoadIndexPageController extends BaseCommandController {
         }
 
         String pathToIndexPage = "";
-        if (html.equals("")) {
+        if (html.isEmpty()) {
 
             pathToIndexPage = indexFile.getPath().substring(indexFile.getPath().lastIndexOf(contextPath) + contextPath.length() + 1);
 
@@ -394,7 +394,7 @@ public class LoadIndexPageController extends BaseCommandController {
             // html = changeAttr(html, root, page, "link", "href");
             // html = changeAttr(html, root, page, "script", "src");
 
-            if (action == null || action.equals("")) {
+            if (action == null || action.isEmpty()) {
                 addNewPageToTop(request, pathToIndexPage);
             }
 
@@ -421,8 +421,8 @@ public class LoadIndexPageController extends BaseCommandController {
         int startPos = 0;
         int endPos = 0;
         do {
-            startPos = html.indexOf("<", startPos);
-            endPos = html.indexOf(">", startPos) + 1;
+            startPos = html.indexOf('<', startPos);
+            endPos = html.indexOf('>', startPos) + 1;
             if (startPos > -1 && endPos > -1) {
                 String tag = html.substring(startPos, endPos);
                 String name = "";
@@ -458,7 +458,7 @@ public class LoadIndexPageController extends BaseCommandController {
         // Log.info("1. attribites:" + tag);
 
         int startAttrName = tag.indexOf(tagName) + tagName.length();
-        int endAttrName = tag.indexOf("=", startAttrName);
+        int endAttrName = tag.indexOf('=', startAttrName);
 
         do {
             // 2. get Attr name
@@ -466,16 +466,16 @@ public class LoadIndexPageController extends BaseCommandController {
             String currAttrName = tag.substring(startAttrName, endAttrName).trim();
             Log.info("2. Curr attribite name:" + currAttrName);
 
-            if (currAttrName.lastIndexOf(" ") != -1) {
-                currAttrName = currAttrName.substring(currAttrName.lastIndexOf(" ") + 1);
+            if (currAttrName.lastIndexOf(' ') != -1) {
+                currAttrName = currAttrName.substring(currAttrName.lastIndexOf(' ') + 1);
                 Log.info("2.1 Curr attribite name:" + currAttrName);
             }
 
             int startAttrPos = endAttrName;// tag.indexOf(attrName, 0);
 
             String bracketSymbol = "\"";
-            int i1 = tag.indexOf("\"", startAttrPos);
-            int i2 = tag.indexOf("'", startAttrPos);
+            int i1 = tag.indexOf('"', startAttrPos);
+            int i2 = tag.indexOf('\'', startAttrPos);
 
             Log.info("i1 = " + i1 + "; i2 = " + i2);
 
@@ -495,7 +495,7 @@ public class LoadIndexPageController extends BaseCommandController {
             System.out.println("2.2 '" + tag.substring(endAttrName + 1, startImgPath).trim() + "'");
             if (tag.substring(endAttrName + 1, startImgPath).trim().length() > 0) {
                 startAttrName = endAttrName + 1;
-                endAttrName = tag.indexOf("=", startAttrName);
+                endAttrName = tag.indexOf('=', startAttrName);
                 Log.info("2.3");
                 continue;
             }
@@ -517,17 +517,17 @@ public class LoadIndexPageController extends BaseCommandController {
                 // Log.info(html);
             }
             startAttrName = endImgPath + 1;
-            endAttrName = tag.indexOf("=", startAttrName);
+            endAttrName = tag.indexOf('=', startAttrName);
         } while (endAttrName != -1);
         return tag;
     }
 
     private String change(String root, String index, String img) {
-        if (index.lastIndexOf("/") != -1) {
-            index = index.substring(0, index.lastIndexOf("/"));
+        if (index.lastIndexOf('/') != -1) {
+            index = index.substring(0, index.lastIndexOf('/'));
         } else {
             index = "";
-            root = root.substring(0, root.lastIndexOf("/"));
+            root = root.substring(0, root.lastIndexOf('/'));
         }
         String path = "";
         String upDir = "../";
@@ -556,7 +556,7 @@ public class LoadIndexPageController extends BaseCommandController {
 
         while (countUpDir > 0) {
             // Log.info("index1 = " + index);
-            int lastPos = index.lastIndexOf("/");
+            int lastPos = index.lastIndexOf('/');
 
             if ("".equals(index)) {
                 System.err.println("Bad html path");
@@ -603,8 +603,8 @@ public class LoadIndexPageController extends BaseCommandController {
      */
     private String convertDate(Date date, String format) {
         SimpleDateFormat dateFormatDate = new SimpleDateFormat(format);
-        StringBuilder strDate = new StringBuilder(dateFormatDate.format(date));
-        return strDate.toString();
+        String strDate = dateFormatDate.format(date);
+        return strDate;
     }
 
     /**
@@ -649,7 +649,7 @@ public class LoadIndexPageController extends BaseCommandController {
     private Integer getRequestedFileId(HttpServletRequest request) {
         Integer fileId = null;
         String strFileId = request.getParameter("fileId");
-        if (strFileId != null && !strFileId.equals("")) {
+        if (strFileId != null && !strFileId.isEmpty()) {
             fileId = Integer.parseInt(strFileId);
         }
         return fileId;
