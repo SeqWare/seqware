@@ -70,9 +70,7 @@ public class ExperimentSpotDesignReadSpecDAOHibernate extends HibernateDaoSuppor
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, experiment);
             return (ExperimentSpotDesignReadSpec) this.getHibernateTemplate().merge(dbObject);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
         return null;

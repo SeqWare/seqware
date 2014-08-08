@@ -32,9 +32,7 @@ public class TriggerFileProvenanceResource extends BasicRestlet {
             mdb = DBAccess.get();
             mdb.executeUpdate(query);
             response.setStatus(Status.SUCCESS_NO_CONTENT);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (SQLException ex) {
+        } catch (IOException | SQLException ex) {
             throw new RuntimeException(ex);
         } finally {
             if (mdb != null) {

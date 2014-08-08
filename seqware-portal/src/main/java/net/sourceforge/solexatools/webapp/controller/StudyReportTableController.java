@@ -529,7 +529,7 @@ public class StudyReportTableController extends BaseCommandController {
             List<String> cellsModel = new LinkedList<>();
             cellsModel.add(wrapSwAccession(rootSample.getSwAccession(), rootSample.getTitle()));
             cellsModel.add(wrapSwAccession(sample.getSwAccession(),
-                    rootSample.getSampleId().intValue() != sample.getSampleId().intValue() ? sample.getTitle() : "no child"));
+                    rootSample.getSampleId() != sample.getSampleId() ? sample.getTitle() : "no child"));
             cellsModel.addAll(statusesOut);
             cellsModel.add(wrapOverall());
 

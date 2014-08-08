@@ -71,10 +71,13 @@ public class LaunchWorkflowListDetailsController extends BaseCommandController {
         Boolean isAsc = null;
         String strAsc = request.getParameter("asc");
 
-        if ("true".equals(strAsc)) {
-            isAsc = true;
-        } else if ("false".equals(strAsc)) {
-            isAsc = false;
+        if (null != strAsc) switch (strAsc) {
+            case "true":
+                isAsc = true;
+                break;
+            case "false":
+                isAsc = false;
+                break;
         }
         return isAsc;
     }

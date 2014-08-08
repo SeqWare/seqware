@@ -99,18 +99,23 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
                 search_query = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
             }
 
-            if ("canceled".equals(filter)) {
-                workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                        + " and ( wr.status = 'canceled' or wr.status = 'cancelled')" + search_query);
-            } else if ("failed".equals(filter)) {
-                workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                        + " and (wr.status = 'failed' or wr.status = 'failed-testing')" + search_query);
-            } else if ("running".equals(filter)) {
-                workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                        + " and ( wr.status = 'running' or wr.status = 'pending')" + search_query);
-            } else {
-                workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                        + search_query);
+            if (null != filter) switch (filter) {
+                case "canceled":
+                    workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+                            + " and ( wr.status = 'canceled' or wr.status = 'cancelled')" + search_query);
+                    break;
+                case "failed":
+                    workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+                            + " and (wr.status = 'failed' or wr.status = 'failed-testing')" + search_query);
+                    break;
+                case "running":
+                    workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+                            + " and ( wr.status = 'running' or wr.status = 'pending')" + search_query);
+                    break;
+                default:
+                    workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+                            + search_query);
+                    break;
             }
 
             String json = createSampleTableJson(workflowRuns, page, rowsPages, sortName, sortOrder);
@@ -240,20 +245,27 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 
     private void sortRows(List<Cells> rowsAll, String sortOrder, String sortName) {
         int columnPos = 0;
-        if ("date".equals(sortName)) {
-            columnPos = 0;
-        } else if ("status".equals(sortName)) {
-            columnPos = 1;
-        } else if ("swid".equals(sortName)) {
-            columnPos = 2;
+        if (null != sortName) switch (sortName) {
+            case "date":
+                columnPos = 0;
+                break;
+            case "status":
+                columnPos = 1;
+                break;
+            case "swid":
+                columnPos = 2;
+                break;
         }
 
         @SuppressWarnings("rawtypes")
         Comparator comparator = null;
-        if ("asc".equals(sortOrder)) {
-            comparator = new AnalisysTableControllerDetails.CellsComparator(columnPos);
-        } else if ("desc".equals(sortOrder)) {
-            comparator = Collections.reverseOrder(new AnalisysTableControllerDetails.CellsComparator(columnPos));
+        if (null != sortOrder) switch (sortOrder) {
+            case "asc":
+                comparator = new AnalisysTableControllerDetails.CellsComparator(columnPos);
+                break;
+            case "desc":
+                comparator = Collections.reverseOrder(new AnalisysTableControllerDetails.CellsComparator(columnPos));
+                break;
         }
 
         Collections.sort(rowsAll, comparator);

@@ -299,20 +299,27 @@ public class StudyTableControllerDetails extends BaseCommandController {
 
     private void sortRows(List<Cells> rowsAll, String sortOrder, String sortName) {
         int columnPos = 0;
-        if ("date".equals(sortName)) {
-            columnPos = 0;
-        } else if ("status".equals(sortName)) {
-            columnPos = 1;
-        } else if ("swid".equals(sortName)) {
-            columnPos = 2;
+        if (null != sortName) switch (sortName) {
+            case "date":
+                columnPos = 0;
+                break;
+            case "status":
+                columnPos = 1;
+                break;
+            case "swid":
+                columnPos = 2;
+                break;
         }
 
         @SuppressWarnings("rawtypes")
         Comparator comparator = null;
-        if ("asc".equals(sortOrder)) {
-            comparator = new StudyTableControllerDetails.CellsComparator(columnPos);
-        } else if ("desc".equals(sortOrder)) {
-            comparator = Collections.reverseOrder(new StudyTableControllerDetails.CellsComparator(columnPos));
+        if (null != sortOrder) switch (sortOrder) {
+            case "asc":
+                comparator = new StudyTableControllerDetails.CellsComparator(columnPos);
+                break;
+            case "desc":
+                comparator = Collections.reverseOrder(new StudyTableControllerDetails.CellsComparator(columnPos));
+                break;
         }
 
         Collections.sort(rowsAll, comparator);

@@ -125,12 +125,9 @@ public class LaneIDResource extends DatabaseIDResource {
 
             String text = entity.getText();
             newLane = (Lane) XmlTools.unMarshal(jo, new Lane(), text);
-        } catch (SAXException ex) {
+        } catch (SAXException | IOException ex) {
             ex.printStackTrace();
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         }
         try {
             LaneService fs = BeanFactory.getLaneServiceBean();
