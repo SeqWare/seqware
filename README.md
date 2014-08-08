@@ -153,6 +153,10 @@ Sometimes we run into problems when building, strange missing dependency issues
 and broken packages. A lot of the time this is an issue with Maven, try
 deleting your ~/.m2 directory and running the build process again.
 
+## Citations
+
+Browse DOI codes for SeqWare and related software for software engineering at OICR at [Software Engineering at Zenodo(https://zenodo.org/collection/user-softeng-at-oicr)
+
 
 ## Installing
 
