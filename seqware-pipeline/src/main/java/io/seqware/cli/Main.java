@@ -6,6 +6,7 @@ import io.seqware.Reports;
 import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
 import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -393,7 +394,7 @@ public class Main {
             out("Optional parameters:");
             out("  --engine <type>            The engine that will process the workflow run.");
             out("                             May be one of: " + Engines.ENGINES_LIST);
-            out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+            out("                             Defaults to the value of " + SqwKeys.SW_DEFAULT_WORKFLOW_ENGINE.getSettingKey());
             out("                             or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
             out("  --ini <ini-file>           An ini file to configure the workflow run.");
             out("                             Repeat this parameter to provide multiple files.");
@@ -466,7 +467,7 @@ public class Main {
             out("Optional parameters:");
             out("  --engine <type>     The engine that will process the workflow run.");
             out("                      May be one of: " + Engines.ENGINES_LIST);
-            out("                      Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+            out("                      Defaults to the value of " + SqwKeys.SW_DEFAULT_WORKFLOW_ENGINE.getSettingKey());
             out("                      or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
             out("  --ini <ini-file>    An ini file to configure the workflow run");
             out("                      Repeat this parameter to provide multiple files");
@@ -1183,7 +1184,7 @@ public class Main {
             out("Optional parameters:");
             out("  --engine <type>            The engine that will process the workflow run.");
             out("                             May be one of: " + Engines.ENGINES_LIST);
-            out("                             Defaults to the value of SW_DEFAULT_WORKFLOW_ENGINE");
+            out("                             Defaults to the value of " + SqwKeys.SW_DEFAULT_WORKFLOW_ENGINE.getSettingKey());
             out("                             or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
             out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
             out("                             Repeat this parameter to provide multiple parents");

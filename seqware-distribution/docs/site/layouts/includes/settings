@@ -1,0 +1,128 @@
+# SEQWARE PIPELINE SETTINGS
+
+# The settings in this file are tagged by when they are used.
+# COMMON: Used by all components
+# INSTALL: Used when installing a workflow bundle
+# SCHEDULE: Used when a user wants to schedule a workflow run
+# LAUNCH: Used when a workflow run is to be launched (or dry-run)
+# DELETION: Used for the admin web service supporting deletion
+#
+# Remote users need COMMON and SCHEDULE.
+# Workflow developers need COMMON and LAUNCH for testing.
+# Administrators need COMMON, DELETION, and INSTALL.
+# Cronjobs/daemon processes will need COMMON and LAUNCH.
+
+
+# COMMON
+# Common Seqware settings
+
+# SeqWare MetaDB communication method, can be 'database' or 'webservice' or 'none'
+SW_METADATA_METHOD=webservice
+# Amazon cloud settings. Only used if reading and writing to S3 buckets.
+AWS_ACCESS_KEY=FILLMEIN
+# Amazon cloud settings. Only used if reading and writing to S3 buckets.
+AWS_SECRET_KEY=FILLMEIN
+
+# COMMON_WS
+# Seqware webservice settings. Only used if SW_METADATA_METHOD=webservice
+
+# Specify the URL for the seqware-webservice
+SW_REST_URL=http://localhost:8080/SeqWareWebService
+# Specify the username for the seqware-webservice
+SW_REST_USER=admin
+# Specify the password for the seqware-webservice
+SW_REST_PASS=admin@admin.com
+
+# COMMON_DB
+# Seqware database settings. Only used if SW_METADATA_METHOD=database and by the database check utility
+
+# JDBC user for the seqware metadb
+SW_DB_USER=seqware
+# JDBC password for the seqware metadb
+SW_DB_PASS=seqware
+# Host for the metadb
+SW_DB_SERVER=localhost
+# database name
+SW_DB=seqware_meta_db
+
+# SCHEDULE_LAUNCH
+# Settings used by scheduling and launching bundles
+
+# the default engine to use if otherwise unspecified (one of: oozie, oozie-sge, pegasus)
+SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
+
+# INSTALL_LAUNCH
+# Settings used by both installing and launching bundles
+
+# The directory containing bundle directories (into which bundle archives are unzipped)
+SW_BUNDLE_DIR=/home/seqware/SeqWare/provisioned-bundles
+
+# INSTALL
+# Settings used to configure the installation of workflow bundles
+
+# The directory containing bundle archives (into which a bundle archive is first copied during install)
+SW_BUNDLE_REPO_DIR=/home/seqware/SeqWare/released-bundles
+# Default is to use compression, this can be set to OFF to disable compression
+BUNDLE_COMPRESSION=ON
+
+# LAUNCH
+# Oozie engine settings. Only used for both 'oozie' and 'oozie-sge' engines.
+
+# URL for the Oozie webservice
+OOZIE_URL=http://localhost:11000/oozie
+# HDFS directory for storing workflow xml
+OOZIE_APP_ROOT=seqware_workflow
+# Hadoop job tracker, used to schedule jobs for oozie-hadoop engine
+OOZIE_JOBTRACKER=localhost:8021
+# Hadoop name node, possibly redundant (should be refactored)
+OOZIE_NAMENODE=hdfs://localhost:8020
+# Hadoop queue onto which to schedule jobs
+OOZIE_QUEUENAME=default
+# Working directory where your workflow steps execute and where we store generated scripts and logs
+OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
+# Number of times that Oozie will retry user steps in workflows
+OOZIE_RETRY_MAX=5
+# Minutes to wait before retry for user steps in workflows
+OOZIE_RETRY_INTERVAL=5
+# Above this threshold, provision file events on the same job/workflow will be batched together
+OOZIE_BATCH_THRESHOLD=10
+# Number of provision file events that should be batched together
+OOZIE_BATCH_SIZE=100
+# HDFS implementation class
+FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem
+# Only used for 'oozie-sge' engine. Format of qsub flag for specifying number of threads. If present, ${threads} will be replaced with the job-specific value.
+OOZIE_SGE_THREADS_PARAM_FORMAT=-pe serial ${threads}
+# Format of qsub flag for specifying the max memory. If present, ${maxMemory} will be replaced with the job-specific value.
+OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT=-l h_vmem=${maxMemory}M
+
+# ADMIN
+# Settings used for administrators
+
+# Location of the admin web service, currently used for deletion
+SW_ADMIN_REST_URL=http://localhost:38080/seqware-admin-webservice
+# Used to override the JUnique lock used to ensure that utilities don't run concurrently
+SW_LOCK_ID=seqware
+# Legacy key used to encrypt provisioned files
+SW_ENCRYPT_KEY=seqware
+# Legacy key used to decrypt provisioned files
+SW_DECRYPT_KEY=seqware
+
+# TESTING
+# Used for regression testing
+
+# Used to designate a database for integration tests
+BASIC_TEST_DB_HOST=localhost
+# Used to designate a database name for integration tests
+BASIC_TEST_DB_NAME=seqware_meta_db
+# Used to designate a database username for integration tests
+BASIC_TEST_DB_USER=seqware
+# Used to designate a database password for integration tests
+BASIC_TEST_DB_PASSWORD=seqware
+# Used to designate a database for extended integration tests
+EXTENDED_TEST_DB_HOST=localhost
+# Used to designate a database name for extended integration tests
+EXTENDED_TEST_DB_NAME=seqware_meta_db
+# Used to designate a database username for extended integration tests
+EXTENDED_TEST_DB_USER=seqware
+# Used to designate a database password for extended integration tests
+EXTENDED_TEST_DB_PASSWORD=seqware

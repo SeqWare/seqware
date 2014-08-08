@@ -17,6 +17,7 @@
 
 package io.seqware.pipeline.api;
 
+import io.seqware.pipeline.SqwKeys;
 import java.util.Map;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.OozieWorkflowEngine;
@@ -46,17 +47,17 @@ public class WorkflowTools {
         } else if (engine.equalsIgnoreCase("oozie")) {
             wfEngine = new OozieWorkflowEngine(dataModel, false, null, null, createDirectories);
         } else if (engine.equalsIgnoreCase("oozie-sge")) {
-            String threadsSgeParamFormat = config.get("OOZIE_SGE_THREADS_PARAM_FORMAT");
-            String maxMemorySgeParamFormat = config.get("OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT");
+            String threadsSgeParamFormat = config.get(SqwKeys.OOZIE_SGE_THREADS_PARAM_FORMAT.getSettingKey());
+            String maxMemorySgeParamFormat = config.get(SqwKeys.OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT.getSettingKey());
             if (threadsSgeParamFormat == null) {
-                System.err
-                        .println("WARNING: No entry in settings for OOZIE_SGE_THREADS_PARAM_FORMAT, omitting threads option from qsub. Fix by providing the format of qsub threads option, using the '"
-                                + OozieJob.SGE_THREADS_PARAM_VARIABLE + "' variable.");
+                System.err.println("WARNING: No entry in settings for " + SqwKeys.OOZIE_SGE_THREADS_PARAM_FORMAT.getSettingKey()
+                        + ", omitting threads option from qsub. Fix by providing the format of qsub threads option, using the '"
+                        + OozieJob.SGE_THREADS_PARAM_VARIABLE + "' variable.");
             }
             if (maxMemorySgeParamFormat == null) {
-                System.err
-                        .println("WARNING: No entry in settings for OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT, omitting max-memory option from qsub. Fix by providing the format of qsub max-memory option, using the '"
-                                + OozieJob.SGE_MAX_MEMORY_PARAM_VARIABLE + "' variable.");
+                System.err.println("WARNING: No entry in settings for " + SqwKeys.OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT.getSettingKey()
+                        + ", omitting max-memory option from qsub. Fix by providing the format of qsub max-memory option, using the '"
+                        + OozieJob.SGE_MAX_MEMORY_PARAM_VARIABLE + "' variable.");
             }
             wfEngine = new OozieWorkflowEngine(dataModel, true, threadsSgeParamFormat, maxMemorySgeParamFormat, createDirectories);
         } else {

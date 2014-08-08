@@ -41,7 +41,6 @@ import net.sourceforge.seqware.common.util.runtools.RunTools;
  */
 public class FileTools {
 
-    public static final String COMPRESSION_SETTING = "BUNDLE_COMPRESSION";
     public static final String FORCE_HOST = "force-host";
 
     /*

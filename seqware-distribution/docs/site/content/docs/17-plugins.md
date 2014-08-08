@@ -249,6 +249,16 @@ This plugin will take in a sw_accession of a processing, and translate the hiera
 |--parent-accession|The SWID of the processing|
 
 
+##  UserSettingsPlugin
+io.seqware.pipeline.plugins.UserSettingsPlugin
+A plugin that a documented .seqware settings file that can be used for documentation.
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--?, --h, --help|Provides this help message.|
+|--[arguments]||
+
+
 ##  WorkflowLauncher
 io.seqware.pipeline.plugins.WorkflowLauncher
 A plugin that lets you launch scheduled workflow bundles.

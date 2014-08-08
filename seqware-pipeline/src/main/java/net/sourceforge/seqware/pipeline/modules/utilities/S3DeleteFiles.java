@@ -3,6 +3,7 @@ package net.sourceforge.seqware.pipeline.modules.utilities;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -39,6 +40,9 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = ModuleInterface.class)
 public class S3DeleteFiles extends Module {
+
+    public static final String NEED_BOTH_AWS_SETTINGS = "You need to have a .seqware/settings file that contains "
+            + SqwKeys.AWS_ACCESS_KEY.getSettingKey() + " and " + SqwKeys.AWS_SECRET_KEY.getSettingKey();
 
     protected OptionSet options = null;
     protected final int READ_ATTEMPTS = 1000;
@@ -158,8 +162,8 @@ public class S3DeleteFiles extends Module {
         if (accessKey == null || secretKey == null) {
             try {
                 HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                accessKey = settings.get("AWS_ACCESS_KEY");
-                secretKey = settings.get("AWS_SECRET_KEY");
+                accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+                secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
             } catch (Exception e) {
                 e.printStackTrace();
                 return (null);
@@ -168,7 +172,7 @@ public class S3DeleteFiles extends Module {
 
         if (accessKey == null || "".equals(accessKey) || secretKey == null || "".equals(secretKey)) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-            ret.setStderr("You need to have a .seqware/settings file that contains AWS_ACCESS_KEY and AWS_SECRET_KEY");
+            ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
             return (ret);
         }
 
@@ -223,12 +227,12 @@ public class S3DeleteFiles extends Module {
         // now delete
         try {
             HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-            accessKey = settings.get("AWS_ACCESS_KEY");
-            secretKey = settings.get("AWS_SECRET_KEY");
+            accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+            secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
 
             if (accessKey == null || secretKey == null) {
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-                ret.setStderr("You need to have a .seqware/settings file that contains AWS_ACCESS_KEY and AWS_SECRET_KEY");
+                ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
                 return (ret);
             }
 

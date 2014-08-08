@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -168,8 +169,8 @@ public class S3ListFiles extends Module {
         if (accessKey == null || secretKey == null) {
             try {
                 HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                accessKey = settings.get("AWS_ACCESS_KEY");
-                secretKey = settings.get("AWS_SECRET_KEY");
+                accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+                secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
             } catch (Exception e) {
                 e.printStackTrace();
                 return (null);
@@ -178,7 +179,7 @@ public class S3ListFiles extends Module {
 
         if (accessKey == null || "".equals(accessKey) || secretKey == null || "".equals(secretKey)) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-            ret.setStderr("You need to have a .seqware/settings file that contains AWS_ACCESS_KEY and AWS_SECRET_KEY");
+            ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
             return (ret);
         }
 
@@ -273,8 +274,8 @@ public class S3ListFiles extends Module {
                     // get the access/secret key from the .seqware/settings file
                     try {
                         HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                        accessKey = settings.get("AWS_ACCESS_KEY");
-                        secretKey = settings.get("AWS_SECRET_KEY");
+                        accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
+                        secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
                     } catch (Exception e) {
                         e.printStackTrace();
                         return (null);
@@ -283,7 +284,7 @@ public class S3ListFiles extends Module {
 
                 if (accessKey == null || secretKey == null) {
                     ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
-                    ret.setStderr("You need to have a .seqware/settings file that contains AWS_ACCESS_KEY and AWS_SECRET_KEY");
+                    ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
                     return (ret);
                 }
 

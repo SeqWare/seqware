@@ -70,19 +70,17 @@ public final class SanityCheck extends Plugin {
 
                 HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
                 // do a defensive check to see if we have a direct database connection available
-                if (settings.get("SW_DB_SERVER") == null || settings.get("SW_DB") == null || settings.get("SW_DB_USER") == null
-                        || settings.get("SW_DB_PASS") == null) {
+                if (!ConfigTools.isValidDBConnectionParam(settings)) {
                     hasDBSettings = false;
                     ReturnValue ret = new ReturnValue();
-                    System.out
-                            .println("This utility requires direct access to the metadb. Configure  SW_DB_SERVER, SW_DB, SW_DB_USER, and SW_DB_PASS in your .seqware/setttings");
+                    System.out.println("This utility requires direct access to the metadb." + MetadataFactory.NO_DATABASE_CONFIG);
                     ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-                    return (ret);
+                    return ret;
                 }
             } catch (Exception e) {
                 ReturnValue ret = new ReturnValue();
                 ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-                return (ret);
+                return ret;
             }
         }
         return new ReturnValue();

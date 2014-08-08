@@ -6,6 +6,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,10 +71,18 @@ public class BundleManager extends Plugin {
         parser.acceptsAll(Arrays.asList("validate", "v"), "Optional: Run a light basic validation on this bundle.");
         parser.acceptsAll(
                 Arrays.asList("install", "i"),
-                "Optional: if the --bundle param points to a .zip file then the install process will first unzip into the directory specified by the directory defined by SW_BUNDLE_DIR in the .seqware/settings file (skipping files that already exit).  It will then copy the whole zip file to the SW_BUNDLE_REPO_DIR which can be a directory or S3 prefix (the copy will be skipped if the file is already at this location). It will finish this process by installing this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location.  If the --bundle param point to a directory then this will first create a zip of the bundle and place it in SW_BUNDLE_REPO_DIR. It will then install this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location. The method (direct database or web service) and server location of the SeqWare  MetaDB is controlled via the .seqware/settings file.");
+                "Optional: if the --bundle param points to a .zip file then the install process will first unzip into the directory specified by the directory defined by "
+                        + SqwKeys.SW_BUNDLE_DIR.getSettingKey()
+                        + " in the .seqware/settings file (skipping files that already exit).  It will then copy the whole zip file to the "
+                        + SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey()
+                        + " which can be a directory or S3 prefix (the copy will be skipped if the file is already at this location). It will finish this process by installing this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location.  If the --bundle param point to a directory then this will first create a zip of the bundle and place it in "
+                        + SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey()
+                        + ". It will then install this bundle in the database with the permanent_bundle_location pointed to the zip file location and current_working_dir pointed to the unzipped location. The method (direct database or web service) and server location of the SeqWare  MetaDB is controlled via the .seqware/settings file.");
         parser.acceptsAll(
                 Arrays.asList("install-zip-only", "izo"),
-                "Optional: This will suppress the unzipping of a zip file, it is only valid if the --bundle points to a zip file and not a directory. It will take a workflow bundle zip file, copy it to the SW_BUNDLE_REPO_DIR location, and then installs that workflow into the database.  Only the permanent_bundle_location location will be defined, the current_working_dir will be null. (PROBLEM: can't read the metadata.xml if the workflow zip isn't unzipped!)");
+                "Optional: This will suppress the unzipping of a zip file, it is only valid if the --bundle points to a zip file and not a directory. It will take a workflow bundle zip file, copy it to the "
+                        + SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey()
+                        + " location, and then installs that workflow into the database.  Only the permanent_bundle_location location will be defined, the current_working_dir will be null. (PROBLEM: can't read the metadata.xml if the workflow zip isn't unzipped!)");
         parser.acceptsAll(
                 Arrays.asList("install-dir-only", "ido"),
                 "Optional: This will suppress the creation of a zip file from a workflow bundle directory. It will simply install the workflow into the database and set the current_working_dir but leave permanent_bundle_location null.");

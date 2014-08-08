@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.Engines;
 import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringBufferInputStream;
@@ -113,11 +114,12 @@ public class WorkflowStatusChecker extends Plugin {
         }
 
         // figure out the username
-        if (this.config.get("SW_REST_USER") == null || "".equals(this.config.get("SW_REST_USER"))) {
-            Log.error("You must define SW_REST_USER in your SeqWare settings file!");
+        if (this.config.get(SqwKeys.SW_REST_USER.getSettingKey()) == null
+                || "".equals(this.config.get(SqwKeys.SW_REST_USER.getSettingKey()))) {
+            Log.error("You must define " + SqwKeys.SW_REST_USER.getSettingKey() + " in your SeqWare settings file!");
             return new ReturnValue(ExitStatus.FAILURE);
         }
-        this.username = this.config.get("SW_REST_USER");
+        this.username = this.config.get(SqwKeys.SW_REST_USER.getSettingKey());
 
         return new ReturnValue();
 
@@ -274,7 +276,7 @@ public class WorkflowStatusChecker extends Plugin {
 
         private void checkOozie() {
             try {
-                OozieClient oc = new OozieClient((String) config.get("OOZIE_URL"));
+                OozieClient oc = new OozieClient((String) config.get(SqwKeys.OOZIE_URL.getSettingKey()));
                 String jobId = wr.getStatusCmd();
                 if (jobId == null) {
                     handlePreLaunch();

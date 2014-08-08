@@ -10,8 +10,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 import org.jdom.Element;
 
 public class OozieBashJob extends OozieJob {
-    public static final String OOZIE_RETRY_MAX = "OOZIE_RETRY_MAX";
-    public static final String OOZIE_RETRY_INTERVAL = "OOZIE_RETRY_INTERVAL";
+
     private File jobScript = null;
 
     public OozieBashJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
