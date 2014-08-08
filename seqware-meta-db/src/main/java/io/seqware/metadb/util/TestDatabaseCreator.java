@@ -22,17 +22,17 @@ import org.slf4j.LoggerFactory;
  */
 public class TestDatabaseCreator {
 
-    private final static String DEFAULT_DB_HOST = "127.0.0.1";
-    private final static String POSTGRE_DB = "postgres";
-    private final static String SEQWARE_DB = "test_seqware_meta_db";
+    private static final String DEFAULT_DB_HOST = "127.0.0.1";
+    private static final String POSTGRE_DB = "postgres";
+    private static final String SEQWARE_DB = "test_seqware_meta_db";
     // We should not have a postgres user with an easily guessable password. It
     // is a security risk. The seqware user needs CREATEDB for this to work but
     // it is more secure. Since we are using local database for testing it is
     // not really security breach here.
-    private final static String POSTGRE_USER = "seqware";
-    private final static String POSTGRE_PASSWORD = "seqware";
-    private final static String SEQWARE_USER = "seqware";
-    private final static String SEQWARE_PASSWORD = "seqware";
+    private static final String POSTGRE_USER = "seqware";
+    private static final String POSTGRE_PASSWORD = "seqware";
+    private static final String SEQWARE_USER = "seqware";
+    private static final String SEQWARE_PASSWORD = "seqware";
     private static boolean database_changed;
     private static boolean first_time_created = true;
     private static final Logger logger = LoggerFactory.getLogger(TestDatabaseCreator.class);

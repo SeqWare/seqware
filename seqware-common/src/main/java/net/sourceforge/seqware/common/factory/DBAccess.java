@@ -89,7 +89,7 @@ public class DBAccess {
      * close.
      * </p>
      */
-    public synchronized static void close() {
+    public static synchronized void close() {
         MetadataDB mdb = metadataDBWrapper.get();
         if (mdb != null) {
             Log.debug(metadataDBWrapper.get().toString() + " was closed ");

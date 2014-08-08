@@ -17,7 +17,7 @@ import net.sourceforge.seqware.common.util.Log;
  */
 public class LockingFileTools {
 
-    private final static int RETRIES = 100;
+    private static final int RETRIES = 100;
 
     public static boolean lockAndAppend(File file, String output) {
         return lockAndWrite(file, output, true);

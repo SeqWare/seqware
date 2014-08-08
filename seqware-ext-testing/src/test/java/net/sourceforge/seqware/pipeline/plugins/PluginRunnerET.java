@@ -56,8 +56,8 @@ public class PluginRunnerET {
     private static Map<String, Integer> installedWorkflows = new HashMap<>();
     private static Map<String, File> bundleLocations = new HashMap<>();
     private static final List<Integer> launchedWorkflowRuns = new ArrayList<>();
-    private final static boolean DEBUG_SKIP = false;
-    private final static int PARENT = 4707;
+    private static final boolean DEBUG_SKIP = false;
+    private static final int PARENT = 4707;
 
     public static Map<String, Integer> getInstalledWorkflows() {
         return installedWorkflows;

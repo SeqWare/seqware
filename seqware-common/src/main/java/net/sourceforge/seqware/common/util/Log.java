@@ -35,7 +35,7 @@ import org.apache.log4j.PatternLayout;
 public class Log {
 
     private static boolean verbose;
-    private final static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     /**
      * See {@link org.apache.log4j.Logger#debug(Object)}.
