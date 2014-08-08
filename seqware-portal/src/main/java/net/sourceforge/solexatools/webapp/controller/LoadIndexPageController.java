@@ -39,10 +39,10 @@ import net.sourceforge.seqware.common.util.Log;
 public class LoadIndexPageController extends BaseCommandController {
     private FileService fileService;
 
-    private final static String SEPARATOR = java.io.File.separator;
+    private static final String SEPARATOR = java.io.File.separator;
     private static final long MEGABYTE = 1024L * 1024L;
-    private final static String MAIN_FILE = "index.html";
-    private final static long WARNING_SIZE = 1024L * 3;
+    private static final String MAIN_FILE = "index.html";
+    private static final long WARNING_SIZE = 1024L * 3;
 
     private HTMLTagValidator htmlTagValidator = new HTMLTagValidator();
 

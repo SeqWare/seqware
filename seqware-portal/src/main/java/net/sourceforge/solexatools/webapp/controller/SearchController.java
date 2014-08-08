@@ -24,7 +24,7 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 public class SearchController extends BaseCommandController {
 
     /** Constant <code>SEARCH_CASE_SENSITIVE="search.checked"</code> */
-    public final static String SEARCH_CASE_SENSITIVE = "search.checked";
+    public static final String SEARCH_CASE_SENSITIVE = "search.checked";
 
     private String criteria;
     private String type;

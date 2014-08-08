@@ -38,8 +38,8 @@ public class BulkDownloaderController extends BaseCommandController {
 
     private FileService fileService;
     /** Constant <code>BUFFERSIZE=500*1024</code> */
-    public final static int BUFFERSIZE = 500 * 1024; // 512K buffer
-    private final static String SEPARATOR = java.io.File.separator;
+    public static final int BUFFERSIZE = 500 * 1024; // 512K buffer
+    private static final String SEPARATOR = java.io.File.separator;
 
     /**
      * <p>

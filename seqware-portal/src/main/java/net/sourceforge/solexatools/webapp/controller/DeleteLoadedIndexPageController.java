@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 public class DeleteLoadedIndexPageController extends BaseCommandController {
 
     /** Constant <code>SEPARATOR="java.io.File.separator"</code> */
-    public final static String SEPARATOR = java.io.File.separator;
+    public static final String SEPARATOR = java.io.File.separator;
 
     /**
      * <p>
