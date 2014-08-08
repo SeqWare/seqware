@@ -15,9 +15,14 @@ monitoring workflows.
 
 <img width="600" src="/assets/images/seqware_hpc_oozie.png"/>
 
-We currently support two workflow languages (FTL markup and Java) and two
-workflow engines (Oozie and Pegasus). Our current recommended combination is
-Java workflows with the Pegasus engine.
+We currently support one workflow languages (Java) and four 
+workflow engines (oozie, oozie-sge, whitestar, and whitestar-sge). Our current recommended combination is
+Java workflows with the Oozie-sge engine.
+
+* Oozie uses the Hadoop Workflow Scheduler to schedule steps in workflows on the Hadoop ecosystem (JobTrackers and TaskTrackers). 
+* Oozie-sge uses Oozie, but in conjunction with a oozie-sge plugin to schedule steps in workflows on a pre-existing sge cluster. 
+* WhiteStar is a synchronous workflow engine used by SeqWare developers to debug, it runs steps locally via Bash. 
+* WhiteStar-sge runs steps on a local sge cluster.     
 
 We highly recommend you go through the
 [User](/docs/3-getting-started/user-tutorial/),
