@@ -438,4 +438,11 @@ public abstract class OozieJob {
         return pathToJRE;
     }
 
+    /**
+     * @return the scriptsDir
+     */
+    public File getScriptsDir() {
+        return scriptsDir;
+    }
+
 }

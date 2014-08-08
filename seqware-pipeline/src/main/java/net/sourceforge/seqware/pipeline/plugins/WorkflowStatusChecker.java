@@ -269,8 +269,31 @@ public class WorkflowStatusChecker extends Plugin {
 
             if (Engines.isOozie(wr.getWorkflowEngine())) {
                 checkOozie();
+            } else if (Engines.isWhiteStar(wr.getWorkflowEngine())) {
+                checkWhiteStar();
             } else {
                 throw new RuntimeException("No other workflow engines currently supported");
+            }
+        }
+
+        private void checkWhiteStar() {
+            String err;
+            String out;
+
+            File dir = OozieJob.scriptsDir(wr.getCurrentWorkingDir());
+            if (dir.exists()) {
+                out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, null));
+                err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, null));
+            } else {
+                // working dir has been deleted, do not wipe-out the stored output
+                out = wr.getStdOut();
+                err = wr.getStdErr();
+            }
+
+            synchronized (metadata_sync) {
+                wr.setStdErr(err);
+                wr.setStdOut(out);
+                WorkflowStatusChecker.this.metadata.updateWorkflowRun(wr);
             }
         }
 
@@ -473,7 +496,11 @@ public class WorkflowStatusChecker extends Plugin {
             Matcher m = p.matcher(f.getName());
             if (m.find()) {
                 String id = m.group(1);
-                if (extIds.contains(id)) {
+                if (extIds != null && extIds.contains(id)) {
+                    idFiles.put(Integer.parseInt(id), f);
+                }
+                // don't filter anything if no filter specified
+                if (extIds == null) {
                     idFiles.put(Integer.parseInt(id), f);
                 }
             }

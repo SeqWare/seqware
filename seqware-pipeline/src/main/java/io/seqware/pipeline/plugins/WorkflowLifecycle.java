@@ -194,6 +194,12 @@ public class WorkflowLifecycle extends Plugin {
                 totalParams.add(val);
             }
         }
+        if (options.has(this.workflowEngineSpec)) {
+            for (String val : options.valuesOf(this.workflowEngineSpec)) {
+                totalParams.add("--" + this.workflowEngineSpec.options().iterator().next());
+                totalParams.add(val);
+            }
+        }
         if (options.has(this.parentAccessionSpec)) {
             for (String val : options.valuesOf(this.parentAccessionSpec)) {
                 totalParams.add("--" + this.parentAccessionSpec.options().iterator().next());
