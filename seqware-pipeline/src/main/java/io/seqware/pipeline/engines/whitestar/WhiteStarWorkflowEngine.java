@@ -5,6 +5,7 @@ import io.seqware.pipeline.api.WorkflowEngine;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -95,7 +96,9 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
         try {
             // run this workflow synchronously
-            for (OozieJob job : this.workflowApp.getJobs()) {
+	    List<List<OozieJob>> jobs =  this.workflowApp.getOrderedJobs();
+	    for (List<OozieJob> rowOfJobs : jobs) {
+            for (OozieJob job : rowOfJobs) {
                 CommandLine cmdLine;
                 File scriptsDir = job.getScriptsDir();
                 String optionsFileName = OozieJob.optsFileName(job.getName());
@@ -134,6 +137,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 } else {
                     executor.execute(cmdLine);
                 }
+            }
             }
         } catch (IOException e) {
             throw rethrow(e);
