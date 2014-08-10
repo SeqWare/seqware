@@ -402,6 +402,7 @@ public class Main {
             out("  --name <wf-name>           The name of the workflow in the bundle.");
             out("  --version <ver>            The version of the workflow in the bundle.");
             out("  --override <key=value>     Override specific parameters from the workflow.ini");
+            out("  --no-metadata              Run without per-step workflow metadata tracking");
             out("");
         } else {
             String dir = reqVal(args, "--dir");
@@ -410,6 +411,7 @@ public class Main {
             String version = optVal(args, "--version", null);
             String engine = optVal(args, "--engine", null);
             List<String> override = optVals(args, "--override");
+            boolean noMetadata = flag(args, "--no-metadata");
 
             extras(args, "bundle launch");
 
@@ -428,11 +430,14 @@ public class Main {
             String[] runParams;
             if (engine == null) {
                 runParams = new String[] { "--plugin", "io.seqware.pipeline.plugins.WorkflowLifecycle", "--", "--wait", "--bundle", dir,
-                        "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata" };
+                        "--workflow", name, "--version", version, "--ini-files", cdl(inis)};
             } else {
                 runParams = new String[] { "--plugin", "io.seqware.pipeline.plugins.WorkflowLifecycle", "--", "--wait", "--bundle", dir,
-                        "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--no-metadata", "--workflow-engine", engine };
+                        "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--workflow-engine", engine };
             }
+	    if (noMetadata){
+	        runParams = ArrayUtils.add(runParams, "--no-metadata");
+	    }
             String[] addAll = ArrayUtils.addAll(runParams, overrideParams.toArray(new String[overrideParams.size()]));
             run(addAll);
         }
