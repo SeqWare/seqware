@@ -17,7 +17,7 @@ mvn release:perform -DconnectionUrl=scm:git:git@github.com:SeqWare/seqware.git -
 # upload non-jar artifacts to github
 
 # create release
-echo -e "{\"tag_name\":\""$VERSION"\", \"name\":\""$VERSION"\", \"body\":\""Automated release message"\"}" > release.json
+echo -e "{\"tag_name\":\""$VERSION"\", \"name\":\""$VERSION"\", \"prerelease\": true, \"body\":\""Automated release message"\"}" > release.json
 curl -u $TOKEN:x-oauth-basic -X POST -d @release.json https://api.github.com/repos/SeqWare/seqware/releases?tag_name=$VERSION&name=$VERSION
 rm release.json
 # extract release number, relies upon order of releases which can be improved
