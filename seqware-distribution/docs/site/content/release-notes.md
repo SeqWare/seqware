@@ -31,6 +31,7 @@ Database tables removed include:
 * sample_search
 
 Web resources:
+
 * webservice DTO classes
 * asychronous classes for scheduling and running workflows (Pegasus)
 * web-resources that back SymLinkFileReporter (reporting files associated with studies, sequencer runs, samples, etc.)
