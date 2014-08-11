@@ -12,7 +12,7 @@
 # Administrators need COMMON, DELETION, and INSTALL.
 # Cronjobs/daemon processes will need COMMON and LAUNCH.
 
-Note that this document was auto-generated using the UserSettingsPlugin,
+# Note that this document was auto-generated using the UserSettingsPlugin
 
 
 # COMMON
