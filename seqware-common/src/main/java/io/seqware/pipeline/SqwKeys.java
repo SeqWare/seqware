@@ -17,6 +17,8 @@
 
 package io.seqware.pipeline;
 
+import io.seqware.Engines;
+
 /**
  * This binds together all of the keys in the .seqware/settings file as a precursor to auto-generating documentation for them.
  * 
@@ -26,7 +28,7 @@ package io.seqware.pipeline;
  */
 public enum SqwKeys {
     // @formatter:off
-    SW_METADATA_METHOD(null, Categories.COMMON, "SeqWare MetaDB communication method, can be 'database' or 'webservice' or 'none'", "webservice", "database", "webservice", "none"), 
+    SW_METADATA_METHOD(null, Categories.COMMON, "SeqWare MetaDB communication method, can be 'database' or 'webservice' or 'inmemory' or 'none'", "webservice", "database", "webservice", "inmemory", "none"), 
     AWS_ACCESS_KEY(null, Categories.COMMON, "Amazon cloud settings. Only used if reading and writing to S3 buckets.", "FILLMEIN"), 
     AWS_SECRET_KEY(null, Categories.COMMON, "Amazon cloud settings. Only used if reading and writing to S3 buckets.", "FILLMEIN"), 
     
@@ -38,7 +40,7 @@ public enum SqwKeys {
     SW_DB_SERVER(null, Categories.COMMON_DB, "Host for the metadb", "localhost"), 
     SW_DB(null, Categories.COMMON_DB, "database name", "seqware_meta_db"), 
     SW_DEFAULT_WORKFLOW_ENGINE(null, Categories.SCHEDULE_LAUNCH,
-            "the default engine to use if otherwise unspecified (one of: oozie, oozie-sge, pegasus)", "oozie-sge"), 
+            "the default engine to use if otherwise unspecified (one of: "+Engines.ENGINES_LIST+")", "oozie-sge"), 
     SW_BUNDLE_DIR(null, Categories.INSTALL_LAUNCH, "The directory containing bundle directories (into which bundle archives are unzipped)",
             "/home/seqware/SeqWare/provisioned-bundles"), 
     SW_BUNDLE_REPO_DIR(null, Categories.INSTALL,

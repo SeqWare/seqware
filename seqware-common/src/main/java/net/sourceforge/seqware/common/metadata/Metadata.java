@@ -570,6 +570,7 @@ public interface Metadata {
      *            a {@link java.lang.String} object.
      * @param storeArchiveZip
      *            a boolean.
+     * @param workflowClass
      * @param workflowEngine
      * @param workflowType
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
