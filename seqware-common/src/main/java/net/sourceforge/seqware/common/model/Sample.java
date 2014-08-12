@@ -420,15 +420,15 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      *            a {@link java.util.SortedSet} object.
      */
     public void setLanesForView(SortedSet<Lane> lanes) {
-        SortedSet<IUS> IUS = new TreeSet<>();
+        SortedSet<IUS> ius = new TreeSet<>();
         for (Lane lane : lanes) {
             IUS newIUS = new IUS();
             newIUS.setSample(this);
             newIUS.setLane(lane);
             newIUS.setIusId(lane.getLaneId());
-            IUS.add(newIUS);
+            ius.add(newIUS);
         }
-        this.setIUS(IUS);
+        this.setIUS(ius);
         // this.lanes = lanes;
     }
 

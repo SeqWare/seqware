@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LibraryStrategyServiceImpl implements LibraryStrategyService {
     private LibraryStrategyDAO dao = null;
-    private static final Log log = LogFactory.getLog(LibraryStrategyServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(LibraryStrategyServiceImpl.class);
 
     /**
      * <p>
@@ -56,8 +56,8 @@ public class LibraryStrategyServiceImpl implements LibraryStrategyService {
             try {
                 obj = dao.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find LibraryStrategy by id " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find LibraryStrategy by id " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return obj;

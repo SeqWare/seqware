@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class WorkflowParamServiceImpl implements WorkflowParamService {
     private WorkflowParamDAO workflowParamDAO = null;
-    private static final Log log = LogFactory.getLog(WorkflowParamServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(WorkflowParamServiceImpl.class);
 
     /**
      * <p>
@@ -64,8 +64,8 @@ public class WorkflowParamServiceImpl implements WorkflowParamService {
                 workflowParam = workflowParamDAO.findByID(id);
                 // fillInLanes(lane);
             } catch (Exception exception) {
-                log.error("Cannot find Lane by expID " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Lane by expID " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return workflowParam;

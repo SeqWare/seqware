@@ -35,7 +35,7 @@ public class TestDatabaseCreator {
     private static final String SEQWARE_PASSWORD = "seqware";
     private static boolean database_changed;
     private static boolean first_time_created = true;
-    private static final Logger logger = LoggerFactory.getLogger(TestDatabaseCreator.class);
+    private final Logger logger = LoggerFactory.getLogger(TestDatabaseCreator.class);
 
     /**
      * @return the DEFAULT_DB_HOST
@@ -239,6 +239,7 @@ public class TestDatabaseCreator {
                 connection.createStatement().execute(getClassPathFileToString("seqware_meta_db_testdata.sql"));
             }
         } catch (IOException e) {
+            Logger logger = LoggerFactory.getLogger(TestDatabaseCreator.class);
             logger.error("could not load testing database", e);
         }
         System.out.println("----------------Dump Loaded--------------------");

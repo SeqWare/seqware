@@ -217,7 +217,7 @@ public class SequencerRunReportTableController implements Serializable {
         if (registration == null) return null;
 
         // Read all the possible parameters
-        String seqRun_id = request.getParameter(SEQ_RUN_ID);
+        String seqRunID = request.getParameter(SEQ_RUN_ID);
         String tableSel = request.getParameter(TABLE_SEL);
         String tableModel = request.getParameter(TABLE_MODEL);
         String sortName = request.getParameter(SORT_NAME);
@@ -237,7 +237,7 @@ public class SequencerRunReportTableController implements Serializable {
             // this is ok. Default value is used.
         }
         try {
-            seqRunId = Integer.parseInt(seqRun_id);
+            seqRunId = Integer.parseInt(seqRunID);
         } catch (NumberFormatException e) {
             // this is ok. Default value is used.
         }
@@ -292,7 +292,7 @@ public class SequencerRunReportTableController implements Serializable {
             Collections.sort(workflows);
             ModelAndView modelAndView = new ModelAndView("ReportSequencerRun");
             createChartModel(seqRun, modelAndView);
-            modelAndView.addObject("seq_run_id", seqRun_id);
+            modelAndView.addObject("seq_run_id", seqRunID);
             return modelAndView;
         }
         if (tableModel != null) {

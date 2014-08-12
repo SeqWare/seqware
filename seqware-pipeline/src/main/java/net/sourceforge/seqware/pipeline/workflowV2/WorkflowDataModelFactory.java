@@ -84,15 +84,15 @@ public class WorkflowDataModelFactory {
         Log.info("bundle for workflowdatamodel found");
 
         // check FTL exist?
-        boolean workflow_java = true;
+        boolean workflowJava = true;
         if (metaInfo.get("workflow_template") != null && !metaInfo.get("workflow_template").isEmpty()) {
-            workflow_java = false;
+            workflowJava = false;
         }
 
         // Java object or FTL
         AbstractWorkflowDataModel dataModel = null;
         Class<?> clazz = null;
-        if (workflow_java) {
+        if (workflowJava) {
             // String clazzPath = metaInfo.get("classes");
             // Log.stdout("looking for classes at " + clazzPath);
             // Log.info("CLASSPATH: " + clazzPath);
@@ -179,7 +179,7 @@ public class WorkflowDataModelFactory {
         dataModel.setWorkflow_accession(String.valueOf(workflowAccession));
 
         // parse XML or Java Object for
-        if (workflow_java) {
+        if (workflowJava) {
             try {
                 Method m = clazz.getMethod("setupDirectory");
                 m.invoke(dataModel);
