@@ -5,7 +5,13 @@ import io.seqware.pipeline.api.WorkflowEngine;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -42,6 +48,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
 
     private final File nfsWorkDir;
     private WorkflowApp workflowApp;
+    private final boolean parallel;
 
     /**
      * 
@@ -51,9 +58,10 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
      * @param maxMemorySgeParamFormat
      * @param createDirectories
      *            true when creating the engine to launch a job
+     * @param parallel
      */
     public WhiteStarWorkflowEngine(AbstractWorkflowDataModel objectModel, boolean useSge, String threadsSgeParamFormat,
-            String maxMemorySgeParamFormat, boolean createDirectories) {
+            String maxMemorySgeParamFormat, boolean createDirectories, boolean parallel) {
         this.useSge = useSge;
         this.threadsSgeParamFormat = threadsSgeParamFormat;
         this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
@@ -63,6 +71,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         } else {
             this.nfsWorkDir = null;
         }
+        this.parallel = parallel;
     }
 
     public static File initNfsWorkDir(AbstractWorkflowDataModel model) {
@@ -95,61 +104,33 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
     @Override
     public ReturnValue runWorkflow() {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
-        try {
-            // run this workflow synchronously
-            List<List<OozieJob>> jobs = this.workflowApp.getOrderedJobs();
-            for (List<OozieJob> rowOfJobs : jobs) {
-                for (OozieJob job : rowOfJobs) {
-                    CommandLine cmdLine;
-                    File scriptsDir = job.getScriptsDir();
-                    String optionsFileName = OozieJob.optsFileName(job.getName());
-                    String runnerFileName = OozieJob.runnerFileName(job.getName());
 
-                    if (this.useSge) {
-                        cmdLine = new CommandLine("qsub");
-                        cmdLine.addArgument("-sync");
-                        cmdLine.addArgument("yes");
-                        cmdLine.addArgument("-@");
-                        cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + optionsFileName);
-                    } else {
-                        cmdLine = new CommandLine("bash");
-                    }
+        // run this workflow synchronously
+        List<List<OozieJob>> jobs = this.workflowApp.getOrderedJobs();
+        for (List<OozieJob> rowOfJobs : jobs) {
 
-                    cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + runnerFileName);
+            ExecutorService pool;
+            if (this.parallel) {
+                pool = Executors.newFixedThreadPool(rowOfJobs.size());
+            } else {
+                pool = Executors.newSingleThreadExecutor();
+            }
 
-                    Executor executor = new DefaultExecutor();
-                    executor.setWorkingDirectory(scriptsDir);
-                    Log.stdoutWithTime("Running command: " + cmdLine.toString());
-                    // record output ourselves if not using sge
-                    if (!this.useSge) {
-                        // we can only use the last 9 characters to fit into an int
-                        String time = String.valueOf(System.currentTimeMillis()).substring(4);
-
-                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                        ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
-                        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
-                        executor.setStreamHandler(streamHandler);
-                        // execute!
-                        try {
-                            executor.execute(cmdLine);
-                            // grab stdout and stderr
-                        } catch (ExecuteException e) {
-                            throw rethrow(e);
-                        } finally {
-                            FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".e" + time),
-                                    outputStream.toString());
-                            FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".o" + time),
-                                    errorStream.toString());
-                        }
-
-                    } else {
-                        executor.execute(cmdLine);
-                    }
+            List<Future<?>> futures = new ArrayList<>(rowOfJobs.size());
+            for (OozieJob job : rowOfJobs) {
+                futures.add(pool.submit(new ExecutionThread(job)));
+            }
+            // join
+            for (Future<?> future : futures) {
+                try {
+                    future.get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    throw new RuntimeException(ex);
                 }
             }
-        } catch (IOException e) {
-            throw rethrow(e);
+
         }
+
         Log.stdoutWithTime("Setting workflow-run status to complete for: " + this.jobId);
         // set the status to completed
         Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
@@ -158,6 +139,64 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         ws.updateWorkflowRun(workflowRun);
 
         return ret;
+    }
+
+    private final class ExecutionThread implements Callable<Integer> {
+        private final OozieJob job;
+
+        protected ExecutionThread(OozieJob job) {
+            this.job = job;
+        }
+
+        @Override
+        public Integer call() throws Exception {
+            CommandLine cmdLine;
+            File scriptsDir = job.getScriptsDir();
+            String optionsFileName = OozieJob.optsFileName(job.getName());
+            String runnerFileName = OozieJob.runnerFileName(job.getName());
+
+            if (WhiteStarWorkflowEngine.this.useSge) {
+                cmdLine = new CommandLine("qsub");
+                cmdLine.addArgument("-sync");
+                cmdLine.addArgument("yes");
+                cmdLine.addArgument("-@");
+                cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + optionsFileName);
+            } else {
+                cmdLine = new CommandLine("bash");
+            }
+
+            cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + runnerFileName);
+
+            Executor executor = new DefaultExecutor();
+            executor.setWorkingDirectory(scriptsDir);
+            Log.stdoutWithTime("Running command: " + cmdLine.toString());
+            // record output ourselves if not using sge
+            if (!WhiteStarWorkflowEngine.this.useSge) {
+                // we can only use the last 9 characters to fit into an int
+                String time = String.valueOf(System.currentTimeMillis()).substring(4);
+
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
+                PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
+                executor.setStreamHandler(streamHandler);
+                // execute!
+                try {
+                    executor.execute(cmdLine);
+                    // grab stdout and stderr
+                } catch (ExecuteException e) {
+                    throw rethrow(e);
+                } catch (IOException e) {
+                    throw rethrow(e);
+                } finally {
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".e" + time), outputStream.toString());
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".o" + time), errorStream.toString());
+                }
+
+            } else {
+                executor.execute(cmdLine);
+            }
+            return 0;
+        }
     }
 
     @Override

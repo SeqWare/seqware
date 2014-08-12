@@ -8,7 +8,8 @@ import java.util.Set;
 public class Engines {
 
     public enum TYPES {
-        oozie("oozie"), oozie_sge("oozie-sge"), whitestar("whitestar"), whitestar_sge("whitestar-sge");
+        oozie("oozie"), oozie_sge("oozie-sge"), whitestar("whitestar"), whitestar_parallel("whitestar-parallel"), whitestar_sge(
+                "whitestar-sge");
         private final String cliString;
 
         TYPES(String cliString) {
@@ -29,7 +30,7 @@ public class Engines {
     }
 
     public static final String ENGINES_LIST = Engines.TYPES.oozie + ", " + Engines.TYPES.oozie_sge + ", " + Engines.TYPES.whitestar + ", "
-            + Engines.TYPES.whitestar_sge;
+            + Engines.TYPES.whitestar_parallel + ", " + Engines.TYPES.whitestar_sge;
     public static final String DEFAULT_ENGINE = Engines.TYPES.oozie.toString();
     public static final Set<String> ENGINES = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(ENGINES_LIST.split(", "))));
 
@@ -51,6 +52,16 @@ public class Engines {
      */
     public static boolean isWhiteStar(final String engine) {
         return engine != null && engine.startsWith("whitestar");
+    }
+
+    /**
+     * Check whether the workflow engine supports parallel operation.
+     * 
+     * @param engine
+     * @return
+     */
+    public static boolean isWhiteStarParallel(final String engine) {
+        return engine != null && engine.startsWith(TYPES.whitestar_parallel.getCliString());
     }
 
     /**
