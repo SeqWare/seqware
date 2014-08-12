@@ -21,7 +21,7 @@ import org.apache.commons.logging.LogFactory;
 public class InvoiceServiceImpl implements InvoiceService {
 
     private InvoiceDAO invoiceDAO = null;
-    private static final Log log = LogFactory.getLog(InvoiceServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(InvoiceServiceImpl.class);
 
     /**
      * <p>
@@ -96,8 +96,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             try {
                 invoice = invoiceDAO.findByID(iID);
             } catch (Exception exception) {
-                log.error("Cannot find Invoice by wfID " + iID);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Invoice by wfID " + iID);
+                LOG.error(exception.getMessage());
             }
         }
         return invoice;
@@ -111,8 +111,8 @@ public class InvoiceServiceImpl implements InvoiceService {
             try {
                 invoice = invoiceDAO.findBySWAccession(swAccession);
             } catch (Exception exception) {
-                log.error("Cannot find Invoice by swAccession " + swAccession);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Invoice by swAccession " + swAccession);
+                LOG.error(exception.getMessage());
             }
         }
         return invoice;

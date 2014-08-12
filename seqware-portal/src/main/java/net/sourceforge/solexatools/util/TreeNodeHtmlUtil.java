@@ -21,8 +21,8 @@ import net.sourceforge.seqware.common.util.Log;
  */
 public class TreeNodeHtmlUtil {
 
-    private static final String htmlEmptyNode = "<ul style='display: none;'><li id='placeholder' class='last'>placeholder</li></ul>";
-    private static final String endHtmlEmptyNode = "<ul style='display: none;'><li id='placeholder' class='last'>placeholder</li></ul></li>";
+    private static final String HTML_EMPTY_NODE = "<ul style='display: none;'><li id='placeholder' class='last'>placeholder</li></ul>";
+    private static final String END_HTML_EMPTY_NODE = "<ul style='display: none;'><li id='placeholder' class='last'>placeholder</li></ul></li>";
 
     /**
      * <p>
@@ -160,7 +160,7 @@ public class TreeNodeHtmlUtil {
          * Log.info(); Log.info("******************************newHtml**************************"); Log.info(newHtml);
          */
         parentHtml = parentHtml.substring(0, start) + newHtml
-                + parentHtml.substring(start + endHtmlEmptyNode.length(), parentHtml.length());
+                + parentHtml.substring(start + END_HTML_EMPTY_NODE.length(), parentHtml.length());
 
         Log.info("");
         Log.info("******************************All**************************");
@@ -231,7 +231,7 @@ public class TreeNodeHtmlUtil {
                 + status
                 + ")"
                 + "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
-                + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + endHtmlEmptyNode;
+                + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + END_HTML_EMPTY_NODE;
 
         html = html + aeHtml;
 
@@ -323,7 +323,7 @@ public class TreeNodeHtmlUtil {
                     + swAccession
                     + statuses
                     + "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
-                    + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + endHtmlEmptyNode;
+                    + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + END_HTML_EMPTY_NODE;
 
             html = html + laneHtml;
 
@@ -365,7 +365,7 @@ public class TreeNodeHtmlUtil {
                     + " SWID: "
                     + swAccession
                     + "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
-                    + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + endHtmlEmptyNode;
+                    + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + END_HTML_EMPTY_NODE;
 
             html = html + sampleHtml;
         }
@@ -425,10 +425,10 @@ public class TreeNodeHtmlUtil {
                         + " SWID: "
                         + swAccession
                         + "</span> <span><a class='m-question np-mousetrack supernote-hover-demo1' href='#demo1'><img src='i/ico/ico_question.gif'></a></span>"
-                        + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + endHtmlEmptyNode;
+                        + ownerHtml + "<span class='m-description'>Description: " + decs + "</span>" + END_HTML_EMPTY_NODE;
             } else {
                 expHtml = "<li id='liexp_" + expId + "<span id='exp_" + expId + "' >Experiment: " + name + " SWID: " + swAccession
-                        + "</span>" + ownerHtml + endHtmlEmptyNode;
+                        + "</span>" + ownerHtml + END_HTML_EMPTY_NODE;
             }
             html = html + expHtml;
 

@@ -235,8 +235,8 @@ public final class SanityCheck extends Plugin {
         mp.setMetadata(MetadataFactory.getWS(ConfigTools.getSettings()));
         mp.setParams(Arrays.asList(args));
         mp.parse_parameters();
-        ReturnValue do_run = mp.do_run();
-        if (do_run.getExitStatus() == ReturnValue.FAILURE) {
+        ReturnValue doRun = mp.do_run();
+        if (doRun.getExitStatus() == ReturnValue.FAILURE) {
             System.err.println("One of the tests has failed. Exiting with a non-zero exit status");
             System.exit(1);
         }

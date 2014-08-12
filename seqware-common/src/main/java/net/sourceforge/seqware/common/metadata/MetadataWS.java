@@ -1128,32 +1128,32 @@ public class MetadataWS implements Metadata {
             IUS ius = ll.existsIUS("/" + parentAccession);
             Lane lane = ll.existsLane("/" + parentAccession);
             // this one won't be able to get back lanes and ius
-            WorkflowRun wr_withoutLanes = ll.findWorkflowRun("?id=" + workflowRunId/**
+            WorkflowRun wrWithoutLanes = ll.findWorkflowRun("?id=" + workflowRunId/**
              * + "&show=lanes,ius"
              */
             );
             // this will, but uses seqware accessions
-            int accession = wr_withoutLanes.getSwAccession();
-            WorkflowRun wr_withLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
+            int accession = wrWithoutLanes.getSwAccession();
+            WorkflowRun wrWithLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
             if (ius != null) {
-                SortedSet<IUS> iuses = wr_withLanesAndIUS.getIus();
+                SortedSet<IUS> iuses = wrWithLanesAndIUS.getIus();
                 if (iuses == null) {
                     iuses = new TreeSet<>();
                 }
                 iuses.add(ius);
-                wr_withLanesAndIUS.setIus(iuses);
+                wrWithLanesAndIUS.setIus(iuses);
 
-                ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
+                ll.updateWorkflowRun("/" + accession, wrWithLanesAndIUS);
 
             } else if (lane != null) {
-                SortedSet<Lane> lanes = wr_withLanesAndIUS.getLanes();
+                SortedSet<Lane> lanes = wrWithLanesAndIUS.getLanes();
                 if (lanes == null) {
                     lanes = new TreeSet<>();
                 }
                 lanes.add(lane);
-                wr_withLanesAndIUS.setLanes(lanes);
+                wrWithLanesAndIUS.setLanes(lanes);
 
-                ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
+                ll.updateWorkflowRun("/" + accession, wrWithLanesAndIUS);
 
             } else {
                 Log.error("ERROR: SW Accession is neither a lane nor an IUS: " + parentAccession);

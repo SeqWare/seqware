@@ -151,11 +151,11 @@ public class S3DeleteFiles extends Module {
             Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
             Matcher m = p.matcher(input);
             boolean result = m.find();
-            String URL = input;
+            String url = input;
             if (result) {
                 accessKey = m.group(1);
                 secretKey = m.group(2);
-                URL = "s3://" + m.group(3);
+                url = "s3://" + m.group(3);
             }
         }
 

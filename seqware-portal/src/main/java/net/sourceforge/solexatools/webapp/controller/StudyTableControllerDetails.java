@@ -101,9 +101,9 @@ public class StudyTableControllerDetails extends BaseCommandController {
 
             List<Study> studies = null;
 
-            String search_query = "";
+            String searchQuery = "";
             if (qtype != null && !"".equals(qtype) && query != null && !"".equals(query)) {
-                search_query = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
+                searchQuery = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
             }
 
             // LEFT OFF HERE!!!
@@ -300,26 +300,26 @@ public class StudyTableControllerDetails extends BaseCommandController {
     private void sortRows(List<Cells> rowsAll, String sortOrder, String sortName) {
         int columnPos = 0;
         if (null != sortName) switch (sortName) {
-            case "date":
-                columnPos = 0;
-                break;
-            case "status":
-                columnPos = 1;
-                break;
-            case "swid":
-                columnPos = 2;
-                break;
+        case "date":
+            columnPos = 0;
+            break;
+        case "status":
+            columnPos = 1;
+            break;
+        case "swid":
+            columnPos = 2;
+            break;
         }
 
         @SuppressWarnings("rawtypes")
         Comparator comparator = null;
         if (null != sortOrder) switch (sortOrder) {
-            case "asc":
-                comparator = new StudyTableControllerDetails.CellsComparator(columnPos);
-                break;
-            case "desc":
-                comparator = Collections.reverseOrder(new StudyTableControllerDetails.CellsComparator(columnPos));
-                break;
+        case "asc":
+            comparator = new StudyTableControllerDetails.CellsComparator(columnPos);
+            break;
+        case "desc":
+            comparator = Collections.reverseOrder(new StudyTableControllerDetails.CellsComparator(columnPos));
+            break;
         }
 
         Collections.sort(rowsAll, comparator);

@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LibrarySourceServiceImpl implements LibrarySourceService {
     private LibrarySourceDAO dao = null;
-    private static final Log log = LogFactory.getLog(LibrarySourceServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(LibrarySourceServiceImpl.class);
 
     /**
      * <p>
@@ -56,8 +56,8 @@ public class LibrarySourceServiceImpl implements LibrarySourceService {
             try {
                 obj = dao.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find LibrarySource by id " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find LibrarySource by id " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return obj;

@@ -94,29 +94,30 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 
             List<WorkflowRun> workflowRuns = null;
 
-            String search_query = "";
+            String searchQuery = "";
             if (qtype != null && !"".equals(qtype) && query != null && !"".equals(query)) {
-                search_query = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
+                searchQuery = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
             }
 
-            if (null != filter) switch (filter) {
+            if (null != filter)
+                switch (filter) {
                 case "canceled":
                     workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                            + " and ( wr.status = 'canceled' or wr.status = 'cancelled')" + search_query);
+                            + " and ( wr.status = 'canceled' or wr.status = 'cancelled')" + searchQuery);
                     break;
                 case "failed":
                     workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                            + " and (wr.status = 'failed' or wr.status = 'failed-testing')" + search_query);
+                            + " and (wr.status = 'failed' or wr.status = 'failed-testing')" + searchQuery);
                     break;
                 case "running":
                     workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                            + " and ( wr.status = 'running' or wr.status = 'pending')" + search_query);
+                            + " and ( wr.status = 'running' or wr.status = 'pending')" + searchQuery);
                     break;
                 default:
                     workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                            + search_query);
+                            + searchQuery);
                     break;
-            }
+                }
 
             String json = createSampleTableJson(workflowRuns, page, rowsPages, sortName, sortOrder);
             response.getWriter().write(json);
@@ -246,26 +247,26 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
     private void sortRows(List<Cells> rowsAll, String sortOrder, String sortName) {
         int columnPos = 0;
         if (null != sortName) switch (sortName) {
-            case "date":
-                columnPos = 0;
-                break;
-            case "status":
-                columnPos = 1;
-                break;
-            case "swid":
-                columnPos = 2;
-                break;
+        case "date":
+            columnPos = 0;
+            break;
+        case "status":
+            columnPos = 1;
+            break;
+        case "swid":
+            columnPos = 2;
+            break;
         }
 
         @SuppressWarnings("rawtypes")
         Comparator comparator = null;
         if (null != sortOrder) switch (sortOrder) {
-            case "asc":
-                comparator = new AnalisysTableControllerDetails.CellsComparator(columnPos);
-                break;
-            case "desc":
-                comparator = Collections.reverseOrder(new AnalisysTableControllerDetails.CellsComparator(columnPos));
-                break;
+        case "asc":
+            comparator = new AnalisysTableControllerDetails.CellsComparator(columnPos);
+            break;
+        case "desc":
+            comparator = Collections.reverseOrder(new AnalisysTableControllerDetails.CellsComparator(columnPos));
+            break;
         }
 
         Collections.sort(rowsAll, comparator);

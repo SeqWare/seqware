@@ -222,9 +222,9 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
                 Log.stdout("Found " + listOfFiles.size() + " input files for workflow_run " + workflowSWID);
                 // insert into new workflow_run_input_files table
                 for (Integer fSWID : listOfFiles) {
-                    Integer file_id = this.metadata.getFile(fSWID).getFileId();
+                    Integer fileID = this.metadata.getFile(fSWID).getFileId();
                     prepareStatement.setInt(1, workflowRunID);
-                    prepareStatement.setInt(2, file_id);
+                    prepareStatement.setInt(2, fileID);
                     prepareStatement.executeUpdate();
                 }
             }

@@ -265,9 +265,9 @@ public class BundleManager extends Plugin {
             }
         } else if (options.has("list-installed")) {
             String localParams = metadata.listInstalledWorkflows();
-            final String nameVersionCreation_DateSeqWare_Accession = "Name\tVersion\tCreation Date\tSeqWare Accession\tDescription\tCurrent Working Directory\tBundle Location";
+            final String nameVersionCreationDateSeqWareAccession = "Name\tVersion\tCreation Date\tSeqWare Accession\tDescription\tCurrent Working Directory\tBundle Location";
             if (options.has("human-expanded")) {
-                localParams = nameVersionCreation_DateSeqWare_Accession + "\n" + localParams;
+                localParams = nameVersionCreationDateSeqWareAccession + "\n" + localParams;
                 localParams = TabExpansionUtil.expansion(localParams);
                 if (localParams.trim().isEmpty()) {
                     println("No workflows installed.");
@@ -275,14 +275,14 @@ public class BundleManager extends Plugin {
                     println(localParams);
                 }
             } else if (options.has("human-aligned")) {
-                localParams = nameVersionCreation_DateSeqWare_Accession + "\n" + localParams;
+                localParams = nameVersionCreationDateSeqWareAccession + "\n" + localParams;
                 localParams = TabExpansionUtil.aligned(localParams);
                 println(localParams);
             } else {
                 println("=====================================================");
                 println("===============INSTALLED WORKFLOWS===================");
                 println("=====================================================");
-                println(nameVersionCreation_DateSeqWare_Accession);
+                println(nameVersionCreationDateSeqWareAccession);
                 println("-----------------------------------------------------");
                 println(localParams);
                 println("-----------------------------------------------------");

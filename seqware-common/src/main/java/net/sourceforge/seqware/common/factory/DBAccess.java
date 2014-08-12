@@ -36,14 +36,14 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
  */
 public class DBAccess {
 
-    private static final ThreadLocal<MetadataDB> metadataDBWrapper = new ThreadLocal<>();
+    private static final ThreadLocal<MetadataDB> METADATA_DB_WRAPPER = new ThreadLocal<>();
 
     public static MetadataDB get() {
-        MetadataDB mdb = metadataDBWrapper.get();
+        MetadataDB mdb = METADATA_DB_WRAPPER.get();
 
         if (mdb == null) {
             mdb = create();
-            metadataDBWrapper.set(mdb);
+            METADATA_DB_WRAPPER.set(mdb);
             return mdb;
         }
 
@@ -90,12 +90,12 @@ public class DBAccess {
      * </p>
      */
     public static synchronized void close() {
-        MetadataDB mdb = metadataDBWrapper.get();
+        MetadataDB mdb = METADATA_DB_WRAPPER.get();
         if (mdb != null) {
-            Log.debug(metadataDBWrapper.get().toString() + " was closed ");
+            Log.debug(METADATA_DB_WRAPPER.get().toString() + " was closed ");
             mdb.clean_up();
         }
-        metadataDBWrapper.remove();
+        METADATA_DB_WRAPPER.remove();
     }
 
     private DBAccess() {

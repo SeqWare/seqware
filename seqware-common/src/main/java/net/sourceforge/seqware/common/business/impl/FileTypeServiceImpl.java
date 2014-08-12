@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class FileTypeServiceImpl implements FileTypeService {
     private FileTypeDAO fileTypeDAO = null;
-    private static final Log log = LogFactory.getLog(FileTypeServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(FileTypeServiceImpl.class);
 
     /**
      * <p>
@@ -61,8 +61,8 @@ public class FileTypeServiceImpl implements FileTypeService {
             try {
                 obj = fileTypeDAO.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find FileType by id " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find FileType by id " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return obj;

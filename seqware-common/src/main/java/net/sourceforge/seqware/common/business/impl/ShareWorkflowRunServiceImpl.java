@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
     private ShareWorkflowRunDAO dao = null;
-    private static final Log log = LogFactory.getLog(ShareWorkflowRunServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ShareWorkflowRunServiceImpl.class);
 
     /**
      * <p>
@@ -94,8 +94,8 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
             try {
                 shareWorkflowRun = dao.findByWorkflowRunIdAndRegistrationId(workflowRunId, registrationId);
             } catch (Exception exception) {
-                log.error("Cannot find ShareWorkflowRun by sorkflowRunID " + workflowRunId + " registrationId " + registrationId);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find ShareWorkflowRun by sorkflowRunID " + workflowRunId + " registrationId " + registrationId);
+                LOG.error(exception.getMessage());
             }
         }
         return shareWorkflowRun;
@@ -113,8 +113,8 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
             try {
                 shareWorkflowRun = dao.findByID(shareWorkflowRunId);
             } catch (Exception exception) {
-                log.error("Cannot find ShareWorkflowRun by expID " + shareWorkflowRunId);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find ShareWorkflowRun by expID " + shareWorkflowRunId);
+                LOG.error(exception.getMessage());
             }
         }
         return shareWorkflowRun;
@@ -128,8 +128,8 @@ public class ShareWorkflowRunServiceImpl implements ShareWorkflowRunService {
             try {
                 shareWorkflowRun = dao.findBySWAccession(swAccession);
             } catch (Exception exception) {
-                log.error("Cannot find ShareWorkflowRun by swAccession " + swAccession);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find ShareWorkflowRun by swAccession " + swAccession);
+                LOG.error(exception.getMessage());
             }
         }
         return shareWorkflowRun;
