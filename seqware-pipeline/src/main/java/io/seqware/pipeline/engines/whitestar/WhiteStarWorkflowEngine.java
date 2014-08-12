@@ -6,8 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
-import net.sourceforge.seqware.common.metadata.MetadataWS;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -96,55 +96,57 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
         try {
             // run this workflow synchronously
-	    List<List<OozieJob>> jobs =  this.workflowApp.getOrderedJobs();
-	    for (List<OozieJob> rowOfJobs : jobs) {
-            for (OozieJob job : rowOfJobs) {
-                CommandLine cmdLine;
-                File scriptsDir = job.getScriptsDir();
-                String optionsFileName = OozieJob.optsFileName(job.getName());
-                String runnerFileName = OozieJob.runnerFileName(job.getName());
+            List<List<OozieJob>> jobs = this.workflowApp.getOrderedJobs();
+            for (List<OozieJob> rowOfJobs : jobs) {
+                for (OozieJob job : rowOfJobs) {
+                    CommandLine cmdLine;
+                    File scriptsDir = job.getScriptsDir();
+                    String optionsFileName = OozieJob.optsFileName(job.getName());
+                    String runnerFileName = OozieJob.runnerFileName(job.getName());
 
-                if (this.useSge) {
-                    cmdLine = new CommandLine("qsub");
-                    cmdLine.addArgument("-sync");
-                    cmdLine.addArgument("yes");
-                    cmdLine.addArgument("-@");
-                    cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + optionsFileName);
-                } else {
-                    cmdLine = new CommandLine("bash");
+                    if (this.useSge) {
+                        cmdLine = new CommandLine("qsub");
+                        cmdLine.addArgument("-sync");
+                        cmdLine.addArgument("yes");
+                        cmdLine.addArgument("-@");
+                        cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + optionsFileName);
+                    } else {
+                        cmdLine = new CommandLine("bash");
+                    }
+
+                    cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + runnerFileName);
+
+                    Executor executor = new DefaultExecutor();
+                    executor.setWorkingDirectory(scriptsDir);
+                    Log.stdoutWithTime("Running command: " + cmdLine.toString());
+                    // record output ourselves if not using sge
+                    if (!this.useSge) {
+                        // we can only use the last 9 characters to fit into an int
+                        String time = String.valueOf(System.currentTimeMillis()).substring(4);
+
+                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                        ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
+                        PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
+                        executor.setStreamHandler(streamHandler);
+                        // execute!
+                        executor.execute(cmdLine);
+                        // grab stdout and stderr
+                        FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".e" + time),
+                                outputStream.toString());
+                        FileUtils
+                                .write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".o" + time), errorStream.toString());
+
+                    } else {
+                        executor.execute(cmdLine);
+                    }
                 }
-
-                cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + runnerFileName);
-
-                Executor executor = new DefaultExecutor();
-                executor.setWorkingDirectory(scriptsDir);
-                Log.stdoutWithTime("Running command: " + cmdLine.toString());
-                // record output ourselves if not using sge
-                if (!this.useSge) {
-                    // we can only use the last 9 characters to fit into an int
-                    String time = String.valueOf(System.currentTimeMillis()).substring(4);
-
-                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                    ByteArrayOutputStream errorStream = new ByteArrayOutputStream();
-                    PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
-                    executor.setStreamHandler(streamHandler);
-                    // execute!
-                    executor.execute(cmdLine);
-                    // grab stdout and stderr
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".e" + time), outputStream.toString());
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".o" + time), errorStream.toString());
-
-                } else {
-                    executor.execute(cmdLine);
-                }
-            }
             }
         } catch (IOException e) {
             throw rethrow(e);
         }
         Log.stdoutWithTime("Setting workflow-run status to complete for: " + this.jobId);
         // set the status to completed
-        MetadataWS ws = MetadataFactory.getWS(ConfigTools.getSettings());
+        Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
         WorkflowRun workflowRun = ws.getWorkflowRun(Integer.valueOf(this.jobId));
         workflowRun.setStatus(WorkflowRunStatus.completed);
         ws.updateWorkflowRun(workflowRun);
@@ -154,7 +156,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
 
     @Override
     public ReturnValue watchWorkflow(String jobToken) {
-        MetadataWS ws = MetadataFactory.getWS(ConfigTools.getSettings());
+        Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
         WorkflowRun workflowRun = ws.getWorkflowRun(Integer.valueOf(jobToken));
         Log.stdout("Workflow run " + jobToken + " is now " + workflowRun.getStatus().name());
         return new ReturnValue(workflowRun.getStatus() == WorkflowRunStatus.completed ? ReturnValue.SUCCESS : ReturnValue.FAILURE);
