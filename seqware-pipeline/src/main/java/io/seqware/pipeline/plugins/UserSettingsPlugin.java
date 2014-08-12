@@ -135,7 +135,7 @@ public class UserSettingsPlugin extends Plugin {
                     + "# Remote users need COMMON and SCHEDULE.\n" + "# Workflow developers need COMMON and LAUNCH for testing.\n"
                     + "# Administrators need COMMON, DELETION, and INSTALL.\n"
                     + "# Cronjobs/daemon processes will need COMMON and LAUNCH.\n\n"
-                    + "Note that this document was auto-generated using the " + UserSettingsPlugin.class.getSimpleName() + ",\n\n");
+                    + "# Note that this document was auto-generated using the " + UserSettingsPlugin.class.getSimpleName() + "\n\n");
 
             SqwKeys.Categories currCategory = null;
             for (SqwKeys key : SqwKeys.values()) {

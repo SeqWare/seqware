@@ -69,6 +69,15 @@ public class WorkflowApp {
         this.parseDataModel(wfdm);
     }
 
+    public List<List<OozieJob>> getOrderedJobs(){
+        if (!this.jobs.isEmpty()) {
+            OozieJob job0 = this.jobs.get(0);
+            List<List<OozieJob>> graph = this.reOrganizeGraph(job0);
+	    return graph;
+        }
+	return new ArrayList<List<OozieJob>>(); 
+    }
+
     // TODO: Emit an end node that cleans up the generated script files.
     public Element serializeXML() {
         Element wf = new Element("workflow-app", NAMESPACE);
@@ -640,6 +649,13 @@ public class WorkflowApp {
             }
         }
         return count;
+    }
+
+    /**
+     * @return the jobs
+     */
+    public List<OozieJob> getJobs() {
+        return jobs;
     }
 
     /**
