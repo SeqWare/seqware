@@ -28,7 +28,7 @@ import io.seqware.Engines;
  */
 public enum SqwKeys {
     // @formatter:off
-    SW_METADATA_METHOD(null, Categories.COMMON, "SeqWare MetaDB communication method, can be 'database' or 'webservice' or 'none'", "webservice", "database", "webservice", "none"), 
+    SW_METADATA_METHOD(null, Categories.COMMON, "SeqWare MetaDB communication method, can be 'database' or 'webservice' or 'inmemory' or 'none'", "webservice", "database", "webservice", "inmemory", "none"), 
     AWS_ACCESS_KEY(null, Categories.COMMON, "Amazon cloud settings. Only used if reading and writing to S3 buckets.", "FILLMEIN"), 
     AWS_SECRET_KEY(null, Categories.COMMON, "Amazon cloud settings. Only used if reading and writing to S3 buckets.", "FILLMEIN"), 
     
