@@ -290,7 +290,7 @@ public class WorkflowStatusChecker extends Plugin {
                 err = wr.getStdErr();
             }
 
-            synchronized (metadata_sync) {
+            synchronized (METADATA_SYNC) {
                 wr.setStdErr(err);
                 wr.setStdOut(out);
                 WorkflowStatusChecker.this.metadata.updateWorkflowRun(wr);
