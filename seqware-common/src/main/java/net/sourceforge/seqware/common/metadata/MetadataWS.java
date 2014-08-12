@@ -161,55 +161,10 @@ public class MetadataWS implements Metadata {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
-        // figure out the correct command
-        String command;
-        if (baseCommand == null) { // SEQWARE-1692 a null baseCommand leads to a String "null" in the database
-            command = null;
-        } else {
-            command = baseCommand + " ";
-        }
-        // FIXME: need to let the client determine this!
-        // command = command.replaceAll("\\$\\{workflow_bundle_dir\\}",
-        // provisionDir.getAbsolutePath());
+        Workflow workflow = convertParamsToWorkflow(baseCommand, name, description, version, configFile, storeProvisionDir, provisionDir,
+                templateFile, storeArchiveZip, archiveZip, workflow_class, workflow_type, workflow_engine);
 
-        // FIXME: Remove bogus registration call
-        // Registration owner = new Registration();
-        // owner.setEmailAddress(user);
-        // owner.setPassword(pass.toString());
-        Workflow workflow = new Workflow();
-        workflow.setName(name);
-        workflow.setDescription(description);
-        workflow.setVersion(version);
-        workflow.setBaseIniFile(configFile);
-        workflow.setCommand(command);
-        if (storeProvisionDir) {
-            workflow.setCwd(provisionDir);
-        }
-        workflow.setTemplate(templateFile);
-        workflow.setCreateTimestamp(new Date());
-        if (storeArchiveZip) {
-            workflow.setPermanentBundleLocation(archiveZip);
-        }
-        // workflow.setUpdateTimestamp(new Date());
-        // workflow.setOwner(owner);
-        workflow.setWorkflowClass(workflow_class);
-        workflow.setWorkflowType(workflow_type);
-        workflow.setWorkflowEngine(workflow_engine);
-
-        // open the ini file and parse each item
-        // FIXME: this assumes there is one ini file which is generally fine for
-        // bundled workflows but we could make this more flexible
-        HashMap<String, Map<String, String>> hm = new HashMap<>();
-        // need to be careful, may contain un-expanded value
-        if (configFile != null) { // SEQWARE-1692 : there is no config file for a "workflow" saved via metadata
-            if (configFile.contains("${workflow_bundle_dir}")) {
-                String newPath = configFile;
-                newPath = newPath.replaceAll("\\$\\{workflow_bundle_dir\\}", provisionDir);
-                MapTools.ini2RichMap(newPath, hm);
-            } else {
-                MapTools.ini2RichMap(configFile, hm);
-            }
-        }
+        HashMap<String, Map<String, String>> hm = convertIniToMap(configFile, provisionDir);
 
         Log.info("Posting workflow");
         try {
@@ -240,7 +195,65 @@ public class MetadataWS implements Metadata {
         // Log.info("Setting returned URI to " +
         // workflowResource.getLocationRef().getPath());
         // ret.setUrl(workflowResource.getLocationRef().getPath());
-        return (ret);
+        return ret;
+    }
+
+    protected static HashMap<String, Map<String, String>> convertIniToMap(String configFile, String provisionDir) {
+        // open the ini file and parse each item
+        // FIXME: this assumes there is one ini file which is generally fine for
+        // bundled workflows but we could make this more flexible
+        HashMap<String, Map<String, String>> hm = new HashMap<>();
+        // need to be careful, may contain un-expanded value
+        if (configFile != null) { // SEQWARE-1692 : there is no config file for a "workflow" saved via metadata
+            if (configFile.contains("${workflow_bundle_dir}")) {
+                String newPath = configFile;
+                newPath = newPath.replaceAll("\\$\\{workflow_bundle_dir\\}", provisionDir);
+                MapTools.ini2RichMap(newPath, hm);
+            } else {
+                MapTools.ini2RichMap(configFile, hm);
+            }
+        }
+        return hm;
+    }
+
+    public static Workflow convertParamsToWorkflow(String baseCommand, String name, String description, String version1, String configFile,
+            boolean storeProvisionDir, String provisionDir, String templateFile, boolean storeArchiveZip, String archiveZip,
+            String workflow_class, String workflow_type, String workflow_engine) {
+        Workflow workflow;
+        // figure out the correct command
+        String command;
+        if (baseCommand == null) { // SEQWARE-1692 a null baseCommand leads to a String "null" in the database
+            command = null;
+        } else {
+            command = baseCommand + " ";
+        }
+        // FIXME: need to let the client determine this!
+        // command = command.replaceAll("\\$\\{workflow_bundle_dir\\}",
+        // provisionDir.getAbsolutePath());
+        // FIXME: Remove bogus registration call
+        // Registration owner = new Registration();
+        // owner.setEmailAddress(user);
+        // owner.setPassword(pass.toString());
+        workflow = new Workflow();
+        workflow.setName(name);
+        workflow.setDescription(description);
+        workflow.setVersion(version1);
+        workflow.setBaseIniFile(configFile);
+        workflow.setCommand(command);
+        if (storeProvisionDir) {
+            workflow.setCwd(provisionDir);
+        }
+        workflow.setTemplate(templateFile);
+        workflow.setCreateTimestamp(new Date());
+        if (storeArchiveZip) {
+            workflow.setPermanentBundleLocation(archiveZip);
+        }
+        // workflow.setUpdateTimestamp(new Date());
+        // workflow.setOwner(owner);
+        workflow.setWorkflowClass(workflow_class);
+        workflow.setWorkflowType(workflow_type);
+        workflow.setWorkflowEngine(workflow_engine);
+        return workflow;
     }
 
     /**
@@ -768,21 +781,10 @@ public class MetadataWS implements Metadata {
         ll.updateProcessing("/" + p.getSwAccession(), p);
     }
 
-    private ReturnValue addWorkflowParam(HashMap<String, Map<String, String>> hm, String key, Workflow workflow) {
+    protected ReturnValue addWorkflowParam(HashMap<String, Map<String, String>> hm, String key, Workflow workflow) {
 
         Map<String, String> details = hm.get(key);
-        boolean display = false;
-        if ("T".equals(details.get("display"))) {
-            display = true;
-        }
-        WorkflowParam wp = new WorkflowParam();
-        wp.setWorkflow(workflow);
-        wp.setType(format(details.get("type"), "text"));
-        wp.setKey(format(details.get("key"), null));
-        wp.setDisplay(display);
-        wp.setDisplayName(format(details.get("display_name"), details.get("key")));
-        wp.setFileMetaType(format(details.get("file_meta_type"), null));
-        wp.setDefaultValue(format(details.get("default_value"), null));
+        WorkflowParam wp = convertMapToWorkflowParam(details, workflow);
 
         Log.info("Posting workflow param");
         try {
@@ -827,6 +829,22 @@ public class MetadataWS implements Metadata {
             }
         }
         return new ReturnValue(ReturnValue.SUCCESS);
+    }
+
+    protected static WorkflowParam convertMapToWorkflowParam(Map<String, String> details, Workflow workflow) {
+        boolean display = false;
+        if ("T".equals(details.get("display"))) {
+            display = true;
+        }
+        WorkflowParam wp = new WorkflowParam();
+        wp.setWorkflow(workflow);
+        wp.setType(format(details.get("type"), "text"));
+        wp.setKey(format(details.get("key"), null));
+        wp.setDisplay(display);
+        wp.setDisplayName(format(details.get("display_name"), details.get("key")));
+        wp.setFileMetaType(format(details.get("file_meta_type"), null));
+        wp.setDefaultValue(format(details.get("default_value"), null));
+        return wp;
     }
 
     private ReturnValue addWorkflowParamValue(WorkflowParam wp, String[] kv) {
@@ -1023,29 +1041,35 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public Map<String, String> get_workflow_info(int workflowAccession) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = null;
 
         try {
             Workflow workflow = ll.findWorkflow("/" + workflowAccession);
 
-            map.put("name", workflow.getName());
-            map.put("description", workflow.getDescription());
-            map.put("version", workflow.getVersion());
-            map.put("base_ini_file", workflow.getBaseIniFile());
-            map.put("cmd", workflow.getCommand());
-            map.put("current_working_dir", workflow.getCwd());
-            map.put("workflow_template", workflow.getTemplate());
-            map.put("create_tstmp", workflow.getCreateTimestamp().toString());
-            map.put("update_tstmp", workflow.getUpdateTimestamp().toString());
-            map.put("workflow_accession", workflow.getSwAccession().toString());
-            map.put("permanent_bundle_location", workflow.getPermanentBundleLocation());
-            map.put("workflow_engine", workflow.getWorkflowEngine());
-            map.put("workflow_type", workflow.getWorkflowType());
-            map.put("workflow_class", workflow.getWorkflowClass());
+            map = convertWorkflowToMap(workflow);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return map;
+    }
+
+    public static Map<String, String> convertWorkflowToMap(Workflow workflow) {
+        Map<String, String> map = new HashMap<>();
+        map.put("name", workflow.getName());
+        map.put("description", workflow.getDescription());
+        map.put("version", workflow.getVersion());
+        map.put("base_ini_file", workflow.getBaseIniFile());
+        map.put("cmd", workflow.getCommand());
+        map.put("current_working_dir", workflow.getCwd());
+        map.put("workflow_template", workflow.getTemplate());
+        map.put("create_tstmp", workflow.getCreateTimestamp().toString());
+        map.put("update_tstmp", workflow.getUpdateTimestamp().toString());
+        map.put("workflow_accession", workflow.getSwAccession().toString());
+        map.put("permanent_bundle_location", workflow.getPermanentBundleLocation());
+        map.put("workflow_engine", workflow.getWorkflowEngine());
+        map.put("workflow_type", workflow.getWorkflowType());
+        map.put("workflow_class", workflow.getWorkflowClass());
         return map;
     }
 
@@ -1352,18 +1376,8 @@ public class MetadataWS implements Metadata {
             WorkflowRun wr = ll.findWorkflowRun("?id=" + workflowRunId);
 
             accession = wr.getSwAccession();
-            wr.setCommand(pegasusCmd);
-            wr.setTemplate(workflowTemplate);
-            wr.setStatus(status);
-            wr.setStatusCmd(statusCmd);
-            wr.setCurrentWorkingDir(workingDirectory);
-            wr.setDax(dax);
-            wr.setIniFile(ini);
-            wr.setHost(host);
-            wr.setStdErr(stdErr);
-            wr.setStdOut(stdOut);
-            wr.setWorkflowEngine(workflowEngine);
-            wr.setInputFileAccessions(inputFiles);
+            convertParamsToWorkflowRun(wr, pegasusCmd, workflowTemplate, status, statusCmd, workingDirectory, dax, ini, host, stdErr,
+                    stdOut, workflowEngine, inputFiles);
 
             ll.updateWorkflowRun("/" + accession, wr);
         } catch (Exception e) {
@@ -1372,6 +1386,23 @@ public class MetadataWS implements Metadata {
         ReturnValue ret = new ReturnValue();
         ret.setReturnValue(accession);
         return ret;
+    }
+
+    protected static void convertParamsToWorkflowRun(WorkflowRun wr, String pegasusCmd, String workflowTemplate, WorkflowRunStatus status,
+            String statusCmd, String workingDirectory, String dax, String ini, String host, String stdErr, String stdOut,
+            String workflowEngine, Set<Integer> inputFiles) {
+        wr.setCommand(pegasusCmd);
+        wr.setTemplate(workflowTemplate);
+        wr.setStatus(status);
+        wr.setStatusCmd(statusCmd);
+        wr.setCurrentWorkingDir(workingDirectory);
+        wr.setDax(dax);
+        wr.setIniFile(ini);
+        wr.setHost(host);
+        wr.setStdErr(stdErr);
+        wr.setStdOut(stdOut);
+        wr.setWorkflowEngine(workflowEngine);
+        wr.setInputFileAccessions(inputFiles);
     }
 
     @Override
@@ -1385,7 +1416,7 @@ public class MetadataWS implements Metadata {
         }
     }
 
-    private String format(String variable, String defaultStr) {
+    private static String format(String variable, String defaultStr) {
 
         if ((variable == null || "".equals(variable)) && (defaultStr != null && !"".equals(defaultStr))) {
             String newDefaultStr = defaultStr.replaceAll("'", "");

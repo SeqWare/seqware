@@ -12,6 +12,8 @@
 # Administrators need COMMON, DELETION, and INSTALL.
 # Cronjobs/daemon processes will need COMMON and LAUNCH.
 
+# Note that this document was auto-generated using the UserSettingsPlugin
+
 
 # COMMON
 # Common Seqware settings
@@ -48,7 +50,7 @@ SW_DB=seqware_meta_db
 # SCHEDULE_LAUNCH
 # Settings used by scheduling and launching bundles
 
-# the default engine to use if otherwise unspecified (one of: oozie, oozie-sge, pegasus)
+# the default engine to use if otherwise unspecified (one of: oozie, oozie-sge, whitestar, whitestar-sge)
 SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
 
 # INSTALL_LAUNCH

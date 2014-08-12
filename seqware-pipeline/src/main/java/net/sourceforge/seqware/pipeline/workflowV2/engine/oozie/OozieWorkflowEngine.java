@@ -103,7 +103,7 @@ public class OozieWorkflowEngine implements WorkflowEngine {
         }
     }
 
-    public static String seqwareJarPath(AbstractWorkflowDataModel objectModel) {
+    private static String seqwareJarPath(AbstractWorkflowDataModel objectModel) {
         return objectModel.getWorkflowBaseDir() + "/lib/seqware-distribution-" + objectModel.getTags().get("seqware_version") + "-full.jar";
     }
 

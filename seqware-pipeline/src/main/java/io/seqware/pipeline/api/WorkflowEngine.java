@@ -25,7 +25,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
  * </p>
  * 
  * This interface will eventually encompass all the methods that a workflow engine should have to implement including preparation of
- * workflows, watching workflows, and status checking.
+ * workflows and watching workflows. Currently, workflow status checker code still needs to be modified engine-by-engine.
  * 
  * @author yongliang
  * @since 1.1
@@ -70,33 +70,5 @@ public interface WorkflowEngine {
      * @return
      */
     public ReturnValue watchWorkflow(String jobToken);
-
-    // /**
-    // * Obtain the status of the workflow run.
-    // *
-    // * @param token
-    // * the token created during launch of the workflow
-    // * @return the workflow run status
-    // */
-    // public String lookupStatus(String token);
-    //
-    // /**
-    // * Obtain the stdout of the workflow run.
-    // *
-    // * @param token
-    // * the token created during launch of the workflow
-    // * @return the stdout contents
-    // */
-    // public abstract String lookupStdErr(String token);
-    //
-    // /**
-    // * Obtain the stdout of the workflow run.
-    // *
-    // * @param token
-    // * the token created during launch of the workflow
-    // * @return the stdout contents
-    // */
-    // public abstract String lookupStdOut(String token);
-    //
 
 }

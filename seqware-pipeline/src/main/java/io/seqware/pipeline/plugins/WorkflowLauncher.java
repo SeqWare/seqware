@@ -172,6 +172,7 @@ public class WorkflowLauncher extends Plugin {
 
             } catch (Exception e) {
                 Log.fatal("Workflowrun launch with accession: " + wr.getSwAccession() + " failed", e);
+                WorkflowRuns.failWorkflow(wr.getSwAccession());
             }
         }
     }
@@ -270,10 +271,12 @@ public class WorkflowLauncher extends Plugin {
             return localReturn;
         } else {
             // determine status based on object model
+            // new status proceeds to pending if submitted, otherwise retain
+            WorkflowRunStatus newStatus = wr.getStatus() == WorkflowRunStatus.submitted ? WorkflowRunStatus.pending : wr.getStatus();
             metadata.update_workflow_run(workflowrunId, dataModel.getTags().get("workflow_command"),
-                    dataModel.getTags().get("workflow_template"), WorkflowRunStatus.pending, workflowRunToken,
-                    engine.getWorkingDirectory(), wr.getDax(), wr.getIniFile(), wr.getHost(), localReturn.getStderr(),
-                    localReturn.getStdout(), dataModel.getWorkflow_engine(), wr.getInputFileAccessions());
+                    dataModel.getTags().get("workflow_template"), newStatus, workflowRunToken, engine.getWorkingDirectory(), wr.getDax(),
+                    wr.getIniFile(), wr.getHost(), localReturn.getStderr(), localReturn.getStdout(), dataModel.getWorkflow_engine(),
+                    wr.getInputFileAccessions());
             return localRet;
         }
     }
