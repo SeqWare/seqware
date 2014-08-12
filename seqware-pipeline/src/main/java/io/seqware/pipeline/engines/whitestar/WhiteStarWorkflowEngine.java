@@ -121,14 +121,16 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 futures.add(pool.submit(new ExecutionThread(job)));
             }
             // join
-            for (Future<?> future : futures) {
-                try {
+            try {
+                for (Future<?> future : futures) {
                     future.get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    throw new RuntimeException(ex);
                 }
+            } catch (InterruptedException | ExecutionException ex) {
+                Log.fatal(ex);
+                throw new RuntimeException(ex);
+            } finally {
+                pool.shutdown();
             }
-
         }
 
         Log.stdoutWithTime("Setting workflow-run status to complete for: " + this.jobId);
