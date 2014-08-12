@@ -17,6 +17,8 @@ public final class MetadataFactory {
             return getWS(settings);
         } else if ("none".equals(method)) {
             return getNoOp();
+        } else if ("inmemory".equals(method)) {
+            return getInMemory();
         } else {
             throw new RuntimeException("Missing SW_METADATA_METHOD entry in seqware settings.");
         }
@@ -55,5 +57,9 @@ public final class MetadataFactory {
 
     public static MetadataNoConnection getNoOp() {
         return new MetadataNoConnection();
+    }
+
+    public static MetadataInMemory getInMemory() {
+        return new MetadataInMemory();
     }
 }
