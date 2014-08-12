@@ -19,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
 public class ShareStudyServiceImpl implements ShareStudyService {
 
     private ShareStudyDAO dao = null;
-    private static final Log log = LogFactory.getLog(ShareStudyServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ShareStudyServiceImpl.class);
 
     /**
      * <p>
@@ -91,8 +91,8 @@ public class ShareStudyServiceImpl implements ShareStudyService {
             try {
                 shareStudy = dao.findByStudyIdAndRegistrationId(studyId, registrationId);
             } catch (Exception exception) {
-                log.error("Cannot find ShareStudy by studyID " + studyId + " registrationId " + registrationId);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find ShareStudy by studyID " + studyId + " registrationId " + registrationId);
+                LOG.error(exception.getMessage());
             }
         }
         return shareStudy;
@@ -110,8 +110,8 @@ public class ShareStudyServiceImpl implements ShareStudyService {
             try {
                 shareStudy = dao.findByID(shareStudyId);
             } catch (Exception exception) {
-                log.error("Cannot find ShareStudy by shareStudyID " + shareStudyId);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find ShareStudy by shareStudyID " + shareStudyId);
+                LOG.error(exception.getMessage());
             }
         }
         return shareStudy;
@@ -125,8 +125,8 @@ public class ShareStudyServiceImpl implements ShareStudyService {
             try {
                 shareStudy = dao.findByID(swAccession);
             } catch (Exception exception) {
-                log.error("Cannot find ShareStudy by swAccession " + swAccession);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find ShareStudy by swAccession " + swAccession);
+                LOG.error(exception.getMessage());
             }
         }
         return shareStudy;

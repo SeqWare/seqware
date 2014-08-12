@@ -47,8 +47,10 @@ public class ProvenanceUtility {
                 "sample-name", "Full sample name", false, FileProvenanceParam.sample), ROOT_SAMPLE_NAME("root-sample-name",
                 "Full root sample name", false, FileProvenanceParam.root_sample), SEQUENCER_RUN_NAME("sequencer-run-name",
                 "Full sequencer run name", false, FileProvenanceParam.sequencer_run), ORGANISM("organism", "organism id", true,
-                FileProvenanceParam.organism), WORKFLOW_RUN_STATUS("workflow-run-status","Workflow run status", true, FileProvenanceParam.workflow_run_status),
-		        PROCESSING_STATUS("processing-status","Processing status", true, FileProvenanceParam.processing_status), PROCESSING("processing-SWID", "processing sw_accession", true, FileProvenanceParam.processing);
+                FileProvenanceParam.organism), WORKFLOW_RUN_STATUS("workflow-run-status", "Workflow run status", true,
+                FileProvenanceParam.workflow_run_status), PROCESSING_STATUS("processing-status", "Processing status", true,
+                FileProvenanceParam.processing_status), PROCESSING("processing-SWID", "processing sw_accession", true,
+                FileProvenanceParam.processing);
 
         public final String human_str;
         public final String desc;
@@ -110,34 +112,34 @@ public class ProvenanceUtility {
              */
         } else {
             for (HumanProvenanceFilters filter : HumanProvenanceFilters.values()) {
-                List<String> swa_strings = new ArrayList<>();
-                List<?> swa_values = options.valuesOf(filter.toString());
+                List<String> swaStrings = new ArrayList<>();
+                List<?> swaValues = options.valuesOf(filter.toString());
                 if (filter.standard) {
-                    swa_strings = new ArrayList<>();
-                    for (Object swa : swa_values) {
-                        swa_strings.add(String.valueOf(swa));
+                    swaStrings = new ArrayList<>();
+                    for (Object swa : swaValues) {
+                        swaStrings.add(String.valueOf(swa));
                     }
                 } else if (filter == HumanProvenanceFilters.STUDY_NAME) {
-                    for (String value : (List<String>) swa_values) {
+                    for (String value : (List<String>) swaValues) {
                         Study studyByName = metadata.getStudyByName(value);
-                        swa_strings.add(String.valueOf(studyByName.getSwAccession()));
+                        swaStrings.add(String.valueOf(studyByName.getSwAccession()));
                     }
                 } else if (filter == HumanProvenanceFilters.SAMPLE_NAME || filter == HumanProvenanceFilters.ROOT_SAMPLE_NAME) {
-                    for (String value : (List<String>) swa_values) {
+                    for (String value : (List<String>) swaValues) {
                         List<Sample> samplesByName = metadata.getSampleByName(value);
                         for (Sample sample : samplesByName) {
-                            swa_strings.add(String.valueOf(sample.getSwAccession()));
+                            swaStrings.add(String.valueOf(sample.getSwAccession()));
                         }
                     }
                 } else if (filter == HumanProvenanceFilters.SEQUENCER_RUN_NAME) {
-                    for (String value : (List<String>) swa_values) {
+                    for (String value : (List<String>) swaValues) {
                         SequencerRun run = metadata.getSequencerRunByName(value);
-                        swa_strings.add(String.valueOf(run.getSwAccession()));
+                        swaStrings.add(String.valueOf(run.getSwAccession()));
                     }
                 } else {
                     throw new RuntimeException("No handler for filter type");
                 }
-                map.put(filter.mappedParam, new ImmutableList.Builder<String>().addAll(swa_strings).build());
+                map.put(filter.mappedParam, new ImmutableList.Builder<String>().addAll(swaStrings).build());
             }
         }
         return map;

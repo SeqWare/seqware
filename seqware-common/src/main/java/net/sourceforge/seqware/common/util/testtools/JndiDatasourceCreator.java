@@ -22,9 +22,9 @@ import org.springframework.mock.jndi.SimpleNamingContextBuilder;
 public class JndiDatasourceCreator {
     // private static final String url =
     // "jdbc:postgres:localhost/seqware_meta_db_test";
-    private static final String username = "seqware";
-    private static final String password = "seqware";
-    private static final String jndiName = "SeqWareMetaDB";
+    private static final String USERNAME = "seqware";
+    private static final String PASSWORD = "seqware";
+    private static final String JNDI_NAME = "SeqWareMetaDB";
 
     /**
      * <p>
@@ -36,13 +36,13 @@ public class JndiDatasourceCreator {
      */
     public static void create() throws Exception {
         try {
-            if (isJNDIExist("java:comp/env/jdbc/" + jndiName)) return;
+            if (isJNDIExist("java:comp/env/jdbc/" + JNDI_NAME)) return;
             final SimpleNamingContextBuilder builder = new SimpleNamingContextBuilder();
 
             BasicDataSource ds = new BasicDataSource();
             ds.setDriverClassName("org.postgresql.Driver");
-            ds.setUsername(username);
-            ds.setPassword(password);
+            ds.setUsername(USERNAME);
+            ds.setPassword(PASSWORD);
             ds.setRemoveAbandoned(true);
             ds.setRemoveAbandonedTimeout(30);
             ds.setLogAbandoned(true);
@@ -68,7 +68,7 @@ public class JndiDatasourceCreator {
             // ds.setUser(username);
             // ds.setPassword(password);
 
-            builder.bind("java:comp/env/jdbc/" + jndiName, ds);
+            builder.bind("java:comp/env/jdbc/" + JNDI_NAME, ds);
             builder.activate();
         } catch (NamingException ex) {
             ex.printStackTrace();

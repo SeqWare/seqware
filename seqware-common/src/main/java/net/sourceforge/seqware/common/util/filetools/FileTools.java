@@ -430,7 +430,7 @@ public class FileTools {
      */
     public static boolean unzipFile(File path, File outputDir) {
 
-        int BUFFER = 2048;
+        int buffer = 2048;
 
         try {
 
@@ -445,7 +445,7 @@ public class FileTools {
                     dir.mkdirs();
                 } else {
                     int count;
-                    byte data[] = new byte[BUFFER];
+                    byte data[] = new byte[buffer];
                     // write the files to the disk
                     File dir = new File(outputDir.getAbsolutePath() + File.separator + entry.getName());
                     // only try to extract if doesn't already exist (dir is really the
@@ -464,9 +464,9 @@ public class FileTools {
                             File newDirFile = new File(outputDir.getAbsolutePath() + File.separator + newDir);
                             newDirFile.mkdirs();
                         }
-                        dest = new BufferedOutputStream(new FileOutputStream(dir.getAbsolutePath()), BUFFER);
+                        dest = new BufferedOutputStream(new FileOutputStream(dir.getAbsolutePath()), buffer);
                         try (EntryInputStream zis = zipFile.openEntryInputStream(entry.getName())) {
-                            while ((count = zis.read(data, 0, BUFFER)) != -1) {
+                            while ((count = zis.read(data, 0, buffer)) != -1) {
                                 dest.write(data, 0, count);
                             }
                         }

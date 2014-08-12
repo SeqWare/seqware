@@ -12,7 +12,7 @@ import java.sql.SQLException;
  */
 public class BasicTestDatabaseCreatorWrapper {
 
-    private static final BasicTestDatabaseCreator testDBCreator = new BasicTestDatabaseCreator();
+    private static final BasicTestDatabaseCreator TEST_DB_CREATOR = new BasicTestDatabaseCreator();
 
     /**
      * <p>
@@ -23,7 +23,7 @@ public class BasicTestDatabaseCreatorWrapper {
      *             if any.
      */
     public static void createDatabase() throws SQLException {
-        testDBCreator.createDatabase();
+        TEST_DB_CREATOR.createDatabase();
     }
 
     /**
@@ -35,7 +35,7 @@ public class BasicTestDatabaseCreatorWrapper {
      *             if any.
      */
     public static void dropDatabase() throws SQLException {
-        testDBCreator.dropDatabase();
+        TEST_DB_CREATOR.dropDatabase();
     }
 
     /**

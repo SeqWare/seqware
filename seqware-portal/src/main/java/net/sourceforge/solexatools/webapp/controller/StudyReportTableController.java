@@ -181,7 +181,7 @@ public class StudyReportTableController extends BaseCommandController {
         Registration registration = Security.getRegistration(request);
         if (registration == null) return null;
 
-        String study_id = request.getParameter(STUDY_ID);
+        String studyID = request.getParameter(STUDY_ID);
         String tableSel = request.getParameter(TABLE_SEL);
         String tableModel = request.getParameter(TABLE_MODEL);
         String sortName = request.getParameter(SORT_NAME);
@@ -193,7 +193,7 @@ public class StudyReportTableController extends BaseCommandController {
         int page = 1;
         int rowsPages = 15;
         try {
-            studyId = Integer.parseInt(study_id);
+            studyId = Integer.parseInt(studyID);
             page = Integer.parseInt(pageStr);
             rowsPages = Integer.parseInt(rowsPagesStr);
         } catch (NumberFormatException e) {
@@ -528,8 +528,8 @@ public class StudyReportTableController extends BaseCommandController {
             }
             List<String> cellsModel = new LinkedList<>();
             cellsModel.add(wrapSwAccession(rootSample.getSwAccession(), rootSample.getTitle()));
-            cellsModel.add(wrapSwAccession(sample.getSwAccession(),
-                    rootSample.getSampleId() != sample.getSampleId() ? sample.getTitle() : "no child"));
+            cellsModel.add(wrapSwAccession(sample.getSwAccession(), rootSample.getSampleId() != sample.getSampleId() ? sample.getTitle()
+                    : "no child"));
             cellsModel.addAll(statusesOut);
             cellsModel.add(wrapOverall());
 

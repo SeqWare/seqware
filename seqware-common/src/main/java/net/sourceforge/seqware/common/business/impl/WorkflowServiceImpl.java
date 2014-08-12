@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 public class WorkflowServiceImpl implements WorkflowService {
 
     private WorkflowDAO workflowDAO = null;
-    private static final Log log = LogFactory.getLog(WorkflowServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(WorkflowServiceImpl.class);
 
     /**
      * <p>
@@ -110,7 +110,7 @@ public class WorkflowServiceImpl implements WorkflowService {
             try {
                 workflows = workflowDAO.findByName(name.trim());
             } catch (Exception exception) {
-                log.debug("Cannot find Workflow by name " + name);
+                LOG.debug("Cannot find Workflow by name " + name);
             }
         }
         return workflows;
@@ -124,8 +124,8 @@ public class WorkflowServiceImpl implements WorkflowService {
             try {
                 workflow = workflowDAO.findByID(wfID);
             } catch (Exception exception) {
-                log.error("Cannot find Workflow by wfID " + wfID);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Workflow by wfID " + wfID);
+                LOG.error(exception.getMessage());
             }
         }
         return workflow;
@@ -152,8 +152,8 @@ public class WorkflowServiceImpl implements WorkflowService {
             try {
                 workflow = workflowDAO.findBySWAccession(swAccession);
             } catch (Exception exception) {
-                log.error("Cannot find Workflow by swAccession " + swAccession);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Workflow by swAccession " + swAccession);
+                LOG.error(exception.getMessage());
             }
         }
         return workflow;

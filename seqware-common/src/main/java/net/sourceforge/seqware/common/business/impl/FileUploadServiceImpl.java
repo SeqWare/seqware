@@ -26,8 +26,6 @@ import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
@@ -47,7 +45,6 @@ public class FileUploadServiceImpl implements FileUploadService {
     private IUSDAO IUSDAO = null;
     private FileTypeDAO fileTypeDAO = null;
     private FileDAO fileDAO = null;
-    private static final Log log = LogFactory.getLog(FileTypeServiceImpl.class);
 
     /**
      * <p>

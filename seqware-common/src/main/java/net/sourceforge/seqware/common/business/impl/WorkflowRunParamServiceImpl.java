@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class WorkflowRunParamServiceImpl implements WorkflowRunParamService {
     private WorkflowRunParamDAO workflowRunParamDAO = null;
-    private static final Log log = LogFactory.getLog(WorkflowRunParamServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(WorkflowRunParamServiceImpl.class);
 
     /**
      * <p>
