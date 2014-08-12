@@ -19,6 +19,7 @@ import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
 import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.WorkflowApp;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.FileUtils;
@@ -129,12 +130,17 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                         PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
                         executor.setStreamHandler(streamHandler);
                         // execute!
-                        executor.execute(cmdLine);
-                        // grab stdout and stderr
-                        FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".e" + time),
-                                outputStream.toString());
-                        FileUtils
-                                .write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".o" + time), errorStream.toString());
+                        try {
+                            executor.execute(cmdLine);
+                            // grab stdout and stderr
+                        } catch (ExecuteException e) {
+                            throw rethrow(e);
+                        } finally {
+                            FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".e" + time),
+                                    outputStream.toString());
+                            FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".o" + time),
+                                    errorStream.toString());
+                        }
 
                     } else {
                         executor.execute(cmdLine);
