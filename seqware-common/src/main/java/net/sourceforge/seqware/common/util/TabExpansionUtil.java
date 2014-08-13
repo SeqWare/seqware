@@ -90,8 +90,8 @@ public class TabExpansionUtil {
         // determine maximum header length and other formatting
         int[] maxContent = new int[header.length];
         List<String[]> records = new ArrayList<>();
-        for (int i = 0; i < lines.length; i++) {
-            String[] record = lines[i].split("\t");
+        for (String line : lines) {
+            String[] record = line.split("\t");
             int j = 0;
             for (String col : record) {
                 maxContent[j] = Math.max(col.length(), maxContent[j]);

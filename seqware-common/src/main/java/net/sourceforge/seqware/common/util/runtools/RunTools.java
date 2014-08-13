@@ -2,6 +2,7 @@ package net.sourceforge.seqware.common.util.runtools;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -80,7 +81,7 @@ public class RunTools {
             if (p != null) {
                 ret.setProcessExitStatus(p.exitValue());
             } else {
-                Log.error("The result of the process was null - env:" + env + " cmd:" + command, e);
+                Log.error("The result of the process was null - env:" + env + " cmd:" + Arrays.toString(command), e);
                 ret.setProcessExitStatus(ReturnValue.PROGRAMFAILED);
             }
 
@@ -134,14 +135,14 @@ public class RunTools {
             ret.setProcessExitStatus(p.exitValue());
 
             // save output
-            ret.setStdout(stdOutThread.getOutput().toString());
-            ret.setStderr(stdErrThread.getOutput().toString());
+            ret.setStdout(stdOutThread.getOutput());
+            ret.setStderr(stdErrThread.getOutput());
             ret.setExitStatus(ReturnValue.SUCCESS);
 
             // Check for errors
             if (p.exitValue() != 0) {
-                Log.stdout(stdOutThread.getOutput().toString());
-                Log.stderr(stdErrThread.getOutput().toString());
+                Log.stdout(stdOutThread.getOutput());
+                Log.stderr(stdErrThread.getOutput());
                 Log.error("The exit value was " + p.exitValue());
                 ret.setExitStatus(ReturnValue.PROGRAMFAILED);
             }
@@ -247,7 +248,7 @@ public class RunTools {
         StringBuffer match = new StringBuffer();
         for (String t : tokens) {
             if (matching && !t.endsWith(quoteString)) {
-                match.append(" " + t);
+                match.append(" ").append(t);
             } else if (!matching && t.startsWith("\"")) {
                 quoteString = "\"";
                 matching = true;
@@ -257,7 +258,7 @@ public class RunTools {
                 matching = true;
                 match.append(t.substring(1));
             } else if (matching && t.endsWith(quoteString)) {
-                match.append(" " + t.substring(0, t.length() - 1));
+                match.append(" ").append(t.substring(0, t.length() - 1));
                 matching = false;
                 quoteString = null;
                 result.add(match.toString());
@@ -266,6 +267,6 @@ public class RunTools {
                 result.add(t);
             }
         }
-        return (result.toArray(new String[0]));
+        return (result.toArray(new String[result.size()]));
     }
 }

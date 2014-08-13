@@ -242,12 +242,12 @@ public class OozieWorkflowEngine implements WorkflowEngine {
     private void populateNfsWorkDir() {
         try {
             File file = new File(nfsWorkDir, "job.properties");
-            FileWriter fw = new FileWriter(file);
-            fw.write("nameNode=" + this.dataModel.getEnv().getOOZIE_NAMENODE() + "\n");
-            fw.write("jobTracker=" + this.dataModel.getEnv().getOOZIE_JOBTRACKER() + "\n");
-            fw.write("queueName=" + this.dataModel.getEnv().getOOZIE_QUEUENAME() + "\n");
-            fw.write("oozie.wf.application.path=" + this.hdfsWorkDir);
-            fw.close();
+            try (FileWriter fw = new FileWriter(file)) {
+                fw.write("nameNode=" + this.dataModel.getEnv().getOOZIE_NAMENODE() + "\n");
+                fw.write("jobTracker=" + this.dataModel.getEnv().getOOZIE_JOBTRACKER() + "\n");
+                fw.write("queueName=" + this.dataModel.getEnv().getOOZIE_QUEUENAME() + "\n");
+                fw.write("oozie.wf.application.path=" + this.hdfsWorkDir);
+            }
 
             File lib = new File(this.nfsWorkDir, "lib");
             lib.mkdir();

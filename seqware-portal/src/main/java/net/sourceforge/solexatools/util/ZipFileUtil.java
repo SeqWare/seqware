@@ -60,23 +60,23 @@ public class ZipFileUtil {
         if (!buildDirectory(targetDir)) {
             throw new IOException("Could not create directory: " + targetDir);
         }
-        ZipFile zipFile = new ZipFile(theFile);
-        for (Enumeration entries = zipFile.entries(); entries.hasMoreElements();) {
-            ZipEntry entry = (ZipEntry) entries.nextElement();
-            File file = new File(targetDir, File.separator + entry.getName());
-            if (!buildDirectory(file.getParentFile())) {
-                throw new IOException("Could not create directory: " + file.getParentFile());
-            }
-            if (!entry.isDirectory()) {
-                copyInputStream(zipFile.getInputStream(entry), new BufferedOutputStream(new FileOutputStream(file)));
-            } else {
-                if (!buildDirectory(file)) {
-                    throw new IOException("Could not create directory: " + file);
+        try (ZipFile zipFile = new ZipFile(theFile)) {
+            for (Enumeration entries = zipFile.entries(); entries.hasMoreElements();) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                File file = new File(targetDir, File.separator + entry.getName());
+                if (!buildDirectory(file.getParentFile())) {
+                    throw new IOException("Could not create directory: " + file.getParentFile());
                 }
+                if (!entry.isDirectory()) {
+                    copyInputStream(zipFile.getInputStream(entry), new BufferedOutputStream(new FileOutputStream(file)));
+                } else {
+                    if (!buildDirectory(file)) {
+                        throw new IOException("Could not create directory: " + file);
+                    }
+                }
+                
             }
-
         }
-        zipFile.close();
         return theFile;
     }
 

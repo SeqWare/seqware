@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 public class FileServiceImpl implements FileService {
 
     private FileDAO fileDAO = null;
-    private static final Log log = LogFactory.getLog(FileServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(FileServiceImpl.class);
 
     /**
      * <p>
@@ -160,7 +160,7 @@ public class FileServiceImpl implements FileService {
             try {
                 file = fileDAO.findByPath(path.trim());
             } catch (Exception exception) {
-                log.debug("Cannot find file by path " + path);
+                LOG.debug("Cannot find file by path " + path);
             }
         }
         return file;
@@ -178,8 +178,8 @@ public class FileServiceImpl implements FileService {
             try {
                 file = fileDAO.findByID(fileId);
             } catch (Exception exception) {
-                log.error("Cannot find File by expID " + fileId);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find File by expID " + fileId);
+                LOG.error(exception.getMessage());
             }
         }
         return file;
@@ -193,8 +193,8 @@ public class FileServiceImpl implements FileService {
             try {
                 file = fileDAO.findBySWAccession(swAccession);
             } catch (Exception exception) {
-                log.error("Cannot find File by swAccession " + swAccession);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find File by swAccession " + swAccession);
+                LOG.error(exception.getMessage());
             }
         }
         return file;
@@ -220,8 +220,8 @@ public class FileServiceImpl implements FileService {
             try {
                 files = fileDAO.findByOwnerId(registrationId);
             } catch (Exception exception) {
-                log.error("Cannot find Files by registrationId " + registrationId);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Files by registrationId " + registrationId);
+                LOG.error(exception.getMessage());
             }
         }
         return files;

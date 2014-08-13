@@ -80,15 +80,15 @@ public class MetadataInMemory implements Metadata {
     /**
      * Stores SWID/id -> Model object. Unlike the postgres database, we re-use the sw accession as the id
      */
-    private static final Table<Integer, Class, Object> store = HashBasedTable.create();
+    private static final Table<Integer, Class, Object> STORE = HashBasedTable.create();
 
     /**
      * Not really thread-safe, why does Guava not have a synchronized wrapper?
      * 
      * @return the store
      */
-    private synchronized static Table<Integer, Class, Object> getStore() {
-        return store;
+    private static synchronized Table<Integer, Class, Object> getStore() {
+        return STORE;
     }
 
     @Override

@@ -158,11 +158,11 @@ public class S3ListFiles extends Module {
             Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
             Matcher m = p.matcher(input);
             boolean result = m.find();
-            String URL = input;
+            String url = input;
             if (result) {
                 accessKey = m.group(1);
                 secretKey = m.group(2);
-                URL = "s3://" + m.group(3);
+                url = "s3://" + m.group(3);
             }
         }
 
@@ -265,11 +265,11 @@ public class S3ListFiles extends Module {
                 Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
                 Matcher m = p.matcher(input);
                 boolean result = m.find();
-                String URL = input;
+                String url = input;
                 if (result) {
                     accessKey = m.group(1);
                     secretKey = m.group(2);
-                    URL = "s3://" + m.group(3);
+                    url = "s3://" + m.group(3);
                 } else {
                     // get the access/secret key from the .seqware/settings file
                     try {
@@ -293,7 +293,7 @@ public class S3ListFiles extends Module {
 
                 // parse out the bucket and key
                 p = Pattern.compile("s3://([^/]+)/*(\\S*)");
-                m = p.matcher(URL);
+                m = p.matcher(url);
                 result = m.find();
 
                 if (result) {
@@ -459,7 +459,7 @@ public class S3ListFiles extends Module {
                     path = path.substring(1);
                 }
                 // Log.info(path);
-                fileMap.put(path, new Long(size));
+                fileMap.put(path, size);
             }
         }
     }

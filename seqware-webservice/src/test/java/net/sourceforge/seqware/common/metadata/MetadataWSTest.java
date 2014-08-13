@@ -140,16 +140,19 @@ public class MetadataWSTest {
         Assert.assertTrue("invalid number of workflow params retrieved", workflowParams.size() == 33);
         // check out the values of some long values
         for (WorkflowParam param : workflowParams) {
-            if (param.getKey().equals("bam_inputs")) {
-                Assert.assertTrue(
-                        "bam_inputs invalid",
-                        param.getDefaultValue()
-                                .equals("${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022P.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022R.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022X.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022C.val.bam"));
-            } else if (param.getKey().equals("chr_sizes")) {
-                Assert.assertTrue(
-                        "chr_sizes invalid",
-                        param.getDefaultValue()
-                                .equals("chr1:249250621,chr2:243199373,chr3:198022430,chr4:191154276,chr5:180915260,chr6:171115067,chr7:159138663,chr8:146364022,chr9:141213431,chr10:135534747,chr11:135006516,chr12:133851895,chr13:115169878,chr14:107349540,chr15:102531392,chr16:90354753,chr17:81195210,chr18:78077248,chr19:59128983,chr20:63025520,chr21:48129895,chr22:51304566,chrX:155270560,chrY:59373566,chrM:16571"));
+            switch (param.getKey()) {
+                case "bam_inputs":
+                    Assert.assertTrue(
+                            "bam_inputs invalid",
+                            param.getDefaultValue()
+                                    .equals("${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022P.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022R.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022X.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022C.val.bam"));
+                    break;
+                case "chr_sizes":
+                    Assert.assertTrue(
+                            "chr_sizes invalid",
+                            param.getDefaultValue()
+                                    .equals("chr1:249250621,chr2:243199373,chr3:198022430,chr4:191154276,chr5:180915260,chr6:171115067,chr7:159138663,chr8:146364022,chr9:141213431,chr10:135534747,chr11:135006516,chr12:133851895,chr13:115169878,chr14:107349540,chr15:102531392,chr16:90354753,chr17:81195210,chr18:78077248,chr19:59128983,chr20:63025520,chr21:48129895,chr22:51304566,chrX:155270560,chrY:59373566,chrM:16571"));
+                    break;
             }
         }
     }
@@ -192,11 +195,14 @@ public class MetadataWSTest {
         Assert.assertTrue("invalid number of workflow params retrieved", workflowParams.size() == 34);
         // check out the values of some suspicious values
         for (WorkflowParam param : workflowParams) {
-            if (param.getKey().equals("colorspace")) {
-                Assert.assertTrue("colorspace invalid", param.getDefaultValue().equals("0"));
-            } else if (param.getKey().equals("novoalign_r1_adapter_trim")) {
-                Assert.assertTrue("novoalign_r1_adapter_trim invalid",
-                        param.getDefaultValue().equals("-a AGATCGGAAGAGCGGTTCAGCAGGAATGCCGAGACCG"));
+            switch (param.getKey()) {
+                case "colorspace":
+                    Assert.assertTrue("colorspace invalid", param.getDefaultValue().equals("0"));
+                    break;
+                case "novoalign_r1_adapter_trim":
+                    Assert.assertTrue("novoalign_r1_adapter_trim invalid",
+                            param.getDefaultValue().equals("-a AGATCGGAAGAGCGGTTCAGCAGGAATGCCGAGACCG"));
+                    break;
             }
         }
 

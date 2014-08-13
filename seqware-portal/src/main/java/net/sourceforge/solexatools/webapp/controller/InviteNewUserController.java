@@ -91,7 +91,7 @@ public class InviteNewUserController extends BaseCommandController {
 
         String[] emails = getRequestedEmails(request);
 
-        if (emails == null || (emails.length == 1 && emails[0].trim().equals(""))) {
+        if (emails == null || (emails.length == 1 && emails[0].trim().isEmpty())) {
             isHasError = true;
             errorMessages.add(this.getMessageSourceAccessor().getMessage("error.list.emails.empty"));
         }

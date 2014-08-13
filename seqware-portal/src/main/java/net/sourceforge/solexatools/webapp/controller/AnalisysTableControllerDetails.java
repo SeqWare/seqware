@@ -94,24 +94,30 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 
             List<WorkflowRun> workflowRuns = null;
 
-            String search_query = "";
+            String searchQuery = "";
             if (qtype != null && !"".equals(qtype) && query != null && !"".equals(query)) {
-                search_query = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
+                searchQuery = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
             }
 
-            if ("canceled".equals(filter)) {
-                workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                        + " and ( wr.status = 'canceled' or wr.status = 'cancelled')" + search_query);
-            } else if ("failed".equals(filter)) {
-                workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                        + " and (wr.status = 'failed' or wr.status = 'failed-testing')" + search_query);
-            } else if ("running".equals(filter)) {
-                workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                        + " and ( wr.status = 'running' or wr.status = 'pending')" + search_query);
-            } else {
-                workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
-                        + search_query);
-            }
+            if (null != filter)
+                switch (filter) {
+                case "canceled":
+                    workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+                            + " and ( wr.status = 'canceled' or wr.status = 'cancelled')" + searchQuery);
+                    break;
+                case "failed":
+                    workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+                            + " and (wr.status = 'failed' or wr.status = 'failed-testing')" + searchQuery);
+                    break;
+                case "running":
+                    workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+                            + " and ( wr.status = 'running' or wr.status = 'pending')" + searchQuery);
+                    break;
+                default:
+                    workflowRuns = workflowRunService.findByCriteria("wr.owner.registrationId = " + registration.getRegistrationId()
+                            + searchQuery);
+                    break;
+                }
 
             String json = createSampleTableJson(workflowRuns, page, rowsPages, sortName, sortOrder);
             response.getWriter().write(json);
@@ -201,7 +207,7 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getTitle() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getTitle()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -216,7 +222,7 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getName()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -231,7 +237,7 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getName()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -240,20 +246,27 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
 
     private void sortRows(List<Cells> rowsAll, String sortOrder, String sortName) {
         int columnPos = 0;
-        if ("date".equals(sortName)) {
+        if (null != sortName) switch (sortName) {
+        case "date":
             columnPos = 0;
-        } else if ("status".equals(sortName)) {
+            break;
+        case "status":
             columnPos = 1;
-        } else if ("swid".equals(sortName)) {
+            break;
+        case "swid":
             columnPos = 2;
+            break;
         }
 
         @SuppressWarnings("rawtypes")
         Comparator comparator = null;
-        if ("asc".equals(sortOrder)) {
+        if (null != sortOrder) switch (sortOrder) {
+        case "asc":
             comparator = new AnalisysTableControllerDetails.CellsComparator(columnPos);
-        } else if ("desc".equals(sortOrder)) {
+            break;
+        case "desc":
             comparator = Collections.reverseOrder(new AnalisysTableControllerDetails.CellsComparator(columnPos));
+            break;
         }
 
         Collections.sort(rowsAll, comparator);

@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class LibrarySelectionServiceImpl implements LibrarySelectionService {
     private LibrarySelectionDAO dao = null;
-    private static final Log log = LogFactory.getLog(LibrarySelectionServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(LibrarySelectionServiceImpl.class);
 
     /**
      * <p>
@@ -56,8 +56,8 @@ public class LibrarySelectionServiceImpl implements LibrarySelectionService {
             try {
                 obj = dao.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find LibrarySelection by id " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find LibrarySelection by id " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return obj;

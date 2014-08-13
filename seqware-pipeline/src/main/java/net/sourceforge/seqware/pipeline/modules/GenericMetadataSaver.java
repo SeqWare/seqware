@@ -143,7 +143,7 @@ public class GenericMetadataSaver extends Module {
                 }
             }
 
-            options = parser.parse(myParameters.toArray(new String[0]));
+            options = parser.parse(myParameters.toArray(new String[myParameters.size()]));
 
             // if algo is defined save the new value
             if (options.has("gms-algorithm")) {

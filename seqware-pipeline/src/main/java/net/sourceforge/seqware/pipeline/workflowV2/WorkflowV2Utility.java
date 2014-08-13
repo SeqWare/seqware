@@ -97,12 +97,12 @@ public class WorkflowV2Utility {
                 basedir = wf.getAttributeValue("basedir").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir);
                 ret.put("basedir", basedir);
                 // parse the workflow_directory_name
-                String[] _arr = basedir.split("/");
-                if (_arr.length > 2) {
-                    String tmp = _arr[1];
-                    String[] _arrtmp = tmp.split("_", 3);
-                    if (_arrtmp.length == 3) {
-                        ret.put("workflow_directory_name", _arrtmp[2]);
+                String[] arr = basedir.split("/");
+                if (arr.length > 2) {
+                    String tmp = arr[1];
+                    String[] arrTemp = tmp.split("_", 3);
+                    if (arrTemp.length == 3) {
+                        ret.put("workflow_directory_name", arrTemp[2]);
                     }
                 }
             }
@@ -114,9 +114,9 @@ public class WorkflowV2Utility {
             if (template != null) {
                 ret.put("workflow_template", template.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
             }
-            Element java_class = wf.getChild(WORKFLOW_CLASS);
-            if (java_class != null) {
-                ret.put(WORKFLOW_CLASS, java_class.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
+            Element javaClass = wf.getChild(WORKFLOW_CLASS);
+            if (javaClass != null) {
+                ret.put(WORKFLOW_CLASS, javaClass.getAttributeValue("path").replaceFirst("\\$\\{workflow_bundle_dir\\}", bundleDir));
             }
             Element config = wf.getChild("config");
             if (config != null) {

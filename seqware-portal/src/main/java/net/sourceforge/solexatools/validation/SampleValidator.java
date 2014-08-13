@@ -71,7 +71,7 @@ public class SampleValidator implements Validator {
         if (errors.getFieldError("strExpectedNumRuns") == null) {
             boolean isHasError = false;
             String strRuns = sample.getStrExpectedNumRuns();
-            if (strRuns != null && !strRuns.equals("")) {
+            if (strRuns != null && !strRuns.isEmpty()) {
                 Integer runs = null;
                 try {
                     runs = Integer.parseInt(strRuns);
@@ -106,7 +106,7 @@ public class SampleValidator implements Validator {
         if (errors.getFieldError("strExpectedNumReads") == null) {
             boolean isHasError = false;
             String strReads = sample.getStrExpectedNumReads();
-            if (strReads != null && !strReads.equals("")) {
+            if (strReads != null && !strReads.isEmpty()) {
                 Integer reads = null;
                 try {
                     reads = Integer.parseInt(strReads);

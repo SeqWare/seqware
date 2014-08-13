@@ -67,7 +67,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowStatusChecker extends Plugin {
     public static final String WORKFLOW_RUN_ACCESSION = "workflow-run-accession";
-    private static final String metadata_sync = "synch_for_metadata";
+    private static final String METADATA_SYNC = "synch_for_metadata";
     // variables for use in the app
     private String hostname = null;
     private String username = null;
@@ -290,7 +290,7 @@ public class WorkflowStatusChecker extends Plugin {
                 err = wr.getStdErr();
             }
 
-            synchronized (metadata_sync) {
+            synchronized (METADATA_SYNC) {
                 wr.setStdErr(err);
                 wr.setStdOut(out);
                 WorkflowStatusChecker.this.metadata.updateWorkflowRun(wr);
@@ -384,7 +384,7 @@ public class WorkflowStatusChecker extends Plugin {
                     err = sb.toString();
                 }
 
-                synchronized (metadata_sync) {
+                synchronized (METADATA_SYNC) {
                     wr.setStatus(nextSqwStatus);
                     wr.setStdErr(err);
                     wr.setStdOut(out);
@@ -402,14 +402,14 @@ public class WorkflowStatusChecker extends Plugin {
             case submitted_cancel:
                 // run cancelled before launching
                 wr.setStatus(WorkflowRunStatus.cancelled);
-                synchronized (metadata_sync) {
+                synchronized (METADATA_SYNC) {
                     WorkflowStatusChecker.this.metadata.updateWorkflowRun(wr);
                 }
                 break;
             case submitted_retry:
                 // retrying a pre-launch cancellation
                 wr.setStatus(WorkflowRunStatus.submitted);
-                synchronized (metadata_sync) {
+                synchronized (METADATA_SYNC) {
                     WorkflowStatusChecker.this.metadata.updateWorkflowRun(wr);
                 }
                 break;

@@ -54,7 +54,7 @@ public class InviteNewUserValidatorController extends BaseCommandController {
 
         String[] emails = request.getParameterValues("emailsToString");
 
-        if (emails == null || (emails.length == 1 && emails[0].trim().equals(""))) {
+        if (emails == null || (emails.length == 1 && emails[0].trim().isEmpty())) {
             Log.info("Emails is Empty");
             isHasError = true;
             errorMessages.add(this.getMessageSourceAccessor().getMessage("error.list.emails.empty"));

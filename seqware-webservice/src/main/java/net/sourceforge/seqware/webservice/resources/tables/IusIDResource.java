@@ -104,12 +104,9 @@ public class IusIDResource extends DatabaseIDResource {
         try {
             String text = entity.getText();
             newIUS = (IUS) XmlTools.unMarshal(jo, new IUS(), text);
-        } catch (SAXException ex) {
+        } catch (SAXException | IOException ex) {
             ex.printStackTrace();
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         }
         try {
             IUSService fs = BeanFactory.getIUSServiceBean();
