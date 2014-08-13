@@ -84,8 +84,14 @@ run on a randomly chosen cluster node.
 : This document describes the metadata XML file used to describe workflows. It provides workflow names, versions, descriptions, and information for running and testing the workflow.
 * [File Type Conventions](/docs/6-pipeline/file-types/) 
 : This document describes the standardized file meta types (MIME-like types) we use in the project and how to add files to a community-writable file type registration.
+
+## Developer Tutorials
+
 * [Debugging, Troubleshooting, & Restarting Workflow](/docs/6-pipeline/debug-workflows/)
 : A guide to debugging, troubleshooting, and restarting failed workflows for both workflow engines (Pegasus and Oozie).
+
+* [Developing in Partial SeqWare Environments with Whitestar](/docs/6-pipeline/partial_environments/)
+: A guide to developing without dependencies such as Oozie, SGE/Hadoop, and metadata (via the SeqWare webservice).  
 
 ## Modules
 
