@@ -1203,7 +1203,7 @@ public class MetadataDB implements Metadata {
                         map.put("workflow_template", rs.getString("workflow_template"));
                         map.put("create_tstmp", rs.getString("create_tstmp"));
                         map.put("update_tstmp", rs.getString("update_tstmp"));
-                        map.put("workflow_accession", new Integer(workflowAccession).toString());
+                        map.put("workflow_accession", Integer.toString(workflowAccession));
                         map.put("permanent_bundle_location", rs.getString("permanent_bundle_location"));
                         map.put("workflow_engine", rs.getString("workflow_engine"));
                         map.put("workflow_type", rs.getString("workflow_type"));

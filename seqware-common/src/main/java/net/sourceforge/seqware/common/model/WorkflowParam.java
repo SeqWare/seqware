@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowParam extends PermissionsAware implements Serializable, Comparable<WorkflowParam> {
+public class WorkflowParam extends PermissionsAware implements Serializable, Comparable<WorkflowParam>, Cloneable {
 
     /**
      *

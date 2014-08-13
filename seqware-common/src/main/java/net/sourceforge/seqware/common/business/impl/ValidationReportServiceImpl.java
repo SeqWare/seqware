@@ -44,7 +44,7 @@ public class ValidationReportServiceImpl implements ValidationReportService {
     }
 
     private void visitProcessing(Processing processing, int in, StringBuilder sb) {
-        sb.append(indent(in) + processing.getAlgorithm() + " SWA: " + processing.getSwAccession());
+        sb.append(indent(in)).append(processing.getAlgorithm()).append(" SWA: ").append(processing.getSwAccession());
         sb.append("\n");
         visitSequencerRun(processing, in, sb);
         visitLane(processing, in, sb);
@@ -62,42 +62,42 @@ public class ValidationReportServiceImpl implements ValidationReportService {
 
     private void visitSequencerRun(Processing processing, int in, StringBuilder sb) {
         for (SequencerRun link : processing.getSequencerRuns()) {
-            sb.append(indent(in++) + "LINK SequencerRun SWA: " + link.getSwAccession());
+            sb.append(indent(in++)).append("LINK SequencerRun SWA: ").append(link.getSwAccession());
             sb.append('\n');
         }
     }
 
     private void visitLane(Processing processing, int in, StringBuilder sb) {
         for (Lane link : processing.getLanes()) {
-            sb.append(indent(++in) + "LINK Lane SWA: " + link.getSwAccession());
+            sb.append(indent(++in)).append("LINK Lane SWA: ").append(link.getSwAccession());
             sb.append('\n');
         }
     }
 
     private void visitIus(Processing processing, int in, StringBuilder sb) {
         for (IUS link : processing.getIUS()) {
-            sb.append(indent(++in) + "LINK IUS SWA: " + link.getSwAccession());
+            sb.append(indent(++in)).append("LINK IUS SWA: ").append(link.getSwAccession());
             sb.append('\n');
         }
     }
 
     private void visitSample(Processing processing, int in, StringBuilder sb) {
         for (Sample link : processing.getSamples()) {
-            sb.append(indent(in++) + "LINK Sample SWA: " + link.getSwAccession());
+            sb.append(indent(in++)).append("LINK Sample SWA: ").append(link.getSwAccession());
             sb.append('\n');
         }
     }
 
     private void visitExperiment(Processing processing, int in, StringBuilder sb) {
         for (Experiment link : processing.getExperiments()) {
-            sb.append(indent(in++) + "LINK Experiment SWA: " + link.getSwAccession());
+            sb.append(indent(in++)).append("LINK Experiment SWA: ").append(link.getSwAccession());
             sb.append('\n');
         }
     }
 
     private void visitStudy(Processing processing, int in, StringBuilder sb) {
         for (Study link : processing.getStudies()) {
-            sb.append(indent(in++) + "LINK Study SWA: " + link.getSwAccession());
+            sb.append(indent(in++)).append("LINK Study SWA: ").append(link.getSwAccession());
             sb.append('\n');
         }
     }
@@ -108,7 +108,7 @@ public class ValidationReportServiceImpl implements ValidationReportService {
         if (workflowRun != null) {
             Workflow workflow = workflowRun.getWorkflow();
             if (workflow != null) {
-                sb.append(indent(in++) + "WORKFLOW " + workflow.getFullName() + " SWA: " + workflow.getSwAccession());
+                sb.append(indent(in++)).append("WORKFLOW ").append(workflow.getFullName()).append(" SWA: ").append(workflow.getSwAccession());
                 sb.append('\n');
                 result = true;
             }
@@ -127,8 +127,7 @@ public class ValidationReportServiceImpl implements ValidationReportService {
         StringBuilder sb = new StringBuilder();
         int in = 0;
         File file = fileDao.findBySWAccession(swa);
-        sb.append(indent(in++) + "FILE SWA: " + file.getSwAccession() + " FILE NAME: " + file.getFileName() + " Processing Children: "
-                + file.getProcessings().size());
+        sb.append(indent(in++)).append("FILE SWA: ").append(file.getSwAccession()).append(" FILE NAME: ").append(file.getFileName()).append(" Processing Children: ").append(file.getProcessings().size());
         sb.append("\n");
         for (Processing process : file.getProcessings()) {
             visitProcessing(process, in, sb);

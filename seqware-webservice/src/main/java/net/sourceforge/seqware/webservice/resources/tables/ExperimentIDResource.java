@@ -107,12 +107,9 @@ public class ExperimentIDResource extends DatabaseIDResource {
         try {
             String text = entity.getText();
             newObj = (Experiment) XmlTools.unMarshal(jo, new Experiment(), text);
-        } catch (SAXException ex) {
+        } catch (SAXException | IOException ex) {
             ex.printStackTrace();
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
         }
         try {
             ExperimentService service = BeanFactory.getExperimentServiceBean();

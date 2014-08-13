@@ -86,7 +86,7 @@ public class SequencerRunValidator implements Validator {
         if (errors.getFieldError("strRefLane") == null) {
             boolean isHasError = false;
             String strRefLane = sequencerRun.getStrRefLane();
-            if (strRefLane != null && !strRefLane.equals("")) {
+            if (strRefLane != null && !strRefLane.isEmpty()) {
                 Integer refLane = null;
                 try {
                     refLane = Integer.parseInt(strRefLane);

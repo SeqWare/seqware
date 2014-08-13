@@ -64,18 +64,18 @@ public class UNCKerberos extends Authentication {
      */
     protected Subject getSubject(String uid, String password, String keytabfile) throws LoginException {
         try {
-            Subject j_subject = null;
+            Subject jSubject = null;
 
             if (password != null) {
 
                 Krb5LoginModule lm = new com.sun.security.auth.module.Krb5LoginModule();
 
                 HashMap options = new HashMap();
-                j_subject = new Subject();
+                jSubject = new Subject();
                 options.put("doNotPrompt", "false");
                 // options.put("debug", "true");
 
-                lm.initialize(j_subject, new NamePasswordCallbackHandler(uid, password), null, options);
+                lm.initialize(jSubject, new NamePasswordCallbackHandler(uid, password), null, options);
                 lm.logout();
                 lm.login();
                 lm.commit();
@@ -83,7 +83,7 @@ public class UNCKerberos extends Authentication {
                 // use the old way for keytabs
                 Krb5LoginModule lm = new com.sun.security.auth.module.Krb5LoginModule();
                 HashMap options = new HashMap();
-                j_subject = new Subject();
+                jSubject = new Subject();
                 options.put("principal", uid);
                 options.put("keyTab", keytabfile);
                 options.put("useTicketCache", "false");
@@ -91,13 +91,13 @@ public class UNCKerberos extends Authentication {
                 options.put("storeKey", "true");
                 options.put("doNotPrompt", "true");
                 // options.put("debug", "true");
-                lm.initialize(j_subject, null, null, options);
+                lm.initialize(jSubject, null, null, options);
                 lm.logout();
                 lm.login();
                 lm.commit();
             }
 
-            return j_subject;
+            return jSubject;
         } catch (LoginException e) {
             throw e;
         }
@@ -120,9 +120,9 @@ public class UNCKerberos extends Authentication {
         }
 
         if (!rval) {
-            StackTraceElement[] E = e.getStackTrace();
-            for (int i = 0; i < E.length; i++) {
-                String s = E[i].getClassName();
+            StackTraceElement[] ste = e.getStackTrace();
+            for (StackTraceElement e1 : ste) {
+                String s = e1.getClassName();
                 if ("sun.security.krb5.Config".equals(s)) {
                     rval = true;
                     break;
@@ -147,26 +147,25 @@ public class UNCKerberos extends Authentication {
         public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
             boolean n = false;
             boolean p = false;
-            for (int i = 0; i < callbacks.length; i++) {
-                Callback C = callbacks[i];
-                if (C instanceof NameCallback) {
-                    NameCallback nc = (NameCallback) C;
+            for (Callback c : callbacks) {
+                if (c instanceof NameCallback) {
+                    NameCallback nc = (NameCallback) c;
                     nc.setName(username);
                     n = true;
-                } else if (C instanceof PasswordCallback) {
-                    PasswordCallback pc = (PasswordCallback) C;
+                } else if (c instanceof PasswordCallback) {
+                    PasswordCallback pc = (PasswordCallback) c;
 
                     // pc.setPassword( password.toCharArray() );
                     byte[] bytes = password.getBytes();
 
                     int length = password.length();
-                    char[] password_chars = new char[length];
+                    char[] passwordChars = new char[length];
 
                     for (int j = 0; j < length; j++) {
-                        password_chars[j] = (char) bytes[j];// password.charAt(j);
+                        passwordChars[j] = (char) bytes[j];// password.charAt(j);
                     }
 
-                    pc.setPassword(password_chars);
+                    pc.setPassword(passwordChars);
 
                     p = true;
                 }

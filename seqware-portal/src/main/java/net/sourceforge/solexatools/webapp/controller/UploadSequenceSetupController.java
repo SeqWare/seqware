@@ -68,7 +68,7 @@ public class UploadSequenceSetupController extends BaseCommandController {
         model.put("listFileType", listFileType);
 
         // if operation Upload cant be launch
-        if (sample == null && listSample.size() == 0) {
+        if (sample == null && listSample.isEmpty()) {
             BindingResult errors = new BindException(uploadSequence, getCommandName());
             errors.reject("upload.required.sample");
             Map errorModel = errors.getModel();

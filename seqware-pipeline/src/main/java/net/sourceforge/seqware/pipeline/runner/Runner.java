@@ -70,7 +70,7 @@ public class Runner {
     private int processingAccession = 0;
     private final NonOptionArgumentSpec<String> nonOptionSpec;
 
-    private static final OptionParser parser = new OptionParser();
+    private static final OptionParser PARSER = new OptionParser();
     private OptionSet options = null;
     private Module app = null;
     private Metadata meta = null;
@@ -81,91 +81,91 @@ public class Runner {
     private final StringBuffer stderr = new StringBuffer();
 
     public Runner() {
-        parser.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
-        parser.accepts("module", "Required: Specifies the module to run. All modules implement the ModuleInterface.").withRequiredArg()
+        PARSER.acceptsAll(Arrays.asList("help", "h", "?"), "Provides this help message.");
+        PARSER.accepts("module", "Required: Specifies the module to run. All modules implement the ModuleInterface.").withRequiredArg()
                 .ofType(String.class).describedAs("This is the module you wish to run.");
-        parser.accepts("output", "Optional: redirect StdOut to file.").withRequiredArg().ofType(String.class)
+        PARSER.accepts("output", "Optional: redirect StdOut to file.").withRequiredArg().ofType(String.class)
                 .describedAs("File path to redirect StdOut to.");
         // added by Xiaoshu Wang (xiao@renci.org)
-        parser.accepts("stderr", "Optional: redirect Stderr to file.").withRequiredArg().ofType(String.class)
+        PARSER.accepts("stderr", "Optional: redirect Stderr to file.").withRequiredArg().ofType(String.class)
                 .describedAs("File path to redirect Stderr to.");
 
-        parser.accepts("module-pkg", "Optional: but replaces need to specify module, by specifying instead a pre-packaged module to run.")
+        PARSER.accepts("module-pkg", "Optional: but replaces need to specify module, by specifying instead a pre-packaged module to run.")
                 .withRequiredArg().ofType(String.class).describedAs("This is the module you wish to run.");
         // MetaDB stuff
-        parser.acceptsAll(
+        PARSER.acceptsAll(
                 Arrays.asList("meta-db", "metadata"),
                 "Optional: This argument really has no effect since we attempt metadata writeback so long as --no-meta-db or --no-metadata aren't passed in. This is really an argument to make it easier to have an if/else control over metadata writeback in calling programs.");
-        parser.acceptsAll(Arrays.asList("no-meta-db", "no-metadata"),
+        PARSER.acceptsAll(Arrays.asList("no-meta-db", "no-metadata"),
                 "Optional: Do not use metadata writeback. Otherwise, we will attempt it.");
-        parser.accepts("metadata-config-database",
+        PARSER.accepts("metadata-config-database",
                 "Required for metadata (DEPRECATED, use .seqware/settings file instead): The JDBC path for connection").withRequiredArg()
                 .ofType(String.class).describedAs("Example: jdbc:postgresql://127.0.0.1/seqware_meta_db");
-        parser.accepts("metadata-config-username",
+        PARSER.accepts("metadata-config-username",
                 "Required for metadata (DEPRECATED, use .seqware/settings file instead): Database username for connection")
                 .withRequiredArg().ofType(String.class).describedAs("Database Username");
-        parser.accepts("metadata-config-password",
+        PARSER.accepts("metadata-config-password",
                 "Required for metadata (DEPRECATED, use .seqware/settings file instead): Database password for connection")
                 .withRequiredArg().ofType(String.class).describedAs("Database Password");
 
-        parser.accepts(
+        PARSER.accepts(
                 "metadata-parentID",
                 "Optional (DEPRECATED): Specifies one of the parentID for metadata write back. This option can be specified zero or more times. This is deprecated, use metadata-parent-accession going forward.")
                 .withRequiredArg().ofType(Integer.class)
                 .describedAs("The processingID of the parent for this event, for constructing the dependency tree in the metadb");
-        parser.accepts(
+        PARSER.accepts(
                 "metadata-parentID-file",
                 "Optional (DEPRECATED): The same as --metadata-parentID, but is a path to a file, to parse for parent processing ID's. This is deprecated, use metadata-parent-accession-file going forward.")
                 .withRequiredArg().ofType(String.class)
                 .describedAs("Path to a line-delimited file containing one or more parent processing IDs");
-        parser.accepts(
+        PARSER.accepts(
                 "metadata-parent-accession",
                 "Optional: Specifies one of the SeqWare accessions (sw_accession column in the DB) for metadata write back. This is an alternative "
                         + "to processing parentID (see --metadata-parentID) that allows you to specify an IUS, lane, sequencer run, or other processing event as a parent. "
                         + " This option can be specified zero or more times and the value can also be comma-separated.").withRequiredArg()
                 .withValuesSeparatedBy(',').ofType(Integer.class)
                 .describedAs("The sw_accession of the parent for this event, for constructing the dependency tree in the metadb");
-        parser.accepts("metadata-parent-accession-file",
+        PARSER.accepts("metadata-parent-accession-file",
                 "Optional: The same as --metadata-parent-accession, but is a path to a file, to parse for parent processing sw_accessions.")
                 .withRequiredArg().ofType(String.class)
                 .describedAs("Path to a line-delimeted file containing one or more parent sw_accessions");
-        parser.accepts("metadata-output-file-prefix",
+        PARSER.accepts("metadata-output-file-prefix",
                 "Optional: Specifies a path to prepend to every file returned by the module. Useful for dealing when staging files back.")
                 .withRequiredArg().ofType(String.class).describedAs("Path to prepend to each file location.");
-        parser.accepts(
+        PARSER.accepts(
                 "metadata-processingID-file",
                 "Optional (DEPRECATED): Specifies the path to a file, which we will write our processingID, for future processing events to parse. This is deprecated, use metadata-processing-accession-file going forward.")
                 .withRequiredArg().ofType(String.class).describedAs("Path for where we should create a new file with our processing ID");
-        parser.accepts("metadata-processing-accession-file",
+        PARSER.accepts("metadata-processing-accession-file",
                 "Optional: Specifies the path to a file, which we will write our processing accession, for future processing events to parse.")
                 .withRequiredArg().ofType(String.class).describedAs("Path for where we should create a new file with our processing ID");
-        parser.accepts("metadata-processing-accession-file-lock",
+        PARSER.accepts("metadata-processing-accession-file-lock",
                 "Optional: Specifies the path to a file, which we will write/check our processing accession, for use to prevent repeated runs.")
                 .withRequiredArg().ofType(String.class).describedAs("Path for where we should create a new file with our processing ID");
-        parser.accepts("metadata-tries-number",
+        PARSER.accepts("metadata-tries-number",
                 "Optional: After a failure, how many times we should try metadata write back operations, such as obtaining a lock, writing to DB, etc.")
                 .withRequiredArg().ofType(Integer.class).defaultsTo(60).describedAs("Number of tries (Default: 60)");
-        parser.accepts("metadata-tries-delay",
+        PARSER.accepts("metadata-tries-delay",
                 "Optional: After a failure, how long we should wait before trying again (in accordance with metadata-tries-number)")
                 .withRequiredArg().ofType(Integer.class).defaultsTo(5).describedAs("Number of seconds between tries (Default: 5)");
-        parser.accepts(
+        PARSER.accepts(
                 "metadata-workflow-accession",
                 "Optional: Specifies the workflow accession that this run of the workflow should be associated with. This creates a new row in the workflow_run table and links it to the workflow row specified by this accession.")
                 .withRequiredArg().ofType(Integer.class).describedAs("The sw_accession of a workflow table row.");
-        parser.accepts("metadata-workflow-run-accession",
+        PARSER.accepts("metadata-workflow-run-accession",
                 "Optional: Specifies the workflow-run accession that should be saved in this processing event's workflow_run_id column.")
                 .withRequiredArg().ofType(Integer.class)
                 .describedAs("The sw_accession of a workflow-run table row that should be filled into the workflow_run_id field.");
-        parser.accepts(
+        PARSER.accepts(
                 "metadata-workflow-run-accession-output-file",
                 "Optional: Specifies the file that the workflow-run accession is written out to. This is so subsequent steps can reference it to correctly populate the ancestor_workflow_run_id in child processing events.")
                 .withRequiredArg().ofType(String.class)
                 .describedAs("The file a sw_accession of a workflow-run table row should be written to.");
-        parser.accepts("metadata-workflow-run-ancestor-accession",
+        PARSER.accepts("metadata-workflow-run-ancestor-accession",
                 "Optional: Specifies the workflow-run accession that should be saved in this processing event's ancestor_workflow_run_id column.")
                 .withRequiredArg().ofType(Integer.class)
                 .describedAs("The sw_accession of a workflow-run table row that should be filled into the ancestor_workflow_run_id field.");
-        parser.accepts(
+        PARSER.accepts(
                 "metadata-workflow-run-ancestor-accession-input-file",
                 "Optional: Specifies the workflow-run accession file that should be read and the contained workflow-run accession should be saved in this processing event's ancestor_workflow_run_id column.")
                 .withRequiredArg()
@@ -173,11 +173,11 @@ public class Runner {
                 .describedAs(
                         "The file contains the sw_accession of a workflow-run table row that should be filled into the ancestor_workflow_run_id field.");
         // Debugging stuff
-        parser.accepts("sleep-between-steps", "Optional: For debugging, allows one to specify a time to sleep between steps")
+        PARSER.accepts("sleep-between-steps", "Optional: For debugging, allows one to specify a time to sleep between steps")
                 .withRequiredArg().ofType(Integer.class).defaultsTo(0).describedAs("Time in Seconds (Default: 0)");
-        parser.accepts("suppress-unimplemented-warnings", "Optional: For debugging, hide warnings about unimplemented methods");
-        parser.accepts("verbose", "Show debug information");
-        this.nonOptionSpec = parser
+        PARSER.accepts("suppress-unimplemented-warnings", "Optional: For debugging, hide warnings about unimplemented methods");
+        PARSER.accepts("verbose", "Show debug information");
+        this.nonOptionSpec = PARSER
                 .nonOptions("Specify arguments for the module by providding an additional -- and then --<key> <value> pairs");
     }
 
@@ -380,7 +380,7 @@ public class Runner {
     public static void unzipPkg(String zipFile) throws ZipException, IOException {
 
         Log.info(zipFile);
-        int BUFFER = 2048;
+        int buffer = 2048;
         File file = new File(zipFile);
 
         ZipFile zip = new ZipFile(file);
@@ -412,18 +412,18 @@ public class Runner {
                 try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry))) {
                     int currentByte;
                     // establish buffer for writing file
-                    byte data[] = new byte[BUFFER];
+                    byte data[] = new byte[buffer];
 
                     // write the current file to disk
                     FileOutputStream fos = new FileOutputStream(destFile);
-                    BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
-
                     // read and write until last byte is encountered
-                    while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-                        dest.write(data, 0, currentByte);
+                    try (BufferedOutputStream dest = new BufferedOutputStream(fos, buffer)) {
+                        // read and write until last byte is encountered
+                        while ((currentByte = is.read(data, 0, buffer)) != -1) {
+                            dest.write(data, 0, currentByte);
+                        }
+                        dest.flush();
                     }
-                    dest.flush();
-                    dest.close();
                 }
             }
             if (currentEntry.endsWith(".zip")) {
@@ -451,7 +451,7 @@ public class Runner {
     private void checkSyntax() {
         // Check if help was requested
         if (options.has("help") || options.has("h") || options.has("?")) {
-            getSyntax(parser, "");
+            getSyntax(PARSER, "");
         }
 
         // check if verbose was requested, then override the log4j.properties
@@ -508,29 +508,29 @@ public class Runner {
     }
 
     private void setupModuleApp() {
-        String ModuleName = null;
+        String moduleName = null;
         if (options.has("module")) {
-            ModuleName = options.valueOf("module").toString();
-            Log.info(ModuleName);
+            moduleName = options.valueOf("module").toString();
+            Log.info(moduleName);
         } else if (options.has("module-pkg")) {
             // Log.error("Failure in module-pkg detection");
-            String ModName = options.valueOf("module-pkg").toString();
-            String[] modNames = ModName.substring(0, ModName.length() - 4).split(File.separator);
+            String modName = options.valueOf("module-pkg").toString();
+            String[] modNames = modName.substring(0, modName.length() - 4).split(File.separator);
             // temp we will look in examples, but really we just want all these in
             // "net.sourceforge.seqware.pipeline.modules."
             // ModuleName = "wrapper.".concat(modNames[modNames.length -1]);
-            ModuleName = modNames[modNames.length - 1].concat(".wrapper.").concat(modNames[modNames.length - 1]);
+            moduleName = modNames[modNames.length - 1].concat(".wrapper.").concat(modNames[modNames.length - 1]);
             // ModuleName = modNames[modNames.length
             // -1].concat(".net.sourceforge.seqware.pipeline.modules.").concat(modNames[modNames.length
             // -1]);
-            Log.info(ModuleName);
+            Log.info(moduleName);
         } else {
-            getSyntax(parser, "You must specifiy a --module or a --module-pkg parameter");
+            getSyntax(PARSER, "You must specifiy a --module or a --module-pkg parameter");
         }
 
         try {
-            app = (Module) Class.forName(ModuleName).newInstance();
-            app.setAlgorithm(ModuleName);
+            app = (Module) Class.forName(moduleName).newInstance();
+            app.setAlgorithm(moduleName);
 
             if (options.has("output")) {
                 app.setStdoutFile(new File(options.valueOf("output").toString()));
@@ -540,7 +540,7 @@ public class Runner {
                 app.setStderrFile(new File(options.valueOf("stderr").toString()));
             }
         } catch (ClassNotFoundException e) {
-            Log.error("Could not find the Module class for '" + ModuleName + "'");
+            Log.error("Could not find the Module class for '" + moduleName + "'");
             System.exit(-1);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -556,7 +556,6 @@ public class Runner {
             return;
         }
 
-        String meta_db = null;
         Map<String, String> settings = ConfigTools.getSettings();
 
         // Should try settings only if when user does not specify
@@ -924,14 +923,14 @@ public class Runner {
         errStart = errAnn == null ? ModuleMethod.do_run : errAnn.startsBefore();
         errEnd = errAnn == null ? ModuleMethod.do_run : errAnn.endsAfter();
 
-        PrintStream old_out = null;
-        PrintStream old_err = null;
+        PrintStream oldOut = null;
+        PrintStream oldErr = null;
 
         for (ModuleMethod m : ModuleMethod.values()) {
             // check stdout redirect
             if ((m == outStart) && (app.getStdoutFile() != null)) {
                 try {
-                    old_out = System.out;
+                    oldOut = System.out;
                     System.setOut(new PrintStream(new FileOutputStream(app.getStdoutFile())));
                 } catch (FileNotFoundException e) {
                     printAndAppendtoStderr("Error in redirecting stdout to '" + app.getStdoutFile().getAbsolutePath() + "'.");
@@ -942,7 +941,7 @@ public class Runner {
             // check stdout redirect
             if ((m == errStart) && (app.getStderrFile() != null)) {
                 try {
-                    old_err = System.err;
+                    oldErr = System.err;
                     System.setErr(new PrintStream(new FileOutputStream(app.getStderrFile())));
                 } catch (FileNotFoundException e) {
                     printAndAppendtoStderr("Error in redirecting stderr to '" + app.getStderrFile().getAbsolutePath() + "'.");
@@ -951,12 +950,12 @@ public class Runner {
                 }
             }
             evaluateReturn(app, m.name());
-            if ((m == outEnd) && (old_out != null)) {
-                System.setOut(old_out);
+            if ((m == outEnd) && (oldOut != null)) {
+                System.setOut(oldOut);
             }
 
-            if ((m == errEnd) && (old_err != null)) {
-                System.setErr(old_err);
+            if ((m == errEnd) && (oldErr != null)) {
+                System.setErr(oldErr);
             }
         }
     }
@@ -972,9 +971,9 @@ public class Runner {
     public void run(String[] args) {
         // 1. Parse the options
         try {
-            options = parser.parse(args);
+            options = PARSER.parse(args);
         } catch (OptionException e) {
-            getSyntax(parser, e.getMessage());
+            getSyntax(PARSER, e.getMessage());
         }
         // 2. Do syntax check
         checkSyntax();

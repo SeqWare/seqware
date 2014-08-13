@@ -135,7 +135,7 @@ public class Scheduler {
         for (String currIniFile : iniFiles) {
             MapTools.ini2Map(currIniFile, map);
         }
-        MapTools.cli2Map(cmdLineOptions.toArray(new String[0]), map);
+        MapTools.cli2Map(cmdLineOptions.toArray(new String[cmdLineOptions.size()]), map);
 
         substituteParentAccessions(parentAccessions, map);
 

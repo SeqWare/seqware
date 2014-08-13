@@ -75,7 +75,7 @@ public class BatchMetadataInjection extends Metadata {
     private final StringBuffer whatWeDid = new StringBuffer();
     private final Map<Integer, String> names;
     private boolean instanceInteractive = false;
-    private static final InputStream schema = BatchMetadataInjection.class.getResourceAsStream("bmischema.json");
+    private static final InputStream SCHEMA = BatchMetadataInjection.class.getResourceAsStream("bmischema.json");
     JSONHelper jsonHelper = new JSONHelper();
 
     // private boolean createStudy = false;
@@ -140,9 +140,9 @@ public class BatchMetadataInjection extends Metadata {
             if (options.has("miseq-sample-sheet")) {
                 parseFields();
                 String filepath = (String) options.valueOf("miseq-sample-sheet");
-                ParseMiseqFile MiseqParser = new ParseMiseqFile(metadata, (Map<String, String>) fields.clone(), instanceInteractive);
+                ParseMiseqFile miseqParser = new ParseMiseqFile(metadata, (Map<String, String>) fields.clone(), instanceInteractive);
                 try {
-                    run = MiseqParser.parseMiseqFile(filepath);
+                    run = miseqParser.parseMiseqFile(filepath);
                     inject(run);
 
                 } catch (Exception ex) {
@@ -650,7 +650,7 @@ public class BatchMetadataInjection extends Metadata {
 
     private RunInfo jsonToRunInfo(String filePath) throws IOException {
         // Checks to ensure that the input is first valid before doing anything
-        if (!jsonHelper.isJSONValid(schema, new FileInputStream(filePath))) {
+        if (!jsonHelper.isJSONValid(SCHEMA, new FileInputStream(filePath))) {
             // Throws an exception if it's not valid
             throw new IOException("JSON is not valid");
         }

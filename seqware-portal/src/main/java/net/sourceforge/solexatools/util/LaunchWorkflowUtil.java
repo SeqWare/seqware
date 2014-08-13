@@ -27,11 +27,11 @@ import net.sourceforge.seqware.common.util.Log;
 public class LaunchWorkflowUtil {
 
     /** Constant <code>SELECTED_NODES="launchSelectedNodes"</code> */
-    public final static String SELECTED_NODES = "launchSelectedNodes";
+    public static final String SELECTED_NODES = "launchSelectedNodes";
     /** Constant <code>SELECTED_FILES="selectedLaunchFiles"</code> */
-    public final static String SELECTED_FILES = "selectedLaunchFiles";
+    public static final String SELECTED_FILES = "selectedLaunchFiles";
     /** Constant <code>SELECTED_VALUES="selectedWorkflowParamValueId"</code> */
-    public final static String SELECTED_VALUES = "selectedWorkflowParamValueId";
+    public static final String SELECTED_VALUES = "selectedWorkflowParamValueId";
 
     // methods for SELECTED NODES
     /**

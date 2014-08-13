@@ -134,8 +134,8 @@ public class PluginRunner {
             Log.stdout("");
         }
         PluginRunner it = new PluginRunner();
-        String SEQWARE_VERSION = it.getClass().getPackage().getImplementationVersion();
-        Log.stdout("Syntax: java seqware-distribution-" + SEQWARE_VERSION
+        String seqwareVersion = it.getClass().getPackage().getImplementationVersion();
+        Log.stdout("Syntax: java seqware-distribution-" + seqwareVersion
                 + "-full.jar [[--help]] [--list] [--verbose] [--plugin] PluginName -- [PluginParameters]");
         Log.stdout("");
         Log.stdout("--> PluginParameters are passed directly to the Plugin and ignored by the PluginRunner. ");
@@ -218,16 +218,16 @@ public class PluginRunner {
      */
     private void setupPlugin() {
 
-        String PluginName = null;
+        String pluginName = null;
         if (options.has("plugin")) {
-            PluginName = (String) options.valueOf("plugin");
-            Log.debug("Running Plugin: " + PluginName);
+            pluginName = (String) options.valueOf("plugin");
+            Log.debug("Running Plugin: " + pluginName);
 
             try {
-                plugin = (Plugin) Class.forName(PluginName).newInstance();
+                plugin = (Plugin) Class.forName(pluginName).newInstance();
 
             } catch (ClassNotFoundException e) {
-                Log.error("Could not find the Plugin class for '" + PluginName + "'");
+                Log.error("Could not find the Plugin class for '" + pluginName + "'");
                 throw new ExitException(ReturnValue.INVALIDPLUGIN);
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -255,8 +255,8 @@ public class PluginRunner {
 
         } else if (options.has("list")) {
             PluginRunner it = new PluginRunner();
-            String SEQWARE_VERSION = it.getClass().getPackage().getImplementationVersion();
-            Log.stdout("For more information use \"java -jar seqware-distribution-" + SEQWARE_VERSION
+            String seqwareVersion = it.getClass().getPackage().getImplementationVersion();
+            Log.stdout("For more information use \"java -jar seqware-distribution-" + seqwareVersion
                     + "-full.jar --plugin <plugin_name> --help\" to see options for each.\n");
         } else {
             getSyntax(parser, "You must specifiy a plugin with option --plugin");

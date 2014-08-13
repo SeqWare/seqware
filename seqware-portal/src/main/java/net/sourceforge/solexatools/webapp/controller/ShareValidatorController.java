@@ -70,7 +70,7 @@ public class ShareValidatorController extends BaseCommandController {
 
         Integer objectId = Constant.getId(openNodeId);
 
-        if (emails == null || (emails.length == 1 && emails[0].trim().equals(""))) {
+        if (emails == null || (emails.length == 1 && emails[0].trim().isEmpty())) {
             Log.info("Emails is Empty");
             isHasError = true;
             errorMessages.add(this.getMessageSourceAccessor().getMessage("error.list.emails.empty"));

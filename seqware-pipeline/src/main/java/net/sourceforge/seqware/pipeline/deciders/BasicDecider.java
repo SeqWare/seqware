@@ -980,8 +980,8 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private String do_summary_command() {
         StringBuilder command = new StringBuilder();
         // SEQWARE-1612 Change test command to actual jar name
-        String SEQWARE_VERSION = this.metadata.getClass().getPackage().getImplementationVersion();
-        command.append("\njava -jar seqware-distribution-").append(SEQWARE_VERSION).append("-full.jar ");
+        String seqwareVersion = this.metadata.getClass().getPackage().getImplementationVersion();
+        command.append("\njava -jar seqware-distribution-").append(seqwareVersion).append("-full.jar ");
         command.append(spaceSeparateMy(constructCommand()));
         command.append("\n");
         return command.toString();
