@@ -18,7 +18,7 @@
 # COMMON
 # Common Seqware settings
 
-# SeqWare MetaDB communication method, can be 'database' or 'webservice' or 'none'
+# SeqWare MetaDB communication method, can be 'database' or 'webservice' or 'inmemory' or 'none'
 SW_METADATA_METHOD=webservice
 # Amazon cloud settings. Only used if reading and writing to S3 buckets.
 AWS_ACCESS_KEY=FILLMEIN
@@ -50,7 +50,7 @@ SW_DB=seqware_meta_db
 # SCHEDULE_LAUNCH
 # Settings used by scheduling and launching bundles
 
-# the default engine to use if otherwise unspecified (one of: oozie, oozie-sge, whitestar, whitestar-sge)
+# the default engine to use if otherwise unspecified (one of: oozie, oozie-sge, whitestar, whitestar-parallel, whitestar-sge)
 SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
 
 # INSTALL_LAUNCH
