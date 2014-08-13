@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ExperimentSpotDesignReadSpecServiceImpl implements ExperimentSpotDesignReadSpecService {
     private ExperimentSpotDesignReadSpecDAO dao = null;
-    private static final Log log = LogFactory.getLog(ExperimentSpotDesignReadSpecServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ExperimentSpotDesignReadSpecServiceImpl.class);
 
     /**
      * <p>
@@ -72,8 +72,8 @@ public class ExperimentSpotDesignReadSpecServiceImpl implements ExperimentSpotDe
             try {
                 obj = dao.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find ExperimentSpotDesignReadSpec by id " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find ExperimentSpotDesignReadSpec by id " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return obj;

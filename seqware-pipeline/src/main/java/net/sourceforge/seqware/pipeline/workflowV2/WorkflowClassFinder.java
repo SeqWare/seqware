@@ -34,7 +34,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
  */
 public class WorkflowClassFinder {
 
-    private final static String FOLDERS_SEPARATOR_AS_STRING = System.getProperty("file.separator");
+    private static final String FOLDERS_SEPARATOR_AS_STRING = System.getProperty("file.separator");
 
     private final ResourcePatternResolver resourceResolver;
 
@@ -92,9 +92,7 @@ public class WorkflowClassFinder {
                 Log.info("CLASS LOADED " + qPath);
                 return cls;
 
-            } catch (IOException ex) {
-                Log.error(ex, ex);
-            } catch (ClassNotFoundException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Log.error(ex, ex);
             }
         }

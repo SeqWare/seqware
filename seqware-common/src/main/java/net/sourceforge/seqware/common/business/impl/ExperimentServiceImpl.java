@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 public class ExperimentServiceImpl implements ExperimentService {
     private ExperimentDAO experimentDAO = null;
     private FileDAO fileDAO = null;
-    private static final Log log = LogFactory.getLog(ExperimentServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ExperimentServiceImpl.class);
 
     /**
      * <p>
@@ -199,7 +199,7 @@ public class ExperimentServiceImpl implements ExperimentService {
             try {
                 experiment = experimentDAO.findByTitle(title.trim());
             } catch (Exception exception) {
-                log.debug("Cannot find Experiment by title " + title);
+                LOG.debug("Cannot find Experiment by title " + title);
             }
         }
         return experiment;
@@ -213,8 +213,8 @@ public class ExperimentServiceImpl implements ExperimentService {
             try {
                 experiment = experimentDAO.findByID(expID);
             } catch (Exception exception) {
-                log.error("Cannot find Experiment by expID " + expID);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Experiment by expID " + expID);
+                LOG.error(exception.getMessage());
             }
         }
         return experiment;
@@ -228,8 +228,8 @@ public class ExperimentServiceImpl implements ExperimentService {
             try {
                 experiment = experimentDAO.findBySWAccession(swAccession);
             } catch (Exception exception) {
-                log.error("Cannot find Experiment by swAccession " + swAccession);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Experiment by swAccession " + swAccession);
+                LOG.error(exception.getMessage());
             }
         }
         return experiment;

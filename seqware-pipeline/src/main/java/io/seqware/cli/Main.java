@@ -91,8 +91,8 @@ public class Main {
         if (!override.isEmpty()) {
             overrideParams.add("--");
             for (String entry : override) {
-                String key = entry.substring(0, entry.indexOf("="));
-                String value = entry.substring(entry.indexOf("=") + 1);
+                String key = entry.substring(0, entry.indexOf('='));
+                String value = entry.substring(entry.indexOf('=') + 1);
                 overrideParams.add("--" + key);
                 overrideParams.add(value);
             }

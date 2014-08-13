@@ -35,7 +35,7 @@ public class ProcessingServiceImpl implements ProcessingService {
 
     private ProcessingDAO processingDAO = null;
     private FileDAO fileDAO = null;
-    private static final Log log = LogFactory.getLog(ProcessingServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ProcessingServiceImpl.class);
 
     /**
      * <p>
@@ -258,8 +258,8 @@ public class ProcessingServiceImpl implements ProcessingService {
             try {
                 processing = processingDAO.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find Processing by ID " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Processing by ID " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return processing;
@@ -289,8 +289,8 @@ public class ProcessingServiceImpl implements ProcessingService {
             try {
                 processing = processingDAO.findBySWAccession(swAccession);
             } catch (Exception exception) {
-                log.error("Cannot find Processing by swAccession " + swAccession);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Processing by swAccession " + swAccession);
+                LOG.error(exception.getMessage());
             }
         }
         return processing;
@@ -304,8 +304,8 @@ public class ProcessingServiceImpl implements ProcessingService {
             try {
                 processings = processingDAO.findByOwnerID(registrationId);
             } catch (Exception exception) {
-                log.error("Cannot find Processings by registrationId " + registrationId);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Processings by registrationId " + registrationId);
+                LOG.error(exception.getMessage());
             }
         }
         return processings;

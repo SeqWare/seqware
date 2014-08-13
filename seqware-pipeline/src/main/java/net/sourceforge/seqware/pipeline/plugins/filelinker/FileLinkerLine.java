@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public class FileLinkerLine {
 
-    private static final Logger log = LoggerFactory.getLogger(FileLinkerLine.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileLinkerLine.class);
 
     private String sequencerRun;
     private String sample;
@@ -106,7 +106,7 @@ public class FileLinkerLine {
             try {
                 setSeqwareAccession(Integer.parseInt(seqwareAccessionString));
             } catch (NumberFormatException e) {
-                log.error("The SeqWare accession number [{}] is not a valid integer value. {}", seqwareAccessionString, e);
+                LOG.error("The SeqWare accession number [{}] is not a valid integer value. {}", seqwareAccessionString, e);
             }
         }
     }
@@ -116,7 +116,7 @@ public class FileLinkerLine {
             try {
                 setSize(Long.parseLong(sizeString));
             } catch (NumberFormatException e) {
-                log.error("The size [{}] is not a valid integer value. {}", sizeString, e);
+                LOG.error("The size [{}] is not a valid integer value. {}", sizeString, e);
             }
         }
     }

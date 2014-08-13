@@ -55,25 +55,25 @@ public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
              **/
             // workflow runs not connected to a study
             String query = IOUtils.toString(AttributePlugin.class.getResourceAsStream("workflow_runs_not_connected_to_study.sql"));
-            List<Object[]> workflow_run_study_pairs = qRunner.executeQuery(query, new ArrayListHandler());
+            List<Object[]> workflowRunStudyPairs = qRunner.executeQuery(query, new ArrayListHandler());
 
             List<Integer> unreachableByStudy = new ArrayList<>();
             // number studies -> workflow runs
             SortedMap<Integer, SortedSet<Integer>> reachableByMultipleStudies = new TreeMap<>();
 
-            for (Object[] pair : workflow_run_study_pairs) {
+            for (Object[] pair : workflowRunStudyPairs) {
                 int studyCount = Integer.valueOf(pair[1].toString());
                 if (pair[0] == null) {
                     continue;
                 }
-                int sw_accession = Integer.valueOf(pair[0].toString());
+                int swAccession = Integer.valueOf(pair[0].toString());
                 if (studyCount == 0) {
-                    unreachableByStudy.add(sw_accession);
+                    unreachableByStudy.add(swAccession);
                 } else if (studyCount > 1) {
                     if (!reachableByMultipleStudies.containsKey(studyCount)) {
                         reachableByMultipleStudies.put(studyCount, new TreeSet<Integer>());
                     }
-                    reachableByMultipleStudies.get(studyCount).add(sw_accession);
+                    reachableByMultipleStudies.get(studyCount).add(swAccession);
                 }
             }
             CheckDB.processOutput(result, Level.SEVERE, "'Completed' Workflow runs not reachable by studies: ", unreachableByStudy);

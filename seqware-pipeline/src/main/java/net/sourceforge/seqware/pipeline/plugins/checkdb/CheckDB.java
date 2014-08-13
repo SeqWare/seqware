@@ -189,8 +189,8 @@ public final class CheckDB extends Plugin {
         List<String> arr = new ArrayList<>();
         mp.setParams(arr);
         mp.parse_parameters();
-        ReturnValue do_run = mp.do_run();
-        Desktop.getDesktop().browse(new URI(do_run.getUrl()));
+        ReturnValue doRun = mp.do_run();
+        Desktop.getDesktop().browse(new URI(doRun.getUrl()));
     }
 
     @Override
