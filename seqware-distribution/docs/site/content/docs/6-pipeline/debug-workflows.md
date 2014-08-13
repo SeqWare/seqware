@@ -23,7 +23,7 @@ workflow for more information including stderr/stdout for the jobs.
 
 ### Restarting Workflows 
 
-While Oozie does support workflow re-submission (via the 'seqware workflow-run retry' command) the recommended approach for failed workflows in SeqWare is simply to resubmit the workflows.
+While Oozie does support workflow re-submission (via the 'seqware workflow-run retry' command) the recommended approach for failed workflows in SeqWare is simply to resubmit the workflows. You can either do this by using the 'seqware workflow schedule' command anew or by using 'seqware workflow-run reschedule' to re-schedule a new workflow-run using exactly the same configuration as a previous schedule of a workflow. 
 
 ## Debugging and Troubleshooting Tutorial
 
