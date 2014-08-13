@@ -40,7 +40,7 @@ public class VersionResource extends ServerResource {
         Map root = new HashMap();
 
         // output string to return to client
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
 
         output.append("<?xml version=\"1.0\"?>" + "<version major=\"0\" minor=\"11\" patch=\"0\"/>");
 

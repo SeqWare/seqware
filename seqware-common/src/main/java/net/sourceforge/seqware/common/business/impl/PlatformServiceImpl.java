@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class PlatformServiceImpl implements PlatformService {
     private PlatformDAO platformDAO = null;
-    private static final Log log = LogFactory.getLog(PlatformServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(PlatformServiceImpl.class);
 
     /**
      * <p>
@@ -56,8 +56,8 @@ public class PlatformServiceImpl implements PlatformService {
             try {
                 obj = platformDAO.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find Platform by id " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Platform by id " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return obj;

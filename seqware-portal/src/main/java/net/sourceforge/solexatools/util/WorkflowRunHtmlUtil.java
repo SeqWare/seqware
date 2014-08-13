@@ -18,9 +18,9 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
  */
 public class WorkflowRunHtmlUtil {
     /** Constant <code>TYPE_TREE_COMPLETED="wfr"</code> */
-    public final static String TYPE_TREE_COMPLETED = "wfr";
+    public static final String TYPE_TREE_COMPLETED = "wfr";
     /** Constant <code>TYPE_TREE_RUNNNING="wfrr"</code> */
-    public final static String TYPE_TREE_RUNNNING = "wfrr";
+    public static final String TYPE_TREE_RUNNNING = "wfrr";
 
     /**
      * <p>

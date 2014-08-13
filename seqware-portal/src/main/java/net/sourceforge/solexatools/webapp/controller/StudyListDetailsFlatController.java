@@ -133,7 +133,7 @@ public class StudyListDetailsFlatController extends ApplicationObjectSupport {
                 pageInfo = PaginationUtil.getPageInfo(request, "myStudiesPageFlat", listView, listAll, nameOneItem, nameLotOfItem, ma);
 
                 // set error if want
-                if (listAll.size() == 0) {
+                if (listAll.isEmpty()) {
                     isHasError = true;
                     errorMessage = this.getMessageSourceAccessor().getMessage("study.list.required.one.item");
                 }

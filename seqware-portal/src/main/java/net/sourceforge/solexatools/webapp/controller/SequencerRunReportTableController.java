@@ -48,101 +48,101 @@ public class SequencerRunReportTableController implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /** Constant <code>SEQ_RUN_ID="seq_run_id"</code> */
-    public final static String SEQ_RUN_ID = "seq_run_id";
+    public static final String SEQ_RUN_ID = "seq_run_id";
     /** Constant <code>SORT_NAME="sortname"</code> */
-    public final static String SORT_NAME = "sortname";
+    public static final String SORT_NAME = "sortname";
     /** Constant <code>SORT_ORDER="sortorder"</code> */
-    public final static String SORT_ORDER = "sortorder";
+    public static final String SORT_ORDER = "sortorder";
     /** Constant <code>SORT_ORDER_ASC="asc"</code> */
-    public final static String SORT_ORDER_ASC = "asc";
+    public static final String SORT_ORDER_ASC = "asc";
     /** Constant <code>SORT_ORDER_DESC="desc"</code> */
-    public final static String SORT_ORDER_DESC = "desc";
+    public static final String SORT_ORDER_DESC = "desc";
     /** Constant <code>PAGE_NUM="page"</code> */
-    public final static String PAGE_NUM = "page";
+    public static final String PAGE_NUM = "page";
     /** Constant <code>ROWS_PER_PAGE="rp"</code> */
-    public final static String ROWS_PER_PAGE = "rp";
+    public static final String ROWS_PER_PAGE = "rp";
     /** Constant <code>TABLE_SEL="tablesel"</code> */
-    public final static String TABLE_SEL = "tablesel";
+    public static final String TABLE_SEL = "tablesel";
     /** Constant <code>TABLE_MODEL="tablemodel"</code> */
-    public final static String TABLE_MODEL = "tablemodel";
+    public static final String TABLE_MODEL = "tablemodel";
     /** Constant <code>CSV_TYPE="csvtype"</code> */
-    public final static String CSV_TYPE = "csvtype";
+    public static final String CSV_TYPE = "csvtype";
     /** Constant <code>CHECK="check"</code> */
-    public final static String CHECK = "check";
+    public static final String CHECK = "check";
 
     // Sortfields
     /** Constant <code>FILE_SAMPLE="f_sample"</code> */
-    public final static String FILE_SAMPLE = "f_sample";
+    public static final String FILE_SAMPLE = "f_sample";
     /** Constant <code>FILE_TISSUE="f_tissue"</code> */
-    public final static String FILE_TISSUE = "f_tissue";
+    public static final String FILE_TISSUE = "f_tissue";
     /** Constant <code>FILE_LIBRARY="f_library"</code> */
-    public final static String FILE_LIBRARY = "f_library";
+    public static final String FILE_LIBRARY = "f_library";
     /** Constant <code>FILE_TEMPLATE="f_template"</code> */
-    public final static String FILE_TEMPLATE = "f_template";
+    public static final String FILE_TEMPLATE = "f_template";
     /** Constant <code>FILE_IUS="f_ius"</code> */
-    public final static String FILE_IUS = "f_ius";
+    public static final String FILE_IUS = "f_ius";
     /** Constant <code>FILE_LANE="f_lane"</code> */
-    public final static String FILE_LANE = "f_lane";
+    public static final String FILE_LANE = "f_lane";
     /** Constant <code>FILE_FILE="f_file"</code> */
-    public final static String FILE_FILE = "f_file";
+    public static final String FILE_FILE = "f_file";
 
     // New sort fields
     /** Constant <code>FILE_STUDY_TITLE="f_study_title"</code> */
-    public final static String FILE_STUDY_TITLE = "f_study_title";
+    public static final String FILE_STUDY_TITLE = "f_study_title";
     /** Constant <code>FILE_STUDY_SWID="f_study_swid"</code> */
-    public final static String FILE_STUDY_SWID = "f_study_swid";
+    public static final String FILE_STUDY_SWID = "f_study_swid";
     /** Constant <code>FILE_EXPERIMENT_NAME="f_exp_name"</code> */
-    public final static String FILE_EXPERIMENT_NAME = "f_exp_name";
+    public static final String FILE_EXPERIMENT_NAME = "f_exp_name";
     /** Constant <code>FILE_EXPERIMENT_SWID="f_exp_swid"</code> */
-    public final static String FILE_EXPERIMENT_SWID = "f_exp_swid";
+    public static final String FILE_EXPERIMENT_SWID = "f_exp_swid";
     /** Constant <code>FILE_PARENT_SAMPLE_NAME="f_sample_name"</code> */
-    public final static String FILE_PARENT_SAMPLE_NAME = "f_sample_name";
+    public static final String FILE_PARENT_SAMPLE_NAME = "f_sample_name";
     /** Constant <code>FILE_PARENT_SAMPLE_SWID="f_sample_swid"</code> */
-    public final static String FILE_PARENT_SAMPLE_SWID = "f_sample_swid";
+    public static final String FILE_PARENT_SAMPLE_SWID = "f_sample_swid";
     /** Constant <code>FILE_SAMPLE_NAME="f_child_sample_name"</code> */
-    public final static String FILE_SAMPLE_NAME = "f_child_sample_name";
+    public static final String FILE_SAMPLE_NAME = "f_child_sample_name";
     /** Constant <code>FILE_SAMPLE_SWID="f_child_sample_swid"</code> */
-    public final static String FILE_SAMPLE_SWID = "f_child_sample_swid";
+    public static final String FILE_SAMPLE_SWID = "f_child_sample_swid";
     /** Constant <code>FILE_SEQUENCER_NAME="f_seqrun_name"</code> */
-    public final static String FILE_SEQUENCER_NAME = "f_seqrun_name";
+    public static final String FILE_SEQUENCER_NAME = "f_seqrun_name";
     /** Constant <code>FILE_SEQUENCER_SWID="f_seqrun_swid"</code> */
-    public final static String FILE_SEQUENCER_SWID = "f_seqrun_swid";
+    public static final String FILE_SEQUENCER_SWID = "f_seqrun_swid";
     /** Constant <code>FILE_LANE_NAME="f_lane_name"</code> */
-    public final static String FILE_LANE_NAME = "f_lane_name";
+    public static final String FILE_LANE_NAME = "f_lane_name";
     /** Constant <code>FILE_LANE_NUMBER="f_lane_num"</code> */
-    public final static String FILE_LANE_NUMBER = "f_lane_num";
+    public static final String FILE_LANE_NUMBER = "f_lane_num";
     /** Constant <code>FILE_LANE_SWID="f_lane_swid"</code> */
-    public final static String FILE_LANE_SWID = "f_lane_swid";
+    public static final String FILE_LANE_SWID = "f_lane_swid";
     /** Constant <code>FILE_IUS_NAME="f_ius_name"</code> */
-    public final static String FILE_IUS_NAME = "f_ius_name";
+    public static final String FILE_IUS_NAME = "f_ius_name";
     /** Constant <code>FILE_IUS_TAG="f_ius_tag"</code> */
-    public final static String FILE_IUS_TAG = "f_ius_tag";
+    public static final String FILE_IUS_TAG = "f_ius_tag";
     /** Constant <code>FILE_IUS_SWID="f_ius_swid"</code> */
-    public final static String FILE_IUS_SWID = "f_ius_swid";
+    public static final String FILE_IUS_SWID = "f_ius_swid";
     /** Constant <code>FILE_WF_NAME="f_wf_name"</code> */
-    public final static String FILE_WF_NAME = "f_wf_name";
+    public static final String FILE_WF_NAME = "f_wf_name";
     /** Constant <code>FILE_WF_VERSION="f_wf_version"</code> */
-    public final static String FILE_WF_VERSION = "f_wf_version";
+    public static final String FILE_WF_VERSION = "f_wf_version";
     /** Constant <code>FILE_WF_SWID="f_wf_swid"</code> */
-    public final static String FILE_WF_SWID = "f_wf_swid";
+    public static final String FILE_WF_SWID = "f_wf_swid";
     /** Constant <code>FILE_RUN_NAME="f_run_name"</code> */
-    public final static String FILE_RUN_NAME = "f_run_name";
+    public static final String FILE_RUN_NAME = "f_run_name";
     /** Constant <code>FILE_RUN_SWID="f_run_swid"</code> */
-    public final static String FILE_RUN_SWID = "f_run_swid";
+    public static final String FILE_RUN_SWID = "f_run_swid";
     /** Constant <code>FILE_PROCESSING_ALG="f_processing_alg"</code> */
-    public final static String FILE_PROCESSING_ALG = "f_processing_alg";
+    public static final String FILE_PROCESSING_ALG = "f_processing_alg";
     /** Constant <code>FILE_PROCESSING_SWID="f_processing_swid"</code> */
-    public final static String FILE_PROCESSING_SWID = "f_processing_swid";
+    public static final String FILE_PROCESSING_SWID = "f_processing_swid";
     /** Constant <code>FILE_META_TYPE="f_file_meta"</code> */
-    public final static String FILE_META_TYPE = "f_file_meta";
+    public static final String FILE_META_TYPE = "f_file_meta";
     /** Constant <code>FILE_SWID="f_file_swid"</code> */
-    public final static String FILE_SWID = "f_file_swid";
+    public static final String FILE_SWID = "f_file_swid";
     /** Constant <code>FILE_PATH="f_file_path"</code> */
-    public final static String FILE_PATH = "f_file_path";
+    public static final String FILE_PATH = "f_file_path";
     private static final String SAMPLE_SEQUENCER_NAME = "s_seqrun_name";
 
     // Table model data
-    private final static int WIDTH = 100;
+    private static final int WIDTH = 100;
     private static final String INIT = "init";
 
     private String orderFieldSeqRun;
@@ -217,7 +217,7 @@ public class SequencerRunReportTableController implements Serializable {
         if (registration == null) return null;
 
         // Read all the possible parameters
-        String seqRun_id = request.getParameter(SEQ_RUN_ID);
+        String seqRunID = request.getParameter(SEQ_RUN_ID);
         String tableSel = request.getParameter(TABLE_SEL);
         String tableModel = request.getParameter(TABLE_MODEL);
         String sortName = request.getParameter(SORT_NAME);
@@ -237,7 +237,7 @@ public class SequencerRunReportTableController implements Serializable {
             // this is ok. Default value is used.
         }
         try {
-            seqRunId = Integer.parseInt(seqRun_id);
+            seqRunId = Integer.parseInt(seqRunID);
         } catch (NumberFormatException e) {
             // this is ok. Default value is used.
         }
@@ -292,7 +292,7 @@ public class SequencerRunReportTableController implements Serializable {
             Collections.sort(workflows);
             ModelAndView modelAndView = new ModelAndView("ReportSequencerRun");
             createChartModel(seqRun, modelAndView);
-            modelAndView.addObject("seq_run_id", seqRun_id);
+            modelAndView.addObject("seq_run_id", seqRunID);
             return modelAndView;
         }
         if (tableModel != null) {
@@ -326,10 +326,10 @@ public class SequencerRunReportTableController implements Serializable {
         if (!orderTypeSeqRun.equals("asc") && !orderTypeSeqRun.equals("desc")) {
             orderTypeSeqRun = "asc";
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("Sequencer_Run\tLane\tIUS\tSample\t");
         for (Workflow workflow : workflows) {
-            sb.append(workflow.getName() + " " + workflow.getVersion()).append("\t");
+            sb.append(workflow.getName()).append(" ").append(workflow.getVersion()).append("\t");
         }
 
         sb.append("\n");
@@ -364,7 +364,7 @@ public class SequencerRunReportTableController implements Serializable {
         if (!orderTypeFile.equals("asc") && !orderTypeFile.equals("desc")) {
             orderTypeFile = "asc";
         }
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("Sequencer_Run\tLane\tIUS\tSample\tExperiment\tStudy\tWorkflow\tWorkflow_Run\tProcessing\tFile\n");
         List<FileReportRow> rows = fileReportService.getReportForSequencerRun(seqRun, sortField, orderTypeFile);
         for (FileReportRow row : rows) {
@@ -450,7 +450,7 @@ public class SequencerRunReportTableController implements Serializable {
                 if (Status.notstarted == status) {
                     sStatus = "not started";
                 }
-                out.append("['" + sStatus + "'," + count + "]");
+                out.append("['").append(sStatus).append("',").append(count).append("]");
                 if (current != statusCount.keySet().size()) {
                     out.append(",");
                 }
@@ -482,7 +482,7 @@ public class SequencerRunReportTableController implements Serializable {
             if (Status.notstarted == status) {
                 sStatus = "not started";
             }
-            out.append("['" + sStatus + "'," + count + "]");
+            out.append("['").append(sStatus).append("',").append(count).append("]");
             if (current != statusCount.keySet().size()) {
                 out.append(",");
             }

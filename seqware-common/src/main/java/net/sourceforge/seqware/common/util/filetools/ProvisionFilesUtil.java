@@ -500,11 +500,11 @@ public class ProvisionFilesUtil {
         boolean result = m.find();
         String accessKey;
         String secretKey;
-        String URL = output;
+        String stringURL = output;
         if (result) {
             accessKey = m.group(1);
             secretKey = m.group(2);
-            URL = "s3://" + m.group(3);
+            stringURL = "s3://" + m.group(3);
         } else {
             // get the access/secret key from the .seqware/settings file
             try {
@@ -524,7 +524,7 @@ public class ProvisionFilesUtil {
 
         // parse out the bucket and key
         p = Pattern.compile("s3://([^/]+)/*(\\S*)");
-        m = p.matcher(URL);
+        m = p.matcher(stringURL);
         result = m.find();
 
         if (result) {
@@ -621,7 +621,7 @@ public class ProvisionFilesUtil {
             // s3.putObject(bucket, key, reader, new ObjectMetadata());
 
         } else {
-            Log.error("Unable to parse a bucket and file name from " + URL
+            Log.error("Unable to parse a bucket and file name from " + stringURL
                     + " it should be in the form s3://<bucket>/<key>/ or s3://<bucket>/");
             return false;
         }
@@ -678,11 +678,11 @@ public class ProvisionFilesUtil {
             boolean result = m.find();
             String accessKey = null;
             String secretKey = null;
-            String URL = input;
+            String localUrl = input;
             if (result) {
                 accessKey = m.group(1);
                 secretKey = m.group(2);
-                URL = "s3://" + m.group(3);
+                localUrl = "s3://" + m.group(3);
             } else {
                 // get the access/secret key from the .seqware/settings file
                 try {
@@ -701,7 +701,7 @@ public class ProvisionFilesUtil {
 
             // parse out the bucket and key
             p = Pattern.compile("s3://([^/]+)/(\\S+)");
-            m = p.matcher(URL);
+            m = p.matcher(localUrl);
             if (m.find()) {
                 String bucket = m.group(1);
                 String key = m.group(2);
@@ -734,16 +734,16 @@ public class ProvisionFilesUtil {
         Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
         Matcher m = p.matcher(input);
         boolean result = m.find();
-        String URL = input;
+        String stringUrl = input;
         if (result) {
             accessKey = m.group(1);
             secretKey = m.group(2);
-            URL = "s3://" + m.group(3);
+            stringUrl = "s3://" + m.group(3);
         }
 
         // parse out the bucket and key
         p = Pattern.compile("s3://([^/]+)/(\\S+)");
-        m = p.matcher(URL);
+        m = p.matcher(stringUrl);
 
         if (m.find()) {
             String bucket = m.group(1);
@@ -834,16 +834,16 @@ public class ProvisionFilesUtil {
         String protocol;
         String user = null;
         String pass = null;
-        String URL = input;
+        String stringURL = input;
         if (result) {
             protocol = m.group(1);
             user = m.group(2);
             pass = m.group(3);
-            URL = protocol + "://" + m.group(4);
+            stringURL = protocol + "://" + m.group(4);
         }
         URL urlObj = null;
         try {
-            urlObj = new URL(URL);
+            urlObj = new URL(stringURL);
             URLConnection urlConn = urlObj.openConnection();
             if (user != null && pass != null) {
                 String userPassword = user + ":" + pass;
@@ -855,7 +855,7 @@ public class ProvisionFilesUtil {
             urlConn.setRequestProperty("Range", "bytes=" + startPosition + "-");
             // download data and write out
             p = Pattern.compile("://([^/]+)/(\\S+)");
-            m = p.matcher(URL);
+            m = p.matcher(stringURL);
             result = m.find();
             if (result) {
                 // String host = m.group(1);
@@ -865,7 +865,7 @@ public class ProvisionFilesUtil {
                 this.inputSize = urlConn.getContentLength();
                 reader = new BufferedInputStream(urlConn.getInputStream(), bufLen);
             } else {
-                Log.error("getHttpInputStream doesn't know how to deal with URL: " + URL);
+                Log.error("getHttpInputStream doesn't know how to deal with URL: " + stringURL);
                 return (null);
             }
         } catch (MalformedURLException e) {
@@ -1002,11 +1002,11 @@ public class ProvisionFilesUtil {
         Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
         Matcher m = p.matcher(input);
         boolean result = m.find();
-        String URL = input;
+        String stringURL = input;
         if (result) {
             accessKey = m.group(1);
             secretKey = m.group(2);
-            URL = "s3://" + m.group(3);
+            stringURL = "s3://" + m.group(3);
         }
 
         // if the access and secret access keys are not found in the URL then pull from settings file
@@ -1027,7 +1027,7 @@ public class ProvisionFilesUtil {
             return (null);
         }
 
-        return getS3InputStream(URL, bufLen, startPosition, accessKey, secretKey);
+        return getS3InputStream(stringURL, bufLen, startPosition, accessKey, secretKey);
 
     }
 
@@ -1161,16 +1161,16 @@ public class ProvisionFilesUtil {
             String protocol = null;
             String user = null;
             String pass = null;
-            String URL = path;
+            String stringURL = path;
             if (result) {
                 protocol = m.group(1);
                 user = m.group(2);
                 pass = m.group(3);
-                URL = protocol + "://" + m.group(4);
+                stringURL = protocol + "://" + m.group(4);
             }
             URL urlObj = null;
             try {
-                urlObj = new URL(URL);
+                urlObj = new URL(stringURL);
                 URLConnection urlConn = urlObj.openConnection();
                 if (user != null && pass != null) {
                     String userPassword = user + ":" + pass;
@@ -1197,11 +1197,11 @@ public class ProvisionFilesUtil {
             Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
             Matcher m = p.matcher(path);
             boolean result = m.find();
-            String URL = path;
+            String stringURL = path;
             if (result) {
                 accessKey = m.group(1);
                 secretKey = m.group(2);
-                URL = "s3://" + m.group(3);
+                stringURL = "s3://" + m.group(3);
             } else {
                 try {
                     HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
@@ -1218,7 +1218,7 @@ public class ProvisionFilesUtil {
 
             // parse out the bucket and key
             p = Pattern.compile("s3://([^/]+)/(\\S+)");
-            m = p.matcher(URL);
+            m = p.matcher(stringURL);
             result = m.find();
 
             if (result) {

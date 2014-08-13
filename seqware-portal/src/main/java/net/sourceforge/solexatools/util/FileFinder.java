@@ -197,7 +197,7 @@ public class FileFinder {
             throw new Exception("Error: Directory dont exists");
         }
 
-        if (!mask.equals("")) {
+        if (!mask.isEmpty()) {
             p = Pattern.compile(mask, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
         }
         filesNumber = 0;
@@ -213,18 +213,18 @@ public class FileFinder {
 
     private void search(File topDirectory, List res, int objectType) {
         File[] list = topDirectory.listFiles();
-        for (int i = 0; i < list.length; i++) {
-            if (list[i].isDirectory()) {
-                if (objectType != FILES && accept(list[i].getName())) {
+        for (File list1 : list) {
+            if (list1.isDirectory()) {
+                if (objectType != FILES && accept(list1.getName())) {
                     directoriesNumber++;
-                    res.add(list[i]);
+                    res.add(list1);
                 }
-                search(list[i], res, objectType);
+                search(list1, res, objectType);
             } else {
-                if (objectType != DIRECTORIES && accept(list[i].getName())) {
+                if (objectType != DIRECTORIES && accept(list1.getName())) {
                     filesNumber++;
-                    totalLength += list[i].length();
-                    res.add(list[i]);
+                    totalLength += list1.length();
+                    res.add(list1);
                 }
             }
         }

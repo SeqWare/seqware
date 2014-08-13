@@ -24,11 +24,10 @@ import org.xml.sax.SAXException;
  */
 public class XmlTools {
 
-    static final Logger logger = LoggerFactory.getLogger(XmlTools.class);
-
     private static Document getDocument(String string) throws ParserConfigurationException, IOException, SAXException {
         Document document;
         if (string == null) {
+            Logger logger = LoggerFactory.getLogger(XmlTools.class);
             logger.debug("String is :" + string);
             return null;
         }
@@ -69,6 +68,7 @@ public class XmlTools {
         try {
             doc = jaxbTool.marshalToDocument(o);
         } catch (JAXBException e) {
+            Logger logger = LoggerFactory.getLogger(XmlTools.class);
             logger.error("Error mashalling XML document", e);
         }
         return doc;
@@ -115,9 +115,11 @@ public class XmlTools {
             o = jaxbTool.unMarshal(document, expectedType);
 
         } catch (ParserConfigurationException | IOException ex) {
+            Logger logger = LoggerFactory.getLogger(XmlTools.class);
             logger.error(string, ex);
             throw new ResourceException(Status.SERVER_ERROR_INTERNAL);
         } catch (JAXBException e) {
+            Logger logger = LoggerFactory.getLogger(XmlTools.class);
             logger.error(string, e);
             throw new ResourceException(Status.CLIENT_ERROR_NOT_ACCEPTABLE);
         }

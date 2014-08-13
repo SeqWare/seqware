@@ -72,11 +72,7 @@ public class SampleHierarchyResource extends BasicRestlet {
                 String deleteAll = "delete from sample_hierarchy";
                 DBAccess.get().executeUpdate(deleteAll);
                 DBAccess.get().executeUpdate(insertSql);
-            } catch (IOException ex) {
-                Logger.getLogger(SampleHierarchyResource.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (JSONException ex) {
-                Logger.getLogger(SampleHierarchyResource.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
+            } catch (IOException | JSONException | SQLException ex) {
                 Logger.getLogger(SampleHierarchyResource.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 DBAccess.close();

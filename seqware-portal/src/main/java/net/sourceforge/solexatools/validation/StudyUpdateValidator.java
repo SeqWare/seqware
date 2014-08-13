@@ -30,7 +30,7 @@ public class StudyUpdateValidator extends StudyValidator {
             // same study
             // Title can be the same, otherwise title should not be matched to the
             // different study.
-            if (inDbStudy != null && inDbStudy.getSwAccession().intValue() != study.getSwAccession().intValue()) {
+            if (inDbStudy != null && inDbStudy.getSwAccession() != study.getSwAccession()) {
                 errors.reject("error.match.title");
             }
         }

@@ -101,9 +101,9 @@ public class StudyTableControllerDetails extends BaseCommandController {
 
             List<Study> studies = null;
 
-            String search_query = "";
+            String searchQuery = "";
             if (qtype != null && !"".equals(qtype) && query != null && !"".equals(query)) {
-                search_query = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
+                searchQuery = " and cast(wr." + qtype + " as string) like '%" + query + "%'";
             }
 
             // LEFT OFF HERE!!!
@@ -201,7 +201,7 @@ public class StudyTableControllerDetails extends BaseCommandController {
      * @param sampleStrs
      */
     private void getSampleStrings(String currString, Sample s, ArrayList<String> sampleStrs) {
-        if (s.getChildren() == null || s.getChildren().size() == 0) {
+        if (s.getChildren() == null || s.getChildren().isEmpty()) {
             sampleStrs.add(currString);
         } else {
             for (Sample s2 : s.getChildren()) {
@@ -260,7 +260,7 @@ public class StudyTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getTitle() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getTitle()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -275,7 +275,7 @@ public class StudyTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getName()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -290,7 +290,7 @@ public class StudyTableControllerDetails extends BaseCommandController {
                 if (!first) {
                     sb.append(", ");
                 }
-                sb.append(s.getName() + " (SWID:" + s.getSwAccession() + ")");
+                sb.append(s.getName()).append(" (SWID:").append(s.getSwAccession()).append(")");
                 first = false;
             }
         }
@@ -299,20 +299,27 @@ public class StudyTableControllerDetails extends BaseCommandController {
 
     private void sortRows(List<Cells> rowsAll, String sortOrder, String sortName) {
         int columnPos = 0;
-        if ("date".equals(sortName)) {
+        if (null != sortName) switch (sortName) {
+        case "date":
             columnPos = 0;
-        } else if ("status".equals(sortName)) {
+            break;
+        case "status":
             columnPos = 1;
-        } else if ("swid".equals(sortName)) {
+            break;
+        case "swid":
             columnPos = 2;
+            break;
         }
 
         @SuppressWarnings("rawtypes")
         Comparator comparator = null;
-        if ("asc".equals(sortOrder)) {
+        if (null != sortOrder) switch (sortOrder) {
+        case "asc":
             comparator = new StudyTableControllerDetails.CellsComparator(columnPos);
-        } else if ("desc".equals(sortOrder)) {
+            break;
+        case "desc":
             comparator = Collections.reverseOrder(new StudyTableControllerDetails.CellsComparator(columnPos));
+            break;
         }
 
         Collections.sort(rowsAll, comparator);

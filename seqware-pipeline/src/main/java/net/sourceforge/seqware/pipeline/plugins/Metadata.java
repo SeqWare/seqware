@@ -488,9 +488,9 @@ public class Metadata extends Plugin {
      */
     protected ReturnValue addExperiment() {
         String[] necessaryFields = { "study_accession", "platform_id", "title", "description" };
-        final String experiment_library_design_id = "experiment_library_design_id";
-        final String experiment_spot_design_id = "experiment_spot_design_id";
-        String[] optionalFields = { experiment_library_design_id, experiment_spot_design_id };
+        final String experimentLibraryDesignId = "experiment_library_design_id";
+        final String experimentSpotDesignId = "experiment_spot_design_id";
+        String[] optionalFields = { experimentLibraryDesignId, experimentSpotDesignId };
         // check to make sure we have what we need
         ReturnValue localRet = new ReturnValue(ReturnValue.SUCCESS);
         if (interactive) {
@@ -503,13 +503,12 @@ public class Metadata extends Plugin {
             }
         }
 
-        if (checkFields(necessaryFields) && nullOrLessThanZero(experiment_library_design_id)
-                && nullOrLessThanZero(experiment_spot_design_id)) {
+        if (checkFields(necessaryFields) && nullOrLessThanZero(experimentLibraryDesignId) && nullOrLessThanZero(experimentSpotDesignId)) {
             // check for valid platform id
             final int platformId = Integer.parseInt(fields.get("platform_id"));
             // create a new experiment
             localRet = metadata.addExperiment(Integer.parseInt(fields.get("study_accession")), platformId, fields.get("description"),
-                    fields.get("title"), parseNullOrInteger(experiment_library_design_id), parseNullOrInteger(experiment_spot_design_id));
+                    fields.get("title"), parseNullOrInteger(experimentLibraryDesignId), parseNullOrInteger(experimentSpotDesignId));
             if (localRet.getReturnValue() == ReturnValue.INVALIDPARAMETERS) {
                 print("Invalid parameters, please check your id values");
                 return localRet;

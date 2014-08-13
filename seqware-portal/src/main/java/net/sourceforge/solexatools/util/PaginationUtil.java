@@ -23,9 +23,9 @@ import org.springframework.context.support.MessageSourceAccessor;
 public class PaginationUtil {
 
     /** Constant <code>SIZE_COUNT_TREE=20</code> */
-    public final static int SIZE_COUNT_TREE = 20;
+    public static final int SIZE_COUNT_TREE = 20;
     /** Constant <code>SIZE_COUNT_FILE=5</code> */
-    public final static int SIZE_COUNT_FILE = 5;
+    public static final int SIZE_COUNT_FILE = 5;
 
     private static String getOperation(HttpServletRequest request) {
         String operation = (String) request.getParameter("action");
