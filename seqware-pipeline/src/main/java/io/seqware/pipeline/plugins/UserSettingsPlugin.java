@@ -144,16 +144,16 @@ public class UserSettingsPlugin extends Plugin {
                 if (key.getCategory() != currCategory) {
                     bufferedWriter.write("\n");
                     bufferedWriter.write("# " + key.getCategory().name() + "\n");
-                    if (key.isRequired()) {
-                        bufferedWriter.write("# required: ");
-                    } else {
-                        bufferedWriter.write("# optional: ");
-                    }
-                    bufferedWriter.write(key.getCategory().getCategoryDescription() + "\n");
+                    bufferedWriter.write("# " + key.getCategory().getCategoryDescription() + "\n");
                     bufferedWriter.write("\n");
                     currCategory = key.getCategory();
                 }
-                bufferedWriter.write("# " + key.getDescription() + "\n");
+                if (key.isRequired()) {
+                    bufferedWriter.write("# required: ");
+                } else {
+                    bufferedWriter.write("# optional: ");
+                }
+                bufferedWriter.write(key.getDescription() + "\n");
                 bufferedWriter.write(key.getSettingKey() + "=" + key.getDefaultValue() + "\n");
 
             }
