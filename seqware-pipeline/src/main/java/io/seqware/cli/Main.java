@@ -430,14 +430,14 @@ public class Main {
             String[] runParams;
             if (engine == null) {
                 runParams = new String[] { "--plugin", "io.seqware.pipeline.plugins.WorkflowLifecycle", "--", "--wait", "--bundle", dir,
-                        "--workflow", name, "--version", version, "--ini-files", cdl(inis)};
+                        "--workflow", name, "--version", version, "--ini-files", cdl(inis) };
             } else {
                 runParams = new String[] { "--plugin", "io.seqware.pipeline.plugins.WorkflowLifecycle", "--", "--wait", "--bundle", dir,
                         "--workflow", name, "--version", version, "--ini-files", cdl(inis), "--workflow-engine", engine };
             }
-	    if (noMetadata){
-	        runParams = ArrayUtils.add(runParams, "--no-metadata");
-	    }
+            if (noMetadata) {
+                runParams = ArrayUtils.add(runParams, "--no-metadata");
+            }
             String[] addAll = ArrayUtils.addAll(runParams, overrideParams.toArray(new String[overrideParams.size()]));
             run(addAll);
         }
@@ -1238,6 +1238,52 @@ public class Main {
         }
     }
 
+    private static void workflowRunReschedule(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware workflow-run reschedule [--help]");
+            out("       seqware workflow-run reschedule <params>");
+            out("");
+            out("Description:");
+            out("  Reschedule a workflow-run to be rescheduled to run from scratch as a new workflow-run.");
+            out("");
+            out("Required parameters:");
+            out("  --accession <swid>         The SWID of the workflow-run to be rescheduled");
+            out("");
+            out("Optional parameters:");
+            out("  --host <host>              The host on which to launch the workflow run");
+            out("  --engine <type>            The engine that will process the workflow run.");
+            out("                             May be one of: " + Engines.ENGINES_LIST);
+            out("                             Defaults to the value of " + SqwKeys.SW_DEFAULT_WORKFLOW_ENGINE.getSettingKey());
+            out("                             or '" + Engines.DEFAULT_ENGINE + "' if not specified.");
+            out("");
+        } else {
+            String wfId = reqVal(args, "--accession");
+            String host = optVal(args, "--host", null);
+            String engine = optVal(args, "--engine", null);
+
+            extras(args, "workflow-run reschedule");
+
+            List<String> runnerArgs = new ArrayList<>();
+            runnerArgs.add("--plugin");
+            runnerArgs.add("io.seqware.pipeline.plugins.WorkflowRescheduler");
+            runnerArgs.add("--");
+            runnerArgs.add("--workflow-run");
+            runnerArgs.add(wfId);
+            if (engine != null) {
+                runnerArgs.add("--workflow-engine");
+                runnerArgs.add(engine);
+            }
+            if (host != null) {
+                runnerArgs.add("--host");
+                runnerArgs.add(host);
+            }
+
+            String[] totalArgs = ArrayUtils.addAll(runnerArgs.toArray(new String[runnerArgs.size()]));
+            run(totalArgs);
+        }
+    }
+
     private static void workflowRunWatch(List<String> args) {
         if (isHelp(args, true)) {
             out("");
@@ -1644,7 +1690,8 @@ public class Main {
             out("  cancel              Cancel a submitted or running workflow run");
             out("  launch-scheduled    Launch scheduled workflow runs");
             out("  propagate-statuses  Propagate workflow engine statuses to seqware meta DB");
-            out("  retry               Retry a failed or cancelled workflow run");
+            out("  retry               Retry a failed or cancelled workflow run skipping completed steps");
+            out("  reschedule          Reschedule a workflow-run to re-run from scratch as a new run");
             out("  stderr              Obtain the stderr output of the run");
             out("  stdout              Obtain the stdout output of the run");
             out("  report              The details of a given workflow-run");
@@ -1666,6 +1713,9 @@ public class Main {
                 break;
             case "retry":
                 workflowRunRetry(args);
+                break;
+            case "reschedule":
+                workflowRunReschedule(args);
                 break;
             case "stderr":
                 workflowRunStderr(args);
