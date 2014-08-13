@@ -135,6 +135,7 @@ public class UserSettingsPlugin extends Plugin {
                     + "# Remote users need COMMON and SCHEDULE.\n" + "# Workflow developers need COMMON and LAUNCH for testing.\n"
                     + "# Administrators need COMMON, DELETION, and INSTALL.\n"
                     + "# Cronjobs/daemon processes will need COMMON and LAUNCH.\n\n"
+                    + "# Keys that are required for a typical Oozie-sge with metadata via web service are marked as required.\n\n"
                     + "# Note that this document was auto-generated using the " + UserSettingsPlugin.class.getSimpleName() + "\n\n");
 
             SqwKeys.Categories currCategory = null;
@@ -143,7 +144,12 @@ public class UserSettingsPlugin extends Plugin {
                 if (key.getCategory() != currCategory) {
                     bufferedWriter.write("\n");
                     bufferedWriter.write("# " + key.getCategory().name() + "\n");
-                    bufferedWriter.write("# " + key.getCategory().getCategoryDescription() + "\n");
+                    if (key.isRequired()) {
+                        bufferedWriter.write("# required: ");
+                    } else {
+                        bufferedWriter.write("# optional: ");
+                    }
+                    bufferedWriter.write(key.getCategory().getCategoryDescription() + "\n");
                     bufferedWriter.write("\n");
                     currCategory = key.getCategory();
                 }
