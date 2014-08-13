@@ -38,8 +38,8 @@ public class BulkDownloaderController extends BaseCommandController {
 
     private FileService fileService;
     /** Constant <code>BUFFERSIZE=500*1024</code> */
-    public final static int BUFFERSIZE = 500 * 1024; // 512K buffer
-    private final static String SEPARATOR = java.io.File.separator;
+    public static final int BUFFERSIZE = 500 * 1024; // 512K buffer
+    private static final String SEPARATOR = java.io.File.separator;
 
     /**
      * <p>
@@ -80,7 +80,7 @@ public class BulkDownloaderController extends BaseCommandController {
 
         Date dateNow = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        StringBuilder strNow = new StringBuilder(dateFormat.format(dateNow));
+        String strNow = dateFormat.format(dateNow);
 
         String pathToTempStore = "webapps" + contextPath + SEPARATOR + "temp" + SEPARATOR + registration.getEmailAddress() + SEPARATOR
                 + strNow + SEPARATOR;
@@ -110,10 +110,9 @@ public class BulkDownloaderController extends BaseCommandController {
         response.setHeader("Content-Disposition", "attachment; filename=\"" + shortName + "\"");
         response.setContentLength(fileSize);
 
-        BufferedInputStream in = new BufferedInputStream(new FileInputStream(realFile));
-
-        FileCopyUtils.copy(in, response.getOutputStream());
-        in.close();
+        try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(realFile))) {
+            FileCopyUtils.copy(in, response.getOutputStream());
+        }
         response.getOutputStream().flush();
         response.getOutputStream().close();
 

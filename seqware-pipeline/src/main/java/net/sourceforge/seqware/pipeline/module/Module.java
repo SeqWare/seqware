@@ -183,7 +183,7 @@ public abstract class Module implements ModuleInterface {
 
             // Log.info("Param Parser: "+param);
             if (readingQuoteString && !param.endsWith(quoteString)) {
-                buffer.append(" " + param);
+                buffer.append(" ").append(param);
             } else if (param.startsWith("\"") && !readingQuoteString) {
                 quoteString = "\"";
                 readingQuoteString = true;
@@ -193,7 +193,7 @@ public abstract class Module implements ModuleInterface {
                 readingQuoteString = true;
                 buffer.append(param.substring(1));
             } else if (readingQuoteString && param.endsWith(quoteString)) {
-                buffer.append(" " + param.substring(0, param.length() - 1));
+                buffer.append(" ").append(param.substring(0, param.length() - 1));
                 readingQuoteString = false;
                 quoteString = null;
                 Log.info("  param: " + buffer.toString());
@@ -227,7 +227,7 @@ public abstract class Module implements ModuleInterface {
     public String get_syntax() {
         OptionParser parser = getOptionParser();
         if (parser == null) {
-            return new String("Sorry, no help information available");
+            return "Sorry, no help information available";
         }
         StringWriter output = new StringWriter();
         try {
@@ -248,7 +248,7 @@ public abstract class Module implements ModuleInterface {
     public String get_galaxy_xml() {
         OptionParser parser = getOptionParser();
         if (parser == null) {
-            return new String("Sorry, no module paramater information available so I can't make a Galaxy XML.");
+            return "Sorry, no module paramater information available so I can't make a Galaxy XML.";
         }
         StringWriter output = new StringWriter();
         try {

@@ -157,10 +157,10 @@
 
         <!-- Checks for Naming Conventions.                  -->
         <!-- See http://checkstyle.sf.net/config_naming.html -->
-	<!--
         <module name="ConstantName"/>
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
+	<!--
         <module name="MemberName"/>
         <module name="MethodName"/>
         <module name="PackageName"/>
@@ -228,7 +228,7 @@
 
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
-	<!-- <module name="ModifierOrder"/> -->
+	<module name="ModifierOrder"/>
 	<!-- <module name="RedundantModifier"/> -->
 
         <!-- Checks for blocks. You know, those {}'s         -->

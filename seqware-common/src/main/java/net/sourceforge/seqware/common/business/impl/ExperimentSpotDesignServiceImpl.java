@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ExperimentSpotDesignServiceImpl implements ExperimentSpotDesignService {
     private ExperimentSpotDesignDAO dao = null;
-    private static final Log log = LogFactory.getLog(ExperimentSpotDesignServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ExperimentSpotDesignServiceImpl.class);
 
     /**
      * <p>
@@ -66,8 +66,8 @@ public class ExperimentSpotDesignServiceImpl implements ExperimentSpotDesignServ
             try {
                 obj = dao.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find ExperimentSpotDesign by id " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find ExperimentSpotDesign by id " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return obj;

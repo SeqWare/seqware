@@ -85,7 +85,7 @@ public class MarkdownPlugin extends Plugin {
      */
     @Override
     public void setParams(List<String> params) {
-        this.params = params.toArray(new String[0]);
+        this.params = params.toArray(new String[params.size()]);
     }
 
     /*

@@ -36,7 +36,7 @@ public class SampleWorkflowRunsController extends BaseCommandController {
 
     // URL Params
     /** Constant <code>SAMPLE_SWID="sw"</code> */
-    public final static String SAMPLE_SWID = "sw";
+    public static final String SAMPLE_SWID = "sw";
 
     /**
      * {@inheritDoc}

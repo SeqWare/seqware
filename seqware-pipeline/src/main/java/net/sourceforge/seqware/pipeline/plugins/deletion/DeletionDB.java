@@ -142,11 +142,11 @@ public final class DeletionDB extends Plugin {
             fileClient = new SeqWareWebServiceClient("file", adminUrl + "/webresources");
             if (inKeyFile == null) {
                 // create a key file
-                Set<ModelAccessionIDTuple> find_JSON_rdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()),
+                Set<ModelAccessionIDTuple> findJSONrdelete = client.find_JSON_rdelete(Class.forName(tuple.getAdminModelClass()),
                         String.valueOf(tuple.getId()));
                 // add to a sorted set for easy viewing
                 SortedSet<ModelAccessionIDTuple> sortedSet = new TreeSet<>();
-                sortedSet.addAll(find_JSON_rdelete);
+                sortedSet.addAll(findJSONrdelete);
                 // output information for informational purposes
                 outputSummaryInformation(sortedSet, fileClient);
 
@@ -262,7 +262,7 @@ public final class DeletionDB extends Plugin {
         List<String> arr = new ArrayList<>();
         mp.setParams(arr);
         mp.parse_parameters();
-        ReturnValue do_run = mp.do_run();
+        ReturnValue doRun = mp.do_run();
     }
 
     @Override

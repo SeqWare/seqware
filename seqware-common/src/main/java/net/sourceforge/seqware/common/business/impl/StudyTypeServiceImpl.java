@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class StudyTypeServiceImpl implements StudyTypeService {
     private StudyTypeDAO studyTypeDAO = null;
-    private static final Log log = LogFactory.getLog(StudyTypeServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(StudyTypeServiceImpl.class);
 
     /**
      * <p>
@@ -84,7 +84,7 @@ public class StudyTypeServiceImpl implements StudyTypeService {
             try {
                 studyType = studyTypeDAO.findByName(name.trim().toLowerCase());
             } catch (Exception exception) {
-                log.debug("Cannot find StudyType by title " + name);
+                LOG.debug("Cannot find StudyType by title " + name);
             }
         }
         return studyType;
@@ -102,8 +102,8 @@ public class StudyTypeServiceImpl implements StudyTypeService {
             try {
                 studyType = studyTypeDAO.findByID(studyTypeID);
             } catch (Exception exception) {
-                log.error("Cannot find StudyType by studyTypeID " + studyTypeID);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find StudyType by studyTypeID " + studyTypeID);
+                LOG.error(exception.getMessage());
             }
         }
         return studyType;

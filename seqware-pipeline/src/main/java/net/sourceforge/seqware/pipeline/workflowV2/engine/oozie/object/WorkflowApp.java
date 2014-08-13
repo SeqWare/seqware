@@ -417,12 +417,12 @@ public class WorkflowApp {
         // add all provision out job
         // get all the leaf job
         List<OozieJob> leaves = new ArrayList<>();
-        for (OozieJob _job : this.jobs) {
+        for (OozieJob job : this.jobs) {
             // Note: the leaves accumulated are to be parents of output provisions,
             // thus the leaves themselves should not be file provisions
-            if ((_job instanceof OozieProvisionFileJob == false && _job instanceof BatchedOozieProvisionFileJob == false)
-                    && _job.getChildren().isEmpty()) {
-                leaves.add(_job);
+            if ((job instanceof OozieProvisionFileJob == false && job instanceof BatchedOozieProvisionFileJob == false)
+                    && job.getChildren().isEmpty()) {
+                leaves.add(job);
             }
         }
         for (Map.Entry<SqwFile, OozieJob> entry : fileJobMap.entrySet()) {

@@ -215,16 +215,16 @@ public class WorkflowRunReport {
 
         long milliseconds = lateDate.getTime() - earlyDate.getTime();
         logger.debug("Total time in ms: " + milliseconds);
-        int MS_PER_DAY = 86400000;
-        int MS_PER_HOUR = 3600000;
-        int MS_PER_MINUTE = 60000;
+        int msPerDay = 86400000;
+        int msPerHour = 3600000;
+        int msPerMinute = 60000;
 
-        int days = (int) milliseconds / MS_PER_DAY;
-        int hourMilliseconds = (int) milliseconds - days * MS_PER_DAY;
-        int hours = hourMilliseconds / MS_PER_HOUR;
-        int minuteMilliseconds = hourMilliseconds - hours * MS_PER_HOUR;
-        int minutes = minuteMilliseconds / MS_PER_MINUTE;
-        int secondMilliseconds = minuteMilliseconds - minutes * MS_PER_MINUTE;
+        int days = (int) milliseconds / msPerDay;
+        int hourMilliseconds = (int) milliseconds - days * msPerDay;
+        int hours = hourMilliseconds / msPerHour;
+        int minuteMilliseconds = hourMilliseconds - hours * msPerHour;
+        int minutes = minuteMilliseconds / msPerMinute;
+        int secondMilliseconds = minuteMilliseconds - minutes * msPerMinute;
         double seconds = secondMilliseconds / 1000;
 
         StringBuilder time = new StringBuilder();

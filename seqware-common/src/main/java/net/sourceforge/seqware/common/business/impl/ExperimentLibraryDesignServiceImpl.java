@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ExperimentLibraryDesignServiceImpl implements ExperimentLibraryDesignService {
     private ExperimentLibraryDesignDAO dao = null;
-    private static final Log log = LogFactory.getLog(ExperimentLibraryDesignServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(ExperimentLibraryDesignServiceImpl.class);
 
     /**
      * <p>
@@ -73,8 +73,8 @@ public class ExperimentLibraryDesignServiceImpl implements ExperimentLibraryDesi
             try {
                 obj = dao.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find ExperimentLibraryDesign by id " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find ExperimentLibraryDesign by id " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return obj;

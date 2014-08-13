@@ -17,7 +17,7 @@ import net.sourceforge.seqware.common.util.Log;
  */
 public class LockingFileTools {
 
-    private final static int RETRIES = 100;
+    private static final int RETRIES = 100;
 
     public static boolean lockAndAppend(File file, String output) {
         return lockAndWrite(file, output, true);
@@ -36,25 +36,22 @@ public class LockingFileTools {
     public static boolean lockAndWrite(File file, String output, boolean append) {
         for (int i = 0; i < RETRIES; i++) {
             try {
-                FileOutputStream fos = new FileOutputStream(file, append);
-                FileLock fl = fos.getChannel().tryLock();
-                if (fl != null) {
-                    OutputStreamWriter fw = new OutputStreamWriter(fos);
-                    fw.append(output);
-                    fl.release();
-                    fw.close();
-                    // Log.info("Locked, appended, and released for file: "+file.getAbsolutePath()+" value: "+output);
-                    return (true);
-                } else {
-                    Log.info("Can't get lock for " + file.getAbsolutePath() + " try number " + i + " of " + RETRIES);
-                    // sleep for 2 seconds before trying again
-                    Thread.sleep(2000);
+                try (FileOutputStream fos = new FileOutputStream(file, append)) {
+                    FileLock fl = fos.getChannel().tryLock();
+                    if (fl != null) {
+                        try (OutputStreamWriter fw = new OutputStreamWriter(fos)) {
+                            fw.append(output);
+                            fl.release();
+                        }
+                        // Log.info("Locked, appended, and released for file: "+file.getAbsolutePath()+" value: "+output);
+                        return (true);
+                    } else {
+                        Log.info("Can't get lock for " + file.getAbsolutePath() + " try number " + i + " of " + RETRIES);
+                        // sleep for 2 seconds before trying again
+                        Thread.sleep(2000);
+                    }
                 }
-                fos.close();
-            } catch (IOException e) {
-                Log.info("Exception with LockingFileTools: " + e.getMessage());
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 Log.info("Exception with LockingFileTools: " + e.getMessage());
                 e.printStackTrace();
             }

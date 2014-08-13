@@ -163,7 +163,7 @@ public class NodeHtmlUtil {
             ;
 
             String lastClassHtml = "";
-            if (countItem == files.size() && processing.getChildren().size() == 0) {
+            if (countItem == files.size() && processing.getChildren().isEmpty()) {
                 lastClassHtml = "lastCollapsable";
             }
 

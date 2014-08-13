@@ -68,10 +68,13 @@ public class StudyListDetailsController extends BaseCommandController {
         Boolean isAsc = null;
         String strAsc = request.getParameter("asc");
 
-        if ("true".equals(strAsc)) {
-            isAsc = true;
-        } else if ("false".equals(strAsc)) {
-            isAsc = false;
+        if (null != strAsc) switch (strAsc) {
+            case "true":
+                isAsc = true;
+                break;
+            case "false":
+                isAsc = false;
+                break;
         }
         return isAsc;
     }
@@ -161,7 +164,7 @@ public class StudyListDetailsController extends BaseCommandController {
                 pageInfo = PaginationUtil.getPageInfo(request, "myStudiesPage", listView, listAll, nameOneItem, nameLotOfItem, ma);
 
                 // set error if want
-                if (listAll.size() == 0) {
+                if (listAll.isEmpty()) {
                     isHasError = true;
                     errorMessage = this.getMessageSourceAccessor().getMessage("study.list.required.one.item");
                 }

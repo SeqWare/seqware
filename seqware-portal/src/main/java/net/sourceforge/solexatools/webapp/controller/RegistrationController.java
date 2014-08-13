@@ -262,7 +262,7 @@ public class RegistrationController extends MultiActionController {
             if (isSignUp) {
                 RegistrationDTO reg = getRegistrationService().findByEmailAddress(registration.getEmailAddress());
 
-                if (reg != null && reg.getPassword() != null && !reg.getPassword().equals("")) {
+                if (reg != null && reg.getPassword() != null && !reg.getPassword().isEmpty()) {
                     errors.reject("error.registration.email.used");
                 }
 

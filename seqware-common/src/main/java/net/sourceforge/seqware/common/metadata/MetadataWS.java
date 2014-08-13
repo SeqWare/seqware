@@ -581,9 +581,7 @@ public class MetadataWS implements Metadata {
     public List<Platform> getPlatforms() {
         try {
             return ll.findPlatforms();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -593,9 +591,7 @@ public class MetadataWS implements Metadata {
     public List<Organism> getOrganisms() {
         try {
             return ll.findOrganisms();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -605,9 +601,7 @@ public class MetadataWS implements Metadata {
     public List<StudyType> getStudyTypes() {
         try {
             return ll.findStudyTypes();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -617,9 +611,7 @@ public class MetadataWS implements Metadata {
     public List<LibraryStrategy> getLibraryStrategies() {
         try {
             return ll.findLibraryStrategies();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -629,9 +621,7 @@ public class MetadataWS implements Metadata {
     public List<LibrarySelection> getLibrarySelections() {
         try {
             return ll.findLibrarySelections();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -641,9 +631,7 @@ public class MetadataWS implements Metadata {
     public List<LibrarySource> getLibrarySource() {
         try {
             return ll.findLibrarySources();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -1164,32 +1152,32 @@ public class MetadataWS implements Metadata {
             IUS ius = ll.existsIUS("/" + parentAccession);
             Lane lane = ll.existsLane("/" + parentAccession);
             // this one won't be able to get back lanes and ius
-            WorkflowRun wr_withoutLanes = ll.findWorkflowRun("?id=" + workflowRunId/**
+            WorkflowRun wrWithoutLanes = ll.findWorkflowRun("?id=" + workflowRunId/**
              * + "&show=lanes,ius"
              */
             );
             // this will, but uses seqware accessions
-            int accession = wr_withoutLanes.getSwAccession();
-            WorkflowRun wr_withLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
+            int accession = wrWithoutLanes.getSwAccession();
+            WorkflowRun wrWithLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
             if (ius != null) {
-                SortedSet<IUS> iuses = wr_withLanesAndIUS.getIus();
+                SortedSet<IUS> iuses = wrWithLanesAndIUS.getIus();
                 if (iuses == null) {
                     iuses = new TreeSet<>();
                 }
                 iuses.add(ius);
-                wr_withLanesAndIUS.setIus(iuses);
+                wrWithLanesAndIUS.setIus(iuses);
 
-                ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
+                ll.updateWorkflowRun("/" + accession, wrWithLanesAndIUS);
 
             } else if (lane != null) {
-                SortedSet<Lane> lanes = wr_withLanesAndIUS.getLanes();
+                SortedSet<Lane> lanes = wrWithLanesAndIUS.getLanes();
                 if (lanes == null) {
                     lanes = new TreeSet<>();
                 }
                 lanes.add(lane);
-                wr_withLanesAndIUS.setLanes(lanes);
+                wrWithLanesAndIUS.setLanes(lanes);
 
-                ll.updateWorkflowRun("/" + accession, wr_withLanesAndIUS);
+                ll.updateWorkflowRun("/" + accession, wrWithLanesAndIUS);
 
             } else {
                 Log.error("ERROR: SW Accession is neither a lane nor an IUS: " + parentAccession);
@@ -1444,7 +1432,7 @@ public class MetadataWS implements Metadata {
     private String[] convertIDs(int[] ids, String prefix) {
         String[] stringIds = new String[ids.length];
         for (int i = 0; i < ids.length; i++) {
-            stringIds[i] = prefix + new Integer(ids[i]).toString();
+            stringIds[i] = prefix + Integer.toString(ids[i]);
         }
         return stringIds;
     }
@@ -1457,9 +1445,7 @@ public class MetadataWS implements Metadata {
         File file = null;
         try {
             file = ll.findFile("?path=" + filepath);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             throw new RuntimeException(ex);
         } catch (NotFoundException ex) {
             /**
@@ -1565,9 +1551,7 @@ public class MetadataWS implements Metadata {
                 }
             }
 
-        } catch (IOException ex) {
-            Log.error(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             Log.error(ex);
         }
 
@@ -1586,10 +1570,8 @@ public class MetadataWS implements Metadata {
         try {
             Workflow workflow = ll.findWorkflowParams(workflowAccession);
             params = workflow.getWorkflowParams();
-            testNull(params, new TreeSet<WorkflowParam>().getClass(), workflowAccession);
-        } catch (IOException ex) {
-            Log.error(ex);
-        } catch (JAXBException ex) {
+            testNull(params, TreeSet.class, workflowAccession);
+        } catch (IOException | JAXBException ex) {
             Log.error(ex);
         }
         return params;
@@ -1622,9 +1604,7 @@ public class MetadataWS implements Metadata {
         try {
             String searchString = "?status=" + status.name() + "";
             return ll.findWorkflowRuns(searchString);
-        } catch (IOException ex) {
-            Log.error("", ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             Log.error("", ex);
         }
         return new ArrayList<>();
@@ -1641,9 +1621,7 @@ public class MetadataWS implements Metadata {
             Workflow w = ll.findWorkflowByWorkflowRun(workflowRunAccession);
             wr.setWorkflow(w);
             return (wr);
-        } catch (IOException ex) {
-            Log.error("", ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             Log.error("", ex);
         }
         return (null);
@@ -1660,9 +1638,7 @@ public class MetadataWS implements Metadata {
     public List<Study> getAllStudies() {
         try {
             return ll.findStudies();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -1679,9 +1655,7 @@ public class MetadataWS implements Metadata {
     public List<SequencerRun> getAllSequencerRuns() {
         try {
             return ll.findSequencerRuns();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -2023,9 +1997,7 @@ public class MetadataWS implements Metadata {
     public File getFile(int swAccession) {
         try {
             return ll.findFile("/" + swAccession);
-        } catch (IOException ex) {
-            Log.error(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             Log.error(ex);
         }
         return null;
@@ -2536,9 +2508,7 @@ public class MetadataWS implements Metadata {
     public List<WorkflowRun> getWorkflowRunsAssociatedWithFiles(List<Integer> fileAccessions, String search_type) {
         try {
             return ll.findWorkflowRunsByFiles(fileAccessions, search_type);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             ex.printStackTrace();
         }
         return null;
@@ -2548,9 +2518,7 @@ public class MetadataWS implements Metadata {
     public Lane getLane(int laneAccession) {
         try {
             return ll.findLane("/" + laneAccession);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -2559,9 +2527,7 @@ public class MetadataWS implements Metadata {
     public Processing getProcessing(int processingAccession) {
         try {
             return ll.findProcessing("/" + processingAccession);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -2570,9 +2536,7 @@ public class MetadataWS implements Metadata {
     public SequencerRun getSequencerRun(int sequencerRunAccession) {
         try {
             return ll.findSequencerRun("/" + sequencerRunAccession);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -2581,9 +2545,7 @@ public class MetadataWS implements Metadata {
     public List<ExperimentLibraryDesign> getExperimentLibraryDesigns() {
         try {
             return ll.findExperimentLibraryDesigns();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -2592,9 +2554,7 @@ public class MetadataWS implements Metadata {
     public List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs() {
         try {
             return ll.findExperimentSpotDesignReadSpecs();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -2603,9 +2563,7 @@ public class MetadataWS implements Metadata {
     public List<ExperimentSpotDesign> getExperimentSpotDesigns() {
         try {
             return ll.findExperimentSpotDesigns();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -2614,9 +2572,7 @@ public class MetadataWS implements Metadata {
     public Experiment getExperiment(int swAccession) {
         try {
             return ll.findExperiment("/" + swAccession);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        } catch (JAXBException ex) {
+        } catch (IOException | JAXBException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -2714,9 +2670,7 @@ public class MetadataWS implements Metadata {
                             return sslContext;
                         }
                     });
-                } catch (KeyManagementException ex) {
-                    Log.fatal(ex);
-                } catch (NoSuchAlgorithmException ex) {
+                } catch (KeyManagementException | NoSuchAlgorithmException ex) {
                     Log.fatal(ex);
                 }
 
@@ -2753,12 +2707,10 @@ public class MetadataWS implements Metadata {
             WorkflowRun workflowRun = null;
             try {
                 workflowRun = findWorkflowRun(searchString);
-            } catch (IOException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("WorkflowRun does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
-            } catch (NotFoundException ex) {
-                Log.debug("WorkflowRun does not exist. Continuing.");
             }
             return workflowRun;
         }
@@ -2767,12 +2719,10 @@ public class MetadataWS implements Metadata {
             Workflow workflow = null;
             try {
                 workflow = findWorkflow(searchString);
-            } catch (IOException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("Workflow does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
-            } catch (NotFoundException ex) {
-                Log.debug("Workflow does not exist. Continuing.");
             }
             return workflow;
         }
@@ -2781,12 +2731,10 @@ public class MetadataWS implements Metadata {
             File file = null;
             try {
                 file = findFile(searchString);
-            } catch (IOException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("File does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
-            } catch (NotFoundException ex) {
-                Log.debug("File does not exist. Continuing.");
             }
             return file;
         }
@@ -2795,12 +2743,10 @@ public class MetadataWS implements Metadata {
             Processing processing = null;
             try {
                 processing = findProcessing(searchString);
-            } catch (IOException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("Workflow does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
-            } catch (NotFoundException ex) {
-                Log.debug("Workflow does not exist. Continuing.");
             }
             return processing;
         }
@@ -2809,12 +2755,10 @@ public class MetadataWS implements Metadata {
             Lane lane = null;
             try {
                 lane = findLane(searchString);
-            } catch (IOException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("Lane does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
-            } catch (NotFoundException ex) {
-                Log.debug("Lane does not exist. Continuing.");
             }
             return lane;
         }
@@ -2823,12 +2767,10 @@ public class MetadataWS implements Metadata {
             IUS ius = null;
             try {
                 ius = findIUS(searchString);
-            } catch (IOException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("IUS does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
-            } catch (NotFoundException ex) {
-                Log.debug("IUS does not exist. Continuing.");
             }
             return ius;
         }
@@ -2837,12 +2779,10 @@ public class MetadataWS implements Metadata {
             SequencerRun sr = null;
             try {
                 sr = findSequencerRun(searchString);
-            } catch (IOException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("SequencerRun does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
-            } catch (NotFoundException ex) {
-                Log.debug("SequencerRun does not exist. Continuing.");
             }
             return sr;
         }
@@ -2851,12 +2791,10 @@ public class MetadataWS implements Metadata {
             Study study = null;
             try {
                 study = findStudy(searchString);
-            } catch (IOException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("Study does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
-            } catch (NotFoundException ex) {
-                Log.debug("Study does not exist. Continuing.");
             }
             return study;
         }
@@ -2865,12 +2803,10 @@ public class MetadataWS implements Metadata {
             Experiment experiment = null;
             try {
                 experiment = findExperiment(searchString);
-            } catch (IOException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("Experiment does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
-            } catch (NotFoundException ex) {
-                Log.debug("Experiment does not exist. Continuing.");
             }
             return experiment;
         }
@@ -2879,9 +2815,7 @@ public class MetadataWS implements Metadata {
             Sample sample = null;
             try {
                 sample = findSample(searchString);
-            } catch (IOException ex) {
-                Log.debug("Sample does not exist. Continuing.");
-            } catch (NotFoundException ex) {
+            } catch (IOException | NotFoundException ex) {
                 Log.debug("Sample does not exist. Continuing.");
             } catch (JAXBException ex) {
                 Log.error(ex);
@@ -2895,9 +2829,7 @@ public class MetadataWS implements Metadata {
                 object = getObject(uri, searchString, jaxbObject, parent);
             } catch (SAXException ex) {
                 Log.error("Error decoding message from server for query: " + uri + searchString, ex);
-            } catch (IOException ex) {
-                Log.debug("Resource at " + uri + searchString + " does not exist. Continuing.", ex);
-            } catch (ResourceException ex) {
+            } catch (IOException | ResourceException ex) {
                 Log.debug("Resource at " + uri + searchString + " does not exist. Continuing.", ex);
             }
             return object;

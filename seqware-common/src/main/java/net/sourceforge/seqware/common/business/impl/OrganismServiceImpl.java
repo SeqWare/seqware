@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class OrganismServiceImpl implements OrganismService {
     private OrganismDAO organismDAO = null;
-    private static final Log log = LogFactory.getLog(OrganismServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(OrganismServiceImpl.class);
 
     /**
      * <p>
@@ -57,8 +57,8 @@ public class OrganismServiceImpl implements OrganismService {
             try {
                 obj = organismDAO.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find Organism by id " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Organism by id " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return obj;

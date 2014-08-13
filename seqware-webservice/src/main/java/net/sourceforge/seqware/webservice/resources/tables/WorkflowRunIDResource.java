@@ -313,12 +313,9 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
                 String text = entity.getText();
                 Log.debug(text);
                 newWR = (WorkflowRun) XmlTools.unMarshal(jo, new WorkflowRun(), text);
-            } catch (SAXException ex) {
+            } catch (SAXException | IOException ex) {
                 ex.printStackTrace();
                 throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
-            } catch (IOException e) {
-                e.printStackTrace();
-                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
             }
             try {
 

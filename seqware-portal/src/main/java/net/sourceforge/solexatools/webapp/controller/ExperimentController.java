@@ -632,23 +632,31 @@ public class ExperimentController extends MultiActionController {
                     // FIXME: hard coded!!! I don't know if I'm populating this
                     // correctly!!!
                     esdrs.setReadClass("Application Read");
-                    if ("F".equals(type)) {
-                        esdrs.setReadType("Forward");
-                    } else if ("R".equals(type)) {
-                        esdrs.setReadType("Reverse");
-                    } else if ("A".equals(type)) {
-                        esdrs.setReadType("Adapter");
-                        esdrs.setReadClass("Technical Read");
-                    } else if ("P".equals(type)) {
-                        esdrs.setReadType("Primer");
-                        esdrs.setReadClass("Technical Read");
-                    } else if ("L".equals(type)) {
-                        esdrs.setReadType("Linker");
-                        esdrs.setReadClass("Technical Read");
-                    } else if ("B".equals(type)) {
-                        esdrs.setReadType("BarCode");
-                    } else {
-                        esdrs.setReadType("Other");
+                    if (null != type) switch (type) {
+                        case "F":
+                            esdrs.setReadType("Forward");
+                            break;
+                        case "R":
+                            esdrs.setReadType("Reverse");
+                            break;
+                        case "A":
+                            esdrs.setReadType("Adapter");
+                            esdrs.setReadClass("Technical Read");
+                            break;
+                        case "P":
+                            esdrs.setReadType("Primer");
+                            esdrs.setReadClass("Technical Read");
+                            break;
+                        case "L":
+                            esdrs.setReadType("Linker");
+                            esdrs.setReadClass("Technical Read");
+                            break;
+                        case "B":
+                            esdrs.setReadType("BarCode");
+                            break;
+                        default:
+                            esdrs.setReadType("Other");
+                            break;
                     }
                     readIndex++;
                     esdrs.setBaseCoord(position);
