@@ -69,13 +69,13 @@ public class WorkflowApp {
         this.parseDataModel(wfdm);
     }
 
-    public List<List<OozieJob>> getOrderedJobs(){
+    public List<List<OozieJob>> getOrderedJobs() {
         if (!this.jobs.isEmpty()) {
             OozieJob job0 = this.jobs.get(0);
             List<List<OozieJob>> graph = this.reOrganizeGraph(job0);
-	    return graph;
+            return graph;
         }
-	return new ArrayList<List<OozieJob>>(); 
+        return new ArrayList<>();
     }
 
     // TODO: Emit an end node that cleans up the generated script files.
