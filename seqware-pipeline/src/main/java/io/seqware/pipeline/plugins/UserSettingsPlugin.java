@@ -127,16 +127,22 @@ public class UserSettingsPlugin extends Plugin {
         // output a description of our categories
         try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out))) {
             // output a description of our categories
-            bufferedWriter.write("# SEQWARE PIPELINE SETTINGS\n" + "\n" + "# The settings in this file are tagged by when they are used.\n"
-                    + "# COMMON: Used by all components\n" + "# INSTALL: Used when installing a workflow bundle\n"
-                    + "# SCHEDULE: Used when a user wants to schedule a workflow run\n"
-                    + "# LAUNCH: Used when a workflow run is to be launched (or dry-run)\n"
-                    + "# DELETION: Used for the admin web service supporting deletion\n" + "#\n"
-                    + "# Remote users need COMMON and SCHEDULE.\n" + "# Workflow developers need COMMON and LAUNCH for testing.\n"
-                    + "# Administrators need COMMON, DELETION, and INSTALL.\n"
-                    + "# Cronjobs/daemon processes will need COMMON and LAUNCH.\n\n"
-                    + "# Keys that are required for a typical Oozie-sge with metadata via web service are marked as required.\n\n"
-                    + "# Note that this document was auto-generated using the " + UserSettingsPlugin.class.getSimpleName() + "\n\n");
+            bufferedWriter
+                    .write("# SEQWARE PIPELINE SETTINGS\n"
+                            + "\n"
+                            + "# The settings in this file are tagged by when they are used.\n"
+                            + "# COMMON: Used by all components\n"
+                            + "# INSTALL: Used when installing a workflow bundle\n"
+                            + "# SCHEDULE: Used when a user wants to schedule a workflow run\n"
+                            + "# LAUNCH: Used when a workflow run is to be launched (or dry-run)\n"
+                            + "# DELETION: Used for the admin web service supporting deletion\n"
+                            + "#\n"
+                            + "# Remote users need COMMON and SCHEDULE.\n"
+                            + "# Workflow developers need COMMON and LAUNCH for testing.\n"
+                            + "# Administrators need COMMON, DELETION, and INSTALL.\n"
+                            + "# Cronjobs/daemon processes will need COMMON and LAUNCH.\n\n"
+                            + "# Keys that are required for a typical Oozie-sge installation with metadata via web service are marked as required.\n\n"
+                            + "# Note that this document was auto-generated using the " + UserSettingsPlugin.class.getSimpleName() + "\n\n");
 
             SqwKeys.Categories currCategory = null;
             for (SqwKeys key : SqwKeys.values()) {
