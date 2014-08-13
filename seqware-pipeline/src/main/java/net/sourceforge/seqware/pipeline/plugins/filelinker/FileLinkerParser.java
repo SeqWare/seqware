@@ -28,7 +28,7 @@ public class FileLinkerParser {
 
     private static final String UTF8 = "UTF8";
 
-    private static final Logger log = LoggerFactory.getLogger(FileLinkerParser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileLinkerParser.class);
 
     public static Map<Integer, List<FileMetadata>> parse(String filename, char separator) throws FileNotFoundException,
             UnsupportedEncodingException {
@@ -100,7 +100,7 @@ public class FileLinkerParser {
             if (!line.hasRequiredValues()) {
                 hasRequiredValues = false;
                 badLines.add(i + 2);
-                log.error(
+                LOG.error(
                         "Required value(s) missing in csv file at line number [{}]. ius_sw_accession, seqwareAccession, mime_type and file are required. {}",
                         i + 2, line);
             }

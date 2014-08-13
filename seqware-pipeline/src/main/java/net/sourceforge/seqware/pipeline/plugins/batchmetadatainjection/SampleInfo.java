@@ -226,7 +226,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
      */
     public Set<TagValueUnit> getIusAttributes() {
         if (iusAttributes == null) {
-            iusAttributes = new HashSet<TagValueUnit>();
+            iusAttributes = new HashSet<>();
         }
         return iusAttributes;
     }
@@ -279,7 +279,7 @@ public class SampleInfo implements Comparable<SampleInfo> {
      */
     public Set<TagValueUnit> getSampleAttributes() {
         if (sampleAttributes == null) {
-            sampleAttributes = new HashSet<TagValueUnit>();
+            sampleAttributes = new HashSet<>();
         }
         return sampleAttributes;
     }

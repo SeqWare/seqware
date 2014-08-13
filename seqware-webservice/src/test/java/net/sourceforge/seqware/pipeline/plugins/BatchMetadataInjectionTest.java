@@ -67,8 +67,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     private RunInfo originalObject, runInfo;
     List<Map<String, String>> fileReport;
 
-    private final List<String> iusSwids = new ArrayList<String>();
-    private final List<String> laneSwids = new ArrayList<String>();
+    private final List<String> iusSwids = new ArrayList<>();
+    private final List<String> laneSwids = new ArrayList<>();
 
     // Metadata object
     // Map<String, String> hm = ConfigTools.getSettings();
@@ -152,7 +152,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     @Test
     public void testParseMiseqFile() throws Exception {
         System.out.println("parseMiseqFile");
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, String> map = new HashMap<>();
         map.put("study_type", "4");
         map.put("library_type", "Type");
         map.put("library_source_template_type", "LSTT");
@@ -284,12 +284,11 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
         runInfo.setRunAttributes(getAttributes(fileReport.get(0).get("Sequencer Run Attributes")));
         runInfo.setRunDescription(sequencer.getDescription());
 
-        Set<LaneInfo> lanes = new HashSet<LaneInfo>();
-        for (int i = 0; i < laneSwids.size(); i++) {
+        Set<LaneInfo> lanes = new HashSet<>();
+        for (String laneSwid : laneSwids) {
             // Iterates through all the unique lanes
-            Lane metadataLane = metadata.getLane(Integer.parseInt(laneSwids.get(i)));
+            Lane metadataLane = metadata.getLane(Integer.parseInt(laneSwid));
             LaneInfo lane = new LaneInfo();
-
             // Sets the required data
             lane.setLaneName(metadataLane.getName());
             lane.setLaneDescription(metadataLane.getDescription());
@@ -298,36 +297,28 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
             lane.setLibrarySelectionAcc(metadataLane.getLibrarySelection().getLibrarySelectionId());
             lane.setLibrarySourceAcc(metadataLane.getLibrarySource().getLibrarySourceId());
             lane.setLibraryStrategyAcc(metadataLane.getLibraryStrategy().getLibraryStrategyId());
-
-            Set<SampleInfo> samples = new HashSet<SampleInfo>();
-            // Iterates through the data
-            for (int j = 0; j < fileReport.size(); j++) {
+            Set<SampleInfo> samples = new HashSet<>();
+            for (Map<String, String> fileReport1 : fileReport) {
                 // Makes sure that the data is going to the right lane
                 // Checks to make sure that the samples are from the correct lanes
-                if (fileReport.get(j).get("Lane SWID").equals(String.valueOf(laneSwids.get(i)))) {
-                    lane.setLaneNumber(fileReport.get(j).get("Lane Number"));
-                    lane.setLaneAttributes(getAttributes(fileReport.get(j).get("Lane Attributes")));
+                if (fileReport1.get("Lane SWID").equals(String.valueOf(laneSwid))) {
+                    lane.setLaneNumber(fileReport1.get("Lane Number"));
+                    lane.setLaneAttributes(getAttributes(fileReport1.get("Lane Attributes")));
                     SampleInfo sample = new SampleInfo();
-
-                    sample.setBarcode(fileReport.get(j).get("IUS Tag"));
-                    sample.setName(fileReport.get(j).get("Sample Name"));
-                    sample.setSampleAttributes(getAttributes(fileReport.get(j).get("Sample Attributes")));
-                    sample.setIusAttributes(getAttributes(fileReport.get(j).get("IUS Attributes")));
-
-                    List<IUS> IUSes = metadata.getIUSFrom(Integer.parseInt(fileReport.get(j).get("Sample SWID")));
+                    sample.setBarcode(fileReport1.get("IUS Tag"));
+                    sample.setName(fileReport1.get("Sample Name"));
+                    sample.setSampleAttributes(getAttributes(fileReport1.get("Sample Attributes")));
+                    sample.setIusAttributes(getAttributes(fileReport1.get("IUS Attributes")));
+                    List<IUS> IUSes = metadata.getIUSFrom(Integer.parseInt(fileReport1.get("Sample SWID")));
                     sample.setIusDescription(IUSes.get(0).getDescription());
                     sample.setIusName(IUSes.get(0).getName());
                     sample.setIusSkip(IUSes.get(0).getSkip());
-
                     String[] sampleNameBrokenDown = sample.getName().split("_");
-
                     sample.setProjectCode(sampleNameBrokenDown[0]);
                     sample.setIndividualNumber(sampleNameBrokenDown[1]);
-
                     sample.setSampleDescription(metadata.getSampleByName(sample.getName()).get(0).getDescription());
-
                     // The Sample Attributes also contains other info which can be parsed
-                    for (TagValueUnit unit : getAttributes(fileReport.get(j).get("Sample Attributes"))) {
+                    for (TagValueUnit unit : getAttributes(fileReport1.get("Sample Attributes"))) {
                         if (unit.getTag().matches(".*tissue_origin.*")) {
                             sample.setTissueOrigin(unit.getValue());
 
@@ -350,16 +341,12 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
                             sample.setTargetedResequencing(unit.getValue());
 
                         }
-
                     }
-
                     samples.add(sample);
                 }
             }
-
             lane.setSamples(samples);
             lanes.add(lane);
-
         }
         runInfo.setLanes(lanes);
     }
@@ -369,7 +356,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
         if ("".equals(data)) {
             return null;
         }
-        Set<TagValueUnit> attributes = new HashSet<TagValueUnit>();
+        Set<TagValueUnit> attributes = new HashSet<>();
         String[] differentAttributes = data.split(";");
 
         for (String attribute : differentAttributes) {
@@ -385,7 +372,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
     private void getData() {
 
-        Map<FileProvenanceParam, List<String>> fileProvenanceParams = new EnumMap<FileProvenanceParam, List<String>>(
+        Map<FileProvenanceParam, List<String>> fileProvenanceParams = new EnumMap<>(
                 FileProvenanceParam.class);
         fileProvenanceParams.put(FileProvenanceParam.ius, iusSwids);
 
@@ -442,7 +429,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
         String[] fileLinkerParams = { "--file-list-file", fileLinkerPath, "--workflow-accession", wfaccession, "--csv-separator", "," };
         PluginRunner p = new PluginRunner();
-        List<String> a = new ArrayList<String>();
+        List<String> a = new ArrayList<>();
         a.add("--plugin");
         a.add(FileLinker.class.getCanonicalName());
         a.add("--");
@@ -456,7 +443,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     private String parseSWID(String output) {
         String swid;
 
-        swid = output.substring(output.indexOf(":") + 2);
+        swid = output.substring(output.indexOf(':') + 2);
 
         return swid;
 
@@ -486,8 +473,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
         equal.append(original.getRunSkip(), actual.getRunSkip());
         equal.append(original.getRunDescription(), actual.getRunDescription());
 
-        List<TagValueUnit> originalRunAttributes = new ArrayList<TagValueUnit>(original.getRunAttributes());
-        List<TagValueUnit> actualRunAttributes = new ArrayList<TagValueUnit>(actual.getRunAttributes());
+        List<TagValueUnit> originalRunAttributes = new ArrayList<>(original.getRunAttributes());
+        List<TagValueUnit> actualRunAttributes = new ArrayList<>(actual.getRunAttributes());
 
         Collections.sort(originalRunAttributes);
         Collections.sort(actualRunAttributes);
@@ -505,8 +492,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
         equal.append(original.getExperimentDescription(), actual.getExperimentDescription());
         equal.append(original.getExperimentName(), actual.getExperimentName());
 
-        List<TagValueUnit> originalExperimentAttributes = new ArrayList<TagValueUnit>(original.getExperimentAttributes());
-        List<TagValueUnit> actualExperimentAttributes = new ArrayList<TagValueUnit>(actual.getExperimentAttributes());
+        List<TagValueUnit> originalExperimentAttributes = new ArrayList<>(original.getExperimentAttributes());
+        List<TagValueUnit> actualExperimentAttributes = new ArrayList<>(actual.getExperimentAttributes());
 
         Collections.sort(originalExperimentAttributes);
         Collections.sort(actualExperimentAttributes);
@@ -521,8 +508,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
         }
 
         // Lanes
-        List<LaneInfo> originalLanes = new ArrayList<LaneInfo>(original.getLanes());
-        List<LaneInfo> actualLanes = new ArrayList<LaneInfo>(actual.getLanes());
+        List<LaneInfo> originalLanes = new ArrayList<>(original.getLanes());
+        List<LaneInfo> actualLanes = new ArrayList<>(actual.getLanes());
 
         Collections.sort(originalLanes);
         Collections.sort(actualLanes);
@@ -544,8 +531,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
             equal.append(originalLane.getLibraryStrategyAcc(), actualLane.getLibraryStrategyAcc());
 
             // Adds all the lane attributes
-            List<TagValueUnit> originalLaneAttributes = new ArrayList<TagValueUnit>(originalLane.getLaneAttributes());
-            List<TagValueUnit> actualLaneAttributes = new ArrayList<TagValueUnit>(actualLane.getLaneAttributes());
+            List<TagValueUnit> originalLaneAttributes = new ArrayList<>(originalLane.getLaneAttributes());
+            List<TagValueUnit> actualLaneAttributes = new ArrayList<>(actualLane.getLaneAttributes());
             Collections.sort(originalLaneAttributes);
             Collections.sort(actualLaneAttributes);
 
@@ -561,8 +548,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
             }
 
             // Now to check samples
-            List<SampleInfo> originalSamples = new ArrayList<SampleInfo>(originalLane.getSamples());
-            List<SampleInfo> actualSamples = new ArrayList<SampleInfo>(actualLane.getSamples());
+            List<SampleInfo> originalSamples = new ArrayList<>(originalLane.getSamples());
+            List<SampleInfo> actualSamples = new ArrayList<>(actualLane.getSamples());
 
             Collections.sort(actualSamples);
             Collections.sort(originalSamples);
@@ -591,8 +578,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
                 equal.append(originalSample.getIusDescription(), actualSample.getIusDescription());
                 equal.append(originalSample.getIusSkip(), actualSample.getIusSkip());
 
-                List<TagValueUnit> originalSampleAttributes = new ArrayList<TagValueUnit>(originalSample.getSampleAttributes());
-                List<TagValueUnit> actualSampleAttributes = new ArrayList<TagValueUnit>(actualSample.getSampleAttributes());
+                List<TagValueUnit> originalSampleAttributes = new ArrayList<>(originalSample.getSampleAttributes());
+                List<TagValueUnit> actualSampleAttributes = new ArrayList<>(actualSample.getSampleAttributes());
 
                 Collections.sort(originalSampleAttributes);
                 Collections.sort(actualSampleAttributes);
@@ -607,8 +594,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
                     equal.append(unitOrig.getValue(), unitActual.getValue());
                 }
 
-                List<TagValueUnit> originalIUSAttributes = new ArrayList<TagValueUnit>(originalSample.getIusAttributes());
-                List<TagValueUnit> actualIUSAttributes = new ArrayList<TagValueUnit>(originalSample.getIusAttributes());
+                List<TagValueUnit> originalIUSAttributes = new ArrayList<>(originalSample.getIusAttributes());
+                List<TagValueUnit> actualIUSAttributes = new ArrayList<>(originalSample.getIusAttributes());
 
                 Collections.sort(originalIUSAttributes);
                 Collections.sort(actualIUSAttributes);

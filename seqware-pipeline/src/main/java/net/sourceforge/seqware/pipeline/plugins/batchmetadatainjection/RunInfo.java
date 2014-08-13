@@ -220,7 +220,7 @@ public class RunInfo {
      */
     public Set<TagValueUnit> getRunAttributes() {
         if (runAttributes == null) {
-            runAttributes = new HashSet<TagValueUnit>();
+            runAttributes = new HashSet<>();
         }
         return runAttributes;
     }
@@ -273,7 +273,7 @@ public class RunInfo {
      */
     public Set<TagValueUnit> getStudyAttributes() {
         if (studyAttributes == null) {
-            studyAttributes = new HashSet<TagValueUnit>();
+            studyAttributes = new HashSet<>();
         }
         return studyAttributes;
     }
@@ -326,7 +326,7 @@ public class RunInfo {
      */
     public Set<TagValueUnit> getExperimentAttributes() {
         if (experimentAttributes == null) {
-            experimentAttributes = new HashSet<TagValueUnit>();
+            experimentAttributes = new HashSet<>();
         }
         return experimentAttributes;
     }

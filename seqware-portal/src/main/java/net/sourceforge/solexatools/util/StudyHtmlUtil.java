@@ -21,7 +21,7 @@ import net.sourceforge.seqware.common.util.Log;
  */
 public class StudyHtmlUtil {
     /** Constant <code>TYPE_TREE="st"</code> */
-    public final static String TYPE_TREE = "st";
+    public static final String TYPE_TREE = "st";
 
     /**
      * <p>

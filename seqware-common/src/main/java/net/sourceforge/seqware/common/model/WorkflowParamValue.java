@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowParamValue extends PermissionsAware implements Serializable, Comparable<WorkflowParamValue> {
+public class WorkflowParamValue extends PermissionsAware implements Serializable, Comparable<WorkflowParamValue>, Cloneable {
 
     private static final long serialVersionUID = 1L;
     private Integer workflowParamValueId;

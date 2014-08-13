@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class WorkflowParamValueServiceImpl implements WorkflowParamValueService {
     private WorkflowParamValueDAO workflowParamValueDAO = null;
-    private static final Log log = LogFactory.getLog(WorkflowParamValueServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(WorkflowParamValueServiceImpl.class);
 
     /**
      * <p>
@@ -61,8 +61,8 @@ public class WorkflowParamValueServiceImpl implements WorkflowParamValueService 
             try {
                 workflowParamValue = workflowParamValueDAO.findByID(id);
             } catch (Exception exception) {
-                log.error("Cannot find Lane by Workflow Param ID " + id);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Lane by Workflow Param ID " + id);
+                LOG.error(exception.getMessage());
             }
         }
         return workflowParamValue;

@@ -24,7 +24,7 @@ public class Security {
      *            a {@link javax.servlet.http.HttpServletRequest} object.
      * @return a boolean.
      */
-    public final static boolean isAuthenticated(HttpServletRequest request) {
+    public static final boolean isAuthenticated(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null && (Registration) session.getAttribute("registration") != null) return true;
         return false;
@@ -39,7 +39,7 @@ public class Security {
      *            a {@link javax.servlet.http.HttpServletRequest} object.
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
-    public final static Registration getRegistration(HttpServletRequest request) {
+    public static final Registration getRegistration(HttpServletRequest request) {
         if (request == null || request.getSession(false) == null) return null;
         return (Registration) request.getSession(false).getAttribute("registration");
     }
@@ -55,7 +55,7 @@ public class Security {
      *            a {@link javax.servlet.http.HttpServletResponse} object.
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
-    public final static Registration requireRegistration(HttpServletRequest request, HttpServletResponse response) {
+    public static final Registration requireRegistration(HttpServletRequest request, HttpServletResponse response) {
         // TODO// use a more specific Exception sub-class?
 
         Registration registration = getRegistration(request);

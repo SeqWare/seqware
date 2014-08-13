@@ -84,7 +84,7 @@ public class UploadFileSetupController extends BaseCommandController {
 
         UploadFile uploadFile = new UploadFile();
 
-        if (listFileType.size() == 0) {
+        if (listFileType.isEmpty()) {
             BindingResult errors = new BindException(uploadFile, getCommandName());
             errors.reject("error.upload.file.file.type.empty");
             model = errors.getModel();
@@ -140,7 +140,7 @@ public class UploadFileSetupController extends BaseCommandController {
     private Integer getRequestedId(HttpServletRequest request) {
         Integer id = null;
         String strId = request.getParameter("id");
-        if (strId != null && !strId.equals("")) {
+        if (strId != null && !strId.isEmpty()) {
             id = Integer.parseInt(strId);
         }
         return id;

@@ -42,17 +42,17 @@ import org.springframework.web.servlet.mvc.BaseCommandController;
 public class StudyReportBoxController extends BaseCommandController {
 
     /** Constant <code>STUDY_ID="study_id"</code> */
-    public final static String STUDY_ID = "study_id";
+    public static final String STUDY_ID = "study_id";
     /** Constant <code>JSON="json"</code> */
-    public final static String JSON = "json";
+    public static final String JSON = "json";
     /** Constant <code>SORT_NAME="sortname"</code> */
-    public final static String SORT_NAME = "sortname";
+    public static final String SORT_NAME = "sortname";
     /** Constant <code>SORT_ORDER="sortorder"</code> */
-    public final static String SORT_ORDER = "sortorder";
+    public static final String SORT_ORDER = "sortorder";
     /** Constant <code>CSV_TYPE="csvtype"</code> */
-    public final static String CSV_TYPE = "csvtype";
+    public static final String CSV_TYPE = "csvtype";
     /** Constant <code>CHECK="check"</code> */
-    public final static String CHECK = "check";
+    public static final String CHECK = "check";
 
     private StudyService studyService;
     private SampleService sampleService;
@@ -160,26 +160,26 @@ public class StudyReportBoxController extends BaseCommandController {
                         return null;
                     }
 
-                    StringBuffer sb = new StringBuffer();
+                    StringBuilder sb = new StringBuilder();
                     sb.append("Sample\tChild Sample\t");
                     List<Workflow> workflows = sampleReportService.getWorkflowsForStudy(currentStudy);
                     for (Workflow wf : workflows) {
-                        sb.append(wf.getName() + "\t");
+                        sb.append(wf.getName()).append("\t");
                     }
                     sb.append("\n");
                     List<Sample> childSamples = sampleReportService.getChildSamples(currentStudy);
                     // Generate Rows
                     for (Sample sample : childSamples) {
                         Sample rootSample = sampleService.getRootSample(sample);
-                        sb.append(rootSample.getTitle() + "\t");
-                        sb.append(rootSample.getSampleId().intValue() != sample.getSampleId().intValue() ? sample.getTitle() + "\t"
+                        sb.append(rootSample.getTitle()).append("\t");
+                        sb.append(rootSample.getSampleId() != sample.getSampleId() ? sample.getTitle() + "\t"
                                 : "no child" + "\t");
                         for (Workflow workflow : workflows) {
                             Status status = sampleReportService.getStatus(currentStudy, sample, workflow);
                             if (status == null) {
-                                sb.append(Status.notstarted + "\t");
+                                sb.append(Status.notstarted).append("\t");
                             } else {
-                                sb.append(status + "\t");
+                                sb.append(status).append("\t");
                             }
                         }
 
@@ -205,7 +205,7 @@ public class StudyReportBoxController extends BaseCommandController {
                         response.flushBuffer();
                         return null;
                     }
-                    StringBuffer sb = new StringBuffer();
+                    StringBuilder sb = new StringBuilder();
                     sb.append("Study Title\tStudy SWID\tExperiment Name\tExperiment SWID\tParent Sample Name\t"
                             + "Parent Sample SWID\tParent Sample Attributes\t" + "Sample Name\tSample SWID\tSample Attributes\t"
                             + "Sequencer Run Name\tSequencer Run SWID\t" + "Lane Name\tLane Number\tLane SWID\tLane Attributes\t"
@@ -216,53 +216,53 @@ public class StudyReportBoxController extends BaseCommandController {
                     List<FileReportRow> rows = fileReportService.getReportForStudy(currentStudy);
 
                     for (FileReportRow row : rows) {
-                        sb.append(row.getStudy().getTitle() + "\t");
-                        sb.append(row.getStudy().getSwAccession() + "\t");
-                        sb.append(row.getExperiment().getName() + "\t");
-                        sb.append(row.getExperiment().getSwAccession() + "\t");
-                        sb.append(row.getSample().getName() + "\t");
-                        sb.append(row.getSample().getSwAccession() + "\t");
+                        sb.append(row.getStudy().getTitle()).append("\t");
+                        sb.append(row.getStudy().getSwAccession()).append("\t");
+                        sb.append(row.getExperiment().getName()).append("\t");
+                        sb.append(row.getExperiment().getSwAccession()).append("\t");
+                        sb.append(row.getSample().getName()).append("\t");
+                        sb.append(row.getSample().getSwAccession()).append("\t");
                         StringBuffer attributes = new StringBuffer();
                         for (SampleAttribute attribute : row.getSample().getSampleAttributes()) {
-                            attributes.append(attribute.getTag() + "=" + attribute.getValue() + " ");
+                            attributes.append(attribute.getTag()).append("=").append(attribute.getValue()).append(" ");
                         }
-                        sb.append(attributes.toString() + "\t");
-                        sb.append(row.getChildSample().getName() + "\t");
-                        sb.append(row.getChildSample().getSwAccession() + "\t");
+                        sb.append(attributes.toString()).append("\t");
+                        sb.append(row.getChildSample().getName()).append("\t");
+                        sb.append(row.getChildSample().getSwAccession()).append("\t");
                         attributes = new StringBuffer();
                         for (SampleAttribute attribute : row.getChildSample().getSampleAttributes()) {
-                            attributes.append(attribute.getTag() + "=" + attribute.getValue() + " ");
+                            attributes.append(attribute.getTag()).append("=").append(attribute.getValue()).append(" ");
                         }
-                        sb.append(attributes.toString() + "\t");
+                        sb.append(attributes.toString()).append("\t");
                         Lane lane = row.getLane();
                         SequencerRun sequencerRun = null;
                         if (lane != null) {
                             sequencerRun = lane.getSequencerRun();
                         }
                         if (sequencerRun != null) {
-                            sb.append(sequencerRun.getName() + "\t");
-                            sb.append(sequencerRun.getSwAccession() + "\t");
+                            sb.append(sequencerRun.getName()).append("\t");
+                            sb.append(sequencerRun.getSwAccession()).append("\t");
                         } else {
                             sb.append(" \t");
                             sb.append(" \t");
                         }
                         if (lane != null) {
-                            sb.append(lane.getName() + "\t");
-                            sb.append(lane.getLaneIndex() + "\t");
-                            sb.append(lane.getSwAccession() + "\t");
+                            sb.append(lane.getName()).append("\t");
+                            sb.append(lane.getLaneIndex()).append("\t");
+                            sb.append(lane.getSwAccession()).append("\t");
                             attributes = new StringBuffer();
                             for (LaneAttribute attribute : lane.getLaneAttributes()) {
-                                attributes.append(attribute.getTag() + "=" + attribute.getValue() + " ");
+                                attributes.append(attribute.getTag()).append("=").append(attribute.getValue()).append(" ");
                             }
-                            sb.append(attributes + "\t");
+                            sb.append(attributes).append("\t");
                         } else {
                             sb.append(" \t");
                             sb.append(" \t");
                             sb.append(" \t");
                             sb.append(" \t");
                         }
-                        sb.append(row.getIus().getTag() + "\t");
-                        sb.append(row.getIus().getSwAccession() + "\t");
+                        sb.append(row.getIus().getTag()).append("\t");
+                        sb.append(row.getIus().getSwAccession()).append("\t");
                         Processing processing = row.getProcessing();
                         WorkflowRun run = null;
                         Workflow workflow = null;
@@ -277,31 +277,31 @@ public class StudyReportBoxController extends BaseCommandController {
 
                         }
                         if (workflow != null) {
-                            sb.append(workflow.getName() + "\t");
-                            sb.append(workflow.getVersion() + "\t");
-                            sb.append(workflow.getSwAccession() + "\t");
+                            sb.append(workflow.getName()).append("\t");
+                            sb.append(workflow.getVersion()).append("\t");
+                            sb.append(workflow.getSwAccession()).append("\t");
                         } else {
                             sb.append(" \t");
                             sb.append(" \t");
                             sb.append(" \t");
                         }
                         if (run != null) {
-                            sb.append(run.getName() + "\t");
-                            sb.append(run.getSwAccession() + "\t");
+                            sb.append(run.getName()).append("\t");
+                            sb.append(run.getSwAccession()).append("\t");
                         } else {
                             sb.append(" \t");
                             sb.append(" \t");
                         }
                         if (processing != null) {
-                            sb.append(processing.getAlgorithm() + "\t");
-                            sb.append(processing.getSwAccession() + "\t");
+                            sb.append(processing.getAlgorithm()).append("\t");
+                            sb.append(processing.getSwAccession()).append("\t");
                         } else {
                             sb.append(" \t");
                             sb.append(" \t");
                         }
-                        sb.append(row.getFile().getMetaType() + "\t");
-                        sb.append(row.getFile().getSwAccession() + "\t");
-                        sb.append(row.getFile().getFilePath() + "\t");
+                        sb.append(row.getFile().getMetaType()).append("\t");
+                        sb.append(row.getFile().getSwAccession()).append("\t");
+                        sb.append(row.getFile().getFilePath()).append("\t");
                         sb.append("\n");
 
                     }
@@ -353,7 +353,7 @@ public class StudyReportBoxController extends BaseCommandController {
                 if (Status.notstarted == status) {
                     sStatus = "not started";
                 }
-                out.append("['" + sStatus + "'," + count + "]");
+                out.append("['").append(sStatus).append("',").append(count).append("]");
                 if (current != statusCount.keySet().size()) {
                     out.append(",");
                 }
@@ -385,7 +385,7 @@ public class StudyReportBoxController extends BaseCommandController {
             if (Status.notstarted == status) {
                 sStatus = "not started";
             }
-            out.append("['" + sStatus + "'," + count + "]");
+            out.append("['").append(sStatus).append("',").append(count).append("]");
             if (current != statusCount.keySet().size()) {
                 out.append(",");
             }

@@ -34,13 +34,13 @@ public class OozieWorkflowXmlGenerator {
         // write to dax
         Document doc = new Document();
         try (OutputStream out = new FileOutputStream(dax)) {
-            XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
-            WorkflowApp adag = new WorkflowApp(wfdm, nfsWorkDir, hdfsWorkDir, useSge, seqwareJar, threadsSgeParamFormat,
-                    maxMemorySgeParamFormat);
-            doc.setRootElement(adag.serializeXML());
-            serializer.output(doc, out);
-
-            out.flush();
+                XMLOutputter serializer = new XMLOutputter(Format.getPrettyFormat());
+                WorkflowApp adag = new WorkflowApp(wfdm, nfsWorkDir, hdfsWorkDir, useSge, seqwareJar, threadsSgeParamFormat,
+                        maxMemorySgeParamFormat);
+                doc.setRootElement(adag.serializeXML());
+                serializer.output(doc, out);
+                
+                out.flush();
         } catch (IOException e) {
             Log.error(e);
             ret.setExitStatus(ReturnValue.FAILURE);

@@ -189,11 +189,11 @@ public class ProvisionDependenciesBundle extends Module {
             boolean result = m.find();
             String accessKey = null;
             String secretKey = null;
-            String URL = (String) options.valueOf("input-file");
+            String url = (String) options.valueOf("input-file");
             if (result) {
                 accessKey = m.group(1);
                 secretKey = m.group(2);
-                URL = "s3://" + m.group(3);
+                url = "s3://" + m.group(3);
             } else {
                 // get the access/secret key from the .seqware/settings file
                 try {
@@ -218,7 +218,7 @@ public class ProvisionDependenciesBundle extends Module {
 
             // parse out the bucket and key
             p = Pattern.compile("s3://([^/]+)/(\\S+)");
-            m = p.matcher(URL);
+            m = p.matcher(url);
             result = m.find();
             if (result) {
                 String bucket = m.group(1);
@@ -233,16 +233,16 @@ public class ProvisionDependenciesBundle extends Module {
                     Log.info("Downloading an S3 object from bucket: " + bucket + " with key: " + key);
                     BufferedInputStream reader = new BufferedInputStream(object.getObjectContent(), bufLen);
                     try {
-                        BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(output), bufLen);
-                        while (true) {
-                            int data = reader.read();
-                            if (data == -1) {
-                                break;
+                        try (BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(output), bufLen)) {
+                            while (true) {
+                                int data = reader.read();
+                                if (data == -1) {
+                                    break;
+                                }
+                                writer.write(data);
                             }
-                            writer.write(data);
+                            reader.close();
                         }
-                        reader.close();
-                        writer.close();
                     } catch (FileNotFoundException e) {
                         Log.error(e.getMessage());
                     } catch (IOException e) {
@@ -263,16 +263,16 @@ public class ProvisionDependenciesBundle extends Module {
             String protocol = null;
             String user = null;
             String pass = null;
-            String URL = (String) options.valueOf("input-file");
+            String url = (String) options.valueOf("input-file");
             if (result) {
                 protocol = m.group(1);
                 user = m.group(2);
                 pass = m.group(3);
-                URL = protocol + "://" + m.group(4);
+                url = protocol + "://" + m.group(4);
             }
             URL urlObj = null;
             try {
-                urlObj = new URL(URL);
+                urlObj = new URL(url);
                 if (urlObj != null) {
                     URLConnection urlConn = urlObj.openConnection();
                     if (user != null && pass != null) {
@@ -282,7 +282,7 @@ public class ProvisionDependenciesBundle extends Module {
                     }
                     // download data and write out
                     p = Pattern.compile("://([^/]+)/(\\S+)");
-                    m = p.matcher(URL);
+                    m = p.matcher(url);
                     result = m.find();
                     if (result) {
                         String host = m.group(1);
@@ -293,20 +293,21 @@ public class ProvisionDependenciesBundle extends Module {
                         // again
                         // FIXME: I haven't tested this...
                         if (!output.exists() || output.length() != urlConn.getContentLength()) {
-                            Log.info("Downloading an http object from URL: " + URL);
-                            BufferedInputStream reader = new BufferedInputStream(urlConn.getInputStream(), bufLen);
-                            BufferedOutputStream writer = new BufferedOutputStream(new FileOutputStream(output), bufLen);
-                            while (true) {
-                                int data = reader.read();
-                                if (data == -1) {
-                                    break;
+                            Log.info("Downloading an http object from URL: " + url);
+                            BufferedOutputStream writer;
+                            try (BufferedInputStream reader = new BufferedInputStream(urlConn.getInputStream(), bufLen)) {
+                                writer = new BufferedOutputStream(new FileOutputStream(output), bufLen);
+                                while (true) {
+                                    int data = reader.read();
+                                    if (data == -1) {
+                                        break;
+                                    }
+                                    writer.write(data);
                                 }
-                                writer.write(data);
                             }
-                            reader.close();
                             writer.close();
                         } else {
-                            Log.info("Skipping download of http object from URL: " + URL + " since local output exists: "
+                            Log.info("Skipping download of http object from URL: " + url + " since local output exists: "
                                     + output.getAbsolutePath());
                         }
                     }

@@ -70,7 +70,7 @@ public class HelloWorld extends Plugin {
     @Override
     public void setParams(List<String> params) {
         println("Setting Params: " + params);
-        this.params = params.toArray(new String[0]);
+        this.params = params.toArray(new String[params.size()]);
     }
 
     /*

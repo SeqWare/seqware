@@ -27,7 +27,7 @@ public class StudyServiceImpl implements StudyService {
     private StudyDAO studyDAO = null;
     private StudyTypeDAO studyTypeDAO = null;
     private FileDAO fileDAO = null;
-    private static final Log log = LogFactory.getLog(StudyServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(StudyServiceImpl.class);
 
     /**
      * <p>
@@ -180,7 +180,7 @@ public class StudyServiceImpl implements StudyService {
             try {
                 study = studyDAO.findByTitle(title.trim());
             } catch (Exception exception) {
-                log.debug("Cannot find Study by title " + title);
+                LOG.debug("Cannot find Study by title " + title);
             }
         }
         return study;
@@ -198,8 +198,8 @@ public class StudyServiceImpl implements StudyService {
             try {
                 study = studyDAO.findByID(studyID);
             } catch (Exception exception) {
-                log.error("Cannot find Study by studyID " + studyID);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Study by studyID " + studyID);
+                LOG.error(exception.getMessage());
             }
         }
         return study;
@@ -213,8 +213,8 @@ public class StudyServiceImpl implements StudyService {
             try {
                 study = studyDAO.findBySWAccession(swAccession);
             } catch (Exception exception) {
-                log.error("Cannot find Study by swAccession " + swAccession);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Study by swAccession " + swAccession);
+                LOG.error(exception.getMessage());
             }
         }
         return study;
@@ -228,8 +228,8 @@ public class StudyServiceImpl implements StudyService {
             try {
                 studies = studyDAO.findByOwnerID(registrationId);
             } catch (Exception exception) {
-                log.error("Cannot find Study by registrationId " + registrationId);
-                log.error(exception.getMessage());
+                LOG.error("Cannot find Study by registrationId " + registrationId);
+                LOG.error(exception.getMessage());
             }
         }
         return studies;

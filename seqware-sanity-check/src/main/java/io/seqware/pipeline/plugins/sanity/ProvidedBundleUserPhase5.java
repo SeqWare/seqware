@@ -33,33 +33,36 @@ import org.junit.Test;
 
 /**
  * Build and install a bundle, used by both the User tutorial and the Developer tutorial
+ * 
  * @author dyuen
  */
 public class ProvidedBundleUserPhase5 {
-    
+
     public static final String WORKFLOW = "Workflow";
-    
+
     @Test
     public void installHandyProvidedBundleTest() throws IOException {
-        Collection<File> listFiles = FileUtils.listFiles(new File(System.getProperty("user.dir")), new String[]{"zip"}, false);
+        Collection<File> listFiles = FileUtils.listFiles(new File(System.getProperty("user.dir")), new String[] { "zip" }, false);
         Assert.assertTrue("could not find appropriate bundle for testing", listFiles.size() > 0);
-        
+
         File bundleUsed = listFiles.iterator().next();
-        Log.info("Using bundle "+bundleUsed.getAbsolutePath()+" for testing");
-        
+        Log.info("Using bundle " + bundleUsed.getAbsolutePath() + " for testing");
+
         // for all tests, we're going to need to create and install our basic archetypes
-        String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b " + bundleUsed.getAbsolutePath();
+        String installCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -verbose -- -i -b "
+                + bundleUsed.getAbsolutePath();
         String installOutput = ITUtility.runSeqWareJar(installCommand, ReturnValue.SUCCESS, null);
-        Log.info(installOutput);     
-        int workflow_accession = ITUtility.extractSwid(installOutput);
-        AccessionMap.accessionMap.put(WORKFLOW, String.valueOf(workflow_accession));
-        File exportINIFile = exportINI(new PluginRunnerET(), Lists.newArrayList(workflow_accession));
-        
+        Log.info(installOutput);
+        int workflowAccession = ITUtility.extractSwid(installOutput);
+        AccessionMap.accessionMap.put(WORKFLOW, String.valueOf(workflowAccession));
+        File exportINIFile = exportINI(new PluginRunnerET(), Lists.newArrayList(workflowAccession));
+
         String localhost = ITUtility.getLocalhost();
         Log.info("Attempting to launch with wait on host: " + localhost);
         // launch, slightly unlike the tutorial, I'm going to wait to ensure that we have results to export in the next phase
-        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files " + exportINIFile.getAbsolutePath() + " --workflow-accession " + workflow_accession
-                + " --parent-accessions " + AccessionMap.accessionMap.get(UserPhase4.FILE) + " --wait --host " + localhost;
+        String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowLauncher -- --ini-files "
+                + exportINIFile.getAbsolutePath() + " --workflow-accession " + workflowAccession + " --parent-accessions "
+                + AccessionMap.accessionMap.get(UserPhase4.FILE) + " --wait --host " + localhost;
         String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         Log.info(listOutput);
     }

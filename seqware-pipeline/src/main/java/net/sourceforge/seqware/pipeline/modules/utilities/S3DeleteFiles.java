@@ -151,11 +151,11 @@ public class S3DeleteFiles extends Module {
             Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
             Matcher m = p.matcher(input);
             boolean result = m.find();
-            String URL = input;
+            String url = input;
             if (result) {
                 accessKey = m.group(1);
                 secretKey = m.group(2);
-                URL = "s3://" + m.group(3);
+                url = "s3://" + m.group(3);
             }
         }
 
@@ -199,15 +199,15 @@ public class S3DeleteFiles extends Module {
             if (options.has("s3-url-file")) {
                 List<String> lists = (List<String>) options.valuesOf("s3-url-file");
                 for (String list : lists) {
-                    BufferedReader reader = new BufferedReader(new FileReader(list));
-                    String line = reader.readLine();
-                    while (line != null) {
-                        if (line.startsWith("s3://")) {
-                            remoteFiles.add(line);
+                    try (BufferedReader reader = new BufferedReader(new FileReader(list))) {
+                        String line = reader.readLine();
+                        while (line != null) {
+                            if (line.startsWith("s3://")) {
+                                remoteFiles.add(line);
+                            }
+                            line = reader.readLine();
                         }
-                        line = reader.readLine();
                     }
-                    reader.close();
                 }
             }
         } catch (Exception e) {

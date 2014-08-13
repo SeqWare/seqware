@@ -135,7 +135,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         int start = 0;
         int end = 0;
         if (replace == null) replace = "";
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         while ((end = str.indexOf(pattern, start)) >= 0) {
             result.append(str.substring(start, end));
             result.append(replace);

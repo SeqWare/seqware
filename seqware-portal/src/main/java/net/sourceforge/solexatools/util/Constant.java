@@ -43,7 +43,7 @@ public class Constant {
      * @return a {@link java.lang.Integer} object.
      */
     public static Integer getId(String str) {
-        return Integer.parseInt(str.substring(str.lastIndexOf("_") + 1, str.length()));
+        return Integer.parseInt(str.substring(str.lastIndexOf('_') + 1, str.length()));
     }
 
     /**
@@ -56,7 +56,7 @@ public class Constant {
      * @return a {@link java.lang.Integer} object.
      */
     public static Integer getFirstId(String str) {
-        return Integer.parseInt(str.substring(str.indexOf("_") + 1, str.lastIndexOf("_")));
+        return Integer.parseInt(str.substring(str.indexOf('_') + 1, str.lastIndexOf('_')));
     }
 
     /**
