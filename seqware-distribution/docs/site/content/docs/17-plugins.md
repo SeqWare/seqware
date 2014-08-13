@@ -289,7 +289,7 @@ A plugin that lets you (install)/schedule/launch/watch/status check workflows in
 |--w, --workflow|The name of the workflow to run. This must be used in conjunction with a version and bundle. Alternatively you can use a workflow-accession in place of all three for installed workflows.|
 |--wait|Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.|
 |--workflow-accession|The accession for an installed workflow, must be provided unless a bundle is.|
-|--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge, whitestar, whitestar-sge. Defaults to oozie.|
+|--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge, whitestar, whitestar-parallel, whitestar-sge. Defaults to oozie.|
 
 
 ##  WorkflowRunFilesInitialPopulationPlugin
@@ -337,7 +337,7 @@ A plugin that lets you schedule installed workflow bundles.
 |--out|Optional: Will output a workflow-run by sw_accession|
 |--pa, --parent-accessions|Optional: Typically this is the sw_accession of the processing record that is the parent for this workflow e.g. whose file is used as the input. You can actually specify multiple parent accessions by using this parameter multiple times or providing a comma-delimited list, no space. You may want multiple parents when your workflow takes multiple input files. Most of the time the accession is from a processing row but can be an ius, lane, sequencer_run, study, experiment, or sample.|
 |--wa, --workflow-accession|Required: The sw_accession of the workflow that this run of a workflow should be associated with (via the workflow_id in the workflow_run_table). Specify this or the workflow, version, and bundle.|
-|--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge, whitestar, whitestar-sge. Defaults to oozie.|
+|--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge, whitestar, whitestar-parallel, whitestar-sge. Defaults to oozie.|
 
 
 ##  WorkflowStatusChecker
