@@ -100,6 +100,10 @@ public class OozieBashJob extends OozieJob {
         args.add(jobObj.getAlgo());
         args.add("--gcr-command");
         args.add(jobScript.getAbsolutePath());
+
+        // store permanent copy of full output
+        args.add("--gcr-permanent-storage-prefix");
+        args.add("generated-scripts/" + jobScript.getName());
         return args;
     }
 

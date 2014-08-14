@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -55,6 +56,7 @@ public class GenericCommandRunner extends Module {
     public static final int DEFAULT_QUEUE_LENGTH = 10;
     private int stdoutQueueLength = Integer.MAX_VALUE;
     private int stderrQueueLength = Integer.MAX_VALUE;
+    private ArgumentAcceptingOptionSpec<String> permanentPrefixSpec;
 
     /**
      * getOptionParser is an internal method to parse command line args.
@@ -86,20 +88,25 @@ public class GenericCommandRunner extends Module {
         parser.accepts("gcr-check-output-file", "Specify the path to the file.").withRequiredArg();
         parser.accepts(
                 GCR_STDOUT_BUFFERSIZE,
-                "Used if " + GCR_STDOUT + " is not set. This sets the number of lines of stdout to report (Default is "
-                        + DEFAULT_QUEUE_LENGTH + "). ").withRequiredArg().ofType(Integer.class).describedAs("Optional")
-                .defaultsTo(DEFAULT_QUEUE_LENGTH);
+                "Optional: Used if " + GCR_STDOUT
+                        + " is not set. This sets the number of lines of stdout to report as metadata (Default is " + DEFAULT_QUEUE_LENGTH
+                        + "). ").withRequiredArg().ofType(Integer.class).describedAs("Optional").defaultsTo(DEFAULT_QUEUE_LENGTH);
         parser.accepts(
                 GCR_STDERR_BUFFERSIZE,
-                "Used if " + GCR_STDERR + " is not set. This sets the number of lines of stderr to report (Default is "
-                        + DEFAULT_QUEUE_LENGTH + "). ").withRequiredArg().ofType(Integer.class).describedAs("Optional")
-                .defaultsTo(DEFAULT_QUEUE_LENGTH);
-        // SEQWARE-1668 GCR needs the ability to output to stdout and stderr for debugging
-        parser.accepts(GCR_STDOUT, "Optional: Reports the full stdout (stdout of the command called is normally trimmed to "
+                "Optional: Used if " + GCR_STDERR
+                        + " is not set. This sets the number of lines of stderr to report as metadata (Default is " + DEFAULT_QUEUE_LENGTH
+                        + "). ").withRequiredArg().ofType(Integer.class).describedAs("Optional").defaultsTo(DEFAULT_QUEUE_LENGTH);
+        // SEQWARE-1668, GCR needs the ability to output to stdout and stderr for debugging
+        parser.accepts(GCR_STDOUT, "Optional: Reports the full stdout as metadata (stdout of the command called is normally trimmed to "
                 + GCR_STDOUT_BUFFERSIZE + " lines");
-        parser.accepts(GCR_STDERR, "Optional: Returns the full stderr (stderr of the command called is normally trimmed to "
+        parser.accepts(GCR_STDERR, "Optional: Returns the full stderr as metadata (stderr of the command called is normally trimmed to "
                 + GCR_STDERR_BUFFERSIZE + " lines");
-        return (parser);
+        // SEQWARE-1955, GCR can be redirected to a specific prefix for storing a permanent copy of stderr and stdout that isn't output to
+        // stderr and stdout (for metadata)
+        this.permanentPrefixSpec = parser
+                .accepts("gcr-permanent-storage-prefix", "Optional: Stream a copy of stdout and stderr to this prefix + .stderr/stdout")
+                .withRequiredArg().ofType(String.class);
+        return parser;
     }
 
     /**
@@ -365,7 +372,14 @@ public class GenericCommandRunner extends Module {
         }
         theCommand.add(cmdBuff.toString());
         Log.stdout("Command run: \nbash -lc " + cmdBuff.toString());
-        ReturnValue result = RunTools.runCommand(null, theCommand.toArray(new String[theCommand.size()]), stdoutQueueLength, stderrQueueLength);
+        ReturnValue result;
+        if (options.has(permanentPrefixSpec)) {
+            result = RunTools.runCommand(null, theCommand.toArray(new String[theCommand.size()]), stdoutQueueLength, stderrQueueLength,
+                    options.valueOf(permanentPrefixSpec));
+        } else {
+            result = RunTools.runCommand(null, theCommand.toArray(new String[theCommand.size()]), stdoutQueueLength, stderrQueueLength);
+        }
+
         Log.stdout("Command exit code: " + result.getExitStatus());
         // ReturnValue result = RunTools.runCommand(new String[] { "bash", "-c",
         // (String)options.valueOf("gcr-command"), cmdParameters.toArray(new
