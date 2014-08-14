@@ -125,6 +125,7 @@ public class WorkflowRescheduler extends Plugin {
                     // this translation here is ugly, do we still need to do this?
                     int workflowRunAccessionInt = this.metadata.get_workflow_run_accession(newWorkflowRunID);
                     WorkflowRun newWorkflowRun = metadata.getWorkflowRun(workflowRunAccessionInt);
+                    Log.stdout("Created workflow run with SWID: " + workflowRunAccessionInt);
 
                     // here, we could reverse-engineer parent links and re-create them
                     // but I'd rather just deprecate direct links from workflow runs to lane and ius though
