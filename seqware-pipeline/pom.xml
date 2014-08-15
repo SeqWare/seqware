@@ -62,6 +62,17 @@
     </repositories>
     <dependencies>
         <dependency>
+            <groupId>io.seqware</groupId>
+            <artifactId>oozie-sge</artifactId>
+            <version>1.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.oozie</groupId>
+                    <artifactId>oozie-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-common</artifactId>
         </dependency>
