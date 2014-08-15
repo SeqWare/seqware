@@ -129,13 +129,14 @@ public class MetadataWS implements Metadata {
     }
 
     private String version;
-    private LowLevel ll;
+    private final LowLevel ll;
 
     /**
      * <p>
      * Constructor for MetadataWS.
      * </p>
      * 
+     * @param database
      * @param password
      * @param username
      */
