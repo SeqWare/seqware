@@ -150,20 +150,24 @@ We have provided a new, simplified command line interface.  The best way to lear
 	$ seqware --help
 
 	Usage: seqware [<flag>]
-	       seqware <command> [--help]
+	seqware <command> [--help]
 
 	Commands:
-	  annotate      Add arbitrary key/value pairs to seqware objects
-	  bundle        Interact with a workflow bundle
-	  copy          Copy files between local and remote file systems
-	  create        Create new seqware objects (e.g., study)
-	  files         Extract information about workflow output files
-	  workflow      Interact with workflows
-	  workflow-run  Interact with workflow runs
+	annotate      Add arbitrary key/value pairs to seqware objects
+	bundle        Interact with a workflow bundle during development/admin
+	copy          Copy files between local and remote file systems
+	create        Create new seqware objects (e.g., study)
+	files         Extract information about workflow output files
+	study         Extract information about studies
+	workflow      Interact with workflows
+	workflow-run  Interact with workflow runs
+	checkdb       Check the seqware database for convention errors
+	check         Check the seqware environment for configuration issues
 
 	Flags:
-	  --help        Print help out
-	  --version     Print Seqware's version
+	--help        Print help out
+	--version     Print Seqware's version
+
 
 	$ seqware workflow --help
 
