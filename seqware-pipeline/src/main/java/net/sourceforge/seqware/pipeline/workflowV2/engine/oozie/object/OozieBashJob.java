@@ -7,6 +7,7 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.modules.GenericCommandRunner;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
+import org.apache.commons.io.FilenameUtils;
 import org.jdom.Element;
 
 public class OozieBashJob extends OozieJob {
@@ -103,7 +104,7 @@ public class OozieBashJob extends OozieJob {
 
         // store permanent copy of full output
         args.add("--gcr-permanent-storage-prefix");
-        args.add("generated-scripts/" + jobScript.getName());
+        args.add("generated-scripts/" + FilenameUtils.removeExtension(jobScript.getName()));
         return args;
     }
 
