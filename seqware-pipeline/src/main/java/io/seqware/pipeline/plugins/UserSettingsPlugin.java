@@ -188,7 +188,7 @@ public class UserSettingsPlugin extends Plugin {
      */
     @Override
     public String get_description() {
-        return ("A plugin that a documented .seqware settings file that can be used for documentation.");
+        return ("A plugin that generates a commented .seqware settings file that can be used for documentation.");
     }
 
     public static void main(String[] args) {
