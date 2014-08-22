@@ -18,8 +18,10 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import net.sourceforge.seqware.common.model.Attribute;
+import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.webservice.resources.BasicResource;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
@@ -124,10 +126,11 @@ public class DatabaseIDResource extends BasicResource {
     /**
      * Merge attributes from a new set into an existing one while removing duplicates. Unfortunately, due to how duplicates work,
      * 
+     * @param <S>
+     * @param <T>
      * @param existingAttributeSet
      * @param newAttributeSet
      * @param parent
-     * @return
      */
     protected <S, T extends Attribute> void mergeAttributes(Set<T> existingAttributeSet, Set<T> newAttributeSet, S parent) {
         // extract keys
@@ -139,6 +142,11 @@ public class DatabaseIDResource extends BasicResource {
         for (T newAttr : newAttributeSet) {
             if (keyMap.containsKey(newAttr.getTag())) {
                 T oldDuplicate = keyMap.get(newAttr.getTag());
+                // seqware-1945, check to see if we have a complete key and value duplicate, if so just ignore it
+                if (Objects.equals(oldDuplicate.getValue(), newAttr.getValue())) {
+                    Log.debug("Ignoring duplicate attribute" + newAttr.getTag() + "=" + newAttr.getValue());
+                    continue;
+                }
                 keyMap.remove(newAttr.getTag());
                 existingAttributeSet.remove(oldDuplicate);
             }
