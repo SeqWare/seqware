@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
+import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,8 @@ public class OozieProvisionFileJob extends OozieJob {
             String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
         super(job, name, oozie_working_dir, useSge, seqwareJar, slotsSgeParamFormat, maxMemorySgeParamFormat);
         // oozie provision file jobs should only require 2GB, leaving a margin of safety
-        job.setMaxMemory("3000");
+        String startMem = ConfigTools.getSettings().get(SqwKeys.SW_CONTROL_NODE_MEMORY.getSettingKey());
+        job.setMaxMemory(startMem == null ? "3000" : startMem);
         this.file = file;
     }
 
