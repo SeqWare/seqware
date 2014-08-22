@@ -151,19 +151,16 @@ public class MetadataWS implements Metadata {
     /**
      * {@inheritDoc}
      * 
-     * @param workflow_engine
-     * @param workflow_type
-     * @param workflow_class
      */
     @Override
     public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
             String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip,
-            String workflow_class, String workflow_type, String workflow_engine) {
+            String workflowClass, String workflowType, String workflowEngine, String seqwareVersion) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         Workflow workflow = convertParamsToWorkflow(baseCommand, name, description, version, configFile, storeProvisionDir, provisionDir,
-                templateFile, storeArchiveZip, archiveZip, workflow_class, workflow_type, workflow_engine);
+                templateFile, storeArchiveZip, archiveZip, workflowClass, workflowType, workflowEngine, seqwareVersion);
 
         HashMap<String, Map<String, String>> hm = convertIniToMap(configFile, provisionDir);
 
@@ -219,7 +216,7 @@ public class MetadataWS implements Metadata {
 
     public static Workflow convertParamsToWorkflow(String baseCommand, String name, String description, String version1, String configFile,
             boolean storeProvisionDir, String provisionDir, String templateFile, boolean storeArchiveZip, String archiveZip,
-            String workflow_class, String workflow_type, String workflow_engine) {
+            String workflow_class, String workflow_type, String workflow_engine, String seqware_version) {
         Workflow workflow;
         // figure out the correct command
         String command;
@@ -254,6 +251,7 @@ public class MetadataWS implements Metadata {
         workflow.setWorkflowClass(workflow_class);
         workflow.setWorkflowType(workflow_type);
         workflow.setWorkflowEngine(workflow_engine);
+        workflow.setSeqwareVersion(seqware_version);
         return workflow;
     }
 
@@ -1071,6 +1069,7 @@ public class MetadataWS implements Metadata {
         map.put("workflow_engine", workflow.getWorkflowEngine());
         map.put("workflow_type", workflow.getWorkflowType());
         map.put("workflow_class", workflow.getWorkflowClass());
+        map.put("seqware_version", workflow.getSeqwareVersion());
         return map;
     }
 

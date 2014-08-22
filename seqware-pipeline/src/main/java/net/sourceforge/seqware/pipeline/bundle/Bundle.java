@@ -267,7 +267,7 @@ public class Bundle {
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue packageBundle(File bundlePath, File bundleOutput) {
-        
+
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
 
@@ -620,15 +620,15 @@ public class Bundle {
             if (packageIntoZip && unzipIntoDir) {
                 localRet = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
                         w.getTemplatePath(), this.outputDir, true, this.outputZip, true, w.getWorkflowClass(), w.getWorkflowType(),
-                        w.getWorkflowEngine());
+                        w.getWorkflowEngine(), w.getWorkflowSqwVersion());
             } else if (packageIntoZip && !unzipIntoDir) {
                 localRet = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
                         w.getTemplatePath(), this.outputDir, false, this.outputZip, true, w.getWorkflowClass(), w.getWorkflowType(),
-                        w.getWorkflowEngine());
+                        w.getWorkflowEngine(), w.getWorkflowSqwVersion());
             } else if (!packageIntoZip && unzipIntoDir) {
                 localRet = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
                         w.getTemplatePath(), this.outputDir, true, this.outputZip, false, w.getWorkflowClass(), w.getWorkflowType(),
-                        w.getWorkflowEngine());
+                        w.getWorkflowEngine(), w.getWorkflowSqwVersion());
             } else {
                 Log.error("You need to specify an workflow bundle dir, workflow bundle zip file or both when you install a workflow.");
                 localRet.setExitStatus(ReturnValue.FAILURE);
