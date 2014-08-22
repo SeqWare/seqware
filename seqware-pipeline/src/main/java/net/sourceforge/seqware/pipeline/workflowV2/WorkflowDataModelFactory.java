@@ -193,6 +193,8 @@ public class WorkflowDataModelFactory {
                 m.invoke(dataModel);
                 m = clazz.getMethod("buildWorkflow");
                 m.invoke(dataModel);
+                m = clazz.getMethod("wrapup");
+                m.invoke(dataModel);
             } catch (NullPointerException e) {
                 Log.error("NullPointerException", e);
                 throw Rethrow.rethrow(e);
