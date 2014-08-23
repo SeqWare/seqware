@@ -375,7 +375,8 @@ public class AttributeAnnotatorET {
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --file-accession 6650 --key funky_key --value funky_value";
-        ITUtility.runSeqWareJar(listCommand, ReturnValue.FAILURE, null);
+        // seqware-1945: rejecting double annotation with the same key and value seems confusing to users
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
     }
 
     @Test
