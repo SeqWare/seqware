@@ -115,12 +115,16 @@ public abstract class AbstractWorkflowDataModel {
     }
 
     /**
-     * to be Overridden by the workflow author Called via reflection in WorkflowDataModelFactory
+     * to be Overridden by the workflow author
+     * 
+     * Called via reflection in WorkflowDataModelFactory
      */
     public abstract void buildWorkflow();
 
     /**
      * to be Overridden by the workflow author
+     * 
+     * Called via reflection in WorkflowDataModelFactory
      */
     public void wrapup() {
 
