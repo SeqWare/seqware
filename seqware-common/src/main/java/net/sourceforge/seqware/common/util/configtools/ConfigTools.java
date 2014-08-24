@@ -47,7 +47,7 @@ public class ConfigTools {
         // now read back the values from the settings file
         MapTools.ini2Map(settings, hm, true);
 
-        return (hm);
+        return hm;
     }
 
     /**
