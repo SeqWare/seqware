@@ -48,7 +48,7 @@ import org.openide.util.lookup.ServiceProvider;
 public class FileLinker extends Plugin {
 
     ReturnValue ret = new ReturnValue();
-    private OptionSpec<String> separator;
+    private final OptionSpec<String> separator;
 
     public FileLinker() {
         super();
@@ -96,6 +96,14 @@ public class FileLinker extends Plugin {
             final int workflowAccession = new Integer(options.valueOf("workflow-accession").toString());
 
             for (Map.Entry<Integer, List<FileMetadata>> entry : swaToFileMap.entrySet()) {
+                // seqware-1938
+                // pre-emptively check whether there are any valid files, skip workflow run creation if there are not
+                List<FileMetadata> files = removeFilesThatAlreadyExistInSeqWare(entry.getValue());
+                if (files.isEmpty()) {
+                    Log.stdout("No files to add for IUS " + entry.getKey() + " skipping.");
+                    continue;
+                }
+
                 // Make the workflow run, one for every IUS.
                 int workflowRunId = metadata.add_workflow_run(workflowAccession);
                 if (workflowRunId == 0) {
@@ -117,7 +125,7 @@ public class FileLinker extends Plugin {
                     return ret;
                 }
 
-                if (!saveFiles(workflowRunId, entry.getKey(), entry.getValue())) {
+                if (!saveFiles(workflowRunId, entry.getKey(), files)) {
                     return ret;
                 }
 
@@ -141,12 +149,10 @@ public class FileLinker extends Plugin {
 
     private boolean saveFiles(int workflowRunId, int iusSwa, List<FileMetadata> inputFiles) {
         boolean result = true;
-        List<FileMetadata> files = removeFilesThatAlreadyExistInSeqWare(inputFiles);
-        if (!files.isEmpty()) {
-            boolean success = createFileImportProcessingNode(iusSwa, files, workflowRunId);
-            if (!success) {
-                return false;
-            }
+        assert (!inputFiles.isEmpty()); // also, we've already removed files that already exist
+        boolean success = createFileImportProcessingNode(iusSwa, inputFiles, workflowRunId);
+        if (!success) {
+            return false;
         }
         return result;
     }
