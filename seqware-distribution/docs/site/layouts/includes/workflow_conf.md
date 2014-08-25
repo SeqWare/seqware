@@ -103,6 +103,7 @@ The ini files support variables, in the format `$(variable-name}`, that will be 
 * `sqw.random`: a randomly generated integer from 0 to 2147483647.  Support for the legacy version of this variable, `random`, may be removed in a future version.
 * `sqw.timestamp`: the current number of milliseconds since January 1, 1970.
 * `sqw.uuid`: a randomly generated <a href="http://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_.28random.29">universally unique identifier</a>.
+* `sqw.bundle-seqware-version`: the version of seqware that this workflow was built with. You should not have to use this often, but it may be useful if you want to trigger different behaviour based on a version of seqware.
 
 Each instance of the above `sqw.*` variables in an ini file will be replaced with a separately resolved value, e.g., multiple instances of `${sqw.uuid}` will each resolve to different values. If you desire to reuse the same generated value, do somthing akin to the following:
 

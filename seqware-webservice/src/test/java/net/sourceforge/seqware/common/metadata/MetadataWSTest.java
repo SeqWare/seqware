@@ -129,7 +129,7 @@ public class MetadataWSTest {
                 + "/sqwprod/Workflow_Bundle_GATKRecalibrationAndVariantCalling_" + "1.2.29_SeqWare_0.10.0/");
         int expResult = ReturnValue.SUCCESS;
         ReturnValue result = instance.addWorkflow(name, version, description, baseCommand, configFile.getAbsolutePath(),
-                templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false, null, null, null);
+                templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false, null, null, null, null);
         Assert.assertEquals(expResult, result.getExitStatus());
 
         // test certain properties of the workflow parameters in relation to SEQWARE-1444
@@ -184,7 +184,7 @@ public class MetadataWSTest {
                 + "/sqwprod/Workflow_Bundle_GATKRecalibrationAndVariantCalling_" + "1.2.29_SeqWare_0.10.0/");
         int expResult = ReturnValue.SUCCESS;
         ReturnValue result = instance.addWorkflow(name, version, description, baseCommand, configFile.getAbsolutePath(),
-                templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false, null, null, null);
+                templateFile.getAbsolutePath(), provisionDir.getAbsolutePath(), true, "", false, null, null, null, null);
         Assert.assertEquals(expResult, result.getExitStatus());
 
         // test certain properties of the workflow parameters in relation to SEQWARE-1444

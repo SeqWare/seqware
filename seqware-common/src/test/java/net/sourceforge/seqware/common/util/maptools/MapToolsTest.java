@@ -88,7 +88,7 @@ public class MapToolsTest {
         String path = getClass().getResource("vars.ini").getPath();
         Map<String, String> raw = new HashMap<>();
         MapTools.ini2Map(path, raw);
-        Map<String, String> provided = MapTools.providedMap("/u/seqware/provisioned-bundles");
+        Map<String, String> provided = MapTools.providedMap("/u/seqware/provisioned-bundles", "1.0");
         Map<String, String> exp = MapTools.expandVariables(raw, provided);
 
         assertEquals(raw.size(), exp.size());
@@ -97,6 +97,7 @@ public class MapToolsTest {
         assertEquals("d", exp.get("bar"));
         assertEquals("abcde", exp.get("test-multi"));
 
+        assertEquals("1.0", exp.get("test-bundle-seqware-version"));
         assertEquals("/u/seqware/provisioned-bundles", exp.get("test-bundle-dir"));
         assertEquals("/u/seqware/provisioned-bundles", exp.get("test-legacy-bundle-dir"));
 
