@@ -141,7 +141,7 @@ public class Scheduler {
 
         // perform variable substituion on any bundle path variables
         Log.info("Attempting to substitute workflow_bundle_dir " + wi.getWorkflowDir());
-        map = MapTools.expandVariables(map, MapTools.providedMap(wi.getWorkflowDir()));
+        map = MapTools.expandVariables(map, MapTools.providedMap(wi.getWorkflowDir(), wi.getWorkflowSqwVersion()));
 
         // create the final ini for upload to the web service
         StringBuilder mapBuffer = new StringBuilder();
@@ -280,7 +280,8 @@ public class Scheduler {
         wi.setWorkflowClass(m.get("workflow_class"));
         wi.setWorkflowEngine(m.get("workflow_engine"));
         wi.setWorkflowType(m.get("workflow_type"));
-        return (wi);
+        wi.setWorkflowSqwVersion(m.get("seqware_version"));
+        return wi;
     }
 
 }

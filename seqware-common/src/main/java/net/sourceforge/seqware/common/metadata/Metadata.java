@@ -573,11 +573,12 @@ public interface Metadata {
      * @param workflowClass
      * @param workflowEngine
      * @param workflowType
+     * @param seqwareVersion
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile,
             String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass,
-            String workflowType, String workflowEngine);
+            String workflowType, String workflowEngine, String seqwareVersion);
 
     /**
      * <p>

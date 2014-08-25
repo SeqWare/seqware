@@ -306,10 +306,10 @@ public class MetadataInMemory implements Metadata {
     @Override
     public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
             String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip,
-            String workflowClass, String workflowType, String workflowEngine) {
+            String workflowClass, String workflowType, String workflowEngine, String seqwareVersion) {
         int nextKey = getNextSwAccession();
         Workflow workflow = MetadataWS.convertParamsToWorkflow(baseCommand, name, description, version, configFile, storeProvisionDir,
-                provisionDir, templateFile, storeArchiveZip, archiveZip, workflowClass, workflowType, workflowEngine);
+                provisionDir, templateFile, storeArchiveZip, archiveZip, workflowClass, workflowType, workflowEngine, seqwareVersion);
         workflow.setCreateTimestamp(new Date());
         workflow.setUpdateTimestamp(new Date());
         workflow.setSwAccession(nextKey);
