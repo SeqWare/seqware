@@ -324,7 +324,7 @@ public class Metadata extends Plugin {
         if (checkFields(necessaryFields)) {
             // create a new workflow!
             localRet = metadata.addWorkflow(fields.get("name"), fields.get("version"), fields.get("description"), null, null, null, null,
-                    false, null, false, null, null, null);
+                    false, null, false, null, null, null, null);
             print(String.format("Created workflow '%s' version %s with SWID: %s", fields.get("name"), fields.get("version"),
                     localRet.getAttribute("sw_accession")));
         } else {

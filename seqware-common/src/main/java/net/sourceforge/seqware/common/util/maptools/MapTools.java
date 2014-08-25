@@ -241,15 +241,21 @@ public class MapTools {
     public static final String LEGACY_VAR_RANDOM = "random";
     public static final String LEGACY_VAR_DATE = "date";
     public static final String LEGACY_VAR_BUNDLE_DIR = "workflow_bundle_dir";
+    public static final String VAR_WORKFLOW_VERSION = "sqw.bundle-seqware-version";
+
+    public static void provideBundleVersion(Map<String, String> m, String bundleVersion) {
+        m.put(VAR_WORKFLOW_VERSION, bundleVersion);
+    }
 
     public static void provideBundleDir(Map<String, String> m, String bundleDir) {
         m.put(VAR_BUNDLE_DIR, bundleDir);
         m.put(LEGACY_VAR_BUNDLE_DIR, bundleDir);
     }
 
-    public static Map<String, String> providedMap(String bundleDir) {
+    public static Map<String, String> providedMap(String bundleDir, String bundleSeqwareVersion) {
         Map<String, String> m = new HashMap<>();
         provideBundleDir(m, bundleDir);
+        provideBundleVersion(m, bundleSeqwareVersion);
         return m;
     }
 
