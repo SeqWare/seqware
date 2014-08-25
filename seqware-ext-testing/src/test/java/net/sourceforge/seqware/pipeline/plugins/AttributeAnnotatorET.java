@@ -302,15 +302,10 @@ public class AttributeAnnotatorET {
         Assert.assertTrue("first value incorrect", runQuery.get(0)[2].equals(funky_initial_value));
         // count records in the database to check for cascading deletes
         List<Object[]> count1 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
-        // reannotate with same key, different value
-        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --" + type.parameter_prefix + "-accession "
-                + accession + " --key " + funky_key + " --value " + funky_second_value;
-        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
-        // ensure that duplicates are not formed in the database
-        runQuery = dbCreator.runQuery(new ArrayListHandler(), query, accession);
-        Assert.assertTrue("incorrect resulting number of duplicate annotations, found " + runQuery.size(), runQuery.size() == 1);
-        Assert.assertTrue("second tag incorrect", runQuery.get(0)[1].equals(funky_key));
-        Assert.assertTrue("second value incorrect", runQuery.get(0)[2].equals(funky_second_value));
+        runAnnotationWithSecondValue(type, accession, funky_key, funky_second_value, query);
+        // seqware-1945: test reannotating with the same key and same value
+        runAnnotationWithSecondValue(type, accession, funky_key, funky_second_value, query);
+
         // check against cascading deletes
         List<Object[]> count2 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         compareTwoCounts(count1.get(0), count2.get(0));
@@ -327,6 +322,21 @@ public class AttributeAnnotatorET {
         Assert.assertTrue("third value incorrect", runQuery.get(1)[2].equals(groovy_value));
         List<Object[]> count3 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         compareTwoCounts(count2.get(0), count3.get(0));
+    }
+
+    private void runAnnotationWithSecondValue(AttributeType type, int accession, final String funky_key, final String funky_second_value,
+            String query) throws IOException {
+        String listCommand;
+        List<Object[]> runQuery;
+        // reannotate with same key, different value
+        listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator " + "-- --" + type.parameter_prefix + "-accession "
+                + accession + " --key " + funky_key + " --value " + funky_second_value;
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
+        // ensure that duplicates are not formed in the database
+        runQuery = dbCreator.runQuery(new ArrayListHandler(), query, accession);
+        Assert.assertTrue("incorrect resulting number of duplicate annotations, found " + runQuery.size(), runQuery.size() == 1);
+        Assert.assertTrue("second tag incorrect", runQuery.get(0)[1].equals(funky_key));
+        Assert.assertTrue("second value incorrect", runQuery.get(0)[2].equals(funky_second_value));
     }
 
     /**
@@ -365,7 +375,8 @@ public class AttributeAnnotatorET {
         ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         listCommand = "-p net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator "
                 + "-- --file-accession 6650 --key funky_key --value funky_value";
-        ITUtility.runSeqWareJar(listCommand, ReturnValue.FAILURE, null);
+        // seqware-1945: rejecting double annotation with the same key and value seems confusing to users
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
     }
 
     @Test
