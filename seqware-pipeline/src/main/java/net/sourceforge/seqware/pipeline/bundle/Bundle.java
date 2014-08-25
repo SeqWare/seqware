@@ -278,6 +278,9 @@ public class Bundle {
         }
 
         File outputZipFile = new File(bundleOutput.getAbsolutePath() + File.separator + bundlePath.getName() + ".zip");
+        if (outputZipFile.exists()) {
+            Log.stdout("Overwriting " + outputZipFile.getAbsolutePath());
+        }
 
         boolean compression = true;
         Map<String, String> settings = ConfigTools.getSettings();
