@@ -18,12 +18,13 @@ This is a simple command runner.
 |--gcr-check-output-file|Specify the path to the file.|
 |--gcr-command|The command being executed (quote as needed).|
 |--gcr-output-file|Specify this option one or more times for each output file created by the command called by this module. The argument is a '::' delimited list of type, meta_type, and file_path.|
+|--gcr-permanent-storage-prefix|Optional: Stream a copy of stdout and stderr to this prefix + .stderr/stdout|
 |--gcr-skip-if-missing|If the registered output files don't exist don't worry about it. Useful for workflows that can produce variable file outputs but also potentially dangerous.|
 |--gcr-skip-if-output-exists|If the registered output files exist then this step won't be run again. This only works if gcr-output-file is defined too since we need to be able to check the output files to see if they exist. If this step produces no output files then it's hard to say if it was run successfully before.|
-|--gcr-stderr|Optional: Returns the full stderr (stderr of the command called is normally trimmed to gcr-stderr-buffer-size lines|
-|--gcr-stderr-buffer-size|Used if gcr-stderr is not set. This sets the number of lines of stderr to report (Default is 10). |
-|--gcr-stdout|Optional: Reports the full stdout (stdout of the command called is normally trimmed to gcr-stdout-buffer-size lines|
-|--gcr-stdout-buffer-size|Used if gcr-stdout is not set. This sets the number of lines of stdout to report (Default is 10). |
+|--gcr-stderr|Optional: Returns the full stderr as metadata (stderr of the command called is normally trimmed to gcr-stderr-buffer-size lines|
+|--gcr-stderr-buffer-size|Optional: Used if gcr-stderr is not set. This sets the number of lines of stderr to report as metadata (Default is 10). |
+|--gcr-stdout|Optional: Reports the full stdout as metadata (stdout of the command called is normally trimmed to gcr-stdout-buffer-size lines|
+|--gcr-stdout-buffer-size|Optional: Used if gcr-stdout is not set. This sets the number of lines of stdout to report as metadata (Default is 10). |
 
 
 ##  GenericMetadataSaver

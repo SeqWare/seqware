@@ -190,8 +190,8 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 } catch (IOException e) {
                     throw rethrow(e);
                 } finally {
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".e" + time), outputStream.toString());
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + runnerFileName + ".o" + time), errorStream.toString());
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".e" + time), outputStream.toString());
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".o" + time), errorStream.toString());
                 }
 
             } else {

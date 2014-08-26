@@ -267,7 +267,7 @@ public class Bundle {
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue packageBundle(File bundlePath, File bundleOutput) {
-        
+
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
 
@@ -278,6 +278,9 @@ public class Bundle {
         }
 
         File outputZipFile = new File(bundleOutput.getAbsolutePath() + File.separator + bundlePath.getName() + ".zip");
+        if (outputZipFile.exists()) {
+            Log.stdout("Overwriting " + outputZipFile.getAbsolutePath());
+        }
 
         boolean compression = true;
         Map<String, String> settings = ConfigTools.getSettings();
@@ -540,6 +543,15 @@ public class Bundle {
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue installBundle(File bundle, File metadataFile, List<String> workflows) {
+        // seqware-1933 - throw error when the provisioned or archive directories are not present
+        if (this.bundleDir == null) {
+            Log.stdout("Could not install bundle, please check that your " + SqwKeys.SW_BUNDLE_DIR.getSettingKey() + " is defined");
+            return new ReturnValue(ReturnValue.SETTINGSFILENOTFOUND);
+        }
+        if (this.permanentBundleLocation == null) {
+            Log.stdout("Could not install bundle, please check that your " + SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey() + " is defined");
+            return new ReturnValue(ReturnValue.SETTINGSFILENOTFOUND);
+        }
         return installBundle(bundle, metadataFile, true, true, workflows);
     }
 
@@ -620,15 +632,15 @@ public class Bundle {
             if (packageIntoZip && unzipIntoDir) {
                 localRet = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
                         w.getTemplatePath(), this.outputDir, true, this.outputZip, true, w.getWorkflowClass(), w.getWorkflowType(),
-                        w.getWorkflowEngine());
+                        w.getWorkflowEngine(), w.getWorkflowSqwVersion());
             } else if (packageIntoZip && !unzipIntoDir) {
                 localRet = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
                         w.getTemplatePath(), this.outputDir, false, this.outputZip, true, w.getWorkflowClass(), w.getWorkflowType(),
-                        w.getWorkflowEngine());
+                        w.getWorkflowEngine(), w.getWorkflowSqwVersion());
             } else if (!packageIntoZip && unzipIntoDir) {
                 localRet = metadata.addWorkflow(w.getName(), w.getVersion(), w.getDescription(), w.getCommand(), w.getConfigPath(),
                         w.getTemplatePath(), this.outputDir, true, this.outputZip, false, w.getWorkflowClass(), w.getWorkflowType(),
-                        w.getWorkflowEngine());
+                        w.getWorkflowEngine(), w.getWorkflowSqwVersion());
             } else {
                 Log.error("You need to specify an workflow bundle dir, workflow bundle zip file or both when you install a workflow.");
                 localRet.setExitStatus(ReturnValue.FAILURE);
