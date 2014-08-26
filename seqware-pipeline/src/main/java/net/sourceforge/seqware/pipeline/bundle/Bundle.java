@@ -278,6 +278,9 @@ public class Bundle {
         }
 
         File outputZipFile = new File(bundleOutput.getAbsolutePath() + File.separator + bundlePath.getName() + ".zip");
+        if (outputZipFile.exists()) {
+            Log.stdout("Overwriting " + outputZipFile.getAbsolutePath());
+        }
 
         boolean compression = true;
         Map<String, String> settings = ConfigTools.getSettings();
@@ -540,6 +543,15 @@ public class Bundle {
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue installBundle(File bundle, File metadataFile, List<String> workflows) {
+        // seqware-1933 - throw error when the provisioned or archive directories are not present
+        if (this.bundleDir == null) {
+            Log.stdout("Could not install bundle, please check that your " + SqwKeys.SW_BUNDLE_DIR.getSettingKey() + " is defined");
+            return new ReturnValue(ReturnValue.SETTINGSFILENOTFOUND);
+        }
+        if (this.permanentBundleLocation == null) {
+            Log.stdout("Could not install bundle, please check that your " + SqwKeys.SW_BUNDLE_REPO_DIR.getSettingKey() + " is defined");
+            return new ReturnValue(ReturnValue.SETTINGSFILENOTFOUND);
+        }
         return installBundle(bundle, metadataFile, true, true, workflows);
     }
 
