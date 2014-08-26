@@ -251,7 +251,7 @@ This plugin will take in a sw_accession of a processing, and translate the hiera
 
 ##  UserSettingsPlugin
 io.seqware.pipeline.plugins.UserSettingsPlugin
-A plugin that a documented .seqware settings file that can be used for documentation.
+A plugin that generates a commented .seqware settings file that can be used for documentation.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -290,6 +290,20 @@ A plugin that lets you (install)/schedule/launch/watch/status check workflows in
 |--wait|Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.|
 |--workflow-accession|The accession for an installed workflow, must be provided unless a bundle is.|
 |--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge, whitestar, whitestar-parallel, whitestar-sge. Defaults to oozie.|
+
+
+##  WorkflowRescheduler
+io.seqware.pipeline.plugins.WorkflowRescheduler
+A plugin that lets you re-schedule previously launched workflow runs.
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--?, --h, --help|Provides this help message.|
+|--[arguments]||
+|--ho, --host|Used to schedule onto a specific host|
+|--out|Optional: Will output a workflow-run by sw_accession|
+|--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge, whitestar, whitestar-parallel, whitestar-sge. Defaults to oozie.|
+|--workflow-run, --wr|Required: specify workflow-run(s) by swid, comma-delimited, to re-schedule|
 
 
 ##  WorkflowRunFilesInitialPopulationPlugin
