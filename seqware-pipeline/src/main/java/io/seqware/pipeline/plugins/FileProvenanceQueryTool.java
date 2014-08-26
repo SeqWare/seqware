@@ -47,6 +47,7 @@ import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.MapListHandler;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -101,6 +102,7 @@ public class FileProvenanceQueryTool extends Plugin {
 
     @Override
     public ReturnValue do_run() {
+        Path randomTempDirectory = null;
         try {
             Path originalReport;
             if (options.has(this.inFileSpec)) {
@@ -157,7 +159,8 @@ public class FileProvenanceQueryTool extends Plugin {
             String driver = "org.apache.derby.jdbc.EmbeddedDriver";
             Class.forName(driver).newInstance();
             String protocol = "jdbc:derby:";
-            Connection connection = DriverManager.getConnection(protocol + "derbyDB;create=true");
+            randomTempDirectory = Files.createTempDirectory("randomFileProvenanceQueryDir");
+            Connection connection = DriverManager.getConnection(protocol + randomTempDirectory.toString() + "/derbyDB;create=true");
             // drop table if it exists already (running in IDE?)
             Statement dropTableStatement = null;
             try {
@@ -239,6 +242,14 @@ public class FileProvenanceQueryTool extends Plugin {
             return new ReturnValue();
         } catch (IOException | SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
+        } finally {
+            try {
+                if (randomTempDirectory != null) {
+                    FileUtils.deleteDirectory(randomTempDirectory.toFile());
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
