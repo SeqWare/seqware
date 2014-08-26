@@ -18,10 +18,14 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.Engines;
 import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.oozie.action.sge.JobStatus;
 import io.seqware.pipeline.SqwKeys;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringBufferInputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -282,8 +286,8 @@ public class WorkflowStatusChecker extends Plugin {
 
             File dir = OozieJob.scriptsDir(wr.getCurrentWorkingDir());
             if (dir.exists()) {
-                out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, null));
-                err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, null));
+                out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, null), "stdout");
+                err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, null), "stderr");
             } else {
                 // working dir has been deleted, do not wipe-out the stored output
                 out = wr.getStdOut();
@@ -343,7 +347,22 @@ public class WorkflowStatusChecker extends Plugin {
                         case FAILED:
                         case KILLED:
                             Properties conf = getCurrentConf(wfJob);
-                            conf.setProperty(OozieClient.RERUN_FAIL_NODES, "true");
+                            // here we need specify the precise nodes to skip since OozieClient.RERUN_FAIL_NODES is bugged due to
+                            // OOZIE-1879
+                            // conf.setProperty(OozieClient.RERUN_FAIL_NODES, "true");
+                            WorkflowJob jobInfo = oc.getJobInfo(jobId);
+                            StringBuilder nodesToSkip = new StringBuilder();
+                            for (WorkflowAction action : jobInfo.getActions()) {
+                                Log.debug("examining node: " + action.getName());
+                                if (JobStatus.SUCCESSFUL.name().equals(action.getExternalStatus())) {
+                                    if (nodesToSkip.length() != 0) {
+                                        nodesToSkip.append(",");
+                                    }
+                                    nodesToSkip.append(action.getName());
+                                }
+                            }
+                            Log.info("skipping nodes: " + nodesToSkip.toString());
+                            conf.setProperty(OozieClient.RERUN_SKIP_NODES, nodesToSkip.toString());
                             oc.reRun(jobId, conf);
                             nextSqwStatus = WorkflowRunStatus.pending;
                             break;
@@ -365,8 +384,8 @@ public class WorkflowStatusChecker extends Plugin {
                     File dir = OozieJob.scriptsDir(wr.getCurrentWorkingDir());
                     if (dir.exists()) {
                         Set<String> extIds = sgeIds(wfJob);
-                        out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, extIds));
-                        err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, extIds));
+                        out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, extIds), "stdout");
+                        err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, extIds), "stderr");
                     } else {
                         // working dir has been deleted, do not wipe-out the stored output
                         out = wr.getStdOut();
@@ -510,7 +529,7 @@ public class WorkflowStatusChecker extends Plugin {
 
     private static final Pattern SGE_FILE = Pattern.compile("(.+)\\.[eo]\\d+");
 
-    private static String sgeConcat(SortedMap<Integer, File> idFiles) {
+    private static String sgeConcat(SortedMap<Integer, File> idFiles, String fullExtension) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<Integer, File> e : idFiles.entrySet()) {
             File f = e.getValue();
@@ -528,7 +547,7 @@ public class WorkflowStatusChecker extends Plugin {
             sb.append(f.getAbsolutePath());
             sb.append("\nUpdated:  ");
             sb.append(new Date(f.lastModified()));
-            sb.append("\nContents:\n");
+            sb.append("\nContents Excerpt:\n");
             try {
                 sb.append(stripInvalidXmlCharacters(FileUtils.readFileToString(f)));
             } catch (IOException ex) {
@@ -538,6 +557,12 @@ public class WorkflowStatusChecker extends Plugin {
             }
             if (sb.charAt(sb.length() - 1) != '\n') {
                 sb.append("\n");
+            }
+            // check if file exists before pointing people at it
+            Path fullFile = Paths.get(f.getAbsoluteFile().getParent() + "/" + jobName + "." + fullExtension);
+            if (Files.exists(fullFile)) {
+                sb.append("\nFull output: ").append(f.getAbsoluteFile().getParent()).append("/").append(jobName).append(".")
+                        .append(fullExtension).append('\n');
             }
             sb.append("-----------------------------------------------------------------------\n\n");
         }

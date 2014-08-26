@@ -1086,9 +1086,7 @@ public class MetadataDB implements Metadata {
     }
 
     @Override
-    public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
-            String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip,
-            String workflowClass, String workflowType, String workflowEngine) {
+    public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine, String seqwareVersion) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 

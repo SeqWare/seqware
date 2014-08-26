@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.util.runtools;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,11 @@ public class RunTools {
     }
 
     public static ReturnValue runCommand(Map<String, String> env, String[] command) {
-        return runCommand(env, command, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        return runCommand(env, command, Integer.MAX_VALUE, Integer.MAX_VALUE, null);
+    }
+
+    public static ReturnValue runCommand(Map<String, String> env, String[] command, int stdoutCapacity, int stderrCapacity) {
+        return runCommand(env, command, stdoutCapacity, stderrCapacity, null);
     }
 
     /**
@@ -61,9 +66,12 @@ public class RunTools {
      *            a {@link java.util.Map} object.
      * @param stdoutCapacity
      * @param stderrCapacity
+     * @param permanentStoragePrefix
+     *            store a permanent copy of output at permanentStoragePrefix.stderr and .stdout
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public static ReturnValue runCommand(Map<String, String> env, String[] command, int stdoutCapacity, int stderrCapacity) {
+    public static ReturnValue runCommand(Map<String, String> env, String[] command, int stdoutCapacity, int stderrCapacity,
+            String permanentStoragePrefix) {
         ReturnValue ret = new ReturnValue();
 
         Process p = null;
@@ -95,7 +103,7 @@ public class RunTools {
             return ret;
         }
 
-        ret = waitAndGetReturn(p, stdoutCapacity, stderrCapacity);
+        ret = waitAndGetReturn(p, stdoutCapacity, stderrCapacity, permanentStoragePrefix);
         return ret;
     }
 
@@ -108,9 +116,10 @@ public class RunTools {
      *            limit the number of lines stored or set to 0 to store everything
      * @param stderrLineCapacity
      *            limit the number of lines stored or set to 0 to store everything
+     * @param permanentStoragePrefix
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public static ReturnValue waitAndGetReturn(Process p, int stdoutLineCapacity, int stderrLineCapacity) {
+    public static ReturnValue waitAndGetReturn(Process p, int stdoutLineCapacity, int stderrLineCapacity, String permanentStoragePrefix) {
         ReturnValue ret = new ReturnValue();
 
         // Make sure we weren't passed a null process
@@ -120,9 +129,10 @@ public class RunTools {
 
         try {
             // Spawn reader threads to grab stdout and stderr
-
-            BufferedReaderThread stdOutThread = new BufferedReaderThread(p.getInputStream(), stdoutLineCapacity);
-            BufferedReaderThread stdErrThread = new BufferedReaderThread(p.getErrorStream(), stderrLineCapacity);
+            BufferedReaderThread stdOutThread = new BufferedReaderThread(p.getInputStream(), stdoutLineCapacity,
+                    permanentStoragePrefix != null ? new File(permanentStoragePrefix + ".stdout") : null);
+            BufferedReaderThread stdErrThread = new BufferedReaderThread(p.getErrorStream(), stderrLineCapacity,
+                    permanentStoragePrefix != null ? new File(permanentStoragePrefix + ".stderr") : null);
             stdOutThread.start();
             stdErrThread.start();
 
