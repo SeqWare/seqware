@@ -22,9 +22,9 @@ import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.WorkflowRunStatus;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,7 +34,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -64,9 +63,15 @@ public class FileProvenanceQueryTool extends Plugin {
     private static final String TABLE_NAME = "FILE_REPORT";
     private final ArgumentAcceptingOptionSpec<String> outFileSpec;
     private final ArgumentAcceptingOptionSpec<String> querySpec;
+    private final ArgumentAcceptingOptionSpec<String> inFileSpec;
 
     public FileProvenanceQueryTool() {
         ProvenanceUtility.configureFileProvenanceParams(parser);
+        this.inFileSpec = parser.accepts(
+                "in",
+                "The tab separated file that will be used instead of pulling back a " + "fresh file provenance report. "
+                        + "Must be a tab separated file with a fixed number of columns with "
+                        + "a provided header (that will be used for column names). ").withRequiredArg();
         this.outFileSpec = parser.accepts("out", "The tab separated file into which the results will be written.").withRequiredArg()
                 .required();
         this.querySpec = parser.accepts("query", "The standard SQL query that should be run. Table queried should be " + TABLE_NAME)
@@ -75,27 +80,17 @@ public class FileProvenanceQueryTool extends Plugin {
 
     @Override
     public String get_description() {
-        return "Pulls back a file provenance report, runs an arbitrarily complex SQL query on the results and saves the results as a tab separated file for use as a part of interpreted language deciders.";
+        return "Pulls back a file provenance report (or a previous tab-separated file), runs an arbitrarily complex SQL query on the results and saves the results as a tab separated file for use as a part of interpreted language deciders.";
     }
-
-    private File outfile = null;
 
     @Override
     public ReturnValue init() {
-        String filename;
-        if (options.has(outFileSpec)) {
-            filename = (String) options.valueOf(outFileSpec);
-        } else if (options.has("all")) {
-            filename = (new Date() + "__all.tsv").replace(" ", "_");
-        } else if (!ProvenanceUtility.checkForValidOptions(options)) {
+        if (!options.has(inFileSpec) && !ProvenanceUtility.checkForValidOptions(options)) {
             println("One of the various contraints or '--all' must be specified.");
             println(this.get_syntax());
             return new ReturnValue(ReturnValue.INVALIDPARAMETERS);
-        } else {
-            filename = (new Date() + ".tsv").replace(" ", "_");
         }
 
-        outfile = new File(filename);
         return new ReturnValue();
     }
 
@@ -107,18 +102,13 @@ public class FileProvenanceQueryTool extends Plugin {
     @Override
     public ReturnValue do_run() {
         try {
-            Map<FileProvenanceParam, List<String>> map = ProvenanceUtility.convertOptionsToMap(options, metadata);
-            // specify some standard filters that are required for filters
-            map.put(FileProvenanceParam.skip, new ImmutableList.Builder<String>().add("false").build());
-            map.put(FileProvenanceParam.workflow_run_status, new ImmutableList.Builder<String>()
-                    .add(WorkflowRunStatus.completed.toString()).build());
-            map.put(FileProvenanceParam.processing_status, new ImmutableList.Builder<String>().add(ProcessingStatus.success.toString())
-                    .build());
-            Path originalReport = Files.createTempFile("file_provenance", "txt");
-            Log.debug("Original report written to " + originalReport.toString());
-            try (BufferedWriter originalWriter = Files.newBufferedWriter(originalReport, Charset.defaultCharset())) {
-                metadata.fileProvenanceReport(map, originalWriter);
+            Path originalReport;
+            if (options.has(this.inFileSpec)) {
+                originalReport = FileSystems.getDefault().getPath(options.valueOf(inFileSpec));
+            } else {
+                originalReport = populateOriginalReportFromWS();
             }
+
             List<String> headers;
             List<Boolean> numericDataType;
             Path derbyImportFile;
@@ -130,9 +120,10 @@ public class FileProvenanceQueryTool extends Plugin {
                 headers = Lists.newArrayList();
                 numericDataType = Lists.newArrayList();
                 for (String column : headerLine.split("\t")) {
-                    headers.add(StringUtils.lowerCase(column).replaceAll(" ", "_").replaceAll("-", "_"));
+                    String editedColumnName = StringUtils.lowerCase(column).replaceAll(" ", "_").replaceAll("-", "_");
+                    headers.add(editedColumnName);
                     // note that Parent Sample SWID is a silly column that has colons in it
-                    numericDataType.add(!column.contains("Parent Sample") && (column.contains("SWID") || column.contains("ID")));
+                    numericDataType.add(!editedColumnName.contains("parent_sample") && (editedColumnName.contains("swid")));
                 }
                 derbyImportFile = Files.createTempFile("import", "txt");
                 try (BufferedWriter derbyImportWriter = Files.newBufferedWriter(derbyImportFile, Charset.defaultCharset())) {
@@ -249,6 +240,21 @@ public class FileProvenanceQueryTool extends Plugin {
         } catch (IOException | SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    private Path populateOriginalReportFromWS() throws IOException {
+        Map<FileProvenanceParam, List<String>> map = ProvenanceUtility.convertOptionsToMap(options, metadata);
+        // specify some standard filters that are required for filters
+        map.put(FileProvenanceParam.skip, new ImmutableList.Builder<String>().add("false").build());
+        map.put(FileProvenanceParam.workflow_run_status, new ImmutableList.Builder<String>().add(WorkflowRunStatus.completed.toString())
+                .build());
+        map.put(FileProvenanceParam.processing_status, new ImmutableList.Builder<String>().add(ProcessingStatus.success.toString()).build());
+        Path originalReport = Files.createTempFile("file_provenance", "txt");
+        Log.debug("Original report written to " + originalReport.toString());
+        try (BufferedWriter originalWriter = Files.newBufferedWriter(originalReport, Charset.defaultCharset())) {
+            metadata.fileProvenanceReport(map, originalWriter);
+        }
+        return originalReport;
     }
 
     @Override
