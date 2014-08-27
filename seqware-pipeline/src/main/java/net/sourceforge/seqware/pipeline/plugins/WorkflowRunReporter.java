@@ -42,17 +42,13 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowRunReporter extends Plugin {
-    public static final String WRSTDERR = "wr-stderr";
-    public static final String WRSTDOUT = "wr-stdout";
+    private static final String WRSTDERR = "wr-stderr";
+    private static final String WRSTDOUT = "wr-stdout";
 
-    ReturnValue ret = new ReturnValue();
-    private final String FILETYPE_ALL = "all";
-    private final String LINKTYPE_SYM = "s";
-    private String fileType = FILETYPE_ALL;
-    private String linkType = LINKTYPE_SYM;
+    private ReturnValue ret = new ReturnValue();
     private String csvFileName = null;
     private Writer writer;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_kkmmss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_kkmmss");
 
     private final int STDOUT = 1;
     private final int STDERR = 2;
@@ -125,11 +121,11 @@ public class WorkflowRunReporter extends Plugin {
             Date firstDate = null, lastDate = null;
             if (timePeriod != null) {
                 String[] dates = timePeriod.trim().split(":");
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat localDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 try {
-                    firstDate = dateFormat.parse(dates[0].trim());
+                    firstDate = localDateFormat.parse(dates[0].trim());
                     if (dates.length != 1) {
-                        lastDate = dateFormat.parse(dates[1].trim());
+                        lastDate = localDateFormat.parse(dates[1].trim());
                     }
                 } catch (ParseException ex) {
                     Log.warn("Date not found. Date must be in format YYYY-MM-DD or YYYY-MM-DD:YYYY-MM-DD.", ex);
@@ -231,30 +227,6 @@ public class WorkflowRunReporter extends Plugin {
         } catch (RuntimeException e) {
             println("Workflow not found");
             ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
-            return;
-        }
-        if (options.has("human")) {
-            writer.write(TabExpansionUtil.expansion(report));
-            return;
-        }
-        writer.write(report);
-    }
-
-    private void reportOnWorkflowRuns(Date earlyDate, Date lateDate) throws IOException {
-        String title = "workflowruns_";
-        if (earlyDate != null) {
-            title += "from" + dateFormat.format(earlyDate);
-        }
-        if (lateDate != null) {
-            title += "to" + dateFormat.format(lateDate);
-        }
-        initWriter(title);
-        String report;
-        try {
-            report = metadata.getWorkflowRunReport(earlyDate, lateDate);
-        } catch (RuntimeException e) {
-            println("No runs found in date range");
-            ret = new ReturnValue(ReturnValue.SUCCESS);
             return;
         }
         if (options.has("human")) {
