@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import joptsimple.ArgumentAcceptingOptionSpec;
+import joptsimple.OptionSpecBuilder;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -65,6 +66,7 @@ public class FileProvenanceQueryTool extends Plugin {
     private final ArgumentAcceptingOptionSpec<String> outFileSpec;
     private final ArgumentAcceptingOptionSpec<String> querySpec;
     private final ArgumentAcceptingOptionSpec<String> inFileSpec;
+    private final OptionSpecBuilder userH2Spec;
 
     public FileProvenanceQueryTool() {
         ProvenanceUtility.configureFileProvenanceParams(parser);
@@ -75,6 +77,7 @@ public class FileProvenanceQueryTool extends Plugin {
                         + "a provided header (that will be used for column names). ").withRequiredArg();
         this.outFileSpec = parser.accepts("out", "The tab separated file into which the results will be written.").withRequiredArg()
                 .required();
+        this.userH2Spec = parser.accepts("useH2", "Use the embedded H2 database instead of Derby");
         this.querySpec = parser.accepts("query", "The standard SQL query that should be run. Table queried should be " + TABLE_NAME)
                 .withRequiredArg().required();
     }
@@ -129,7 +132,7 @@ public class FileProvenanceQueryTool extends Plugin {
                 }
                 derbyImportFile = Files.createTempFile("import", "txt");
                 try (BufferedWriter derbyImportWriter = Files.newBufferedWriter(derbyImportFile, Charset.defaultCharset())) {
-                    Log.debug("Derby import file written to " + derbyImportFile.toString());
+                    Log.debug("Bulk import file written to " + derbyImportFile.toString());
                     while (originalReader.ready()) {
                         String line = originalReader.readLine();
                         StringBuilder builder = new StringBuilder();
@@ -155,12 +158,14 @@ public class FileProvenanceQueryTool extends Plugin {
                     }
                 }
             }
-            // import into derby
-            String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-            Class.forName(driver).newInstance();
-            String protocol = "jdbc:derby:";
             randomTempDirectory = Files.createTempDirectory("randomFileProvenanceQueryDir");
-            Connection connection = DriverManager.getConnection(protocol + randomTempDirectory.toString() + "/derbyDB;create=true");
+
+            Connection connection;
+            if (options.has(this.userH2Spec)) {
+                connection = spinUpEmbeddedDB(randomTempDirectory, "org.h2.Driver", "jdbc:h2:");
+            } else {
+                connection = spinUpEmbeddedDB(randomTempDirectory, "org.apache.derby.jdbc.EmbeddedDriver", "jdbc:derby:");
+            }
             // drop table if it exists already (running in IDE?)
             Statement dropTableStatement = null;
             try {
@@ -175,7 +180,6 @@ public class FileProvenanceQueryTool extends Plugin {
             // create table creation query
             StringBuilder tableCreateBuilder = new StringBuilder();
             // tableCreateBuilder
-            // .append("CREATE TABLE FILE_REPORT (ROW_ID INT NOT NULL GENERATED ALWAYS AS IDENTITY CONSTRAINT ROW_ID_CONSTRAINT PRIMARY KEY ");
             tableCreateBuilder.append("CREATE TABLE " + TABLE_NAME + " (");
             for (int i = 0; i < headers.size(); i++) {
                 if (i != 0) {
@@ -189,22 +193,12 @@ public class FileProvenanceQueryTool extends Plugin {
                 }
             }
             tableCreateBuilder.append(")");
-            Log.debug("Table creation query is: " + tableCreateBuilder.toString());
-            Statement createTableStatement = connection.createStatement();
-            createTableStatement.executeUpdate(tableCreateBuilder.toString());
-            DbUtils.closeQuietly(createTableStatement);
-            PreparedStatement prepareStatement = connection.prepareStatement("CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE (?, ?, ?, ?, ? , ? , ? )");
-            prepareStatement.setString(1, null);
-            prepareStatement.setString(2, TABLE_NAME);
-            prepareStatement.setString(3, derbyImportFile.toString());
-            prepareStatement.setString(4, "\t");
-            prepareStatement.setString(5, null);
-            prepareStatement.setString(6, null);
-            // use replace mode
-            prepareStatement.setInt(7, 1);
-            // call the statement
-            prepareStatement.execute();
-            DbUtils.closeQuietly(prepareStatement);
+            if (options.has(this.userH2Spec)) {
+                bulkImportH2(tableCreateBuilder, connection, derbyImportFile);
+            } else {
+                bulkImportDerby(tableCreateBuilder, connection, derbyImportFile);
+            }
+
             // query the database and dump the results to
             try (BufferedWriter outputWriter = Files.newBufferedWriter(Paths.get(options.valueOf(outFileSpec)), Charset.defaultCharset(),
                     StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
@@ -251,6 +245,41 @@ public class FileProvenanceQueryTool extends Plugin {
                 throw new RuntimeException(ex);
             }
         }
+    }
+
+    private void bulkImportH2(StringBuilder tableCreateBuilder, Connection connection, Path derbyImportFile) throws SQLException {
+        tableCreateBuilder.append("AS SELECT * FROM CSVREAD('").append(derbyImportFile.toString()).append("', null, 'fieldSeparator=\t')");
+        Log.debug("Table creation query is: " + tableCreateBuilder.toString());
+        Statement createTableStatement = connection.createStatement();
+        createTableStatement.executeUpdate(tableCreateBuilder.toString());
+        DbUtils.closeQuietly(createTableStatement);
+    }
+
+    private void bulkImportDerby(StringBuilder tableCreateBuilder, Connection connection, Path derbyImportFile) throws SQLException {
+        Log.debug("Table creation query is: " + tableCreateBuilder.toString());
+        Statement createTableStatement = connection.createStatement();
+        createTableStatement.executeUpdate(tableCreateBuilder.toString());
+        DbUtils.closeQuietly(createTableStatement);
+        PreparedStatement prepareStatement = connection.prepareStatement("CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE (?, ?, ?, ?, ? , ? , ? )");
+        prepareStatement.setString(1, null);
+        prepareStatement.setString(2, TABLE_NAME);
+        prepareStatement.setString(3, derbyImportFile.toString());
+        prepareStatement.setString(4, "\t");
+        prepareStatement.setString(5, null);
+        prepareStatement.setString(6, null);
+        // use replace mode
+        prepareStatement.setInt(7, 1);
+        // call the statement
+        prepareStatement.execute();
+        DbUtils.closeQuietly(prepareStatement);
+    }
+
+    private Connection spinUpEmbeddedDB(Path randomTempDirectory, String driver, String protocol) throws IllegalAccessException,
+            SQLException, ClassNotFoundException, InstantiationException {
+        // import into derby
+        Class.forName(driver).newInstance();
+        Connection connection = DriverManager.getConnection(protocol + randomTempDirectory.toString() + "/tempDB;create=true");
+        return connection;
     }
 
     private Path populateOriginalReportFromWS() throws IOException {
