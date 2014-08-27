@@ -66,7 +66,8 @@ public class FileProvenanceQueryTool extends Plugin {
     private final ArgumentAcceptingOptionSpec<String> outFileSpec;
     private final ArgumentAcceptingOptionSpec<String> querySpec;
     private final ArgumentAcceptingOptionSpec<String> inFileSpec;
-    private final OptionSpecBuilder userH2Spec;
+    private final OptionSpecBuilder useH2Spec;
+    private final OptionSpecBuilder useH2InMemorySpec;
 
     public FileProvenanceQueryTool() {
         ProvenanceUtility.configureFileProvenanceParams(parser);
@@ -77,7 +78,8 @@ public class FileProvenanceQueryTool extends Plugin {
                         + "a provided header (that will be used for column names). ").withRequiredArg();
         this.outFileSpec = parser.accepts("out", "The tab separated file into which the results will be written.").withRequiredArg()
                 .required();
-        this.userH2Spec = parser.accepts("useH2", "Use the embedded H2 database instead of Derby");
+        this.useH2InMemorySpec = parser.accepts("H2mem", "Use H2 in-memory database for better performance (but with memory limits)");
+        this.useH2Spec = parser.accepts("useH2", "Use the embedded H2 database instead of Derby").requiredIf(useH2InMemorySpec);
         this.querySpec = parser.accepts("query", "The standard SQL query that should be run. Table queried should be " + TABLE_NAME)
                 .withRequiredArg().required();
     }
@@ -106,8 +108,9 @@ public class FileProvenanceQueryTool extends Plugin {
     @Override
     public ReturnValue do_run() {
         Path randomTempDirectory = null;
+        Path originalReport = null;
+        Path bulkImportFile = null;
         try {
-            Path originalReport;
             if (options.has(this.inFileSpec)) {
                 originalReport = FileSystems.getDefault().getPath(options.valueOf(inFileSpec));
             } else {
@@ -116,7 +119,6 @@ public class FileProvenanceQueryTool extends Plugin {
 
             List<String> headers;
             List<Boolean> numericDataType;
-            Path derbyImportFile;
             // construct column name and datatypes
             // convert file provenance report into derby bulk load format
             try (BufferedReader originalReader = Files.newBufferedReader(originalReport, Charset.defaultCharset())) {
@@ -130,9 +132,9 @@ public class FileProvenanceQueryTool extends Plugin {
                     // note that Parent Sample SWID is a silly column that has colons in it
                     numericDataType.add(!editedColumnName.contains("parent_sample") && (editedColumnName.contains("swid")));
                 }
-                derbyImportFile = Files.createTempFile("import", "txt");
-                try (BufferedWriter derbyImportWriter = Files.newBufferedWriter(derbyImportFile, Charset.defaultCharset())) {
-                    Log.debug("Bulk import file written to " + derbyImportFile.toString());
+                bulkImportFile = Files.createTempFile("import", "txt");
+                try (BufferedWriter derbyImportWriter = Files.newBufferedWriter(bulkImportFile, Charset.defaultCharset())) {
+                    Log.debug("Bulk import file written to " + bulkImportFile.toString());
                     while (originalReader.ready()) {
                         String line = originalReader.readLine();
                         StringBuilder builder = new StringBuilder();
@@ -161,8 +163,13 @@ public class FileProvenanceQueryTool extends Plugin {
             randomTempDirectory = Files.createTempDirectory("randomFileProvenanceQueryDir");
 
             Connection connection;
-            if (options.has(this.userH2Spec)) {
-                connection = spinUpEmbeddedDB(randomTempDirectory, "org.h2.Driver", "jdbc:h2:");
+            if (options.has(this.useH2Spec)) {
+                // try using in-memory for better performance
+                String protocol = "jdbc:h2:";
+                if (options.has(useH2InMemorySpec)) {
+                    protocol = protocol + "mem:";
+                }
+                connection = spinUpEmbeddedDB(randomTempDirectory, "org.h2.Driver", protocol);
             } else {
                 connection = spinUpEmbeddedDB(randomTempDirectory, "org.apache.derby.jdbc.EmbeddedDriver", "jdbc:derby:");
             }
@@ -193,10 +200,10 @@ public class FileProvenanceQueryTool extends Plugin {
                 }
             }
             tableCreateBuilder.append(")");
-            if (options.has(this.userH2Spec)) {
-                bulkImportH2(tableCreateBuilder, connection, derbyImportFile);
+            if (options.has(this.useH2Spec)) {
+                bulkImportH2(tableCreateBuilder, connection, bulkImportFile);
             } else {
-                bulkImportDerby(tableCreateBuilder, connection, derbyImportFile);
+                bulkImportDerby(tableCreateBuilder, connection, bulkImportFile);
             }
 
             // query the database and dump the results to
@@ -238,7 +245,13 @@ public class FileProvenanceQueryTool extends Plugin {
             throw new RuntimeException(ex);
         } finally {
             try {
-                if (randomTempDirectory != null) {
+                if (originalReport != null) {
+                    FileUtils.deleteDirectory(originalReport.toFile());
+                }
+                if (bulkImportFile != null) {
+                    FileUtils.deleteDirectory(bulkImportFile.toFile());
+                }
+                if (randomTempDirectory != null && randomTempDirectory.toFile().exists()) {
                     FileUtils.deleteDirectory(randomTempDirectory.toFile());
                 }
             } catch (IOException ex) {
