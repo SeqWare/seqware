@@ -3165,7 +3165,7 @@ public class MetadataWS implements Metadata {
                 cResource.release();
 
             }
-            return (text);
+            return text;
         }
 
         /**
