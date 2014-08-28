@@ -131,10 +131,13 @@ public interface Metadata {
      * addSample.
      * </p>
      * 
+     * @param platformAccession
+     * @param name
      * @param description
      *            a {@link java.lang.String} object.
      * @param status
      *            the value of status
+     * @param pairdEnd
      * @param filePath
      * @param skip
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
@@ -147,16 +150,17 @@ public interface Metadata {
      * addSample.
      * </p>
      * 
-     * @param experimentAccession
-     *            a {@link java.lang.Integer} object.
-     * @param organismId
-     *            a {@link java.lang.Integer} object.
+     * @param sequencerRunAccession
+     * @param studyTypeId
+     * @param libraryStrategyId
+     * @param librarySelectionId
      * @param description
      *            a {@link java.lang.String} object.
-     * @param title
-     *            a {@link java.lang.String} object.
      * @param laneNumber
+     * @param librarySourceId
+     * @param name
      * @param skip
+     * @param cycleDescriptor
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId,
@@ -167,8 +171,12 @@ public interface Metadata {
      * addSample.
      * </p>
      * 
+     * @param laneAccession
+     * @param sampleAccession
      * @param skip
+     * @param name
      * @param barcode
+     * @param description
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
 
@@ -707,11 +715,7 @@ public interface Metadata {
      * </p>
      * 
      * @param laneSWID
-     * @param fileSWID
-     *            a int.
      * @param iusAtt
-     * @param fileAtt
-     *            a {@link net.sourceforge.seqware.common.model.FileAttribute} object.
      * @param skip
      *            a {@link java.lang.Boolean} object.
      */
@@ -1011,6 +1015,23 @@ public interface Metadata {
      * @return a {@link java.lang.String} object.
      */
     public String getWorkflowRunReport(int workflowSWID, Date earliestDate, Date latestDate);
+
+    /**
+     * <p>
+     * getWorkflowRunReport.
+     * </p>
+     * 
+     * @param status
+     *            , can be null
+     * @param earliestDate
+     *            a {@link java.util.Date} object.
+     * @param latestDate
+     *            a {@link java.util.Date} object.
+     * @return a {@link java.lang.String} object.
+     */
+    public String getWorkflowRunReport(WorkflowRunStatus status, Date earliestDate, Date latestDate);
+
+    public String getWorkflowRunReport(Integer workflowSWID, WorkflowRunStatus status, Date earliestDate, Date latestDate);
 
     /**
      * <p>
