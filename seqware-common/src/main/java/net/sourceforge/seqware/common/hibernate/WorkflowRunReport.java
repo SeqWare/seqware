@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 public class WorkflowRunReport {
 
     private final Logger logger = LoggerFactory.getLogger(WorkflowRunReport.class);
+    // set to zero to default to earliest date
     private Date earliestDate = new Date(0);
     private Date latestDate = new Date();
 
