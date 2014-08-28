@@ -470,14 +470,14 @@ public class WorkflowStatusChecker extends Plugin {
         private WorkflowRunStatus convertOozieToSeqware(WorkflowJob.Status oozieStatus) {
             WorkflowRunStatus sqwStatus;
             /*
-             * There's no analog to SUSPENDED on the seware side, treating as failed so it can be picked up for retry
+             * There's no analog to SUSPENDED on the seqware side, treating as failed so it can be picked up for retry
              */
             switch (oozieStatus) {
             case PREP:
             case RUNNING:
-            case SUSPENDED:
                 sqwStatus = WorkflowRunStatus.running;
                 break;
+            case SUSPENDED:
             case FAILED:
                 sqwStatus = WorkflowRunStatus.failed;
                 break;
