@@ -18,7 +18,7 @@ Please see Nimbus' website if you are interested in consulting services for SeqW
 
 These are the folks that have made SeqWare possible.  Most development activity now centers around SeqWare at Nimbus Informatics and OICR:
 
-* **Brian O'Connor**: Manager and Senior Software Architect. Started the project in the Nelson lab and moved in 2010 to UNC which was the TCGA center responsible for RNASeq data creation. Brian is currently directing SeqWare and all other projects under the software engineering umbrella. You can contact Brian at briandoconnor at gmail dot com.
+* **Brian O'Connor**: Director of Cloud Projects. Started the project in the Nelson lab and moved in 2010 to UNC which was the TCGA center responsible for RNASeq data creation. Brian is currently directing SeqWare and all other cloud-based projects under the software engineering umbrella. You can contact Brian at briandoconnor at gmail dot com.
 * **Denis Yuen**: Developer/architect on all things SeqWare at OICR since 2012. Also a cloud / dev-ops developer on projects such as [Bindle](https://github.com/CloudBindle). 
 * **Pipeline (Workflow) Development and Evaluation**: Develop workflows (among other useful things) on top of SeqWare at OICR
     * **Morgan Taschuk**: Program leader 
