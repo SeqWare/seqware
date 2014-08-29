@@ -144,7 +144,7 @@ public class WorkflowRunReportResource extends BasicRestlet {
                     toString(results, builder);
                 }
             } else if (status != null) {
-                Log.fatal("getRunsByStatus " + status.toString());
+                Log.debug("getRunsByStatus " + status.toString());
                 Collection<WorkflowRunReportRow> runsByStatus = cfc.getRunsByStatus(status);
                 for (WorkflowRunReportRow results : runsByStatus) {
                     toString(results, builder);
