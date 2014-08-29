@@ -127,7 +127,7 @@ public class WorkflowRunReport {
             if (earliestDate != null && latestDate != null) {
                 logger.debug("Checking dates: " + earliestDate.toString() + " and " + latestDate.toString());
                 if (this.status != null && this.status != wr.getStatus()) {
-                    logger.error("Skip workflow run incorrect status: " + wr.getSwAccession());
+                    logger.debug("Skip workflow run incorrect status: " + wr.getSwAccession());
                     continue;
                 }
                 if (wr.getCreateTimestamp().after(earliestDate) && wr.getCreateTimestamp().before(latestDate)) {
