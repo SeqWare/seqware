@@ -243,7 +243,7 @@ public class WorkflowRunReporter extends Plugin {
                 workflowParameter = Integer.parseInt(workflowAccession);
             }
             report = metadata.getWorkflowRunReport(workflowParameter, status, earlyDate, lateDate);
-        } catch (NumberFormatException e) {
+        } catch (RuntimeException e) {
             Log.fatal("Workflow not found", e);
             ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
             return;
