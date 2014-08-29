@@ -1309,7 +1309,7 @@ public class MetadataDB implements Metadata {
     }
 
     @Override
-    public Study getStudyByName(String name) {
+    public List<Study> getStudyByName(String name) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
     }
 

@@ -175,7 +175,7 @@ public interface StudyService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public Study findByTitle(String title);
+    public List<Study> findByTitle(String title);
 
     /**
      * <p>

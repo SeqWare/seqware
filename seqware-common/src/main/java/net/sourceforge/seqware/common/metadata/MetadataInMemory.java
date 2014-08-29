@@ -609,7 +609,7 @@ public class MetadataInMemory implements Metadata {
     }
 
     @Override
-    public Study getStudyByName(String name) {
+    public List<Study> getStudyByName(String name) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
