@@ -55,16 +55,16 @@ public class StudyServiceImplTest extends BaseUnit {
     @Test
     public void testFindByTitle() {
 
-        Study studySensitive = ss.findByTitle("AbcCo_Exome_Sequencing");
+        List<Study> studySensitive = ss.findByTitle("AbcCo_Exome_Sequencing");
         // Should return one item.
         assertNotNull(studySensitive);
 
-        Study studyInsensitive = ss.findByTitle("abcco_Exome_Sequencing");
+        List<Study> studyInsensitive = ss.findByTitle("abcco_Exome_Sequencing");
         // Should return one item.
         assertNotNull(studyInsensitive);
 
         // Look for not existing Title
-        Study studyNotExist = ss.findByTitle("Not Exist");
+        List<Study> studyNotExist = ss.findByTitle("Not Exist");
         // Should return one item.
         assertNull(studyNotExist);
     }

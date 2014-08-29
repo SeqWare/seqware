@@ -121,8 +121,10 @@ public class ProvenanceUtility {
                     }
                 } else if (filter == HumanProvenanceFilters.STUDY_NAME) {
                     for (String value : (List<String>) swaValues) {
-                        Study studyByName = metadata.getStudyByName(value);
-                        swaStrings.add(String.valueOf(studyByName.getSwAccession()));
+                        List<Study> studiesByName = metadata.getStudyByName(value);
+                        for (Study study : studiesByName) {
+                            swaStrings.add(String.valueOf(study.getSwAccession()));
+                        }
                     }
                 } else if (filter == HumanProvenanceFilters.SAMPLE_NAME || filter == HumanProvenanceFilters.ROOT_SAMPLE_NAME) {
                     for (String value : (List<String>) swaValues) {
