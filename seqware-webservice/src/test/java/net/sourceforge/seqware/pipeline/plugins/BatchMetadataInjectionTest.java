@@ -37,6 +37,7 @@ import net.sourceforge.seqware.common.metadata.MetadataNoConnection;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
+import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.jsontools.JSONHelper;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
@@ -148,6 +149,8 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
     /**
      * Test of parseMiseqFile method, of class BatchMetadataInjection.
+     * 
+     * @throws java.lang.Exception
      */
     @Test
     public void testParseMiseqFile() throws Exception {
@@ -255,7 +258,9 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
     // }
     private void writeToObjects() throws IOException {
 
-        net.sourceforge.seqware.common.model.Study study = metadata.getStudyByName(fileReport.get(0).get("Study Title"));
+        // FIXME: this code assumes that there is only one study per title
+        List<Study> studyByName = metadata.getStudyByName(fileReport.get(0).get("Study Title"));
+        net.sourceforge.seqware.common.model.Study study = studyByName.get(0);
 
         net.sourceforge.seqware.common.model.SequencerRun sequencer = metadata.getSequencerRun(Integer.parseInt(fileReport.get(0).get(
                 "Sequencer Run SWID")));
@@ -372,8 +377,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
     private void getData() {
 
-        Map<FileProvenanceParam, List<String>> fileProvenanceParams = new EnumMap<>(
-                FileProvenanceParam.class);
+        Map<FileProvenanceParam, List<String>> fileProvenanceParams = new EnumMap<>(FileProvenanceParam.class);
         fileProvenanceParams.put(FileProvenanceParam.ius, iusSwids);
 
         metadata.fileProvenanceReportTrigger();

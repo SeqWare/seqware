@@ -83,27 +83,24 @@ public class StudyResource extends DatabaseResource {
         StudyService ss = BeanFactory.getStudyServiceBean();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
 
+        List<Study> studies;
         if (queryValues.get("title") != null) {
-            Study study = (Study) testIfNull(ss.findByTitle(queryValues.get("title")));
-            JaxbObject jaxbTool = new JaxbObject<>();
-            Study dto = copier.hibernate2dto(Study.class, study);
-            Document line = XmlTools.marshalToDocument(jaxbTool, dto);
-            getResponse().setEntity(XmlTools.getRepresentation(line));
+            studies = (List<Study>) testIfNull(ss.findByTitle(queryValues.get("title")));
         } else {
-            JaxbObject jaxbTool = new JaxbObject<>();
-            List<Study> studies = (List<Study>) testIfNull(ss.list());
-            StudyList eList = new StudyList();
-            eList.setList(new ArrayList());
-
-            for (Study study : studies) {
-                CollectionPropertyName<Study>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(
-                        Study.class, new String[] { "existingType" });
-                Study dto = copier.hibernate2dto(Study.class, study, new Class[] { StudyType.class }, createCollectionPropertyNames);
-                eList.add(dto);
-            }
-            Document line = XmlTools.marshalToDocument(jaxbTool, eList);
-            getResponse().setEntity(XmlTools.getRepresentation(line));
+            studies = (List<Study>) testIfNull(ss.list());
         }
+        JaxbObject jaxbTool = new JaxbObject<>();
+        StudyList eList = new StudyList();
+        eList.setList(new ArrayList());
+
+        for (Study study : studies) {
+            CollectionPropertyName<Study>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(
+                    Study.class, new String[] { "existingType" });
+            Study dto = copier.hibernate2dto(Study.class, study, new Class[] { StudyType.class }, createCollectionPropertyNames);
+            eList.add(dto);
+        }
+        Document line = XmlTools.marshalToDocument(jaxbTool, eList);
+        getResponse().setEntity(XmlTools.getRepresentation(line));
 
     }
 
