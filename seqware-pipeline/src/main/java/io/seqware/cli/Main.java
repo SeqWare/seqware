@@ -1,6 +1,8 @@
 package io.seqware.cli;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.ObjectArrays;
+import com.google.common.primitives.Ints;
 import io.seqware.Engines;
 import io.seqware.Reports;
 import io.seqware.Studies;
@@ -1655,15 +1657,20 @@ public class Main {
             out("  Cancel a submitted or running workflow run.");
             out("");
             out("Required parameters:");
-            out("  --accession <swid>  The SWID of the workflow run");
+            out("  --accession <swid>  The SWID of the workflow run, comma separated (no-spaces) for multiple SWIDs");
             out("");
         } else {
-            int swid = swid(reqVal(args, "--accession"));
+            List<String> reqVals = reqVals(args, "--accession");
+            List<Integer> swids = Lists.newArrayList();
+            for (String val : reqVals) {
+                swids.add(swid(val));
+            }
+            int[] swidArr = Ints.toArray(swids);
 
             extras(args, "workflow-run cancel");
 
-            WorkflowRuns.submitCancel(swid);
-            out("Submitted request to cancel workflow run with SWID " + swid);
+            WorkflowRuns.submitCancel(swidArr);
+            out("Submitted request to cancel workflow run with SWID(s) " + Arrays.toString(swidArr));
         }
     }
 
@@ -1677,15 +1684,20 @@ public class Main {
             out("  Retry a failed or cancelled workflow run.");
             out("");
             out("Required parameters:");
-            out("  --accession <swid>  The SWID of the workflow run");
+            out("  --accession <swid>  The SWID of the workflow run, comma separated (no-spaces) for multiple SWIDs");
             out("");
         } else {
-            int swid = swid(reqVal(args, "--accession"));
+            List<String> reqVals = reqVals(args, "--accession");
+            List<Integer> swids = Lists.newArrayList();
+            for (String val : reqVals) {
+                swids.add(swid(val));
+            }
+            int[] swidArr = Ints.toArray(swids);
 
             extras(args, "workflow-run retry");
 
-            WorkflowRuns.submitRetry(swid);
-            out("Submitted request to retry workflow run with SWID " + swid);
+            WorkflowRuns.submitRetry(swidArr);
+            out("Submitted request to retry workflow run with SWID " + Arrays.toString(swidArr));
         }
     }
 
