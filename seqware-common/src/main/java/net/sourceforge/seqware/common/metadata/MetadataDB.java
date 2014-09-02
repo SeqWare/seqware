@@ -1086,7 +1086,9 @@ public class MetadataDB implements Metadata {
     }
 
     @Override
-    public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine, String seqwareVersion) {
+    public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
+            String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip,
+            String workflowClass, String workflowType, String workflowEngine, String seqwareVersion) {
 
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
@@ -1331,6 +1333,16 @@ public class MetadataDB implements Metadata {
     @Override
     public Processing getProcessing(int processingAccession) {
         throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public String getWorkflowRunReport(WorkflowRunStatus status, Date earliestDate, Date latestDate) {
+        throw new NotImplementedException("This method is not supported through the direct MetaDB connection!");
+    }
+
+    @Override
+    public String getWorkflowRunReport(Integer workflowSWID, WorkflowRunStatus status, Date earliestDate, Date latestDate) {
+        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose Tools | Templates.
     }
 
     public static class IntByIndex implements ResultSetHandler<Integer> {
