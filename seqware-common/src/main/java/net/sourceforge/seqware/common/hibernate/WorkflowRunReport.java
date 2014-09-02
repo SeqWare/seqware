@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.common.hibernate;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -50,8 +51,10 @@ import org.slf4j.LoggerFactory;
 public class WorkflowRunReport {
 
     private final Logger logger = LoggerFactory.getLogger(WorkflowRunReport.class);
+    // set to zero to default to earliest date
     private Date earliestDate = new Date(0);
     private Date latestDate = new Date();
+    private WorkflowRunStatus status = null;
 
     /**
      * Set the value of latestDate. This date must be set prior to calling other methods in order to filter collections of workflow runs.
@@ -123,6 +126,10 @@ public class WorkflowRunReport {
         for (WorkflowRun wr : runs) {
             if (earliestDate != null && latestDate != null) {
                 logger.debug("Checking dates: " + earliestDate.toString() + " and " + latestDate.toString());
+                if (this.status != null && this.status != wr.getStatus()) {
+                    logger.debug("Skip workflow run incorrect status: " + wr.getSwAccession());
+                    continue;
+                }
                 if (wr.getCreateTimestamp().after(earliestDate) && wr.getCreateTimestamp().before(latestDate)) {
                     logger.debug("Add new workflow run within dates: " + wr.getSwAccession() + " " + wr.getCreateTimestamp());
                     rows.add(fromWorkflowRun(wr));
@@ -365,5 +372,16 @@ public class WorkflowRunReport {
             throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND);
         }
         return o;
+    }
+
+    public void setStatus(WorkflowRunStatus status) {
+        this.status = status;
+    }
+
+    public Collection<WorkflowRunReportRow> getRunsByStatus(WorkflowRunStatus status) {
+        WorkflowRunService ws = BeanFactory.getWorkflowRunServiceBean();
+        List<WorkflowRun> runsWithValidStatus = ws.findByCriteria("wr.status = '" + status.toString() + "'");
+        Collection<WorkflowRunReportRow> rows = runThroughWorkflowRuns(runsWithValidStatus);
+        return rows;
     }
 }

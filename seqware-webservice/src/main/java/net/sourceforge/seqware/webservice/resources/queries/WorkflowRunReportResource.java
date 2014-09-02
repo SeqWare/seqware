@@ -16,14 +16,17 @@
  */
 package net.sourceforge.seqware.webservice.resources.queries;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import net.sourceforge.seqware.common.hibernate.WorkflowRunReport;
 import net.sourceforge.seqware.common.hibernate.reports.WorkflowRunReportRow;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Sample;
+import net.sourceforge.seqware.common.util.Log;
 import static net.sourceforge.seqware.webservice.resources.BasicResource.parseClientInt;
 import net.sourceforge.seqware.webservice.resources.BasicRestlet;
 import org.apache.log4j.Logger;
@@ -45,7 +48,8 @@ import org.restlet.resource.ResourceException;
  */
 public class WorkflowRunReportResource extends BasicRestlet {
 
-    private Logger logger = Logger.getLogger(WorkflowRunReportResource.class);
+    private static final String STATUS = "status";
+    private final Logger logger = Logger.getLogger(WorkflowRunReportResource.class);
 
     /**
      * <p>
@@ -79,6 +83,7 @@ public class WorkflowRunReportResource extends BasicRestlet {
 
         Date earliestDate = new Date(0);
         Date latestDate = new Date();
+        WorkflowRunStatus status = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         for (String key : queryValues.keySet()) {
             logger.debug("queryValues: " + key + " " + queryValues.get(key));
@@ -105,11 +110,21 @@ public class WorkflowRunReportResource extends BasicRestlet {
                         "Improperly formatted latest date. Should be in the form yyyyMMdd: " + ex.getMessage());
             }
         }
+        if (queryValues.containsKey(STATUS)) {
+            try {
+                status = WorkflowRunStatus.valueOf(queryValues.get(STATUS));
+            } catch (IllegalArgumentException | NullPointerException e) {
+                logger.error("Improper workflow run status: " + queryValues.get(STATUS));
+                throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Improper status, should be one of "
+                        + Arrays.toString(WorkflowRunStatus.values()));
+            }
+        }
 
         if (request.getMethod().compareTo(Method.GET) == 0) {
             WorkflowRunReport cfc = new WorkflowRunReport();
             cfc.setEarliestDate(earliestDate);
             cfc.setLatestDate(latestDate);
+            cfc.setStatus(status);
             StringBuilder builder = getHeader();
             if (wId != null) {
                 Collection<WorkflowRunReportRow> rows = cfc.getRunsFromWorkflow(parseClientInt(wId.toString()));
@@ -128,8 +143,14 @@ public class WorkflowRunReportResource extends BasicRestlet {
                 } else { // full report
                     toString(results, builder);
                 }
+            } else if (status != null) {
+                Log.debug("getRunsByStatus " + status.toString());
+                Collection<WorkflowRunReportRow> runsByStatus = cfc.getRunsByStatus(status);
+                for (WorkflowRunReportRow results : runsByStatus) {
+                    toString(results, builder);
+                }
             } else if (wId == null && wrId == null) {
-                String errMsg = "Improperly format, you need to provide a workflow ID or workflowRun ID";
+                String errMsg = "Improperly formatted, you need to provide a workflow ID or workflowRun ID";
                 throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, errMsg);
             } else {
                 Collection<WorkflowRunReportRow> rows = cfc.getAllRuns();

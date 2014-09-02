@@ -623,4 +623,14 @@ public class MetadataInMemory implements Metadata {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    public String getWorkflowRunReport(WorkflowRunStatus status, Date earliestDate, Date latestDate) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String getWorkflowRunReport(Integer workflowSWID, WorkflowRunStatus status, Date earliestDate, Date latestDate) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }
