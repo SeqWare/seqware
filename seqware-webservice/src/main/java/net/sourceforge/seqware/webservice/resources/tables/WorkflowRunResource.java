@@ -16,9 +16,11 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.WorkflowRunService;
@@ -84,10 +86,22 @@ public class WorkflowRunResource extends DatabaseResource {
             List<WorkflowRun> runs = ss.findByOwnerID(registrationId);
             respondWithList(runs, copier);
         } else {
+            Set<String> validProperties = ImmutableSet.of("status", "statusCmd", "host", "currentWorkingDir", "workflowEngine",
+                    "ownerUserName");
+            List<WorkflowRun> runs;
+            StringBuilder constraintBuilder = new StringBuilder();
+            for (String property : validProperties) {
+                if (queryValues.get(property) != null) {
+                    if (constraintBuilder.length() != 0) {
+                        constraintBuilder.append(" and ");
+                    }
+                    constraintBuilder.append("wr.").append(property).append("='").append(queryValues.get(property)).append("'");
+                }
+            }
 
-            List<WorkflowRun> runs = null;
-            if (queryValues.get("status") != null) {
-                runs = ss.findByCriteria("wr.status='" + queryValues.get("status") + "'");
+            if (constraintBuilder.length() != 0) {
+                Log.debug("WorkflowRunResource constraint: " + constraintBuilder.toString());
+                runs = ss.findByCriteria(constraintBuilder.toString());
             } else {
                 runs = (List<WorkflowRun>) testIfNull(ss.list());
             }

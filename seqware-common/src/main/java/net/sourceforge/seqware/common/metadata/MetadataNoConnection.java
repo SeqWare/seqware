@@ -351,7 +351,9 @@ public class MetadataNoConnection implements Metadata {
      * @param workflow_class
      */
     @Override
-    public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile, String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip, String workflowClass, String workflowType, String workflowEngine, String seqwareVersion) {
+    public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
+            String templateFile, String provisionDir, boolean storeProvisionDir, String archiveZip, boolean storeArchiveZip,
+            String workflowClass, String workflowType, String workflowEngine, String seqwareVersion) {
         logger.info("No metadata connection");
         ReturnValue finished = new ReturnValue(ReturnValue.PROCESSING);
         finished.setExitStatus(ReturnValue.SUCCESS);
@@ -756,5 +758,16 @@ public class MetadataNoConnection implements Metadata {
     public Processing getProcessing(int processingAccession) {
         logger.info("No metadata connection");
         return null;
+    }
+
+    @Override
+    public String getWorkflowRunReport(WorkflowRunStatus status, Date earliestDate, Date latestDate) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public String getWorkflowRunReport(Integer workflowSWID, WorkflowRunStatus status, Date earliestDate, Date latestDate) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

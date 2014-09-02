@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import io.seqware.common.model.WorkflowRunStatus;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -25,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import joptsimple.ArgumentAcceptingOptionSpec;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
@@ -42,20 +44,17 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = PluginInterface.class)
 public class WorkflowRunReporter extends Plugin {
-    public static final String WRSTDERR = "wr-stderr";
-    public static final String WRSTDOUT = "wr-stdout";
+    private static final String WRSTDERR = "wr-stderr";
+    private static final String WRSTDOUT = "wr-stdout";
 
-    ReturnValue ret = new ReturnValue();
-    private final String FILETYPE_ALL = "all";
-    private final String LINKTYPE_SYM = "s";
-    private String fileType = FILETYPE_ALL;
-    private String linkType = LINKTYPE_SYM;
+    private ReturnValue ret = new ReturnValue();
     private String csvFileName = null;
     private Writer writer;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_kkmmss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_kkmmss");
 
     private final int STDOUT = 1;
     private final int STDERR = 2;
+    private final ArgumentAcceptingOptionSpec<WorkflowRunStatus> statusSpec;
 
     /**
      * <p>
@@ -78,6 +77,11 @@ public class WorkflowRunReporter extends Plugin {
                 "Optional: will print the stdout of the workflow run, must specify the --workflow-run-accession");
         parser.acceptsAll(Arrays.asList(WRSTDERR),
                 "Optional: will print the stderr of the workflow run, must specify the --workflow-run-accession");
+        this.statusSpec = parser
+                .accepts(
+                        "status",
+                        "Optional: Specify a particular status to restrict workflow runs that will be returned, status is one of "
+                                + Arrays.toString(WorkflowRunStatus.values())).withRequiredArg().ofType(WorkflowRunStatus.class);
         parser.acceptsAll(Arrays.asList("human"), "Optional: will print output in expanded human friendly format");
         ret.setExitStatus(ReturnValue.SUCCESS);
     }
@@ -113,6 +117,7 @@ public class WorkflowRunReporter extends Plugin {
         try {
 
             String timePeriod = null;
+            WorkflowRunStatus status = options.valueOf(statusSpec);
 
             if (options.has("time-period")) {
                 timePeriod = (String) options.valueOf("time-period");
@@ -125,15 +130,15 @@ public class WorkflowRunReporter extends Plugin {
             Date firstDate = null, lastDate = null;
             if (timePeriod != null) {
                 String[] dates = timePeriod.trim().split(":");
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat localDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 try {
-                    firstDate = dateFormat.parse(dates[0].trim());
+                    firstDate = localDateFormat.parse(dates[0].trim());
                     if (dates.length != 1) {
-                        lastDate = dateFormat.parse(dates[1].trim());
+                        lastDate = localDateFormat.parse(dates[1].trim());
                     }
                 } catch (ParseException ex) {
                     Log.warn("Date not found. Date must be in format YYYY-MM-DD or YYYY-MM-DD:YYYY-MM-DD.", ex);
-                    println("Workflow not found");
+                    println("Incorrect date");
                     ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
                     return ret;
                 }
@@ -157,9 +162,9 @@ public class WorkflowRunReporter extends Plugin {
                 } else {
                     reportOnWorkflowRun(wra);
                 }
-            } else if (options.has("workflow-accession")) {
+            } else if (options.has("workflow-accession") || options.has(statusSpec)) {
                 String tp = (String) options.valueOf("workflow-accession");
-                reportOnWorkflow(tp, firstDate, lastDate);
+                reportOnWorkflow(tp, status, firstDate, lastDate);
             }
             /**
              * SEQWARE-863 ability to query without specifying a specific workflow-accession was removed else if (firstDate != null ||
@@ -216,8 +221,14 @@ public class WorkflowRunReporter extends Plugin {
         }
     }
 
-    private void reportOnWorkflow(String workflowAccession, Date earlyDate, Date lateDate) throws IOException {
-        String title = "workflow_" + workflowAccession;
+    private void reportOnWorkflow(String workflowAccession, WorkflowRunStatus status, Date earlyDate, Date lateDate) throws IOException {
+        String title = "";
+        if (workflowAccession != null) {
+            title = "workflow_" + workflowAccession;
+        }
+        if (status != null) {
+            title += "status_" + status.name();
+        }
         if (earlyDate != null) {
             title += "from" + dateFormat.format(earlyDate);
         }
@@ -227,34 +238,14 @@ public class WorkflowRunReporter extends Plugin {
         initWriter(title);
         String report;
         try {
-            report = metadata.getWorkflowRunReport(Integer.parseInt(workflowAccession), earlyDate, lateDate);
+            Integer workflowParameter = null;
+            if (workflowAccession != null) {
+                workflowParameter = Integer.parseInt(workflowAccession);
+            }
+            report = metadata.getWorkflowRunReport(workflowParameter, status, earlyDate, lateDate);
         } catch (RuntimeException e) {
-            println("Workflow not found");
+            Log.fatal("Workflow not found", e);
             ret = new ReturnValue(ReturnValue.INVALIDPARAMETERS);
-            return;
-        }
-        if (options.has("human")) {
-            writer.write(TabExpansionUtil.expansion(report));
-            return;
-        }
-        writer.write(report);
-    }
-
-    private void reportOnWorkflowRuns(Date earlyDate, Date lateDate) throws IOException {
-        String title = "workflowruns_";
-        if (earlyDate != null) {
-            title += "from" + dateFormat.format(earlyDate);
-        }
-        if (lateDate != null) {
-            title += "to" + dateFormat.format(lateDate);
-        }
-        initWriter(title);
-        String report;
-        try {
-            report = metadata.getWorkflowRunReport(earlyDate, lateDate);
-        } catch (RuntimeException e) {
-            println("No runs found in date range");
-            ret = new ReturnValue(ReturnValue.SUCCESS);
             return;
         }
         if (options.has("human")) {

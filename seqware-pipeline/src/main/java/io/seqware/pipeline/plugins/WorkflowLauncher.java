@@ -163,7 +163,7 @@ public class WorkflowLauncher extends Plugin {
                 boolean requiresNewLauncher = WorkflowV2Utility.requiresNewLauncher(wrWithWorkflow.getWorkflow());
                 if (!requiresNewLauncher) {
                     Log.stdout("Launching via old launcher: " + wr.getSwAccession());
-                    WorkflowRuns.failWorkflow(wr.getSwAccession());
+                    WorkflowRuns.failWorkflowRuns(wr.getSwAccession());
                     throw new RuntimeException("SeqWare no longer supports running Pegasus bundles");
                 } else {
                     Log.stdout("Launching via new launcher: " + wr.getSwAccession());
@@ -172,7 +172,7 @@ public class WorkflowLauncher extends Plugin {
 
             } catch (Exception e) {
                 Log.fatal("Workflowrun launch with accession: " + wr.getSwAccession() + " failed", e);
-                WorkflowRuns.failWorkflow(wr.getSwAccession());
+                WorkflowRuns.failWorkflowRuns(wr.getSwAccession());
             }
         }
     }
@@ -225,7 +225,7 @@ public class WorkflowLauncher extends Plugin {
             }
         } catch (Exception e) {
             Log.fatal("Exception constructing data model, failing workflow " + workflowRunAccession, e);
-            WorkflowRuns.failWorkflow(workflowRunAccession);
+            WorkflowRuns.failWorkflowRuns(workflowRunAccession);
             localRet.setExitStatus(ReturnValue.FAILURE);
             return localRet;
         }

@@ -1950,21 +1950,15 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public String getWorkflowRunReport(int workflowSWID, Date earliestDate, Date latestDate) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        StringBuilder dateQuery = new StringBuilder();
-        if (earliestDate != null) {
-            dateQuery.append("earliestDate=");
-            dateQuery.append(dateFormat.format(earliestDate));
-        }
-        if (latestDate != null) {
-            if (dateQuery.length() != 0) {
-                dateQuery.append("&");
-            }
-            dateQuery.append("latestDate=");
-            dateQuery.append(dateFormat.format(latestDate));
-        }
-        String report = (String) ll.getString("/reports/workflows/" + workflowSWID + "/runs?" + dateQuery.toString());
-        return report;
+        return getWorkflowRunReport(workflowSWID, null, earliestDate, latestDate);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getWorkflowRunReport(WorkflowRunStatus status, Date earliestDate, Date latestDate) {
+        return getWorkflowRunReport(null, status, earliestDate, latestDate);
     }
 
     /**
@@ -1972,21 +1966,44 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public String getWorkflowRunReport(Date earliestDate, Date latestDate) {
+        return getWorkflowRunReport(null, null, earliestDate, latestDate);
+    }
+
+    /**
+     * @param workflowSWID
+     * @param status
+     * @param latestDate
+     * @param earliestDate
+     * @return
+     */
+    @Override
+    public String getWorkflowRunReport(Integer workflowSWID, WorkflowRunStatus status, Date earliestDate, Date latestDate) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        StringBuilder dateQuery = new StringBuilder();
+        StringBuilder constraintQuery = new StringBuilder();
         if (earliestDate != null) {
-            dateQuery.append("earliestDate=");
-            dateQuery.append(dateFormat.format(earliestDate));
+            constraintQuery.append("earliestDate=");
+            constraintQuery.append(dateFormat.format(earliestDate));
         }
         if (latestDate != null) {
-            if (dateQuery.length() != 0) {
-                dateQuery.append("&");
+            if (constraintQuery.length() != 0) {
+                constraintQuery.append("&");
             }
-            dateQuery.append("latestDate=");
-            dateQuery.append(dateFormat.format(latestDate));
+            constraintQuery.append("latestDate=");
+            constraintQuery.append(dateFormat.format(latestDate));
         }
-        String report = (String) ll.getString("/reports/workflowruns?" + dateQuery.toString());
-
+        if (status != null) {
+            if (constraintQuery.length() != 0) {
+                constraintQuery.append("&");
+            }
+            constraintQuery.append("status=");
+            constraintQuery.append(status.toString());
+        }
+        String report;
+        if (workflowSWID != null) {
+            report = (String) ll.getString("/reports/workflows/" + workflowSWID + "/runs?" + constraintQuery.toString());
+        } else {
+            report = (String) ll.getString("/reports/workflowruns?" + constraintQuery.toString());
+        }
         return report;
     }
 
@@ -3165,7 +3182,7 @@ public class MetadataWS implements Metadata {
                 cResource.release();
 
             }
-            return (text);
+            return text;
         }
 
         /**
