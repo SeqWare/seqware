@@ -346,9 +346,6 @@ public class MetadataNoConnection implements Metadata {
     /**
      * {@inheritDoc}
      * 
-     * @param workflow_engine
-     * @param workflow_type
-     * @param workflow_class
      */
     @Override
     public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
@@ -737,7 +734,7 @@ public class MetadataNoConnection implements Metadata {
     }
 
     @Override
-    public Study getStudyByName(String name) {
+    public List<Study> getStudyByName(String name) {
         logger.info("No metadata connection");
         return null;
     }

@@ -2595,10 +2595,10 @@ public class MetadataWS implements Metadata {
     }
 
     @Override
-    public Study getStudyByName(String name) {
+    public List<Study> getStudyByName(String name) {
         try {
-            Study study = ll.findStudy("?title=" + name);
-            return study;
+            List<Study> studies = ll.matchStudyTitle(name);
+            return studies;
         } catch (Exception e) {
             Log.error("Problem finding studies with this name: " + name, e);
         }
@@ -3183,6 +3183,15 @@ public class MetadataWS implements Metadata {
 
             }
             return text;
+        }
+
+        private List<Study> matchStudyTitle(String title) throws IOException, JAXBException {
+            JaxbObject<Study> jaxb = new JaxbObject<>();
+            StudyList list = (StudyList) findObject("/studies", "?title=" + title, jaxb, new StudyList());
+            if (list != null) {
+                return list.getList();
+            }
+            return null;
         }
 
         /**

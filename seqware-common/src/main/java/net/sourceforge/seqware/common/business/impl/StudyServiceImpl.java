@@ -174,8 +174,8 @@ public class StudyServiceImpl implements StudyService {
      * Finds an instance of Study in the database by the Study emailAddress, and copies the Study properties to an instance of Study.
      */
     @Override
-    public Study findByTitle(String title) {
-        Study study = null;
+    public List<Study> findByTitle(String title) {
+        List<Study> study = null;
         if (title != null) {
             try {
                 study = studyDAO.findByTitle(title.trim());
@@ -250,7 +250,7 @@ public class StudyServiceImpl implements StudyService {
     /**
      * {@inheritDoc}
      * 
-     * Determines if an email address has already been used.
+     * Determines if an study title has already been used.
      */
     @Override
     public boolean hasTitleBeenUsed(String oldTitle, String newTitle) {
@@ -267,8 +267,8 @@ public class StudyServiceImpl implements StudyService {
             }
 
             if (checkTitle) {
-                Study study = this.findByTitle(newTitle.trim());
-                if (study != null) {
+                List<Study> studies = this.findByTitle(newTitle.trim());
+                if (studies != null) {
                     titleUsed = true;
                 }
             }
