@@ -993,16 +993,12 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
      * Finds an instance of Study in the database by the Study name.
      */
     @Override
-    public Study findByTitle(String title) {
+    public List<Study> findByTitle(String title) {
         String query = "from Study as study where lower(study.title) = ?";
         Study study = null;
         Object[] parameters = { title.toLowerCase() };
-        List list = this.getHibernateTemplate().find(query, parameters);
-        if (list.size() > 0) {
-            study = (Study) list.get(0);
-            localLogger.debug("In DAO. Study title = " + study.getTitle());
-        }
-        return study;
+        List<Study> list = this.getHibernateTemplate().find(query, parameters);
+        return list;
     }
 
     /**

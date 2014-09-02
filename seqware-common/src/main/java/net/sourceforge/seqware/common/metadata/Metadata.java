@@ -1198,7 +1198,7 @@ public interface Metadata {
      */
     public List<Object> getViaAccessions(int[] potentialAccessions);
 
-    public Study getStudyByName(String name);
+    public List<Study> getStudyByName(String name);
 
     public List<Sample> getSampleByName(String name);
 
