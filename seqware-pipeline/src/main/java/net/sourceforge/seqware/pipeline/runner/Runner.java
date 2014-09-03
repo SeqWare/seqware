@@ -274,6 +274,7 @@ public class Runner {
      */
     public void evaluateReturn(Module app, String methodName) {
 
+        Log.debug("EvaluateReturn for " + methodName);
         // If metaDB is defined, let's update status to methodName so we know what
         // we are running
         if (meta != null && processingID != 0) {
@@ -316,6 +317,8 @@ public class Runner {
             System.exit(ReturnValue.RUNNERERR);
         }
 
+        Log.debug("Past section1 of EvaluateReturn " + methodName);
+
         // Print STDERR/STDOUT and then set the full stderr/stdout in the
         // returnvalue
         if (newReturn.getStdout() != null) {
@@ -327,8 +330,11 @@ public class Runner {
             newReturn.setStderr(stderr.toString());
         }
 
+        Log.debug("Past section2 of EvaluateReturn " + methodName);
+
         // On failure, update metadb and exit
         if (newReturn.getExitStatus() > ReturnValue.SUCCESS) {
+            Log.debug("Section3 of EvaluateReturn, failure");
             printAndAppendtoStderr("The method '" + methodName + "' exited abnormally so the Runner will terminate here!");
             printAndAppendtoStderr("Return value was: " + newReturn.getExitStatus());
 
@@ -339,9 +345,11 @@ public class Runner {
                 meta.update_processing_event(processingID, newReturn);
                 meta.update_processing_status(processingID, ProcessingStatus.failed);
             }
+            Log.debug("Attempting exit");
             System.exit(newReturn.getExitStatus());
         } // Otherwise we will continue, after updating metadata
         else {
+            Log.debug("Section3 of EvaluateReturn, success");
             // If it returned unimplemented, let's warn
             if (newReturn.getExitStatus() < ReturnValue.SUCCESS) {
                 if (!options.has("suppress-unimplemented-warnings")) {
@@ -354,7 +362,7 @@ public class Runner {
 
                 newReturn.setExitStatus(ReturnValue.NULL);
             }
-
+            Log.debug("Section3 of EvaluateReturn, update metadata");
             // Update metadata if we can
             if (meta != null && processingID != 0) {
                 newReturn.setStdout(stdout.toString());
@@ -362,6 +370,7 @@ public class Runner {
                 meta.update_processing_event(processingID, newReturn);
             }
         }
+        Log.debug("Past section3 of EvaluateReturn " + methodName);
 
         // If were are supposed to sleep after steps, do so
         ProcessTools.sleep((Integer) options.valueOf("sleep-between-steps"));
@@ -872,11 +881,13 @@ public class Runner {
     }
 
     private void postProcessMetadata() {
+	Log.debug("Running postProcessMetadata");
         if (meta != null && processingID != 0) {
 
             // write out the accessions to file iff success
             // Try to write to each processingIDFile until success or timeout
             for (File file : processingIDFiles) {
+                Log.debug("Writing out accession to " + file.toString());
                 int maxTries = (Integer) options.valueOf("metadata-tries-number");
                 for (int i = 0; i < maxTries; i++) {
                     // Break on success
@@ -896,15 +907,18 @@ public class Runner {
                     }
                 }
             }
+            Log.debug("Completed processingIDFiles");
 
             // Try to write to each processingAccessionFile until success or timeout
             for (File file : processingAccessionFiles) {
+		Log.debug("Writing out to " + file.toString());
                 writeProcessingAccessionToFile(file, true);
             }
+            Log.debug("Completed processingAccessionFiles");
             if (processingAccessionFileCheck != null) {
                 writeProcessingAccessionToFile(processingAccessionFileCheck, false);
             }
-
+            Log.debug("Completed processingAccessionFileCheck");
             meta.update_processing_status(processingID, ProcessingStatus.success);
         }
     }
@@ -927,6 +941,7 @@ public class Runner {
         PrintStream oldErr = null;
 
         for (ModuleMethod m : ModuleMethod.values()) {
+	    Log.debug("Running method " + m.toString());
             // check stdout redirect
             if ((m == outStart) && (app.getStdoutFile() != null)) {
                 try {
@@ -958,6 +973,7 @@ public class Runner {
                 System.setErr(oldErr);
             }
         }
+        Log.debug("Finishing invokeModuleMethods");
     }
 
     /**
