@@ -109,7 +109,7 @@ import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
-import org.restlet.ext.ssl.SslContextFactory;
+import org.restlet.engine.ssl.SslContextFactory;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
