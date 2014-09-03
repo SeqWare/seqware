@@ -549,8 +549,8 @@
             <version>1.4.01</version>
         </dependency>
         <dependency>
-            <artifactId>org.restlet.lib.org.json</artifactId>
             <groupId>org.restlet.jee</groupId>
+            <artifactId>org.restlet.lib.org.restlet.lib.org.json</artifactId>
             <type>jar</type>
             <version>2.0</version>
         </dependency>
