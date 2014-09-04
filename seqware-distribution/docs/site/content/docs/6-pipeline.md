@@ -142,6 +142,8 @@ Other useful tools used for import, export, and annotation of results.
 : The batch metadata injector is a testing/development tool used to create arbitrary metadata for testing workflows. 
 * [Sanity Check](/docs/25-sanity-check-tool/)
 : This tool checks whether a SeqWare environment is setup properly. It currently runs for user environments and master environments.
+* [ProcessingDataStructure2Dot](/docs/6-pipeline/processingdatastructure2dot/)
+: This tool converts a section of the processing hierarchy "below" a processing event into a dot file for visualization. 
 
 ## Command Line Reference
 
