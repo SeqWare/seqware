@@ -14,7 +14,7 @@ outside of the SeqWare development directories).  Here we are working in the wor
 
 The numbers used to identify  the archetypes will vary 
 depending on what you have installed, so you will need to scan through the list 
-to find the SeqWare archetype you are looking for, in this case "SeqWare Java workflow archetype".  Following the prompts, use "MyHelloWorld" as the artifactId and accept the defaults for the remaining by just pressing return.
+to find the SeqWare archetype you are looking for, in this case "SeqWare Java workflow archetype". You can also enter "seqware" as a filter in order to narrow down the possibilities. Following the prompts, use "com.github.seqware" as the package, "MyHelloWorld" as the artifactId, and accept the defaults for the remaining by just pressing return.
 
 Alternately, the archetype can be generated without any interaction:
 
