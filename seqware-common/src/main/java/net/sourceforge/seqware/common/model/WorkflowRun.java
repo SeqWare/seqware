@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.model;
 
+import com.google.common.collect.ImmutableSet;
 import io.seqware.common.model.WorkflowRunStatus;
 import java.io.Serializable;
 import java.util.Date;
@@ -78,6 +79,12 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
     private Integer workflowAccession;
     private String ownerUserName;
     final Logger logger = LoggerFactory.getLogger(WorkflowRun.class);
+
+    /**
+     * Lists the properties that can be used to easily filter this entity
+     */
+    public static final Set<String> USABLE_CONSTRAINTS = ImmutableSet.of("status", "statusCmd", "host", "currentWorkingDir",
+            "workflowEngine", "ownerUserName");
 
     /**
      * <p>

@@ -633,4 +633,9 @@ public class MetadataInMemory implements Metadata {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    public List<WorkflowRun> getWorkflowRunsByStatusCmd(String statusCmd) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

@@ -765,6 +765,13 @@ public class MetadataNoConnection implements Metadata {
 
     @Override
     public String getWorkflowRunReport(Integer workflowSWID, WorkflowRunStatus status, Date earliestDate, Date latestDate) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public List<WorkflowRun> getWorkflowRunsByStatusCmd(String statusCmd) {
+        logger.info("No metadata connection");
+        return null;
     }
 }
