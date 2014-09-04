@@ -109,7 +109,7 @@ import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Parameter;
 import org.restlet.data.Protocol;
 import org.restlet.data.Status;
-import org.restlet.ext.ssl.SslContextFactory;
+import org.restlet.engine.ssl.SslContextFactory;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
@@ -1244,8 +1244,10 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public ReturnValue update_processing_event(int processingID, ReturnValue retval) {
+        Log.debug("In update_processing_event");
         try {
             Processing processing = ll.findProcessing("?id=" + processingID + "&show=files");
+            Log.debug("Received processing event from WS");
 
             processing.setExitStatus(retval.getExitStatus());
             processing.setProcessExitStatus(retval.getProcessExitStatus());
@@ -1291,7 +1293,9 @@ public class MetadataWS implements Metadata {
             }
             processing.getFiles().addAll(modelFiles);
 
+            Log.debug("Completed updating client copy of processing");
             ll.updateProcessing("/" + processing.getSwAccession(), processing);
+            Log.debug("Completed update to web service");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2697,6 +2701,8 @@ public class MetadataWS implements Metadata {
             }
             client.getContext().getParameters().add("useForwardedForHeader", "false");
             client.getContext().getParameters().add("maxConnectionsPerHost", "100");
+            //client.getContext().getParameters().add("controllerSleepTimeMs", "60000");
+            //client.getContext().getParameters().add("maxIoIdleTimeMs", "60000");
             // if a low level call does not return in 20 minutes, disconnect
             // default apache http client will retry three times and then throw an exception
             client.getContext().getParameters().add("socketTimeout", Integer.toString(20 * 60 * 1000));
@@ -2989,6 +2995,7 @@ public class MetadataWS implements Metadata {
         }
 
         private Processing findProcessing(String searchString) throws IOException, JAXBException {
+            Log.debug("In findProcessing: " + searchString);
             Processing parent = new Processing();
             JaxbObject<Processing> jaxbProcess = new JaxbObject<>();
             return (Processing) findObject("/processes", searchString, jaxbProcess, parent);
@@ -3215,7 +3222,7 @@ public class MetadataWS implements Metadata {
         }
 
         private Object findObject(String uri, String searchString, JaxbObject jaxb, Object parent) throws IOException, NotFoundException {
-
+            Log.debug("findObject");
             Class clazz = parent.getClass();
             try {
                 parent = getObject(uri, searchString, jaxb, parent);
@@ -3230,6 +3237,7 @@ public class MetadataWS implements Metadata {
                 }
             }
             // SEQWARE-1331, this was commented out for some reason, but that causes the checking of incorrect accessions to fail
+            Log.debug("findObject -- testing null");
             testNull(parent, clazz, searchString);
             return parent;
         }
@@ -3240,7 +3248,9 @@ public class MetadataWS implements Metadata {
             try {
                 Log.info("getObject: " + cResource);
                 result = cResource.get();
+                Log.info("getObject completed get()");
                 String text = result.getText();
+                Log.info("getObject got text: " + text);
                 parent = XmlTools.unMarshal(jaxb, parent, text);
             } catch (SAXException ex) {
                 Log.error("MetadataWS.findObject with search string " + searchString + " encountered error " + ex.getMessage());
@@ -3254,6 +3264,7 @@ public class MetadataWS implements Metadata {
 
                 parent = null;
             } finally {
+                Log.info("getObject finally block: " + cResource);
                 if (result != null) {
                     result.exhaust();
                     result.release();
