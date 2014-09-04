@@ -327,6 +327,7 @@ This plugin creates a tab-separated file that describes one or more workflow run
 |--[arguments]||
 |--human|Optional: will print output in expanded human friendly format|
 |--o, --output-filename|Optional: The output filename|
+|--status|Optional: Specify a particular status to restrict workflow runs that will be returned, status is one of [submitted, pending, running, failed, completed, submitted_cancel, cancelled, submitted_retry]|
 |--stdout|Prints to standard out instead of to a file|
 |--t, --time-period|Dates to check for workflow runs. Dates are in format YYYY-MM-DD. If one date is provided, from that point to the present is checked. If two, separated by hyphen YYYY-MM-DDL:YYYY-MM-DD then it checks that range|
 |--wa, --workflow-accession|The SWID of a workflow. All the workflow runs for that workflow will be retrieved.|
