@@ -459,6 +459,14 @@ public interface Metadata {
     WorkflowRun getWorkflowRun(int workflowRunAccession);
 
     /**
+     * Get workflow run by status cmd (oozie job id in oozie).
+     * 
+     * @param statusCmd
+     * @return
+     */
+    List<WorkflowRun> getWorkflowRunsByStatusCmd(String statusCmd);
+
+    /**
      * Returns the workflow_runs associated with a group of input files.
      * 
      * Specifically, this resource will return all workflow runs that use at least one of the input file accessions
