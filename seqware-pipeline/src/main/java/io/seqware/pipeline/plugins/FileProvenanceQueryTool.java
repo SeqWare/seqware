@@ -31,7 +31,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -66,7 +65,6 @@ public class FileProvenanceQueryTool extends Plugin {
     private final ArgumentAcceptingOptionSpec<String> outFileSpec;
     private final ArgumentAcceptingOptionSpec<String> querySpec;
     private final ArgumentAcceptingOptionSpec<String> inFileSpec;
-    private final OptionSpecBuilder useH2Spec;
     private final OptionSpecBuilder useH2InMemorySpec;
 
     public FileProvenanceQueryTool() {
@@ -79,7 +77,6 @@ public class FileProvenanceQueryTool extends Plugin {
         this.outFileSpec = parser.accepts("out", "The tab separated file into which the results will be written.").withRequiredArg()
                 .required();
         this.useH2InMemorySpec = parser.accepts("H2mem", "Use H2 in-memory database for better performance (but with memory limits)");
-        this.useH2Spec = parser.accepts("useH2", "Use the embedded H2 database instead of Derby").requiredIf(useH2InMemorySpec);
         this.querySpec = parser.accepts("query", "The standard SQL query that should be run. Table queried should be " + TABLE_NAME)
                 .withRequiredArg().required();
     }
@@ -162,17 +159,13 @@ public class FileProvenanceQueryTool extends Plugin {
             }
             randomTempDirectory = Files.createTempDirectory("randomFileProvenanceQueryDir");
 
-            Connection connection;
-            if (options.has(this.useH2Spec)) {
-                // try using in-memory for better performance
-                String protocol = "jdbc:h2:";
-                if (options.has(useH2InMemorySpec)) {
-                    protocol = protocol + "mem:";
-                }
-                connection = spinUpEmbeddedDB(randomTempDirectory, "org.h2.Driver", protocol);
-            } else {
-                connection = spinUpEmbeddedDB(randomTempDirectory, "org.apache.derby.jdbc.EmbeddedDriver", "jdbc:derby:");
+            // try using in-memory for better performance
+            String protocol = "jdbc:h2:";
+            if (options.has(useH2InMemorySpec)) {
+                protocol = protocol + "mem:";
             }
+            Connection connection = spinUpEmbeddedDB(randomTempDirectory, "org.h2.Driver", protocol);
+
             // drop table if it exists already (running in IDE?)
             Statement dropTableStatement = null;
             try {
@@ -195,16 +188,12 @@ public class FileProvenanceQueryTool extends Plugin {
                 if (numericDataType.get(i)) {
                     tableCreateBuilder.append(headers.get(i)).append(" INT ");
                 } else {
-                    // postgres uses text which has no maximum length, Derby has a max of 32,672
-                    tableCreateBuilder.append(headers.get(i)).append(" VARCHAR(").append(32672).append(")");
+                    tableCreateBuilder.append(headers.get(i)).append(" VARCHAR ");
                 }
             }
             tableCreateBuilder.append(")");
-            if (options.has(this.useH2Spec)) {
-                bulkImportH2(tableCreateBuilder, connection, bulkImportFile);
-            } else {
-                bulkImportDerby(tableCreateBuilder, connection, bulkImportFile);
-            }
+
+            bulkImportH2(tableCreateBuilder, connection, bulkImportFile);
 
             // query the database and dump the results to
             try (BufferedWriter outputWriter = Files.newBufferedWriter(Paths.get(options.valueOf(outFileSpec)), Charset.defaultCharset(),
@@ -244,52 +233,29 @@ public class FileProvenanceQueryTool extends Plugin {
         } catch (IOException | SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             throw new RuntimeException(ex);
         } finally {
-            try {
-                if (originalReport != null) {
-                    FileUtils.deleteDirectory(originalReport.toFile());
-                }
-                if (bulkImportFile != null) {
-                    FileUtils.deleteDirectory(bulkImportFile.toFile());
-                }
-                if (randomTempDirectory != null && randomTempDirectory.toFile().exists()) {
-                    FileUtils.deleteDirectory(randomTempDirectory.toFile());
-                }
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+            if (originalReport != null) {
+                FileUtils.deleteQuietly(originalReport.toFile());
             }
+            if (bulkImportFile != null) {
+                FileUtils.deleteQuietly(bulkImportFile.toFile());
+            }
+            if (randomTempDirectory != null && randomTempDirectory.toFile().exists()) {
+                FileUtils.deleteQuietly(randomTempDirectory.toFile());
+            }
+
         }
     }
 
-    private void bulkImportH2(StringBuilder tableCreateBuilder, Connection connection, Path derbyImportFile) throws SQLException {
-        tableCreateBuilder.append("AS SELECT * FROM CSVREAD('").append(derbyImportFile.toString()).append("', null, 'fieldSeparator=\t')");
+    private void bulkImportH2(StringBuilder tableCreateBuilder, Connection connection, Path importFile) throws SQLException {
+        tableCreateBuilder.append("AS SELECT * FROM CSVREAD('").append(importFile.toString()).append("', null, 'fieldSeparator=\t')");
         Log.debug("Table creation query is: " + tableCreateBuilder.toString());
         Statement createTableStatement = connection.createStatement();
         createTableStatement.executeUpdate(tableCreateBuilder.toString());
         DbUtils.closeQuietly(createTableStatement);
-    }
-
-    private void bulkImportDerby(StringBuilder tableCreateBuilder, Connection connection, Path derbyImportFile) throws SQLException {
-        Log.debug("Table creation query is: " + tableCreateBuilder.toString());
-        Statement createTableStatement = connection.createStatement();
-        createTableStatement.executeUpdate(tableCreateBuilder.toString());
-        DbUtils.closeQuietly(createTableStatement);
-        PreparedStatement prepareStatement = connection.prepareStatement("CALL SYSCS_UTIL.SYSCS_IMPORT_TABLE (?, ?, ?, ?, ? , ? , ? )");
-        prepareStatement.setString(1, null);
-        prepareStatement.setString(2, TABLE_NAME);
-        prepareStatement.setString(3, derbyImportFile.toString());
-        prepareStatement.setString(4, "\t");
-        prepareStatement.setString(5, null);
-        prepareStatement.setString(6, null);
-        // use replace mode
-        prepareStatement.setInt(7, 1);
-        // call the statement
-        prepareStatement.execute();
-        DbUtils.closeQuietly(prepareStatement);
     }
 
     private Connection spinUpEmbeddedDB(Path randomTempDirectory, String driver, String protocol) throws IllegalAccessException,
             SQLException, ClassNotFoundException, InstantiationException {
-        // import into derby
         Class.forName(driver).newInstance();
         Connection connection = DriverManager.getConnection(protocol + randomTempDirectory.toString() + "/tempDB;create=true");
         return connection;
