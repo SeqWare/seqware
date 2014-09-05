@@ -25,7 +25,7 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import joptsimple.OptionSpec;
+import joptsimple.ArgumentAcceptingOptionSpec;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
@@ -40,11 +40,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class FileProvenanceReporter extends Plugin {
 
-    private Map<String, OptionSpec> configureFileProvenanceParams;
+    private final ArgumentAcceptingOptionSpec<String> outFileSpec;
 
     public FileProvenanceReporter() {
-        configureFileProvenanceParams = ProvenanceUtility.configureFileProvenanceParams(parser);
-        parser.accepts("out", "The file into which the report will be written.").withRequiredArg();
+        ProvenanceUtility.configureFileProvenanceParams(parser);
+        this.outFileSpec = parser.accepts("out", "The file into which the report will be written.").withRequiredArg();
     }
 
     @Override
@@ -59,8 +59,8 @@ public class FileProvenanceReporter extends Plugin {
     @Override
     public ReturnValue init() {
         String filename;
-        if (options.has("out")) {
-            filename = (String) options.valueOf("out");
+        if (options.has(outFileSpec)) {
+            filename = (String) options.valueOf(outFileSpec);
         } else if (options.has("all")) {
             filename = (new Date() + "__all.tsv").replace(" ", "_");
         } else if (!ProvenanceUtility.checkForValidOptions(options)) {
