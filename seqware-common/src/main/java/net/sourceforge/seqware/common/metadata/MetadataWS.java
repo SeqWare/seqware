@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.common.metadata;
 
+import com.google.common.collect.Lists;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.SequencerRunStatus;
 import io.seqware.common.model.WorkflowRunStatus;
@@ -1123,7 +1124,18 @@ public class MetadataWS implements Metadata {
         } catch (Exception e) {
             Log.info("Could not find workflow run by accession", e);
         }
-        return (wr);
+        return wr;
+    }
+
+    @Override
+    public List<WorkflowRun> getWorkflowRunsByStatusCmd(String statusCmd) {
+        List<WorkflowRun> wrs = Lists.newArrayList();
+        try {
+            wrs = ll.findWorkflowRuns("?statusCmd=" + statusCmd);
+        } catch (Exception e) {
+            Log.info("Could not find workflow run by statuscmd", e);
+        }
+        return wrs;
     }
 
     /**

@@ -23,6 +23,7 @@ import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
@@ -1647,6 +1648,43 @@ public class Main {
         }
     }
 
+    private static void map(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware dev map --help");
+            out("       seqware dev map <params>");
+            out("");
+            out("Description:");
+            out("  Map from various unique identifiers to unique identifiers.");
+            out("");
+            out("Optional parameters:");
+            out("  --engine-id <engine-id>          Convert from an engine ID (for oozie this is a job ID) to workflow run accession");
+            out("  --action-id <sge-id>             Convert from an external ID (for oozie-sge this is a SGE ID) to workflow run accession (expensive)");
+            out("");
+        } else {
+            String optVal = optVal(args, "--engine-id", null);
+            if (optVal != null) {
+                WorkflowRun workflowrun = WorkflowRuns.getWorkflowRunByStatusCmd(optVal);
+                if (workflowrun == null) {
+                    kill("No workflow run found");
+                }
+                out(Integer.toString(workflowrun.getSwAccession()));
+                return;
+            }
+            optVal = optVal(args, "--action-id", null);
+            if (optVal != null) {
+                Integer swAccession = WorkflowRuns.getAccessionByActionExternalID(optVal);
+                if (swAccession == null) {
+                    kill("No workflow run found");
+                }
+                out(Integer.toString(swAccession));
+                return;
+            }
+
+            kill("No desired mapping provided");
+        }
+    }
+
     private static void workflowRunCancel(List<String> args) {
         if (isHelp(args, true)) {
             out("");
@@ -1698,6 +1736,31 @@ public class Main {
 
             WorkflowRuns.submitRetry(swidArr);
             out("Submitted request to retry workflow run with SWID " + Arrays.toString(swidArr));
+        }
+    }
+
+    private static void dev(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware dev --help");
+            out("       seqware dev <sub-command> [--help]");
+            out("");
+            out("Description:");
+            out("  Advanced commands for debugging and developers.");
+            out("");
+            out("Sub-commands:");
+            out("  map                 Convert between various identifiers");
+            out("");
+        } else {
+            String cmd = args.remove(0);
+            if (null != cmd) switch (cmd) {
+            case "map":
+                map(args);
+                break;
+            default:
+                invalid("dev", cmd);
+                break;
+            }
         }
     }
 
@@ -1811,6 +1874,7 @@ public class Main {
             out("  workflow-run  Interact with workflow runs");
             out("  checkdb       Check the seqware database for convention errors");
             out("  check         Check the seqware environment for configuration issues");
+            out("  dev           Advanced commands that are useful for developers or debugging");
             out("");
             out("Flags:");
             out("  --help        Print help out");
@@ -1848,6 +1912,9 @@ public class Main {
                     break;
                 case "workflow-run":
                     workflowRun(args);
+                    break;
+                case "dev":
+                    dev(args);
                     break;
                 case "checkdb":
                     checkdb(args);
