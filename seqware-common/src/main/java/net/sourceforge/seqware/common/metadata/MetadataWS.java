@@ -2701,8 +2701,8 @@ public class MetadataWS implements Metadata {
             }
             client.getContext().getParameters().add("useForwardedForHeader", "false");
             client.getContext().getParameters().add("maxConnectionsPerHost", "100");
-            //client.getContext().getParameters().add("controllerSleepTimeMs", "60000");
-            //client.getContext().getParameters().add("maxIoIdleTimeMs", "60000");
+            // client.getContext().getParameters().add("controllerSleepTimeMs", "60000");
+            // client.getContext().getParameters().add("maxIoIdleTimeMs", "60000");
             // if a low level call does not return in 20 minutes, disconnect
             // default apache http client will retry three times and then throw an exception
             client.getContext().getParameters().add("socketTimeout", Integer.toString(20 * 60 * 1000));
@@ -3173,7 +3173,7 @@ public class MetadataWS implements Metadata {
 
             } catch (Exception ex) {
                 Log.warn("MetadataWS.getString " + ex.getMessage());
-                Rethrow.rethrow(ex);
+                throw Rethrow.rethrow(ex);
             } finally {
                 if (result != null) {
                     try {
@@ -3453,7 +3453,12 @@ public class MetadataWS implements Metadata {
 
     @Override
     public String getProcessingRelations(String swAccession) {
-        String report = (String) ll.getString("/processingstructure?swAccession=" + swAccession);
+        String report = null;
+        try {
+            report = (String) ll.getString("/processingstructure?swAccession=" + swAccession);
+        } catch (Exception e) {
+            /** do nothing */
+        }
         return report;
     }
 

@@ -1,34 +1,33 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import net.sourceforge.seqware.common.metadata.MetadataDB;
+import joptsimple.ArgumentAcceptingOptionSpec;
 import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.module.ReturnValue.ExitStatus;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.Rethrow;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = PluginInterface.class)
 public class ProcessingDataStructure2Dot extends Plugin {
+    private final ArgumentAcceptingOptionSpec<String> processingSWIDSpec;
+    private final ArgumentAcceptingOptionSpec<String> outputFileSpec;
 
     public ProcessingDataStructure2Dot() {
         super();
-        parser.accepts("parent-accession", "The SWID of the processing").withRequiredArg().ofType(String.class)
-                .describedAs("The SWID of the processing.");
-        parser.accepts("output-file", "Optional: file name").withRequiredArg().ofType(String.class).describedAs("Output File Name");
+        this.processingSWIDSpec = parser.accepts("parent-accession", "The SWID of the processing").withRequiredArg().ofType(String.class)
+                .required().describedAs("The SWID of the processing.");
+        this.outputFileSpec = parser.accepts("output-file", "Optional: file name").withRequiredArg().ofType(String.class)
+                .describedAs("Output File Name").defaultsTo("output.dot");
 
     }
 
@@ -44,22 +43,18 @@ public class ProcessingDataStructure2Dot extends Plugin {
 
     @Override
     public ReturnValue do_run() {
-        String swAccession = (String) options.valueOf("parent-accession");
-        String outputFile = (String) options.valueOf("output-file");
+        String swAccession = options.valueOf(processingSWIDSpec);
+        String outputFile = options.valueOf(outputFileSpec);
         String output = metadata.getProcessingRelations(swAccession);
-        Writer writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(outputFile));
+        if (output == null) {
+            Log.stderr("Could not find processing event, please check that this is a valid processing SWID");
+            return new ReturnValue(ExitStatus.INVALIDPARAMETERS);
+        }
+        Log.stdout("Writing dot file to " + outputFile);
+        try (Writer writer = new BufferedWriter(new FileWriter(outputFile))) {
             writer.write(output);
         } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                writer.flush();
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            throw Rethrow.rethrow(e);
         }
 
         return new ReturnValue();
@@ -75,7 +70,7 @@ public class ProcessingDataStructure2Dot extends Plugin {
         return new ReturnValue();
     }
 
-    class DotNode {
+    private class DotNode {
         private final List<DotNode> children;
         private final String processingId;
 
@@ -111,76 +106,4 @@ public class ProcessingDataStructure2Dot extends Plugin {
         }
     }
 
-    private void buildDotTree(MetadataDB metadb, String parentAccession, File file) throws SQLException, IOException {
-
-        String sql0 = "select processing_id from processing where sw_accession = " + parentAccession;
-        String s = metadb.executeQuery(sql0, new ResultSetHandler<String>() {
-            @Override
-            public String handle(ResultSet rs) throws SQLException {
-                if (rs.next()) {
-                    return rs.getString("processing_id");
-                } else {
-                    return null;
-                }
-            }
-        });
-        if (s == null) return;
-
-        DotNode root = new DotNode(s);
-
-        String sql = "select child_id from processing_relationship where parent_id = " + root.toString();
-        List<String> children = metadb.executeQuery(sql, new ResultSetHandler<List<String>>() {
-            @Override
-            public List<String> handle(ResultSet rs) throws SQLException {
-                List<String> children = new ArrayList<>();
-                while (rs.next()) {
-                    children.add(rs.getString("child_id"));
-                }
-                return children;
-            }
-        });
-
-        for (String c : children) {
-            DotNode child = new DotNode(c);
-            root.addChild(child);
-            this.addSubNodes(metadb, child);
-        }
-        // construct dot file
-        try (FileWriter fw = new FileWriter(file)) {
-            fw.write("digraph dag {\n");
-            // avoid duplicated
-            Set<String> allEdge = new HashSet<>();
-            this.visitNode(root, fw, allEdge);
-            fw.write("}\n");
-        }
-    }
-
-    private void addSubNodes(MetadataDB db, DotNode parent) throws SQLException {
-        String sql = "select child_id from processing_relationship where parent_id = " + parent.toString();
-        List<String> children = db.executeQuery(sql, new ResultSetHandler<List<String>>() {
-            @Override
-            public List<String> handle(ResultSet rs) throws SQLException {
-                List<String> children = new ArrayList<>();
-                while (rs.next()) {
-                    children.add(rs.getString("child_id"));
-                }
-                return children;
-            }
-        });
-        for (String c : children) {
-            DotNode child = new DotNode(c);
-            parent.addChild(child);
-            this.addSubNodes(db, child);
-        }
-    }
-
-    private void visitNode(DotNode node, FileWriter fw, Collection<String> all) throws IOException {
-        for (DotNode child : node.getChildren()) {
-            String w = node.toString() + "  ->  " + child.toString();
-            if (all.contains(w)) continue;
-            all.add(w);
-            fw.write(w + "\n");
-            this.visitNode(child, fw, all);
-        }
-    }
 }
