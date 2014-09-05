@@ -24,8 +24,6 @@
                         <usedDependency>commons-dbcp:commons-dbcp</usedDependency>
                         <!-- used by file provenance report -->
                         <usedDependency>org.clojure:java.jdbc</usedDependency>
-                        <!-- clearly used by webresources, not sure why this isn't picked up -->
-                        <usedDependency>com.google.guava:guava</usedDependency>
                     </usedDependencies>
                 </configuration>
             </plugin>
@@ -495,6 +493,10 @@
                     <groupId>com.google.inject</groupId>
                     <artifactId>guice</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>google-collections</artifactId>
+                    <groupId>com.google.collections</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -568,13 +570,6 @@
             <artifactId>jackson-mapper-asl</artifactId>
             <groupId>org.codehaus.jackson</groupId>
             <type>jar</type>
-        </dependency>
-        <dependency>
-            <artifactId>google-collections</artifactId>
-            <groupId>com.google.collections</groupId>
-            <type>jar</type>
-            <version>1.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <artifactId>hibernate-core</artifactId>
