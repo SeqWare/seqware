@@ -3,10 +3,10 @@ import argparse
 from abc import ABCMeta, abstractmethod
 from argparse import PARSER
 
-####################################################
-## This defines what methods are customizable 
+#############################################################
+## This abstract class defines what methods are customizable 
 ## by decider developers. 
-#################################################### 
+#############################################################
 
 
 class AbstractDecider( metaclass=ABCMeta ):

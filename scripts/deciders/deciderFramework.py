@@ -22,20 +22,19 @@ def __main():
     parser.add_argument('--launch-max', help='The maximum number of jobs to launch at once', default=sys.maxsize, type=int)
     parser.add_argument('--meta-types', help='The meta-type(s) of files to run a workflow with', action='append')
     parser.add_argument('--deciderImpl', help='The name of a Python class that contains the implementation of the decider', default='basicDeciderImpl')
+    parser.add_argument('--wf-accession', help='The sw_accession of the workflow that we wish to run', type=int)
     
+    
+    # this section dynamically loads the desired decider implementation class
+    decider = importlib.import_module(args.deciderImpl)
+    Decider = getattr(decider, 'Decider')
+    deciderImpl = Decider()
+    
+    # this is the first hook for custom deciders. Authors can customize the parser object with new parameters
+    deciderImpl.init(parser)
     
     args = parser.parse_args()
     ## for debugging print the arguments
     print(args)
-    
-    decider = importlib.import_module(args.deciderImpl)
-    Decider = getattr(decider, 'Decider')
-    
-    deciderImpl = Decider()
-    deciderImpl.init(parser)
-    
-    
-    
-    
     
 __main()
