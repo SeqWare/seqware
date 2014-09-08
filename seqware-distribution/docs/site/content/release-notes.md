@@ -9,6 +9,46 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.1.0-alpha.2 (2014-09-08)
+
+This release focuses on usability improvements. Highlights include a workaround for the retry utility to workaround a known issue with Oozie, an update to spring and restlet, the ability to run workflows via whitestar without a web service and without a DB, tools for bulk transition of workflows (cancel and retry), re-scheduling workflows, and a re-working of GCR to save full output to disk.   
+
+A few new utilities and bugfixes have also been added to aid in workflow development. 
+
+### Defect
+* [SEQWARE-738] - when there are identically named studies in the DB the web service only shows one
+* [SEQWARE-1933] - Bundle install doesn't report an error when no SW_BUNDLE_DIR is set
+* [SEQWARE-1934] - seqware bundle package updates the timestamp on existing zips but not the files inside
+* [SEQWARE-1938] - FileLinker path collision doesn't completely fail
+
+### Improvement
+* [SEQWARE-1242] - Extend and improve integration testing
+* [SEQWARE-1923] - Developer Tutorial Documentation: maven parameters
+* [SEQWARE-1957] - Call AbstractWorkflowDataModel.wrapup()
+
+### Task
+* [SEQWARE-1888] - Create tool to shutdown/restart all running workflows
+* [SEQWARE-1891] - workflow status checker doesn't fail workflows (oozie suspends jobs when qmaster is unreachable)
+* [SEQWARE-1925] - Make workflow-version available as a SeqWare variable
+* [SEQWARE-1931] - Add pipefail to generated scripts
+* [SEQWARE-1932] - Migrate jenkins to Bindle 1.2.1 and IceHouse
+* [SEQWARE-1945] - Non-descriptive error message if you annotate twice with the same key and value
+* [SEQWARE-1949] - Allow whitestar to run without metadata for production environments without a WS and db
+* [SEQWARE-1950] - Create mapping utilities
+* [SEQWARE-1951] - Annotate optional parameters 
+* [SEQWARE-1952] - Prototype file provenance grouping and query utility
+* [SEQWARE-1953] - Implement workaround for oozie-1879 retry issue 
+* [SEQWARE-1954] - Implement re-schedule functionality 
+* [SEQWARE-1955] - GCR output should still save full output on disk
+* [SEQWARE-1958] - Add ability to override memory setting for control nodes
+* [SEQWARE-1960] - BWA 2.6.0 workflow freezes on AWS
+* [SEQWARE-1961] - Address seqware-bag (bindle) issues encountered during alpha deployment
+
+
+### Technical task
+* [SEQWARE-1417] - Create nanoc documentation for the ProcessingDataStructure2Dot
+* [SEQWARE-1422] - Create integration tests for the ProcessingDataStructure2Dot
+
 
 ## 1.1.0-alpha.1 (2014-08-11)
 
