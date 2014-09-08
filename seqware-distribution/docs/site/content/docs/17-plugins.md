@@ -159,6 +159,30 @@ Takes a list of files and enters them into the database, linking them with the a
 |--workflow-accession|The sw_accession of the Import files workflow|
 
 
+##  FileProvenanceQueryTool
+io.seqware.pipeline.plugins.FileProvenanceQueryTool
+Pulls back a file provenance report (or a previous tab-separated file), runs an arbitrarily complex SQL query on the results and saves the results as a tab separated file for use as a part of interpreted language deciders.
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--H2mem|Use H2 in-memory database for better performance (but with memory limits)|
+|--[arguments]||
+|--all|Operate across everything. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. |
+|--in|The tab separated file that will be used instead of pulling back a fresh file provenance report. Must be a tab separated file with a fixed number of columns with a provided header (that will be used for column names). |
+|--ius-SWID|ius-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --ius-SWID|
+|--lane-SWID|lane-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --lane-SWID|
+|--organism|organism. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --organism|
+|--out|The tab separated file into which the results will be written.|
+|--processing-SWID|processing-SWID. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --processing-SWID|
+|--processing-status|processing-status. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --processing-status|
+|--query|The standard SQL query that should be run. Table queried should be FILE_REPORT|
+|--root-sample-name|root-sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --root-sample-name|
+|--sample-name|sample-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --sample-name|
+|--sequencer-run-name|sequencer-run-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --sequencer-run-name|
+|--study-name|study-name. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --study-name|
+|--workflow-run-status|workflow-run-status. At least one of [lane-SWID, ius-SWID, study-name, sample-name, root-sample-name, sequencer-run-name, organism, workflow-run-status, processing-status, processing-SWID]  or all is required. Specify multiple names by repeating --workflow-run-status|
+
+
 ##  FileProvenanceReporter
 net.sourceforge.seqware.pipeline.plugins.fileprovenance.FileProvenanceReporter
 Generates a tab-delimited report of all output files (and their relationships and metadata) from a specified study or from all studies.
