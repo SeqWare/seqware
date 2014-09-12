@@ -8,9 +8,9 @@ from abstractDeciderImpl import AbstractDecider
 
 class Decider (AbstractDecider):
     def init (self, PARSER):
-        print("oogly")
+        print("Basic Decider does nothing for init")
     def provideTargetQuery (self):
-        pass
+        return "select *, file_swid as group_col from file_report"
     def checkFileDetails (self):
         pass
     def doFinalCheck(self):
