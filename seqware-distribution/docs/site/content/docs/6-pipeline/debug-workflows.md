@@ -433,18 +433,3 @@ Fix the error, rebuild, and relaunch. The workflow should now proceed onto the n
 	-----------------------------------------------------------------------
 
 Fix the two errors and your workflow should now run to completion. 
-
-
-## The Pegasus Engine - Unsupported
-
-The Pegasus engine is deprecated in 1.0.X and is no longer supported in 11.0.
-The Pegasus Engine used <tt>pegasus-status</tt> as the primary command for monitoring the status of workflows.
-
-### Debugging Workflows
-
-<%= render '/includes/debug/pegasus_debug/' %>
-
-### Restarting Workflows 
-
-<%= render '/includes/debug/pegasus_restart/' %>
-
