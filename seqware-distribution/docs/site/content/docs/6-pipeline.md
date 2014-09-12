@@ -15,8 +15,12 @@ monitoring workflows.
 
 <img width="600" src="/assets/images/seqware_hpc_oozie.png"/>
 
-We currently support one workflow languages (Java) and four 
-workflow engines (oozie, oozie-sge, whitestar, and whitestar-sge). Our current recommended combination is
+We currently support one workflow language (Java) and four 
+workflow engines (oozie, oozie-sge, whitestar, and whitestar-sge). 
+
+(Previously, we also supported Pegasus/Condor/Globus as a workflow engine). 
+
+Our current recommended combination is
 Java workflows with the Oozie-sge engine.
 
 * Oozie uses the Hadoop Workflow Scheduler to schedule steps in workflows on the Hadoop ecosystem (JobTrackers and TaskTrackers). 
@@ -74,8 +78,6 @@ run on a randomly chosen cluster node.
 
 * [Java Workflows](/docs/6-pipeline/java-workflows/)
 : This is our newer workflow language that is much simpler than the FTL and more expressive. We recommend this for all new workflow development.
-* [Deprecated FTL Workflows](/docs/6-pipeline/legacy-ftl-workflows/)
-: This is our older, more verbose workflow language based on FreeMarker. This provides information on the structure of a typical workflow descriptor written in this language. FTL is deprecated, do not use it for new workflows.
 * [Workflow Bundle Conventions](/docs/6-pipeline/workflow_bundles/)
 : We rely on a bundle format for packaging up and exchanging workflows. This document describes the format and directory structure.
 * [Workflow Config Files](/docs/6-pipeline/config_files/)
@@ -88,7 +90,7 @@ run on a randomly chosen cluster node.
 ## Developer Tutorials
 
 * [Debugging, Troubleshooting, & Restarting Workflow](/docs/6-pipeline/debug-workflows/)
-: A guide to debugging, troubleshooting, and restarting failed workflows for both workflow engines (Pegasus and Oozie).
+: A guide to debugging, troubleshooting, and restarting failed workflows for the Oozie workflow engine.
 
 * [Developing in Partial SeqWare Environments with Whitestar](/docs/6-pipeline/partial_environments/)
 : A guide to developing without dependencies such as Oozie, SGE/Hadoop, and metadata (via the SeqWare webservice).  

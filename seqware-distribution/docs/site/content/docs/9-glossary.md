@@ -21,7 +21,7 @@ markdown: basic
 
 	<dt>FreeMarker template language (FTL)</dt>
 	<dd> 
-        A simple markup language for Java used by our older, legacy workflow language.
+        A simple markup language for Java previously used by our older, legacy workflow engine.
         </dd>
 
 	<dt>High Performance Computing (HPC)</dt>
@@ -80,7 +80,7 @@ markdown: basic
 
 	<dt>Workflow Engine</dt>
 	<dd> 
-        There are two workflow engines in SeqWare 1) Oozie and 2) Pegasus.  The first uses the Hadoop system for running jobs while the second uses the Condor/Globus/Sun Grid Engine tools for running jobs.
+        There are two main sets of workflow engines in SeqWare 1) Oozie and 2) Whitestar.  The first uses the Hadoop system for running jobs while the second is a group of workflow engines that can run workflows directly for debugging purposes.
         </dd>
 
 	<dt>Workflow Run</dt>

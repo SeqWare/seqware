@@ -51,23 +51,6 @@ From the SeqWare perspective you will need to tell SeqWare which HDFS/MapReduce
 cluster to talk to, see the Oozie and Hadoop sections of the [SeqWare
 Configuration Guide](/docs/6-pipeline/user-configuration/).  
 
-## Pegasus Workflow Engine
-
-How to connect the Pipeline's Pegasus Workflow Engine to a real SGE cluster.
-
-### Importing the VM
-
-This really depends on your organization and how they want to run a virtualized
-server.  For information on VirtualBox see their
-[website](https://www.virtualbox.org/).  For information on importing our
-VirtualBox image into KVM see [this
-link](http://cheznick.net/main/content/converting-a-virtual-machine-from-virtualbox-to-kvm).
-If you use Xen as your server virtualization see [this
-link](http://roymic.blogspot.ca/2012/02/how-to-convert-virtual-box-image-to-xen.html).
-You can also just use VirtualBox to run your virtual SeqWare server, in which
-case you will find the command line tools useful, see [this
-link](http://www.ubuntugeek.com/how-to-control-virtual-machines-virtualbox-using-vboxmanage.html).
-
 ### Install the Corresponding SGE Version
 
 This is really up to your local sysadmin.  You will need to use a common
@@ -76,31 +59,6 @@ a common NFS mount that includes the SGE software, config files, and logs.
 Consult the [GridEngine
 wiki](http://wiki.gridengine.info/wiki/index.php/Main_Page) for more
 information about obtaining and configuring SGE.  
-
-### Configuring GRAM on the VM
-
-This is the key step in the whole process.  The GRAM layer from the Globus Toolkit
-actually handles the submission of workflow step to the cluster as a job.  This is
-done via a Perl module that knows how to talk with SGE. We need to modify that
-Perl module so it knows 1) where the SGE tools are located and 2) the settings particular
-to the cluster being connected to.
-
-#### Perl Submission Module
-
-On the VM, this Perl module lives in: <tt>/usr/share/perl5/vendor_perl/Globus/GRAM/JobManager/sge.pm</tt>. 
-
-You may have seen this document mentioned in the [Install from Scratch](/docs/2a-installation-from-scratch/) guide where we patched it.  Now, you need to ensure you setup the parallel environment (<tt>-pe</tt>) and max memory (<tt>-l vf=</tt>) correctly for your new cluster.  Annoyingly, the parameters used for this are actually configurable in SGE so you will need to discuss with your cluster Sys Admin to see what is right for your environment.  See the code snippet patches below.
-
-<%= render '/includes/setup_gram_1/' %>
-
-<%= render '/includes/setup_gram_2/' %>
-
-You will also need to modify the following settings files:
-
-  /etc/sysconfig/gridengine
-  /etc/globus/globus-sge.conf
-
-These contain file paths and cluster name parameters that you need to update to point to the correct values for the real cluster.
 
 ### Testing
 
