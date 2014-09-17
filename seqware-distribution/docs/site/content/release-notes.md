@@ -9,6 +9,23 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.1.0-alpha.3 (2014-09-17)
+
+This release is a minor release to workflow developers in order to demo and get feedback on a prototype for interpreted language deciders.
+
+There are also a number of Oozie fixes that and seqware-bag fixes that await their own releases in their respective projects. 
+
+### Improvement
+* [SEQWARE-1429] - Expose Workflow .ini parameters as Decider usage flags
+
+### Task
+* [SEQWARE-1944] - Oozie should kill SGE jobs when they go into Eqw state
+* [SEQWARE-1962] - Prototype Python ReferenceDecider
+* [SEQWARE-1963] - seqware-bag should set oozie log4j parameter
+* [SEQWARE-1964] - Implement encryption for seqware-bag
+* [SEQWARE-1965] - oozie-sge plugin appears to report incorrect qstat
+* [SEQWARE-1967] - Add retry documentation and remove outdated documentation
+
 ## 1.1.0-alpha.2 (2014-09-08)
 
 This release focuses on usability improvements. Highlights include a workaround for the retry utility to workaround a known issue with Oozie, an update to spring and restlet, the ability to run workflows via whitestar without a web service and without a DB, tools for bulk transition of workflows (cancel and retry), re-scheduling workflows, and a re-working of GCR to save full output to disk.   
