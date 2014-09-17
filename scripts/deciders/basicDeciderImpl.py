@@ -11,7 +11,9 @@ class Decider (AbstractDecider):
         print("Basic Decider does nothing for init")
     def provideTargetQuery (self):
         return "select *, file_swid as group_col from file_report"
-    def checkFileDetails (self):
-        pass
-    def doFinalCheck(self):
-        pass
+    def checkFileDetails (self, dict):
+        return True
+    def doFinalCheck(self, workflowRunGroup):
+        return True
+    def modifyIniFile(self, dict, workflowRunGroup):
+        return dict

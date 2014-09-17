@@ -23,9 +23,12 @@ import java.util.Map.Entry;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 import net.sourceforge.seqware.pipeline.bundle.Bundle;
 import net.sourceforge.seqware.pipeline.bundle.BundleInfo;
@@ -1648,6 +1651,42 @@ public class Main {
         }
     }
 
+    private static void files2workflowruns(List<String> args) {
+        if (isHelp(args, true)) {
+            out("");
+            out("Usage: seqware dev files2workflowruns --help");
+            out("       seqware dev files2workflowruns <params>");
+            out("");
+            out("Description:");
+            out("  Identify workflow runs that used specified files as input for workflow runs");
+            out("");
+            out("Optional parameters:");
+            out("  --file <file-swa>            List of files by sw_accession, repeat for multiple files");
+            out("  --workflow <workflow-swa>    List of workflows, repeat for multiple workflows");
+            out("");
+        } else {
+            List<String> fileVals = reqVals(args, "--file");
+            List<Integer> fileSWIDs = Lists.newArrayList();
+            for (String val : fileVals) {
+                fileSWIDs.add(swid(val));
+            }
+
+            List<String> workflowVals = optVals(args, "--workflow");
+            List<Integer> workflowSWIDs = Lists.newArrayList();
+            for (String val : workflowVals) {
+                workflowSWIDs.add(swid(val));
+            }
+
+            extras(args, "dev files2workflowruns");
+
+            Metadata md = MetadataFactory.get(ConfigTools.getSettings());
+            List<WorkflowRun> relevantWorkflows = md.getWorkflowRunsAssociatedWithInputFiles(fileSWIDs, workflowSWIDs);
+            for (WorkflowRun run : relevantWorkflows) {
+                out(Integer.toString(run.getSwAccession()));
+            }
+        }
+    }
+
     private static void map(List<String> args) {
         if (isHelp(args, true)) {
             out("");
@@ -1749,13 +1788,17 @@ public class Main {
             out("  Advanced commands for debugging and developers.");
             out("");
             out("Sub-commands:");
-            out("  map                 Convert between various identifiers");
+            out("  map                      Convert between various identifiers");
+            out("  files2workflowruns       Identify workflow runs that used files as input");
             out("");
         } else {
             String cmd = args.remove(0);
             if (null != cmd) switch (cmd) {
             case "map":
                 map(args);
+                break;
+            case "files2workflowruns":
+                files2workflowruns(args);
                 break;
             default:
                 invalid("dev", cmd);
