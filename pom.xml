@@ -974,6 +974,9 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
