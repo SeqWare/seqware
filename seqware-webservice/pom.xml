@@ -104,7 +104,7 @@
                 <configuration>
 <!-- try this as an integration test instead -->
                     <skipTests>true</skipTests>
-                    <argLine>-Xms512m -Xmx512m</argLine>
+                    <argLine>${argLine} -Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
                     <includes>
                         <include>**/WSResourceTestSuite.java</include>
@@ -133,7 +133,7 @@
                 </executions>
 
                 <configuration>
-                    <argLine>-Xms512m -Xmx512m</argLine>
+                    <argLine>${argLine} -Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
                     <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state --> 
 		    <runOrder>reversealphabetical</runOrder>
