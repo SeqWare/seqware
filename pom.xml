@@ -1134,6 +1134,13 @@
                                     <goal>cobertura</goal>
                                 </goals>
                             </execution>
+                            <execution>
+                                <id>cobertura-instrument</id>
+                                <phase>process-classes</phase>
+                                <goals>
+                                    <goal>instrument</goal>
+                                </goals>
+                            </execution>
                         </executions>
                     </plugin>
                 </plugins>
