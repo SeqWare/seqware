@@ -679,6 +679,10 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>${maven-failsafe-plugin.version}</version>
+                    <configuration>
+                        <!-- property set by jacoco-maven-plugin -->
+                        <argLine>${itCoverageAgent}</argLine>
+                    </configuration>
                 </plugin>         
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
@@ -980,6 +984,9 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <propertyName>itCoverageAgent</propertyName>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>default-prepare-agent-integration</id>
