@@ -268,7 +268,7 @@
                 </executions>
 
                 <configuration>
-                    <argLine>${itCoverageAgent} -Xms512m -Xmx512m</argLine>
+                    <argLine>${argLine} -Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>		    
                 </configuration>
             </plugin>
