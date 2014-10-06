@@ -1274,8 +1274,8 @@ public class Processing extends PermissionsAware implements Serializable, Compar
         if (owner != null) {
             RegistrationService rs = BeanFactory.getRegistrationServiceBean();
             Registration o = rs.findByEmailAddressAndPassword(owner.getEmailAddress(), owner.getPassword());
-            logger.debug(" Registration id:" + o.getRegistrationId());
             if (o != null) {
+                logger.debug(" Registration id:" + o.getRegistrationId());
                 p.setOwner(o);
             }
         }

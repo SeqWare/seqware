@@ -52,7 +52,7 @@ public class ExperimentSpotDesign implements Serializable, Comparable<Experiment
     public int compareTo(ExperimentSpotDesign that) {
         if (that == null) return -1;
 
-        if (that.getExperimentSpotDesignId() == this.getExperimentSpotDesignId()) // when both names are null
+        if (that.getExperimentSpotDesignId() == null && this.getExperimentSpotDesignId() == null) // when both names are null
             return 0;
 
         if (that.getExperimentSpotDesignId() == null) return -1; // when only the other name is null

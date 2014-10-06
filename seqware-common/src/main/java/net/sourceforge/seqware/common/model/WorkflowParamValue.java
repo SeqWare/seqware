@@ -76,7 +76,7 @@ public class WorkflowParamValue extends PermissionsAware implements Serializable
         if ((this == other)) {
             return true;
         }
-        if (!(other instanceof WorkflowParam)) {
+        if (!(other instanceof WorkflowParamValue)) {
             return false;
         }
         WorkflowParamValue castOther = (WorkflowParamValue) other;

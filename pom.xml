@@ -57,7 +57,7 @@
         <maven-build-helper-plugin.version>1.8</maven-build-helper-plugin.version>
         
         <skipITs>true</skipITs>
-        <findbugs.version>2.5.2</findbugs.version>
+        <findbugs.version>3.0.0</findbugs.version>
         <maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
         
         <!-- Needs to be set for memory issues, but must be overrideable from the command line for Bionimbus for unknown reasons -->
@@ -756,13 +756,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
                     <version>${findbugs.version}</version>
-                    <configuration>
-                        <!-- let's try to get rid of the timeout issue on Jenkins -->
-                        <timeout>3600000</timeout>
-                        <findbugsXmlOutput>true</findbugsXmlOutput>
-                        <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
-                        <xmlOutput>true</xmlOutput>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -1093,8 +1086,29 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- let's try to get rid of the timeout issue on Jenkins -->
+                    <timeout>3600000</timeout>
+                    <xmlOutput>true</xmlOutput>
+                    <threshold>High</threshold>
+                    <excludeFilterFile>
+                        findbugs-exclude.xml
+                    </excludeFilterFile>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    
     <reporting>
         <plugins>
             <plugin>

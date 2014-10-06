@@ -70,7 +70,7 @@ public class ShareWorkflowRun implements Serializable, Comparable<ShareWorkflowR
     @Override
     public boolean equals(Object other) {
         if ((this == other)) return true;
-        if (!(other instanceof WorkflowRun)) return false;
+        if (!(other instanceof ShareWorkflowRun)) return false;
         ShareWorkflowRun castOther = (ShareWorkflowRun) other;
         return new EqualsBuilder().append(this.getShareWorkflowRunId(), castOther.getShareWorkflowRunId()).isEquals();
     }

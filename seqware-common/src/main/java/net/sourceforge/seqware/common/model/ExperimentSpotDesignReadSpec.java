@@ -48,7 +48,8 @@ public class ExperimentSpotDesignReadSpec implements Serializable, Comparable<Ex
     public int compareTo(ExperimentSpotDesignReadSpec that) {
         if (that == null) return -1;
 
-        if (that.getExperimentSpotDesignReadSpecId() == this.getExperimentSpotDesignReadSpecId()) // when both names are null
+        if (that.getExperimentSpotDesignReadSpecId() == null && this.getExperimentSpotDesignReadSpecId() == null) // when both names are
+                                                                                                                  // null
             return 0;
 
         if (that.getExperimentSpotDesignReadSpecId() == null) return -1; // when only the other name is null

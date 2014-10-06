@@ -3,8 +3,6 @@
  */
 package net.sourceforge.seqware.queryengine.webservice.view;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
@@ -37,7 +35,7 @@ public class VersionResource extends ServerResource {
         this.getLogger().log(Level.INFO, "Version Called");
 
         // now build a model
-        Map root = new HashMap();
+        // Map root = new HashMap();
 
         // output string to return to client
         StringBuilder output = new StringBuilder();

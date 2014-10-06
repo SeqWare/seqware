@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
@@ -92,7 +93,7 @@ public class ProcessIDResource extends DatabaseIDResource {
         authenticate();
 
         ProcessingService ss = BeanFactory.getProcessingServiceBean();
-        Processing processing = (Processing) testIfNull(ss.findBySWAccession(getId()));
+        Processing processing = testIfNull(ss.findBySWAccession(getId()));
         Processing dto = copier.hibernate2dto(Processing.class, processing);
 
         if (fields.contains("workflowRun")) {
@@ -100,7 +101,7 @@ public class ProcessIDResource extends DatabaseIDResource {
             if (wr != null) {
                 WorkflowRun copyWR = copier.hibernate2dto(WorkflowRun.class, wr);
                 dto.setWorkflowRun(copyWR);
-            } else if (wr == null) {
+            } else {
                 Log.info("Could not be found : workflow run");
             }
         }
@@ -136,10 +137,10 @@ public class ProcessIDResource extends DatabaseIDResource {
                 String text = rep.getText();
                 p = (Processing) XmlTools.unMarshal(jo, new Processing(), text);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.error(e, e);
                 throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e);
             } catch (SAXException ex) {
-                ex.printStackTrace();
+                Log.error(ex, ex);
                 throw new ResourceException(Status.CLIENT_ERROR_UNPROCESSABLE_ENTITY, ex);
             }
             try {
@@ -161,7 +162,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                 // Move the Hibernate calls before the direct DB access so that
                 // the authentication of this user is checked by the Hibernate layer
                 ProcessingService ps = BeanFactory.getProcessingServiceBean();
-                Processing processing = (Processing) testIfNull(ps.findBySWAccession(p.getSwAccession()));
+                Processing processing = testIfNull(ps.findBySWAccession(p.getSwAccession()));
                 Log.debug("Checking processing permission for " + registration.getEmailAddress());
                 processing.givesPermission(registration);
 
@@ -304,8 +305,8 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
                 if (p.getWorkflowRun() != null
-                        && (processing.getWorkflowRun() == null || p.getWorkflowRun().getSwAccession() != processing.getWorkflowRun()
-                                .getSwAccession())) {
+                        && (processing.getWorkflowRun() == null || !Objects.equals(p.getWorkflowRun().getSwAccession(), processing
+                                .getWorkflowRun().getSwAccession()))) {
                     WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
                     WorkflowRun newWr = wrs.findBySWAccession(p.getWorkflowRun().getSwAccession());
                     if (newWr != null && newWr.givesPermission(registration)) {
@@ -316,8 +317,9 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
                 if (p.getWorkflowRunByAncestorWorkflowRunId() != null
-                        && (processing.getWorkflowRunByAncestorWorkflowRunId() == null || p.getWorkflowRunByAncestorWorkflowRunId()
-                                .getSwAccession() != processing.getWorkflowRunByAncestorWorkflowRunId().getSwAccession())) {
+                        && (processing.getWorkflowRunByAncestorWorkflowRunId() == null || !Objects.equals(p
+                                .getWorkflowRunByAncestorWorkflowRunId().getSwAccession(), processing
+                                .getWorkflowRunByAncestorWorkflowRunId().getSwAccession()))) {
                     WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
                     WorkflowRun newWr = wrs.findBySWAccession(p.getWorkflowRunByAncestorWorkflowRunId().getSwAccession());
                     if (newWr != null && newWr.givesPermission(registration)) {
@@ -385,7 +387,7 @@ public class ProcessIDResource extends DatabaseIDResource {
                 }
 
                 ReturnValue newProcessing = Processing.clone(p), ret;
-                MetadataDB mdb = DBAccess.get();
+                // MetadataDB mdb = DBAccess.get();
                 try {
                     ret = DBAccess.get().update_processing_event(p.getProcessingId(), newProcessing);
                 } finally {
@@ -405,7 +407,7 @@ public class ProcessIDResource extends DatabaseIDResource {
             } catch (SecurityException e) {
                 getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN, e);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(e, e);
                 getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
             } finally {
                 DBAccess.close();
@@ -441,7 +443,7 @@ public class ProcessIDResource extends DatabaseIDResource {
         }
         Log.debug("Adding " + newFiles.size() + " files");
 
-        MetadataDB mdb = null;
+        MetadataDB mdb;
         try {
 
             String query = "SELECT file_id " + "FROM processing_files " + "WHERE processing_id = " + p.getProcessingId();
@@ -609,7 +611,7 @@ public class ProcessIDResource extends DatabaseIDResource {
             newObj.add(obj.getSwAccession());
         }
 
-        MetadataDB mdb = DBAccess.get();
+        // MetadataDB mdb = DBAccess.get();
         try {
             List<Integer> swas = DBAccess.get().executeQuery(
                     "SELECT o.sw_accession " + "FROM processing_samples po, sample o " + "WHERE po.sample_id = o.sample_id "

@@ -1159,7 +1159,6 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException {
-        JaxbObject<WorkflowRun> jow = new JaxbObject<>();
         try {
             IUS ius = ll.existsIUS("/" + parentAccession);
             Lane lane = ll.existsLane("/" + parentAccession);

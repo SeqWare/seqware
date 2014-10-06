@@ -81,7 +81,16 @@
                     </includes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <configuration>
+                    <!-- too buggy to enforce high priority yet -->
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
         </plugins>
+        
         <pluginManagement>
             <plugins>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->

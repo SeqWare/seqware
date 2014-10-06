@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.common.model.lists;
 
+import com.google.common.collect.Lists;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -62,8 +63,7 @@ public class WorkflowRunList {
      *            a {@link java.util.Collection} object.
      */
     public void setList(Collection<WorkflowRun> list) {
-        this.tList = (List) list;
-
+        this.tList = Lists.newArrayList(list);
     }
 
     /**

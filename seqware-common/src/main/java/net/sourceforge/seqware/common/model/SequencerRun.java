@@ -1178,7 +1178,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
      *            a {@link java.lang.Boolean} object.
      */
     public void setSkip(Boolean skip) {
-        if (skip != null && this.skip != skip) {
+        if (skip != null && !Objects.equals(this.skip, skip)) {
             Log.debug("Setting skip=" + skip + " in sequencer run " + getName() + " " + getSwAccession());
             this.skip = skip;
             for (Lane lane : lanes) {

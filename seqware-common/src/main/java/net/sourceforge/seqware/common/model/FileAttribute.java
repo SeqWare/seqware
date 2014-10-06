@@ -156,7 +156,7 @@ public class FileAttribute implements Attribute<File>, Comparable<FileAttribute>
 
     @Override
     public int compareTo(FileAttribute t) {
-        FileAttribute other = (FileAttribute) t;
+        FileAttribute other = t;
         return new CompareToBuilder().append(this.file, other.file).append(this.tag, other.tag).append(this.value, other.value)
                 .toComparison();
     }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class ProcessingStructureResource extends BasicRestlet {
 
             @Override
             public void write(OutputStream out) throws IOException {
-                try (Writer writer = new BufferedWriter(new OutputStreamWriter(out))) {
+                try (Writer writer = new BufferedWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
                     writer.write(sb.toString());
                     writer.flush();
                 }

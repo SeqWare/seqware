@@ -1,0 +1,6 @@
+<FindBugsFilter>
+     <Match>
+	     <!-- we don't use windows -->
+       <Bug code="RE_CANT_USE_FILE_SEPARATOR_AS_REGULAR_EXPRESSION" />
+     </Match>
+</FindBugsFilter>

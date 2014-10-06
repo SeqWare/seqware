@@ -145,7 +145,7 @@ public class IusIDResource extends DatabaseIDResource {
                 if (newReg != null) {
                     ius.setOwner(newReg);
                 } else {
-                    Log.info(newReg.getClass().getName() + " cannot be found: " + owner.getEmailAddress());
+                    Log.info("newReg cannot be found: " + owner.getEmailAddress());
                 }
             } else if (ius.getOwner() == null) {
                 ius.setOwner(registration);
