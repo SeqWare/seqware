@@ -249,9 +249,13 @@ public class FileProvenanceQueryTool extends Plugin {
     private void bulkImportH2(StringBuilder tableCreateBuilder, Connection connection, Path importFile) throws SQLException {
         tableCreateBuilder.append("AS SELECT * FROM CSVREAD('").append(importFile.toString()).append("', null, 'fieldSeparator=\t')");
         Log.debug("Table creation query is: " + tableCreateBuilder.toString());
-        Statement createTableStatement = connection.createStatement();
-        createTableStatement.executeUpdate(tableCreateBuilder.toString());
-        DbUtils.closeQuietly(createTableStatement);
+        Statement createTableStatement = null;
+        try {
+            createTableStatement = connection.createStatement();
+            createTableStatement.executeUpdate(tableCreateBuilder.toString());
+        } finally {
+            DbUtils.closeQuietly(createTableStatement);
+        }
     }
 
     private Connection spinUpEmbeddedDB(Path randomTempDirectory, String driver, String protocol) throws IllegalAccessException,

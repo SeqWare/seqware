@@ -112,7 +112,7 @@ public class ProvisionDependenciesBundle extends Module {
         ret.setExitStatus(ReturnValue.SUCCESS);
         try {
             OptionParser parser = getOptionParser();
-            options = parser.parse(this.getParameters().toArray(new String[0]));
+            options = parser.parse(this.getParameters().toArray(new String[this.getParameters().size()]));
         } catch (OptionException e) {
             ret.setStderr(e.getMessage() + System.getProperty("line.separator") + this.get_syntax());
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);

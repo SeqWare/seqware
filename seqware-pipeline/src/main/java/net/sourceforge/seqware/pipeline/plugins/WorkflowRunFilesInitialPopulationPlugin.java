@@ -189,6 +189,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
         ReturnValue ret = new ReturnValue();
         ResultSet rs = null;
         MetadataDB mdb = null;
+        PreparedStatement prepareStatement = null;
         try {
             String query = new StringBuilder()
                     .append("select w.sw_accession, w.workflow_run_id, w.status, f.* FROM workflow_run w LEFT OUTER JOIN workflow_run_input_files f ")
@@ -210,8 +211,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
             });
 
             mdb.getDb().setAutoCommit(false);
-            PreparedStatement prepareStatement = mdb.getDb().prepareStatement(
-                    "INSERT INTO workflow_run_input_files (workflow_run_id, file_id) VALUES(?,?)");
+            prepareStatement = mdb.getDb().prepareStatement("INSERT INTO workflow_run_input_files (workflow_run_id, file_id) VALUES(?,?)");
             for (int[] i : ids) {
                 int workflowSWID = i[0];
                 int workflowRunID = i[1];
@@ -240,6 +240,7 @@ public class WorkflowRunFilesInitialPopulationPlugin extends Plugin {
                 DbUtils.closeQuietly(mdb.getDb(), mdb.getSql(), rs);
             }
             DBAccess.close();
+            DbUtils.closeQuietly(prepareStatement);
         }
         ret.setExitStatus(ReturnValue.FAILURE);
         return ret;

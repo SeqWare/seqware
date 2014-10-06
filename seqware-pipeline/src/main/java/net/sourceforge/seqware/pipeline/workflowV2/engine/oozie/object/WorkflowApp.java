@@ -27,9 +27,9 @@ import org.jdom.Element;
  */
 public class WorkflowApp {
     public static final String URIOOZIEWORKFLOW = "uri:oozie:workflow:0.4";
-    public static org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace(URIOOZIEWORKFLOW);
+    public static final org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace(URIOOZIEWORKFLOW);
     public static final int BUCKET_SIZE = Integer
-            .valueOf(ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_BATCH_SIZE.getSettingKey()) ? ConfigTools.getSettings().get(
+            .parseInt(ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_BATCH_SIZE.getSettingKey()) ? ConfigTools.getSettings().get(
                     SqwKeys.OOZIE_BATCH_SIZE.getSettingKey()) : "100");
     public static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings()
             .containsKey(SqwKeys.OOZIE_BATCH_THRESHOLD.getSettingKey()) ? ConfigTools.getSettings().get(

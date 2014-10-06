@@ -352,14 +352,6 @@ public class Runner {
             Log.debug("Section3 of EvaluateReturn, success");
             // If it returned unimplemented, let's warn
             if (newReturn.getExitStatus() < ReturnValue.SUCCESS) {
-                if (!options.has("suppress-unimplemented-warnings")) {
-                    // newReturn.printAndAppendtoStderr("WARNING: The method '" +
-                    // methodName + "' returned exit value of " +
-                    // newReturn.getExitStatus() + ".");
-                    // newReturn.printAndAppendtoStderr("WARNING: This means an unimplemented features (such as an unneeded optional cleanup or init step!");
-                    // newReturn.printAndAppendtoStderr("WARNING: If you are finding errors not being caught, check that your wrapper returns a positive exit code and not negative!");
-                }
-
                 newReturn.setExitStatus(ReturnValue.NULL);
             }
             Log.debug("Section3 of EvaluateReturn, update metadata");
@@ -881,7 +873,7 @@ public class Runner {
     }
 
     private void postProcessMetadata() {
-	Log.debug("Running postProcessMetadata");
+        Log.debug("Running postProcessMetadata");
         if (meta != null && processingID != 0) {
 
             // write out the accessions to file iff success
@@ -911,7 +903,7 @@ public class Runner {
 
             // Try to write to each processingAccessionFile until success or timeout
             for (File file : processingAccessionFiles) {
-		Log.debug("Writing out to " + file.toString());
+                Log.debug("Writing out to " + file.toString());
                 writeProcessingAccessionToFile(file, true);
             }
             Log.debug("Completed processingAccessionFiles");
@@ -941,7 +933,7 @@ public class Runner {
         PrintStream oldErr = null;
 
         for (ModuleMethod m : ModuleMethod.values()) {
-	    Log.debug("Running method " + m.toString());
+            Log.debug("Running method " + m.toString());
             // check stdout redirect
             if ((m == outStart) && (app.getStdoutFile() != null)) {
                 try {

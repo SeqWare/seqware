@@ -179,7 +179,7 @@ public class Scheduler {
                 null, mapBuffer.toString(), scheduledHost, null, null, workflowEngine, inputFiles);
 
         ReturnValue ret = new ReturnValue();
-        ret.setReturnValue(Integer.valueOf(workflowRunAccession));
+        ret.setReturnValue(Integer.parseInt(workflowRunAccession));
         return ret;
     }
 

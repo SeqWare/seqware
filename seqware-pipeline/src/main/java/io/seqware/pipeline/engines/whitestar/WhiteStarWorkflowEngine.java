@@ -5,6 +5,7 @@ import io.seqware.pipeline.api.WorkflowEngine;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -136,7 +137,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         Log.stdoutWithTime("Setting workflow-run status to complete for: " + this.jobId);
         // set the status to completed
         Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
-        WorkflowRun workflowRun = ws.getWorkflowRun(Integer.valueOf(this.jobId));
+        WorkflowRun workflowRun = ws.getWorkflowRun(Integer.parseInt(this.jobId));
         workflowRun.setStatus(WorkflowRunStatus.completed);
         ws.updateWorkflowRun(workflowRun);
 
@@ -190,8 +191,10 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 } catch (IOException e) {
                     throw rethrow(e);
                 } finally {
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".e" + time), outputStream.toString());
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".o" + time), errorStream.toString());
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".e" + time), outputStream.toString(),
+                            StandardCharsets.UTF_8);
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".o" + time), errorStream.toString(),
+                            StandardCharsets.UTF_8);
                 }
 
             } else {

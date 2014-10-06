@@ -44,7 +44,6 @@ import org.openide.util.lookup.ServiceProvider;
 public class ProvisionFiles extends Module {
 
     protected OptionSet options = null;
-    protected final int READ_ATTEMPTS = 1000;
     protected String algorithmName = "ProvisionFiles";
     private final ProvisionFilesUtil filesUtil = new ProvisionFilesUtil();
     private static final String DATA_ENCRYPTION_ALGORITHM = "DESede";
@@ -171,7 +170,7 @@ public class ProvisionFiles extends Module {
         ret.setExitStatus(ReturnValue.SUCCESS);
         try {
             OptionParser parser = getOptionParser();
-            options = parser.parse(this.getParameters().toArray(new String[0]));
+            options = parser.parse(this.getParameters().toArray(new String[this.getParameters().size()]));
         } catch (OptionException e) {
             ret.setStderr(e.getMessage() + System.getProperty("line.separator") + this.get_syntax());
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);

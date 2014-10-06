@@ -176,7 +176,7 @@ public class FileTools {
         if (!file.isFile() || !file.canRead() || !file.exists() || file.length() == 0) {
             ret.setExitStatus(ReturnValue.FILENOTREADABLE);
         }
-        return (ret);
+        return ret;
     }
 
     /**

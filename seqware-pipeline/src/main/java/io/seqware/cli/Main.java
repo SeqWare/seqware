@@ -282,11 +282,11 @@ public class Main {
 
                     extras(args, "annotate " + obj);
 
-                    if (swid != null && key != null && val != null & skip == false && csv == null) {
+                    if (swid != null && key != null && val != null && skip == false && csv == null) {
                         String idFlag = "--" + obj + "-accession";
                         run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid, "--key", key,
                                 "--value", val);
-                    } else if (swid != null && key == null && val == null & skip == true && csv == null) {
+                    } else if (swid != null && key == null && val == null && skip == true && csv == null) {
                         String idFlag = "--" + obj + "-accession";
                         if (reason == null) {
                             run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid, "--skip",
@@ -295,7 +295,7 @@ public class Main {
                             run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid, "--skip",
                                     "true", "--value", reason);
                         }
-                    } else if (swid == null && key == null && val == null & skip == false && csv != null) {
+                    } else if (swid == null && key == null && val == null && skip == false && csv != null) {
                         run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", "--file", csv);
                     } else {
                         kill("seqware: invalid set of parameters to 'seqware annotate'. See 'seqware annotate --help'.");
@@ -1352,12 +1352,12 @@ public class Main {
 
             if (out != null) {
                 try {
-                    FileUtils.writeStringToFile(new File(out), WorkflowRuns.workflowRunIni(Integer.valueOf(swid)));
+                    FileUtils.writeStringToFile(new File(out), WorkflowRuns.workflowRunIni(Integer.parseInt(swid)));
                 } catch (IOException ex) {
                     kill("seqware: cannot write to '%s'.", out);
                 }
             } else {
-                out(WorkflowRuns.workflowRunIni(Integer.valueOf(swid)));
+                out(WorkflowRuns.workflowRunIni(Integer.parseInt(swid)));
             }
         }
     }
