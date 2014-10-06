@@ -19,7 +19,6 @@ package net.sourceforge.seqware.pipeline.plugins;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import joptsimple.OptionParser;
@@ -79,16 +78,18 @@ public class ITUtility {
     public static String runSeqWareJar(String parameters, int expectedReturnValue, File workingDir) throws IOException {
         File jar = retrieveFullAssembledJar();
 
-        Properties props = new Properties();
-        props.load(ITUtility.class.getClassLoader().getResourceAsStream("project.properties"));
-        String itCoverageAgent = (String) props.get("itCoverageAgent");
+	// this might be uncommented if we go to the extent of coverage analysis for extended tests
+        // Properties props = new Properties();
+        // props.load(ITUtility.class.getClassLoader().getResourceAsStream("project.properties"));
+        // String itCoverageAgent = (String) props.get("itCoverageAgent");
 
         if (workingDir == null) {
             workingDir = Files.createTempDir();
             workingDir.deleteOnExit();
         }
 
-        String line = "java " + itCoverageAgent + " -jar " + jar.getAbsolutePath() + " " + parameters;
+        //String line = "java " + itCoverageAgent + " -jar " + jar.getAbsolutePath() + " " + parameters;
+        String line = "java -jar " + jar.getAbsolutePath() + " " + parameters;
         String output = runArbitraryCommand(line, expectedReturnValue, workingDir);
         return output;
     }
