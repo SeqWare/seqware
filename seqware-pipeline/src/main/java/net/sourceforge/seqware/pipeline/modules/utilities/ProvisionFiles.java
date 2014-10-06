@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.pipeline.modules.utilities;
 
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.retry.PredefinedRetryPolicies;
 import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -51,7 +52,7 @@ public class ProvisionFiles extends Module {
     // S3 specific options
     protected int s3ConnectionTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
     protected int s3MaxConnections = ClientConfiguration.DEFAULT_MAX_CONNECTIONS;
-    protected int s3MaxErrorRetry = ClientConfiguration.DEFAULT_MAX_RETRIES;
+    protected int s3MaxErrorRetry = PredefinedRetryPolicies.DEFAULT_MAX_ERROR_RETRY;
     protected int s3SocketTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
 
     // FIXME: users have requested the ability to specify a single input file and

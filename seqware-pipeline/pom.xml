@@ -113,7 +113,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>  
-            <version>1.9.5</version> 
+            <version>1.10.5</version> 
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -125,13 +125,13 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
-            <version>1.5.5</version>
+            <version>1.5.6</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-            <version>1.5.5</version>
+            <version>1.5.6</version>
             <scope>test</scope>
         </dependency>  
         <dependency>
@@ -160,6 +160,10 @@
                     <artifactId>commons-codec</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
@@ -236,9 +240,15 @@
             </exclusions>
         </dependency>
         <dependency>
-        <groupId>org.rendersnake</groupId>
-        <artifactId>rendersnake</artifactId>
-        <version>1.7.2</version>
+            <groupId>org.rendersnake</groupId>
+            <artifactId>rendersnake</artifactId>
+            <version>1.7.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.commons</groupId>
+                    <artifactId>commons-lang3</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <artifactId>seqware-meta-db</artifactId>
@@ -260,7 +270,7 @@
             <artifactId>commons-lang3</artifactId>
             <groupId>org.apache.commons</groupId>
             <type>jar</type>
-            <version>3.1</version>
+            <version>3.3.2</version>
         </dependency>
         <dependency>
             <artifactId>guava</artifactId>
@@ -314,7 +324,7 @@
             <artifactId>powermock-core</artifactId>
             <groupId>org.powermock</groupId>
             <type>jar</type>
-            <version>1.5.5</version>
+            <version>1.5.6</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
