@@ -7,7 +7,7 @@
     <url>https://github.com/SeqWare/seqware</url>
     
     <prerequisites>
-        <maven>2.2.1</maven>
+        <maven>3.0.1</maven>
     </prerequisites>
 
     <properties>
@@ -37,28 +37,28 @@
         <guava.version>17.0</guava.version>
         <restlet.version>2.2.2</restlet.version>
         <opencsv.version>2.3</opencsv.version>
-        <maven-assembly-plugin.version>2.4</maven-assembly-plugin.version>
+        <maven-assembly-plugin.version>2.4.1</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>6.1.26</jetty-maven-plugin.version>
         <github.url>scm:git:git@github.com:SeqWare/seqware.git</github.url>
-        <maven-jar-plugin.version>2.4</maven-jar-plugin.version>
-        <maven-clean-plugin.version>2.5</maven-clean-plugin.version>
-        <maven-surefire-plugin.version>2.15</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>2.15</maven-failsafe-plugin.version>
-        <maven-war-plugin.version>2.3</maven-war-plugin.version>
+        <maven-jar-plugin.version>2.5</maven-jar-plugin.version>
+        <maven-clean-plugin.version>2.6</maven-clean-plugin.version>
+        <maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>2.17</maven-failsafe-plugin.version>
+        <maven-war-plugin.version>2.4</maven-war-plugin.version>
         <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-        <maven-install-plugin.version>2.4</maven-install-plugin.version>
-        <maven-deploy-plugin.version>2.7</maven-deploy-plugin.version>
-        <maven-site-plugin.version>3.3</maven-site-plugin.version>
-        <maven-versions-plugin.version>2.0</maven-versions-plugin.version>
-        <maven-resources-plugin.version>2.6</maven-resources-plugin.version>
+        <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-site-plugin.version>3.4</maven-site-plugin.version>
+        <maven-versions-plugin.version>2.1</maven-versions-plugin.version>
+        <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
-        <maven-release-plugin.version>2.3.2</maven-release-plugin.version>
-        <maven-build-helper-plugin.version>1.8</maven-build-helper-plugin.version>
+        <maven-release-plugin.version>2.5.1</maven-release-plugin.version>
+        <maven-build-helper-plugin.version>1.9.1</maven-build-helper-plugin.version>
         
         <skipITs>true</skipITs>
         <findbugs.version>3.0.0</findbugs.version>
-        <maven-pmd-plugin.version>3.0.1</maven-pmd-plugin.version>
+        <maven-pmd-plugin.version>3.2</maven-pmd-plugin.version>
         
         <!-- Needs to be set for memory issues, but must be overrideable from the command line for Bionimbus for unknown reasons -->
         <maven.compiler.fork>true</maven.compiler.fork>
@@ -724,7 +724,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jxr-plugin</artifactId>
-                    <version>2.3</version>
+                    <version>2.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -852,14 +852,14 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>2.12.1</version>
+                    <version>2.13</version>
                     <configuration>                                                                         
                         <configLocation>checkstyle.xml</configLocation>                                     
                     </configuration>   
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.8</version>
+                    <version>2.9</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -869,7 +869,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.2.1</version>
+                    <version>2.3</version>
                 </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
                 <plugin>
@@ -1016,7 +1016,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <inherited>false</inherited>
-                <version>2.9.1</version>
+                <version>2.10.1</version>
                 <executions>
                     <execution>
                         <inherited>false</inherited>
@@ -1114,7 +1114,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.3</version>
+                <version>2.4</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
