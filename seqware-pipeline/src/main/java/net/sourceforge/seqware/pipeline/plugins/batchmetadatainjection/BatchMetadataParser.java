@@ -31,7 +31,7 @@ import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.StudyType;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 

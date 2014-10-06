@@ -2,8 +2,8 @@ package net.sourceforge.seqware.common.model;
 
 //default package
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 //Generated 09.12.2011 15:01:20 by Hibernate Tools 3.2.4.GA
 

@@ -37,7 +37,7 @@ import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import net.sourceforge.seqware.pipeline.plugins.checkdb.CheckDBPluginInterface.Level;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.rendersnake.HtmlCanvas;

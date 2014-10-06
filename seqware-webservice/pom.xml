@@ -387,12 +387,6 @@
             <version>2.2.2</version>
         </dependency>-->
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
@@ -541,8 +535,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
-            <scope>test</scope>
-            <type>jar</type>
         </dependency>
         <dependency>
             <artifactId>xml-apis</artifactId>

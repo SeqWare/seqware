@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 import net.sourceforge.seqware.common.security.PermissionsAware;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -17,7 +17,7 @@
 package net.sourceforge.seqware.common.model.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ public class XmlizeXML extends XmlAdapter<String, String> {
     public String unmarshal(String vt) throws Exception {
         // String out = vt.replace("&amp;", "&");
         String out = StringEscapeUtils.unescapeXml(vt);
-        out = StringEscapeUtils.unescapeJavaScript(out);
+        out = StringEscapeUtils.escapeEcmaScript(out);
 
         return out;
     }
@@ -53,7 +53,7 @@ public class XmlizeXML extends XmlAdapter<String, String> {
     @Override
     public String marshal(String bt) throws Exception {
         String out = StringEscapeUtils.escapeXml(bt);
-        out = StringEscapeUtils.escapeJavaScript(out);
+        out = StringEscapeUtils.escapeEcmaScript(out);
         return out;
     }
 }
