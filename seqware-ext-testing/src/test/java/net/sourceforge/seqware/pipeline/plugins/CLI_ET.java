@@ -18,7 +18,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import java.io.IOException;
 import net.sourceforge.seqware.common.module.ReturnValue;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

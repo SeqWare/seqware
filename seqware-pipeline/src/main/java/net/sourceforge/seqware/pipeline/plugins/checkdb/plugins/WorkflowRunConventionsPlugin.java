@@ -62,11 +62,11 @@ public class WorkflowRunConventionsPlugin implements CheckDBPluginInterface {
             SortedMap<Integer, SortedSet<Integer>> reachableByMultipleStudies = new TreeMap<>();
 
             for (Object[] pair : workflowRunStudyPairs) {
-                int studyCount = Integer.valueOf(pair[1].toString());
+                int studyCount = Integer.parseInt(pair[1].toString());
                 if (pair[0] == null) {
                     continue;
                 }
-                int swAccession = Integer.valueOf(pair[0].toString());
+                int swAccession = Integer.parseInt(pair[0].toString());
                 if (studyCount == 0) {
                     unreachableByStudy.add(swAccession);
                 } else if (studyCount > 1) {

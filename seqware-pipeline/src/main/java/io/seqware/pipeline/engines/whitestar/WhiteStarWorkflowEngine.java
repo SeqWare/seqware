@@ -5,6 +5,7 @@ import io.seqware.pipeline.api.WorkflowEngine;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -74,10 +75,13 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         this.parallel = parallel;
     }
 
-    public static File initNfsWorkDir(AbstractWorkflowDataModel model) {
+    private static File initNfsWorkDir(AbstractWorkflowDataModel model) {
         try {
             File nfsWorkDir = FileTools.createDirectoryWithUniqueName(new File(model.getEnv().getOOZIE_WORK_DIR()), "oozie");
-            nfsWorkDir.setWritable(true, false);
+            boolean setWritable = nfsWorkDir.setWritable(true, false);
+            if (!setWritable) {
+                throw new RuntimeException("Unable to write to working directory");
+            }
             System.out.println("Using working directory: " + nfsWorkDir.getAbsolutePath());
             return nfsWorkDir;
         } catch (IOException e) {
@@ -85,7 +89,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         }
     }
 
-    public static String seqwareJarPath(AbstractWorkflowDataModel objectModel) {
+    private static String seqwareJarPath(AbstractWorkflowDataModel objectModel) {
         return objectModel.getWorkflowBaseDir() + "/lib/seqware-distribution-" + objectModel.getTags().get("seqware_version") + "-full.jar";
     }
 
@@ -136,7 +140,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         Log.stdoutWithTime("Setting workflow-run status to complete for: " + this.jobId);
         // set the status to completed
         Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
-        WorkflowRun workflowRun = ws.getWorkflowRun(Integer.valueOf(this.jobId));
+        WorkflowRun workflowRun = ws.getWorkflowRun(Integer.parseInt(this.jobId));
         workflowRun.setStatus(WorkflowRunStatus.completed);
         ws.updateWorkflowRun(workflowRun);
 
@@ -190,8 +194,10 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 } catch (IOException e) {
                     throw rethrow(e);
                 } finally {
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".e" + time), outputStream.toString());
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".o" + time), errorStream.toString());
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".e" + time),
+                            outputStream.toString(StandardCharsets.UTF_8.name()), StandardCharsets.UTF_8);
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".o" + time),
+                            errorStream.toString(StandardCharsets.UTF_8.name()), StandardCharsets.UTF_8);
                 }
 
             } else {
@@ -204,7 +210,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
     @Override
     public ReturnValue watchWorkflow(String jobToken) {
         Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
-        WorkflowRun workflowRun = ws.getWorkflowRun(Integer.valueOf(jobToken));
+        WorkflowRun workflowRun = ws.getWorkflowRun(Integer.parseInt(jobToken));
         Log.stdout("Workflow run " + jobToken + " is now " + workflowRun.getStatus().name());
         return new ReturnValue(workflowRun.getStatus() == WorkflowRunStatus.completed ? ReturnValue.SUCCESS : ReturnValue.FAILURE);
     }
@@ -214,7 +220,10 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
      */
     private void populateNfsWorkDir() {
         File lib = new File(this.nfsWorkDir, "lib");
-        lib.mkdir();
+        boolean mkdir = lib.mkdir();
+        if (!mkdir) {
+            throw new RuntimeException("Unable to make directory in working dir");
+        }
     }
 
     @Override

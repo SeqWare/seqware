@@ -186,8 +186,8 @@ public class GenericCommandRunner extends Module {
 
             options = parser.parse(myParameters.toArray(new String[myParameters.size()]));
 
-            stdoutQueueLength = Integer.valueOf(options.valueOf(GCR_STDOUT_BUFFERSIZE).toString());
-            stderrQueueLength = Integer.valueOf(options.valueOf(GCR_STDERR_BUFFERSIZE).toString());
+            stdoutQueueLength = Integer.parseInt(options.valueOf(GCR_STDOUT_BUFFERSIZE).toString());
+            stderrQueueLength = Integer.parseInt(options.valueOf(GCR_STDERR_BUFFERSIZE).toString());
             if (options.has(GCR_STDOUT)) {
                 stdoutQueueLength = Integer.MAX_VALUE;
             }

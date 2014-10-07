@@ -12,8 +12,8 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -24,11 +24,11 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = PluginInterface.class)
 public class OozieXML2Dot extends Plugin {
 
-    private static Namespace NAMESPACE = Namespace.getNamespace("uri:oozie:workflow:0.2");
+    private static final Namespace NAMESPACE = Namespace.getNamespace("uri:oozie:workflow:0.2");
     private String input;
     private String output;
 
-    private ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
+    private final ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
     public OozieXML2Dot() {
         super();
@@ -41,7 +41,7 @@ public class OozieXML2Dot extends Plugin {
     public ReturnValue init() {
         this.input = (String) options.valueOf("input");
         this.output = (String) options.valueOf("output");
-        if (!FileTools.fileExistsAndNotEmpty(new File(this.input)).equals(ReturnValue.SUCCESS))
+        if (!(FileTools.fileExistsAndNotEmpty(new File(this.input)).getExitStatus() == ReturnValue.SUCCESS))
             ret.setReturnValue(ReturnValue.INVALIDFILE);
         return ret;
     }

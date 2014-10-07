@@ -44,7 +44,6 @@ import org.openide.util.lookup.ServiceProvider;
 public class S3CreateFileURLs extends Module {
 
     protected OptionSet options = null;
-    protected final int READ_ATTEMPTS = 1000;
     protected String accessKey = null;
     protected String secretKey = null;
     private static final String[] Q = new String[] { "", "K", "M", "G", "T", "P", "E" };
@@ -97,7 +96,7 @@ public class S3CreateFileURLs extends Module {
         ret.setExitStatus(ReturnValue.SUCCESS);
         try {
             OptionParser parser = getOptionParser();
-            options = parser.parse(this.getParameters().toArray(new String[0]));
+            options = parser.parse(this.getParameters().toArray(new String[this.getParameters().size()]));
         } catch (OptionException e) {
             ret.setStderr(e.getMessage() + System.getProperty("line.separator") + this.get_syntax());
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);

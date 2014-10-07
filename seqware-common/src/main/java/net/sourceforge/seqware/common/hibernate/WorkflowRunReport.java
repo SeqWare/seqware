@@ -303,11 +303,11 @@ public class WorkflowRunReport {
         Set<Sample> samples = processing.getSamples();
 
         // logger.debug("iuses: " + iuses.size() + " lanes: " + lanes.size() + " samples: " + samples.size());
-        logger.debug("iuses: " + iuses.size() + " samples: " + samples.size());
 
         List<Sample> allIdentitySamples = new ArrayList<>();
 
         if (iuses != null) {
+            logger.debug("iuses: " + iuses.size());
             for (IUS i : iuses) {
                 allIdentitySamples.add(i.getSample());
             }
@@ -324,6 +324,7 @@ public class WorkflowRunReport {
         // }
 
         if (samples != null) {
+            logger.debug("samples: " + samples.size());
             allIdentitySamples.addAll(samples);
         }
 

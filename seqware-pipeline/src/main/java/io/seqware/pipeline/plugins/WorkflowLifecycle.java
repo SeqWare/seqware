@@ -173,7 +173,7 @@ public class WorkflowLifecycle extends Plugin {
             workflowAccession = readLines.get(0);
         } else {
             for (String accession : readLines) {
-                Workflow workflow = metadata.getWorkflow(Integer.valueOf(accession));
+                Workflow workflow = metadata.getWorkflow(Integer.parseInt(accession));
                 if (workflow.getName().equals(options.valueOf(this.workflowNameSpec))
                         && workflow.getVersion().equals(options.valueOf(this.workflowVersionSpec))) {
                     workflowAccession = accession;

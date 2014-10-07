@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -248,7 +249,7 @@ public class TestDatabaseCreator {
     private static String getClassPathFileToString(String path) throws IOException {
         InputStream in = TestDatabaseCreator.class.getResourceAsStream(path);
         StringBuilder fileData = new StringBuilder(1000);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             char[] buf = new char[1024];
             int numRead;
             while ((numRead = reader.read(buf)) != -1) {

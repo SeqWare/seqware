@@ -52,8 +52,8 @@ public class WorkflowRunReporter extends Plugin {
     private Writer writer;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_kkmmss");
 
-    private final int STDOUT = 1;
-    private final int STDERR = 2;
+    private static final int STDOUT = 1;
+    private static final int STDERR = 2;
     private final ArgumentAcceptingOptionSpec<WorkflowRunStatus> statusSpec;
 
     /**
@@ -214,10 +214,11 @@ public class WorkflowRunReporter extends Plugin {
             initWriter(title);
             writer.write(metadata.getWorkflowRunReportStdErr(Integer.parseInt(workflowRunAccession)));
         } else {
-            Log.error("Unknown stream type: " + streamType + " should be " + this.STDERR + " for stderr or " + this.STDOUT + " for stdout!");
+            Log.error("Unknown stream type: " + streamType + " should be " + WorkflowRunReporter.STDERR + " for stderr or "
+                    + WorkflowRunReporter.STDOUT + " for stdout!");
             initWriter(title);
-            writer.write("Unknown stream type: " + streamType + " should be " + this.STDERR + " for stderr or " + this.STDOUT
-                    + " for stdout!");
+            writer.write("Unknown stream type: " + streamType + " should be " + WorkflowRunReporter.STDERR + " for stderr or "
+                    + WorkflowRunReporter.STDOUT + " for stdout!");
         }
     }
 

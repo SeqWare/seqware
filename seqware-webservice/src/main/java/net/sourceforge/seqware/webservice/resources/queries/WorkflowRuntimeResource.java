@@ -18,7 +18,6 @@ package net.sourceforge.seqware.webservice.resources.queries;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import net.sourceforge.seqware.common.factory.DBAccess;
@@ -111,9 +110,9 @@ public class WorkflowRuntimeResource extends BasicRestlet {
                                 Map<Integer, Map<String, String>> currentProcIds = new HashMap<>();
                                 while (rs.next()) {
                                     Integer processingId = rs.getInt(1);
-                                    String algorithm = rs.getString(2);
-                                    String status = rs.getString(3);
-                                    Timestamp createTstmp = rs.getTimestamp(4);
+                                    // String algorithm = rs.getString(2);
+                                    // String status = rs.getString(3);
+                                    // Timestamp createTstmp = rs.getTimestamp(4);
                                     String workflowName = rs.getString(5);
                                     Integer workflowRunId = rs.getInt(6);
                                     HashMap<String, String> currentProcHash = new HashMap<>();
@@ -127,7 +126,7 @@ public class WorkflowRuntimeResource extends BasicRestlet {
                         });
 
                 for (Integer currentProcId : currentProcIds.keySet()) {
-                    String procId = currentProcIds.get(currentProcId).get("procId");
+                    // String procId = currentProcIds.get(currentProcId).get("procId");
                     String workflowRunId = currentProcIds.get(currentProcId).get("workflowRunId");
                     String workflowName = currentProcIds.get(currentProcId).get("workflowName");
                     recursiveFindProcessings(currentProcId, parseClientInt(workflowRunId), workflowName, seen, d, algos, wrIds);
@@ -193,7 +192,7 @@ public class WorkflowRuntimeResource extends BasicRestlet {
                                     if (rs.next()) {
                                         return new Object[] { rs.getString(2), rs.getString(3), rs.getTimestamp(4), rs.getInt(5) };
                                     } else {
-                                        return null;
+                                        return new Object[] {};
                                     }
                                 }
                             });
@@ -202,8 +201,6 @@ public class WorkflowRuntimeResource extends BasicRestlet {
             if (tuple != null) {
 
                 String algorithm = (String) tuple[0];
-                String status = (String) tuple[1];
-                Timestamp create = (Timestamp) tuple[2];
                 Integer runtime = (Integer) tuple[3];
 
                 algos.put(algorithm, true);

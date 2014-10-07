@@ -41,7 +41,7 @@ import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import static net.sourceforge.seqware.webservice.resources.BasicResource.testIfNull;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;

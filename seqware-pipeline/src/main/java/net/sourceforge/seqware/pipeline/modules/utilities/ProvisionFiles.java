@@ -1,6 +1,7 @@
 package net.sourceforge.seqware.pipeline.modules.utilities;
 
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.retry.PredefinedRetryPolicies;
 import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -44,7 +45,6 @@ import org.openide.util.lookup.ServiceProvider;
 public class ProvisionFiles extends Module {
 
     protected OptionSet options = null;
-    protected final int READ_ATTEMPTS = 1000;
     protected String algorithmName = "ProvisionFiles";
     private final ProvisionFilesUtil filesUtil = new ProvisionFilesUtil();
     private static final String DATA_ENCRYPTION_ALGORITHM = "DESede";
@@ -52,7 +52,7 @@ public class ProvisionFiles extends Module {
     // S3 specific options
     protected int s3ConnectionTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
     protected int s3MaxConnections = ClientConfiguration.DEFAULT_MAX_CONNECTIONS;
-    protected int s3MaxErrorRetry = ClientConfiguration.DEFAULT_MAX_RETRIES;
+    protected int s3MaxErrorRetry = PredefinedRetryPolicies.DEFAULT_MAX_ERROR_RETRY;
     protected int s3SocketTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
 
     // FIXME: users have requested the ability to specify a single input file and
@@ -171,7 +171,7 @@ public class ProvisionFiles extends Module {
         ret.setExitStatus(ReturnValue.SUCCESS);
         try {
             OptionParser parser = getOptionParser();
-            options = parser.parse(this.getParameters().toArray(new String[0]));
+            options = parser.parse(this.getParameters().toArray(new String[this.getParameters().size()]));
         } catch (OptionException e) {
             ret.setStderr(e.getMessage() + System.getProperty("line.separator") + this.get_syntax());
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);

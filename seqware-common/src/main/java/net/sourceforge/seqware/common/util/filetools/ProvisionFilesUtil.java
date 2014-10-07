@@ -6,6 +6,7 @@ import com.amazonaws.ClientConfiguration;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.retry.PredefinedRetryPolicies;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -437,7 +438,7 @@ public class ProvisionFilesUtil {
      */
     public boolean putToS3(BufferedInputStream reader, String output, boolean fullOutputPath) {
         return (putToS3(reader, output, fullOutputPath, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT,
-                ClientConfiguration.DEFAULT_MAX_CONNECTIONS, ClientConfiguration.DEFAULT_MAX_RETRIES,
+                ClientConfiguration.DEFAULT_MAX_CONNECTIONS, PredefinedRetryPolicies.DEFAULT_MAX_ERROR_RETRY,
                 ClientConfiguration.DEFAULT_SOCKET_TIMEOUT));
     }
 
@@ -473,7 +474,7 @@ public class ProvisionFilesUtil {
      */
     public boolean putToS3(InputStream reader, String output, boolean fullOutputPath, Cipher decryptCipher, Cipher encryptCipher) {
         return putToS3(reader, output, fullOutputPath, ClientConfiguration.DEFAULT_SOCKET_TIMEOUT,
-                ClientConfiguration.DEFAULT_MAX_CONNECTIONS, ClientConfiguration.DEFAULT_MAX_RETRIES,
+                ClientConfiguration.DEFAULT_MAX_CONNECTIONS, PredefinedRetryPolicies.DEFAULT_MAX_ERROR_RETRY,
                 ClientConfiguration.DEFAULT_SOCKET_TIMEOUT, decryptCipher, encryptCipher);
     }
 

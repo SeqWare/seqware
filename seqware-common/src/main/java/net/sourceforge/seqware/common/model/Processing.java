@@ -35,9 +35,9 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.restlet.resource.ResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1274,8 +1274,8 @@ public class Processing extends PermissionsAware implements Serializable, Compar
         if (owner != null) {
             RegistrationService rs = BeanFactory.getRegistrationServiceBean();
             Registration o = rs.findByEmailAddressAndPassword(owner.getEmailAddress(), owner.getPassword());
-            logger.debug(" Registration id:" + o.getRegistrationId());
             if (o != null) {
+                logger.debug(" Registration id:" + o.getRegistrationId());
                 p.setOwner(o);
             }
         }

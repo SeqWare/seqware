@@ -382,7 +382,7 @@ public class MapTools {
      * @return
      * @throws NumberFormatException
      */
-    public static SortedSet createWorkflowRunParameters(HashMap<String, String> map) throws NumberFormatException {
+    public static SortedSet<WorkflowRunParam> createWorkflowRunParameters(HashMap<String, String> map) throws NumberFormatException {
         SortedSet<WorkflowRunParam> runParams = new TreeSet<>();
         for (String str : map.keySet()) {
             if (map.get(str) != null) {

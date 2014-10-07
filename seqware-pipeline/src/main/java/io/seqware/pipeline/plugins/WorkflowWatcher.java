@@ -67,7 +67,7 @@ public class WorkflowWatcher extends Plugin {
         WorkflowDataModelFactory factory = new WorkflowDataModelFactory(config, metadata);
 
         AbstractWorkflowDataModel dataModel = factory.getWorkflowDataModel(bundleDir, workflowAccession,
-                Integer.valueOf(workflowRunAccession), workflowRunWithWorkflow.getWorkflowEngine());
+                Integer.parseInt(workflowRunAccession), workflowRunWithWorkflow.getWorkflowEngine());
         WorkflowEngine workflowEngine = WorkflowTools.getWorkflowEngine(dataModel, config, false);
 
         return workflowEngine.watchWorkflow(workflowRunWithWorkflow.getStatusCmd());

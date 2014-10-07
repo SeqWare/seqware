@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.hibernate.annotations.Cascade;
 
 @Entity
@@ -156,7 +156,7 @@ public class FileAttribute implements Attribute<File>, Comparable<FileAttribute>
 
     @Override
     public int compareTo(FileAttribute t) {
-        FileAttribute other = (FileAttribute) t;
+        FileAttribute other = t;
         return new CompareToBuilder().append(this.file, other.file).append(this.tag, other.tag).append(this.value, other.value)
                 .toComparison();
     }

@@ -55,7 +55,7 @@ public class FileLinkReportResource extends DatabaseResource {
      */
     @Get("text")
     public Representation validate() {
-        List<ReportEntry> report = Lists.newArrayList();
+        List<ReportEntry> report;
         ValidationReportService fileValidationService = BeanFactory.getFileValidationServiceBean();
         if (swas.isEmpty()) {
             report = fileValidationService.fileLinkReport();

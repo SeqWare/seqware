@@ -44,8 +44,8 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -175,7 +175,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
     public WorkflowRun updateWorkflowRun(WorkflowRun newWR) throws ResourceException, SQLException {
         authenticate();
         WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
-        WorkflowRun wr = (WorkflowRun) testIfNull(wrs.findBySWAccession(newWR.getSwAccession()));
+        WorkflowRun wr = testIfNull(wrs.findBySWAccession(newWR.getSwAccession()));
         wr.givesPermission(registration);
         // ius_workflow_runs
         if (newWR.getIus() != null) {
@@ -293,7 +293,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
     }
 
     private WorkflowRun getWorkflowRun(WorkflowRunService ss) throws NumberFormatException {
-        WorkflowRun workflowRun = (WorkflowRun) testIfNull(ss.findBySWAccession(getId()));
+        WorkflowRun workflowRun = testIfNull(ss.findBySWAccession(getId()));
         return workflowRun;
     }
 
@@ -314,7 +314,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
                 Log.debug(text);
                 newWR = (WorkflowRun) XmlTools.unMarshal(jo, new WorkflowRun(), text);
             } catch (SAXException | IOException ex) {
-                ex.printStackTrace();
+                Log.fatal(ex, ex);
                 throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
             }
             try {
@@ -331,16 +331,16 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
             } catch (SecurityException e) {
                 getResponse().setStatus(Status.CLIENT_ERROR_FORBIDDEN, e);
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                Log.fatal(ex, ex);
                 throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.error(e, e);
                 getResponse().setStatus(Status.SERVER_ERROR_INTERNAL, e);
             } finally {
                 try {
                     entity.exhaust();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    Log.fatal(ex, ex);
                     throw new ResourceException(Status.SERVER_ERROR_INTERNAL, ex);
                 }
                 entity.release();
@@ -394,8 +394,6 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
             Lane l = ls.findBySWAccession(swa);
             if (l != null && l.givesPermission(registration)) {
                 currentWR.getLanes().add(l);
-            } else if (lanes == null) {
-                Log.info("Could not be found: ius " + swa);
             }
         }
     }

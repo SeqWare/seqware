@@ -95,7 +95,7 @@ public class TestModule extends Module {
      *            an array of {@link java.lang.String} objects.
      */
     public static void main(String[] args) {
-        File file = new File("/home/xiao/work/test/sysout.log");
+        File file = new File(args[0]);
         PrintStream printStream = null;
         PrintStream curOut = System.out;
         try {

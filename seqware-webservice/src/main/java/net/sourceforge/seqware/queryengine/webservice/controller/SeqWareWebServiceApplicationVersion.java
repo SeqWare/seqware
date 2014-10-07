@@ -15,8 +15,6 @@ import org.restlet.data.Reference;
 import org.restlet.data.Status;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.DocumentationInfo;
-import org.restlet.ext.wadl.ResourceInfo;
-import org.restlet.ext.wadl.ResourcesInfo;
 import org.restlet.ext.wadl.WadlApplication;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
@@ -41,7 +39,7 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
         final Component component = new Component();
         component.getClients().add(Protocol.CLAP);
 
-        ChallengeAuthenticator guard = getGuard();
+        // ChallengeAuthenticator guard = getGuard();
 
         // String rootURL = "";
         // if (EnvUtil.getProperty("urlhack") != null) { rootURL = EnvUtil.getProperty("urlhack"); }
@@ -63,7 +61,7 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
         // I don't know if this is needed anymore
         getConnectorService().getClientProtocols().add(Protocol.FILE);
 
-        Restlet slashRedirect = new OptionalSlashRedirect(getContext());
+        // Restlet slashRedirect = new OptionalSlashRedirect(getContext());
         // VERSION
         // this is used by various tools as a heartbeat to see if the application is alive
         router.attach("/version", VersionResource.class);
@@ -94,8 +92,8 @@ public class SeqWareWebServiceApplicationVersion extends WadlApplication {
     @Override
     public ApplicationInfo getApplicationInfo(Request request, Response response) {
         ApplicationInfo result = super.getApplicationInfo(request, response);
-        ResourcesInfo ri = new ResourcesInfo();
-        ResourceInfo r = new ResourceInfo();
+        // ResourcesInfo ri = new ResourcesInfo();
+        // ResourceInfo r = new ResourceInfo();
         // ri.setResources(null);
 
         // result.setResources(ri);

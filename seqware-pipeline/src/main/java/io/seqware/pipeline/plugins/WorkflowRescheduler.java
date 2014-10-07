@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import io.seqware.Engines;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
-import io.seqware.pipeline.api.Scheduler;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -101,7 +100,6 @@ public class WorkflowRescheduler extends Plugin {
 
     @Override
     public ReturnValue do_run() {
-        Scheduler w = new Scheduler(metadata, config);
         try {
             File outputFile = null;
             if (options.has(this.outFileSpec)) {
@@ -113,7 +111,7 @@ public class WorkflowRescheduler extends Plugin {
                 List<String> workflowRunSWIDs = options.valuesOf(this.workflowRunSpec);
                 for (String runSWID : workflowRunSWIDs) {
 
-                    WorkflowRun oldWorkflowRun = metadata.getWorkflowRun(Integer.valueOf(runSWID));
+                    WorkflowRun oldWorkflowRun = metadata.getWorkflowRun(Integer.parseInt(runSWID));
                     // extract a workflow ini from the previous run
                     String iniFile = oldWorkflowRun.getIniFile();
                     Path tempFile = Files.createTempFile("workflow", "ini");

@@ -4,6 +4,7 @@ import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -125,7 +126,7 @@ public class UserSettingsPlugin extends Plugin {
     @Override
     public ReturnValue do_run() {
         // output a description of our categories
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out))) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8))) {
             // output a description of our categories
             bufferedWriter
                     .write("# SEQWARE PIPELINE SETTINGS\n"

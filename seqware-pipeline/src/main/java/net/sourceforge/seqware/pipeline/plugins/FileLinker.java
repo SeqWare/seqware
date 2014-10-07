@@ -93,7 +93,7 @@ public class FileLinker extends Plugin {
                 ret.setDescription(e.getMessage());
                 return ret;
             }
-            final int workflowAccession = new Integer(options.valueOf("workflow-accession").toString());
+            final int workflowAccession = Integer.valueOf(options.valueOf("workflow-accession").toString());
 
             for (Map.Entry<Integer, List<FileMetadata>> entry : swaToFileMap.entrySet()) {
                 // seqware-1938

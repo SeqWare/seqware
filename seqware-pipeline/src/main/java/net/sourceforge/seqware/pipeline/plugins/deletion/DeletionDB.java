@@ -262,7 +262,7 @@ public final class DeletionDB extends Plugin {
         List<String> arr = new ArrayList<>();
         mp.setParams(arr);
         mp.parse_parameters();
-        ReturnValue doRun = mp.do_run();
+        mp.do_run();
     }
 
     @Override

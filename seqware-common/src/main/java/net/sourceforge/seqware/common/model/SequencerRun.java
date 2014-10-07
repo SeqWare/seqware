@@ -14,9 +14,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.jsontools.JsonUtil;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1178,7 +1178,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
      *            a {@link java.lang.Boolean} object.
      */
     public void setSkip(Boolean skip) {
-        if (skip != null && this.skip != skip) {
+        if (skip != null && !Objects.equals(this.skip, skip)) {
             Log.debug("Setting skip=" + skip + " in sequencer run " + getName() + " " + getSwAccession());
             this.skip = skip;
             for (Lane lane : lanes) {

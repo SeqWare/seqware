@@ -59,7 +59,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.ResultSetHandler;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1405,14 +1405,19 @@ public class MetadataDB implements Metadata {
         Statement sql1 = getSql();
         Log.debug("MetadataDB executeQuery: \"" + s + "\" on connection + " + Integer.toHexString(this.getDb().hashCode()));
         Log.debug("MetadataDB executeQuery: query is " + (s == null ? "null" : "not null"));
-        Log.debug("MetadataDB executeQuery: statement " + Integer.toHexString(sql1.hashCode()) + " is "
-                + (sql1 == null ? "null" : "not null"));
-        ResultSet rs = sql1.executeQuery(s);
-        try {
-            return h.handle(rs);
-        } finally {
-            DbUtils.closeQuietly(rs);
+        if (sql1 == null) {
+            Log.debug("MetadataDB executeQuery: statement is null");
+        } else {
+            Log.debug("MetadataDB executeQuery: statement " + Integer.toHexString(sql1.hashCode()) + " is not null");
+            ResultSet rs = sql1.executeQuery(s);
+
+            try {
+                return h.handle(rs);
+            } finally {
+                DbUtils.closeQuietly(rs);
+            }
         }
+        throw new RuntimeException("could not get sql object");
     }
 
     /**
