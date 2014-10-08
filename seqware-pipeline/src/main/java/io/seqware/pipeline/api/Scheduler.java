@@ -24,7 +24,7 @@ import net.sourceforge.seqware.common.util.workflowtools.WorkflowInfo;
 public class Scheduler {
 
     /**
-     * 
+     *
      */
     protected Metadata metadata = null;
     protected Map<String, String> config = null;
@@ -141,7 +141,7 @@ public class Scheduler {
 
         // perform variable substituion on any bundle path variables
         Log.info("Attempting to substitute workflow_bundle_dir " + wi.getWorkflowDir());
-        map = MapTools.expandVariables(map, MapTools.providedMap(wi.getWorkflowDir(), wi.getWorkflowSqwVersion()));
+        map = MapTools.expandVariables(map, MapTools.providedMap(wi.getWorkflowDir(), wi.getWorkflowSqwVersion()), true);
 
         // create the final ini for upload to the web service
         StringBuilder mapBuffer = new StringBuilder();
