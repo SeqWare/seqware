@@ -5,7 +5,7 @@
 
     <name>seqware-webservice</name>
     <packaging>war</packaging>
-    
+
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
@@ -39,7 +39,7 @@
                             <targetPath>META-INF</targetPath>
                         </resource>
                     </webResources>
-                        
+
                     <packagingExcludes>**/servlet*.jar,META-INF/context.xml</packagingExcludes>
                     <archive>
                         <manifest>
@@ -63,16 +63,16 @@
                             <outputDirectory>${basedir}/target</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/webapp/META-INF</directory>  
+                                    <directory>src/main/webapp/META-INF</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>
                         </configuration>
-                        
+
                     </execution>
                 </executions>
-            </plugin>	
-            
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -92,7 +92,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -116,7 +116,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
-			
+
                 <executions>
                     <execution>
                         <id>integration-test</id>
@@ -135,7 +135,7 @@
                 <configuration>
                     <argLine>${argLine} -Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
-                    <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state --> 
+                    <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state -->
 		    <runOrder>reversealphabetical</runOrder>
                     <includes>
                         <include>**/WSResourceTestSuite.java</include>
@@ -144,7 +144,7 @@
                     </includes>
                 </configuration>
             </plugin>
-            
+
           </plugins>
 
     </build>
@@ -189,11 +189,11 @@
             <artifactId>beanlib-hibernate</artifactId>
         </dependency>
         <!--
-        
+
         From the Hibernate test project
-        
+
         -->
-        
+
         <dependency>
             <groupId>com.github.seqware</groupId>
             <artifactId>seqware-common</artifactId>
@@ -338,8 +338,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <scope>runtime</scope> <!--Not sure what it is about this package, 
-            but if you remove the scoping tag, it doesn't find the dependency 
+            <scope>runtime</scope> <!--Not sure what it is about this package,
+            but if you remove the scoping tag, it doesn't find the dependency
             any more -->
         </dependency>
         <dependency>
@@ -354,7 +354,7 @@
         </dependency>
         <!--See http://forum.springsource.org/showthread.php?26713-Spring-2.0-AOP-ASM-Dependencies
         For information on asm, cglib and conflicting dependencies between Jersey and Hibernate.
-        -->        
+        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -378,7 +378,7 @@
         <dependency>
             <groupId>asm</groupId>
             <artifactId>asm</artifactId>
-            <version>3.3.1</version>  
+            <version>3.3.1</version>
             <scope>runtime</scope>
         </dependency>
 <!--        <dependency>
@@ -394,12 +394,17 @@
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
         </dependency>
-        
-        
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+
+
+
         <!--
-        
+
         End Hibernate test dependencies
-        
+
         -->
         <!-- Commented out while solving SEQWARE-848 -->
         <!-- <dependency>
@@ -505,7 +510,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- Validator is need for tests not running inside a web containter. -->
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -623,7 +628,7 @@
             </exclusions>
         </dependency>
     </dependencies>
-    
+
     <profiles>
         <profile>
             <id>embeddedTomcat</id>
@@ -635,9 +640,9 @@
                     <plugin>
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat7-maven-plugin</artifactId>
-                        <configuration>   
+                        <configuration>
                             <contextFile>target/seqware-webservice-${project.version}/META-INF/context.xml</contextFile>
-                            <useNaming>true</useNaming> 
+                            <useNaming>true</useNaming>
                         </configuration>
 
                     </plugin>

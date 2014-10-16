@@ -10,6 +10,7 @@ import net.sourceforge.seqware.webservice.resources.filters.LaneIDFilter;
 import net.sourceforge.seqware.webservice.resources.filters.SampleIDFilter;
 import net.sourceforge.seqware.webservice.resources.queries.FileProvenanceResource;
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
+import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
 import net.sourceforge.seqware.webservice.resources.queries.SampleHierarchyResource;
 import net.sourceforge.seqware.webservice.resources.queries.TriggerFileProvenanceResource;
 import net.sourceforge.seqware.webservice.resources.queries.WorkflowReportResource;
@@ -213,6 +214,8 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/workflows", WorkflowResource.class);
         router.attach("/workflows/", slashRedirect);
         router.attach("/workflows/{workflowId}", WorkflowIDResource.class);
+        router.attach("/workflows/{workflowId}/runs", new RunWorkflowResource(getContext()));
+        router.attach("/workflows/{workflowId}/runs/", slashRedirect);
 
         router.attach("/workflowparams", WorkflowParamResource.class);
         router.attach("/workflowparams/", slashRedirect);
