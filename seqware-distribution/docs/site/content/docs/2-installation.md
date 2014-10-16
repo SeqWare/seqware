@@ -159,12 +159,12 @@ subject to change so we refer to Amazon's thorough
 [this](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html) guide
 should be very helpful in learning how to use Linux VMs on Amazon's cloud.
 
-#### Stable Public AMI(s):
+#### Unstable Public AMI(s):
 
-* ** ami-80af40e8 **
-: 20140514 (SeqWare-1.0.13, Bindle 1.2 pre-release) Make sure you launch in Virginia and select the instance type "m1.xlarge" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
-* ** ami-b1e9f4d8 DEPRECATED**
-: 20140409 (SeqWare-1.0.13, Bindle 1.2 pre-release) Make sure you launch in Virginia and select the instance type "m1.xlarge" since the AMI is designed specifically to work with this type (we use the local disks provided by this instance).
+* ** ami-c82c80bf **
+: 20141015 (SeqWare-1.1.0-alpha.4, Bindle 2.0-alpha.1 (d)) Make sure you launch in Ireland and select the instance type "m3.2xlarge" since the AMI is designed specifically to work with this type (we configure SGE based on the CPU and memory of this instance).
+* ** ami-c8e55da0 **
+: 20141015 (SeqWare-1.1.0-alpha.4, Bindle 2.0-alpha.1 (d)) Make sure you launch in Virginia and select the instance type "m1.xlarge" since the AMI is designed specifically to work with this type (we configure SGE based on the CPU and memory of this instance).
 
 An example of the launching wizard in the Amazon AWS console can be seen below:
 
