@@ -53,7 +53,7 @@
         <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <maven-project-info-reports-plugin.version>2.7</maven-project-info-reports-plugin.version>
-        <maven-release-plugin.version>2.5.1</maven-release-plugin.version>
+        <maven-release-plugin.version>2.3.2</maven-release-plugin.version>
         <maven-build-helper-plugin.version>1.9.1</maven-build-helper-plugin.version>
 
         <skipITs>true</skipITs>
