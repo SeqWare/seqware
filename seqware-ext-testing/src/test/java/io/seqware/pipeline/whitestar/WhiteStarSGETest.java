@@ -47,23 +47,23 @@ public class WhiteStarSGETest {
     }
 
     // Checking this in if we can figure out the workflow class loader issue.
-    
-//    @Test
-//    public void testWhiteStarStandardWorkflow() throws Exception {
-//        Path createTempFile = createSettingsFile("whitestar-sge");
-//
-//        DefaultExecutor executorMock = createMockAndExpectNew(DefaultExecutor.class);
-//        expect(executorMock.execute(isA(CommandLine.class))).andReturn(0).anyTimes();
-//
-//        mockStatic(ConfigTools.class);
-//        // overide settings file location, environment variables seem screwed up by mocking?
-//        HashMap<String, String> hm = new HashMap<>();
-//        MapTools.ini2Map(createTempFile.toString(), hm, true);
-//        expect(ConfigTools.getSettings()).andReturn(hm).anyTimes();
-//
-//        PowerMock.replay(ConfigTools.class);
-//        replay(executorMock);
-//        WhiteStarTest.createAndRunWorkflow(createTempFile);
-//    }
+
+    // @Test
+    // public void testWhiteStarStandardWorkflow() throws Exception {
+    // Path createTempFile = createSettingsFile("whitestar-sge");
+    //
+    // DefaultExecutor executorMock = createMockAndExpectNew(DefaultExecutor.class);
+    // expect(executorMock.execute(isA(CommandLine.class))).andReturn(0).anyTimes();
+    //
+    // mockStatic(ConfigTools.class);
+    // // overide settings file location, environment variables seem screwed up by mocking?
+    // HashMap<String, String> hm = new HashMap<>();
+    // MapTools.ini2Map(createTempFile.toString(), hm, true);
+    // expect(ConfigTools.getSettings()).andReturn(hm).anyTimes();
+    //
+    // PowerMock.replay(ConfigTools.class);
+    // replay(executorMock);
+    // WhiteStarTest.createAndRunWorkflow(createTempFile);
+    // }
 
 }
