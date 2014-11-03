@@ -14,47 +14,58 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.whitestar;
+package io.seqware.pipeline.whitestar;
 
 import io.seqware.cli.Main;
+import io.seqware.pipeline.Utility;
 import java.io.File;
-import java.lang.reflect.Field;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.apache.commons.exec.environment.EnvironmentUtils;
 import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * Run a helloworld using whitestar.
- * 
+ *
  * @author dyuen
  */
 public class WhiteStarTest {
 
+    @BeforeClass
+    public static void setupWhiteStarTest() {
+
+    }
+
+    @AfterClass
+    public static void teardownWhiteStarTest() {
+
+    }
+
     @Test
-    public void testWorkflow() throws Exception {
-        // override seqware settings file
-        List<String> whiteStarProperties = new ArrayList<>();
-        whiteStarProperties.add("SW_METADATA_METHOD=inmemory");
-        whiteStarProperties.add("SW_REST_USER=fubar");
-        whiteStarProperties.add("SW_REST_PASS=fubar");
-        whiteStarProperties.add("SW_ADMIN_REST_URL=fubar");
-        whiteStarProperties.add("SW_DEFAULT_WORKFLOW_ENGINE=whitestar");
-        whiteStarProperties.add("OOZIE_WORK_DIR=/tmp");
+    public void testWhiteStarStandardWorkflow() throws Exception {
+        Path createTempFile = createSettingsFile("whitestar");
+        createAndRunWorkflow(createTempFile);
 
-        Path createTempFile = Files.createTempFile("whitestar", "properties");
-        FileUtils.writeLines(createTempFile.toFile(), whiteStarProperties);
+    }
 
+    @Test
+    public void testWhiteStarParallelWorkflow() throws Exception {
+        Path createTempFile = createSettingsFile("whitestar-parallel");
+        createAndRunWorkflow(createTempFile);
+    }
+
+    protected static void createAndRunWorkflow(Path settingsFile) throws Exception, IOException {
         // create a helloworld
         Path tempDir = Files.createTempDirectory("tempTestingDirectory");
         PluginRunner it = new PluginRunner();
@@ -80,40 +91,32 @@ public class WhiteStarTest {
         File bundleDir = new File(targetDir, workflow_name);
 
         Map environment = EnvironmentUtils.getProcEnvironment();
-        environment.put("SEQWARE_SETTINGS", createTempFile.toAbsolutePath().toString());
-        String runSeqwareCLI = ITUtility.runSeqwareCLI(" bundle launch  --no-metadata --dir " + bundleDir.getAbsolutePath(),
-                ReturnValue.SUCCESS, tempDir.toFile(), environment);
+        environment.put("SEQWARE_SETTINGS", settingsFile.toAbsolutePath().toString());
 
         // save system environment variables
         Map<String, String> env = System.getenv();
+        try {
+            // override for launching
+            Utility.set(environment);
+            Main.main(new String[] { "bundle", "launch", "--no-metadata", "--dir", bundleDir.getAbsolutePath() });
+        } finally {
+            Utility.set(env);
+        }
 
-        // override for launching
-        WhiteStarTest.set(environment);
-        Main.main(new String[] { "bundle", "launch", "--no-metadata", "--dir", bundleDir.getAbsolutePath() });
-        WhiteStarTest.set(env);
-
-        System.out.println(runSeqwareCLI);
     }
 
-    /**
-     * Evil https://stackoverflow.com/questions/318239/how-do-i-set-environment-variables-from-java
-     * 
-     * @param newenv
-     * @throws Exception
-     */
-    public static void set(Map<String, String> newenv) throws Exception {
-        Class[] classes = Collections.class.getDeclaredClasses();
-        Map<String, String> env = System.getenv();
-        for (Class cl : classes) {
-            if ("java.util.Collections$UnmodifiableMap".equals(cl.getName())) {
-                Field field = cl.getDeclaredField("m");
-                field.setAccessible(true);
-                Object obj = field.get(env);
-                Map<String, String> map = (Map<String, String>) obj;
-                map.clear();
-                map.putAll(newenv);
-            }
-        }
+    public static Path createSettingsFile(String engine) throws IOException {
+        // override seqware settings file
+        List<String> whiteStarProperties = new ArrayList<>();
+        whiteStarProperties.add("SW_METADATA_METHOD=inmemory");
+        whiteStarProperties.add("SW_REST_USER=fubar");
+        whiteStarProperties.add("SW_REST_PASS=fubar");
+        whiteStarProperties.add("SW_ADMIN_REST_URL=fubar");
+        whiteStarProperties.add("SW_DEFAULT_WORKFLOW_ENGINE=" + engine);
+        whiteStarProperties.add("OOZIE_WORK_DIR=/tmp");
+        Path createTempFile = Files.createTempFile("whitestar", "properties");
+        FileUtils.writeLines(createTempFile.toFile(), whiteStarProperties);
+        return createTempFile;
     }
 
 }
