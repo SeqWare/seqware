@@ -7,6 +7,7 @@ markdown:  basic
 
 <!-- 
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
+   Need to document 1.1.0-alpha.4 and 5 which are builds for pan-cancer
 -->
 
 ## 1.1.0-alpha.3 (2014-09-17)
