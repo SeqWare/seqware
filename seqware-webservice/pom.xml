@@ -139,11 +139,9 @@
 		    <runOrder>reversealphabetical</runOrder>
                     <includes>
                         <include>**/whitestar/*.java</include>
-                        <!--
                         <include>**/WSResourceTestSuite.java</include>
                         <include>**/plugins/*.java</include>
                         <include>**/deciders/*.java</include>
-                        -->
                     </includes>
                 </configuration>
             </plugin>
