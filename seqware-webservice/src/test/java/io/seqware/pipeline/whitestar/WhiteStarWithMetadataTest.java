@@ -23,8 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
-import net.sourceforge.seqware.pipeline.plugins.ExtendedPluginTest;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
+import net.sourceforge.seqware.pipeline.plugins.PluginTest;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,7 +36,7 @@ import org.junit.Test;
  *
  * @author dyuen
  */
-public class WhiteStarWithMetadataTest extends ExtendedPluginTest {
+public class WhiteStarWithMetadataTest extends PluginTest {
 
     @BeforeClass
     public static void beforeClass() {
@@ -87,12 +87,10 @@ public class WhiteStarWithMetadataTest extends ExtendedPluginTest {
         final String workflow_name = "Workflow_Bundle_" + workflowName + "_1.0-SNAPSHOT_SeqWare_" + SEQWARE_VERSION;
         File bundleDir = new File(targetDir, workflow_name);
 
-        launchPlugin("--wait", "--bundle" , bundleDir.getAbsolutePath(), "--workflow", "seqwarearchetypejavaworkflow", "--version",
+        launchPlugin("--wait", "--bundle", bundleDir.getAbsolutePath(), "--workflow", "seqwarearchetypejavaworkflow", "--version",
                 "1.0-SNAPSHOT", "--ini-files", bundleDir.getAbsolutePath()
                         + "/Workflow_Bundle_seqwarearchetypejavaworkflow/1.0-SNAPSHOT/config/seqwarearchetypejavaworkflowWorkflow.ini",
                 "--workflow-engine", engine);
-        Log.fatal(getOut());
-        Log.fatal(getErr());
 
     }
 
