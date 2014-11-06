@@ -1109,6 +1109,9 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <inherited>false</inherited>
                 <version>2.10.1</version>
+                <configuration>
+                    <notimestamp>true</notimestamp>
+                </configuration>
                 <executions>
                     <execution>
                         <inherited>false</inherited>
