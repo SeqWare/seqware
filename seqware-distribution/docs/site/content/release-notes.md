@@ -10,6 +10,14 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
    Need to document 1.1.0-alpha.4 and 5 which are builds for pan-cancer
 -->
 
+## 1.1.0-alpha.5 (2014-10-23)
+
+This is a minor release re-enabling a deprecated web-resource for the pan-cancer project. Specifically, pulling back workflow runs by workflow. 
+
+## 1.1.0-alpha.4 (2014-10-09)
+
+This release is a minor release largely focused on technical debt and monitoring of code quality. Support for Cobertura and Jacoco has been added, findbugs has been integrated into the build process to reject high priority bugs (with all existing high priority bugs now fixed), maven plugin versions have been updated, commons-lang has been replaced with commons-lang3, and apache-collections has been replaced with apache-collections4. It is now also possible to schedule to 1.0.15 clusters with 1.1 series decider code. 
+
 ## 1.1.0-alpha.3 (2014-09-17)
 
 This release is a minor release to workflow developers in order to demo and get feedback on a prototype for interpreted language deciders.
