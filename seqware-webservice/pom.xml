@@ -138,7 +138,6 @@
                     <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state -->
 		    <runOrder>reversealphabetical</runOrder>
                     <includes>
-                        <include>**/whitestar/*.java</include>
                         <include>**/WSResourceTestSuite.java</include>
                         <include>**/plugins/*.java</include>
                         <include>**/deciders/*.java</include>
@@ -298,11 +297,6 @@
                     <artifactId>mockito-all</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.seqware</groupId>
-            <artifactId>seqware-ext-admin-testing</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

@@ -54,18 +54,18 @@ public class WhiteStarTest {
 
     @Test
     public void testWhiteStarStandardWorkflow() throws Exception {
-        Path createTempFile = createSettingsFile("whitestar");
-        createAndRunWorkflow(createTempFile);
+        Path createTempFile = createSettingsFile("whitestar", "inmemory");
+        createAndRunWorkflow(createTempFile, false);
 
     }
 
     @Test
     public void testWhiteStarParallelWorkflow() throws Exception {
-        Path createTempFile = createSettingsFile("whitestar-parallel");
-        createAndRunWorkflow(createTempFile);
+        Path createTempFile = createSettingsFile("whitestar-parallel", "inmemory");
+        createAndRunWorkflow(createTempFile, false);
     }
 
-    protected static void createAndRunWorkflow(Path settingsFile) throws Exception, IOException {
+    protected static void createAndRunWorkflow(Path settingsFile, boolean metadata) throws Exception, IOException {
         // create a helloworld
         Path tempDir = Files.createTempDirectory("tempTestingDirectory");
         PluginRunner it = new PluginRunner();
@@ -98,22 +98,34 @@ public class WhiteStarTest {
         try {
             // override for launching
             Utility.set(environment);
-            Main.main(new String[] { "bundle", "launch", "--no-metadata", "--dir", bundleDir.getAbsolutePath() });
+            List<String> cmd = new ArrayList<>();
+            cmd.add("bundle");
+            cmd.add("launch");
+            cmd.add("--dir");
+            cmd.add(bundleDir.getAbsolutePath());
+            if (!metadata) {
+                cmd.add("--no-metadata");
+            }
+            Main.main(cmd.toArray(new String[cmd.size()]));
         } finally {
             Utility.set(env);
         }
 
     }
 
-    public static Path createSettingsFile(String engine) throws IOException {
+    protected static Path createSettingsFile(String engine, String metadataMethod) throws IOException {
         // override seqware settings file
         List<String> whiteStarProperties = new ArrayList<>();
-        whiteStarProperties.add("SW_METADATA_METHOD=inmemory");
-        whiteStarProperties.add("SW_REST_USER=fubar");
-        whiteStarProperties.add("SW_REST_PASS=fubar");
+        whiteStarProperties.add("SW_METADATA_METHOD=" + metadataMethod);
+        whiteStarProperties.add("SW_REST_USER=admin@admin.com");
+        whiteStarProperties.add("SW_REST_PASS=admin");
         whiteStarProperties.add("SW_ADMIN_REST_URL=fubar");
         whiteStarProperties.add("SW_DEFAULT_WORKFLOW_ENGINE=" + engine);
         whiteStarProperties.add("OOZIE_WORK_DIR=/tmp");
+        // use this if running locally via mvn tomcat7:run
+        // whiteStarProperties.add("SW_REST_URL=http://localhost:8889/seqware-webservice");
+        // use this in our regression testing framework
+        whiteStarProperties.add("SW_REST_URL=http://master:8080/SeqWareWebService");
         Path createTempFile = Files.createTempFile("whitestar", "properties");
         FileUtils.writeLines(createTempFile.toFile(), whiteStarProperties);
         return createTempFile;

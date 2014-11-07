@@ -59,3 +59,6 @@ seqware-vagrant/vagrant_cluster_launch.json
 # netbeans settings
 */nbactions.xml
 */nb-configuration.xml
+
+# python cache
+scripts/deciders/__pycache__
