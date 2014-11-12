@@ -1,5 +1,5 @@
 /**
- * Provides utility classes.
+ * Provides new utility classes.
  * 
  * @since 1.0
  */
