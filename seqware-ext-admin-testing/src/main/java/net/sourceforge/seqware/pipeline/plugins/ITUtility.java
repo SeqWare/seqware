@@ -19,6 +19,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import joptsimple.OptionParser;
@@ -38,6 +39,10 @@ import org.junit.Assert;
  */
 public class ITUtility {
 
+    public static String runSeqwareCLI(String parameters, int expectedReturnValue, File workingDir) throws IOException {
+        return runSeqwareCLI(parameters, expectedReturnValue, workingDir, null);
+    }
+
     /**
      * Run the new SeqWare simplified command-line script given a particular set of parameters and check for an expected return value.
      * 
@@ -45,10 +50,11 @@ public class ITUtility {
      * @param expectedReturnValue
      *            this will be checked via a JUnit assert
      * @param workingDir
+     * @param environment
      * @return
      * @throws IOException
      */
-    public static String runSeqwareCLI(String parameters, int expectedReturnValue, File workingDir) throws IOException {
+    public static String runSeqwareCLI(String parameters, int expectedReturnValue, File workingDir, Map environment) throws IOException {
         File script = retrieveCompiledSeqwareScript();
         script.setExecutable(true);
 
@@ -58,7 +64,7 @@ public class ITUtility {
         }
 
         String line = "bash " + script.getAbsolutePath() + " " + parameters;
-        String output = runArbitraryCommand(line, expectedReturnValue, workingDir);
+        String output = runArbitraryCommand(line, expectedReturnValue, workingDir, environment);
         return output;
     }
 
@@ -78,7 +84,7 @@ public class ITUtility {
     public static String runSeqWareJar(String parameters, int expectedReturnValue, File workingDir) throws IOException {
         File jar = retrieveFullAssembledJar();
 
-	// this might be uncommented if we go to the extent of coverage analysis for extended tests
+        // this might be uncommented if we go to the extent of coverage analysis for extended tests
         // Properties props = new Properties();
         // props.load(ITUtility.class.getClassLoader().getResourceAsStream("project.properties"));
         // String itCoverageAgent = (String) props.get("itCoverageAgent");
@@ -88,7 +94,7 @@ public class ITUtility {
             workingDir.deleteOnExit();
         }
 
-        //String line = "java " + itCoverageAgent + " -jar " + jar.getAbsolutePath() + " " + parameters;
+        // String line = "java " + itCoverageAgent + " -jar " + jar.getAbsolutePath() + " " + parameters;
         String line = "java -jar " + jar.getAbsolutePath() + " " + parameters;
         String output = runArbitraryCommand(line, expectedReturnValue, workingDir);
         return output;
@@ -146,6 +152,10 @@ public class ITUtility {
         return targetFullJar;
     }
 
+    public static String runArbitraryCommand(String line, int expectedReturnValue, File dir) throws IOException {
+        return runArbitraryCommand(line, expectedReturnValue, dir, null);
+    }
+
     /**
      * Run an arbitrary command and check it against an expected return value
      * 
@@ -153,10 +163,11 @@ public class ITUtility {
      * @param expectedReturnValue
      * @param dir
      *            working directory, can be null if you don't want to change directories
+     * @param environment
      * @return
      * @throws IOException
      */
-    public static String runArbitraryCommand(String line, int expectedReturnValue, File dir) throws IOException {
+    public static String runArbitraryCommand(String line, int expectedReturnValue, File dir, Map environment) throws IOException {
         Log.info("Running " + line);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         CommandLine commandline = CommandLine.parse(line);
@@ -168,7 +179,7 @@ public class ITUtility {
         exec.setStreamHandler(streamHandler);
         exec.setExitValue(expectedReturnValue);
         try {
-            int exitValue = exec.execute(commandline);
+            int exitValue = exec.execute(commandline, environment);
             Assert.assertTrue("exit value for full jar with no params should be " + expectedReturnValue + " was " + exitValue,
                     exitValue == expectedReturnValue);
             String output = outputStream.toString();

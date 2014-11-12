@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent> 
+    <parent>
         <version>1.1.0-alpha.6-SNAPSHOT</version> 
-        <groupId>com.github.seqware</groupId> 
-        <artifactId>seqware</artifactId> 
-        <relativePath>../pom.xml</relativePath> 
+        <groupId>com.github.seqware</groupId>
+        <artifactId>seqware</artifactId>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>seqware-ext-testing</artifactId>
@@ -105,12 +105,46 @@
             <artifactId>spring-core</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <build>
         <resources>
             <resource>
@@ -130,28 +164,28 @@
                     </execution>
                 </executions>
             </plugin>
-             <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-			
+
                 <configuration>
                     <systemPropertyVariables>
                         <cliPath>${project.parent.basedir}/seqware-pipeline/target/seqware</cliPath>
                     </systemPropertyVariables>
                 </configuration>
-             </plugin>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
-			
+
                 <configuration>
                     <systemPropertyVariables>
                         <cliPath>${project.parent.basedir}/seqware-pipeline/target/seqware</cliPath>
                     </systemPropertyVariables>
                 </configuration>
-                        
+
                 <executions>
                     <execution>
                         <id>integration-test</id>
@@ -179,7 +213,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${maven-failsafe-plugin.version}</version>
-			
+
                         <configuration>
                             <includes>
                                 <include>**/IT*.java</include>
@@ -199,16 +233,16 @@
                     <plugin>
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat7-maven-plugin</artifactId>
-                        <configuration>   
+                        <configuration>
                             <contextFile>../seqware-webservice/target/seqware-webservice-${project.version}/META-INF/context.xml</contextFile>
                             <webapps>
                                 <webapp>
-                                    <groupId>com.github.seqware</groupId> 
-                                    <artifactId>seqware-webservice</artifactId> 
-                                    <version>${project.version}</version> 
-                                    <type>war</type>                                     
-                                    <asWebapp>true</asWebapp>  
-                                </webapp>                           
+                                    <groupId>com.github.seqware</groupId>
+                                    <artifactId>seqware-webservice</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>war</type>
+                                    <asWebapp>true</asWebapp>
+                                </webapp>
                             </webapps>
                             <skip>${skipITs}</skip>
                         </configuration>
