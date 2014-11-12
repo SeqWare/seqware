@@ -40,7 +40,7 @@ approach on MacOS (or even another version of Linux).
 
 ###Java
 
-SeqWare requires Oracle JDK 1.6 or greater, we primarily write and test with JDK 1.6.x.
+SeqWare requires Oracle JDK 1.7 or greater, we primarily write and test with JDK 1.7.x.
 An example of instructions on how to update your Linux installation can be found [here](https://ccp.cloudera.com/display/CDH4DOC/Before+You+Install+CDH4+on+a+Single+Node#BeforeYouInstallCDH4onaSingleNode-InstalltheOracleJavaDevelopmentKit). You will need to use the method appropriate to your distribution to install this.
 
 ## Building 
