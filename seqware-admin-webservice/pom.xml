@@ -23,11 +23,11 @@
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
-         </dependency> 
+        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-        </dependency> 
+        </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
@@ -112,7 +112,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.5</version>
+            <version>2.6</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -128,7 +128,7 @@
     </dependencies>
 
     <build>
-        <plugins>  
+        <plugins>
             <plugin>
                 <groupId>org.glassfish.embedded</groupId>
                 <artifactId>maven-embedded-glassfish-plugin</artifactId>
@@ -142,7 +142,7 @@
                     <autoDelete>true</autoDelete>
                     <goalPrefix>embedded-glassfish</goalPrefix>
                 </configuration>
-            </plugin>      
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -157,14 +157,14 @@
                             <outputDirectory>${basedir}/target/${project.artifactId}-${project.version}/WEB-INF/</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>src/main/webapp/WEB-INF</directory>  
+                                    <directory>src/main/webapp/WEB-INF</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>	          
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -192,16 +192,16 @@
                             <targetPath>WEB-INF</targetPath>
                         </resource>
                     </webResources>
-                        
+
                     <packagingExcludes>**/servlet*.jar,META-INF/context.xml</packagingExcludes>
-		    <!-- causes lots of exceptions on startup
+                    <!-- causes lots of exceptions on startup
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
                     </archive>
-		    -->
+                    -->
                 </configuration>
             </plugin>
             <plugin>
@@ -251,7 +251,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
-			
+
                 <executions>
                     <execution>
                         <id>integration-test</id>
@@ -269,44 +269,44 @@
 
                 <configuration>
                     <argLine>${argLine} -Xms512m -Xmx512m</argLine>
-                    <forkMode>pertest</forkMode>		    
+                    <forkMode>pertest</forkMode>
                 </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
-        	<plugins>
-        		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        		<plugin>
-        			<groupId>org.eclipse.m2e</groupId>
-        			<artifactId>lifecycle-mapping</artifactId>
-        			<version>1.0.0</version>
-        			<configuration>
-        				<lifecycleMappingMetadata>
-        					<pluginExecutions>
-        						<pluginExecution>
-        							<pluginExecutionFilter>
-        								<groupId>
-        									org.apache.maven.plugins
-        								</groupId>
-        								<artifactId>
-        									maven-dependency-plugin
-        								</artifactId>
-        								<versionRange>
-        									[2.8,)
-        								</versionRange>
-        								<goals>
-        									<goal>copy</goal>
-        								</goals>
-        							</pluginExecutionFilter>
-        							<action>
-        								<ignore></ignore>
-        							</action>
-        						</pluginExecution>
-        					</pluginExecutions>
-        				</lifecycleMappingMetadata>
-        			</configuration>
-        		</plugin>
-        	</plugins>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            org.apache.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            maven-dependency-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [2.8,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>copy</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
         </pluginManagement>
     </build>
     <repositories>
