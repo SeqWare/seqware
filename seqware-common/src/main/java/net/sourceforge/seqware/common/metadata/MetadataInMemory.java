@@ -70,9 +70,9 @@ import net.sourceforge.seqware.common.util.Log;
 
 /**
  * This stores some metadata in memory as an exploration of running workflows without a running database or web service.
- * 
+ *
  * Data will only be stored while this VM is still active and cannot be accessed by other clients.
- * 
+ *
  * @author dyuen
  */
 public class MetadataInMemory implements Metadata {
@@ -84,7 +84,7 @@ public class MetadataInMemory implements Metadata {
 
     /**
      * Not really thread-safe, why does Guava not have a synchronized wrapper?
-     * 
+     *
      * @return the store
      */
     private static synchronized Table<Integer, Class, Object> getStore() {
@@ -323,7 +323,10 @@ public class MetadataInMemory implements Metadata {
         TreeSet<WorkflowParam> setOfDefaultParams = new TreeSet<>();
         for (Entry<String, Map<String, String>> e : hm.entrySet()) {
             WorkflowParam workflowParam = MetadataWS.convertMapToWorkflowParam(e.getValue(), workflow);
+            int nextSwAccession = getNextSwAccession();
+            workflowParam.setWorkflowParamId(nextSwAccession);
             setOfDefaultParams.add(workflowParam);
+            MetadataInMemory.getStore().put(nextSwAccession, WorkflowParam.class, workflowParam);
         }
         workflow.setWorkflowParams(setOfDefaultParams);
         return returnValue;
