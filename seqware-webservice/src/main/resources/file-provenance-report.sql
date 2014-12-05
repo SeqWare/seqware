@@ -72,7 +72,7 @@ union
     join lane l on l.lane_id = pl.lane_id
     join sequencer_run sr on sr.sequencer_run_id = l.sequencer_run_id
     join processing_files pf on pf.processing_id = pl.processing_id
-    WHERE pf.file_id NOT IN (select f.file_id from study_report_ids_premerge f)
+    WHERE NOT EXISTS (select null from study_report_ids_premerge f where pf.file_id = f.file_id)
 union all 
     select * from study_report_ids_premerge
 )
