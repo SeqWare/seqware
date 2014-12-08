@@ -33,7 +33,7 @@ union
     join lane l on l.lane_id = i.lane_id
     join sequencer_run sr on sr.sequencer_run_id = l.sequencer_run_id
     join study_samples ss on ss.sample_id = i.sample_id
-union
+union 
     select sp.study_id
          , sp.experiment_id
          , sp.sample_id
@@ -44,8 +44,8 @@ union
     from study_processings sp
     join processing_relationship pr on pr.parent_id = sp.processing_id
 )
-
-, study_report_ids (study_id, experiment_id, sample_id, sequencer_run_id, lane_id, ius_id, processing_id, file_id) as (
+-- this gathers together all paths that run fully from study to file
+, study_report_ids_premerge (study_id, experiment_id, sample_id, sequencer_run_id, lane_id, ius_id, processing_id, file_id) as (
     select sp.study_id
          , sp.experiment_id
          , sp.sample_id
@@ -57,24 +57,25 @@ union
     from study_processings sp
     join processing_files pf on pf.processing_id = sp.processing_id
 )
-
-, study_report_wf_ids (study_id, experiment_id, sample_id, sequencer_run_id, lane_id, ius_id, workflow_id, workflow_run_id, processing_id, file_id) as (
-    select so.study_id
-         , so.experiment_id
-         , so.sample_id
-         , so.sequencer_run_id
-         , so.lane_id
-         , so.ius_id
-         , wr.workflow_id
-         , wr.workflow_run_id
-         , so.processing_id
-         , so.file_id
-    from study_report_ids so
-    join processing p on p.processing_id = so.processing_id
-    left join workflow_run wr on (p.workflow_run_id is not null and wr.workflow_run_id = p.workflow_run_id)
-                              or (p.workflow_run_id is null and wr.workflow_run_id = p.ancestor_workflow_run_id)
+-- a bit of a misnomer, this collects all paths that go through the processing_lanes table from sequencer run to file 
+-- along with normal paths that stretch from study through to file
+, study_report_ids (study_id, experiment_id, sample_id, sequencer_run_id, lane_id, ius_id, processing_id, file_id) as (
+    select null as study_id
+         , null as experiment_id
+         , null as sample_id
+         , sr.sequencer_run_id
+         , l.lane_id
+         , null as ius_id
+         , pl.processing_id
+         , pf.file_id
+    from processing_lanes pl
+    join lane l on l.lane_id = pl.lane_id
+    join sequencer_run sr on sr.sequencer_run_id = l.sequencer_run_id
+    join processing_files pf on pf.processing_id = pl.processing_id
+    WHERE NOT EXISTS (select null from study_report_ids_premerge f where pf.file_id = f.file_id)
+union all 
+    select * from study_report_ids_premerge
 )
-
 , sample_ancestors (sample_id, ancestor_id) as (
     select sample_id
          , parent_id as ancestor_id
@@ -293,9 +294,9 @@ select p.update_tstmp as last_modified
 from study_report_ids ids
 join file f on f.file_id = ids.file_id
 left join file_attrs_str fa on fa.file_id = ids.file_id
-join study st on st.study_id = ids.study_id
+left join study st on st.study_id = ids.study_id
 left join study_attrs_str sta on sta.study_id = ids.study_id
-join experiment e on e.experiment_id = ids.experiment_id
+left join experiment e on e.experiment_id = ids.experiment_id
 left join experiment_attrs_str ea on ea.experiment_id = ids.experiment_id
 join processing p on p.processing_id = ids.processing_id
 left join processing_attrs_str pa on pa.processing_id = ids.processing_id
