@@ -233,15 +233,6 @@ union all
     group by workflow_run_id
 )
 
--- , workflow_run_input_files_str (workflow_run_id, file_swas) as (
---    select wr.workflow_run_id
---         , array_to_string(array_agg(f.sw_accession order by f.sw_accession), ';') as file_swas
---    from workflow_run wr 
---    join workflow_run_input_files wrif on wrif.workflow_run_id = wr.workflow_run_id
---    join file f on wrif.file_id = f.file_id
---    group by wr.workflow_run_id   
--- )
-
 -- concatenated values from sample parents
 , sample_parent_swas_names (sample_id, parent_swas, parent_names, parent_organism_ids) as (
     select anc.sample_id
@@ -317,7 +308,14 @@ select p.update_tstmp as last_modified
      , wfr.status as workflow_run_status
      , wfr.sw_accession as workflow_run_swa
      , wfra.attrs as workflow_run_attrs
-     , wfrif.file_swas as workflow_run_input_files_swas
+     ,
+     ( -- doing this as a scalar subquery, looks like the query optimizer doesn't properly restrict this query as a CTE
+       -- and lateral left join will not be available until production gets postgres 9.3
+        select array_to_string(array_agg(f.sw_accession order by f.sw_accession), ';') as file_swas
+        from workflow_run_input_files wrif
+        join file f on wrif.file_id = f.file_id
+        where wrif.workflow_run_id = wfr.workflow_run_id
+     ) as workflow_run_input_files_swas
      , p.algorithm as processing_algorithm
      , p.sw_accession as processing_swa
      , pa.attrs as processing_attrs
@@ -359,15 +357,6 @@ left join workflow_run wfr on (p.workflow_run_id is not null and wfr.workflow_ru
 left join workflow_run_attrs_str wfra on wfra.workflow_run_id = wfr.workflow_run_id
 left join workflow wf on wf.workflow_id = wfr.workflow_id
 left join workflow_attrs_str wfa on wfa.workflow_id = wf.workflow_id
-left join lateral
-( -- doing this inline here, looks like the query optimizer doesn't properly restrict this query as a CTE
-    select wrif.workflow_run_id
-         , array_to_string(array_agg(f.sw_accession order by f.sw_accession), ';') as file_swas
-    from workflow_run_input_files wrif
-    join file f on wrif.file_id = f.file_id
-    where wrif.workflow_run_id = wfr.workflow_run_id
-    group by wrif.workflow_run_id
-) as wfrif on wfrif.workflow_run_id = wfr.workflow_run_id
 );
 
 begin;
