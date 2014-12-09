@@ -20,6 +20,7 @@ import io.seqware.pipeline.plugins.WorkflowLauncher;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.pipeline.tools.RunLock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,14 +30,15 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * 
+ *
  * @author dyuen
  */
-@PrepareForTest({ FileTools.class, WorkflowLauncher.class })
+@PrepareForTest({ FileTools.class, WorkflowLauncher.class, RunLock.class })
 @RunWith(PowerMockRunner.class)
 public class WorkflowLauncherTest {
 
@@ -53,6 +55,7 @@ public class WorkflowLauncherTest {
         workflowLauncher = new WorkflowLauncher(); // this is kind of hacky
         // apparantly testNG retains the state of mocks and statuschecker from test to test, so we need to rebuild everything
         MockitoAnnotations.initMocks(this);
+        PowerMockito.mockStatic(RunLock.class);
     }
 
     @Test
