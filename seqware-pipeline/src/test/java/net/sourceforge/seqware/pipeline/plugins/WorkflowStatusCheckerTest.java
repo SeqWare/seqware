@@ -50,10 +50,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * 
+ *
  * @author dyuen
  */
-@PrepareForTest({ FileTools.class, WorkflowStatusChecker.class })
+@PrepareForTest({ FileTools.class, WorkflowStatusChecker.class, RunLock.class })
 @RunWith(PowerMockRunner.class)
 public class WorkflowStatusCheckerTest {
 
@@ -78,11 +78,12 @@ public class WorkflowStatusCheckerTest {
         when(options.has("force-host")).thenReturn(true);
         when(options.valueOf("force-host")).thenReturn("localhost");
         when(config.get(SqwKeys.SW_REST_USER.getSettingKey())).thenReturn("user");
+        PowerMockito.mockStatic(RunLock.class);
     }
 
     @After
     public void cleanMocks() {
-        RunLock.release();
+
     }
 
     @Test
@@ -90,13 +91,6 @@ public class WorkflowStatusCheckerTest {
         Assert.assertNotNull(metadata);
         Assert.assertNotNull(workflowStatusChecker);
         Assert.assertNotNull(workflowStatusChecker.getMetadata());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testInitLocking() {
-        final ReturnValue ret1 = workflowStatusChecker.init();
-        Assert.assertTrue("workflowStatusChecker could not init", ret1.getExitStatus() == ReturnValue.SUCCESS);
-        workflowStatusChecker.init();
     }
 
     @Test
@@ -149,7 +143,7 @@ public class WorkflowStatusCheckerTest {
 
     /**
      * For testing purposes, create some workflow runs and make our mocks aware of them
-     * 
+     *
      * @throws Exception
      */
     private void mockupFakeRuns() throws Exception {
@@ -190,7 +184,7 @@ public class WorkflowStatusCheckerTest {
 
     /**
      * Verify that the run returned normally and that the appropriate number of updates were make to the database
-     * 
+     *
      * @param ret2
      */
     private void verifyNormalRun(final ReturnValue ret2) {
