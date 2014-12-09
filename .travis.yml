@@ -1,4 +1,3 @@
-sudo: false
 language: java
 before_script: 
   - psql -c 'create database test_seqware_meta_db;' -U postgres
