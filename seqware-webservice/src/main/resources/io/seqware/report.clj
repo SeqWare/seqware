@@ -55,9 +55,12 @@
               "Workflow Name" 
               "Workflow Version" 
               "Workflow SWID" 
+              "Workflow Attributes"
               "Workflow Run Name"
               "Workflow Run Status"
               "Workflow Run SWID" 
+              "Workflow Run Attributes"
+              "Workflow Run Input File SWAs"
               "Processing Algorithm" 
               "Processing SWID" 
               "Processing Attributes"
@@ -69,6 +72,7 @@
               "File Md5sum"
               "File Size"
               "File Description"
+              "Path Skip"
               "Skip"])
 
 (def ^:dynamic *db-spec*
