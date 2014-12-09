@@ -296,6 +296,10 @@
                     <groupId>org.mockito</groupId>
                     <artifactId>mockito-all</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>cloudera-jets3t</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
