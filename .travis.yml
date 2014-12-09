@@ -1,7 +1,8 @@
 sudo: false
 language: java
-test:
+postgresql:
   adapter: postgresql
   database: test_seqware_meta_db
   username: seqware
+  password: seqware
 script: mvn -B clean install -DskipITs=false
