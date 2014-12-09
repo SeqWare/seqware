@@ -36,8 +36,8 @@ import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility
 import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility.HumanProvenanceFilters;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /*
  * TODO:
@@ -47,7 +47,7 @@ public class Main {
 
     /**
      * Take a List and create a 'delim' delimited String.
-     * 
+     *
      * @param tokens
      * @param delim
      * @return
@@ -67,7 +67,7 @@ public class Main {
 
     /**
      * Create a comma delimited string from a List
-     * 
+     *
      * @param tokens
      * @return
      */
@@ -507,11 +507,11 @@ public class Main {
             out("Performing dry-run of workflow '" + name + "' version '" + version + "'");
 
             if (engine == null) {
-                run("--plugin", "io.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name, "--version",
+                run("--plugin", "io.seqware.pipeline.plugins.WorkflowLifecycle", "--", "--bundle", dir, "--workflow", name, "--version",
                         version, "--ini-files", cdl(inis), "--no-run");
             } else {
-                run("--plugin", "io.seqware.pipeline.plugins.WorkflowLauncher", "--", "--bundle", dir, "--workflow", name, "--version",
-                        version, "--ini-files", cdl(inis), "--no-run", "--workflow-engine", engine);
+                run("--plugin", "io.seqware.pipeline.plugins.WorkflowLifecycle", "--", "--bundle", dir, "--workflow", name, "--version",
+                        version, "--ini-files", cdl(inis), "--workflow-engine", engine, "--no-run");
             }
         }
     }

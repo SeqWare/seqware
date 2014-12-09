@@ -25,12 +25,12 @@ import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * 
+ *
  * The WorkflowLifecycle is responsible for performing aggregations of tasks.
- * 
+ *
  * Specifically, it will install a bundle, schedule a bundle, launch the bundle, watch it, and status check it thus replicating the current
  * lifecycle of WorkflowLauncher in a modular fashion for testing and development purposes.
- * 
+ *
  * @author dyuen
  */
 @ServiceProvider(service = PluginInterface.class)
@@ -142,7 +142,9 @@ public class WorkflowLifecycle extends Plugin {
         } catch (IOException e) {
             throw new ExitException(ReturnValue.FILENOTWRITABLE);
         } finally {
-            runStatusCheckerPlugin();
+            if (!options.has(noRunSpec)) {
+                runStatusCheckerPlugin();
+            }
         }
         return new ReturnValue();
     }
