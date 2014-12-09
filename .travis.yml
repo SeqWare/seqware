@@ -3,6 +3,9 @@ language: java
 postgresql:
   adapter: postgresql
   database: test_seqware_meta_db
+  encoding: utf8
   username: seqware
   password: seqware
+before_script: 
+  - psql -c "CREATE USER seqware WITH PASSWORD 'seqware';" -U postgres
 script: mvn -B clean install -DskipITs=false
