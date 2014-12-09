@@ -72,6 +72,7 @@
               "File Md5sum"
               "File Size"
               "File Description"
+              "Path Skip"
               "Skip"])
 
 (def ^:dynamic *db-spec*

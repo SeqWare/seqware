@@ -327,8 +327,14 @@ select p.update_tstmp as last_modified
      , f.md5sum as file_md5sum
      , f.size as file_size
      , f.description as file_description
+     -- this determines whether this particular path through the database hierarchy should be skipped
      , (case when (f.skip or sr.skip or l.skip or i.skip or s.skip or sps.skip) = true
-             then true else false end) as skip
+             then true else false end) as path_skip
+     -- this determines whether there are any paths to a particular file that are skipped
+     , coalesce((bool_or(f.skip) over (partition by f.sw_accession)) or (bool_or(sr.skip) over (partition by f.sw_accession)) 
+       or (bool_or(l.skip) over (partition by f.sw_accession)) or (bool_or(i.skip) over (partition by f.sw_accession)) 
+       or (bool_or(s.skip) over (partition by f.sw_accession)) or (bool_or(sps.skip) over (partition by f.sw_accession))
+       , false )as skip
 from study_report_ids ids
 join file f on f.file_id = ids.file_id
 left join file_attrs_str fa on fa.file_id = ids.file_id
