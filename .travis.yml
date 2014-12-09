@@ -1,2 +1,6 @@
 language: java
-script: mvn -B clean install
+test:
+  adapter: postgresql
+  database: test_seqware_meta_db
+  username: seqware
+script: mvn -B clean install -DskipITs=false
