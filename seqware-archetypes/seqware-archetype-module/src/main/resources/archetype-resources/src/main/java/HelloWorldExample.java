@@ -125,7 +125,7 @@ public class HelloWorldExample extends Module {
     }
     
     // now return the ReturnValue
-    return (ret);
+    return ret;
 
   }
 
@@ -191,7 +191,7 @@ public class HelloWorldExample extends Module {
         
         ret.setExitStatus(ReturnValue.FILENOTREADABLE);
         ret.setStderr("Can't read from input file " + (String) options.valueOf("input-file") + ": " + inputRet.getStderr() );
-        return (ret);
+        return ret;
       }
     }
     
@@ -202,7 +202,7 @@ public class HelloWorldExample extends Module {
       ret.setStderr("Can't write to temp directory");
     }
     
-    return (ret);
+    return ret;
 
   }
 

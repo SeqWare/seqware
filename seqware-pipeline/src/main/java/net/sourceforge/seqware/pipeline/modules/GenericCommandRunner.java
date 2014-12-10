@@ -219,7 +219,7 @@ public class GenericCommandRunner extends Module {
         }
 
         // now return the ReturnValue
-        return (ret);
+        return ret;
 
     }
 
@@ -268,7 +268,7 @@ public class GenericCommandRunner extends Module {
             ret.setStderr("Can't write to temp directory");
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -290,7 +290,7 @@ public class GenericCommandRunner extends Module {
         ret.setExitStatus(ReturnValue.NOTIMPLEMENTED);
 
         // not much to do, just return
-        return (ret);
+        return ret;
     }
 
     /**
@@ -351,7 +351,7 @@ public class GenericCommandRunner extends Module {
             ReturnValue outputRetVal = do_verify_output();
             if (outputRetVal.getExitStatus() == ReturnValue.SUCCESS) {
                 // if these are true just exit here
-                return (ret);
+                return ret;
             }
         }
 
@@ -395,7 +395,7 @@ public class GenericCommandRunner extends Module {
             ret.setProcessExitStatus(result.getProcessExitStatus());
             ret.setStderr(stderr.toString());
             ret.setStdout(stdout.toString());
-            return (ret);
+            return ret;
         }
 
         // note the time do_run finishes
@@ -404,7 +404,7 @@ public class GenericCommandRunner extends Module {
         if (options.has("gcr-check-output-file")) {
             ret = this.checkOutputFile();
         }
-        return (ret);
+        return ret;
 
     }
 
@@ -428,7 +428,7 @@ public class GenericCommandRunner extends Module {
                 if (FileTools.fileExistsAndReadable(new File(tokens[2])).getExitStatus() != ReturnValue.SUCCESS) {
                     Log.error("File does not exist or is not readable: " + tokens[2]);
                     ret.setExitStatus(ReturnValue.FILENOTREADABLE);
-                    return (ret);
+                    return ret;
                 }
                 /*
                  * else if (FileTools.fileExistsAndNotEmpty(new File(tokens[2])).getExitStatus() != ReturnValue.SUCCESS) {
@@ -437,7 +437,7 @@ public class GenericCommandRunner extends Module {
             }
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -461,7 +461,7 @@ public class GenericCommandRunner extends Module {
             ret.setStderr("Can't delete folder: " + tempDir.getAbsolutePath());
         }
 
-        return (ret);
+        return ret;
     }
 
     private ReturnValue checkOutputFile() {

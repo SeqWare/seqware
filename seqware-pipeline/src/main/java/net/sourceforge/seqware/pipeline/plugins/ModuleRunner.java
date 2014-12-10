@@ -51,7 +51,7 @@ public class ModuleRunner extends Plugin {
      */
     @Override
     public ReturnValue parse_parameters() {
-        return (ret);
+        return ret;
     }
 
     /*

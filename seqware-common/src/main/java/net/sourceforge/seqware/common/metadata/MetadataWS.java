@@ -292,7 +292,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -362,7 +362,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -482,7 +482,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     // FIXME: might actually need to turn off libraryStrategy et al.
@@ -538,7 +538,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     @Override
@@ -574,7 +574,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     @Override

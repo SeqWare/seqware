@@ -30,14 +30,14 @@ import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * 
+ *
  * Purpose:
- * 
+ *
  * This module takes one or more inputs (S3 URL, HTTP/HTTPS URL, or local file path) and copies the file to the specified output (S3 bucket
  * URL, HTTP/HTTPS URL, or local directory path). For S3 this bundle supports large, multipart file upload which is needed for files >2G.
- * 
+ *
  * FIXME: needs to return errors on failures/exceptions
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -47,7 +47,6 @@ public class ProvisionFiles extends Module {
     protected OptionSet options = null;
     protected String algorithmName = "ProvisionFiles";
     private final ProvisionFilesUtil filesUtil = new ProvisionFilesUtil();
-    private static final String DATA_ENCRYPTION_ALGORITHM = "DESede";
 
     // S3 specific options
     protected int s3ConnectionTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
@@ -61,7 +60,7 @@ public class ProvisionFiles extends Module {
      * <p>
      * getOptionParser.
      * </p>
-     * 
+     *
      * @return a {@link joptsimple.OptionParser} object.
      */
     @Override
@@ -131,7 +130,7 @@ public class ProvisionFiles extends Module {
      * <p>
      * get_syntax.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     @Override
@@ -149,9 +148,9 @@ public class ProvisionFiles extends Module {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Things to check: * FIXME
-     * 
+     *
      * @return
      */
     @Override
@@ -161,7 +160,7 @@ public class ProvisionFiles extends Module {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -232,12 +231,12 @@ public class ProvisionFiles extends Module {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -295,7 +294,7 @@ public class ProvisionFiles extends Module {
             if (FileTools.dirPathExistsAndWritable(output).getExitStatus() != ReturnValue.SUCCESS) {
                 ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
                 ret.setStderr("Can't write to output directory " + options.valueOf("output-dir"));
-                return (ret);
+                return ret;
             }
         }
 
@@ -312,16 +311,16 @@ public class ProvisionFiles extends Module {
             if (FileTools.dirPathExistsAndWritable(output).getExitStatus() != ReturnValue.SUCCESS) {
                 ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
                 ret.setStderr("Can't write to output directory for file " + options.valueOf("output-file"));
-                return (ret);
+                return ret;
             }
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -404,7 +403,7 @@ public class ProvisionFiles extends Module {
                 if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
                     Log.error("Failed to copy file");
                     ret.setExitStatus(ReturnValue.FAILURE);
-                    return (ret);
+                    return ret;
                 }
             } else if ((options.valuesOf("input-file").isEmpty() && options.valuesOf("input-file-metadata").size() == 1)
                     && options.has("input-file-metadata") && options.valuesOf("output-file").size() == 1) { // then this is a single file to
@@ -412,13 +411,13 @@ public class ProvisionFiles extends Module {
                 if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
                     Log.error("Failed to copy file");
                     ret.setExitStatus(ReturnValue.FAILURE);
-                    return (ret);
+                    return ret;
                 }
             } else if (options.has("output-dir")) { // then this is just a normal file copy
                 if (!provisionFile(input, (String) options.valueOf("output-dir"), skipIfMissing, fileArray, false)) {
                     Log.error("Failed to copy file to dir");
                     ret.setExitStatus(ReturnValue.FAILURE);
-                    return (ret);
+                    return ret;
                 }
             }
         }
@@ -427,7 +426,7 @@ public class ProvisionFiles extends Module {
             fileArray.clear();
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -463,18 +462,18 @@ public class ProvisionFiles extends Module {
                         outputDir + "/" + additionalPath.substring(0, additionalPath.length() - file.length()), skipIfMissing, fileArray,
                         false)) {
                     ret.setExitStatus(ReturnValue.FAILURE);
-                    return (ret);
+                    return ret;
                 }
             }
         }
-        return (ret);
+        return ret;
     }
 
     /**
      * <p>
      * provisionFile.
      * </p>
-     * 
+     *
      * @param input
      *            a {@link java.lang.String} object.
      * @param output
@@ -516,14 +515,14 @@ public class ProvisionFiles extends Module {
             Log.error("To proceed, run ProvisionFile again with --skip-if-missing");
             return false;
         }
-        return (putDestination(reader, output, bufLen, input, fileArray, fullOutputPath));
+        return putDestination(reader, output, bufLen, input, fileArray, fullOutputPath);
 
     }
 
     /**
      * HTTP writeback currently not supported S3 uses multi-part upload which should deal with failed uploads (maybe) I'm not really dealing
      * with failed upload recovery here... Keep in mind only the writeout to local file will attempt to recover from failed reader
-     * 
+     *
      * @param output
      *            a {@link java.lang.String} object.
      * @param reader
@@ -571,9 +570,9 @@ public class ProvisionFiles extends Module {
 
         }/**
          * else if (output.startsWith("hdfs://")) {
-         * 
+         *
          * // put to S3 result = filesUtil.putToHDFS(reader, output, fullOutputPath, decryptCipher, encryptCipher);
-         * 
+         *
          * }
          */
         else {
@@ -603,14 +602,14 @@ public class ProvisionFiles extends Module {
             return false;
         }
 
-        return (result);
+        return result;
     }
 
     /**
      * <p>
      * getDecryptCipher.
      * </p>
-     * 
+     *
      * @return a {@link javax.crypto.Cipher} object.
      */
     protected Cipher getDecryptCipher() {
@@ -625,14 +624,14 @@ public class ProvisionFiles extends Module {
                 return null;
             }
         }
-        return (null);
+        return null;
     }
 
     /**
      * <p>
      * getEncryptCipher.
      * </p>
-     * 
+     *
      * @return a {@link javax.crypto.Cipher} object.
      */
     protected Cipher getEncryptCipher() {
@@ -647,12 +646,12 @@ public class ProvisionFiles extends Module {
                 return null;
             }
         }
-        return (null);
+        return null;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -660,6 +659,6 @@ public class ProvisionFiles extends Module {
         // TODO: should verify output, especially is they are local files!
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 }

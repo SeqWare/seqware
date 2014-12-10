@@ -85,7 +85,7 @@ public final class CheckDB extends Plugin {
         } catch (Exception e) {
             ReturnValue ret = new ReturnValue();
             ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-            return (ret);
+            return ret;
         }
         return new ReturnValue();
     }

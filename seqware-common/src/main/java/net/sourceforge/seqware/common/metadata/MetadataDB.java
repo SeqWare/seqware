@@ -300,7 +300,7 @@ public class MetadataDB implements Metadata {
                         ret.setExitStatus(ReturnValue.SQLQUERYFAILED);
                         ret.setStderr(ret.getStderr() + "\nCouldn't link this processing event: " + processingID + " to accession "
                                 + accession);
-                        return (ret);
+                        return ret;
                     }
 
                 }
@@ -842,7 +842,7 @@ public class MetadataDB implements Metadata {
                     ReturnValue.SQLQUERYFAILED);
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -1165,7 +1165,7 @@ public class MetadataDB implements Metadata {
 
         // add default params in workflow_param table
 
-        return (ret);
+        return ret;
     }
 
     private String formatSQL(String variable, String defaultStr) {

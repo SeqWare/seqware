@@ -161,7 +161,7 @@ public class GenericMetadataSaver extends Module {
         }
 
         // now return the ReturnValue
-        return (ret);
+        return ret;
 
     }
 
@@ -215,12 +215,12 @@ public class GenericMetadataSaver extends Module {
                 if (FileTools.fileExistsAndReadable(new File(tokens[2])).getExitStatus() != ReturnValue.SUCCESS) {
                     Log.error("File does not exist or is not readable: " + tokens[2]);
                     ret.setExitStatus(ReturnValue.FILENOTREADABLE);
-                    return (ret);
+                    return ret;
                 }
             }
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -242,7 +242,7 @@ public class GenericMetadataSaver extends Module {
         ret.setExitStatus(ReturnValue.NOTIMPLEMENTED);
 
         // not much to do, just return
-        return (ret);
+        return ret;
     }
 
     /**
@@ -286,7 +286,7 @@ public class GenericMetadataSaver extends Module {
 
         // note the time do_run finishes
         ret.setRunStopTstmp(new Date());
-        return (ret);
+        return ret;
 
     }
 
@@ -303,7 +303,7 @@ public class GenericMetadataSaver extends Module {
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.NOTIMPLEMENTED);
 
-        return (ret);
+        return ret;
 
     }
 
@@ -322,7 +322,7 @@ public class GenericMetadataSaver extends Module {
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.NOTIMPLEMENTED);
 
-        return (ret);
+        return ret;
     }
 
 }
