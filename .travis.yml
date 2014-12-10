@@ -1,8 +1,8 @@
-sudo: false
 language: java
 before_script: 
-  - psql -c 'create database test_seqware_meta_db;' -U postgres
-  - psql -c "create user seqware with password 'seqware';" -U postgres
+  - psql -c "create user seqware with password 'seqware' createdb;" -U postgres
+  - psql -c "ALTER USER seqware WITH superuser;" -U postgres
+  - psql -c 'create database test_seqware_meta_db with owner = seqware;' -U postgres
   - mkdir ~/.seqware
   - cp .travis/settings ~/.seqware
 script: mvn -B clean install -DskipITs=false
