@@ -5,3 +5,5 @@ before_script:
   - mkdir ~/.seqware
   - cp .travis/settings ~/.seqware
 script: mvn -B clean install -DskipITs=false
+addons:
+  postgresql: "9.1"
