@@ -475,14 +475,15 @@ public class ProvisionFiles extends Module {
      * </p>
      *
      * @param input
-     *            a {@link java.lang.String} object.
+     *            original path to the file, a file path if local, otherwise a http path or s3 path
      * @param output
-     *            a {@link java.lang.String} object.
+     *            path to the destination, a file path if local, otherwise a http path or s3 path
      * @param skipIfMissing
-     *            a boolean.
+     *            skip missing files with only a warning
      * @param fileArray
-     *            a {@link java.util.ArrayList} object.
+     *            metadata about the file (files) to be copied
      * @param fullOutputPath
+     *            the full output path overrides any concatenation of variables
      * @return a boolean.
      */
     protected boolean provisionFile(String input, String output, boolean skipIfMissing, ArrayList<FileMetadata> fileArray,
@@ -509,7 +510,7 @@ public class ProvisionFiles extends Module {
         // just skip this if this option is set
         if (reader == null && skipIfMissing) {
             Log.warn("File does not exist: " + input + ". Skipping...");
-            return (true);
+            return true;
         } else if (reader == null) {
             Log.error("File does not exist: " + input);
             Log.error("To proceed, run ProvisionFile again with --skip-if-missing");
@@ -524,13 +525,13 @@ public class ProvisionFiles extends Module {
      * with failed upload recovery here... Keep in mind only the writeout to local file will attempt to recover from failed reader
      *
      * @param output
-     *            a {@link java.lang.String} object.
+     *            where the file should be copied to
      * @param reader
-     *            a {@link java.io.BufferedInputStream} object.
+     *            a reader open to the file that needs to be copied
      * @param bufLen
-     *            a int.
+     *            passed right through to filesUtil
      * @param input
-     *            a {@link java.lang.String} object.
+     *            where the file is copied from
      * @param fileArray
      *            a {@link java.util.ArrayList} object.
      * @param fullOutputPath
