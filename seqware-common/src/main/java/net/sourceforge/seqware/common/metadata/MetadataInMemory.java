@@ -31,7 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
@@ -639,6 +641,23 @@ public class MetadataInMemory implements Metadata {
     @Override
     public List<WorkflowRun> getWorkflowRunsByStatusCmd(String statusCmd) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Map<String, String> getEnvironmentReport() {
+        SortedMap<String, String> environment = new TreeMap<>();
+        environment.put("metadata", "in-memory");
+        environment.put("version", this.getClass().getPackage().getImplementationVersion());
+        environment.put("java.version", System.getProperty("java.version"));
+        for (Entry<Object, Object> property : System.getProperties().entrySet()) {
+            environment.put("java.property." + property.getKey().toString(), property.getValue().toString());
+        }
+        return environment;
+    }
+
+    @Override
+    public boolean checkClientServerMatchingVersion() {
+        return true;
     }
 
 }

@@ -29,6 +29,7 @@ public class EnvironmentResource extends BasicResource {
 
         SortedMap<String, String> environment = new TreeMap<>();
         PluginRunner pluginRunner = new PluginRunner();
+        environment.put("metadata", "webservice");
         environment.put("tomcat.version", TomcatVersion.get().getServerNumber());
         environment.put("tomcat.built", TomcatVersion.get().getServerBuilt());
         environment.put("version", pluginRunner.getClass().getPackage().getImplementationVersion());
@@ -45,8 +46,12 @@ public class EnvironmentResource extends BasicResource {
             for (Object[] row : executeQuery) {
                 environment.put("database." + row[0].toString(), row[1].toString());
             }
-        } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            environment.put("jdbc.driver.name", mdb.getDbmd().getDriverName());
+            environment.put("jdbc.username", mdb.getDbmd().getUserName());
+            environment.put("jdbc.driver.version", mdb.getDbmd().getDriverVersion());
+            environment.put("jdbc.url", mdb.getDbmd().getURL());
+        } catch (RuntimeException | SQLException ex) {
+            environment.put("database", "connection error");
         } finally {
             if (mdb != null) {
                 DbUtils.closeQuietly(mdb.getDb(), mdb.getSql(), null);

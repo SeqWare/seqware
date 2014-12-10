@@ -64,13 +64,13 @@ import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// FIXME: Have to record processing event (event), what the workflow it was, etc. 
-// FIXME: Need to add workflow table, and then have each processing event associated with a workflowID for this particular run of the workflow  
+// FIXME: Have to record processing event (event), what the workflow it was, etc.
+// FIXME: Need to add workflow table, and then have each processing event associated with a workflowID for this particular run of the workflow
 /**
  * <p>
  * MetadataDB class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -142,7 +142,7 @@ public class MetadataDB implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param experiment_library_design_id
      *            the value of experiment_library_design_id
      * @param experiment_spot_design_id
@@ -157,7 +157,7 @@ public class MetadataDB implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param parentSampleAccession
      */
     @Override
@@ -172,7 +172,7 @@ public class MetadataDB implements Metadata {
     // value.
     /**
      * Find out the primary key for the last inserted record FIXME: This is hardcoded for Postgres, need to make DB agnostic
-     * 
+     *
      * @param SequenceID
      *            a {@link java.lang.String} object.
      * @throws java.sql.SQLException
@@ -188,7 +188,7 @@ public class MetadataDB implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param processingID
      * @return
      */
@@ -322,7 +322,7 @@ public class MetadataDB implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This maps processing_id to sw_accession for that event.
      */
     @Override
@@ -338,7 +338,7 @@ public class MetadataDB implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * TODO: needs to support more relationship types, but will need to add to the SQL schema to support this
      */
     @Override
@@ -380,7 +380,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * linkAccessionAndParent.
      * </p>
-     * 
+     *
      * @param accession
      *            a int.
      * @param processingID
@@ -779,7 +779,7 @@ public class MetadataDB implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param workflowRunAccession
      */
     @Override
@@ -809,7 +809,7 @@ public class MetadataDB implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param inputFiles
      * @param workflowengine
      */
@@ -855,7 +855,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * linkProcessingAndFile.
      * </p>
-     * 
+     *
      * @param processingID
      *            a int.
      * @param fileID
@@ -1056,7 +1056,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * Getter for the field <code>db</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.sql.Connection} object.
      */
     public Connection getDb() {
@@ -1067,7 +1067,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * Getter for the field <code>dbmd</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.sql.DatabaseMetaData} object.
      */
     public DatabaseMetaData getDbmd() {
@@ -1078,7 +1078,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * Getter for the field <code>sql</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.sql.Statement} object.
      */
     public Statement getSql() {
@@ -1260,7 +1260,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * listInstalledWorkflows.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     @Override
@@ -1350,6 +1350,16 @@ public class MetadataDB implements Metadata {
         throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public Map<String, String> getEnvironmentReport() {
+        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean checkClientServerMatchingVersion() {
+        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose Tools | Templates.
+    }
+
     public static class IntByIndex implements ResultSetHandler<Integer> {
         private final int col;
         private final int defaultVal;
@@ -1392,7 +1402,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * executeQuery.
      * </p>
-     * 
+     *
      * @param <T>
      * @param s
      *            a {@link java.lang.String} object.
@@ -1424,7 +1434,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * executeUpdate.
      * </p>
-     * 
+     *
      * @param s
      *            a {@link java.lang.String} object.
      * @return a int.
@@ -1485,7 +1495,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * getAllStudies.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -1497,7 +1507,7 @@ public class MetadataDB implements Metadata {
      * <p>
      * getSequencerRunReport.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     @Override
@@ -1507,7 +1517,7 @@ public class MetadataDB implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param iusSWID
      */
     @Override

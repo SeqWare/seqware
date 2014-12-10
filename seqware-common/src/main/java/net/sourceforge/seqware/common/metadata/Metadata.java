@@ -49,7 +49,7 @@ public interface Metadata {
      * <p>
      * clean_up.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
     ReturnValue clean_up(); // Close out connection to Meta store
@@ -58,7 +58,7 @@ public interface Metadata {
      * <p>
      * mapProcessingIdToAccession.
      * </p>
-     * 
+     *
      * @param processingId
      *            a int.
      * @return a int.
@@ -69,7 +69,7 @@ public interface Metadata {
      * <p>
      * addStudy.
      * </p>
-     * 
+     *
      * @param title
      *            a {@link java.lang.String} object.
      * @param description
@@ -89,7 +89,7 @@ public interface Metadata {
      * <p>
      * addExperiment.
      * </p>
-     * 
+     *
      * @param studySwAccession
      *            a {@link java.lang.Integer} object.
      * @param platformId
@@ -111,7 +111,7 @@ public interface Metadata {
      * <p>
      * addSample.
      * </p>
-     * 
+     *
      * @param experimentAccession
      *            a {@link java.lang.Integer} object.
      * @param parentSampleAccession
@@ -130,7 +130,7 @@ public interface Metadata {
      * <p>
      * addSample.
      * </p>
-     * 
+     *
      * @param platformAccession
      * @param name
      * @param description
@@ -149,7 +149,7 @@ public interface Metadata {
      * <p>
      * addSample.
      * </p>
-     * 
+     *
      * @param sequencerRunAccession
      * @param studyTypeId
      * @param libraryStrategyId
@@ -170,7 +170,7 @@ public interface Metadata {
      * <p>
      * addSample.
      * </p>
-     * 
+     *
      * @param laneAccession
      * @param sampleAccession
      * @param skip
@@ -186,7 +186,7 @@ public interface Metadata {
      * <p>
      * getPlatforms.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
     public List<Platform> getPlatforms();
@@ -195,7 +195,7 @@ public interface Metadata {
      * <p>
      * getExperiment.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
@@ -206,7 +206,7 @@ public interface Metadata {
      * <p>
      * getExperimentLibraryDesigns.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
     public List<ExperimentLibraryDesign> getExperimentLibraryDesigns();
@@ -215,7 +215,7 @@ public interface Metadata {
      * <p>
      * getPlatforms.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
     public List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs();
@@ -224,7 +224,7 @@ public interface Metadata {
      * <p>
      * getExperimentSpotDesigns.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
     public List<ExperimentSpotDesign> getExperimentSpotDesigns();
@@ -233,7 +233,7 @@ public interface Metadata {
      * <p>
      * getOrganisms.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Organism} object.
      */
     public List<Organism> getOrganisms();
@@ -242,7 +242,7 @@ public interface Metadata {
      * <p>
      * getStudyTypes.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
     public List<StudyType> getStudyTypes();
@@ -251,7 +251,7 @@ public interface Metadata {
      * <p>
      * getLibraryStrategies.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.LibraryStrategy} object.
      */
     public List<LibraryStrategy> getLibraryStrategies();
@@ -260,7 +260,7 @@ public interface Metadata {
      * <p>
      * getLibrarySelections.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySelection} object.
      */
     public List<LibrarySelection> getLibrarySelections();
@@ -269,7 +269,7 @@ public interface Metadata {
      * <p>
      * getLibrarySource.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySource} object.
      */
     public List<LibrarySource> getLibrarySource();
@@ -278,7 +278,7 @@ public interface Metadata {
      * <p>
      * add_empty_processing_event.
      * </p>
-     * 
+     *
      * @param parentIDs
      *            an array of int.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
@@ -293,7 +293,7 @@ public interface Metadata {
      * <p>
      * add_empty_processing_event_by_parent_accession.
      * </p>
-     * 
+     *
      * @param parentAccessions
      *            an array of int.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
@@ -304,7 +304,7 @@ public interface Metadata {
      * <p>
      * add_task_group.
      * </p>
-     * 
+     *
      * @param parentIDs
      *            an array of int.
      * @param childIDs
@@ -327,7 +327,7 @@ public interface Metadata {
      * <p>
      * processing_event_to_task_group.
      * </p>
-     * 
+     *
      * @param processingID
      *            a int.
      * @param parentIDs
@@ -352,7 +352,7 @@ public interface Metadata {
      * <p>
      * update_processing_event.
      * </p>
-     * 
+     *
      * @param processingID
      *            a int.
      * @param retval
@@ -365,7 +365,7 @@ public interface Metadata {
      * <p>
      * update_processing_status.
      * </p>
-     * 
+     *
      * @param processingID
      *            a int.
      * @param status
@@ -378,7 +378,7 @@ public interface Metadata {
      * <p>
      * associate_processing_event_with_parents_and_child.
      * </p>
-     * 
+     *
      * @param processingID
      *            a int.
      * @param parentIDs
@@ -393,7 +393,7 @@ public interface Metadata {
      * <p>
      * add_workflow_run.
      * </p>
-     * 
+     *
      * @param workflowAccession
      *            a int.
      * @return a int.
@@ -404,7 +404,7 @@ public interface Metadata {
      * <p>
      * update_processing_workflow_run.
      * </p>
-     * 
+     *
      * @param processingID
      *            a int.
      * @param workflowRunID
@@ -417,7 +417,7 @@ public interface Metadata {
      * <p>
      * add_workflow_run_ancestor.
      * </p>
-     * 
+     *
      * @param workflowRunAccession
      *            a int.
      * @param processingId
@@ -429,7 +429,7 @@ public interface Metadata {
      * <p>
      * get_workflow_run_accession.
      * </p>
-     * 
+     *
      * @param workflowRunId
      *            a int.
      * @return a int.
@@ -440,7 +440,7 @@ public interface Metadata {
      * <p>
      * get_workflow_run_id.
      * </p>
-     * 
+     *
      * @param workflowRunAccession
      *            a int.
      * @return a int.
@@ -451,7 +451,7 @@ public interface Metadata {
      * <p>
      * getWorkflowRun.
      * </p>
-     * 
+     *
      * @param workflowRunAccession
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
@@ -460,7 +460,7 @@ public interface Metadata {
 
     /**
      * Get workflow run by status cmd (oozie job id in oozie).
-     * 
+     *
      * @param statusCmd
      * @return
      */
@@ -468,9 +468,9 @@ public interface Metadata {
 
     /**
      * Returns the workflow_runs associated with a group of input files.
-     * 
+     *
      * Specifically, this resource will return all workflow runs that use at least one of the input file accessions
-     * 
+     *
      * @param fileAccessions
      * @return
      */
@@ -478,10 +478,10 @@ public interface Metadata {
 
     /**
      * Returns the workflow_runs associated with a group of input files.
-     * 
+     *
      * Specifically, this resource will return all workflow runs that use at least one of the input file accessions constrained to the
      * provided list of workflow accessions
-     * 
+     *
      * @param fileAccessions
      * @param workflowAccessions
      * @return
@@ -490,7 +490,7 @@ public interface Metadata {
 
     /**
      * Returns the workflow_runs associated with a group of files. Search types are defined as:
-     * 
+     *
      * @param fileAccessions
      * @param search_type
      * @return
@@ -501,7 +501,7 @@ public interface Metadata {
      * <p>
      * get_workflow_info.
      * </p>
-     * 
+     *
      * @param workflowAccession
      *            a int.
      * @return a {@link java.util.Map} object.
@@ -512,7 +512,7 @@ public interface Metadata {
      * <p>
      * linkWorkflowRunAndParent.
      * </p>
-     * 
+     *
      * @param workflowRunId
      *            a int.
      * @param parentAccession
@@ -527,7 +527,7 @@ public interface Metadata {
      * <p>
      * update_workflow_run.
      * </p>
-     * 
+     *
      * @param workflowRunId
      *            a int.
      * @param pegasusCmd
@@ -565,7 +565,7 @@ public interface Metadata {
      * <p>
      * addWorkflow.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      * @param version
@@ -600,7 +600,7 @@ public interface Metadata {
      * <p>
      * updateWorkflow.
      * </p>
-     * 
+     *
      * @param workflowId
      *            a int.
      * @param permanentBundleLocation
@@ -613,7 +613,7 @@ public interface Metadata {
      * <p>
      * listInstalledWorkflows.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     String listInstalledWorkflows();
@@ -622,7 +622,7 @@ public interface Metadata {
      * <p>
      * listInstalledWorkflowParams.
      * </p>
-     * 
+     *
      * @param workflowAccession
      *            a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.
@@ -633,7 +633,7 @@ public interface Metadata {
      * <p>
      * getWorkflowAccession.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      * @param version
@@ -649,7 +649,7 @@ public interface Metadata {
 
     /**
      * Retrieves the file provenance report, writing it to the specified output stream as a TSV.
-     * 
+     *
      * @param params
      *            the parameters to filter the results
      * @param out
@@ -659,7 +659,7 @@ public interface Metadata {
 
     /**
      * Retrieves the file provenance report.
-     * 
+     *
      * @param params
      *            the parameters to filter the results
      * @return the list of each file provenance entry
@@ -667,10 +667,24 @@ public interface Metadata {
     public List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params);
 
     /**
+     * Retrieves all environmental information from the web-service
+     *
+     * @return
+     */
+    public Map<String, String> getEnvironmentReport();
+
+    /**
+     * Check to see if client seqware version matches server version
+     * 
+     * @return
+     */
+    public boolean checkClientServerMatchingVersion();
+
+    /**
      * <p>
      * isDuplicateFile.
      * </p>
-     * 
+     *
      * @param filepath
      *            a {@link java.lang.String} object.
      * @return a {@link java.lang.Boolean} object.
@@ -681,7 +695,7 @@ public interface Metadata {
      * <p>
      * getWorkflowRunsByStatus.
      * </p>
-     * 
+     *
      * @param status
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
@@ -692,7 +706,7 @@ public interface Metadata {
      * <p>
      * getWorkflowRunWithWorkflow.
      * </p>
-     * 
+     *
      * @param workflowRunAccession
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
@@ -703,7 +717,7 @@ public interface Metadata {
      * <p>
      * getAllStudies.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     public List<Study> getAllStudies();
@@ -712,7 +726,7 @@ public interface Metadata {
      * <p>
      * getSequencerRunReport.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getSequencerRunReport();
@@ -721,7 +735,7 @@ public interface Metadata {
      * <p>
      * annotateFile.
      * </p>
-     * 
+     *
      * @param laneSWID
      * @param iusAtt
      * @param skip
@@ -733,7 +747,7 @@ public interface Metadata {
      * <p>
      * annotateFile.
      * </p>
-     * 
+     *
      * @param fileSWID
      *            a int.
      * @param iusAtts
@@ -744,7 +758,7 @@ public interface Metadata {
      * <p>
      * annotateIUS.
      * </p>
-     * 
+     *
      * @param laneSWID
      *            a int.
      * @param iusAtt
@@ -758,7 +772,7 @@ public interface Metadata {
      * <p>
      * annotateIUS.
      * </p>
-     * 
+     *
      * @param laneSWID
      *            a int.
      * @param iusAtts
@@ -770,7 +784,7 @@ public interface Metadata {
      * <p>
      * annotateLane.
      * </p>
-     * 
+     *
      * @param laneSWID
      *            a int.
      * @param laneAtt
@@ -784,7 +798,7 @@ public interface Metadata {
      * <p>
      * annotateLane.
      * </p>
-     * 
+     *
      * @param laneSWID
      *            a int.
      * @param laneAtts
@@ -796,7 +810,7 @@ public interface Metadata {
      * <p>
      * annotateSequencerRun.
      * </p>
-     * 
+     *
      * @param sequencerRunSWID
      *            a int.
      * @param sequencerRunAtt
@@ -810,7 +824,7 @@ public interface Metadata {
      * <p>
      * annotateSequencerRun.
      * </p>
-     * 
+     *
      * @param sequencerRunSWID
      *            a int.
      * @param sequencerRunAtts
@@ -822,7 +836,7 @@ public interface Metadata {
      * <p>
      * annotateExperiment.
      * </p>
-     * 
+     *
      * @param experimentSWID
      *            a int.
      * @param att
@@ -836,7 +850,7 @@ public interface Metadata {
      * <p>
      * annotateExperiment.
      * </p>
-     * 
+     *
      * @param experimentSWID
      *            a int.
      * @param atts
@@ -848,7 +862,7 @@ public interface Metadata {
      * <p>
      * annotateProcessing.
      * </p>
-     * 
+     *
      * @param processingSWID
      *            a int.
      * @param att
@@ -862,7 +876,7 @@ public interface Metadata {
      * <p>
      * annotateProcessing.
      * </p>
-     * 
+     *
      * @param processingSWID
      *            a int.
      * @param atts
@@ -874,7 +888,7 @@ public interface Metadata {
      * <p>
      * annotateSample.
      * </p>
-     * 
+     *
      * @param sampleSWID
      *            a int.
      * @param att
@@ -888,7 +902,7 @@ public interface Metadata {
      * <p>
      * annotateSample.
      * </p>
-     * 
+     *
      * @param sampleSWID
      *            a int.
      * @param atts
@@ -900,7 +914,7 @@ public interface Metadata {
      * <p>
      * annotateStudy.
      * </p>
-     * 
+     *
      * @param studySWID
      *            a int.
      * @param att
@@ -914,7 +928,7 @@ public interface Metadata {
      * <p>
      * annotateStudy.
      * </p>
-     * 
+     *
      * @param studySWID
      *            a int.
      * @param atts
@@ -926,7 +940,7 @@ public interface Metadata {
      * <p>
      * annotateWorkflow.
      * </p>
-     * 
+     *
      * @param workflowSWID
      *            a int.
      * @param att
@@ -940,7 +954,7 @@ public interface Metadata {
      * <p>
      * annotateWorkflow.
      * </p>
-     * 
+     *
      * @param workflowSWID
      *            a int.
      * @param atts
@@ -952,7 +966,7 @@ public interface Metadata {
      * <p>
      * annotateWorkflowRun.
      * </p>
-     * 
+     *
      * @param workflowrunSWID
      *            a int.
      * @param att
@@ -966,7 +980,7 @@ public interface Metadata {
      * <p>
      * annotateWorkflowRun.
      * </p>
-     * 
+     *
      * @param workflowSWID
      *            a int.
      * @param atts
@@ -980,7 +994,7 @@ public interface Metadata {
      * <p>
      * getWorkflowRunReport.
      * </p>
-     * 
+     *
      * @param workflowRunSWID
      *            a int.
      * @return a {@link java.lang.String} object.
@@ -991,7 +1005,7 @@ public interface Metadata {
      * <p>
      * getWorkflowRunReportStdErr.
      * </p>
-     * 
+     *
      * @param workflowRunSWID
      *            a int.
      * @return a {@link java.lang.String} object.
@@ -1002,7 +1016,7 @@ public interface Metadata {
      * <p>
      * getWorkflowRunReportStdOut.
      * </p>
-     * 
+     *
      * @param workflowRunSWID
      *            a int.
      * @return a {@link java.lang.String} object.
@@ -1013,7 +1027,7 @@ public interface Metadata {
      * <p>
      * getWorkflowRunReport.
      * </p>
-     * 
+     *
      * @param workflowSWID
      *            a int.
      * @param earliestDate
@@ -1028,7 +1042,7 @@ public interface Metadata {
      * <p>
      * getWorkflowRunReport.
      * </p>
-     * 
+     *
      * @param status
      *            , can be null
      * @param earliestDate
@@ -1045,7 +1059,7 @@ public interface Metadata {
      * <p>
      * getWorkflowRunReport.
      * </p>
-     * 
+     *
      * @param earliestDate
      *            a {@link java.util.Date} object.
      * @param latestDate
@@ -1058,7 +1072,7 @@ public interface Metadata {
      * <p>
      * getFile.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
@@ -1069,7 +1083,7 @@ public interface Metadata {
      * <p>
      * getWorkflowParams.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.SortedSet} object.
@@ -1080,7 +1094,7 @@ public interface Metadata {
      * <p>
      * getProcessingRelations.
      * </p>
-     * 
+     *
      * @param swAccession
      * @return a Dot format string
      */
@@ -1088,7 +1102,7 @@ public interface Metadata {
 
     /**
      * Get a workflow
-     * 
+     *
      * @param workflowAccession
      * @return
      */
@@ -1096,7 +1110,7 @@ public interface Metadata {
 
     /**
      * Get all of the sequencer runs in the DB.
-     * 
+     *
      * @return a list of Sequencer runs
      */
     public List<SequencerRun> getAllSequencerRuns();
@@ -1105,7 +1119,7 @@ public interface Metadata {
      * <p>
      * getLane.
      * </p>
-     * 
+     *
      * @param laneAccession
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
@@ -1116,7 +1130,7 @@ public interface Metadata {
      * <p>
      * getProcessing.
      * </p>
-     * 
+     *
      * @param processingAccession
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
@@ -1127,7 +1141,7 @@ public interface Metadata {
      * <p>
      * getSequencerRun.
      * </p>
-     * 
+     *
      * @param sequencerRunAccession
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
@@ -1136,7 +1150,7 @@ public interface Metadata {
 
     /**
      * Get Lanes from a sequencer run.
-     * 
+     *
      * @param sequencerRunAccession
      *            the sw_accession of the sequencer run
      * @return the lanes from the run
@@ -1145,7 +1159,7 @@ public interface Metadata {
 
     /**
      * Get IUSes (barcodes) from a lane or sample.
-     * 
+     *
      * @param laneOrSampleAccession
      *            the sw_accession of the lane or sample
      * @return a list of IUSes (barcodes)
@@ -1154,7 +1168,7 @@ public interface Metadata {
 
     /**
      * Get experiments from a study.
-     * 
+     *
      * @param studyAccession
      *            the sw_accession of the study
      * @return a list of Experiments
@@ -1163,7 +1177,7 @@ public interface Metadata {
 
     /**
      * Get the samples from an experiment.
-     * 
+     *
      * @param experimentAccession
      *            the sw_accession of the experiment
      * @return a list of samples
@@ -1173,7 +1187,7 @@ public interface Metadata {
     /**
      * Get the child samples of a parent sample. These samples are further down the sample hierarchy (more specific). For example, if the
      * parent sample or donor is ABC_001, the child sample would be ABC_001_Ref for the reference (blood) sample from the donor.
-     * 
+     *
      * @param parentSampleAccession
      *            the sw_accession of the parent sample / donor
      * @return a list of child samples.
@@ -1183,7 +1197,7 @@ public interface Metadata {
     /**
      * Get the parent samples of a sample. These samples are further up the sample hierarchy (less specific). For example, if the parent
      * sample or donor is ABC_001, the child sample would be ABC_001_Ref for the reference (blood) sample from the donor.
-     * 
+     *
      * @param childSampleAccession
      *            the sw_accession of the child sample
      * @return a list of parent samples / donors
@@ -1192,7 +1206,7 @@ public interface Metadata {
 
     /**
      * Get the models corresponding to potential parent accessions
-     * 
+     *
      * @param potentialParentAccessions
      * @return a list, with null when parent accessions are invalid
      */
@@ -1200,7 +1214,7 @@ public interface Metadata {
 
     /**
      * Get the models corresponding to potential accessions
-     * 
+     *
      * @param potentialAccessions
      * @return a list, with null when accessions are invalid
      */
