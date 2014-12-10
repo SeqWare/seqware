@@ -25,9 +25,9 @@ import org.junit.Test;
 
 /**
  * These tests support the new simplified command-line tools.
- * 
+ *
  * Try a few simple commands as a sanity check.
- * 
+ *
  * @author dyuen
  */
 public class CLI_ET {
@@ -50,6 +50,13 @@ public class CLI_ET {
         String listCommand = "--version";
         String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
         Assert.assertTrue("output does not contain version", listOutput.startsWith("SeqWare version"));
+    }
+
+    @Test
+    public void checkEnvironment() throws IOException {
+        String listCommand = "--metadata";
+        String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
+        Assert.assertTrue("output does not contain version", listOutput.contains("version") && listOutput.contains("metadata"));
     }
 
     @Test
