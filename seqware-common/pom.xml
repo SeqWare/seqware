@@ -202,7 +202,11 @@
                 </exclusion>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
+                    <artifactId>httpcore</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpmime</artifactId>
                 </exclusion>
             </exclusions>
         </dependency> 

@@ -1,0 +1,36 @@
+#
+# SEQWARE PIPELINE SETTINGS
+#
+# SeqWare MetaDB communication method, can be "database" or "webservice" or "none"
+SW_METADATA_METHOD=webservice
+#webservice
+# a directory to copy bundles to for archiving/installing
+SW_BUNDLE_DIR=/tmp
+# the central repository for installed bundles
+SW_BUNDLE_REPO_DIR=/tmp
+#
+# SEQWARE WEBSERVICE SETTINGS
+#
+# the base URL for the RESTful SeqWare API
+SW_REST_URL=http://localhost:8889/seqware-webservice
+# the username and password to connect to the REST API, this is used by SeqWare Pipeline to write back processing info to the DB 
+SW_REST_USER=admin@admin.com
+SW_REST_PASS=admin
+
+#
+# SEQWARE METADB SETTINGS
+#
+# parameters to connect directly to the database
+# these will be DEPRECATED and applications that 
+# directly connect to the DB will be moved to REST
+SW_DB_USER=seqware
+SW_DB_PASS=password
+SW_DB_SERVER=localhost
+SW_DB=test_seqware_meta_db
+# 
+# AMAZON CLOUD SETTINGS
+#
+# used by tools reading and writing to S3 buckets (dependency data/software bundles, inputs, outputs, etc)
+AWS_ACCESS_KEY=
+AWS_SECRET_KEY=
+
