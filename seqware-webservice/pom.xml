@@ -297,6 +297,10 @@
                     <artifactId>mockito-all</artifactId>
                 </exclusion>
                 <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>cloudera-jets3t</artifactId>
+                </exclusion>
+                <exclusion>
                     <groupId>commons-httpclient</groupId>
                     <artifactId>commons-httpclient</artifactId>
                 </exclusion>
