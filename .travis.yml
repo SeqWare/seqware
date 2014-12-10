@@ -1,3 +1,5 @@
+notifications:
+  slack: oicr:S9k4EowgQv9AnbCfEZHSzCsg
 language: java
 before_script: 
   - psql -c "create user seqware with password 'seqware' createdb;" -U postgres
