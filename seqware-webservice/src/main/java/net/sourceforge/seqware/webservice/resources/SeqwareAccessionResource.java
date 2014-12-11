@@ -25,7 +25,7 @@ import org.restlet.resource.Get;
  * <p>
  * SeqwareAccessionResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -33,7 +33,7 @@ public class SeqwareAccessionResource extends BasicResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Get

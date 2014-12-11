@@ -17,6 +17,7 @@
 package net.sourceforge.seqware.common.metadata;
 
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.SequencerRunStatus;
 import io.seqware.common.model.WorkflowRunStatus;
@@ -119,7 +120,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * 
+ *
  * @version $Id: $Id
  */
 public class MetadataWS implements Metadata {
@@ -136,7 +137,7 @@ public class MetadataWS implements Metadata {
      * <p>
      * Constructor for MetadataWS.
      * </p>
-     * 
+     *
      * @param database
      * @param password
      * @param username
@@ -147,11 +148,11 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      */
     /**
      * {@inheritDoc}
-     * 
+     *
      */
     @Override
     public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
@@ -258,7 +259,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      */
     @Override
     public ReturnValue addStudy(String title, String description, String centerName, String centerProjectName, Integer studyTypeId) {
@@ -297,9 +298,9 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * TODO: this needs to setup rows in experiment_library_design and experiment_spot_design
-     * 
+     *
      * @param experimentLibraryDesignId
      *            the value of experimentLibraryDesignId
      * @param experimentSpotDesignId
@@ -367,9 +368,9 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * TODO: this needs to setup rows in experiment_library_design and experiment_spot_design
-     * 
+     *
      * @param parentSampleAccession
      */
     @Override
@@ -430,7 +431,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * FIXME: there are problems with setting accession when I should set ID
-     * 
+     *
      * @param platformAccession
      * @param name
      * @param description
@@ -724,7 +725,7 @@ public class MetadataWS implements Metadata {
     }
 
     /**
-     * 
+     *
      * @param p
      * @param parentIds
      *            if sw accession, each ID must be in the form "/ID", if db id then in the form ?id=ID
@@ -893,7 +894,7 @@ public class MetadataWS implements Metadata {
     }
 
     /**
-     * 
+     *
      * @param processing
      * @param parentIds
      *            may be db IDS or sw accession, previously converted to be either "/ID" or "?id=SWA"
@@ -1348,7 +1349,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param workflowRunAccession
      */
     @Override
@@ -1377,7 +1378,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param workflowEngine
      *            the value of workflowEngine
      * @param inputFiles
@@ -1576,7 +1577,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param workflowAccession
      */
     @Override
@@ -1646,7 +1647,7 @@ public class MetadataWS implements Metadata {
      * <p>
      * getAllStudies.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -1663,7 +1664,7 @@ public class MetadataWS implements Metadata {
      * <p>
      * getAllSequencerRuns.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -1678,9 +1679,9 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * FIXME: this is a hack, will need to add an object layer between this metadata object and the response
-     * 
+     *
      * @author boconnor
      */
     @Override
@@ -1726,7 +1727,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param iusSWID
      */
     @Override
@@ -1827,7 +1828,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param swid
      */
     @Override
@@ -1863,7 +1864,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param swid
      */
     @Override
@@ -1901,7 +1902,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param swid
      */
     @Override
@@ -2114,7 +2115,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param iusSWID
      */
     @Override
@@ -2223,7 +2224,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param atts
      */
     @Override
@@ -2251,7 +2252,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param att
      */
     @Override
@@ -2391,7 +2392,7 @@ public class MetadataWS implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param workflowrunSWID
      */
     @Override
@@ -2640,6 +2641,21 @@ public class MetadataWS implements Metadata {
             Log.error("Problem finding sequencerRuns with this name: " + name, e);
         }
         throw new RuntimeException();
+    }
+
+    @Override
+    public Map<String, String> getEnvironmentReport() {
+        String string = ll.getString("/");
+        Gson gson = new Gson();
+        Map<String, String> fromJson = gson.fromJson(string, Map.class);
+        return fromJson;
+    }
+
+    @Override
+    public boolean checkClientServerMatchingVersion() {
+        String webServiceVersion = this.getEnvironmentReport().get("version");
+        String clientVersion = this.getClass().getPackage().getImplementationVersion();
+        return webServiceVersion.equals(clientVersion);
     }
 
     /*
@@ -3214,10 +3230,10 @@ public class MetadataWS implements Metadata {
 
         /**
          * Use percent sign to designate what should be matched.
-         * 
+         *
          * Eg. SAMPLE_1% will match SAMPLE_1_001 and SAMPLE_1_002 and SAMPLE_1
-         * 
-         * 
+         *
+         *
          * @param name
          * @return
          * @throws IOException
