@@ -70,7 +70,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * 
+ *
  * @author mtaschuk
  */
 @ServiceProvider(service = PluginInterface.class)
@@ -328,6 +328,9 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     @Override
     public ReturnValue do_run() {
+        if (!metadata.checkClientServerMatchingVersion()) {
+            Log.warn("Client version does not match webservice version");
+        }
         String groupBy = header.getTitle();
         Map<String, List<ReturnValue>> mappedFiles;
         List<ReturnValue> vals = createListOfRelevantFilePaths();
@@ -490,7 +493,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     /**
      * Returns true only if there are more files to run than have been run on any workflow so far, or if the filesToRun have different
      * filepaths than those that have been run before.
-     * 
+     *
      * @param filesToRun
      * @param fileSWIDs
      * @return
@@ -520,7 +523,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     /**
      * Map a normal status to whether a workflow run completed, failed, or other (submitted, pending, etc.) (the states that we care about
      * for the decider)
-     * 
+     *
      * @param generateStatus
      * @return
      */
@@ -537,7 +540,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     /**
      * Returns true if the filesToRun are totally contained by the files associated with the files in a given workflowRunAcc
-     * 
+     *
      * @param filesSWIDsHasRun
      * @param filesToRun
      *            the files to check to see if they are contained by the past run
@@ -557,7 +560,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
      * filesToRun has more files than the workflow run. True if the filesToRun and the workflow run have the same number of files but with
      * different filepaths. False if the filesToRun and the workflow run have the same number of files with the same file paths. False and
      * prints an error message if there are more files in the workflow run than in the filesToRun.
-     * 
+     *
      * @param filesSWIDsHasRun
      * @param filesToRun
      * @return
@@ -689,7 +692,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     /**
      * Performs any additional checks on the file before adding it to the list of files to incorporate. This method should be extended for
      * future deciders for custom behaviour. You can also pull any details out of the file metadata here.
-     * 
+     *
      * @param returnValue
      *            The ReturnValue representing the Processing event. May have one or more files. The attributes table contains the
      *            information from FindAllTheFiles.Header.
@@ -765,7 +768,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     /**
      * use getGroupingStrategy
-     * 
+     *
      * @return
      */
     @Deprecated
@@ -779,7 +782,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     /**
      * use setGroupingStrategy
-     * 
+     *
      * @param header
      */
     @Deprecated
@@ -841,7 +844,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     /**
      * allow to user to do the final check and decide to run or cancel the decider e.g. check if all files are present
-     * 
+     *
      * @param commaSeparatedFilePaths
      * @param commaSeparatedParentAccessions
      * @return
@@ -853,7 +856,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     /**
      * Report an actual launch of a workflow for testing purpose
-     * 
+     *
      * @return false iff we don't actually want to launch
      */
     protected boolean reportLaunch() {
@@ -866,7 +869,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     /**
      * We now use the guideline that we only count failures when they occur on the same number of files (with the same paths)
-     * 
+     *
      * @param fileStatus
      * @param previousStatus
      * @return
@@ -877,7 +880,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
 
     /**
      * See https://wiki.oicr.on.ca/display/SEQWARE/BasicDecider+logic
-     * 
+     *
      * @param fileStatus
      * @param previousStatus
      * @return
@@ -913,7 +916,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     /**
      * For a given set of file SWIDs in filesToRun, we will count up the number of previous workflow runs that failed and return whether or
      * not we think the workflow should be rerun
-     * 
+     *
      * @param filesToRun
      * @param failures
      * @param previousWorkflowRuns
@@ -988,6 +991,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     }
 
     private List<ReturnValue> createListOfRelevantFilePaths() {
+
         List<ReturnValue> vals;
         List<Map<String, String>> fileProvenanceReport;
         Map<FileProvenanceParam, List<String>> map = ProvenanceUtility.convertOptionsToMap(options, metadata);

@@ -27,7 +27,7 @@
         <name>SeqWare</name>
         <url>http://seqware.github.com/</url>
     </organization>
-    
+
     <profiles>
         <profile>
             <id>clt-test</id>
@@ -36,7 +36,7 @@
             </properties>
         </profile>
     </profiles>
-    
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -112,8 +112,8 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>  
-            <version>1.10.5</version> 
+            <artifactId>mockito-core</artifactId>
+            <version>1.10.5</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -133,7 +133,7 @@
             <artifactId>powermock-api-mockito</artifactId>
             <version>1.5.6</version>
             <scope>test</scope>
-        </dependency>  
+        </dependency>
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
             <artifactId>jopt-simple</artifactId>
@@ -198,7 +198,7 @@
         <dependency>
             <groupId>net.sf.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-        </dependency> 
+        </dependency>
         <dependency>
             <artifactId>hadoop-hdfs</artifactId>
             <groupId>org.apache.hadoop</groupId>
@@ -345,6 +345,11 @@
             <version>1.4.181</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -361,7 +366,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>	
+                <configuration>
                     <excludes>
                         <exclude>**/CommandLineToolTest.java</exclude>
                     </excludes>
@@ -386,7 +391,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>         
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -400,7 +405,7 @@
                 </configuration>
             </plugin>
         </plugins>
-        
+
         <resources>
             <resource>
                 <targetPath>${basedir}/target</targetPath>

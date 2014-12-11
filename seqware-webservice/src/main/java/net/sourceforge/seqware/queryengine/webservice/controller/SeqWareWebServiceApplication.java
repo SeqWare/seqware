@@ -8,6 +8,7 @@ import net.sourceforge.seqware.webservice.resources.filters.ExperimentIDFilter;
 import net.sourceforge.seqware.webservice.resources.filters.IUSIDFilter;
 import net.sourceforge.seqware.webservice.resources.filters.LaneIDFilter;
 import net.sourceforge.seqware.webservice.resources.filters.SampleIDFilter;
+import net.sourceforge.seqware.webservice.resources.queries.EnvironmentResource;
 import net.sourceforge.seqware.webservice.resources.queries.FileProvenanceResource;
 import net.sourceforge.seqware.webservice.resources.queries.ProcessIdProcessResource;
 import net.sourceforge.seqware.webservice.resources.queries.RunWorkflowResource;
@@ -71,7 +72,6 @@ import org.restlet.data.Status;
 import org.restlet.ext.wadl.ApplicationInfo;
 import org.restlet.ext.wadl.DocumentationInfo;
 import org.restlet.ext.wadl.WadlApplication;
-import org.restlet.resource.Directory;
 import org.restlet.routing.Router;
 import org.restlet.security.ChallengeAuthenticator;
 
@@ -79,7 +79,7 @@ import org.restlet.security.ChallengeAuthenticator;
  * <p>
  * SeqWareWebServiceApplication class.
  * </p>
- * 
+ *
  * @author morgantaschuk
  * @version $Id: $Id
  */
@@ -87,7 +87,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
     /**
      * Creates a root Restlet that will receive all incoming calls.
-     * 
+     *
      * @return a {@link org.restlet.Restlet} object.
      */
     @Override
@@ -119,7 +119,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
         Restlet slashRedirect = new OptionalSlashRedirect(getContext());
 
-        // router.attach("/", new GenericDBResource(getContext()));
+        router.attachDefault(EnvironmentResource.class);
         /*
          * New version of webservices
          */
@@ -260,9 +260,9 @@ public class SeqWareWebServiceApplication extends WadlApplication {
         router.attach("/x/report/filelinkreport/{swas}", FileLinkReportResource.class);
         router.attach("/x/report/reversehierarchy/{swa}", FileReverseHierarchyDisplayResource.class);
 
-        Directory directory = new Directory(getContext(), "war:///WEB-INF/html");
-        router.attachDefault(directory);
-        router.attach("/" + version + "/static", directory);
+        // Directory directory = new Directory(getContext(), "war:///WEB-INF/html");
+        // router.attachDefault(directory);
+        // router.attach("/" + version + "/static", directory);
 
         router.attach("/processingstructure", new ProcessingStructureResource(getContext()));
         router.attach("/sample/parents", new SampleHierarchyResource(getContext()));
@@ -287,7 +287,7 @@ public class SeqWareWebServiceApplication extends WadlApplication {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override

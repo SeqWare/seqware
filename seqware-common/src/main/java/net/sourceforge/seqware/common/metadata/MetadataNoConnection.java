@@ -54,9 +54,9 @@ import org.slf4j.LoggerFactory;
  * <p>
  * MetadataNoConnection class.
  * </p>
- * 
+ *
  * @author boconnor@oicr.on.ca
- * 
+ *
  *         This Metadata object essentially does nothing. It returns null, 0, or a successful ReturnValue for all methods. This lets us do
  *         absolutely no metadata writeback with objects that expect a validate Metadata object. Keep in mind this may break code that
  *         assumes it's talking to a Database- or WebService-backed Metadata object!
@@ -89,7 +89,7 @@ public class MetadataNoConnection implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param experimentLibraryDesignId
      *            the value of experimentLibraryDesignId
      * @param experimentSpotDesignId
@@ -104,7 +104,7 @@ public class MetadataNoConnection implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param parentSampleAccession
      */
     @Override
@@ -196,7 +196,7 @@ public class MetadataNoConnection implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This maps processing_id to sw_accession for that event.
      */
     @Override
@@ -207,7 +207,7 @@ public class MetadataNoConnection implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * TODO: needs to support more relationship types, but will need to add to the SQL schema to support this
      */
     @Override
@@ -292,7 +292,7 @@ public class MetadataNoConnection implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param workflowRunAccession
      */
     @Override
@@ -306,7 +306,7 @@ public class MetadataNoConnection implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param inputFiles
      */
     @Override
@@ -345,7 +345,7 @@ public class MetadataNoConnection implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      */
     @Override
     public ReturnValue addWorkflow(String name, String version, String description, String baseCommand, String configFile,
@@ -419,7 +419,7 @@ public class MetadataNoConnection implements Metadata {
      * <p>
      * getAllStudies.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -432,7 +432,7 @@ public class MetadataNoConnection implements Metadata {
      * <p>
      * getSequencerRunReport.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     @Override
@@ -443,7 +443,7 @@ public class MetadataNoConnection implements Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param iusSWID
      */
     @Override
@@ -773,5 +773,16 @@ public class MetadataNoConnection implements Metadata {
     public List<WorkflowRun> getWorkflowRunsByStatusCmd(String statusCmd) {
         logger.info("No metadata connection");
         return null;
+    }
+
+    @Override
+    public Map<String, String> getEnvironmentReport() {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public boolean checkClientServerMatchingVersion() {
+        return false;
     }
 }

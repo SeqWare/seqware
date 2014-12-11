@@ -3,6 +3,8 @@ package io.seqware.cli;
 import com.google.common.collect.Lists;
 import com.google.common.collect.ObjectArrays;
 import com.google.common.primitives.Ints;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.seqware.Engines;
 import io.seqware.Reports;
 import io.seqware.Studies;
@@ -1923,6 +1925,7 @@ public class Main {
             out("  --help        Print help out");
             // handled in seqware script:
             out("  --version     Print Seqware's version");
+            out("  --metadata    Print metadata environment");
             out("");
         } else {
             try {
@@ -1931,6 +1934,12 @@ public class Main {
                 case "-v":
                 case "--version":
                     kill("seqware: version information is provided by the wrapper script.");
+                    break;
+                case "--metadata":
+                    Metadata md = MetadataFactory.get(ConfigTools.getSettings());
+                    Map<String, String> result = md.getEnvironmentReport();
+                    Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+                    System.out.println(gson.toJson(result));
                     break;
                 case "annotate":
                     annotate(args);
