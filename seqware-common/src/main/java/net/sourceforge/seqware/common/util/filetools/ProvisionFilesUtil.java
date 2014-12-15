@@ -345,7 +345,7 @@ public class ProvisionFilesUtil {
         if (this.inputSize != outputObj.length() && decryptCipher == null && encryptCipher == null) {
             Log.error("The output file size of " + outputObj.length() + " and the input file size of " + this.inputSize
                     + " do not match so the file provisioning failed!");
-            return (null);
+            return null;
         }
 
         return outputObj;
@@ -692,12 +692,12 @@ public class ProvisionFilesUtil {
                     secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return (null);
+                    return null;
                 }
             }
 
             if (accessKey == null || secretKey == null) {
-                return (null);
+                return null;
             }
 
             // parse out the bucket and key
@@ -806,10 +806,10 @@ public class ProvisionFilesUtil {
 
         } catch (FileNotFoundException e) {
             Log.error(e.getMessage());
-            return (null);
+            return null;
         } catch (IOException e) {
             Log.error(e.getMessage());
-            return (null);
+            return null;
         }
         return reader;
     }
@@ -867,14 +867,14 @@ public class ProvisionFilesUtil {
                 reader = new BufferedInputStream(urlConn.getInputStream(), bufLen);
             } else {
                 Log.error("getHttpInputStream doesn't know how to deal with URL: " + stringURL);
-                return (null);
+                return null;
             }
         } catch (MalformedURLException e) {
             Log.error(e.getMessage());
-            return (null);
+            return null;
         } catch (IOException e) {
             Log.error(e.getMessage());
-            return (null);
+            return null;
         }
         return reader;
     }
@@ -1019,13 +1019,13 @@ public class ProvisionFilesUtil {
                 secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
             } catch (Exception e) {
                 Log.error(e.getMessage());
-                return (null);
+                return null;
             }
         }
 
         if (accessKey == null || secretKey == null) {
             Log.error("Couldn't continue because missing S3 access key and/or secret key");
-            return (null);
+            return null;
         }
 
         return getS3InputStream(stringURL, bufLen, startPosition, accessKey, secretKey);

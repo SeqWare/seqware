@@ -412,7 +412,7 @@ public class MetadataNoConnection implements Metadata {
     /** {@inheritDoc} */
     @Override
     public WorkflowRun getWorkflowRunWithWorkflow(String workflowRunAccession) {
-        return (null);
+        return null;
     }
 
     /**
@@ -438,7 +438,7 @@ public class MetadataNoConnection implements Metadata {
     @Override
     public String getSequencerRunReport() {
         logger.info("No metadata connection");
-        return (null);
+        return null;
     }
 
     /**

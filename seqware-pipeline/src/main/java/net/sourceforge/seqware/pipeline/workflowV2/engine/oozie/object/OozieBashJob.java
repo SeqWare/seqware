@@ -105,6 +105,12 @@ public class OozieBashJob extends OozieJob {
         // store permanent copy of full output
         args.add("--gcr-permanent-storage-prefix");
         args.add("generated-scripts/" + FilenameUtils.removeExtension(jobScript.getName()));
+
+        if (!jobObj.getAnnotations().isEmpty()) {
+            File emitAnnotations = super.emitAnnotations(jobObj.getAnnotations());
+            args.add("--gcr-annotation-file");
+            args.add(emitAnnotations.getAbsolutePath());
+        }
         return args;
     }
 

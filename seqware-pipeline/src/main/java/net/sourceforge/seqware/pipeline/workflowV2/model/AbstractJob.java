@@ -2,7 +2,9 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement.Type;
 
 public class AbstractJob implements Job {
@@ -21,6 +23,7 @@ public class AbstractJob implements Job {
     private List<String> parentAccessions;
     private boolean runLocal;
     private String qsubOptions;
+    private final Map<String, String> annotations = new HashMap<>();
 
     /**
      * for bash Job
@@ -290,5 +293,13 @@ public class AbstractJob implements Job {
      */
     public void setQsubOptions(String qsubOptions) {
         this.qsubOptions = qsubOptions;
+    }
+
+    /**
+     * @return the annotations
+     */
+    @Override
+    public Map<String, String> getAnnotations() {
+        return annotations;
     }
 }

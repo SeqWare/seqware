@@ -2,14 +2,16 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * a file object which has all information for provision
- * 
+ *
  */
 public class SqwFile {
     private boolean attached = false;
@@ -18,9 +20,10 @@ public class SqwFile {
     private String outputLocation;
     private boolean input = true;
     private boolean forceCopy;
-    private String uniqueDir;
-    private List<String> parentAccessions;
+    private final String uniqueDir;
+    private final List<String> parentAccessions;
     private boolean skipIfMissing = false;
+    private final Map<String, String> processingAnnotations = new HashMap<>();
 
     public SqwFile() {
         // need to create a random directory for later reference
@@ -54,7 +57,7 @@ public class SqwFile {
 
     /**
      * is an output file?
-     * 
+     *
      * @return
      */
     public boolean isOutput() {
@@ -63,7 +66,7 @@ public class SqwFile {
 
     /**
      * is an input file?
-     * 
+     *
      * @return
      */
     public boolean isInput() {
@@ -72,7 +75,7 @@ public class SqwFile {
 
     /**
      * isInput = @param isInput isOutput = !@param isInput
-     * 
+     *
      * @param isInupt
      */
     public void setIsInput(boolean isInupt) {
@@ -81,7 +84,7 @@ public class SqwFile {
 
     /**
      * isInput = !@param isOutput isOutput = @param isOutput
-     * 
+     *
      * @param isOutput
      */
     public void setIsOutput(boolean isOutput) {
@@ -108,7 +111,7 @@ public class SqwFile {
 
     /**
      * when forceCopy is true, it will pass "--forcecopy" argument to provisionFileJob
-     * 
+     *
      * @param forceCopy
      */
     public void setForceCopy(boolean forceCopy) {
@@ -116,7 +119,7 @@ public class SqwFile {
     }
 
     /**
-     * 
+     *
      * @return the file path after provisioned.
      */
     public String getProvisionedPath() {
@@ -124,9 +127,9 @@ public class SqwFile {
     }
 
     /**
-     * return the unqiue dir associate with the file if the file type is input, the provisioned file will be output to
+     * return the unique dir associate with the file if the file type is input, the provisioned file will be output to
      * provisionfiles/uniquedir + filename
-     * 
+     *
      * @return
      */
     public String getUniqueDir() {
@@ -135,7 +138,7 @@ public class SqwFile {
 
     /**
      * set the parent accessions for provision file job
-     * 
+     *
      * @param parentAccessions
      */
     public void setParentAccessions(Collection<String> parentAccessions) {
@@ -175,5 +178,14 @@ public class SqwFile {
      */
     public void setSkipIfMissing(boolean skipIfMissing) {
         this.skipIfMissing = skipIfMissing;
+    }
+
+    /**
+     * Set arbitrary key-value annotations on jobs.
+     *
+     * @return
+     */
+    public Map<String, String> getProcessingAnnotations() {
+        return processingAnnotations;
     }
 }

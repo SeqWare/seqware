@@ -1438,7 +1438,7 @@ public class MetadataWS implements Metadata {
             String newDefaultStr = defaultStr.replaceAll("'", "");
             return newDefaultStr;
         } else if ((variable == null || "".equals(variable)) && (defaultStr == null || "".equals(defaultStr))) {
-            return (null);
+            return null;
         } else {
             String newVariable = variable.replaceAll("'", "");
             return newVariable;
@@ -1640,7 +1640,7 @@ public class MetadataWS implements Metadata {
         } catch (IOException | JAXBException ex) {
             Log.error("", ex);
         }
-        return (null);
+        return null;
     }
 
     /**

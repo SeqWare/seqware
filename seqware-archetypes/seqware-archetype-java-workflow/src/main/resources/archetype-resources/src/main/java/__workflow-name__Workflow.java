@@ -2,8 +2,6 @@
 package ${package};
 
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Job;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
@@ -42,7 +40,6 @@ public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
 	    catPath = getProperty("cat");
 	    echoPath = getProperty("echo");
 	} catch (Exception e) {
-	    e.printStackTrace();
 	    throw new RuntimeException(e);
 	}
     }
@@ -66,7 +63,6 @@ public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
         file0.setIsInput(true);
       
       } catch (Exception ex) {
-        ex.printStackTrace();
 	throw new RuntimeException(ex);
       }
       return this.getFiles();
@@ -89,6 +85,9 @@ public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
         Job copyJob1 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("3000");
         copyJob1.setCommand(catPath + " " + inputFilePath + "> test1/test.out");
         copyJob1.addParent(mkdirJob);
+	// this will annotate the processing event associated with the cat of the file above
+        copyJob1.getAnnotations().put("command.annotation.key.1", "command.annotation.value.1");
+        copyJob1.getAnnotations().put("command.annotation.key.2", "command.annotation.value.2");
         
         // a simple bash job to echo to an output file and concat an input file
 	// the file IS saved to the metadata database
@@ -97,7 +96,10 @@ public class ${workflow-name}Workflow extends AbstractWorkflowDataModel {
 	copyJob2.getCommand().addArgument(";");
 	copyJob2.getCommand().addArgument(catPath + " " +inputFilePath+ " >> dir1/output");
         copyJob2.addParent(mkdirJob);
-	copyJob2.addFile(createOutputFile("dir1/output", "txt/plain", manualOutput));        
+	SqwFile outputFile = createOutputFile("dir1/output", "txt/plain", manualOutput);
+        // this will annotate the processing event associated with copying your output file to its final location
+        outputFile.getProcessingAnnotations().put("provision.annotation.key.1", "provision.annotation.value.1");
+        copyJob2.addFile(outputFile);
 
     }
 

@@ -15,9 +15,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.crypto.Cipher;
+import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -53,6 +55,7 @@ public class ProvisionFiles extends Module {
     protected int s3MaxConnections = ClientConfiguration.DEFAULT_MAX_CONNECTIONS;
     protected int s3MaxErrorRetry = PredefinedRetryPolicies.DEFAULT_MAX_ERROR_RETRY;
     protected int s3SocketTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
+    private ArgumentAcceptingOptionSpec<String> annotationFileSpec;
 
     // FIXME: users have requested the ability to specify a single input file and
     // a single output file so they can copy and rename
@@ -66,6 +69,10 @@ public class ProvisionFiles extends Module {
     @Override
     protected OptionParser getOptionParser() {
         OptionParser parser = new OptionParser();
+        this.annotationFileSpec = parser
+                .accepts("annotation-file",
+                        "Specify this option to create annotations on the processing event that is created describing this command. ")
+                .withRequiredArg().ofType(String.class).describedAs("Optional: file_path").ofType(String.class);
         parser.acceptsAll(Arrays.asList("input-file", "i"),
                 "Required: use this or --input-file-metadata, this is the input file, multiple should be specified seperately")
                 .withRequiredArg().describedAs("input file path");
@@ -369,16 +376,11 @@ public class ProvisionFiles extends Module {
                     + fmd.getMetaType() + "\nType: " + fmd.getType());
             // handle text/key-value
             if (fmd.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
-                Map<String, String> map = FileTools.getKeyValueFromFile(fmd.getFilePath());
-                Set<ProcessingAttribute> atts = new TreeSet<>();
-                for (Map.Entry<String, String> entry : map.entrySet()) {
-                    ProcessingAttribute a = new ProcessingAttribute();
-                    a.setTag(entry.getKey());
-                    a.setValue(entry.getValue());
-                    atts.add(a);
-                }
-                this.getMetadata().annotateProcessing(this.getProcessingAccession(), atts);
+                handleAnnotations(fmd.getFilePath(), this.getProcessingAccession(), this.getMetadata());
             }
+        }
+        if (options.has(annotationFileSpec) && this.getProcessingAccession() != 0) {
+            handleAnnotations(options.valueOf(annotationFileSpec), this.getProcessingAccession(), this.getMetadata());
         }
 
         for (String input : inputs) {
@@ -428,6 +430,18 @@ public class ProvisionFiles extends Module {
 
         return ret;
 
+    }
+
+    private static void handleAnnotations(String file, int processingAccession, Metadata metadata) {
+        Map<String, String> map = FileTools.getKeyValueFromFile(file);
+        Set<ProcessingAttribute> atts = new TreeSet<>();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            ProcessingAttribute a = new ProcessingAttribute();
+            a.setTag(entry.getKey());
+            a.setValue(entry.getValue());
+            atts.add(a);
+        }
+        metadata.annotateProcessing(processingAccession, atts);
     }
 
     private ReturnValue recursivelyCopyDir(String baseDir, String[] files, String outputDir, ArrayList<FileMetadata> fileArray) {
@@ -582,7 +596,7 @@ public class ProvisionFiles extends Module {
             if (input.startsWith("http://") || input.startsWith("https://") || input.startsWith("s3://") || options.has("force-copy")
                     || options.has("recursive")) {
 
-                result = (filesUtil.copyToFile(reader, output, fullOutputPath, bufLen, input, decryptCipher, encryptCipher) != null);
+                result = filesUtil.copyToFile(reader, output, fullOutputPath, bufLen, input, decryptCipher, encryptCipher) != null;
 
             } else {
                 // If no "force-copy" and "recursive"

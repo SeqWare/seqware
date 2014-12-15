@@ -1214,7 +1214,7 @@ public class MetadataDB implements Metadata {
             });
         } catch (SQLException e) {
             logger.error("SQL Command failed: " + sql + ":" + e.getMessage());
-            return (null);
+            return null;
         }
     }
 
@@ -1512,7 +1512,7 @@ public class MetadataDB implements Metadata {
      */
     @Override
     public String getSequencerRunReport() {
-        return (null);
+        return null;
     }
 
     /**
