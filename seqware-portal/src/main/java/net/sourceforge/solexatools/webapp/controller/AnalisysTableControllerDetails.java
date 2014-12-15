@@ -62,7 +62,7 @@ public class AnalisysTableControllerDetails extends BaseCommandController {
         // Registration registration = Security.requireRegistration(request, response);
         Registration registration = Security.getRegistration(request);
         if (registration == null) {
-            return (null);
+            return null;
         }
 
         String tableSel = request.getParameter("tablesel");

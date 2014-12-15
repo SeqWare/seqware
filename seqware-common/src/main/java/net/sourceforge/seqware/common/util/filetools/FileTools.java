@@ -593,7 +593,7 @@ public class FileTools {
             return (stdout);
         } else {
             Log.error("Can't figure out the username using 'whoami' " + ret.getStderr());
-            return (null);
+            return null;
         }
     }
 

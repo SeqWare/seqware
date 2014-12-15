@@ -307,7 +307,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         } else {
             localLogger.error("sequencerRunDAOHibernate insert not authorized");
         }
-        return (null);
+        return null;
     }
 
     /**
@@ -326,7 +326,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         } else {
             localLogger.error("sequencerRunDAOHibernate insert not authorized");
         }
-        return (null);
+        return null;
     }
 
     /** {@inheritDoc} */

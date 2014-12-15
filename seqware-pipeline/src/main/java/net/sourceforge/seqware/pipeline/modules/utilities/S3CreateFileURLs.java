@@ -145,7 +145,7 @@ public class S3CreateFileURLs extends Module {
                 secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
             } catch (Exception e) {
                 e.printStackTrace();
-                return (null);
+                return null;
             }
         }
 
@@ -199,7 +199,7 @@ public class S3CreateFileURLs extends Module {
                         secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        return (null);
+                        return null;
                     }
                 }
 

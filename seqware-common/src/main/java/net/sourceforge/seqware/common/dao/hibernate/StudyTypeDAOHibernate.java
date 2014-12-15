@@ -55,7 +55,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
     @Override
     public List<StudyType> list(Registration registration) {
         if (registration == null) {
-            return (null);
+            return null;
         }
         return (list());
     }
