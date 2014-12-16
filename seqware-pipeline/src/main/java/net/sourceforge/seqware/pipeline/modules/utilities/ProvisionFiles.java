@@ -20,6 +20,7 @@ import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -381,6 +382,19 @@ public class ProvisionFiles extends Module {
         }
         if (options.has(annotationFileSpec) && this.getProcessingAccession() != 0) {
             handleAnnotations(options.valueOf(annotationFileSpec), this.getProcessingAccession(), this.getMetadata());
+
+            Map<String, String> map = FileTools.getKeyValueFromFile(options.valueOf(annotationFileSpec));
+            Set<FileAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                FileAttribute a = new FileAttribute();
+                a.setTag(entry.getKey());
+                a.setValue(entry.getValue());
+                atts.add(a);
+            }
+            // assumption is that annotation file applies to all files (normally just one with seqware-oozie)
+            for (FileMetadata fmd : fileArray) {
+                fmd.getAnnotations().addAll(atts);
+            }
         }
 
         for (String input : inputs) {

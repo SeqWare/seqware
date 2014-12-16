@@ -1296,7 +1296,9 @@ public class MetadataWS implements Metadata {
                     modelFile.setDescription(file.getDescription());
                     modelFile.setUrl(file.getUrl());
                     modelFile.setUrlLabel(file.getUrlLabel());
-                    // md5sum??
+                    modelFile.setMd5sum(file.getMd5sum());
+                    modelFile.setSize(file.getSize());
+                    modelFile.setFileAttributes(file.getAnnotations());
 
                     modelFile = ll.addFile(modelFile);
 

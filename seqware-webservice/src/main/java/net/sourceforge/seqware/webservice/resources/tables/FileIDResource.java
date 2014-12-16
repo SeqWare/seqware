@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p>
  * FileIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -75,7 +75,7 @@ public class FileIDResource extends DatabaseIDResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -100,7 +100,7 @@ public class FileIDResource extends DatabaseIDResource {
             newFile = testIfNull(newFile);
             // persist
             FileService fs = BeanFactory.getFileServiceBean();
-            File file = (File) testIfNull(fs.findByID(newFile.getFileId()));
+            File file = testIfNull(fs.findByID(newFile.getFileId()));
             file.setDescription(newFile.getDescription());
             file.setFilePath(newFile.getFilePath());
             file.setFileType(newFile.getFileType());
@@ -126,7 +126,7 @@ public class FileIDResource extends DatabaseIDResource {
             Set<FileAttribute> newAttributes = newFile.getFileAttributes();
             if (newAttributes != null) {
                 // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                this.mergeAttributes(file.getFileAttributes(), newAttributes, file);
+                FileIDResource.mergeAttributes(file.getFileAttributes(), newAttributes, file);
             }
 
             fs.update(registration, file);

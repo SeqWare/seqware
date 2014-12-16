@@ -23,7 +23,7 @@ public class SqwFile {
     private final String uniqueDir;
     private final List<String> parentAccessions;
     private boolean skipIfMissing = false;
-    private final Map<String, String> processingAnnotations = new HashMap<>();
+    private final Map<String, String> annotations = new HashMap<>();
 
     public SqwFile() {
         // need to create a random directory for later reference
@@ -181,11 +181,11 @@ public class SqwFile {
     }
 
     /**
-     * Set arbitrary key-value annotations on jobs.
+     * Set arbitrary key-value annotations on provisioned files.
      *
      * @return
      */
-    public Map<String, String> getProcessingAnnotations() {
-        return processingAnnotations;
+    public Map<String, String> getAnnotations() {
+        return annotations;
     }
 }

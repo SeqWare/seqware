@@ -102,7 +102,7 @@ public class DeveloperPhase1 {
                 readLines.remove(i);
                 readLines.add(i,
                         "\nJob dateJob = this.getWorkflow().createBashJob(\"bash_date\");\ndateJob.setCommand(\"date >> dir1/output\");"
-                                + "\ndateJob.addParent(copyJob2);\ndateJob.addFile(outputFile)); ");
+                                + "\ndateJob.addParent(copyJob2);\ndateJob.addFile(outputFile); ");
                 linesAdded = true;
             }
         }

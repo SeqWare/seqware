@@ -119,8 +119,8 @@ public class OozieProvisionFileJob extends OozieJob {
             args.add("--force-copy");
         }
 
-        if (!file.getProcessingAnnotations().isEmpty()) {
-            File emitAnnotations = super.emitAnnotations(file.getProcessingAnnotations());
+        if (!file.getAnnotations().isEmpty()) {
+            File emitAnnotations = super.emitAnnotations(file.getAnnotations());
             args.add("--annotation-file");
             args.add(emitAnnotations.getAbsolutePath());
         }

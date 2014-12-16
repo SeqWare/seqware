@@ -16,13 +16,16 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
+import com.google.common.collect.Sets;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.lists.FileList;
 import net.sourceforge.seqware.common.util.Log;
@@ -40,7 +43,7 @@ import org.xml.sax.SAXException;
  * <p>
  * FileResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -59,7 +62,7 @@ public class FileResource extends DatabaseResource {
      * <p>
      * getXml.
      * </p>
-     * 
+     *
      * @throws java.io.IOException
      *             if any.
      */
@@ -102,7 +105,7 @@ public class FileResource extends DatabaseResource {
      * <p>
      * postJaxb.
      * </p>
-     * 
+     *
      * @param entity
      *            a {@link org.restlet.representation.Representation} object.
      */
@@ -132,10 +135,22 @@ public class FileResource extends DatabaseResource {
             }
             // persist p
             FileService fileService = BeanFactory.getFileServiceBean();
+            // attributes seem to screw this up, so remove them and add them afterwards
+            // and yes, this is a total hack
+            Set<FileAttribute> fileAttributes = Sets.newTreeSet();
+            fileAttributes.addAll(p.getFileAttributes());
+            p.getFileAttributes().clear();
             fileService.insert(registration, p);
-            File file = (File) testIfNull(fileService.findByPath(p.getFilePath()));
+            File file = testIfNull(fileService.findByPath(p.getFilePath()));
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             File detachedFile = copier.hibernate2dto(File.class, file);
+
+            // this is incredibly sad
+            if (fileAttributes.size() > 0) {
+                File newFile = testIfNull(fileService.findByID(detachedFile.getFileId()));
+                DatabaseIDResource.mergeAttributes(newFile.getFileAttributes(), fileAttributes, file);
+                fileService.update(registration, newFile);
+            }
 
             Document line = XmlTools.marshalToDocument(jo, detachedFile);
             getResponse().setEntity(XmlTools.getRepresentation(line));
