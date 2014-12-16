@@ -267,11 +267,15 @@ dateJob is now the final job that manipulates the dir1/output file.
         copyJob2.getCommand().addArgument(";");
         copyJob2.getCommand().addArgument(catPath + " " +inputFilePath+ " >> dir1/output");
         copyJob2.addParent(mkdirJob);
+        SqwFile outputFile = createOutputFile("dir1/output", "txt/plain", manualOutput);
+        // this will annotate the processing event associated with copying your output file to its final location
+        outputFile.getProcessingAnnotations().put("provision.annotation.key.1", "provision.annotation.value.1");
+
 
 	Job dateJob = this.getWorkflow().createBashJob("date");
 	dateJob.setCommand("date >> dir1/output");
 	dateJob.addParent(copyJob2);
-        dateJob.addFile(createOutputFile("dir1/output", "txt/plain", manualOutput));
+        dateJob.addFile(outputFile);
     }
 
 </code>
