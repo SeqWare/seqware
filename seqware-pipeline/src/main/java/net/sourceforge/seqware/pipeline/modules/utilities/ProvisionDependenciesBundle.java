@@ -129,7 +129,7 @@ public class ProvisionDependenciesBundle extends Module {
             }
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -159,10 +159,10 @@ public class ProvisionDependenciesBundle extends Module {
         if (FileTools.dirPathExistsAndWritable(output).getExitStatus() != ReturnValue.SUCCESS) {
             ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
             ret.setStderr("Can't write to output directory " + options.valueOf("output-dir"));
-            return (ret);
+            return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -203,14 +203,14 @@ public class ProvisionDependenciesBundle extends Module {
                 } catch (Exception e) {
                     ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
                     ret.setProcessExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-                    return (ret);
+                    return ret;
                 }
             }
 
             if (accessKey == null || secretKey == null) {
                 ret.setExitStatus(ReturnValue.ENVVARNOTFOUND);
                 ret.setProcessExitStatus(ReturnValue.ENVVARNOTFOUND);
-                return (ret);
+                return ret;
             }
 
             // now get this from S3
@@ -329,7 +329,7 @@ public class ProvisionDependenciesBundle extends Module {
             ret.setExitStatus(ReturnValue.RUNTIMEEXCEPTION);
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -343,6 +343,6 @@ public class ProvisionDependenciesBundle extends Module {
         // TODO: should use a MANIFEST to ensure all files are there
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 }

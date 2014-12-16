@@ -481,7 +481,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         } else {
             localLogger.error("LaneDAOHibernate insert not authorized");
         }
-        return (null);
+        return null;
     }
 
     /** {@inheritDoc} */

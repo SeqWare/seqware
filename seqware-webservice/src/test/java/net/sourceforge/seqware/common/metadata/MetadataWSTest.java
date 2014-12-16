@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.common.metadata;
 
+import com.google.common.collect.Lists;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
@@ -33,6 +34,7 @@ import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.File;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Sample;
@@ -40,6 +42,7 @@ import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
@@ -55,7 +58,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author mtaschuk
  */
 public class MetadataWSTest {
@@ -141,18 +144,18 @@ public class MetadataWSTest {
         // check out the values of some long values
         for (WorkflowParam param : workflowParams) {
             switch (param.getKey()) {
-                case "bam_inputs":
-                    Assert.assertTrue(
-                            "bam_inputs invalid",
-                            param.getDefaultValue()
-                                    .equals("${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022P.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022R.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022X.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022C.val.bam"));
-                    break;
-                case "chr_sizes":
-                    Assert.assertTrue(
-                            "chr_sizes invalid",
-                            param.getDefaultValue()
-                                    .equals("chr1:249250621,chr2:243199373,chr3:198022430,chr4:191154276,chr5:180915260,chr6:171115067,chr7:159138663,chr8:146364022,chr9:141213431,chr10:135534747,chr11:135006516,chr12:133851895,chr13:115169878,chr14:107349540,chr15:102531392,chr16:90354753,chr17:81195210,chr18:78077248,chr19:59128983,chr20:63025520,chr21:48129895,chr22:51304566,chrX:155270560,chrY:59373566,chrM:16571"));
-                    break;
+            case "bam_inputs":
+                Assert.assertTrue(
+                        "bam_inputs invalid",
+                        param.getDefaultValue()
+                                .equals("${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022P.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022R.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022X.val.bam,${workflow_bundle_dir}/GATKRecalibrationAndVariantCalling/1.x.x/data/test/PCSI0022C.val.bam"));
+                break;
+            case "chr_sizes":
+                Assert.assertTrue(
+                        "chr_sizes invalid",
+                        param.getDefaultValue()
+                                .equals("chr1:249250621,chr2:243199373,chr3:198022430,chr4:191154276,chr5:180915260,chr6:171115067,chr7:159138663,chr8:146364022,chr9:141213431,chr10:135534747,chr11:135006516,chr12:133851895,chr13:115169878,chr14:107349540,chr15:102531392,chr16:90354753,chr17:81195210,chr18:78077248,chr19:59128983,chr20:63025520,chr21:48129895,chr22:51304566,chrX:155270560,chrY:59373566,chrM:16571"));
+                break;
             }
         }
     }
@@ -196,13 +199,13 @@ public class MetadataWSTest {
         // check out the values of some suspicious values
         for (WorkflowParam param : workflowParams) {
             switch (param.getKey()) {
-                case "colorspace":
-                    Assert.assertTrue("colorspace invalid", param.getDefaultValue().equals("0"));
-                    break;
-                case "novoalign_r1_adapter_trim":
-                    Assert.assertTrue("novoalign_r1_adapter_trim invalid",
-                            param.getDefaultValue().equals("-a AGATCGGAAGAGCGGTTCAGCAGGAATGCCGAGACCG"));
-                    break;
+            case "colorspace":
+                Assert.assertTrue("colorspace invalid", param.getDefaultValue().equals("0"));
+                break;
+            case "novoalign_r1_adapter_trim":
+                Assert.assertTrue("novoalign_r1_adapter_trim invalid",
+                        param.getDefaultValue().equals("-a AGATCGGAAGAGCGGTTCAGCAGGAATGCCGAGACCG"));
+                break;
             }
         }
 
@@ -406,7 +409,7 @@ public class MetadataWSTest {
 
     /**
      * Test of linkWorkflowRunAndParent method, of class MetadataWS.
-     * 
+     *
      * @throws java.lang.Exception
      */
     // @Test
@@ -463,6 +466,14 @@ public class MetadataWSTest {
         retval.setAlgorithm("algo testUpdate_processing_event()");
         retval.setParameters("parameters testUpdate_processing_event()");
         retval.setProcessExitStatus(ReturnValue.DBCOULDNOTDISCONNECT);
+        // this is awful, but it looks like this is the mechanism that Runner uses to populate files with the ProvisionFiles module
+        FileMetadata data = new FileMetadata();
+        data.setFilePath("path of righteousness");
+        FileAttribute attribute = new FileAttribute();
+        attribute.setTag("funky_tag");
+        attribute.setValue("funky_value");
+        data.getAnnotations().add(attribute);
+        retval.setFiles(Lists.newArrayList(data));
         int expResult = ReturnValue.SUCCESS;
         ReturnValue result = instance.update_processing_event(processingID, retval);
         Assert.assertEquals(expResult, result.getExitStatus());
@@ -613,7 +624,7 @@ public class MetadataWSTest {
      * pf.processing_id=pp.processing_id AND (pp.ancestor_workflow_run_id=wr.workflow_run_id OR pp.workflow_run_id=wr.workflow_run_id) AND
      * wr.workflow_run_id=iwr.workflow_run_id AND iwr.ius_id = i.ius_id AND iwr2.ius_id = i.ius_id AND wr2.workflow_run_id =
      * iwr2.workflow_run_id ORDER BY f.sw_accession;
-     * 
+     *
      * select f.sw_accession, wr.workflow_run_id, wr.sw_accession, wr2.workflow_run_id, wr2.sw_accession from File f, Processing_files pf,
      * Processing pp, Workflow_Run wr, lane_workflow_runs iwr, lane i, lane_workflow_runs iwr2, workflow_run wr2 WHERE f.file_id=pf.file_id
      * AND pf.processing_id=pp.processing_id AND (pp.ancestor_workflow_run_id=wr.workflow_run_id OR pp.workflow_run_id=wr.workflow_run_id)

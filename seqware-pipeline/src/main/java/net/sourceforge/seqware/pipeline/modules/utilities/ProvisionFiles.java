@@ -15,9 +15,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.crypto.Cipher;
+import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -30,14 +33,14 @@ import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * 
+ *
  * Purpose:
- * 
+ *
  * This module takes one or more inputs (S3 URL, HTTP/HTTPS URL, or local file path) and copies the file to the specified output (S3 bucket
  * URL, HTTP/HTTPS URL, or local directory path). For S3 this bundle supports large, multipart file upload which is needed for files >2G.
- * 
+ *
  * FIXME: needs to return errors on failures/exceptions
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -47,13 +50,13 @@ public class ProvisionFiles extends Module {
     protected OptionSet options = null;
     protected String algorithmName = "ProvisionFiles";
     private final ProvisionFilesUtil filesUtil = new ProvisionFilesUtil();
-    private static final String DATA_ENCRYPTION_ALGORITHM = "DESede";
 
     // S3 specific options
     protected int s3ConnectionTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
     protected int s3MaxConnections = ClientConfiguration.DEFAULT_MAX_CONNECTIONS;
     protected int s3MaxErrorRetry = PredefinedRetryPolicies.DEFAULT_MAX_ERROR_RETRY;
     protected int s3SocketTimeout = ClientConfiguration.DEFAULT_SOCKET_TIMEOUT;
+    private ArgumentAcceptingOptionSpec<String> annotationFileSpec;
 
     // FIXME: users have requested the ability to specify a single input file and
     // a single output file so they can copy and rename
@@ -61,12 +64,16 @@ public class ProvisionFiles extends Module {
      * <p>
      * getOptionParser.
      * </p>
-     * 
+     *
      * @return a {@link joptsimple.OptionParser} object.
      */
     @Override
     protected OptionParser getOptionParser() {
         OptionParser parser = new OptionParser();
+        this.annotationFileSpec = parser
+                .accepts("annotation-file",
+                        "Specify this option to create annotations on the processing event that is created describing this command. ")
+                .withRequiredArg().ofType(String.class).describedAs("Optional: file_path").ofType(String.class);
         parser.acceptsAll(Arrays.asList("input-file", "i"),
                 "Required: use this or --input-file-metadata, this is the input file, multiple should be specified seperately")
                 .withRequiredArg().describedAs("input file path");
@@ -131,7 +138,7 @@ public class ProvisionFiles extends Module {
      * <p>
      * get_syntax.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     @Override
@@ -149,9 +156,9 @@ public class ProvisionFiles extends Module {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Things to check: * FIXME
-     * 
+     *
      * @return
      */
     @Override
@@ -161,7 +168,7 @@ public class ProvisionFiles extends Module {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -232,12 +239,12 @@ public class ProvisionFiles extends Module {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -295,7 +302,7 @@ public class ProvisionFiles extends Module {
             if (FileTools.dirPathExistsAndWritable(output).getExitStatus() != ReturnValue.SUCCESS) {
                 ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
                 ret.setStderr("Can't write to output directory " + options.valueOf("output-dir"));
-                return (ret);
+                return ret;
             }
         }
 
@@ -312,16 +319,16 @@ public class ProvisionFiles extends Module {
             if (FileTools.dirPathExistsAndWritable(output).getExitStatus() != ReturnValue.SUCCESS) {
                 ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
                 ret.setStderr("Can't write to output directory for file " + options.valueOf("output-file"));
-                return (ret);
+                return ret;
             }
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -370,15 +377,23 @@ public class ProvisionFiles extends Module {
                     + fmd.getMetaType() + "\nType: " + fmd.getType());
             // handle text/key-value
             if (fmd.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
-                Map<String, String> map = FileTools.getKeyValueFromFile(fmd.getFilePath());
-                Set<ProcessingAttribute> atts = new TreeSet<>();
-                for (Map.Entry<String, String> entry : map.entrySet()) {
-                    ProcessingAttribute a = new ProcessingAttribute();
-                    a.setTag(entry.getKey());
-                    a.setValue(entry.getValue());
-                    atts.add(a);
-                }
-                this.getMetadata().annotateProcessing(this.getProcessingAccession(), atts);
+                handleAnnotations(fmd.getFilePath(), this.getProcessingAccession(), this.getMetadata());
+            }
+        }
+        if (options.has(annotationFileSpec) && this.getProcessingAccession() != 0) {
+            handleAnnotations(options.valueOf(annotationFileSpec), this.getProcessingAccession(), this.getMetadata());
+
+            Map<String, String> map = FileTools.getKeyValueFromFile(options.valueOf(annotationFileSpec));
+            Set<FileAttribute> atts = new TreeSet<>();
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                FileAttribute a = new FileAttribute();
+                a.setTag(entry.getKey());
+                a.setValue(entry.getValue());
+                atts.add(a);
+            }
+            // assumption is that annotation file applies to all files (normally just one with seqware-oozie)
+            for (FileMetadata fmd : fileArray) {
+                fmd.getAnnotations().addAll(atts);
             }
         }
 
@@ -404,7 +419,7 @@ public class ProvisionFiles extends Module {
                 if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
                     Log.error("Failed to copy file");
                     ret.setExitStatus(ReturnValue.FAILURE);
-                    return (ret);
+                    return ret;
                 }
             } else if ((options.valuesOf("input-file").isEmpty() && options.valuesOf("input-file-metadata").size() == 1)
                     && options.has("input-file-metadata") && options.valuesOf("output-file").size() == 1) { // then this is a single file to
@@ -412,13 +427,13 @@ public class ProvisionFiles extends Module {
                 if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
                     Log.error("Failed to copy file");
                     ret.setExitStatus(ReturnValue.FAILURE);
-                    return (ret);
+                    return ret;
                 }
             } else if (options.has("output-dir")) { // then this is just a normal file copy
                 if (!provisionFile(input, (String) options.valueOf("output-dir"), skipIfMissing, fileArray, false)) {
                     Log.error("Failed to copy file to dir");
                     ret.setExitStatus(ReturnValue.FAILURE);
-                    return (ret);
+                    return ret;
                 }
             }
         }
@@ -427,8 +442,20 @@ public class ProvisionFiles extends Module {
             fileArray.clear();
         }
 
-        return (ret);
+        return ret;
 
+    }
+
+    private static void handleAnnotations(String file, int processingAccession, Metadata metadata) {
+        Map<String, String> map = FileTools.getKeyValueFromFile(file);
+        Set<ProcessingAttribute> atts = new TreeSet<>();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            ProcessingAttribute a = new ProcessingAttribute();
+            a.setTag(entry.getKey());
+            a.setValue(entry.getValue());
+            atts.add(a);
+        }
+        metadata.annotateProcessing(processingAccession, atts);
     }
 
     private ReturnValue recursivelyCopyDir(String baseDir, String[] files, String outputDir, ArrayList<FileMetadata> fileArray) {
@@ -463,27 +490,28 @@ public class ProvisionFiles extends Module {
                         outputDir + "/" + additionalPath.substring(0, additionalPath.length() - file.length()), skipIfMissing, fileArray,
                         false)) {
                     ret.setExitStatus(ReturnValue.FAILURE);
-                    return (ret);
+                    return ret;
                 }
             }
         }
-        return (ret);
+        return ret;
     }
 
     /**
      * <p>
      * provisionFile.
      * </p>
-     * 
+     *
      * @param input
-     *            a {@link java.lang.String} object.
+     *            original path to the file, a file path if local, otherwise a http path or s3 path
      * @param output
-     *            a {@link java.lang.String} object.
+     *            path to the destination, a file path if local, otherwise a http path or s3 path
      * @param skipIfMissing
-     *            a boolean.
+     *            skip missing files with only a warning
      * @param fileArray
-     *            a {@link java.util.ArrayList} object.
+     *            metadata about the file (files) to be copied
      * @param fullOutputPath
+     *            the full output path overrides any concatenation of variables
      * @return a boolean.
      */
     protected boolean provisionFile(String input, String output, boolean skipIfMissing, ArrayList<FileMetadata> fileArray,
@@ -510,28 +538,28 @@ public class ProvisionFiles extends Module {
         // just skip this if this option is set
         if (reader == null && skipIfMissing) {
             Log.warn("File does not exist: " + input + ". Skipping...");
-            return (true);
+            return true;
         } else if (reader == null) {
             Log.error("File does not exist: " + input);
             Log.error("To proceed, run ProvisionFile again with --skip-if-missing");
             return false;
         }
-        return (putDestination(reader, output, bufLen, input, fileArray, fullOutputPath));
+        return putDestination(reader, output, bufLen, input, fileArray, fullOutputPath);
 
     }
 
     /**
      * HTTP writeback currently not supported S3 uses multi-part upload which should deal with failed uploads (maybe) I'm not really dealing
      * with failed upload recovery here... Keep in mind only the writeout to local file will attempt to recover from failed reader
-     * 
+     *
      * @param output
-     *            a {@link java.lang.String} object.
+     *            where the file should be copied to
      * @param reader
-     *            a {@link java.io.BufferedInputStream} object.
+     *            a reader open to the file that needs to be copied
      * @param bufLen
-     *            a int.
+     *            passed right through to filesUtil
      * @param input
-     *            a {@link java.lang.String} object.
+     *            where the file is copied from
      * @param fileArray
      *            a {@link java.util.ArrayList} object.
      * @param fullOutputPath
@@ -571,9 +599,9 @@ public class ProvisionFiles extends Module {
 
         }/**
          * else if (output.startsWith("hdfs://")) {
-         * 
+         *
          * // put to S3 result = filesUtil.putToHDFS(reader, output, fullOutputPath, decryptCipher, encryptCipher);
-         * 
+         *
          * }
          */
         else {
@@ -582,7 +610,7 @@ public class ProvisionFiles extends Module {
             if (input.startsWith("http://") || input.startsWith("https://") || input.startsWith("s3://") || options.has("force-copy")
                     || options.has("recursive")) {
 
-                result = (filesUtil.copyToFile(reader, output, fullOutputPath, bufLen, input, decryptCipher, encryptCipher) != null);
+                result = filesUtil.copyToFile(reader, output, fullOutputPath, bufLen, input, decryptCipher, encryptCipher) != null;
 
             } else {
                 // If no "force-copy" and "recursive"
@@ -603,14 +631,14 @@ public class ProvisionFiles extends Module {
             return false;
         }
 
-        return (result);
+        return result;
     }
 
     /**
      * <p>
      * getDecryptCipher.
      * </p>
-     * 
+     *
      * @return a {@link javax.crypto.Cipher} object.
      */
     protected Cipher getDecryptCipher() {
@@ -625,14 +653,14 @@ public class ProvisionFiles extends Module {
                 return null;
             }
         }
-        return (null);
+        return null;
     }
 
     /**
      * <p>
      * getEncryptCipher.
      * </p>
-     * 
+     *
      * @return a {@link javax.crypto.Cipher} object.
      */
     protected Cipher getEncryptCipher() {
@@ -647,12 +675,12 @@ public class ProvisionFiles extends Module {
                 return null;
             }
         }
-        return (null);
+        return null;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -660,6 +688,6 @@ public class ProvisionFiles extends Module {
         // TODO: should verify output, especially is they are local files!
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 }

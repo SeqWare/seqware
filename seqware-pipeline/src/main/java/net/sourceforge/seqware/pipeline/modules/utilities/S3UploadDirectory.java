@@ -95,7 +95,7 @@ public class S3UploadDirectory extends Module {
             }
         }
 
-        return (ret);
+        return ret;
     }
 
     @Override
@@ -104,7 +104,7 @@ public class S3UploadDirectory extends Module {
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
 
-        return (ret);
+        return ret;
     }
 
     @Override
@@ -138,7 +138,7 @@ public class S3UploadDirectory extends Module {
         ret = recursivelyUploadDir(options.valueOf("input-dir").toString(), options.valueOf("output-bucket").toString(),
                 options.valueOf("output-prefix").toString(), tx);
 
-        return (ret);
+        return ret;
 
     }
 
@@ -174,7 +174,7 @@ public class S3UploadDirectory extends Module {
             }
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -183,6 +183,6 @@ public class S3UploadDirectory extends Module {
         // TODO: should verify output, especially is they are local files!
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 }

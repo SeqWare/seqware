@@ -20,20 +20,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Assert;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
-
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * Build and install a bundle, used by both the User tutorial and the Developer tutorial
- * 
+ *
  * @author dyuen
  */
 public class DeveloperPhase1 {
@@ -100,12 +98,11 @@ public class DeveloperPhase1 {
         // edit lines to match tutorial changes
         boolean linesAdded = false;
         for (int i = 0; i < readLines.size(); i++) {
-            if (readLines.get(i).contains("copyJob2.addFile(createOutputFile(\"dir1/output\", \"txt/plain\", manualOutput));")) {
+            if (readLines.get(i).contains("copyJob2.addFile(outputFile);")) {
                 readLines.remove(i);
-                readLines
-                        .add(i,
-                                "\nJob dateJob = this.getWorkflow().createBashJob(\"bash_date\");\ndateJob.setCommand(\"date >> dir1/output\");"
-                                        + "\ndateJob.addParent(copyJob2);\ndateJob.addFile(createOutputFile(\"dir1/output\", \"txt/plain\", manualOutput)); ");
+                readLines.add(i,
+                        "\nJob dateJob = this.getWorkflow().createBashJob(\"bash_date\");\ndateJob.setCommand(\"date >> dir1/output\");"
+                                + "\ndateJob.addParent(copyJob2);\ndateJob.addFile(outputFile); ");
                 linesAdded = true;
             }
         }

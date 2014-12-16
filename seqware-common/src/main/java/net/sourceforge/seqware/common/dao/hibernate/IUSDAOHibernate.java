@@ -345,7 +345,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
         } else {
             logger.error("IUSDAOHibernate insert not authorized");
         }
-        return (null);
+        return null;
     }
 
     /** {@inheritDoc} */

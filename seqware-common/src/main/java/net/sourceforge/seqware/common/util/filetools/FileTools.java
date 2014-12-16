@@ -108,7 +108,7 @@ public class FileTools {
         if (!file.isDirectory() || !file.canRead() || !file.canWrite() || !file.exists()) {
             ret.setExitStatus(ReturnValue.DIRECTORYNOTWRITABLE);
         }
-        return (ret);
+        return ret;
     }
 
     /**
@@ -127,7 +127,7 @@ public class FileTools {
         if (!file.isDirectory() || !file.canRead() || !file.exists()) {
             ret.setExitStatus(ReturnValue.DIRECTORYNOTREADABLE);
         }
-        return (ret);
+        return ret;
     }
 
     /**
@@ -155,7 +155,7 @@ public class FileTools {
             ret.setExitStatus(ReturnValue.FILENOTREADABLE);
         }
 
-        return (ret);
+        return ret;
     }
 
     // FIXME: Instead of calling this function, we should call verifyFile, so that
@@ -593,7 +593,7 @@ public class FileTools {
             return (stdout);
         } else {
             Log.error("Can't figure out the username using 'whoami' " + ret.getStderr());
-            return (null);
+            return null;
         }
     }
 

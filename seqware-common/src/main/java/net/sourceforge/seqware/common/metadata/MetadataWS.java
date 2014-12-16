@@ -293,7 +293,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -363,7 +363,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -483,7 +483,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     // FIXME: might actually need to turn off libraryStrategy et al.
@@ -539,7 +539,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     @Override
@@ -575,7 +575,7 @@ public class MetadataWS implements Metadata {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     @Override
@@ -1296,7 +1296,9 @@ public class MetadataWS implements Metadata {
                     modelFile.setDescription(file.getDescription());
                     modelFile.setUrl(file.getUrl());
                     modelFile.setUrlLabel(file.getUrlLabel());
-                    // md5sum??
+                    modelFile.setMd5sum(file.getMd5sum());
+                    modelFile.setSize(file.getSize());
+                    modelFile.setFileAttributes(file.getAnnotations());
 
                     modelFile = ll.addFile(modelFile);
 
@@ -1438,7 +1440,7 @@ public class MetadataWS implements Metadata {
             String newDefaultStr = defaultStr.replaceAll("'", "");
             return newDefaultStr;
         } else if ((variable == null || "".equals(variable)) && (defaultStr == null || "".equals(defaultStr))) {
-            return (null);
+            return null;
         } else {
             String newVariable = variable.replaceAll("'", "");
             return newVariable;
@@ -1640,7 +1642,7 @@ public class MetadataWS implements Metadata {
         } catch (IOException | JAXBException ex) {
             Log.error("", ex);
         }
-        return (null);
+        return null;
     }
 
     /**

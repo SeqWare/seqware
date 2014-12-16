@@ -464,7 +464,13 @@ public class MetadataInMemory implements Metadata {
 
     @Override
     public void annotateProcessing(int processingSWID, Set<ProcessingAttribute> atts) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Processing p = (Processing) MetadataInMemory.getStore().get(processingSWID, Processing.class);
+        for (ProcessingAttribute attr : atts) {
+            attr.setProcessingAttributeId(getNextSwAccession());
+            MetadataInMemory.getStore().put(attr.getProcessingAttributeId(), ProcessingAttribute.class, attr);
+            p.getProcessingAttributes().add(attr);
+        }
+
     }
 
     @Override

@@ -2,7 +2,9 @@ package net.sourceforge.seqware.pipeline.workflowV2.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.sourceforge.seqware.pipeline.workflowV2.model.Requirement.Type;
 
 public class AbstractJob implements Job {
@@ -21,10 +23,11 @@ public class AbstractJob implements Job {
     private List<String> parentAccessions;
     private boolean runLocal;
     private String qsubOptions;
+    private final Map<String, String> annotations = new HashMap<>();
 
     /**
      * for bash Job
-     * 
+     *
      * @param algo
      */
     public AbstractJob(String algo) {
@@ -34,7 +37,8 @@ public class AbstractJob implements Job {
 
     /**
      * for Java/Perl/JavaModule job
-     * 
+     *
+     * @param algo
      * @param mainclass
      * @param cp
      */
@@ -68,7 +72,7 @@ public class AbstractJob implements Job {
     }
 
     /**
-     * 
+     *
      * @return a job command object
      */
     @Override
@@ -78,7 +82,7 @@ public class AbstractJob implements Job {
 
     /**
      * This should only be called from the back-end and should not be called by workflow developers.
-     * 
+     *
      * @return all the files for this job
      */
     public Collection<SqwFile> getFiles() {
@@ -99,7 +103,7 @@ public class AbstractJob implements Job {
 
     /**
      * add all parent jobs
-     * 
+     *
      * @return
      */
     @Override
@@ -109,7 +113,7 @@ public class AbstractJob implements Job {
 
     /**
      * set parent jobs
-     * 
+     *
      * @param parents
      */
     public void setParents(Collection<Job> parents) {
@@ -118,7 +122,7 @@ public class AbstractJob implements Job {
 
     /**
      * add a parent
-     * 
+     *
      * @param parent
      */
     public void addParent(AbstractJob parent) {
@@ -127,7 +131,7 @@ public class AbstractJob implements Job {
 
     /**
      * get the job algorithm
-     * 
+     *
      * @return
      */
     public String getAlgo() {
@@ -136,7 +140,7 @@ public class AbstractJob implements Job {
 
     /**
      * set the job algorithm
-     * 
+     *
      * @param algo
      */
     public void setAlgo(String algo) {
@@ -145,7 +149,7 @@ public class AbstractJob implements Job {
 
     /**
      * get job requirements
-     * 
+     *
      * @return
      */
     public Collection<Requirement> getRequirements() {
@@ -184,7 +188,7 @@ public class AbstractJob implements Job {
 
     /**
      * return the main class for a Java job, or the script.pl for a perl Job
-     * 
+     *
      * @return
      */
     public String getMainClass() {
@@ -284,10 +288,18 @@ public class AbstractJob implements Job {
 
     /**
      * Allows specifying options to qsub. When provided, options using queue, maxMem, and threads will not be generated.
-     * 
+     *
      * @param qsubOptions
      */
     public void setQsubOptions(String qsubOptions) {
         this.qsubOptions = qsubOptions;
+    }
+
+    /**
+     * @return the annotations
+     */
+    @Override
+    public Map<String, String> getAnnotations() {
+        return annotations;
     }
 }

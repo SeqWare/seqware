@@ -99,7 +99,7 @@ public class Bundle {
 
         if (bundle == null || !bundle.exists()) {
             Log.error("ERROR: Bundle is null or doesn't exist! The bundle must be either a zip file or a directory structure.");
-            return (null);
+            return null;
         }
 
         BundleInfo bi = new BundleInfo();

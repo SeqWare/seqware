@@ -35,7 +35,7 @@ public class LibrarySourceDAOHibernate extends HibernateDaoSupport implements Li
     @Override
     public List<LibrarySource> list(Registration registration) {
         if (registration == null) {
-            return (null);
+            return null;
         }
         return (list());
     }

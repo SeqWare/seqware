@@ -110,7 +110,7 @@ public class S3CreateFileURLs extends Module {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -145,23 +145,23 @@ public class S3CreateFileURLs extends Module {
                 secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
             } catch (Exception e) {
                 e.printStackTrace();
-                return (null);
+                return null;
             }
         }
 
         if (accessKey == null || "".equals(accessKey) || secretKey == null || "".equals(secretKey)) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
-            return (ret);
+            return ret;
         }
 
         if (Long.parseLong((String) options.valueOf("lifetime")) < 1) {
             ret.setStderr("ERROR: You must specify a lifetime >= 1 (minute).");
             ret.setExitStatus(ReturnValue.INVALIDARGUMENT);
-            return (ret);
+            return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -199,14 +199,14 @@ public class S3CreateFileURLs extends Module {
                         secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        return (null);
+                        return null;
                     }
                 }
 
                 if (accessKey == null || secretKey == null) {
                     ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                     ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
-                    return (ret);
+                    return ret;
                 }
 
                 // now get this from S3
@@ -250,16 +250,16 @@ public class S3CreateFileURLs extends Module {
                 } else {
                     ret.setExitStatus(ReturnValue.FAILURE);
                     ret.setStderr("Problems connecting to S3");
-                    return (ret);
+                    return ret;
                 }
             } else {
                 ret.setExitStatus(ReturnValue.FAILURE);
                 ret.setStderr("You need to provide URLs that conform to the standard s3://<bucket>/<path>/<file>");
-                return (ret);
+                return ret;
             }
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -281,7 +281,7 @@ public class S3CreateFileURLs extends Module {
         // TODO: should verify output, especially is they are local files!
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 
     /**
@@ -297,7 +297,7 @@ public class S3CreateFileURLs extends Module {
         ret.setReturnValue(ReturnValue.SUCCESS);
         Logger logger = Logger.getLogger("com.amazonaws");
         logger.setLevel(Level.SEVERE);
-        return (ret);
+        return ret;
     }
 
     /**
@@ -311,7 +311,7 @@ public class S3CreateFileURLs extends Module {
     public ReturnValue clean_up() {
         ReturnValue ret = new ReturnValue();
         ret.setReturnValue(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 
 }

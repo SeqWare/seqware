@@ -13,7 +13,7 @@ public class OozieProvisionFileJob extends OozieJob {
 
     private String metadataOutputPrefix;
     private String outputDir;
-    private SqwFile file;
+    private final SqwFile file;
 
     public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
             String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
@@ -117,6 +117,12 @@ public class OozieProvisionFileJob extends OozieJob {
 
         if (file.isForceCopy()) {
             args.add("--force-copy");
+        }
+
+        if (!file.getAnnotations().isEmpty()) {
+            File emitAnnotations = super.emitAnnotations(file.getAnnotations());
+            args.add("--annotation-file");
+            args.add(emitAnnotations.getAbsolutePath());
         }
 
         return args;

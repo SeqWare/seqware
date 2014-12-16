@@ -3,15 +3,16 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 import com.google.common.collect.Lists;
 import io.seqware.pipeline.SqwKeys;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -87,7 +88,10 @@ public abstract class OozieJob {
         }
 
         if (!scriptsDir.exists()) {
-            scriptsDir.mkdirs();
+            boolean mkdirs = scriptsDir.mkdirs();
+            if (!mkdirs) {
+                throw new RuntimeException("Unable to create " + scriptsDir.toString());
+            }
         }
     }
 
@@ -125,7 +129,7 @@ public abstract class OozieJob {
 
     /**
      * Returns the metadata arg list for the Runner.
-     * 
+     *
      * @return Runner args
      */
     protected ArrayList<String> runnerMetaDataArgs() {
@@ -262,7 +266,10 @@ public abstract class OozieJob {
             throw new RuntimeException(e);
         }
         file.setReadable(true, false);
-        file.setWritable(true, true);
+        boolean setWritable = file.setWritable(true, true);
+        if (!setWritable) {
+            throw new RuntimeException("Could not set write permission to file: " + filename);
+        }
         if (exec) {
             file.setExecutable(true, false);
         } else {
@@ -272,18 +279,10 @@ public abstract class OozieJob {
     }
 
     protected static void write(String contents, File file) {
-        FileWriter writer = null;
         try {
-            writer = new FileWriter(file);
-            writer.write(contents);
+            FileUtils.write(file, contents, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                IOUtils.closeQuietly(writer);
-            } catch (Exception e) {
-                // gulp
-            }
         }
     }
 
@@ -397,7 +396,7 @@ public abstract class OozieJob {
 
     /**
      * Return true only when an accession file is added successfully
-     * 
+     *
      * @param pafs
      * @return
      */
@@ -444,6 +443,24 @@ public abstract class OozieJob {
      */
     public File getScriptsDir() {
         return scriptsDir;
+    }
+
+    public static String annotationFileName(String jobName) {
+        return jobName + ".annotations.tsv";
+    }
+
+    protected File emitAnnotations(Map<String, String> annotations) {
+        File file = file(scriptsDir, annotationFileName(name), true);
+        StringBuilder buf = new StringBuilder();
+        for (Map.Entry<String, String> entry : annotations.entrySet()) {
+            buf.append(entry.getKey()).append('\t').append(entry.getValue()).append('\n');
+        }
+        try {
+            FileUtils.write(file, buf.toString(), StandardCharsets.UTF_8);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        return file;
     }
 
 }

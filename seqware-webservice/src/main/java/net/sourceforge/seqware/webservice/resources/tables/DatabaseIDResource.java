@@ -33,7 +33,7 @@ import org.restlet.resource.Put;
  * <p>
  * DatabaseIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -45,7 +45,7 @@ public class DatabaseIDResource extends BasicResource {
      * <p>
      * Getter for the field <code>attribute</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAttribute() {
@@ -56,7 +56,7 @@ public class DatabaseIDResource extends BasicResource {
      * <p>
      * Getter for the field <code>id</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public int getId() {
@@ -69,7 +69,7 @@ public class DatabaseIDResource extends BasicResource {
      * <p>
      * Constructor for DatabaseIDResource.
      * </p>
-     * 
+     *
      * @param attributeName
      *            a {@link java.lang.String} object.
      */
@@ -96,7 +96,7 @@ public class DatabaseIDResource extends BasicResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param rep
      * @return
      */
@@ -111,7 +111,7 @@ public class DatabaseIDResource extends BasicResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Delete
@@ -125,14 +125,14 @@ public class DatabaseIDResource extends BasicResource {
 
     /**
      * Merge attributes from a new set into an existing one while removing duplicates. Unfortunately, due to how duplicates work,
-     * 
+     *
      * @param <S>
      * @param <T>
      * @param existingAttributeSet
      * @param newAttributeSet
      * @param parent
      */
-    protected <S, T extends Attribute> void mergeAttributes(Set<T> existingAttributeSet, Set<T> newAttributeSet, S parent) {
+    protected static <S, T extends Attribute> void mergeAttributes(Set<T> existingAttributeSet, Set<T> newAttributeSet, S parent) {
         // extract keys
         Map<String, T> keyMap = new HashMap<>();
         for (T exist : existingAttributeSet) {

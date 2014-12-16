@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
  * <p>
  * ProcessResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -58,7 +58,7 @@ public class ProcessResource extends DatabaseResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -114,7 +114,7 @@ public class ProcessResource extends DatabaseResource {
      * <p>
      * postJaxb.
      * </p>
-     * 
+     *
      * @param entity
      *            a {@link org.restlet.representation.Representation} object.
      */
@@ -138,7 +138,7 @@ public class ProcessResource extends DatabaseResource {
             // persist p
             ProcessingService ps = BeanFactory.getProcessingServiceBean();
             Integer id = ps.insert(registration, p);
-            Processing newProcessing = (Processing) testIfNull(ps.findBySWAccession(id));
+            Processing newProcessing = testIfNull(ps.findBySWAccession(id));
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             Processing detachedP = copier.hibernate2dto(Processing.class, newProcessing);
 

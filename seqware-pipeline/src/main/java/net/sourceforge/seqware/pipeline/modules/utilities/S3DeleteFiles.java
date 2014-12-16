@@ -130,7 +130,7 @@ public class S3DeleteFiles extends Module {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -165,17 +165,17 @@ public class S3DeleteFiles extends Module {
                 secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
             } catch (Exception e) {
                 e.printStackTrace();
-                return (null);
+                return null;
             }
         }
 
         if (accessKey == null || "".equals(accessKey) || secretKey == null || "".equals(secretKey)) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
-            return (ret);
+            return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -232,7 +232,7 @@ public class S3DeleteFiles extends Module {
             if (accessKey == null || secretKey == null) {
                 ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                 ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
-                return (ret);
+                return ret;
             }
 
             // now get this from S3
@@ -259,7 +259,7 @@ public class S3DeleteFiles extends Module {
             e.printStackTrace();
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -273,7 +273,7 @@ public class S3DeleteFiles extends Module {
         // TODO: should verify output, especially is they are local files!
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 
     /**
@@ -289,7 +289,7 @@ public class S3DeleteFiles extends Module {
         ret.setReturnValue(ReturnValue.SUCCESS);
         Logger logger = Logger.getLogger("com.amazonaws");
         logger.setLevel(Level.SEVERE);
-        return (ret);
+        return ret;
     }
 
     /**
@@ -303,7 +303,7 @@ public class S3DeleteFiles extends Module {
     public ReturnValue clean_up() {
         ReturnValue ret = new ReturnValue();
         ret.setReturnValue(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 
 }

@@ -86,14 +86,14 @@ public final class DeletionDB extends Plugin {
         } catch (Exception e) {
             ReturnValue ret = new ReturnValue();
             ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-            return (ret);
+            return ret;
         }
         if (this.adminUrl == null) {
             ReturnValue ret = new ReturnValue();
             System.out.println("This utility requires access to the admin web service. Configure "
                     + SqwKeys.SW_ADMIN_REST_URL.getSettingKey() + " in your .seqware/setttings");
             ret.setExitStatus(ReturnValue.SETTINGSFILENOTFOUND);
-            return (ret);
+            return ret;
         }
         return new ReturnValue();
     }
@@ -235,7 +235,7 @@ public final class DeletionDB extends Plugin {
             ReturnValue ret = new ReturnValue();
             System.out.println("Error connecting to admin web service, check that you have access to SW_ADMIN_REST_URL");
             ret.setExitStatus(ReturnValue.FAILURE);
-            return (ret);
+            return ret;
         } catch (Exception ex) {
             throw new RuntimeException("Client malfunction", ex);
         } finally {

@@ -159,7 +159,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (emailAddress != null) {
             if (registrationDAO == null) {
                 Log.stderr("regDAW IS NULL! " + registrationDAO + " " + this);
-                return (null);
+                return null;
             }
             try {
                 Registration registration = registrationDAO.findByEmailAddress(emailAddress.trim().toLowerCase());

@@ -1,31 +1,35 @@
 package net.sourceforge.seqware.common.module;
 
 import java.io.File;
+import java.util.Set;
+import java.util.TreeSet;
+import net.sourceforge.seqware.common.model.FileAttribute;
 
 /**
- * 
+ *
  * This is a simple data structure to represent a file and it's metadata. It should roughly match the DB schema. FIXME: Instead of doing
- * this, should be using something like Hibernate to represent database schema in objects?
- * 
+ * this, should be using something like Hibernate to represent database schema in objects? You bet, refactoring opportunity in 1.2.
+ *
  * @author jmendler
  * @version $Id: $Id
  */
 public class FileMetadata {
-    String url;
-    String urlLabel;
-    String filePath;
-    String type;
-    String metaType;
-    String description;
+    private String url;
+    private String urlLabel;
+    private String filePath;
+    private String type;
+    private String metaType;
+    private String description;
     private String md5sum;
     private Long size;
+    private final Set<FileAttribute> annotations = new TreeSet<>();
 
     // Default constructor initializes everything to empty strings,
     public FileMetadata() {
-        filePath = new String();
-        type = new String();
-        metaType = new String();
-        description = new String();
+        filePath = "";
+        type = "";
+        metaType = "";
+        description = "";
     }
 
     // Another Constructor to take the minimum
@@ -122,5 +126,12 @@ public class FileMetadata {
 
     public void setSize(Long size) {
         this.size = size;
+    }
+
+    /**
+     * @return the annotations
+     */
+    public Set<FileAttribute> getAnnotations() {
+        return annotations;
     }
 }

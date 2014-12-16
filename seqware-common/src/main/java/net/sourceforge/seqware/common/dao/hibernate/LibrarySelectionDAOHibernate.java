@@ -35,7 +35,7 @@ public class LibrarySelectionDAOHibernate extends HibernateDaoSupport implements
     @Override
     public List<LibrarySelection> list(Registration registration) {
         if (registration == null) {
-            return (null);
+            return null;
         }
         return (list());
     }

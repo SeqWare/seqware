@@ -35,7 +35,7 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
     @Override
     public List<LibraryStrategy> list(Registration registration) {
         if (registration == null) {
-            return (null);
+            return null;
         }
         return (list());
     }

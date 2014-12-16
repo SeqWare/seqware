@@ -137,7 +137,7 @@ public class S3ListFiles extends Module {
             return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -172,17 +172,17 @@ public class S3ListFiles extends Module {
                 secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
             } catch (Exception e) {
                 e.printStackTrace();
-                return (null);
+                return null;
             }
         }
 
         if (accessKey == null || "".equals(accessKey) || secretKey == null || "".equals(secretKey)) {
             ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
             ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
-            return (ret);
+            return ret;
         }
 
-        return (ret);
+        return ret;
     }
 
     /**
@@ -277,14 +277,14 @@ public class S3ListFiles extends Module {
                         secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
                     } catch (Exception e) {
                         e.printStackTrace();
-                        return (null);
+                        return null;
                     }
                 }
 
                 if (accessKey == null || secretKey == null) {
                     ret.setExitStatus(ReturnValue.INVALIDPARAMETERS);
                     ret.setStderr(S3DeleteFiles.NEED_BOTH_AWS_SETTINGS);
-                    return (ret);
+                    return ret;
                 }
 
                 // now get this from S3
@@ -370,12 +370,12 @@ public class S3ListFiles extends Module {
                 } else {
                     ret.setExitStatus(ReturnValue.FAILURE);
                     ret.setStderr("Problems connecting to S3");
-                    return (ret);
+                    return ret;
                 }
             } else {
                 ret.setExitStatus(ReturnValue.FAILURE);
                 ret.setStderr("You need to provide URLs that conform to the standard s3://<bucket>/<path>/<file>");
-                return (ret);
+                return ret;
             }
         }
         if (allSize > 0 && inputs.size() > 1) {
@@ -438,7 +438,7 @@ public class S3ListFiles extends Module {
             }
         }
 
-        return (ret);
+        return ret;
 
     }
 
@@ -483,7 +483,7 @@ public class S3ListFiles extends Module {
         // TODO: should verify output, especially is they are local files!
         ReturnValue ret = new ReturnValue();
         ret.setExitStatus(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 
     /**
@@ -499,7 +499,7 @@ public class S3ListFiles extends Module {
         ret.setReturnValue(ReturnValue.SUCCESS);
         Logger logger = Logger.getLogger("com.amazonaws");
         logger.setLevel(Level.SEVERE);
-        return (ret);
+        return ret;
     }
 
     /**
@@ -513,7 +513,7 @@ public class S3ListFiles extends Module {
     public ReturnValue clean_up() {
         ReturnValue ret = new ReturnValue();
         ret.setReturnValue(ReturnValue.SUCCESS);
-        return (ret);
+        return ret;
     }
 
 }
