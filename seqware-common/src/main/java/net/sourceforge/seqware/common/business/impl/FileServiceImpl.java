@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * FileServiceImpl class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -37,10 +37,10 @@ public class FileServiceImpl implements FileService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Sets a private member variable with an instance of an implementation of FileDAO. This method is called by the Spring framework at run
      * time.
-     * 
+     *
      * @param dao
      * @see FileDAO
      */
@@ -51,17 +51,19 @@ public class FileServiceImpl implements FileService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Inserts an instance of File into the database.
+     *
+     * @return
      */
     @Override
-    public void insert(File file) {
-        fileDAO.insert(file);
+    public Integer insert(File file) {
+        return fileDAO.insert(file);
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of File in the database.
      */
     @Override
@@ -71,7 +73,7 @@ public class FileServiceImpl implements FileService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param file
      * @param deleteRealFiles
      */
@@ -97,7 +99,7 @@ public class FileServiceImpl implements FileService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param files
      * @param deleteRealFiles
      */
@@ -168,7 +170,7 @@ public class FileServiceImpl implements FileService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param fileId
      */
     @Override
@@ -241,8 +243,8 @@ public class FileServiceImpl implements FileService {
 
     /** {@inheritDoc} */
     @Override
-    public void insert(Registration registration, File file) {
-        fileDAO.insert(registration, file);
+    public Integer insert(Registration registration, File file) {
+        return fileDAO.insert(registration, file);
     }
 
     /** {@inheritDoc} */

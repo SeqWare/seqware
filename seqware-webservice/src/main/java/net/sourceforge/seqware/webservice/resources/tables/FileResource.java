@@ -74,21 +74,21 @@ public class FileResource extends DatabaseResource {
 
         if (queryValues.get("id") != null) {
             JaxbObject<File> jaxbTool = new JaxbObject<>();
-            File p = (File) testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
+            File p = testIfNull(ss.findByID(parseClientInt(queryValues.get("id"))));
 
             File dto = copier.hibernate2dto(File.class, p);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
         } else if (queryValues.get("path") != null) {
             JaxbObject<File> jaxbTool = new JaxbObject<>();
-            File p = (File) testIfNull(ss.findByPath(queryValues.get("path")));
+            File p = testIfNull(ss.findByPath(queryValues.get("path")));
 
             File dto = copier.hibernate2dto(File.class, p);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
         } else {
             JaxbObject<FileList> jaxbTool = new JaxbObject<>();
-            List<File> files = (List<File>) testIfNull(ss.findByOwnerId(registration.getRegistrationId()));
+            List<File> files = testIfNull(ss.findByOwnerId(registration.getRegistrationId()));
             FileList eList = new FileList();
             eList.setList(new ArrayList());
 
@@ -140,14 +140,14 @@ public class FileResource extends DatabaseResource {
             Set<FileAttribute> fileAttributes = Sets.newTreeSet();
             fileAttributes.addAll(p.getFileAttributes());
             p.getFileAttributes().clear();
-            fileService.insert(registration, p);
-            File file = testIfNull(fileService.findByPath(p.getFilePath()));
+            Integer swAccession = fileService.insert(registration, p);
+            File file = testIfNull(fileService.findBySWAccession(swAccession));
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             File detachedFile = copier.hibernate2dto(File.class, file);
 
             // this is incredibly sad
             if (fileAttributes.size() > 0) {
-                File newFile = testIfNull(fileService.findByID(detachedFile.getFileId()));
+                File newFile = testIfNull(fileService.findBySWAccession(swAccession));
                 DatabaseIDResource.mergeAttributes(newFile.getFileAttributes(), fileAttributes, file);
                 fileService.update(registration, newFile);
             }

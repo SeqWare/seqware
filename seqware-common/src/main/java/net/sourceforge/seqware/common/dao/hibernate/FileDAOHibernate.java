@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
  * <p>
  * FileDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -44,18 +44,19 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Inserts an instance of File into the database.
      */
     @Override
-    public void insert(File file) {
-
+    public Integer insert(File file) {
         this.getHibernateTemplate().save(file);
+        this.getSession().flush();
+        return file.getSwAccession();
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of File in the database.
      */
     @Override
@@ -66,7 +67,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of File in the database.
      */
     @Override
@@ -109,7 +110,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of File in the database by the File Path.
      */
     @Override
@@ -126,7 +127,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of File in the database by the File ID.
      */
     @Override
@@ -208,7 +209,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
 
     /**
      * Removes results matching by filePath, but not FileName.
-     * 
+     *
      * @param files
      * @param crit
      * @param isCaseSens
@@ -300,15 +301,16 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
 
     /** {@inheritDoc} */
     @Override
-    public void insert(Registration registration, File file) {
+    public Integer insert(Registration registration, File file) {
         if (registration == null) {
             localLogger.error("FileDAOHibernate insert registration is null");
         } else if (registration.isLIMSAdmin() || file.givesPermission(registration)) {
             localLogger.info("insert file object");
-            insert(file);
+            return insert(file);
         } else {
             localLogger.error("FileDAOHibernate insert not authorized");
         }
+        return null;
     }
 
     /** {@inheritDoc} */

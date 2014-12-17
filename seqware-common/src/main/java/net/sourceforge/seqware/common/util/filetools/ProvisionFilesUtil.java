@@ -16,6 +16,8 @@ import com.amazonaws.services.s3.transfer.Transfer;
 import com.amazonaws.services.s3.transfer.Transfer.TransferState;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import com.amazonaws.services.s3.transfer.Upload;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
 import io.seqware.pipeline.SqwKeys;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -29,16 +31,22 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.SecretKeySpec;
+import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import org.apache.commons.codec.binary.Base64;
@@ -54,7 +62,7 @@ import org.apache.commons.codec.binary.Base64;
  * <p>
  * ProvisionFilesUtil class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -83,7 +91,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Set verbose mode ctor.
-     * 
+     *
      * @param verbose
      *            a boolean.
      */
@@ -93,7 +101,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Gets the file name. Available after the getSourceReader has been invoked.
-     * 
+     *
      * @return String representation of the proceeded file name
      */
     public String getFileName() {
@@ -102,7 +110,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Creates symlink of input to output.
-     * 
+     *
      * @param output
      *            a {@link java.lang.String} object.
      * @param fullOutputPath
@@ -157,7 +165,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Gets cipher by DecryptKey.
-     * 
+     *
      * @param decryptKey
      *            a {@link java.lang.String} object.
      * @return Cipher object
@@ -176,7 +184,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Gets cipher by EncryptKey.
-     * 
+     *
      * @param encryptKey
      *            a {@link java.lang.String} object.
      * @return Cipher object
@@ -194,12 +202,12 @@ public class ProvisionFilesUtil {
     }
 
     public File copyToFile(BufferedInputStream reader, String output, int bufLen, String input) {
-        return copyToFile(reader, output, false, bufLen, input, null, null);
+        return copyToFile(reader, output, false, bufLen, input, null, null, null);
     }
 
     /**
      * Copy reader into output using Cipher.
-     * 
+     *
      * @param reader
      *            a {@link java.io.BufferedInputStream} object.
      * @param output
@@ -209,6 +217,8 @@ public class ProvisionFilesUtil {
      *            a int.
      * @param input
      *            a {@link java.lang.String} object.
+     * @param metadata
+     *            store the file size and md5sum here after checking the destination
      * @return written File object
      * @param decryptCipher
      *            a {@link javax.crypto.Cipher} object.
@@ -216,7 +226,7 @@ public class ProvisionFilesUtil {
      *            a {@link javax.crypto.Cipher} object.
      */
     public File copyToFile(BufferedInputStream reader, String output, boolean fullOutputPath, int bufLen, String input,
-            Cipher decryptCipher, Cipher encryptCipher) {
+            Cipher decryptCipher, Cipher encryptCipher, FileMetadata metadata) {
 
         OutputStream writer;
 
@@ -348,12 +358,42 @@ public class ProvisionFilesUtil {
             return null;
         }
 
+        // do the calculations to record file size and md5sum to see if they are consistent between source and destination
+        FileMetadata outputMetadata = new FileMetadata();
+        if (decryptCipher == null && encryptCipher == null && metadata != null) {
+            Map<String, String> settings = ConfigTools.getSettings();
+            if (settings.containsKey(SqwKeys.SW_PROVISION_FILES_MD5.getSettingKey())) {
+                String value = settings.get(SqwKeys.SW_PROVISION_FILES_MD5.getSettingKey());
+                boolean usemd5 = Boolean.valueOf(value);
+                if (usemd5) {
+                    calculateInputMetadata(outputObj.getAbsolutePath(), outputMetadata);
+                } else {
+                    return outputObj;
+                }
+            } else {
+                calculateInputMetadata(outputObj.getAbsolutePath(), outputMetadata);
+            }
+            // verify source and destination values. this does the file size check again but we'll probably delete the former code given a
+            // chance
+            if (!Objects.equals(metadata.getSize(), outputMetadata.getSize())) {
+                Log.error("The output file size of " + outputMetadata.getSize() + " and the input file size of " + metadata.getSize()
+                        + " do not match so the file provisioning failed!");
+                return null;
+            }
+            if (!Objects.equals(metadata.getMd5sum(), outputMetadata.getMd5sum())) {
+                Log.error("The output md5sum of " + outputMetadata.getMd5sum() + " and the input md5sum of " + metadata.getMd5sum()
+                        + " do not match so the file provisioning failed!");
+                return null;
+            }
+
+        }
+
         return outputObj;
     }
 
     /**
      * Not supported yet.
-     * 
+     *
      * @return a boolean.
      */
     public boolean putToHttp() {
@@ -428,7 +468,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Copy file using reader into output.
-     * 
+     *
      * @param reader
      *            a {@link java.io.BufferedInputStream} object.
      * @param output
@@ -443,7 +483,7 @@ public class ProvisionFilesUtil {
     }
 
     /**
-     * 
+     *
      * @param reader
      * @param output
      * @param fullOutputPath
@@ -460,7 +500,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Copy file using reader into output.
-     * 
+     *
      * @param reader
      *            a {@link java.io.InputStream} object.
      * @param output
@@ -479,7 +519,7 @@ public class ProvisionFilesUtil {
     }
 
     /**
-     * 
+     *
      * @param reader
      * @param output
      * @param fullOutputPath
@@ -665,7 +705,7 @@ public class ProvisionFilesUtil {
      * <p>
      * getS3Url.
      * </p>
-     * 
+     *
      * @param input
      *            a {@link java.lang.String} object.
      * @return a {@link java.net.URL} object.
@@ -720,7 +760,7 @@ public class ProvisionFilesUtil {
      * <p>
      * getS3Url.
      * </p>
-     * 
+     *
      * @param input
      *            a {@link java.lang.String} object.
      * @param accessKey
@@ -760,7 +800,7 @@ public class ProvisionFilesUtil {
 
     /**
      * This attempts to resume if passed in startPosition > 0.
-     * 
+     *
      * @param input
      *            a {@link java.lang.String} object.
      * @param bufLen
@@ -818,7 +858,7 @@ public class ProvisionFilesUtil {
      * <p>
      * getHttpInputStream.
      * </p>
-     * 
+     *
      * @param input
      *            a {@link java.lang.String} object.
      * @param bufLen
@@ -925,7 +965,7 @@ public class ProvisionFilesUtil {
      * <p>
      * getS3InputStream.
      * </p>
-     * 
+     *
      * @param input
      *            a {@link java.lang.String} object.
      * @param bufLen
@@ -984,7 +1024,7 @@ public class ProvisionFilesUtil {
      * <p>
      * getS3InputStream.
      * </p>
-     * 
+     *
      * @param input
      *            a {@link java.lang.String} object.
      * @param bufLen
@@ -1035,7 +1075,7 @@ public class ProvisionFilesUtil {
     // utils
     /**
      * Sets data encryption key.
-     * 
+     *
      * @param value
      *            BASE64-encoded key
      */
@@ -1046,7 +1086,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Sets data decryption key.
-     * 
+     *
      * @param value
      *            BASE64-encoded key
      */
@@ -1063,7 +1103,7 @@ public class ProvisionFilesUtil {
      * <p>
      * isVerbose.
      * </p>
-     * 
+     *
      * @return a boolean.
      */
     public boolean isVerbose() {
@@ -1072,7 +1112,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Enable class verbose mode.
-     * 
+     *
      * @param verbose
      *            a boolean.
      */
@@ -1094,7 +1134,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Creates abstract pathname.
-     * 
+     *
      * @param folderStore
      *            a {@link java.lang.String} object.
      * @param email
@@ -1121,7 +1161,7 @@ public class ProvisionFilesUtil {
 
     /**
      * Creates abstract pathname.
-     * 
+     *
      * @param folderStore
      *            a {@link java.lang.String} object.
      * @param email
@@ -1147,7 +1187,7 @@ public class ProvisionFilesUtil {
      * <p>
      * getFileSize.
      * </p>
-     * 
+     *
      * @param path
      *            a {@link java.lang.String} object.
      * @return a long.
@@ -1242,10 +1282,10 @@ public class ProvisionFilesUtil {
             }
         }/**
          * else if (path.startsWith("hdfs://")) {
-         * 
+         *
          * Configuration conf = new Configuration(); // FIXME: is this OK to pass in the complete URL? FileSystem fs =
          * FileSystem.get(URI.create(path), conf); Path hdfsPath = new Path(path); return(fs.getFileStatus(hdfsPath).getBlockSize());
-         * 
+         *
          * }
          */
         else {
@@ -1261,7 +1301,7 @@ public class ProvisionFilesUtil {
      * <p>
      * Getter for the field <code>originalFileName</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getOriginalFileName() {
@@ -1272,11 +1312,35 @@ public class ProvisionFilesUtil {
      * <p>
      * Setter for the field <code>originalFileName</code>.
      * </p>
-     * 
+     *
      * @param originalFileName
      *            a {@link java.lang.String} object.
      */
     public void setOriginalFileName(String originalFileName) {
         this.originalFileName = originalFileName;
+    }
+
+    public static void calculateInputMetadata(String input, FileMetadata metadata) throws RuntimeException {
+        if (metadata == null) {
+            Log.error("Could not calculate md5sum or size, no metadata provided");
+            return;
+        }
+        // calculate and store source metadata information about input file
+        Path inputPath = Paths.get(input);
+        try {
+            long size = Files.size(inputPath);
+            metadata.setSize(size);
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not calculate size of input file", ex);
+        }
+
+        HashCode hc;
+        try {
+            hc = com.google.common.io.Files.hash(inputPath.toFile(), Hashing.md5());
+            Log.info("MD5: " + hc.toString());
+            metadata.setMd5sum(hc.toString());
+        } catch (IOException ex) {
+            throw new RuntimeException("Could not calculate md5sum for input file", ex);
+        }
     }
 }

@@ -342,13 +342,15 @@ public class ProvisionFiles extends Module {
         ret.setAlgorithm(algorithmName);
 
         ArrayList<FileMetadata> fileArray = ret.getFiles();
+        // this sucks, but I cannot tell with all this fiddling which input file->FileMetadata we're dealing with
+        Map<String, FileMetadata> input2metadataMap = new HashMap<>();
 
-        ArrayList<String> newArray = new ArrayList<>();
         List<String> inputs = (List<String>) options.valuesOf("input-file");
-        List<String> metaInputs = (List<String>) options.valuesOf("input-file-metadata");
-        List<String> outputFiles = (List<String>) options.valuesOf("output-file");
 
-        if (metaInputs != null) {
+        if (options.has("input-file-metadata")) {
+            List<String> metaInputs = (List<String>) options.valuesOf("input-file-metadata");
+            List<String> outputFiles = (List<String>) options.valuesOf("output-file");
+            ArrayList<String> newArray = new ArrayList<>();
             if (inputs != null && inputs.size() > 0) {
                 newArray.addAll(inputs);
             }
@@ -366,6 +368,7 @@ public class ProvisionFiles extends Module {
                     }
                     fmd.setType(tokens[0]);
                     fileArray.add(fmd);
+                    input2metadataMap.put(tokens[2], fmd);
                 }
             }
             inputs = newArray;
@@ -381,7 +384,6 @@ public class ProvisionFiles extends Module {
             }
         }
         if (options.has(annotationFileSpec) && this.getProcessingAccession() != 0) {
-            handleAnnotations(options.valueOf(annotationFileSpec), this.getProcessingAccession(), this.getMetadata());
 
             Map<String, String> map = FileTools.getKeyValueFromFile(options.valueOf(annotationFileSpec));
             Set<FileAttribute> atts = new TreeSet<>();
@@ -398,6 +400,10 @@ public class ProvisionFiles extends Module {
         }
 
         for (String input : inputs) {
+            FileMetadata filemetadata = input2metadataMap.get(input);
+            if (filemetadata != null) {
+                Log.stdout("Found metadata for input: " + input);
+            }
             Log.stdout("Processing input: " + input);
             if (options.has("output-dir")) {
                 Log.stdout("      output-dir: " + options.valueOf("output-dir"));
@@ -416,7 +422,7 @@ public class ProvisionFiles extends Module {
             } else if ((options.valuesOf("input-file").size() == 1 && options.valuesOf("input-file-metadata").isEmpty())
                     && options.has("output-file") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single
                                                                                                     // file copy
-                if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
+                if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true, filemetadata)) {
                     Log.error("Failed to copy file");
                     ret.setExitStatus(ReturnValue.FAILURE);
                     return ret;
@@ -424,13 +430,13 @@ public class ProvisionFiles extends Module {
             } else if ((options.valuesOf("input-file").isEmpty() && options.valuesOf("input-file-metadata").size() == 1)
                     && options.has("input-file-metadata") && options.valuesOf("output-file").size() == 1) { // then this is a single file to
                                                                                                             // single file copy
-                if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true)) {
+                if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true, filemetadata)) {
                     Log.error("Failed to copy file");
                     ret.setExitStatus(ReturnValue.FAILURE);
                     return ret;
                 }
             } else if (options.has("output-dir")) { // then this is just a normal file copy
-                if (!provisionFile(input, (String) options.valueOf("output-dir"), skipIfMissing, fileArray, false)) {
+                if (!provisionFile(input, (String) options.valueOf("output-dir"), skipIfMissing, fileArray, false, filemetadata)) {
                     Log.error("Failed to copy file to dir");
                     ret.setExitStatus(ReturnValue.FAILURE);
                     return ret;
@@ -486,9 +492,10 @@ public class ProvisionFiles extends Module {
             } else {
                 // Log.error("    CURR FILE IS FILE: "+currFile.getAbsolutePath()+"\n");
                 Log.info("\n  COPYING FILE: " + currFile.getAbsolutePath() + "\n    to " + outputDir + "/" + additionalPath);
+                // when this goes recursive, there is no single metadata that clearly corresponds so set that to null
                 if (!provisionFile(currFile.getAbsolutePath(),
                         outputDir + "/" + additionalPath.substring(0, additionalPath.length() - file.length()), skipIfMissing, fileArray,
-                        false)) {
+                        false, null)) {
                     ret.setExitStatus(ReturnValue.FAILURE);
                     return ret;
                 }
@@ -512,13 +519,17 @@ public class ProvisionFiles extends Module {
      *            metadata about the file (files) to be copied
      * @param fullOutputPath
      *            the full output path overrides any concatenation of variables
+     * @param metadata
+     *            the specific filemetadata for this file, if there is clearly one
      * @return a boolean.
      */
     protected boolean provisionFile(String input, String output, boolean skipIfMissing, ArrayList<FileMetadata> fileArray,
-            boolean fullOutputPath) {
+            boolean fullOutputPath, FileMetadata metadata) {
 
         BufferedInputStream reader;
         int bufLen = 5000 * 1024; // 5M buffer
+
+        // what is this madness?
 
         // finally record the metadata about the file if it was passed in using
         // --input-file-metadata, we ignore files passed in via --input-file since
@@ -544,7 +555,19 @@ public class ProvisionFiles extends Module {
             Log.error("To proceed, run ProvisionFile again with --skip-if-missing");
             return false;
         }
-        return putDestination(reader, output, bufLen, input, fileArray, fullOutputPath);
+
+        Map<String, String> settings = ConfigTools.getSettings();
+        if (settings.containsKey(SqwKeys.SW_PROVISION_FILES_MD5.getSettingKey()) && metadata != null) {
+            String value = settings.get(SqwKeys.SW_PROVISION_FILES_MD5.getSettingKey());
+            boolean usemd5 = Boolean.valueOf(value);
+            if (usemd5) {
+                ProvisionFilesUtil.calculateInputMetadata(input, metadata);
+            }
+        } else {
+            ProvisionFilesUtil.calculateInputMetadata(input, metadata);
+        }
+
+        return putDestination(reader, output, bufLen, input, fileArray, fullOutputPath, metadata);
 
     }
 
@@ -563,11 +586,14 @@ public class ProvisionFiles extends Module {
      * @param fileArray
      *            a {@link java.util.ArrayList} object.
      * @param fullOutputPath
+     * @param metadata
+     *            metadata entry for the specific file
      * @return a boolean.
      */
     protected boolean putDestination(BufferedInputStream reader, String output, int bufLen, String input,
-            ArrayList<FileMetadata> fileArray, boolean fullOutputPath) {
+            ArrayList<FileMetadata> fileArray, boolean fullOutputPath, FileMetadata metadata) {
 
+        // what is this madness?
         // finally record the metadata about the file, update the output path to
         // prepare this file for adding output-prefix as a prefix
         for (FileMetadata fmd : fileArray) {
@@ -610,7 +636,7 @@ public class ProvisionFiles extends Module {
             if (input.startsWith("http://") || input.startsWith("https://") || input.startsWith("s3://") || options.has("force-copy")
                     || options.has("recursive")) {
 
-                result = filesUtil.copyToFile(reader, output, fullOutputPath, bufLen, input, decryptCipher, encryptCipher) != null;
+                result = filesUtil.copyToFile(reader, output, fullOutputPath, bufLen, input, decryptCipher, encryptCipher, metadata) != null;
 
             } else {
                 // If no "force-copy" and "recursive"

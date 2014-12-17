@@ -1299,6 +1299,7 @@ public class MetadataWS implements Metadata {
                     modelFile.setMd5sum(file.getMd5sum());
                     modelFile.setSize(file.getSize());
                     modelFile.setFileAttributes(file.getAnnotations());
+                    modelFile.setSkip(false);
 
                     modelFile = ll.addFile(modelFile);
 
@@ -1943,7 +1944,7 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public String getWorkflowRunReport(int workflowRunSWID) {
-        String report = (String) ll.getString("/reports/workflowruns/" + workflowRunSWID);
+        String report = ll.getString("/reports/workflowruns/" + workflowRunSWID);
         return report;
     }
 
@@ -1952,7 +1953,7 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public String getWorkflowRunReportStdErr(int workflowRunSWID) {
-        return ((String) ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stderr"));
+        return ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stderr");
     }
 
     /**
@@ -1960,7 +1961,7 @@ public class MetadataWS implements Metadata {
      */
     @Override
     public String getWorkflowRunReportStdOut(int workflowRunSWID) {
-        return ((String) ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stdout"));
+        return ll.getString("/reports/workflowruns/" + workflowRunSWID + "/stdout");
     }
 
     /**
@@ -2018,9 +2019,9 @@ public class MetadataWS implements Metadata {
         }
         String report;
         if (workflowSWID != null) {
-            report = (String) ll.getString("/reports/workflows/" + workflowSWID + "/runs?" + constraintQuery.toString());
+            report = ll.getString("/reports/workflows/" + workflowSWID + "/runs?" + constraintQuery.toString());
         } else {
-            report = (String) ll.getString("/reports/workflowruns?" + constraintQuery.toString());
+            report = ll.getString("/reports/workflowruns?" + constraintQuery.toString());
         }
         return report;
     }
@@ -2668,7 +2669,7 @@ public class MetadataWS implements Metadata {
      * ll.updateFile("/" + fileSWID, obj); } catch (IOException ex) { Log.error("IOException while updating study " + fileSWID + " " +
      * ex.getMessage()); } catch (JAXBException ex) { Log.error("JAXBException while updating study " + fileSWID + " " + ex.getMessage()); }
      * catch (ResourceException ex) { Log.error("ResourceException while updating study " + fileSWID + " " + ex.getMessage()); }
-     * 
+     *
      * }
      */
     protected class LowLevel {
@@ -2900,10 +2901,6 @@ public class MetadataWS implements Metadata {
                 return list.getList();
             }
             return null;
-        }
-
-        private List<Experiment> findExperiments() throws IOException, JAXBException {
-            return findExperiments("/experiments");
         }
 
         private List<Experiment> findExperiments(String searchString) throws IOException, JAXBException {

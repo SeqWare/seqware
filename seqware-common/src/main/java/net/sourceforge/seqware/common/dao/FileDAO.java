@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
  * <p>
  * FileDAO interface.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -20,29 +20,31 @@ public interface FileDAO {
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
+     * @return
      */
-    public void insert(File file);
+    public Integer insert(File file);
 
     /**
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
+     * @return
      */
-    public void insert(Registration registration, File file);
+    public Integer insert(Registration registration, File file);
 
     /**
      * <p>
      * update.
      * </p>
-     * 
+     *
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
@@ -52,7 +54,7 @@ public interface FileDAO {
      * <p>
      * update.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param file
@@ -64,7 +66,7 @@ public interface FileDAO {
      * <p>
      * delete.
      * </p>
-     * 
+     *
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
@@ -74,7 +76,7 @@ public interface FileDAO {
      * <p>
      * deleteAll.
      * </p>
-     * 
+     *
      * @param files
      *            a {@link java.util.List} object.
      */
@@ -84,7 +86,7 @@ public interface FileDAO {
      * <p>
      * deleteAllWithFolderStore.
      * </p>
-     * 
+     *
      * @param list
      *            a {@link java.util.List} object.
      */
@@ -94,7 +96,7 @@ public interface FileDAO {
      * <p>
      * findByID.
      * </p>
-     * 
+     *
      * @param id
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
@@ -105,7 +107,7 @@ public interface FileDAO {
      * <p>
      * findByPath.
      * </p>
-     * 
+     *
      * @param path
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
@@ -116,7 +118,7 @@ public interface FileDAO {
      * <p>
      * saveFile.
      * </p>
-     * 
+     *
      * @param uploadFile
      *            a {@link org.springframework.web.multipart.MultipartFile} object.
      * @param folderStore
@@ -133,7 +135,7 @@ public interface FileDAO {
      * <p>
      * findBySWAccession.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
@@ -144,7 +146,7 @@ public interface FileDAO {
      * <p>
      * updateDetached.
      * </p>
-     * 
+     *
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
@@ -155,7 +157,7 @@ public interface FileDAO {
      * <p>
      * updateDetached.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param file
@@ -168,7 +170,7 @@ public interface FileDAO {
      * <p>
      * findByOwnerId.
      * </p>
-     * 
+     *
      * @param registrationId
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
@@ -179,7 +181,7 @@ public interface FileDAO {
      * <p>
      * findByCriteria.
      * </p>
-     * 
+     *
      * @param criteria
      *            a {@link java.lang.String} object.
      * @param isCaseSens
@@ -192,7 +194,7 @@ public interface FileDAO {
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     public List<File> list();
