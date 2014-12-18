@@ -10,7 +10,7 @@ import net.sourceforge.seqware.common.model.Registration;
  * <p>
  * FileService interface.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -23,7 +23,7 @@ public interface FileService {
      * <p>
      * setFileDAO.
      * </p>
-     * 
+     *
      * @param fileDAO
      *            a {@link net.sourceforge.seqware.common.dao.FileDAO} object.
      */
@@ -33,29 +33,30 @@ public interface FileService {
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public void insert(File file);
+    public Integer insert(File file);
 
     /**
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
+     * @return sw_accession for created file
      */
-    public void insert(Registration registration, File file);
+    public Integer insert(Registration registration, File file);
 
     /**
      * <p>
      * update.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param file
@@ -67,7 +68,7 @@ public interface FileService {
      * <p>
      * update.
      * </p>
-     * 
+     *
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
@@ -77,7 +78,7 @@ public interface FileService {
      * <p>
      * delete.
      * </p>
-     * 
+     *
      * @param file
      * @param deleteRealFiles
      */
@@ -87,7 +88,7 @@ public interface FileService {
      * <p>
      * deleteAll.
      * </p>
-     * 
+     *
      * @param file
      * @param deleteRealFiles
      */
@@ -97,7 +98,7 @@ public interface FileService {
      * <p>
      * findByID.
      * </p>
-     * 
+     *
      * @param id
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
@@ -108,7 +109,7 @@ public interface FileService {
      * <p>
      * findByPath.
      * </p>
-     * 
+     *
      * @param path
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
@@ -119,7 +120,7 @@ public interface FileService {
      * <p>
      * findBySWAccession.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
@@ -130,7 +131,7 @@ public interface FileService {
      * <p>
      * findByOwnerId.
      * </p>
-     * 
+     *
      * @param registrationId
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
@@ -141,7 +142,7 @@ public interface FileService {
      * <p>
      * getFiles.
      * </p>
-     * 
+     *
      * @param fileId
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
@@ -152,7 +153,7 @@ public interface FileService {
      * <p>
      * getFiles.
      * </p>
-     * 
+     *
      * @param fileId
      *            a {@link java.lang.Integer} object.
      * @param metaType
@@ -165,7 +166,7 @@ public interface FileService {
      * <p>
      * setWithHasFile.
      * </p>
-     * 
+     *
      * @param list
      *            a {@link java.util.Set} object.
      * @param metaType
@@ -178,7 +179,7 @@ public interface FileService {
      * <p>
      * isExists.
      * </p>
-     * 
+     *
      * @param fileName
      *            a {@link java.lang.String} object.
      * @param folderStore
@@ -191,7 +192,7 @@ public interface FileService {
      * <p>
      * updateDetached.
      * </p>
-     * 
+     *
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
@@ -202,7 +203,7 @@ public interface FileService {
      * <p>
      * updateDetached.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param file
@@ -215,7 +216,7 @@ public interface FileService {
      * <p>
      * findByCriteria.
      * </p>
-     * 
+     *
      * @param criteria
      *            a {@link java.lang.String} object.
      * @param isCaseSens
@@ -228,7 +229,7 @@ public interface FileService {
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     public List<File> list();
