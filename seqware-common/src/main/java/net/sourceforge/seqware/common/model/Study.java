@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Study extends PermissionsAware implements Serializable, ParentAccessionModel, Comparable<Study> {
+public class Study extends PermissionsAware implements Serializable, ParentAccessionModel, Comparable<Study>, Annotatable<StudyAttribute> {
 
     private static final long serialVersionUID = 2L;
     private Integer studyId;
@@ -51,7 +51,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
     private SortedSet<ShareStudy> sharedStudies;
     private Set<Processing> processings = new TreeSet<>();
     private Set<StudyAttribute> studyAttributes = new TreeSet<>();
-    final Logger logger = LoggerFactory.getLogger(Study.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Study.class);
 
     /**
      * <p>
@@ -66,7 +66,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * compareTo.
      * </p>
-     * 
+     *
      * @param that
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a int.
@@ -101,7 +101,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -124,26 +124,26 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
 
     /*
      * public int compareTo(Study that) { if(that == null) return -1;
-     * 
+     *
      * if(that.getTitle() == this.getTitle()) // when both names are null return 0;
-     * 
+     *
      * if(that.getTitle() == null) return -1; // when only the other name is null
-     * 
+     *
      * return(that.getTitle().compareTo(this.getTitle())); }
-     * 
+     *
      * public String toString() { return new ToStringBuilder(this) .append("studyId", getStudyId()) .append("title", getTitle())
      * .append("swAccession", getSwAccession()) .toString(); }
-     * 
+     *
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Study) ) return false; Study
      * castOther = (Study) other; return new EqualsBuilder() .append(this.getTitle(), castOther.getTitle()) .isEquals(); }
-     * 
+     *
      * public int hashCode() { return new HashCodeBuilder() .append(getTitle()) .toHashCode(); }
      */
     /**
      * <p>
      * Getter for the field <code>studyId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getStudyId() {
@@ -154,7 +154,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>studyId</code>.
      * </p>
-     * 
+     *
      * @param studyId
      *            a {@link java.lang.Integer} object.
      */
@@ -166,7 +166,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -177,7 +177,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -189,7 +189,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>title</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getTitle() {
@@ -200,7 +200,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * getJsonEscapeTitle.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeTitle() {
@@ -211,7 +211,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>title</code>.
      * </p>
-     * 
+     *
      * @param title
      *            a {@link java.lang.String} object.
      */
@@ -223,7 +223,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * getJsonEscapeDescription.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -234,7 +234,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * getJsonEscapeDescription200.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription200() {
@@ -249,7 +249,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -260,7 +260,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @param description
      *            a {@link java.lang.String} object.
      */
@@ -272,7 +272,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>alias</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
@@ -283,7 +283,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>alias</code>.
      * </p>
-     * 
+     *
      * @param alias
      *            a {@link java.lang.String} object.
      */
@@ -295,7 +295,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>accession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAccession() {
@@ -306,7 +306,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>accession</code>.
      * </p>
-     * 
+     *
      * @param accession
      *            a {@link java.lang.String} object.
      */
@@ -318,7 +318,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>status</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getStatus() {
@@ -329,7 +329,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>status</code>.
      * </p>
-     * 
+     *
      * @param status
      *            a {@link java.lang.String} object.
      */
@@ -341,7 +341,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>abstractStr</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAbstractStr() {
@@ -352,7 +352,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>abstractStr</code>.
      * </p>
-     * 
+     *
      * @param abstractStr
      *            a {@link java.lang.String} object.
      */
@@ -364,7 +364,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>newType</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getNewType() {
@@ -375,7 +375,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>newType</code>.
      * </p>
-     * 
+     *
      * @param newType
      *            a {@link java.lang.String} object.
      */
@@ -387,7 +387,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>centerName</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getCenterName() {
@@ -398,7 +398,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>centerName</code>.
      * </p>
-     * 
+     *
      * @param centerName
      *            a {@link java.lang.String} object.
      */
@@ -410,7 +410,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>centerProjectName</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getCenterProjectName() {
@@ -421,7 +421,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>centerProjectName</code>.
      * </p>
-     * 
+     *
      * @param centerProjectName
      *            a {@link java.lang.String} object.
      */
@@ -433,7 +433,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>projectId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getProjectId() {
@@ -444,7 +444,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>projectId</code>.
      * </p>
-     * 
+     *
      * @param projectId
      *            a {@link java.lang.Integer} object.
      */
@@ -456,7 +456,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -467,7 +467,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @param createTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -479,7 +479,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -490,7 +490,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @param updateTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -502,7 +502,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -513,7 +513,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @param owner
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
@@ -525,7 +525,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>existingType</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
     public StudyType getExistingType() {
@@ -536,7 +536,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>existingType</code>.
      * </p>
-     * 
+     *
      * @param existingType
      *            a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
@@ -548,7 +548,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>experiments</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<Experiment> getExperiments() {
@@ -559,7 +559,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>experiments</code>.
      * </p>
-     * 
+     *
      * @param experiments
      *            a {@link java.util.SortedSet} object.
      */
@@ -571,7 +571,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>serialVersionUID</code>.
      * </p>
-     * 
+     *
      * @return a long.
      */
     public static long getSerialVersionUID() {
@@ -582,7 +582,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>existingTypeInt</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExistingTypeInt() {
@@ -593,7 +593,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>existingTypeInt</code>.
      * </p>
-     * 
+     *
      * @param existingTypeInt
      *            a {@link java.lang.Integer} object.
      */
@@ -605,7 +605,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>sharedStudies</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<ShareStudy> getSharedStudies() {
@@ -616,7 +616,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>sharedStudies</code>.
      * </p>
-     * 
+     *
      * @param sharedStudies
      *            a {@link java.util.SortedSet} object.
      */
@@ -628,7 +628,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getProcessings() {
@@ -639,7 +639,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @param processings
      *            a {@link java.util.Set} object.
      */
@@ -651,7 +651,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsSelected() {
@@ -662,7 +662,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @param isSelected
      *            a {@link java.lang.Boolean} object.
      */
@@ -674,7 +674,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsHasFile() {
@@ -685,7 +685,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @param isHasFile
      *            a {@link java.lang.Boolean} object.
      */
@@ -697,7 +697,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>html</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getHtml() {
@@ -708,7 +708,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>html</code>.
      * </p>
-     * 
+     *
      * @param html
      *            a {@link java.lang.String} object.
      */
@@ -720,7 +720,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Getter for the field <code>studyAttributes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     @XmlElementWrapper(name = "StudyAttributes")
@@ -733,7 +733,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      * <p>
      * Setter for the field <code>studyAttributes</code>.
      * </p>
-     * 
+     *
      * @param studyAttributes
      *            a {@link java.util.Set} object.
      */
@@ -743,7 +743,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -759,46 +759,46 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
 
         boolean hasPermission;
         if (registration == null) {
-            logger.warn("Registration is null!");
+            LOGGER.warn("Registration is null!");
             hasPermission = false;
         } else if (registration.isLIMSAdmin()) {
-            logger.info("Study gives permission");
+            LOGGER.info("Study gives permission");
             hasPermission = true;
         } else if (owner != null || sharedStudies != null) {
             hasPermission = false;
             if (owner != null && registration.equals(this.getOwner())) {
-                logger.warn("User owns study");
+                LOGGER.warn("User owns study");
                 hasPermission = true;
             }
             if (sharedStudies != null) {
                 for (ShareStudy ss : sharedStudies) {
                     if (registration.equals(ss.getRegistration())) {
-                        logger.warn("User is linked to study");
+                        LOGGER.warn("User is linked to study");
                         hasPermission = true;
                         break;
                     } else if (owner != null || sharedStudies != null) {
                         hasPermission = false;
                         if (owner != null && registration.equals(this.getOwner())) {
-                            logger.info("User owns study");
+                            LOGGER.info("User owns study");
                             hasPermission = true;
                         }
                         if (sharedStudies != null) {
                             for (ShareStudy shares : sharedStudies) {
                                 if (registration.equals(shares.getRegistration())) {
-                                    logger.info("User is linked to study");
+                                    LOGGER.info("User is linked to study");
                                     hasPermission = true;
                                     break;
                                 }
                             }
                         }
                     } else {
-                        logger.warn("Study does not give permission");
+                        LOGGER.warn("Study does not give permission");
                         hasPermission = false;
                     }
                 }
             }
         } else {
-            logger.warn("Study does not give permission");
+            LOGGER.warn("Study does not give permission");
             hasPermission = false;
         }
         if (!hasPermission) {
@@ -807,5 +807,10 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
         }
         return hasPermission;
 
+    }
+
+    @Override
+    public Set<StudyAttribute> getAnnotations() {
+        return this.getStudyAttributes();
     }
 }

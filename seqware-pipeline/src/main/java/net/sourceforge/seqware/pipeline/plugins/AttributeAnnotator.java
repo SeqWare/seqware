@@ -47,7 +47,7 @@ import org.openide.util.lookup.ServiceProvider;
  * <p>
  * AttributeAnnotator class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -98,7 +98,7 @@ public class AttributeAnnotator extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -108,7 +108,7 @@ public class AttributeAnnotator extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -118,7 +118,7 @@ public class AttributeAnnotator extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -295,7 +295,7 @@ public class AttributeAnnotator extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -305,12 +305,12 @@ public class AttributeAnnotator extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
     public String get_description() {
-        return "Experimental plugin. Allows the annotation of objects in the database with 'skip' values.";
+        return "Allows the annotation of objects in the database with 'skip' values.";
     }
 
     private boolean parseFile(Map<String, Map<String, Map<String, String>>> bulkMap) {
@@ -392,7 +392,7 @@ public class AttributeAnnotator extends Plugin {
 
     private void bulkInsertSample(Map<String, Map<String, String>> wmap) {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-            Integer swid = Integer.parseInt((String) entry.getKey());
+            Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
             Set<SampleAttribute> atts = new TreeSet<>();
             for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
@@ -407,7 +407,7 @@ public class AttributeAnnotator extends Plugin {
 
     private void bulkInsertProcessing(Map<String, Map<String, String>> wmap) {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-            Integer swid = Integer.parseInt((String) entry.getKey());
+            Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
             Set<ProcessingAttribute> atts = new TreeSet<>();
             for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
@@ -422,7 +422,7 @@ public class AttributeAnnotator extends Plugin {
 
     private void bulkInsertStudy(Map<String, Map<String, String>> wmap) {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-            Integer swid = Integer.parseInt((String) entry.getKey());
+            Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
             Set<StudyAttribute> atts = new TreeSet<>();
             for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
@@ -437,7 +437,7 @@ public class AttributeAnnotator extends Plugin {
 
     private void bulkInsertIUS(Map<String, Map<String, String>> wmap) {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-            Integer swid = Integer.parseInt((String) entry.getKey());
+            Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
             Set<IUSAttribute> atts = new TreeSet<>();
             for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
@@ -452,7 +452,7 @@ public class AttributeAnnotator extends Plugin {
 
     private void bulkInsertExperiment(Map<String, Map<String, String>> wmap) {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-            Integer swid = Integer.parseInt((String) entry.getKey());
+            Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
             Set<ExperimentAttribute> atts = new TreeSet<>();
             for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
@@ -467,7 +467,7 @@ public class AttributeAnnotator extends Plugin {
 
     private void bulkInsertLane(Map<String, Map<String, String>> wmap) {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-            Integer swid = Integer.parseInt((String) entry.getKey());
+            Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
             Set<LaneAttribute> atts = new TreeSet<>();
             for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
@@ -482,7 +482,7 @@ public class AttributeAnnotator extends Plugin {
 
     private void bulkInsertSequencerRun(Map<String, Map<String, String>> wmap) {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-            Integer swid = Integer.parseInt((String) entry.getKey());
+            Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
             Set<SequencerRunAttribute> atts = new TreeSet<>();
             for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
@@ -497,7 +497,7 @@ public class AttributeAnnotator extends Plugin {
 
     private void bulkInsertWorkflow(Map<String, Map<String, String>> wmap) {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-            Integer swid = Integer.parseInt((String) entry.getKey());
+            Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
             Set<WorkflowAttribute> atts = new TreeSet<>();
             for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
@@ -512,7 +512,7 @@ public class AttributeAnnotator extends Plugin {
 
     private void bulkInsertWorkflowRun(Map<String, Map<String, String>> wmap) {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
-            Integer swid = Integer.parseInt((String) entry.getKey());
+            Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
             Set<WorkflowRunAttribute> atts = new TreeSet<>();
             for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {

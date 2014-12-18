@@ -22,7 +22,7 @@ import org.hibernate.annotations.Cascade;
  * @version $Id: $Id
  */
 @Table(name = "file_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "file_id", "tag", "value" }) })
-public class FileAttribute implements Attribute<File>, Comparable<FileAttribute> {
+public class FileAttribute implements java.io.Serializable, Attribute<File>, Comparable<FileAttribute> {
 
     @Id
     @SequenceGenerator(name = "file_attribute_id_seq_gen", sequenceName = "file_attribute_id_seq")
@@ -59,7 +59,7 @@ public class FileAttribute implements Attribute<File>, Comparable<FileAttribute>
      * <p>
      * Constructor for FileAttribute.
      * </p>
-     * 
+     *
      * @param fileAttributeId
      *            a {@link java.lang.Integer} object.
      */
@@ -71,7 +71,7 @@ public class FileAttribute implements Attribute<File>, Comparable<FileAttribute>
      * <p>
      * Getter for the field <code>file</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
     public File getFile() {
@@ -82,7 +82,7 @@ public class FileAttribute implements Attribute<File>, Comparable<FileAttribute>
      * <p>
      * Setter for the field <code>file</code>.
      * </p>
-     * 
+     *
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
@@ -130,7 +130,7 @@ public class FileAttribute implements Attribute<File>, Comparable<FileAttribute>
      * <p>
      * Getter for the field <code>fileAttributeId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getFileAttributeId() {
@@ -141,7 +141,7 @@ public class FileAttribute implements Attribute<File>, Comparable<FileAttribute>
      * <p>
      * Setter for the field <code>fileAttributeId</code>.
      * </p>
-     * 
+     *
      * @param fileAttributeId
      *            a {@link java.lang.Integer} object.
      */

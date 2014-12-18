@@ -675,7 +675,7 @@ public interface Metadata {
 
     /**
      * Check to see if client seqware version matches server version
-     * 
+     *
      * @return
      */
     public boolean checkClientServerMatchingVersion();
@@ -1225,4 +1225,28 @@ public interface Metadata {
     public List<Sample> getSampleByName(String name);
 
     public SequencerRun getSequencerRunByName(String name);
+
+    /**
+     * Get ius by sw accession
+     * 
+     * @param swAccession
+     * @return
+     */
+    public IUS getIUS(int swAccession);
+
+    /**
+     * Get sample by swa
+     * 
+     * @param swAccession
+     * @return
+     */
+    public Sample getSample(int swAccession);
+
+    /**
+     * Get study by swa
+     * 
+     * @param swAccession
+     * @return
+     */
+    public Study getStudy(int swAccession);
 }

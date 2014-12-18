@@ -9,11 +9,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * Invoice class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -36,7 +38,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
     private String notes;
     private Integer swAccession;
     private Date createTimestamp;
-    private Logger logger;
+    private static final Logger LOGGER = LoggerFactory.getLogger(Invoice.class);
     private Set<Expense> expenses = new TreeSet<>();
 
     // private Set<InvoiceAttribute> invoiceAttributes = new TreeSet<InvoiceAttribute>();
@@ -48,12 +50,11 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      */
     public Invoice() {
         super();
-        logger = logger;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param that
      */
     @Override
@@ -77,7 +78,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -103,11 +104,11 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
         }
 
         if (!hasPermission) {
-            logger.info("Invoice does not give permission");
+            LOGGER.info("Invoice does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress()
                     + " does not have permission to modify aspects of invoice " + this.getSwAccession());
         } else {
-            logger.info("Invoices are public by default");
+            LOGGER.info("Invoices are public by default");
         }
         return hasPermission;
     }
@@ -122,7 +123,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>invoiceId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getInvoiceId() {
@@ -133,7 +134,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>invoiceId</code>.
      * </p>
-     * 
+     *
      * @param invoiceId
      *            a {@link java.lang.Integer} object.
      */
@@ -145,7 +146,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -156,7 +157,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @param owner
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
@@ -168,7 +169,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>startDate</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getStartDate() {
@@ -179,7 +180,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>startDate</code>.
      * </p>
-     * 
+     *
      * @param startDate
      *            a {@link java.util.Date} object.
      */
@@ -191,7 +192,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>endDate</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getEndDate() {
@@ -202,7 +203,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>endDate</code>.
      * </p>
-     * 
+     *
      * @param endDate
      *            a {@link java.util.Date} object.
      */
@@ -214,7 +215,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>state</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public InvoiceState getState() {
@@ -225,7 +226,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>state</code>.
      * </p>
-     * 
+     *
      * @param state
      *            a {@link java.lang.String} object.
      */
@@ -237,7 +238,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * isFinalized.
      * </p>
-     * 
+     *
      * @return a boolean.
      */
     public boolean isFinalized() {
@@ -248,7 +249,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>finalized</code>.
      * </p>
-     * 
+     *
      * @param finalized
      *            a boolean.
      */
@@ -260,7 +261,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * isFullyPaid.
      * </p>
-     * 
+     *
      * @return a boolean.
      */
     public boolean isFullyPaid() {
@@ -271,7 +272,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>fullyPaid</code>.
      * </p>
-     * 
+     *
      * @param fullyPaid
      *            a boolean.
      */
@@ -283,7 +284,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>paidAmount</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Double} object.
      */
     public Double getPaidAmount() {
@@ -294,7 +295,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>paidAmount</code>.
      * </p>
-     * 
+     *
      * @param paidAmount
      *            a {@link java.lang.Double} object.
      */
@@ -306,7 +307,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>daysUntilDue</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getDaysUntilDue() {
@@ -317,7 +318,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>daysUntilDue</code>.
      * </p>
-     * 
+     *
      * @param daysUntilDue
      *            a {@link java.lang.Integer} object.
      */
@@ -329,7 +330,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>externalId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getExternalId() {
@@ -340,7 +341,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>externalId</code>.
      * </p>
-     * 
+     *
      * @param externalId
      *            a {@link java.lang.String} object.
      */
@@ -352,7 +353,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>clientNotes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getClientNotes() {
@@ -363,7 +364,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>clientNotes</code>.
      * </p>
-     * 
+     *
      * @param clientNotes
      *            a {@link java.lang.String} object.
      */
@@ -375,7 +376,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>notes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getNotes() {
@@ -386,7 +387,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>notes</code>.
      * </p>
-     * 
+     *
      * @param notes
      *            a {@link java.lang.String} object.
      */
@@ -398,7 +399,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -409,7 +410,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -421,7 +422,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -432,7 +433,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @param createTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -444,7 +445,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>expenses</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Expense> getExpenses() {
@@ -455,7 +456,7 @@ public class Invoice extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>expenses</code>.
      * </p>
-     * 
+     *
      * @param expenses
      *            a {@link java.util.Set} object.
      */

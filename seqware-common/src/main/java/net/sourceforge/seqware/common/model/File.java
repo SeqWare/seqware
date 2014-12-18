@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory;
  * <p>
  * File class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
-public class File extends PermissionsAware implements Serializable, Comparable<File> {
+public class File extends PermissionsAware implements Serializable, Comparable<File>, Annotatable<FileAttribute> {
 
     private static final long serialVersionUID = 3681322115923390568L;
     private Integer fileId;
@@ -38,13 +38,13 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
     private Set<FileAttribute> fileAttributes = new TreeSet<>();
     private Long size;
     private Boolean skip;
-    final Logger logger = LoggerFactory.getLogger(File.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(File.class);
 
     /**
      * <p>
      * Getter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getProcessings() {
@@ -55,7 +55,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @param processing
      *            a {@link java.util.Set} object.
      */
@@ -74,7 +74,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param that
      */
     @Override
@@ -92,7 +92,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -117,7 +117,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * getFileName.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getFileName() {
@@ -128,7 +128,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * getJsonEscapeFileName.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeFileName() {
@@ -139,7 +139,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>fileId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getFileId() {
@@ -150,7 +150,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>fileId</code>.
      * </p>
-     * 
+     *
      * @param fileId
      *            a {@link java.lang.Integer} object.
      */
@@ -162,7 +162,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>filePath</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getFilePath() {
@@ -173,7 +173,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>filePath</code>.
      * </p>
-     * 
+     *
      * @param filePath
      *            a {@link java.lang.String} object.
      */
@@ -185,7 +185,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>type</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getType() {
@@ -196,7 +196,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>type</code>.
      * </p>
-     * 
+     *
      * @param type
      *            a {@link java.lang.String} object.
      */
@@ -208,7 +208,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>metaType</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getMetaType() {
@@ -219,7 +219,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>metaType</code>.
      * </p>
-     * 
+     *
      * @param metaType
      *            a {@link java.lang.String} object.
      */
@@ -231,7 +231,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * getJsonEscapeDescription.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -242,7 +242,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -253,7 +253,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @param description
      *            a {@link java.lang.String} object.
      */
@@ -265,7 +265,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -276,7 +276,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -288,7 +288,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -299,7 +299,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @param owner
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
@@ -311,7 +311,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsSelected() {
@@ -322,7 +322,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @param isSelected
      *            a {@link java.lang.Boolean} object.
      */
@@ -334,7 +334,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>url</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getUrl() {
@@ -345,7 +345,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>url</code>.
      * </p>
-     * 
+     *
      * @param url
      *            a {@link java.lang.String} object.
      */
@@ -357,7 +357,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>urlLabel</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getUrlLabel() {
@@ -368,7 +368,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>urlLabel</code>.
      * </p>
-     * 
+     *
      * @param urlLabel
      *            a {@link java.lang.String} object.
      */
@@ -380,7 +380,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>md5sum</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getMd5sum() {
@@ -391,7 +391,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>md5sum</code>.
      * </p>
-     * 
+     *
      * @param md5sum
      *            a {@link java.lang.String} object.
      */
@@ -403,7 +403,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>fileType</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.FileType} object.
      */
     public FileType getFileType() {
@@ -414,7 +414,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>fileType</code>.
      * </p>
-     * 
+     *
      * @param fileType
      *            a {@link net.sourceforge.seqware.common.model.FileType} object.
      */
@@ -447,19 +447,19 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
             }
         } else {// orphaned File
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                logger.warn("Modifying Orphan File: " + toString());
+                LOGGER.warn("Modifying Orphan File: " + toString());
                 hasPermission = true;
 
             } else if (owner == null) {
-                logger.warn("File has no owner! Modifying Orphan File: " + toString());
+                LOGGER.warn("File has no owner! Modifying Orphan File: " + toString());
                 hasPermission = true;
             } else {
-                logger.warn("Not modifying Orphan File: " + toString());
+                LOGGER.warn("Not modifying Orphan File: " + toString());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            logger.info("File does not give permission");
+            LOGGER.info("File does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + toString());
         }
         return hasPermission;
@@ -469,7 +469,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>fileAttributes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<FileAttribute> getFileAttributes() {
@@ -480,7 +480,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>fileAttributes</code>.
      * </p>
-     * 
+     *
      * @param fileAttributes
      *            a {@link java.util.Set} object.
      */
@@ -492,7 +492,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Getter for the field <code>size</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Long} object.
      */
     public Long getSize() {
@@ -503,7 +503,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      * <p>
      * Setter for the field <code>size</code>.
      * </p>
-     * 
+     *
      * @param size
      *            a {@link java.lang.Long} object.
      */
@@ -524,6 +524,11 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      */
     public void setSkip(Boolean skip) {
         this.skip = skip;
+    }
+
+    @Override
+    public Set<FileAttribute> getAnnotations() {
+        return this.getFileAttributes();
     }
 
 }

@@ -26,7 +26,8 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Experiment extends PermissionsAware implements Serializable, Comparable<Experiment>, ParentAccessionModel {
+public class Experiment extends PermissionsAware implements Serializable, Comparable<Experiment>, ParentAccessionModel,
+        Annotatable<ExperimentAttribute> {
 
     private static final long serialVersionUID = 2L;
     private Integer experimentId;
@@ -77,7 +78,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
     // addition form fields
     private String strExpectedNumberRuns;
     private String strExpectedNumberReads;
-    final Logger logger = LoggerFactory.getLogger(Experiment.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Experiment.class);
 
     /**
      * <p>
@@ -90,7 +91,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param that
      */
     @Override
@@ -126,7 +127,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -149,26 +150,26 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
 
     /*
      * public int compareTo(Experiment that) { if(that == null) return -1;
-     * 
+     *
      * if(that.getName() == this.getName()) // when both names are null return 0;
-     * 
+     *
      * if(that.getName() == null) return -1; // when only the other name is null
-     * 
+     *
      * return(that.getName().compareTo(this.getName())); }
-     * 
+     *
      * public String toString() { return new ToStringBuilder(this) .append("experimentId", getExperimentId()) .append("name", getName())
      * .toString(); }
-     * 
+     *
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Experiment) ) return false;
      * Experiment castOther = (Experiment) other; return new EqualsBuilder() .append(this.getName(), castOther.getName()) .isEquals(); }
-     * 
+     *
      * public int hashCode() { return new HashCodeBuilder() .append(getName()) .toHashCode(); }
      */
     /**
      * <p>
      * Getter for the field <code>platform</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
     public Platform getPlatform() {
@@ -179,7 +180,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>platform</code>.
      * </p>
-     * 
+     *
      * @param platform
      *            a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
@@ -191,7 +192,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>experimentLibraryDesign</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
     public ExperimentLibraryDesign getExperimentLibraryDesign() {
@@ -202,7 +203,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>experimentLibraryDesign</code>.
      * </p>
-     * 
+     *
      * @param experimentLibraryDesign
      *            a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
@@ -214,7 +215,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expLibDesignName</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getExpLibDesignName() {
@@ -225,7 +226,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expLibDesignName</code>.
      * </p>
-     * 
+     *
      * @param expLibDesignName
      *            a {@link java.lang.String} object.
      */
@@ -237,7 +238,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expLibDesignDesc</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getExpLibDesignDesc() {
@@ -248,7 +249,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expLibDesignDesc</code>.
      * </p>
-     * 
+     *
      * @param expLibDesignDesc
      *            a {@link java.lang.String} object.
      */
@@ -260,7 +261,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expLibDesignProtocol</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getExpLibDesignProtocol() {
@@ -271,7 +272,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expLibDesignProtocol</code>.
      * </p>
-     * 
+     *
      * @param expLibDesignProtocol
      *            a {@link java.lang.String} object.
      */
@@ -283,7 +284,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expLibDesignStrategy</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExpLibDesignStrategy() {
@@ -294,7 +295,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expLibDesignStrategy</code>.
      * </p>
-     * 
+     *
      * @param expLibDesignStrategy
      *            a {@link java.lang.Integer} object.
      */
@@ -306,7 +307,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expLibDesignSource</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExpLibDesignSource() {
@@ -317,7 +318,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expLibDesignSource</code>.
      * </p>
-     * 
+     *
      * @param expLibDesignSource
      *            a {@link java.lang.Integer} object.
      */
@@ -329,7 +330,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expLibDesignSelection</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExpLibDesignSelection() {
@@ -340,7 +341,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expLibDesignSelection</code>.
      * </p>
-     * 
+     *
      * @param expLibDesignSelection
      *            a {@link java.lang.Integer} object.
      */
@@ -352,7 +353,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>spotDesignReadSpec</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getSpotDesignReadSpec() {
@@ -363,7 +364,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>spotDesignReadSpec</code>.
      * </p>
-     * 
+     *
      * @param spotDesignReadSpec
      *            a {@link java.lang.String} object.
      */
@@ -375,7 +376,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>platformInt</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getPlatformInt() {
@@ -386,7 +387,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>platformInt</code>.
      * </p>
-     * 
+     *
      * @param platformInt
      *            a {@link java.lang.Integer} object.
      */
@@ -398,7 +399,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>experimentId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExperimentId() {
@@ -409,7 +410,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>experimentId</code>.
      * </p>
-     * 
+     *
      * @param experimentId
      *            a {@link java.lang.Integer} object.
      */
@@ -421,7 +422,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -432,7 +433,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -444,7 +445,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>title</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getTitle() {
@@ -455,7 +456,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * getJsonEscapeTitle.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeTitle() {
@@ -466,7 +467,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>title</code>.
      * </p>
-     * 
+     *
      * @param title
      *            a {@link java.lang.String} object.
      */
@@ -478,7 +479,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getName() {
@@ -489,7 +490,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * getJsonEscapeName.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeName() {
@@ -500,7 +501,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      */
@@ -512,7 +513,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * getJsonEscapeDescription.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -523,7 +524,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * getJsonEscapeDescription200.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription200() {
@@ -538,7 +539,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -549,7 +550,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @param description
      *            a {@link java.lang.String} object.
      */
@@ -561,7 +562,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>alias</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
@@ -572,7 +573,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>alias</code>.
      * </p>
-     * 
+     *
      * @param alias
      *            a {@link java.lang.String} object.
      */
@@ -584,7 +585,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>accession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAccession() {
@@ -595,7 +596,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>accession</code>.
      * </p>
-     * 
+     *
      * @param accession
      *            a {@link java.lang.String} object.
      */
@@ -607,7 +608,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>status</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getStatus() {
@@ -618,7 +619,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>status</code>.
      * </p>
-     * 
+     *
      * @param status
      *            a {@link java.lang.String} object.
      */
@@ -630,7 +631,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>centerName</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getCenterName() {
@@ -641,7 +642,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>centerName</code>.
      * </p>
-     * 
+     *
      * @param centerName
      *            a {@link java.lang.String} object.
      */
@@ -653,7 +654,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>sequenceSpace</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getSequenceSpace() {
@@ -664,7 +665,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>sequenceSpace</code>.
      * </p>
-     * 
+     *
      * @param sequenceSpace
      *            a {@link java.lang.String} object.
      */
@@ -676,7 +677,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>baseCaller</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getBaseCaller() {
@@ -687,7 +688,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>baseCaller</code>.
      * </p>
-     * 
+     *
      * @param baseCaller
      *            a {@link java.lang.String} object.
      */
@@ -699,7 +700,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>qualityScorer</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getQualityScorer() {
@@ -710,7 +711,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>qualityScorer</code>.
      * </p>
-     * 
+     *
      * @param qualityScorer
      *            a {@link java.lang.String} object.
      */
@@ -722,7 +723,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>qualityNumberOfLevels</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getQualityNumberOfLevels() {
@@ -733,7 +734,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>qualityNumberOfLevels</code>.
      * </p>
-     * 
+     *
      * @param qualityNumberOfLevels
      *            a {@link java.lang.Integer} object.
      */
@@ -745,7 +746,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>qualityMultiplier</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getQualityMultiplier() {
@@ -756,7 +757,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>qualityMultiplier</code>.
      * </p>
-     * 
+     *
      * @param qualityMultiplier
      *            a {@link java.lang.Integer} object.
      */
@@ -768,7 +769,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>qualityType</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getQualityType() {
@@ -779,7 +780,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>qualityType</code>.
      * </p>
-     * 
+     *
      * @param qualityType
      *            a {@link java.lang.String} object.
      */
@@ -791,7 +792,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expectedNumberRuns</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExpectedNumberRuns() {
@@ -802,7 +803,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expectedNumberRuns</code>.
      * </p>
-     * 
+     *
      * @param expectedNumberRuns
      *            a {@link java.lang.Integer} object.
      */
@@ -817,7 +818,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expectedNumberSpots</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Long} object.
      */
     public Long getExpectedNumberSpots() {
@@ -828,7 +829,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expectedNumberSpots</code>.
      * </p>
-     * 
+     *
      * @param expectedNumberSpots
      *            a {@link java.lang.Long} object.
      */
@@ -840,7 +841,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expectedNumberReads</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Long} object.
      */
     public Long getExpectedNumberReads() {
@@ -851,7 +852,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expectedNumberReads</code>.
      * </p>
-     * 
+     *
      * @param expectedNumberReads
      *            a {@link java.lang.Long} object.
      */
@@ -866,7 +867,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -877,7 +878,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @param owner
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
@@ -889,7 +890,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>study</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
     public Study getStudy() {
@@ -900,7 +901,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>study</code>.
      * </p>
-     * 
+     *
      * @param study
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      */
@@ -912,7 +913,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -923,7 +924,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @param createTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -935,7 +936,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -946,7 +947,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @param updateTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -958,7 +959,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>serialVersionUID</code>.
      * </p>
-     * 
+     *
      * @return a long.
      */
     public static long getSerialVersionUID() {
@@ -969,7 +970,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>samples</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<Sample> getSamples() {
@@ -980,7 +981,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>samples</code>.
      * </p>
-     * 
+     *
      * @param samples
      *            a {@link java.util.SortedSet} object.
      */
@@ -992,7 +993,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expSpotDesignTagSpec</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getExpSpotDesignTagSpec() {
@@ -1003,7 +1004,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expSpotDesignTagSpec</code>.
      * </p>
-     * 
+     *
      * @param expSpotDesignTagSpec
      *            a {@link java.lang.String} object.
      */
@@ -1015,7 +1016,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expSpotDesignAdapterSpec</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getExpSpotDesignAdapterSpec() {
@@ -1026,7 +1027,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expSpotDesignAdapterSpec</code>.
      * </p>
-     * 
+     *
      * @param expSpotDesignAdapterSpec
      *            a {@link java.lang.String} object.
      */
@@ -1038,7 +1039,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>expSpotDesignReadsPerSpot</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExpSpotDesignReadsPerSpot() {
@@ -1049,7 +1050,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>expSpotDesignReadsPerSpot</code>.
      * </p>
-     * 
+     *
      * @param expSpotDesignReadsPerSpot
      *            a {@link java.lang.Integer} object.
      */
@@ -1061,7 +1062,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>experimentSpotDesign</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
     public ExperimentSpotDesign getExperimentSpotDesign() {
@@ -1072,7 +1073,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>experimentSpotDesign</code>.
      * </p>
-     * 
+     *
      * @param experimentSpotDesign
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
@@ -1084,7 +1085,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsSelected() {
@@ -1095,7 +1096,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @param isSelected
      *            a {@link java.lang.Boolean} object.
      */
@@ -1107,7 +1108,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsHasFile() {
@@ -1118,7 +1119,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @param isHasFile
      *            a {@link java.lang.Boolean} object.
      */
@@ -1130,7 +1131,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>strExpectedNumberRuns</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getStrExpectedNumberRuns() {
@@ -1141,7 +1142,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>strExpectedNumberRuns</code>.
      * </p>
-     * 
+     *
      * @param strExpectedNumberRuns
      *            a {@link java.lang.String} object.
      */
@@ -1156,7 +1157,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>strExpectedNumberReads</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getStrExpectedNumberReads() {
@@ -1167,7 +1168,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>strExpectedNumberReads</code>.
      * </p>
-     * 
+     *
      * @param strExpectedNumberReads
      *            a {@link java.lang.String} object.
      */
@@ -1182,7 +1183,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getProcessings() {
@@ -1193,7 +1194,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @param processings
      *            a {@link java.util.Set} object.
      */
@@ -1205,7 +1206,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>experimentAttributes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     @XmlElementWrapper(name = "ExperimentAttributes")
@@ -1218,7 +1219,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>experimentAttributes</code>.
      * </p>
-     * 
+     *
      * @param experimentAttributes
      *            a {@link java.util.Set} object.
      */
@@ -1248,20 +1249,25 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
             hasPermission = newStudy.givesPermission(registration, considered);
         } else {// orphaned Experiment
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                logger.warn("Modifying Orphan Experiment: " + this.getName());
+                LOGGER.warn("Modifying Orphan Experiment: " + this.getName());
                 hasPermission = true;
             } else if (owner == null) {
-                logger.warn("Experiment has no owner! Modifying Orphan Experiment: " + this.getName());
+                LOGGER.warn("Experiment has no owner! Modifying Orphan Experiment: " + this.getName());
                 hasPermission = true;
             } else {
-                logger.warn("Not modifying Orphan Experiment: " + this.getName());
+                LOGGER.warn("Not modifying Orphan Experiment: " + this.getName());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            logger.info("Experiment does not give permission");
+            LOGGER.info("Experiment does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.getName());
         }
         return hasPermission;
+    }
+
+    @Override
+    public Set<ExperimentAttribute> getAnnotations() {
+        return this.getExperimentAttributes();
     }
 }

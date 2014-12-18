@@ -785,4 +785,22 @@ public class MetadataNoConnection implements Metadata {
     public boolean checkClientServerMatchingVersion() {
         return false;
     }
+
+    @Override
+    public IUS getIUS(int swAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public Sample getSample(int swAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
+
+    @Override
+    public Study getStudy(int swAccession) {
+        logger.info("No metadata connection");
+        return null;
+    }
 }

@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.model;
 
+import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,7 +22,7 @@ import org.hibernate.annotations.Cascade;
  * @version $Id: $Id
  */
 @Table(name = "workflow_run_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "workflow_run_id", "tag", "value" }) })
-public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<WorkflowRunAttribute> {
+public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<WorkflowRunAttribute>, Serializable {
 
     @Id
     @SequenceGenerator(name = "workflow_run_attribute_id_seq_gen", sequenceName = "workflow_run_attribute_id_seq")
@@ -84,7 +85,7 @@ public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<
      * <p>
      * Getter for the field <code>workflowRun</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
     public WorkflowRun getWorkflowRun() {
@@ -95,7 +96,7 @@ public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<
      * <p>
      * Setter for the field <code>workflowRun</code>.
      * </p>
-     * 
+     *
      * @param workflowRun
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
@@ -107,7 +108,7 @@ public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<
      * <p>
      * Getter for the field <code>workflowRunAttributeId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getWorkflowRunAttributeId() {
@@ -116,7 +117,7 @@ public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param t
      */
     @Override

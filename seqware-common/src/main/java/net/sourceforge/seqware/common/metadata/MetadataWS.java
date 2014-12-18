@@ -2661,6 +2661,36 @@ public class MetadataWS implements Metadata {
         return webServiceVersion.equals(clientVersion);
     }
 
+    @Override
+    public IUS getIUS(int swAccession) {
+        try {
+            return ll.findIUS("/" + swAccession);
+        } catch (IOException | JAXBException ex) {
+            Log.error(ex);
+        }
+        return null;
+    }
+
+    @Override
+    public Sample getSample(int swAccession) {
+        try {
+            return ll.findSample("/" + swAccession);
+        } catch (IOException | JAXBException ex) {
+            Log.error(ex);
+        }
+        return null;
+    }
+
+    @Override
+    public Study getStudy(int swAccession) {
+        try {
+            return ll.findStudy("/" + swAccession);
+        } catch (IOException | JAXBException ex) {
+            Log.error(ex);
+        }
+        return null;
+    }
+
     /*
      * public void annotateFile(int fileSWID, FileAttribute att, Boolean skip) { try { Log.debug("Annotating WorkflowRun " + fileSWID +
      * " with skip=" + skip + ", Att = " + att); File obj = ll.findFile("/" + fileSWID); if (skip != null) { // obj.setSkip(skip);
@@ -2669,7 +2699,7 @@ public class MetadataWS implements Metadata {
      * ll.updateFile("/" + fileSWID, obj); } catch (IOException ex) { Log.error("IOException while updating study " + fileSWID + " " +
      * ex.getMessage()); } catch (JAXBException ex) { Log.error("JAXBException while updating study " + fileSWID + " " + ex.getMessage()); }
      * catch (ResourceException ex) { Log.error("ResourceException while updating study " + fileSWID + " " + ex.getMessage()); }
-     *
+     * 
      * }
      */
     protected class LowLevel {

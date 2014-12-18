@@ -666,4 +666,19 @@ public class MetadataInMemory implements Metadata {
         return true;
     }
 
+    @Override
+    public IUS getIUS(int swAccession) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Sample getSample(int swAccession) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Study getStudy(int swAccession) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Lane extends PermissionsAware implements Serializable, Comparable<Lane>, ParentAccessionModel {
+public class Lane extends PermissionsAware implements Serializable, Comparable<Lane>, ParentAccessionModel, Annotatable<LaneAttribute> {
 
     private static final long serialVersionUID = 5681328115923390568L;
     private Integer laneId;
@@ -57,7 +57,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
     private LibraryStrategy libraryStrategy;
     private LibrarySelection librarySelection;
     private LibrarySource librarySource;
-    final Logger logger = LoggerFactory.getLogger(Lane.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Lane.class);
 
     /**
      * <p>
@@ -70,7 +70,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param that
      */
     @Override
@@ -102,7 +102,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -125,25 +125,25 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     /*
      * public int compareTo(Lane that) { if(that == null || getSwAccession() == null) return -1;
-     * 
+     *
      * if(that.getSwAccession() == this.getSwAccession()) // when both names are null return 0;
-     * 
+     *
      * if(that.getSwAccession() == null) return -1; // when only the other name is null
-     * 
+     *
      * return(that.getSwAccession().compareTo(this.getSwAccession())); }
-     * 
+     *
      * public String toString() { return new ToStringBuilder(this) .append("laneId", getLaneId()) .toString(); }
-     * 
+     *
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Lane) ) return false; Lane
      * castOther = (Lane) other; return new EqualsBuilder() .append(this.getSwAccession(), castOther.getSwAccession()) .isEquals(); }
-     * 
+     *
      * public int hashCode() { return new HashCodeBuilder() .append(getSwAccession()) .toHashCode(); }
      */
     /**
      * <p>
      * getErrorCnt.
      * </p>
-     * 
+     *
      * @return a int.
      */
     public int getErrorCnt() {
@@ -169,7 +169,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * getProcessingCnt.
      * </p>
-     * 
+     *
      * @return a int.
      */
     public int getProcessingCnt() {
@@ -195,7 +195,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * getProcessedCnt.
      * </p>
-     * 
+     *
      * @return a int.
      */
     public int getProcessedCnt() {
@@ -210,7 +210,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * getAllProcessings.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getAllProcessings() {
@@ -239,7 +239,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>ius</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<IUS> getIus() {
@@ -250,7 +250,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * getIUS.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<IUS> getIUS() {
@@ -261,7 +261,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * setIUS.
      * </p>
-     * 
+     *
      * @param ius
      *            a {@link java.util.SortedSet} object.
      */
@@ -273,7 +273,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>laneIndex</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getLaneIndex() {
@@ -284,7 +284,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>laneIndex</code>.
      * </p>
-     * 
+     *
      * @param laneIndex
      *            a {@link java.lang.Integer} object.
      */
@@ -296,7 +296,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>cycleDescriptor</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getCycleDescriptor() {
@@ -307,7 +307,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>cycleDescriptor</code>.
      * </p>
-     * 
+     *
      * @param cycleDescriptor
      *            a {@link java.lang.String} object.
      */
@@ -319,7 +319,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -330,7 +330,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -342,7 +342,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getProcessings() {
@@ -357,7 +357,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @param processings
      *            a {@link java.util.Set} object.
      */
@@ -369,7 +369,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * setProcessingsForView.
      * </p>
-     * 
+     *
      * @param processings
      *            a {@link java.util.Set} object.
      */
@@ -386,7 +386,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * addProcessing.
      * </p>
-     * 
+     *
      * @param processing
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
@@ -399,7 +399,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * getSamples.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<Sample> getSamples() {
@@ -417,7 +417,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>sample</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public Sample getSample() {
@@ -437,7 +437,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>sample</code>.
      * </p>
-     * 
+     *
      * @param sample
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
@@ -449,7 +449,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -460,7 +460,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @param createTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -472,7 +472,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -483,7 +483,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @param updateTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -495,7 +495,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>serialVersionUID</code>.
      * </p>
-     * 
+     *
      * @return a long.
      */
     public static long getSerialVersionUID() {
@@ -506,7 +506,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * getJsonEscapeDescription.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -517,7 +517,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -528,7 +528,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @param description
      *            a {@link java.lang.String} object.
      */
@@ -540,7 +540,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>tags</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getTags() {
@@ -551,7 +551,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>tags</code>.
      * </p>
-     * 
+     *
      * @param tags
      *            a {@link java.lang.String} object.
      */
@@ -563,7 +563,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>regions</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getRegions() {
@@ -574,7 +574,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>regions</code>.
      * </p>
-     * 
+     *
      * @param regions
      *            a {@link java.lang.String} object.
      */
@@ -586,7 +586,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>laneId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getLaneId() {
@@ -597,7 +597,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>laneId</code>.
      * </p>
-     * 
+     *
      * @param laneId
      *            a {@link java.lang.Integer} object.
      */
@@ -609,7 +609,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getName() {
@@ -620,7 +620,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * getJsonEscapeName.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeName() {
@@ -631,7 +631,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      */
@@ -643,7 +643,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>organism</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getOrganism() {
@@ -654,7 +654,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>organism</code>.
      * </p>
-     * 
+     *
      * @param organism
      *            a {@link java.lang.String} object.
      */
@@ -666,7 +666,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>sampleType</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getSampleType() {
@@ -677,7 +677,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>sampleType</code>.
      * </p>
-     * 
+     *
      * @param sampleType
      *            a {@link java.lang.String} object.
      */
@@ -687,14 +687,14 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     /*
      * public String getSampleName() { return sampleName; }
-     * 
+     *
      * public void setSampleName(String sampleName) { this.sampleName = sampleName; }
      */
     /**
      * <p>
      * Getter for the field <code>sampleCode</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getSampleCode() {
@@ -705,7 +705,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>sampleCode</code>.
      * </p>
-     * 
+     *
      * @param sampleCode
      *            a {@link java.lang.String} object.
      */
@@ -717,7 +717,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>skip</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getSkip() {
@@ -728,7 +728,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>skip</code>.
      * </p>
-     * 
+     *
      * @param skip
      *            a {@link java.lang.Boolean} object.
      */
@@ -748,7 +748,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>sequencerRun</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
     public SequencerRun getSequencerRun() {
@@ -759,7 +759,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>sequencerRun</code>.
      * </p>
-     * 
+     *
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
@@ -771,7 +771,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -782,7 +782,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @param owner
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
@@ -794,7 +794,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsSelected() {
@@ -805,7 +805,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @param isSelected
      *            a {@link java.lang.Boolean} object.
      */
@@ -817,7 +817,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsHasFile() {
@@ -828,7 +828,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @param isHasFile
      *            a {@link java.lang.Boolean} object.
      */
@@ -840,7 +840,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>workflowRuns</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<WorkflowRun> getWorkflowRuns() {
@@ -851,7 +851,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>workflowRuns</code>.
      * </p>
-     * 
+     *
      * @param workflowRuns
      *            a {@link java.util.Set} object.
      */
@@ -863,7 +863,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Getter for the field <code>laneAttributes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     @XmlElementWrapper(name = "LaneAttributes")
@@ -876,7 +876,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
      * <p>
      * Setter for the field <code>laneAttributes</code>.
      * </p>
-     * 
+     *
      * @param laneAttributes
      *            a {@link java.util.Set} object.
      */
@@ -918,19 +918,19 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
         // this object is orphaned, but does the person own it?
         if (sample == null && ius == null) {
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                logger.warn("Modifying Orphan Lane: " + toString());
+                LOGGER.warn("Modifying Orphan Lane: " + toString());
                 hasPermission = true;
             } else if (owner == null) {
-                logger.warn("Orphan Lane has no owner! Allowing modifications: " + toString());
+                LOGGER.warn("Orphan Lane has no owner! Allowing modifications: " + toString());
                 hasPermission = true;
             } else {
-                logger.warn("Not modifying Orphan Lane: " + toString());
+                LOGGER.warn("Not modifying Orphan Lane: " + toString());
                 hasPermission = false;
             }
         }
 
         if (!hasPermission) {
-            logger.info("Lane does not give permission");
+            LOGGER.info("Lane does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + toString());
         }
         return hasPermission;
@@ -967,6 +967,11 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     public void setLibrarySource(LibrarySource librarySource) {
         this.librarySource = librarySource;
+    }
+
+    @Override
+    public Set<LaneAttribute> getAnnotations() {
+        return this.getLaneAttributes();
     }
 
 }

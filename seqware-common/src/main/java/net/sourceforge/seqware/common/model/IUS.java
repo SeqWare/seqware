@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class IUS extends PermissionsAware implements Serializable, Comparable<IUS>, ParentAccessionModel {
+public class IUS extends PermissionsAware implements Serializable, Comparable<IUS>, ParentAccessionModel, Annotatable<IUSAttribute> {
 
     private static final long serialVersionUID = 3472028115923390568L;
     private Integer iusId;
@@ -44,7 +44,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
     // not persist
     private Boolean isHasFile = false;
     private Boolean isSelected = false;
-    final Logger logger = LoggerFactory.getLogger(IUS.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(IUS.class);
 
     /**
      * <p>
@@ -57,7 +57,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param that
      */
     @Override
@@ -92,7 +92,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -117,7 +117,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -128,7 +128,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @param owner
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
@@ -140,7 +140,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>iusId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getIusId() {
@@ -151,7 +151,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>iusId</code>.
      * </p>
-     * 
+     *
      * @param iusId
      *            a {@link java.lang.Integer} object.
      */
@@ -163,7 +163,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>lane</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
     public Lane getLane() {
@@ -174,7 +174,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>lane</code>.
      * </p>
-     * 
+     *
      * @param lane
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
@@ -186,7 +186,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>sample</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
     public Sample getSample() {
@@ -197,7 +197,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>sample</code>.
      * </p>
-     * 
+     *
      * @param sample
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
@@ -209,7 +209,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * getJsonEscapeName.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeName() {
@@ -220,7 +220,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getName() {
@@ -231,7 +231,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      */
@@ -243,7 +243,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>alias</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
@@ -254,7 +254,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>alias</code>.
      * </p>
-     * 
+     *
      * @param alias
      *            a {@link java.lang.String} object.
      */
@@ -266,7 +266,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * getJsonEscapeDescription.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -277,7 +277,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -288,7 +288,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @param description
      *            a {@link java.lang.String} object.
      */
@@ -300,7 +300,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>tag</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getTag() {
@@ -311,7 +311,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>tag</code>.
      * </p>
-     * 
+     *
      * @param tag
      *            a {@link java.lang.String} object.
      */
@@ -323,7 +323,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -334,7 +334,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -346,7 +346,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -357,7 +357,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @param createTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -369,7 +369,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -380,7 +380,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @param updateTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -392,7 +392,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getProcessings() {
@@ -403,7 +403,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @param processings
      *            a {@link java.util.Set} object.
      */
@@ -415,7 +415,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>workflowRuns</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<WorkflowRun> getWorkflowRuns() {
@@ -426,7 +426,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>workflowRuns</code>.
      * </p>
-     * 
+     *
      * @param workflowRuns
      *            a {@link java.util.Set} object.
      */
@@ -438,7 +438,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsHasFile() {
@@ -449,7 +449,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @param isHasFile
      *            a {@link java.lang.Boolean} object.
      */
@@ -461,7 +461,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsSelected() {
@@ -472,7 +472,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @param isSelected
      *            a {@link java.lang.Boolean} object.
      */
@@ -484,7 +484,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>iusAttributes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     @XmlElementWrapper(name = "IUSAttributes")
@@ -497,7 +497,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>iusAttributes</code>.
      * </p>
-     * 
+     *
      * @param iusAttributes
      *            a {@link java.util.Set} object.
      */
@@ -509,7 +509,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Getter for the field <code>skip</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getSkip() {
@@ -520,7 +520,7 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
      * <p>
      * Setter for the field <code>skip</code>.
      * </p>
-     * 
+     *
      * @param skip
      *            a {@link java.lang.Boolean} object.
      */
@@ -551,20 +551,25 @@ public class IUS extends PermissionsAware implements Serializable, Comparable<IU
             hasPermission = sample.givesPermission(registration, considered);
         } else {// orphaned IUS
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                logger.warn("Modifying Orphan IUS: " + this.getTag());
+                LOGGER.warn("Modifying Orphan IUS: " + this.getTag());
                 hasPermission = true;
             } else if (owner == null) {
-                logger.warn("Orphan IUS has no owner! Allowing modifications: " + this.getTag());
+                LOGGER.warn("Orphan IUS has no owner! Allowing modifications: " + this.getTag());
                 hasPermission = true;
             } else {
-                logger.warn("Not modifying Orphan IUS: " + this.getTag());
+                LOGGER.warn("Not modifying Orphan IUS: " + this.getTag());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            logger.info("IUS does not give permission");
+            LOGGER.info("IUS does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.getTag());
         }
         return hasPermission;
+    }
+
+    @Override
+    public Set<IUSAttribute> getAnnotations() {
+        return this.getIusAttributes();
     }
 }
