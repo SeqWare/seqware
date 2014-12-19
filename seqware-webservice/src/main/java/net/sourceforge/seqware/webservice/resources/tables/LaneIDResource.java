@@ -18,7 +18,6 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.TreeSet;
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.LaneService;
@@ -36,7 +35,6 @@ import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import org.apache.log4j.Logger;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -49,13 +47,11 @@ import org.xml.sax.SAXException;
  * <p>
  * LaneIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class LaneIDResource extends DatabaseIDResource {
-
-    private Logger logger;
 
     /**
      * <p>
@@ -64,7 +60,6 @@ public class LaneIDResource extends DatabaseIDResource {
      */
     public LaneIDResource() {
         super("laneId");
-        logger = Logger.getLogger(LaneIDResource.class);
     }
 
     /**
@@ -81,27 +76,19 @@ public class LaneIDResource extends DatabaseIDResource {
         authenticate();
 
         LaneService ss = BeanFactory.getLaneServiceBean();
-        Lane lane = (Lane) testIfNull(ss.findBySWAccession(getId()));
+        Lane lane = testIfNull(ss.findBySWAccession(getId()));
+        CollectionPropertyName<Lane>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(Lane.class,
+                new String[] { "laneAttributes" });
         dto = copier.hibernate2dto(Lane.class, lane, new Class<?>[] { LibraryStrategy.class, LibrarySource.class, LibrarySelection.class },
-                new CollectionPropertyName<?>[] {});
+                createCollectionPropertyNames);
 
         if (fields.contains("sequencerRun")) {
             SequencerRun sr = lane.getSequencerRun();
             if (sr != null) {
                 SequencerRun copySR = copier.hibernate2dto(SequencerRun.class, sr);
                 dto.setSequencerRun(copySR);
-            } else if (sr == null) {
+            } else {
                 Log.info("Could not be found sequencer run");
-            }
-        }
-        if (fields.contains("attributes")) {
-            Set<LaneAttribute> las = lane.getLaneAttributes();
-            if (las != null && !las.isEmpty()) {
-                Set<LaneAttribute> newlas = new TreeSet<>();
-                for (LaneAttribute la : las) {
-                    newlas.add(copier.hibernate2dto(LaneAttribute.class, la));
-                }
-                dto.setLaneAttributes(newlas);
             }
         }
 
@@ -111,7 +98,7 @@ public class LaneIDResource extends DatabaseIDResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -131,7 +118,7 @@ public class LaneIDResource extends DatabaseIDResource {
         }
         try {
             LaneService fs = BeanFactory.getLaneServiceBean();
-            Lane lane = (Lane) testIfNull(fs.findByID(newLane.getLaneId()));
+            Lane lane = testIfNull(fs.findByID(newLane.getLaneId()));
             lane.givesPermission(registration);
             // simple types
             String name = newLane.getName();
@@ -190,10 +177,9 @@ public class LaneIDResource extends DatabaseIDResource {
             } else if (lane.getOwner() == null) {
                 lane.setOwner(registration);
             }
-            logger.debug("newAttributes: " + newAttributes);
             if (newAttributes != null) {
                 // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                this.mergeAttributes(lane.getLaneAttributes(), newAttributes, lane);
+                LaneIDResource.mergeAttributes(lane.getLaneAttributes(), newAttributes, lane);
             }
 
             fs.update(registration, lane);

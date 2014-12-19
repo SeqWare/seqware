@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeSet;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.LaneService;
@@ -43,7 +43,6 @@ import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
-import net.sourceforge.seqware.common.model.ProcessingAttribute;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
@@ -65,7 +64,7 @@ import org.xml.sax.SAXException;
  * <p>
  * ProcessIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -94,7 +93,9 @@ public class ProcessIDResource extends DatabaseIDResource {
 
         ProcessingService ss = BeanFactory.getProcessingServiceBean();
         Processing processing = testIfNull(ss.findBySWAccession(getId()));
-        Processing dto = copier.hibernate2dto(Processing.class, processing);
+        CollectionPropertyName<Processing>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(
+                Processing.class, new String[] { "processingAttributes" });
+        Processing dto = copier.hibernate2dto(Processing.class, processing, new Class<?>[] {}, createCollectionPropertyNames);
 
         if (fields.contains("workflowRun")) {
             WorkflowRun wr = processing.getWorkflowRun();
@@ -105,16 +106,6 @@ public class ProcessIDResource extends DatabaseIDResource {
                 Log.info("Could not be found : workflow run");
             }
         }
-        if (fields.contains("attributes")) {
-            Set<ProcessingAttribute> pas = processing.getProcessingAttributes();
-            if (pas != null && !pas.isEmpty()) {
-                Set<ProcessingAttribute> newpas = new TreeSet<>();
-                for (ProcessingAttribute pa : pas) {
-                    newpas.add(copier.hibernate2dto(ProcessingAttribute.class, pa));
-                }
-                dto.setProcessingAttributes(newpas);
-            }
-        }
 
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
@@ -122,7 +113,7 @@ public class ProcessIDResource extends DatabaseIDResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param rep
      * @return
      */

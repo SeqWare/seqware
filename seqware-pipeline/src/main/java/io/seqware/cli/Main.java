@@ -27,6 +27,8 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
+import net.sourceforge.seqware.common.model.Annotatable;
+import net.sourceforge.seqware.common.model.Attribute;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.TabExpansionUtil;
@@ -238,6 +240,88 @@ public class Main {
 
     private static final SortedSet<String> ANNO_OBJS = new TreeSet<>(Arrays.asList("experiment", "file", "ius", "lane", "processing",
             "sample", "sequencer-run", "study", "workflow", "workflow-run"));
+
+    private static void queryHelp() {
+        out("");
+        out("Usage: seqware query [--help]");
+        out("       seqware query <object> --accession <swid>");
+        out("");
+        out("Description:");
+        out("  Display an object in JSON format.");
+        out("");
+        out("Objects:");
+        for (String obj : ANNO_OBJS) {
+            out("  " + obj);
+        }
+        out("");
+        out("Parameters:");
+        out("  --accession <swid>  The SWID of the object to display");
+        out("  --annotations       Display only the annotations from the object");
+        out("");
+    }
+
+    private static void query(List<String> args) {
+        if (isHelp(args, true)) {
+            queryHelp();
+        } else {
+            String obj = args.remove(0);
+            if (!ANNO_OBJS.contains(obj)) {
+                kill("seqware: '%s' is not a valid object type.  See 'seqware query --help'.", obj);
+            } else {
+                if (isHelp(args, true)) {
+                    queryHelp();
+                } else {
+                    int swid = Integer.valueOf(reqVal(args, "--accession"));
+                    boolean annotationsOnly = flag(args, "--annotations");
+                    Metadata metadata = MetadataFactory.get(ConfigTools.getSettings());
+                    Annotatable<? extends Attribute> target = null;
+                    switch (obj) {
+                    case "experiment":
+                        target = metadata.getExperiment(swid);
+                        break;
+                    case "file":
+                        target = metadata.getFile(swid);
+                        break;
+                    case "ius":
+                        target = metadata.getIUS(swid);
+                        break;
+                    case "lane":
+                        target = metadata.getLane(swid);
+                        break;
+                    case "processing":
+                        target = metadata.getProcessing(swid);
+                        break;
+                    case "sample":
+                        target = metadata.getSample(swid);
+                        break;
+                    case "sequencer-run":
+                        target = metadata.getSequencerRun(swid);
+                        break;
+                    case "study":
+                        target = metadata.getStudy(swid);
+                        break;
+                    case "workflow":
+                        target = metadata.getWorkflow(swid);
+                        break;
+                    case "workflow-run":
+                        target = metadata.getWorkflowRun(swid);
+                        break;
+                    default:
+                        kill("seqware: invalid set of parameters to 'seqware query'. See 'seqware query --help'.");
+                    }
+                    Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+                    if (target == null) {
+                        kill("seqware: could not complete query");
+                    }
+                    if (annotationsOnly) {
+                        System.out.println(gson.toJson(target.getAnnotations()));
+                    } else {
+                        System.out.println(gson.toJson(target));
+                    }
+                }
+            }
+        }
+    }
 
     private static void annotateHelp() {
         out("");
@@ -1910,6 +1994,7 @@ public class Main {
             out("");
             out("Commands:");
             out("  annotate      Add arbitrary key/value pairs to seqware objects");
+            out("  query         Display ad-hoc information about seqware objects");
             out("  bundle        Interact with a workflow bundle during development/admin");
             out("  copy          Copy files between local and remote file systems");
             out("  create        Create new seqware objects (e.g., study)");
@@ -1943,6 +2028,9 @@ public class Main {
                     break;
                 case "annotate":
                     annotate(args);
+                    break;
+                case "query":
+                    query(args);
                     break;
                 case "bundle":
                     bundle(args);

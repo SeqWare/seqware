@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Expense class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -35,7 +35,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
     private Double addedSurcharge;
     private Integer swAccession;
     private Date finishedTimestamp;
-    private final Logger logger = LoggerFactory.getLogger(Expense.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Expense.class);
 
     // private Set<ExpenseAttribute> invoiceAttributes = new TreeSet<ExpenseAttribute>();
 
@@ -50,7 +50,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param that
      */
     @Override
@@ -81,7 +81,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -98,7 +98,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -112,11 +112,11 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
         }
 
         if (!hasPermission) {
-            logger.info("Expense does not give permission");
+            LOGGER.info("Expense does not give permission");
             throw new SecurityException("User " + username + " does not have permission to modify aspects of invoice "
                     + this.getSwAccession());
         } else {
-            logger.info("Expenses are public by default");
+            LOGGER.info("Expenses are public by default");
         }
         return hasPermission;
     }
@@ -133,7 +133,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>expenseId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExpenseId() {
@@ -144,7 +144,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>expenseId</code>.
      * </p>
-     * 
+     *
      * @param expenseId
      *            a {@link java.lang.Integer} object.
      */
@@ -156,7 +156,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>invoice</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
     public Invoice getInvoice() {
@@ -167,7 +167,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>invoice</code>.
      * </p>
-     * 
+     *
      * @param invoice
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
@@ -179,7 +179,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>workflowRun</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
     public WorkflowRun getWorkflowRun() {
@@ -190,7 +190,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>workflowRun</code>.
      * </p>
-     * 
+     *
      * @param workflowRun
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
@@ -202,7 +202,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>agent</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAgent() {
@@ -213,7 +213,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>agent</code>.
      * </p>
-     * 
+     *
      * @param agent
      *            a {@link java.lang.String} object.
      */
@@ -225,7 +225,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>expenseType</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getExpenseType() {
@@ -236,7 +236,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>expenseType</code>.
      * </p>
-     * 
+     *
      * @param expenseType
      *            a {@link java.lang.String} object.
      */
@@ -248,7 +248,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -259,7 +259,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @param description
      *            a {@link java.lang.String} object.
      */
@@ -271,7 +271,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>pricePerUnit</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Double} object.
      */
     public Double getPricePerUnit() {
@@ -282,7 +282,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>pricePerUnit</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getPricePerUnitString() {
@@ -293,7 +293,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>pricePerUnit</code>.
      * </p>
-     * 
+     *
      * @param pricePerUnit
      *            a {@link java.lang.Double} object.
      */
@@ -305,7 +305,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>totalUnits</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Double} object.
      */
     public Double getTotalUnits() {
@@ -316,7 +316,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>totalUnits</code>.
      * </p>
-     * 
+     *
      * @param totalUnits
      *            a {@link java.lang.Double} object.
      */
@@ -328,7 +328,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>totalPrice</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Double} object.
      */
     public Double getTotalPrice() {
@@ -339,7 +339,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>totalPrice</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Double} object.
      */
     public String getTotalPriceString() {
@@ -355,7 +355,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>totalPrice</code>.
      * </p>
-     * 
+     *
      * @param totalPrice
      *            a {@link java.lang.Double} object.
      */
@@ -367,7 +367,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>addedSurcharge</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Double} object.
      */
     public Double getAddedSurcharge() {
@@ -378,7 +378,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>addedSurcharge</code>.
      * </p>
-     * 
+     *
      * @param addedSurcharge
      *            a {@link java.lang.Double} object.
      */
@@ -390,7 +390,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -401,7 +401,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -413,7 +413,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Getter for the field <code>finishedTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getFinishedTimestamp() {
@@ -424,7 +424,7 @@ public class Expense extends PermissionsAware implements Serializable, Comparabl
      * <p>
      * Setter for the field <code>finishedTimestamp</code>.
      * </p>
-     * 
+     *
      * @param finishedTimestamp
      *            a {@link java.util.Date} object.
      */

@@ -18,16 +18,15 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.WorkflowService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Workflow;
-import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
@@ -44,7 +43,7 @@ import org.xml.sax.SAXException;
  * <p>
  * WorkflowIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -61,7 +60,7 @@ public class WorkflowIDResource extends DatabaseIDResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -80,8 +79,10 @@ public class WorkflowIDResource extends DatabaseIDResource {
         WorkflowService ss = BeanFactory.getWorkflowServiceBean();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<Workflow> jaxbTool = new JaxbObject<>();
-        Workflow workflow = (Workflow) testIfNull(ss.findBySWAccession(getId()));
-        Workflow dto = copier.hibernate2dto(Workflow.class, workflow);
+        Workflow workflow = testIfNull(ss.findBySWAccession(getId()));
+        CollectionPropertyName<Workflow>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(
+                Workflow.class, new String[] { "workflowAttributes" });
+        Workflow dto = copier.hibernate2dto(Workflow.class, workflow, new Class<?>[] {}, createCollectionPropertyNames);
 
         if (fields.contains("params")) {
             SortedSet<WorkflowParam> wps = workflow.getWorkflowParams();
@@ -95,16 +96,6 @@ public class WorkflowIDResource extends DatabaseIDResource {
                 Log.info("Could not be found: workflow params");
             }
         }
-        if (fields.contains("attributes")) {
-            Set<WorkflowAttribute> was = workflow.getWorkflowAttributes();
-            if (was != null && !was.isEmpty()) {
-                Set<WorkflowAttribute> newwas = new TreeSet<>();
-                for (WorkflowAttribute wa : was) {
-                    newwas.add(copier.hibernate2dto(WorkflowAttribute.class, wa));
-                }
-                dto.setWorkflowAttributes(newwas);
-            }
-        }
 
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
@@ -112,7 +103,7 @@ public class WorkflowIDResource extends DatabaseIDResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -133,7 +124,7 @@ public class WorkflowIDResource extends DatabaseIDResource {
         }
         try {
             WorkflowService fs = BeanFactory.getWorkflowServiceBean();
-            Workflow workflow = (Workflow) testIfNull(fs.findByID(newWorkflow.getWorkflowId()));
+            Workflow workflow = testIfNull(fs.findByID(newWorkflow.getWorkflowId()));
             workflow.givesPermission(registration);
             // simple types
             String name = newWorkflow.getName();
@@ -182,7 +173,7 @@ public class WorkflowIDResource extends DatabaseIDResource {
 
             if (newWorkflow.getWorkflowAttributes() != null) {
                 // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                this.mergeAttributes(workflow.getWorkflowAttributes(), newWorkflow.getWorkflowAttributes(), workflow);
+                WorkflowIDResource.mergeAttributes(workflow.getWorkflowAttributes(), newWorkflow.getWorkflowAttributes(), workflow);
             }
             fs.update(registration, workflow);
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();

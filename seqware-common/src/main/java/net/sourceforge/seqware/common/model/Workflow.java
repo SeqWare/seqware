@@ -18,11 +18,11 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Workflow class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
-public class Workflow extends PermissionsAware implements Serializable, Comparable<Workflow> {
+public class Workflow extends PermissionsAware implements Serializable, Comparable<Workflow>, Annotatable<WorkflowAttribute> {
     /**
      * LEFT OFF WITH: this needs to be finished
      */
@@ -59,7 +59,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     private SortedSet<WorkflowRun> workflowRuns;
     private SortedSet<WorkflowParam> workflowParams;
     private Set<WorkflowAttribute> workflowAttributes = new TreeSet<>();
-    private final Logger logger = LoggerFactory.getLogger(Workflow.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Workflow.class);
 
     /**
      * <p>
@@ -72,7 +72,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param that
      */
     @Override
@@ -96,7 +96,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -117,7 +117,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>cwd</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getCwd() {
@@ -128,7 +128,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>cwd</code>.
      * </p>
-     * 
+     *
      * @param cwd
      *            a {@link java.lang.String} object.
      */
@@ -140,7 +140,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>command</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getCommand() {
@@ -151,7 +151,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>command</code>.
      * </p>
-     * 
+     *
      * @param command
      *            a {@link java.lang.String} object.
      */
@@ -163,7 +163,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>template</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getTemplate() {
@@ -174,7 +174,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>template</code>.
      * </p>
-     * 
+     *
      * @param template
      *            a {@link java.lang.String} object.
      */
@@ -186,7 +186,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>workflowId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getWorkflowId() {
@@ -197,7 +197,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>workflowId</code>.
      * </p>
-     * 
+     *
      * @param workflowId
      *            a {@link java.lang.Integer} object.
      */
@@ -209,7 +209,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -220,7 +220,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -232,7 +232,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getName() {
@@ -243,7 +243,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * getJsonEscapeName.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeName() {
@@ -254,7 +254,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      */
@@ -266,7 +266,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * getJsonEscapeDescription.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -277,7 +277,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -288,7 +288,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @param description
      *            a {@link java.lang.String} object.
      */
@@ -300,7 +300,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>inputAlgorithm</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getInputAlgorithm() {
@@ -311,7 +311,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>inputAlgorithm</code>.
      * </p>
-     * 
+     *
      * @param inputAlgorithm
      *            a {@link java.lang.String} object.
      */
@@ -323,7 +323,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>version</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getVersion() {
@@ -334,7 +334,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>version</code>.
      * </p>
-     * 
+     *
      * @param version
      *            a {@link java.lang.String} object.
      */
@@ -346,7 +346,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>seqwareVersion</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getSeqwareVersion() {
@@ -357,7 +357,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>seqwareVersion</code>.
      * </p>
-     * 
+     *
      * @param seqwareVersion
      *            a {@link java.lang.String} object.
      */
@@ -369,7 +369,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>baseIniFile</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getBaseIniFile() {
@@ -380,7 +380,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>baseIniFile</code>.
      * </p>
-     * 
+     *
      * @param baseIniFile
      *            a {@link java.lang.String} object.
      */
@@ -392,7 +392,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>host</code>.
      * </p>
-     * 
+     *
      * @deprecated
      * @return a {@link java.lang.String} object.
      */
@@ -404,7 +404,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>host</code>.
      * </p>
-     * 
+     *
      * @deprecated
      * @param host
      *            a {@link java.lang.String} object.
@@ -417,7 +417,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>username</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getUsername() {
@@ -428,7 +428,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>username</code>.
      * </p>
-     * 
+     *
      * @param username
      *            a {@link java.lang.String} object.
      */
@@ -440,7 +440,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -451,7 +451,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @param createTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -463,7 +463,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -474,7 +474,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @param updateTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -486,7 +486,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * isPrivate.
      * </p>
-     * 
+     *
      * @return a boolean.
      */
     public boolean isPrivate() {
@@ -497,7 +497,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * getPrivate.
      * </p>
-     * 
+     *
      * @return a boolean.
      */
     public boolean getPrivate() {
@@ -508,7 +508,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * setPrivate.
      * </p>
-     * 
+     *
      * @param isPrivate
      *            a boolean.
      */
@@ -520,7 +520,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * isPublic.
      * </p>
-     * 
+     *
      * @return a boolean.
      */
     public boolean isPublic() {
@@ -531,7 +531,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * getPublic.
      * </p>
-     * 
+     *
      * @return a boolean.
      */
     public boolean getPublic() {
@@ -542,7 +542,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * setPublic.
      * </p>
-     * 
+     *
      * @param isPublic
      *            a boolean.
      */
@@ -554,7 +554,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -565,7 +565,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @param owner
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
@@ -577,7 +577,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>workflowRuns</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<WorkflowRun> getWorkflowRuns() {
@@ -588,7 +588,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>workflowRuns</code>.
      * </p>
-     * 
+     *
      * @param workflowRuns
      *            a {@link java.util.SortedSet} object.
      */
@@ -600,7 +600,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>workflowParams</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<WorkflowParam> getWorkflowParams() {
@@ -611,7 +611,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * getVisibleWorkflowParams.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<WorkflowParam> getVisibleWorkflowParams() {
@@ -630,7 +630,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * getVisibleWorkflowParamsWithDifferentValue.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<WorkflowParam> getVisibleWorkflowParamsWithDifferentValue() {
@@ -651,10 +651,10 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
                 for (WorkflowParamValue workflowParamValue : values) {
                     // System.out.print("value = " + workflowParamValue.getValue());
                     if (defaultValue.equals(workflowParamValue.getValue())) {
-                        logger.debug("Set Default value = " + workflowParamValue.getDisplayName());
+                        LOGGER.debug("Set Default value = " + workflowParamValue.getDisplayName());
                         workflowParam.setDisplayName(workflowParamValue.getDisplayName());
                     } else {
-                        logger.debug(" -> Add value!");
+                        LOGGER.debug(" -> Add value!");
                         differentValues.add(workflowParamValue);
                     }
                 }
@@ -670,7 +670,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * getWorkflowParamsWithDifferentFileMetaType.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     public SortedSet<WorkflowParam> getWorkflowParamsWithDifferentFileMetaType() {
@@ -696,7 +696,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
                  * 
                  * if(isAdd){ paramsWithDifFMT.add(param); }
                  */
-                logger.debug("Add this param");
+                LOGGER.debug("Add this param");
                 paramsWithDifFMT.add(param);
             }
         }
@@ -707,7 +707,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * isLaunch.
      * </p>
-     * 
+     *
      * @return a boolean.
      */
     public boolean isLaunch() {
@@ -722,7 +722,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>workflowParams</code>.
      * </p>
-     * 
+     *
      * @param workflowParams
      *            a {@link java.util.SortedSet} object.
      */
@@ -734,7 +734,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * getFullName.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getFullName() {
@@ -752,7 +752,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * getJsonEscapeFullName.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeFullName() {
@@ -763,7 +763,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>permanentBundleLocation</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getPermanentBundleLocation() {
@@ -798,7 +798,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>permanentBundleLocation</code>.
      * </p>
-     * 
+     *
      * @param permanentBundleLocation
      *            a {@link java.lang.String} object.
      */
@@ -808,7 +808,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -827,11 +827,11 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
         // hasPermission = false;
         // }
         if (!hasPermission) {
-            logger.info("Workflow does not give permission");
+            LOGGER.info("Workflow does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress()
                     + " does not have permission to modify aspects of workflow " + this.getName());
         } else {
-            logger.info("Workflows are public by default");
+            LOGGER.info("Workflows are public by default");
         }
         return hasPermission;
     }
@@ -840,7 +840,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Getter for the field <code>workflowAttributes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<WorkflowAttribute> getWorkflowAttributes() {
@@ -851,12 +851,17 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      * <p>
      * Setter for the field <code>workflowAttributes</code>.
      * </p>
-     * 
+     *
      * @param workflowAttributes
      *            a {@link java.util.Set} object.
      */
     public void setWorkflowAttributes(Set<WorkflowAttribute> workflowAttributes) {
         this.workflowAttributes = workflowAttributes;
+    }
+
+    @Override
+    public Set<WorkflowAttribute> getAnnotations() {
+        return this.getWorkflowAttributes();
     }
 
 }

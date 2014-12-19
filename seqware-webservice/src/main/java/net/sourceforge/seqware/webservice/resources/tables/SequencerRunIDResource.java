@@ -20,10 +20,12 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.business.SequencerRunService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
+import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Platform;
 import net.sourceforge.seqware.common.model.Registration;
@@ -33,7 +35,6 @@ import net.sourceforge.seqware.common.model.SequencerRunWizardDTO;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import org.apache.log4j.Logger;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -46,13 +47,11 @@ import org.xml.sax.SAXException;
  * <p>
  * SequencerRunIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class SequencerRunIDResource extends DatabaseIDResource {
-
-    private Logger logger;
 
     /**
      * <p>
@@ -61,7 +60,6 @@ public class SequencerRunIDResource extends DatabaseIDResource {
      */
     public SequencerRunIDResource() {
         super("sequencerRunId");
-        logger = Logger.getLogger(SequencerRunIDResource.class);
     }
 
     /**
@@ -76,8 +74,10 @@ public class SequencerRunIDResource extends DatabaseIDResource {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<SequencerRun> jaxbTool = new JaxbObject<>();
 
-        SequencerRun run = (SequencerRun) testIfNull(ss.findBySWAccession(getId()));
-        SequencerRun dto = copier.hibernate2dto(SequencerRun.class, run);
+        SequencerRun run = testIfNull(ss.findBySWAccession(getId()));
+        CollectionPropertyName<File>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(File.class,
+                new String[] { "sequencerRunAttributes" });
+        SequencerRun dto = copier.hibernate2dto(SequencerRun.class, run, new Class<?>[] {}, createCollectionPropertyNames);
 
         if (fields.contains("lanes")) {
             SortedSet<Lane> laneList = new TreeSet<>();
@@ -87,18 +87,8 @@ public class SequencerRunIDResource extends DatabaseIDResource {
                     laneList.add(copier.hibernate2dto(Lane.class, lane));
                 }
                 dto.setLanes(laneList);
-            } else if (lanes == null) {
+            } else {
                 Log.info("Could not be found: lanes");
-            }
-        }
-        if (fields.contains("attributes")) {
-            Set<SequencerRunAttribute> sras = run.getSequencerRunAttributes();
-            if (sras != null && !sras.isEmpty()) {
-                Set<SequencerRunAttribute> newsras = new TreeSet<>();
-                for (SequencerRunAttribute sra : sras) {
-                    newsras.add(copier.hibernate2dto(SequencerRunAttribute.class, sra));
-                }
-                dto.setSequencerRunAttributes(newsras);
             }
         }
 
@@ -109,7 +99,7 @@ public class SequencerRunIDResource extends DatabaseIDResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -153,10 +143,10 @@ public class SequencerRunIDResource extends DatabaseIDResource {
                 Registration newReg = rs.findByEmailAddress(owner.getEmailAddress());
                 if (newReg != null) {
                     sequencerRun.setOwner(newReg);
-                } else if (newReg == null) {
+                } else {
                     Log.info("Could not be found " + owner);
                 }
-            } else if (sequencerRun.getOwner() == null) {
+            } else {
                 sequencerRun.setOwner(registration);
             }
 
@@ -164,14 +154,14 @@ public class SequencerRunIDResource extends DatabaseIDResource {
                 Platform p = BeanFactory.getPlatformServiceBean().findByID(platform.getPlatformId());
                 if (p != null) {
                     sequencerRun.setPlatform(p);
-                } else if (p == null) {
+                } else {
                     Log.info("Could not be found " + platform);
                 }
             }
 
             if (newAttributes != null) {
                 // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                this.mergeAttributes(sequencerRun.getSequencerRunAttributes(), newAttributes, sequencerRun);
+                SequencerRunIDResource.mergeAttributes(sequencerRun.getSequencerRunAttributes(), newAttributes, sequencerRun);
             }
             srs.update(registration, sequencerRun);
 

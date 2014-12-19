@@ -29,7 +29,8 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Sample extends PermissionsAware implements Serializable, Comparable<Sample>, ParentAccessionModel {
+public class Sample extends PermissionsAware implements Serializable, Comparable<Sample>, ParentAccessionModel,
+        Annotatable<SampleAttribute> {
 
     // Attributes relied upon by seqware code
 
@@ -89,7 +90,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
     private Set<SampleAttribute> sampleAttributes = new TreeSet<>();
     // non-persisted field to store organism_id
     private Integer organismId;
-    final Logger logger = LoggerFactory.getLogger(Sample.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Sample.class);
 
     /**
      * <p>
@@ -108,7 +109,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param that
      */
     @Override
@@ -138,7 +139,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -163,25 +164,25 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /*
      * public int compareTo(Sample that) { if(that == null) return -1;
-     * 
+     *
      * if(that.getSwAccession() == this.getSwAccession()) // when both names are null return 0;
-     * 
+     *
      * if(that.getSwAccession() == null) return -1; // when only the other name is null
-     * 
+     *
      * return(that.getSwAccession().compareTo(this.getSwAccession())); }
-     * 
+     *
      * public String toString() { return new ToStringBuilder(this) .append("sampleId", getSampleId()) .toString(); }
-     * 
+     *
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Sample) ) return false; Sample
      * castOther = (Sample) other; return new EqualsBuilder() .append(this.getSwAccession(), castOther.getSwAccession()) .isEquals(); }
-     * 
+     *
      * public int hashCode() { return new HashCodeBuilder() .append(getSwAccession()) .toHashCode(); }
      */
     /**
      * <p>
      * Getter for the field <code>alias</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAlias() {
@@ -192,7 +193,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>alias</code>.
      * </p>
-     * 
+     *
      * @param alias
      *            a {@link java.lang.String} object.
      */
@@ -204,7 +205,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>organismId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getOrganismId() {
@@ -215,7 +216,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>organismId</code>.
      * </p>
-     * 
+     *
      * @param organismId
      *            a {@link java.lang.Integer} object.
      */
@@ -227,7 +228,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>adapters</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAdapters() {
@@ -238,7 +239,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>adapters</code>.
      * </p>
-     * 
+     *
      * @param adapters
      *            a {@link java.lang.String} object.
      */
@@ -250,7 +251,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>individualName</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getIndividualName() {
@@ -261,7 +262,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>individualName</code>.
      * </p>
-     * 
+     *
      * @param individualName
      *            a {@link java.lang.String} object.
      */
@@ -273,7 +274,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>title</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getTitle() {
@@ -284,7 +285,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * getJsonEscapeTitle.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeTitle() {
@@ -295,7 +296,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>title</code>.
      * </p>
-     * 
+     *
      * @param title
      *            a {@link java.lang.String} object.
      */
@@ -307,7 +308,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>expectedNumRuns</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExpectedNumRuns() {
@@ -318,7 +319,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>expectedNumRuns</code>.
      * </p>
-     * 
+     *
      * @param expectedNumRuns
      *            a {@link java.lang.Integer} object.
      */
@@ -333,7 +334,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>expectedNumSpots</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExpectedNumSpots() {
@@ -344,7 +345,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>expectedNumSpots</code>.
      * </p>
-     * 
+     *
      * @param expectedNumSpots
      *            a {@link java.lang.Integer} object.
      */
@@ -356,7 +357,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>expectedNumReads</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExpectedNumReads() {
@@ -367,7 +368,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>expectedNumReads</code>.
      * </p>
-     * 
+     *
      * @param expectedNumReads
      *            a {@link java.lang.Integer} object.
      */
@@ -382,7 +383,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>lanes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     @XmlJavaTypeAdapter(XmlizeLaneSortedSet.class)
@@ -403,7 +404,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>lanes</code>.
      * </p>
-     * 
+     *
      * @param lanes
      *            a {@link java.util.SortedSet} object.
      */
@@ -415,20 +416,20 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * setLanesForView.
      * </p>
-     * 
+     *
      * @param lanes
      *            a {@link java.util.SortedSet} object.
      */
     public void setLanesForView(SortedSet<Lane> lanes) {
-        SortedSet<IUS> ius = new TreeSet<>();
+        SortedSet<IUS> localIUS = new TreeSet<>();
         for (Lane lane : lanes) {
             IUS newIUS = new IUS();
             newIUS.setSample(this);
             newIUS.setLane(lane);
             newIUS.setIusId(lane.getLaneId());
-            ius.add(newIUS);
+            localIUS.add(newIUS);
         }
-        this.setIUS(ius);
+        this.setIUS(localIUS);
         // this.lanes = lanes;
     }
 
@@ -436,7 +437,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>sampleId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSampleId() {
@@ -447,7 +448,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>sampleId</code>.
      * </p>
-     * 
+     *
      * @param sampleId
      *            a {@link java.lang.Integer} object.
      */
@@ -459,7 +460,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>experiment</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
     public Experiment getExperiment() {
@@ -470,7 +471,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>experiment</code>.
      * </p>
-     * 
+     *
      * @param experiment
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
@@ -482,7 +483,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -493,7 +494,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @param owner
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
@@ -505,7 +506,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>anonymizedName</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAnonymizedName() {
@@ -516,7 +517,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>anonymizedName</code>.
      * </p>
-     * 
+     *
      * @param anonymizedName
      *            a {@link java.lang.String} object.
      */
@@ -528,7 +529,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getName() {
@@ -539,7 +540,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * getJsonEscapeName.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeName() {
@@ -550,7 +551,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>name</code>.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      */
@@ -562,7 +563,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * getJsonEscapeDescription.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -573,7 +574,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -584,7 +585,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @param description
      *            a {@link java.lang.String} object.
      */
@@ -596,7 +597,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>type</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getType() {
@@ -607,7 +608,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>type</code>.
      * </p>
-     * 
+     *
      * @param type
      *            a {@link java.lang.String} object.
      */
@@ -619,7 +620,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>tags</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getTags() {
@@ -630,7 +631,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>tags</code>.
      * </p>
-     * 
+     *
      * @param tags
      *            a {@link java.lang.String} object.
      */
@@ -642,7 +643,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>regions</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getRegions() {
@@ -653,7 +654,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>regions</code>.
      * </p>
-     * 
+     *
      * @param regions
      *            a {@link java.lang.String} object.
      */
@@ -665,7 +666,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>skip</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getSkip() {
@@ -676,7 +677,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>skip</code>.
      * </p>
-     * 
+     *
      * @param skip
      *            a {@link java.lang.Boolean} object.
      */
@@ -688,7 +689,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -699,7 +700,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @param createTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -711,7 +712,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -722,7 +723,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @param updateTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -734,7 +735,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>serialVersionUID</code>.
      * </p>
-     * 
+     *
      * @return a long.
      */
     public static long getSerialVersionUID() {
@@ -745,7 +746,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -756,7 +757,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -768,7 +769,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>organism</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Organism} object.
      */
     public Organism getOrganism() {
@@ -779,7 +780,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>organism</code>.
      * </p>
-     * 
+     *
      * @param organism
      *            a {@link net.sourceforge.seqware.common.model.Organism} object.
      */
@@ -791,7 +792,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsSelected() {
@@ -802,7 +803,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @param isSelected
      *            a {@link java.lang.Boolean} object.
      */
@@ -814,7 +815,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsHasFile() {
@@ -825,7 +826,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @param isHasFile
      *            a {@link java.lang.Boolean} object.
      */
@@ -837,7 +838,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>countFile</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getCountFile() {
@@ -848,7 +849,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>countFile</code>.
      * </p>
-     * 
+     *
      * @param countFile
      *            a {@link java.lang.Integer} object.
      */
@@ -860,7 +861,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>strExpectedNumRuns</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getStrExpectedNumRuns() {
@@ -871,7 +872,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>strExpectedNumRuns</code>.
      * </p>
-     * 
+     *
      * @param strExpectedNumRuns
      *            a {@link java.lang.String} object.
      */
@@ -883,7 +884,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>strExpectedNumReads</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getStrExpectedNumReads() {
@@ -894,7 +895,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>strExpectedNumReads</code>.
      * </p>
-     * 
+     *
      * @param strExpectedNumReads
      *            a {@link java.lang.String} object.
      */
@@ -903,13 +904,13 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
     }
 
     // public SortedSet<IUS> getIus() {
-    // return ius;
+    // return localIUS;
     // }
     /**
      * <p>
      * getIUS.
      * </p>
-     * 
+     *
      * @return a {@link java.util.SortedSet} object.
      */
     @XmlJavaTypeAdapter(XmlizeIUSSortedSet.class)
@@ -921,7 +922,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * setIUS.
      * </p>
-     * 
+     *
      * @param ius
      *            a {@link java.util.SortedSet} object.
      */
@@ -933,7 +934,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getProcessings() {
@@ -944,7 +945,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>processings</code>.
      * </p>
-     * 
+     *
      * @param processings
      *            a {@link java.util.Set} object.
      */
@@ -956,7 +957,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>parents</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Sample> getParents() {
@@ -967,7 +968,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>parents</code>.
      * </p>
-     * 
+     *
      * @param parents
      *            a {@link java.util.Set} object.
      */
@@ -979,7 +980,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>children</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Sample> getChildren() {
@@ -990,7 +991,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>children</code>.
      * </p>
-     * 
+     *
      * @param children
      *            a {@link java.util.Set} object.
      */
@@ -1002,7 +1003,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Getter for the field <code>sampleAttributes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     @XmlElementWrapper(name = "SampleAttributes")
@@ -1015,7 +1016,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
      * <p>
      * Setter for the field <code>sampleAttributes</code>.
      * </p>
-     * 
+     *
      * @param sampleAttributes
      *            a {@link java.util.Set} object.
      */
@@ -1025,7 +1026,7 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -1049,17 +1050,22 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
             hasPermission = experiment.givesPermission(registration, considered);
         } else {// orphaned Sample
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                logger.warn("Modifying Orphan Sample: " + this.getName());
+                LOGGER.warn("Modifying Orphan Sample: " + this.getName());
                 hasPermission = true;
             } else {
-                logger.warn("Not modifying Orphan Sample: " + this.getName());
+                LOGGER.warn("Not modifying Orphan Sample: " + this.getName());
                 hasPermission = false;
             }
         }
         if (!hasPermission) {
-            logger.info("Sample does not give permission to " + registration);
+            LOGGER.info("Sample does not give permission to " + registration);
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.getName());
         }
         return hasPermission;
+    }
+
+    @Override
+    public Set<SampleAttribute> getAnnotations() {
+        return this.getSampleAttributes();
     }
 }

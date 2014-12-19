@@ -19,6 +19,7 @@ package net.sourceforge.seqware.webservice.resources.tables;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.PlatformService;
 import net.sourceforge.seqware.common.business.SequencerRunService;
@@ -42,7 +43,7 @@ import org.xml.sax.SAXException;
  * <p>
  * SequencerRunResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -70,22 +71,24 @@ public class SequencerRunResource extends DatabaseResource {
         authenticate();
         SequencerRunService ss = BeanFactory.getSequencerRunServiceBean();
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
+        CollectionPropertyName<SequencerRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(
+                SequencerRun.class, new String[] { "sequencerRunAttributes" });
 
         if (queryValues.get("name") != null) {
             String name = queryValues.get("name");
-            SequencerRun study = (SequencerRun) testIfNull(ss.findByName(name));
+            SequencerRun study = testIfNull(ss.findByName(name));
             JaxbObject<SequencerRun> jaxbTool = new JaxbObject<>();
-            SequencerRun dto = copier.hibernate2dto(SequencerRun.class, study);
+            SequencerRun dto = copier.hibernate2dto(SequencerRun.class, study, new Class<?>[] {}, createCollectionPropertyNames);
             Document line = XmlTools.marshalToDocument(jaxbTool, dto);
             getResponse().setEntity(XmlTools.getRepresentation(line));
         } else {
             JaxbObject<SequencerRunList> jaxbTool = new JaxbObject<>();
-            List<SequencerRun> runs = (List<SequencerRun>) testIfNull(ss.list());
+            List<SequencerRun> runs = testIfNull(ss.list());
             SequencerRunList eList = new SequencerRunList();
             eList.setList(new ArrayList());
 
             for (SequencerRun sequencerRun : runs) {
-                SequencerRun dto = copier.hibernate2dto(SequencerRun.class, sequencerRun);
+                SequencerRun dto = copier.hibernate2dto(SequencerRun.class, sequencerRun, new Class<?>[] {}, createCollectionPropertyNames);
                 eList.add(dto);
             }
             Document line = XmlTools.marshalToDocument(jaxbTool, eList);
@@ -98,7 +101,7 @@ public class SequencerRunResource extends DatabaseResource {
      * <p>
      * postJaxb.
      * </p>
-     * 
+     *
      * @param entity
      *            a {@link org.restlet.representation.Representation} object.
      * @throws org.restlet.resource.ResourceException
@@ -131,7 +134,7 @@ public class SequencerRunResource extends DatabaseResource {
             // attempt to save foreign keys, I guess this is replacing an empty object with a fully populated one?
             if (o.getPlatform() != null) {
                 PlatformService ps = BeanFactory.getPlatformServiceBean();
-                Platform platform = (Platform) testIfNull(ps.findByID(o.getPlatform().getPlatformId()));
+                Platform platform = testIfNull(ps.findByID(o.getPlatform().getPlatformId()));
                 o.setPlatform(platform);
             }
 
@@ -139,7 +142,7 @@ public class SequencerRunResource extends DatabaseResource {
             SequencerRunService service = BeanFactory.getSequencerRunServiceBean();
             Integer swAccession = service.insert(registration, o);
 
-            SequencerRun obj = (SequencerRun) testIfNull(service.findBySWAccession(swAccession));
+            SequencerRun obj = testIfNull(service.findBySWAccession(swAccession));
             Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
             SequencerRun detachedSequencerRun = copier.hibernate2dto(SequencerRun.class, obj);
 

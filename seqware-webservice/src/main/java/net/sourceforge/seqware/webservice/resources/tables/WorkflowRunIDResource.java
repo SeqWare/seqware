@@ -38,7 +38,6 @@ import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.model.WorkflowRunParam;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.maptools.MapTools;
@@ -58,7 +57,7 @@ import org.xml.sax.SAXException;
  * <p>
  * WorkflowRunIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -89,7 +88,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         WorkflowRun workflowRun = getWorkflowRun(ss);
         // specify that we want the input file set to be copied along, if this works, we should clean up the manual copying below
         CollectionPropertyName<WorkflowRun>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(
-                WorkflowRun.class, new String[] { "inputFileAccessions" });
+                WorkflowRun.class, new String[] { "inputFileAccessions", "workflowRunAttributes" });
         WorkflowRun dto = copier.hibernate2dto(WorkflowRun.class, workflowRun, ArrayUtils.EMPTY_CLASS_ARRAY, createCollectionPropertyNames);
         // Log.debug("getXML() Workflow run contains " + workflowRun.getInputFileAccessions().size() + " input files");
         // dto.setInputFileAccessions(workflowRun.getInputFileAccessions());
@@ -143,16 +142,6 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
                 Log.info("Could not be found: offspring processings");
             }
         }
-        if (fields.contains("attributes")) {
-            Set<WorkflowRunAttribute> wras = workflowRun.getWorkflowRunAttributes();
-            if (wras != null && !wras.isEmpty()) {
-                Set<WorkflowRunAttribute> newwras = new TreeSet<>();
-                for (WorkflowRunAttribute wra : wras) {
-                    newwras.add(copier.hibernate2dto(WorkflowRunAttribute.class, wra));
-                }
-                dto.setWorkflowRunAttributes(newwras);
-            }
-        }
 
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
@@ -163,7 +152,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
      * <p>
      * updateWorkflowRun.
      * </p>
-     * 
+     *
      * @param newWR
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
@@ -251,7 +240,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         }
 
         if (newWR.getWorkflowRunAttributes() != null) {
-            this.mergeAttributes(wr.getWorkflowRunAttributes(), newWR.getWorkflowRunAttributes(), wr);
+            WorkflowRunIDResource.mergeAttributes(wr.getWorkflowRunAttributes(), newWR.getWorkflowRunAttributes(), wr);
         }
         // SEQWARE-1778 - try to properly create parameters in the workflow_run_param table as well
         // convert ini file parameters into expected format
@@ -299,7 +288,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override

@@ -64,7 +64,7 @@ import org.openide.util.lookup.ServiceProvider;
  * <p>
  * BatchImport class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @author Raunaq Suri
  * @version $Id: $Id
@@ -99,7 +99,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -113,7 +113,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -123,7 +123,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -265,7 +265,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -277,7 +277,7 @@ public class BatchMetadataInjection extends Metadata {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -664,7 +664,7 @@ public class BatchMetadataInjection extends Metadata {
         return mapper.readValue(jsonRunInfo, RunInfo.class);
     }
 
-    private <SeqwareObjectType, AttributeType extends Attribute<SeqwareObjectType>> Set<AttributeType> convertTagValueUnitSetToAttributeSet(
+    private <SeqwareObjectType, AttributeType extends Attribute<SeqwareObjectType, AttributeType>> Set<AttributeType> convertTagValueUnitSetToAttributeSet(
             Set<TagValueUnit> tagValueUnits, Class<AttributeType> attributeTypeClass) throws InstantiationException, IllegalAccessException {
 
         Set<AttributeType> attributes = new HashSet<>();

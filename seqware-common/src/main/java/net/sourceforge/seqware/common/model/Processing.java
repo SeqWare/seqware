@@ -49,7 +49,8 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Processing extends PermissionsAware implements Serializable, Comparable<Processing>, ParentAccessionModel {
+public class Processing extends PermissionsAware implements Serializable, Comparable<Processing>, ParentAccessionModel,
+        Annotatable<ProcessingAttribute> {
 
     private static final long serialVersionUID = 4681328115923390568L;
     private Integer processingId;
@@ -88,7 +89,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
     private String parameters;
     private String stdout;
     private String stderr;
-    final Logger logger = LoggerFactory.getLogger(Processing.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Processing.class);
 
     /**
      * <p>
@@ -101,7 +102,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param that
      */
     @Override
@@ -130,7 +131,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param other
      */
     @Override
@@ -153,21 +154,21 @@ public class Processing extends PermissionsAware implements Serializable, Compar
 
     /*
      * public int compareTo(Processing that) { return(that.getSwAccession().compareTo(this.getSwAccession())); }
-     * 
+     *
      * public String toString() { return new ToStringBuilder(this) .append("processingId", getProcessingId()) .append("filePath",
      * getFilePath()) .toString(); }
-     * 
+     *
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Processing) ) return false;
      * Processing castOther = (Processing) other; return new EqualsBuilder() .append(this.getSwAccession(), castOther.getSwAccession())
      * .isEquals(); }
-     * 
+     *
      * public int hashCode() { return new HashCodeBuilder() .append(getSwAccession()) .toHashCode(); }
      */
     /**
      * <p>
      * Getter for the field <code>exitStatus</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getExitStatus() {
@@ -178,7 +179,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>exitStatus</code>.
      * </p>
-     * 
+     *
      * @param exitStatus
      *            a {@link java.lang.Integer} object.
      */
@@ -190,7 +191,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>processExitStatus</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getProcessExitStatus() {
@@ -201,7 +202,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>processExitStatus</code>.
      * </p>
-     * 
+     *
      * @param processExitStatus
      *            a {@link java.lang.Integer} object.
      */
@@ -213,7 +214,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>parents</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getParents() {
@@ -224,7 +225,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>parents</code>.
      * </p>
-     * 
+     *
      * @param parents
      *            a {@link java.util.Set} object.
      */
@@ -236,7 +237,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>children</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Processing> getChildren() {
@@ -247,7 +248,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>children</code>.
      * </p>
-     * 
+     *
      * @param children
      *            a {@link java.util.Set} object.
      */
@@ -259,7 +260,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * isTaskGroup.
      * </p>
-     * 
+     *
      * @return a boolean.
      */
     public boolean isTaskGroup() {
@@ -270,7 +271,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>taskGroup</code>.
      * </p>
-     * 
+     *
      * @param taskGroup
      *            a boolean.
      */
@@ -282,7 +283,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getSwAccession() {
@@ -293,7 +294,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>swAccession</code>.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
@@ -305,7 +306,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getCreateTimestamp() {
@@ -316,7 +317,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>createTimestamp</code>.
      * </p>
-     * 
+     *
      * @param createTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -328,7 +329,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getUpdateTimestamp() {
@@ -339,7 +340,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>updateTimestamp</code>.
      * </p>
-     * 
+     *
      * @param updateTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -351,7 +352,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>serialVersionUID</code>.
      * </p>
-     * 
+     *
      * @return a long.
      */
     public static long getSerialVersionUID() {
@@ -362,7 +363,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>algorithm</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getAlgorithm() {
@@ -373,7 +374,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * getJsonEscapeAlgorithm.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeAlgorithm() {
@@ -384,7 +385,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>algorithm</code>.
      * </p>
-     * 
+     *
      * @param algorithm
      *            a {@link java.lang.String} object.
      */
@@ -396,7 +397,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>filePath</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getFilePath() {
@@ -407,7 +408,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>filePath</code>.
      * </p>
-     * 
+     *
      * @param filePath
      *            a {@link java.lang.String} object.
      */
@@ -419,7 +420,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>processingId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getProcessingId() {
@@ -430,7 +431,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>processingId</code>.
      * </p>
-     * 
+     *
      * @param processingId
      *            a {@link java.lang.Integer} object.
      */
@@ -450,7 +451,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * getJsonEscapeDescription.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getJsonEscapeDescription() {
@@ -461,7 +462,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getDescription() {
@@ -472,7 +473,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>description</code>.
      * </p>
-     * 
+     *
      * @param description
      *            a {@link java.lang.String} object.
      */
@@ -484,7 +485,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>url</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getUrl() {
@@ -495,7 +496,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>url</code>.
      * </p>
-     * 
+     *
      * @param url
      *            a {@link java.lang.String} object.
      */
@@ -507,7 +508,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>lanes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Lane> getLanes() {
@@ -522,7 +523,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>lanes</code>.
      * </p>
-     * 
+     *
      * @param lanes
      *            a {@link java.util.Set} object.
      */
@@ -534,7 +535,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>urlLabel</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getUrlLabel() {
@@ -545,7 +546,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>urlLabel</code>.
      * </p>
-     * 
+     *
      * @param urlLabel
      *            a {@link java.lang.String} object.
      */
@@ -557,7 +558,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>version</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getVersion() {
@@ -568,7 +569,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>version</code>.
      * </p>
-     * 
+     *
      * @param version
      *            a {@link java.lang.String} object.
      */
@@ -580,7 +581,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>files</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     @XmlJavaTypeAdapter(XmlizeFileSet.class)
@@ -592,7 +593,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>files</code>.
      * </p>
-     * 
+     *
      * @param files
      *            a {@link java.util.Set} object.
      */
@@ -609,7 +610,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>workflowRunId</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Integer} object.
      */
     public Integer getWorkflowRunId() {
@@ -620,7 +621,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>workflowRunId</code>.
      * </p>
-     * 
+     *
      * @param workflowRunId
      *            a {@link java.lang.Integer} object.
      */
@@ -632,7 +633,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
     public Registration getOwner() {
@@ -643,7 +644,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>owner</code>.
      * </p>
-     * 
+     *
      * @param owner
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
@@ -655,7 +656,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>workflowRun</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
     public WorkflowRun getWorkflowRun() {
@@ -666,7 +667,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>workflowRun</code>.
      * </p>
-     * 
+     *
      * @param workflowRun
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
@@ -678,7 +679,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsSelected() {
@@ -689,7 +690,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>isSelected</code>.
      * </p>
-     * 
+     *
      * @param isSelected
      *            a {@link java.lang.Boolean} object.
      */
@@ -701,7 +702,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.Boolean} object.
      */
     public Boolean getIsHasFile() {
@@ -712,7 +713,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>isHasFile</code>.
      * </p>
-     * 
+     *
      * @param isHasFile
      *            a {@link java.lang.Boolean} object.
      */
@@ -724,7 +725,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * getIUS.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<IUS> getIUS() {
@@ -735,7 +736,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * setIUS.
      * </p>
-     * 
+     *
      * @param ius
      *            a {@link java.util.Set} object.
      */
@@ -747,7 +748,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>studies</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Study> getStudies() {
@@ -758,7 +759,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>studies</code>.
      * </p>
-     * 
+     *
      * @param studies
      *            a {@link java.util.Set} object.
      */
@@ -770,7 +771,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>samples</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Sample> getSamples() {
@@ -781,7 +782,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>samples</code>.
      * </p>
-     * 
+     *
      * @param samples
      *            a {@link java.util.Set} object.
      */
@@ -793,7 +794,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>sequencerRuns</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<SequencerRun> getSequencerRuns() {
@@ -804,7 +805,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>sequencerRuns</code>.
      * </p>
-     * 
+     *
      * @param sequencerRuns
      *            a {@link java.util.Set} object.
      */
@@ -816,7 +817,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>experiments</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     public Set<Experiment> getExperiments() {
@@ -827,7 +828,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>experiments</code>.
      * </p>
-     * 
+     *
      * @param experiments
      *            a {@link java.util.Set} object.
      */
@@ -839,7 +840,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>runStartTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getRunStartTimestamp() {
@@ -850,7 +851,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>runStartTimestamp</code>.
      * </p>
-     * 
+     *
      * @param runStartTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -862,7 +863,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>runStopTimestamp</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Date} object.
      */
     public Date getRunStopTimestamp() {
@@ -873,7 +874,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>runStopTimestamp</code>.
      * </p>
-     * 
+     *
      * @param runStopTimestamp
      *            a {@link java.util.Date} object.
      */
@@ -885,7 +886,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>parameters</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getParameters() {
@@ -896,7 +897,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>parameters</code>.
      * </p>
-     * 
+     *
      * @param parameters
      *            a {@link java.lang.String} object.
      */
@@ -908,7 +909,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>stdout</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     @XmlJavaTypeAdapter(XmlizeXML.class)
@@ -920,7 +921,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>stdout</code>.
      * </p>
-     * 
+     *
      * @param stdout
      *            a {@link java.lang.String} object.
      */
@@ -932,7 +933,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>stderr</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.lang.String} object.
      */
     public String getStderr() {
@@ -943,7 +944,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>stderr</code>.
      * </p>
-     * 
+     *
      * @param stderr
      *            a {@link java.lang.String} object.
      */
@@ -956,7 +957,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>workflowRunByAncestorWorkflowRunId</code>.
      * </p>
-     * 
+     *
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
     public WorkflowRun getWorkflowRunByAncestorWorkflowRunId() {
@@ -967,7 +968,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>workflowRunByAncestorWorkflowRunId</code>.
      * </p>
-     * 
+     *
      * @param workflowRunByAncestorWorkflowRunId
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
@@ -979,7 +980,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Getter for the field <code>processingAttributes</code>.
      * </p>
-     * 
+     *
      * @return a {@link java.util.Set} object.
      */
     @XmlElementWrapper(name = "ProcessingAttributes", nillable = true)
@@ -992,7 +993,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * Setter for the field <code>processingAttributes</code>.
      * </p>
-     * 
+     *
      * @param processingAttributes
      *            a {@link java.util.Set} object.
      */
@@ -1043,7 +1044,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * clone.
      * </p>
-     * 
+     *
      * @param newP
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
@@ -1075,13 +1076,12 @@ public class Processing extends PermissionsAware implements Serializable, Compar
      * <p>
      * cloneToHibernate.
      * </p>
-     * 
+     *
      * @param newP
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
     public static Processing cloneToHibernate(Processing newP) {
-        final Logger logger = LoggerFactory.getLogger(Processing.class);
         ProcessingService ps = BeanFactory.getProcessingServiceBean();
         Processing p = ps.findByID(newP.getProcessingId());
 
@@ -1124,7 +1124,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             ProcessingRelationshipService prs = BeanFactory.getProcessingRelationshipServiceBean();
             for (Processing child : children) {
                 Processing newC = ps.findByID(child.getProcessingId());
-                logger.debug("Child id:" + newC.getProcessingId() + " swa:" + newC.getSwAccession());
+                LOGGER.debug("Child id:" + newC.getProcessingId() + " swa:" + newC.getSwAccession());
                 if (prs.findByProcessings(p, newC) == null) {
                     ProcessingRelationship pr = new ProcessingRelationship();
                     pr.setProcessingByParentId(p);
@@ -1138,7 +1138,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             ProcessingRelationshipService prs = BeanFactory.getProcessingRelationshipServiceBean();
             for (Processing parent : parents) {
                 Processing newC = ps.findByID(parent.getProcessingId());
-                logger.debug("Parent id:" + newC.getProcessingId() + " swa:" + newC.getSwAccession());
+                LOGGER.debug("Parent id:" + newC.getProcessingId() + " swa:" + newC.getSwAccession());
                 if (prs.findByProcessings(newC, p) == null) {
                     ProcessingRelationship pr = new ProcessingRelationship();
                     pr.setProcessingByParentId(newC);
@@ -1153,7 +1153,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             ProcessingLanesService pls = BeanFactory.getProcessingLaneServiceBean();
             for (Lane lane : lanes) {
                 Lane newL = ls.findByID(lane.getLaneId());
-                logger.debug("Lane id:" + newL.getLaneId() + " swa:" + newL.getSwAccession());
+                LOGGER.debug("Lane id:" + newL.getLaneId() + " swa:" + newL.getSwAccession());
                 if (pls.findByProcessingLane(p, newL) == null) {
                     ProcessingLanes pl = new ProcessingLanes();
                     pl.setProcessing(p);
@@ -1168,7 +1168,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             ProcessingIUSService pis = BeanFactory.getProcessingIUSServiceBean();
             for (IUS i : iuses) {
                 IUS newI = is.findByID(i.getIusId());
-                logger.debug("IUS id:" + newI.getIusId() + " swa:" + newI.getSwAccession());
+                LOGGER.debug("IUS id:" + newI.getIusId() + " swa:" + newI.getSwAccession());
                 if (pis.findByProcessingIUS(p, newI) == null) {
                     ProcessingIus pi = new ProcessingIus();
                     pi.setIus(newI);
@@ -1183,7 +1183,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             ProcessingSamplesService pss = BeanFactory.getProcessingSampleServiceBean();
             for (Sample s : samples) {
                 Sample newS = ss.findByID(s.getSampleId());
-                logger.debug(" Sample id:" + newS.getSampleId() + " swa:" + newS.getSwAccession());
+                LOGGER.debug(" Sample id:" + newS.getSampleId() + " swa:" + newS.getSwAccession());
                 if (pss.findByProcessingSample(p, newS) == null) {
                     ProcessingSamples prs = new ProcessingSamples();
                     prs.setProcessing(p);
@@ -1198,7 +1198,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             ProcessingExperimentsService pes = BeanFactory.getProcessingExperimentServiceBean();
             for (Experiment e : experiments) {
                 Experiment newE = es.findByID(e.getExperimentId());
-                logger.debug(" Experiment id:" + newE.getExperimentId() + " swa:" + newE.getSwAccession());
+                LOGGER.debug(" Experiment id:" + newE.getExperimentId() + " swa:" + newE.getSwAccession());
                 if (pes.findByProcessingExperiment(p, newE) == null) {
                     ProcessingExperiments pe = new ProcessingExperiments();
                     pe.setProcessing(p);
@@ -1213,7 +1213,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             for (File e : files) {
                 File newF = es.findByID(e.getFileId());
 
-                logger.debug(" File id:" + newF.getFileId() + " swa:" + newF.getSwAccession());
+                LOGGER.debug(" File id:" + newF.getFileId() + " swa:" + newF.getSwAccession());
                 if (!p.getFiles().contains(newF)) {
                     p.getFiles().add(newF);
                 }
@@ -1225,7 +1225,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             ProcessingSequencerRunsService psrs = BeanFactory.getProcessingSequencerRunsServiceBean();
             for (SequencerRun e : sequencerRuns) {
                 SequencerRun newSR = es.findByID(e.getSequencerRunId());
-                logger.debug(" SequencerRun id:" + newSR.getSequencerRunId() + " swa:" + newSR.getSwAccession());
+                LOGGER.debug(" SequencerRun id:" + newSR.getSequencerRunId() + " swa:" + newSR.getSwAccession());
                 if (psrs.findByProcessingSequencerRun(p, newSR) == null) {
                     ProcessingSequencerRuns psr = new ProcessingSequencerRuns();
                     psr.setProcessing(p);
@@ -1240,7 +1240,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             ProcessingStudiesService pss = BeanFactory.getProcessingStudiesServiceBean();
             for (Study e : studies) {
                 Study newS = es.findByID(e.getStudyId());
-                logger.debug(" Study id:" + newS.getStudyId() + " swa:" + newS.getSwAccession());
+                LOGGER.debug(" Study id:" + newS.getStudyId() + " swa:" + newS.getSwAccession());
                 if (pss.findByProcessingStudy(p, newS) == null) {
                     ProcessingStudies prs = new ProcessingStudies();
                     prs.setProcessing(p);
@@ -1253,14 +1253,14 @@ public class Processing extends PermissionsAware implements Serializable, Compar
         if (workR != null) {
             WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
             WorkflowRun newWR = wrs.findByID(workR.getWorkflowRunId());
-            logger.debug(" WorkflowRun id:" + newWR.getWorkflowRunId() + " swa:" + newWR.getSwAccession());
+            LOGGER.debug(" WorkflowRun id:" + newWR.getWorkflowRunId() + " swa:" + newWR.getSwAccession());
             p.setWorkflowRun(newWR);
         }
 
         if (ancestorWR != null) {
             WorkflowRunService wrs = BeanFactory.getWorkflowRunServiceBean();
             WorkflowRun newWR = wrs.findByID(ancestorWR.getWorkflowRunId());
-            logger.debug(" Ancestor WorkflowRun id:" + newWR.getWorkflowRunId() + " swa:" + newWR.getSwAccession());
+            LOGGER.debug(" Ancestor WorkflowRun id:" + newWR.getWorkflowRunId() + " swa:" + newWR.getSwAccession());
             // p.setWorkflowRunByAncestorWorkflowRunId(newWR);
             newWR.getOffspringProcessings().add(p);
             // wrs.update(newWR);
@@ -1275,7 +1275,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             RegistrationService rs = BeanFactory.getRegistrationServiceBean();
             Registration o = rs.findByEmailAddressAndPassword(owner.getEmailAddress(), owner.getPassword());
             if (o != null) {
-                logger.debug(" Registration id:" + o.getRegistrationId());
+                LOGGER.debug(" Registration id:" + o.getRegistrationId());
                 p.setOwner(o);
             }
         }
@@ -1285,7 +1285,7 @@ public class Processing extends PermissionsAware implements Serializable, Compar
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -1350,24 +1350,28 @@ public class Processing extends PermissionsAware implements Serializable, Compar
             hasPermission = workflowRun.givesPermission(registration, considered);
         } else {
             if (registration.equals(this.owner) || registration.isLIMSAdmin()) {
-                logger.warn("Modifying Orphan Processing: " + this.toString());
+                LOGGER.warn("Modifying Orphan Processing: " + this.toString());
                 hasPermission = true;
             } else if (owner == null) {
-                logger.warn("Orphan Processing has no owner! Allowing write: " + this.toString());
+                LOGGER.warn("Orphan Processing has no owner! Allowing write: " + this.toString());
                 hasPermission = true;
-                ;
             } else {
-                logger.warn("Not modifying Orphan Processing: " + this.toString());
+                LOGGER.warn("Not modifying Orphan Processing: " + this.toString());
                 hasPermission = false;
             }
         }
 
         if (!hasPermission) {
-            logger.info("Processing does not give permission");
+            LOGGER.info("Processing does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify " + this.toString());
         } else {
-            logger.info("Processing gives permission to " + registration.getEmailAddress() + " " + registration.getPassword());
+            LOGGER.info("Processing gives permission to " + registration.getEmailAddress() + " " + registration.getPassword());
         }
         return hasPermission;
+    }
+
+    @Override
+    public Set<ProcessingAttribute> getAnnotations() {
+        return this.getProcessingAttributes();
     }
 }

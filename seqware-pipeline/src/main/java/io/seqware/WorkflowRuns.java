@@ -119,7 +119,7 @@ public class WorkflowRuns {
 
     /**
      * Convert from status command to workflow run
-     * 
+     *
      * @param statusCmd
      * @return
      */
@@ -135,15 +135,15 @@ public class WorkflowRuns {
 
     /**
      * Extremely extremely expensive! Converts between sge id and determines the workflow run accession that it corresponds to.
-     * 
+     *
      * This is expensive because the Oozie-sge engine doesn't expose the external ID, instead we need to do a really expensive search.
-     * 
+     *
      * @param sgeid
      * @return
      */
     public static Integer getAccessionByActionExternalID(String sgeid) {
         Map<String, String> config = ConfigTools.getSettings();
-        OozieClient oc = new OozieClient((String) config.get(SqwKeys.OOZIE_URL.getSettingKey()));
+        OozieClient oc = new OozieClient(config.get(SqwKeys.OOZIE_URL.getSettingKey()));
         try {
             for (int i = 0;; i++) {
                 int rangeStart = i * 10;
