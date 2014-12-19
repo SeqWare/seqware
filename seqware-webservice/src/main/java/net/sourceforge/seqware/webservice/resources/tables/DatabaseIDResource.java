@@ -124,7 +124,12 @@ public class DatabaseIDResource extends BasicResource {
     }
 
     /**
-     * Merge attributes from a new set into an existing one while removing duplicates. Unfortunately, due to how duplicates work,
+     * Merge attributes from a new set into an existing one while removing duplicates.
+     *
+     * Unfortunately, due to how we've previously established the semantics here, the web service will always merge new annotations into old
+     * annotations. If there are duplicate tags between old and new, the old annotation will be deleted and the new one written. If there
+     * are duplicates in the new collection, the request will be ignored.
+     *
      *
      * @param <S>
      * @param <T>
@@ -133,6 +138,14 @@ public class DatabaseIDResource extends BasicResource {
      * @param parent
      */
     protected static <S, T extends Attribute> void mergeAttributes(Set<T> existingAttributeSet, Set<T> newAttributeSet, S parent) {
+        Log.debug("before merge");
+        for (T attribute : existingAttributeSet) {
+            Log.debug("existing: " + attribute.toString() + " " + attribute.getTag() + " " + attribute.getValue());
+        }
+        for (T attribute : newAttributeSet) {
+            Log.debug("new: " + attribute.toString() + " " + attribute.getTag() + " " + attribute.getValue());
+        }
+
         // extract keys
         Map<String, T> keyMap = new HashMap<>();
         for (T exist : existingAttributeSet) {
@@ -143,8 +156,8 @@ public class DatabaseIDResource extends BasicResource {
             if (keyMap.containsKey(newAttr.getTag())) {
                 T oldDuplicate = keyMap.get(newAttr.getTag());
                 // seqware-1945, check to see if we have a complete key and value duplicate, if so just ignore it
-                if (Objects.equals(oldDuplicate.getValue(), newAttr.getValue())) {
-                    Log.debug("Ignoring duplicate attribute" + newAttr.getTag() + "=" + newAttr.getValue());
+                if (Objects.equals(oldDuplicate, newAttr)) {
+                    Log.info("Ignoring duplicate attribute" + newAttr.getTag() + "=" + newAttr.getValue());
                     continue;
                 }
                 keyMap.remove(newAttr.getTag());
@@ -155,6 +168,11 @@ public class DatabaseIDResource extends BasicResource {
             existingAttributeSet.add(newAttr);
             // populate the child end of the relationship
             newAttr.setAttributeParent(parent);
+        }
+
+        Log.debug("after merge");
+        for (T attribute : existingAttributeSet) {
+            Log.debug(attribute.toString() + " " + attribute.getTag() + " " + attribute.getValue());
         }
     }
 }

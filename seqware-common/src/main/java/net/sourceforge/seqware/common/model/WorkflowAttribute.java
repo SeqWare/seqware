@@ -14,15 +14,18 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.Cascade;
 
-@Entity
 /**
- * <p>WorkflowAttribute class.</p>
+ * <p>
+ * WorkflowAttribute class.
+ * </p>
  *
  * @author boconnor
  * @version $Id: $Id
  */
+@Entity
 @Table(name = "workflow_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "workflow_id", "tag", "value" }) })
-public class WorkflowAttribute implements Attribute<Workflow>, Comparable<WorkflowAttribute>, Serializable {
+public class WorkflowAttribute extends Attribute<Workflow, WorkflowAttribute> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @SequenceGenerator(name = "workflow_attribute_id_seq_gen", sequenceName = "workflow_attribute_id_seq")
@@ -46,7 +49,11 @@ public class WorkflowAttribute implements Attribute<Workflow>, Comparable<Workfl
 
     private String unit;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
     @Override
     public String getTag() {
         return tag;
@@ -58,7 +65,11 @@ public class WorkflowAttribute implements Attribute<Workflow>, Comparable<Workfl
         this.tag = tag;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
     @Override
     public String getValue() {
         return value;
@@ -70,7 +81,11 @@ public class WorkflowAttribute implements Attribute<Workflow>, Comparable<Workfl
         this.value = value;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
     @Override
     public String getUnit() {
         return unit;
@@ -114,16 +129,6 @@ public class WorkflowAttribute implements Attribute<Workflow>, Comparable<Workfl
      */
     public Integer getWorkflowAttributeId() {
         return workflowAttributeId;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param wfa
-     */
-    @Override
-    public int compareTo(WorkflowAttribute wfa) {
-        return (this.tag + this.value).compareTo(wfa.tag + wfa.value);
     }
 
     @Override

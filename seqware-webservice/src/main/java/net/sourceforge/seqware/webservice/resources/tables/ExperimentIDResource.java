@@ -18,7 +18,6 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.TreeSet;
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.ExperimentService;
@@ -46,7 +45,7 @@ import org.xml.sax.SAXException;
  * <p>
  * ExperimentIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -70,23 +69,15 @@ public class ExperimentIDResource extends DatabaseIDResource {
     public void getXml() {
         ExperimentService ss = BeanFactory.getExperimentServiceBean();
 
-        Experiment experiment = (Experiment) testIfNull(ss.findBySWAccession(getId()));
+        Experiment experiment = testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<Experiment> jaxbTool = new JaxbObject<>();
 
+        CollectionPropertyName<Experiment>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(
+                Experiment.class, new String[] { "experimentAttributes" });
         Experiment dto = copier.hibernate2dto(Experiment.class, experiment, new Class<?>[] { ExperimentSpotDesign.class,
-                ExperimentLibraryDesign.class }, new CollectionPropertyName<?>[] {});
+                ExperimentLibraryDesign.class, ExperimentAttribute.class }, createCollectionPropertyNames);
 
-        if (fields.contains("attributes")) {
-            Set<ExperimentAttribute> eas = experiment.getExperimentAttributes();
-            if (eas != null && !eas.isEmpty()) {
-                Set<ExperimentAttribute> newEas = new TreeSet<>();
-                for (ExperimentAttribute ea : eas) {
-                    newEas.add(copier.hibernate2dto(ExperimentAttribute.class, ea));
-                }
-                dto.setExperimentAttributes(newEas);
-            }
-        }
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
 
         getResponse().setEntity(XmlTools.getRepresentation(line));
@@ -94,7 +85,7 @@ public class ExperimentIDResource extends DatabaseIDResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -113,7 +104,7 @@ public class ExperimentIDResource extends DatabaseIDResource {
         }
         try {
             ExperimentService service = BeanFactory.getExperimentServiceBean();
-            Experiment exp = (Experiment) testIfNull(service.findByID(testIfNull(newObj).getExperimentId()));
+            Experiment exp = testIfNull(service.findByID(testIfNull(newObj).getExperimentId()));
             exp.givesPermission(registration);
 
             // simple types
@@ -206,7 +197,7 @@ public class ExperimentIDResource extends DatabaseIDResource {
 
             if (null != expAttributes) {
                 // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                this.mergeAttributes(exp.getExperimentAttributes(), expAttributes, exp);
+                ExperimentIDResource.mergeAttributes(exp.getExperimentAttributes(), expAttributes, exp);
             }
 
             service.update(registration, exp);

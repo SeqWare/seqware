@@ -59,7 +59,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
     private SortedSet<WorkflowRun> workflowRuns;
     private SortedSet<WorkflowParam> workflowParams;
     private Set<WorkflowAttribute> workflowAttributes = new TreeSet<>();
-    private final Logger LOGGER = LoggerFactory.getLogger(Workflow.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Workflow.class);
 
     /**
      * <p>
@@ -693,7 +693,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
                 /*
                  * for(WorkflowParam paramWithDifFMT: paramsWithDifFMT){ if(paramFMT.equals(paramWithDifFMT.getFileMetaType())){ isAdd =
                  * false; break; } }
-                 *
+                 * 
                  * if(isAdd){ paramsWithDifFMT.add(param); }
                  */
                 LOGGER.debug("Add this param");

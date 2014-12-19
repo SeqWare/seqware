@@ -28,7 +28,7 @@ import org.junit.Test;
 
 /**
  * These tests support command-line tools found in the SeqWare User Tutorial, in this case, AttributeAnnotator
- * 
+ *
  * @author dyuen
  */
 public class AttributeAnnotatorET {
@@ -221,7 +221,7 @@ public class AttributeAnnotatorET {
 
     /**
      * Toggle just the skip column on a selected table type
-     * 
+     *
      * @param type
      * @param accession
      * @throws IOException
@@ -248,7 +248,7 @@ public class AttributeAnnotatorET {
 
     /**
      * Annotate skip with an implicit key of "skip"
-     * 
+     *
      * @param type
      * @param accession
      * @throws IOException
@@ -277,7 +277,7 @@ public class AttributeAnnotatorET {
 
     /**
      * Annotate an attribute with both a key and value. Re-annotate and ensure that no duplicates are formed.
-     * 
+     *
      * @param type
      * @param accession
      * @throws IOException
@@ -304,6 +304,9 @@ public class AttributeAnnotatorET {
         List<Object[]> count1 = dbCreator.runQuery(new ArrayListHandler(), COUNT_DB_SIZE);
         runAnnotationWithSecondValue(type, accession, funky_key, funky_second_value, query);
         // seqware-1945: test reannotating with the same key and same value
+        runAnnotationWithSecondValue(type, accession, funky_key, funky_second_value, query);
+        // test reannotating with original value
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, null);
         runAnnotationWithSecondValue(type, accession, funky_key, funky_second_value, query);
 
         // check against cascading deletes
@@ -341,7 +344,7 @@ public class AttributeAnnotatorET {
 
     /**
      * Compare two object arrays element by element and output which element fails
-     * 
+     *
      * @param count1
      * @param count2
      */
@@ -354,7 +357,7 @@ public class AttributeAnnotatorET {
 
     /**
      * Test various forms of invalid parameters SEQWARE-1678
-     * 
+     *
      * @throws java.io.IOException
      */
     @Test

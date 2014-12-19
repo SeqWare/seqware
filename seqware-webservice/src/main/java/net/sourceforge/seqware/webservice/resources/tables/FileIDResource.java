@@ -18,6 +18,7 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
 import java.util.Set;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.FileService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
@@ -63,11 +64,13 @@ public class FileIDResource extends DatabaseIDResource {
     public void getXml() {
         FileService ss = BeanFactory.getFileServiceBean();
 
-        File file = (File) testIfNull(ss.findBySWAccession(getId()));
+        File file = testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<File> jaxbTool = new JaxbObject<>();
 
-        File dto = copier.hibernate2dto(File.class, file);
+        CollectionPropertyName<File>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(File.class,
+                new String[] { "fileAttributes" });
+        File dto = copier.hibernate2dto(File.class, file, new Class<?>[] {}, createCollectionPropertyNames);
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
 
         getResponse().setEntity(XmlTools.getRepresentation(line));

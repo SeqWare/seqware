@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.common.model;
 
+import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.hibernate.annotations.Cascade;
 
 @Entity
@@ -22,7 +22,7 @@ import org.hibernate.annotations.Cascade;
  * @version $Id: $Id
  */
 @Table(name = "file_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "file_id", "tag", "value" }) })
-public class FileAttribute implements java.io.Serializable, Attribute<File>, Comparable<FileAttribute> {
+public class FileAttribute extends Attribute<File, FileAttribute> implements Serializable {
 
     @Id
     @SequenceGenerator(name = "file_attribute_id_seq_gen", sequenceName = "file_attribute_id_seq")
@@ -90,7 +90,11 @@ public class FileAttribute implements java.io.Serializable, Attribute<File>, Com
         this.file = file;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public String getTag() {
         return tag;
@@ -102,7 +106,11 @@ public class FileAttribute implements java.io.Serializable, Attribute<File>, Com
         this.tag = tag;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public String getValue() {
         return value;
@@ -114,7 +122,11 @@ public class FileAttribute implements java.io.Serializable, Attribute<File>, Com
         this.value = value;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * 
+     * @return
+     */
     @Override
     public String getUnit() {
         return unit;
@@ -152,13 +164,6 @@ public class FileAttribute implements java.io.Serializable, Attribute<File>, Com
     @Override
     public void setAttributeParent(File parent) {
         this.setFile(parent);
-    }
-
-    @Override
-    public int compareTo(FileAttribute t) {
-        FileAttribute other = t;
-        return new CompareToBuilder().append(this.file, other.file).append(this.tag, other.tag).append(this.value, other.value)
-                .toComparison();
     }
 
 }

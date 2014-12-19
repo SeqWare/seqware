@@ -1699,19 +1699,12 @@ public class MetadataWS implements Metadata {
     public void annotateLane(int laneSWID, LaneAttribute laneAtt, Boolean skip) {
         try {
             Log.debug("Annotating Lane " + laneSWID + " with skip=" + skip + ", laneAtt = " + laneAtt);
-            Lane lane = ll.findLane("/" + laneSWID/**
-             * + "?show=attributes"
-             */
-            );
+            Lane lane = ll.findLane("/" + laneSWID);
             if (skip != null) {
                 lane.setSkip(skip);
             }
             if (laneAtt != null) {
-                Set<LaneAttribute> atts = lane.getLaneAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
-
+                Set<LaneAttribute> atts = new HashSet<>();
                 atts.add(laneAtt);
                 lane.setLaneAttributes(atts);
             }
@@ -1742,11 +1735,7 @@ public class MetadataWS implements Metadata {
                 lane.setSkip(skip);
             }
             if (iusAtt != null) {
-                Set<IUSAttribute> atts = lane.getIusAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
-
+                Set<IUSAttribute> atts = new HashSet<>();
                 atts.add(iusAtt);
                 lane.setIusAttributes(atts);
             }
@@ -1775,11 +1764,7 @@ public class MetadataWS implements Metadata {
                 sequencerRun.setSkip(skip);
             }
             if (sequencerRunAtt != null) {
-                Set<SequencerRunAttribute> atts = sequencerRun.getSequencerRunAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
-
+                Set<SequencerRunAttribute> atts = new HashSet<>();
                 atts.add(sequencerRunAtt);
                 sequencerRun.setSequencerRunAttributes(atts);
             }
@@ -1809,10 +1794,7 @@ public class MetadataWS implements Metadata {
                 Log.info("Experiment does not have a skip column!");
             }
             if (att != null) {
-                Set<ExperimentAttribute> atts = obj.getExperimentAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
+                Set<ExperimentAttribute> atts = new HashSet<>();
                 atts.add(att);
                 obj.setExperimentAttributes(atts);
             }
@@ -1844,11 +1826,7 @@ public class MetadataWS implements Metadata {
                 Log.info("Processing does not have a skip column!");
             }
             if (att != null) {
-                Set<ProcessingAttribute> atts = obj.getProcessingAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
-
+                Set<ProcessingAttribute> atts = new HashSet<>();
                 atts.add(att);
                 obj.setProcessingAttributes(atts);
             }
@@ -1874,19 +1852,12 @@ public class MetadataWS implements Metadata {
     public void annotateSample(int swid, SampleAttribute att, Boolean skip) {
         try {
             Log.debug("Annotating Sample " + swid + " with skip=" + skip + ", Att = " + att);
-            Sample obj = ll.findSample("/" + swid/**
-             * +"?show=attributes"
-             */
-            );
+            Sample obj = ll.findSample("/" + swid);
             if (skip != null) {
                 obj.setSkip(skip);
             }
             if (att != null) {
-                Set<SampleAttribute> atts = obj.getSampleAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
-
+                Set<SampleAttribute> atts = new HashSet<>();
                 atts.add(att);
                 obj.setSampleAttributes(atts);
             }
@@ -1918,11 +1889,7 @@ public class MetadataWS implements Metadata {
                 Log.info("Processing does not have a skip column!");
             }
             if (att != null) {
-                Set<StudyAttribute> atts = obj.getStudyAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
-                // att.setStudy(obj);
+                Set<StudyAttribute> atts = new HashSet<>();
                 atts.add(att);
                 obj.setStudyAttributes(atts);
             }
@@ -2060,10 +2027,7 @@ public class MetadataWS implements Metadata {
                 Log.info("Processing does not have a skip column!");
             }
             if (att != null) {
-                Set<WorkflowAttribute> atts = obj.getWorkflowAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
+                Set<WorkflowAttribute> atts = new HashSet<>();
                 // att.setStudy(obj);
                 atts.add(att);
                 obj.setWorkflowAttributes(atts);
@@ -2091,15 +2055,10 @@ public class MetadataWS implements Metadata {
             Log.debug("Annotating WorkflowRun " + workflowrunSWID + " with skip=" + skip + ", Att = " + att);
             WorkflowRun obj = ll.findWorkflowRun("/" + workflowrunSWID);
             if (skip != null) {
-                // obj.setSkip(skip);
                 Log.info("Processing does not have a skip column!");
             }
             if (att != null) {
-                Set<WorkflowRunAttribute> atts = obj.getWorkflowRunAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
-                // att.setStudy(obj);
+                Set<WorkflowRunAttribute> atts = new HashSet<>();
                 atts.add(att);
                 obj.setWorkflowRunAttributes(atts);
             }
@@ -2256,6 +2215,7 @@ public class MetadataWS implements Metadata {
     /**
      * {@inheritDoc}
      *
+     * @param fileSWID
      * @param att
      */
     @Override
@@ -2267,10 +2227,7 @@ public class MetadataWS implements Metadata {
                 obj.setSkip(skip);
             }
             if (att != null) {
-                Set<FileAttribute> atts = obj.getFileAttributes();
-                if (atts == null) {
-                    atts = new HashSet<>();
-                }
+                Set<FileAttribute> atts = new HashSet<>();
                 atts.add(att);
                 obj.setFileAttributes(atts);
             }

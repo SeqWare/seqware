@@ -18,7 +18,7 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import java.io.IOException;
 import java.util.Set;
-import java.util.TreeSet;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.IUSService;
 import net.sourceforge.seqware.common.business.RegistrationService;
@@ -31,7 +31,6 @@ import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
-import org.apache.log4j.Logger;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -43,13 +42,11 @@ import org.xml.sax.SAXException;
  * <p>
  * IusIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
 public class IusIDResource extends DatabaseIDResource {
-
-    private Logger logger;
 
     /**
      * <p>
@@ -58,7 +55,6 @@ public class IusIDResource extends DatabaseIDResource {
      */
     public IusIDResource() {
         super("iusId");
-        logger = Logger.getLogger(IusIDResource.class);
     }
 
     /**
@@ -70,29 +66,21 @@ public class IusIDResource extends DatabaseIDResource {
     public void getXml() {
         authenticate();
         IUSService ss = BeanFactory.getIUSServiceBean();
-        IUS ius = (IUS) testIfNull(ss.findBySWAccession(getId()));
+        IUS ius = testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<IUS> jaxbTool = new JaxbObject<>();
 
-        IUS dto = copier.hibernate2dto(IUS.class, ius);
+        CollectionPropertyName<IUS>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(IUS.class,
+                new String[] { "iusAttributes" });
+        IUS dto = copier.hibernate2dto(IUS.class, ius, new Class<?>[] {}, createCollectionPropertyNames);
 
-        if (fields.contains("attributes")) {
-            Set<IUSAttribute> ias = ius.getIusAttributes();
-            if (ias != null && !ias.isEmpty()) {
-                Set<IUSAttribute> newias = new TreeSet<>();
-                for (IUSAttribute ia : ias) {
-                    newias.add(copier.hibernate2dto(IUSAttribute.class, ia));
-                }
-                dto.setIusAttributes(newias);
-            }
-        }
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -110,7 +98,7 @@ public class IusIDResource extends DatabaseIDResource {
         }
         try {
             IUSService fs = BeanFactory.getIUSServiceBean();
-            IUS ius = (IUS) testIfNull(fs.findByID(newIUS.getIusId()));
+            IUS ius = testIfNull(fs.findByID(newIUS.getIusId()));
             ius.givesPermission(registration);
             // simple types
             String name = newIUS.getName();
@@ -152,7 +140,7 @@ public class IusIDResource extends DatabaseIDResource {
             }
             if (newAttributes != null) {
                 // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                this.mergeAttributes(ius.getIusAttributes(), newAttributes, ius);
+                IusIDResource.mergeAttributes(ius.getIusAttributes(), newAttributes, ius);
             }
 
             fs.update(registration, ius);

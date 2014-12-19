@@ -20,13 +20,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.SampleService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.model.SampleAttribute;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
  * <p>
  * SampleIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -70,8 +70,10 @@ public class SampleIDResource extends DatabaseIDResource {
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
 
         SampleService ss = BeanFactory.getSampleServiceBean();
-        Sample sample = (Sample) testIfNull(ss.findBySWAccession(getId()));
-        Sample dto = copier.hibernate2dto(Sample.class, sample);
+        Sample sample = testIfNull(ss.findBySWAccession(getId()));
+        CollectionPropertyName<Sample>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(Sample.class,
+                new String[] { "sampleAttributes" });
+        Sample dto = copier.hibernate2dto(Sample.class, sample, new Class<?>[] {}, createCollectionPropertyNames);
 
         if (fields.contains("lanes")) {
             SortedSet<Lane> lanes = sample.getLanes();
@@ -81,7 +83,7 @@ public class SampleIDResource extends DatabaseIDResource {
                     copiedLanes.add(copier.hibernate2dto(Lane.class, lane));
                 }
                 dto.setLanes(copiedLanes);
-            } else if (lanes == null) {
+            } else {
                 Log.info("Could not be found: lanes");
             }
         }
@@ -93,18 +95,9 @@ public class SampleIDResource extends DatabaseIDResource {
                     copiedIUS.add(copier.hibernate2dto(IUS.class, i));
                 }
                 dto.setIUS(copiedIUS);
-            } else if (ius == null) {
-                Log.info("Could not be found : ius");
             }
-        }
-        if (fields.contains("attributes")) {
-            Set<SampleAttribute> sas = sample.getSampleAttributes();
-            if (sas != null && !sas.isEmpty()) {
-                Set<SampleAttribute> newsas = new TreeSet<>();
-                for (SampleAttribute sa : sas) {
-                    newsas.add(copier.hibernate2dto(SampleAttribute.class, sa));
-                }
-                dto.setSampleAttributes(newsas);
+            {
+                Log.info("Could not be found : ius");
             }
         }
 
@@ -114,7 +107,7 @@ public class SampleIDResource extends DatabaseIDResource {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -133,7 +126,7 @@ public class SampleIDResource extends DatabaseIDResource {
             }
 
             SampleService service = BeanFactory.getSampleServiceBean();
-            Sample sample = (Sample) testIfNull(service.findByID(o.getSampleId()));
+            Sample sample = testIfNull(service.findByID(o.getSampleId()));
             sample.givesPermission(registration);
 
             String anonymizedName = o.getAnonymizedName();
@@ -176,7 +169,7 @@ public class SampleIDResource extends DatabaseIDResource {
 
             if (null != o.getSampleAttributes()) {
                 // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                this.mergeAttributes(sample.getSampleAttributes(), o.getSampleAttributes(), sample);
+                SampleIDResource.mergeAttributes(sample.getSampleAttributes(), o.getSampleAttributes(), sample);
             }
             if (null != o.getParents()) {
                 SampleService ss = BeanFactory.getSampleServiceBean();

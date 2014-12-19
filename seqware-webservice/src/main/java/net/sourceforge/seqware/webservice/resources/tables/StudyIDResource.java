@@ -16,13 +16,11 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.util.Set;
-import java.util.TreeSet;
+import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.StudyService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Study;
-import net.sourceforge.seqware.common.model.StudyAttribute;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.restlet.data.Status;
@@ -37,7 +35,7 @@ import org.xml.sax.SAXException;
  * <p>
  * StudyIDResource class.
  * </p>
- * 
+ *
  * @author mtaschuk
  * @version $Id: $Id
  */
@@ -61,29 +59,20 @@ public class StudyIDResource extends DatabaseIDResource {
     public void getXml() {
         authenticate();
         StudyService ss = BeanFactory.getStudyServiceBean();
-        Study study = (Study) testIfNull(ss.findBySWAccession(getId()));
+        Study study = testIfNull(ss.findBySWAccession(getId()));
         Hibernate3DtoCopier copier = new Hibernate3DtoCopier();
         JaxbObject<Study> jaxbTool = new JaxbObject<>();
+        CollectionPropertyName<Study>[] createCollectionPropertyNames = CollectionPropertyName.createCollectionPropertyNames(Study.class,
+                new String[] { "studyAttributes" });
+        Study dto = copier.hibernate2dto(Study.class, study, new Class<?>[] {}, createCollectionPropertyNames);
 
-        Study dto = copier.hibernate2dto(Study.class, study);
-
-        if (fields.contains("attributes")) {
-            Set<StudyAttribute> sas = study.getStudyAttributes();
-            Set<StudyAttribute> newsas = new TreeSet<>();
-            if (sas != null && !sas.isEmpty()) {
-                for (StudyAttribute sa : sas) {
-                    newsas.add(copier.hibernate2dto(StudyAttribute.class, sa));
-                }
-                dto.setStudyAttributes(newsas);
-            }
-        }
         Document line = XmlTools.marshalToDocument(jaxbTool, dto);
         getResponse().setEntity(XmlTools.getRepresentation(line));
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -106,11 +95,11 @@ public class StudyIDResource extends DatabaseIDResource {
 
             // persist object
             StudyService service = BeanFactory.getStudyServiceBean();
-            Study study = (Study) testIfNull(service.findByID(p.getStudyId()));
+            Study study = testIfNull(service.findByID(p.getStudyId()));
 
             if (null != p.getStudyAttributes()) {
                 // SEQWARE-1577 - AttributeAnnotator cascades deletes when annotating
-                this.mergeAttributes(study.getStudyAttributes(), p.getStudyAttributes(), study);
+                StudyIDResource.mergeAttributes(study.getStudyAttributes(), p.getStudyAttributes(), study);
             }
 
             String title = p.getTitle();

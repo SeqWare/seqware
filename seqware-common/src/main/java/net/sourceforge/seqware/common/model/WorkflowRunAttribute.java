@@ -14,15 +14,18 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.Cascade;
 
-@Entity
 /**
- * <p>WorkflowRunAttribute class.</p>
+ * <p>
+ * WorkflowRunAttribute class.
+ * </p>
  *
  * @author boconnor
  * @version $Id: $Id
  */
+@Entity
 @Table(name = "workflow_run_attribute", uniqueConstraints = { @UniqueConstraint(columnNames = { "workflow_run_id", "tag", "value" }) })
-public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<WorkflowRunAttribute>, Serializable {
+public class WorkflowRunAttribute extends Attribute<WorkflowRun, WorkflowRunAttribute> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @SequenceGenerator(name = "workflow_run_attribute_id_seq_gen", sequenceName = "workflow_run_attribute_id_seq")
@@ -45,7 +48,11 @@ public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<
 
     private String unit;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
     @Override
     public String getTag() {
         return tag;
@@ -57,7 +64,11 @@ public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<
         this.tag = tag;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
     @Override
     public String getValue() {
         return value;
@@ -69,7 +80,11 @@ public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<
         this.value = value;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     *
+     * @return
+     */
     @Override
     public String getUnit() {
         return unit;
@@ -113,16 +128,6 @@ public class WorkflowRunAttribute implements Attribute<WorkflowRun>, Comparable<
      */
     public Integer getWorkflowRunAttributeId() {
         return workflowRunAttributeId;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param t
-     */
-    @Override
-    public int compareTo(WorkflowRunAttribute t) {
-        return (t.tag + t.value).compareTo(this.tag + this.value);
     }
 
     @Override
