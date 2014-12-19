@@ -5,13 +5,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.channels.FileLock;
+import java.nio.charset.StandardCharsets;
 import net.sourceforge.seqware.common.util.Log;
 
 /**
  * <p>
  * LockingFileTools class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -25,7 +26,7 @@ public class LockingFileTools {
 
     /**
      * Try to acquire lock. If we can, write the String to file and then release the lock
-     * 
+     *
      * @param file
      *            a {@link java.io.File} object.
      * @param output
@@ -39,12 +40,12 @@ public class LockingFileTools {
                 try (FileOutputStream fos = new FileOutputStream(file, append)) {
                     FileLock fl = fos.getChannel().tryLock();
                     if (fl != null) {
-                        try (OutputStreamWriter fw = new OutputStreamWriter(fos)) {
+                        try (OutputStreamWriter fw = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
                             fw.append(output);
                             fl.release();
                         }
                         // Log.info("Locked, appended, and released for file: "+file.getAbsolutePath()+" value: "+output);
-                        return (true);
+                        return true;
                     } else {
                         Log.info("Can't get lock for " + file.getAbsolutePath() + " try number " + i + " of " + RETRIES);
                         // sleep for 2 seconds before trying again
@@ -52,12 +53,10 @@ public class LockingFileTools {
                     }
                 }
             } catch (IOException | InterruptedException e) {
-                Log.info("Exception with LockingFileTools: " + e.getMessage());
-                e.printStackTrace();
+                Log.fatal("Attempt " + i + " Exception with LockingFileTools: " + e.getMessage(), e);
             }
         }
-        Log.info("Unable to get lock for " + file.getAbsolutePath() + " gave up after " + RETRIES + " tries");
-        return (false);
+        Log.fatal("Unable to get lock for " + file.getAbsolutePath() + " gave up after " + RETRIES + " tries");
+        return false;
     }
-
 }
