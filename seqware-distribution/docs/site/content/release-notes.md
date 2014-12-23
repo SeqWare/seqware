@@ -7,8 +7,33 @@ markdown:  basic
 
 <!-- 
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
-   Need to document 1.1.0-alpha.4 and 5 which are builds for pan-cancer
 -->
+
+## 1.1.0-beta.0 (2014-12-23)
+
+This is a major release implementing all remaining features for the 1.1.0 beta release. Following releases in this series will be limited to hotfixes. 
+
+New features include updates to the file provenance report to include workflow and workflow run annotations, aggregate skip information across all paths to a particular file, and report input file information. A new reporting resource displays JDBC and version information for the web service, file provisioning for workflows now records and checks file size and md5sum, it is now possible to pull back arbitrary entries and annotations on the CLI, and it is now possible for workflows to annotate processing events and files while a workflow is running. 
+
+### Defect
+* [SEQWARE-1993] - When using inmemory metadata method, bundle dry-run fails to execute
+
+### Improvement
+* [SEQWARE-1889] - Accessing files linked to lanes
+* [SEQWARE-1981] - Include workflow run input files into the file provenance report?
+* [SEQWARE-1985] - Get version of SeqWare webservice
+
+### Task
+* [SEQWARE-1956] - GCR keeps retrying a lock when the filesystem is down
+* [SEQWARE-1959] - Create general mechanism to run annotator in workflows
+* [SEQWARE-1970] - validate seqware version between CLI and WS
+* [SEQWARE-1974] - Provision files module should record file size and md5 checksum
+* [SEQWARE-1975] - Store file size and md5sum in the seqware database
+* [SEQWARE-1980] - Fix dry-run option on CLI
+* [SEQWARE-1991] - Pull back annotation for arbitrary sw_accession
+* [SEQWARE-1992] - Make job id on sge cluster unique
+* [SEQWARE-1994] - When a file with multiple paths has a path skipped, the file should be skipped
+
 
 ## 1.1.0-alpha.5 (2014-10-23)
 
