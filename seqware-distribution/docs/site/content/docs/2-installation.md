@@ -64,7 +64,7 @@ Next, you will need to download our current VM image which is linked below.
 Please make sure you are using the latest version, when we post a new one we
 will tweet about it so consider following us on Twitter.
 
-* [SeqWare-1.0.13.ova](https://s3.amazonaws.com/oicr.vm/public/Seqware_1.0.13_Bindle_1.2_pre-release.ova)
+* [SeqWare_1.1.0-beta.0.ova](https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0-beta.0.ova)
 * [SeqWare-1.0.13.ova (this is the VM we recommend for the ICGC PanCancer project for data train 2.0)](https://s3.amazonaws.com/oicr.vm/public/Seqware_1.0.13_Bindle_1.2.1.ova)
 
 Open VirtualBox and use the "Import Appliance" tool to create a new SeqWare VM
@@ -95,6 +95,7 @@ The login username is <kbd>vagrant</kbd> and the password is <kbd>vagrant</kbd>.
 By default the VM will open port 2222 for ssh. You can connect to the running VM from an external console using the following command: 
 
     sshpass -p 'vagrant' ssh -p 2222 vagrant@localhost
+    sudo -u seqware -i
 
 <p class="warning"><strong>Note:</strong>
 Obviously, you will not want to run this VM anywhere that is network-accessible. If you do, make sure to disable the above login and use SSH keys.
