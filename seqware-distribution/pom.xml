@@ -125,7 +125,7 @@
                         </goals>
 
                         <configuration>
-	        	    <pubScmUrl>scm:git:ssh://git@github.com:SeqWare/seqware.github.com.git</pubScmUrl>	
+	        	    <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/seqware.github.com.git</pubScmUrl>	
 			    <scmBranch>master</scmBranch>
                             <content>docs/site/output/</content>
                             <ignorePathsToDelete>
