@@ -215,7 +215,7 @@ this unless you a familiar with Linux and a cloud/virtualization
 technology such as VirtualBox, OpenStack, Google Compute Engine, or Amazon Web
 Services.</p>
 
-This option leverages the excellent [Vagrant](http://www.vagrantup.com/)
+Follow the instructions at [Bindle](https://github.com/CloudBindle/Bindle).
 
 ## Next Steps
 
