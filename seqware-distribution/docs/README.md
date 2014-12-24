@@ -7,6 +7,15 @@ the public website. New documentation meant for public release should be done on
 the 'develop' branch. 'Master' should be avoided and should only be modified 
 during releases or with the Hubflow hotfix workflow.
 
+### Docker Container
+
+The recommended way to build the documentation is within a docker container that already has the dependencies that we need. 
+See [seqware.github.com inside docker](https://github.com/SeqWare/seqware-sandbox/tree/develop/seqware.github.com_inside_docker) which builds upon [seqware inside docker](https://github.com/SeqWare/seqware-sandbox/tree/develop/seqware_inside_docker)
+
+### Historical 
+
+It is also possible to install everything from scratch on your development box.
+
 Install nanoc (on Ubuntu 12.04):
 
 For a basic version of nanoc just follow the directions on their site. This is
@@ -46,7 +55,7 @@ To run checks for broken links:
 
 Modify the index.html so the logo points to /seqware/ and the css points to /seqware/style.css
 
-### Update Metadb Schema
+#### Update Metadb Schema
 
 The seqware.github.com repo acts as the only store of the generated schema documentation. 
 In order to update it:
@@ -85,7 +94,7 @@ In order to update it:
     cd seqware.github.com && git add metadb-schema && git push
 
 
-### Troubleshooting 
+#### Historical Troubleshooting 
 
 I did not need to perform any of the steps below, but you may need to on your install
 
