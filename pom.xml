@@ -1195,7 +1195,7 @@
                             <content>${project.build.directory}/site/</content>
                             <tryUpdate>true</tryUpdate>
                             <skipDeletedFiles>true</skipDeletedFiles>
-                            <scmBranch>gh-pages</scmBranch>
+                            <scmBranch>master</scmBranch>
                         </configuration>
                     </execution>
                 </executions>
