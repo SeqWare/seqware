@@ -1,5 +1,5 @@
-[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.10785.png)](http://dx.doi.org/10.5281/zenodo.10785)
-
+[![Build Status](https://travis-ci.org/SeqWare/seqware.svg?branch=develop)](https://travis-ci.org/SeqWare/seqware)
+[![DOI](https://zenodo.org/badge/4360/SeqWare/seqware.svg)](http://dx.doi.org/10.5281/zenodo.13358)
 
 ## Introduction 
 
