@@ -613,8 +613,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             if (swid == null || swid.trim().isEmpty()) {
                 swid = file.getAttribute(Header.LANE_SWA.getTitle());
             }
+            // seqware-2002 it is possible that both are null if the path goes through sample_processing
+            if (swid == null || swid.trim().isEmpty()) {
+                return;
+            }
             workflowParentAccessionsToRun.add(swid);
-
         }
     }
 
