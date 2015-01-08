@@ -159,7 +159,6 @@
         <module>seqware-admin-webservice</module>
         <module>seqware-ext-admin-testing</module>
         <module>seqware-webservice</module>
-        <module>seqware-portal</module>
         <module>seqware-archetypes/seqware-archetype-decider</module>
         <module>seqware-archetypes/seqware-archetype-java-workflow</module>
         <module>seqware-archetypes/seqware-archetype-module</module>
