@@ -380,11 +380,6 @@
             <version>1.0.1</version>
         </dependency>
         <dependency>
-            <artifactId>spring-context-support</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <artifactId>spring-context</artifactId>
             <groupId>org.springframework</groupId>
             <type>jar</type>
