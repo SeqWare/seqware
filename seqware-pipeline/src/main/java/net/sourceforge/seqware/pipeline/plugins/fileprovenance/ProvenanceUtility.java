@@ -17,21 +17,25 @@
 package net.sourceforge.seqware.pipeline.plugins.fileprovenance;
 
 import com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.Sample;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
+import net.sourceforge.seqware.common.util.Log;
 
 /**
  * Convenience methods that can be shared by utilities that access the FileProvenance report
@@ -122,15 +126,29 @@ public class ProvenanceUtility {
                 } else if (filter == HumanProvenanceFilters.STUDY_NAME) {
                     for (String value : (List<String>) swaValues) {
                         List<Study> studiesByName = metadata.getStudyByName(value);
-                        for (Study study : studiesByName) {
-                            swaStrings.add(String.valueOf(study.getSwAccession()));
+                        // User must be notified if the sample name or root sample name was invalid (could not be found).
+                        if (studiesByName == null || studiesByName.size() == 0) {
+                            String errorText = "The study with the name \"" + value + "\" could not be found.";
+                            Log.error(errorText);
+                            throw new NotFoundException(errorText);
+                        } else {
+                            for (Study study : studiesByName) {
+                                swaStrings.add(String.valueOf(study.getSwAccession()));
+                            }
                         }
                     }
                 } else if (filter == HumanProvenanceFilters.SAMPLE_NAME || filter == HumanProvenanceFilters.ROOT_SAMPLE_NAME) {
                     for (String value : (List<String>) swaValues) {
                         List<Sample> samplesByName = metadata.getSampleByName(value);
-                        for (Sample sample : samplesByName) {
-                            swaStrings.add(String.valueOf(sample.getSwAccession()));
+                        // User must be notified if the sample name or root sample name was invalid (could not be found).
+                        if (samplesByName == null || samplesByName.size() == 0) {
+                            String errorText = "The sample with the name \"" + value + "\" could not be found.";
+                            Log.error(errorText);
+                            throw new NotFoundException(errorText);
+                        } else {
+                            for (Sample sample : samplesByName) {
+                                swaStrings.add(String.valueOf(sample.getSwAccession()));
+                            }
                         }
                     }
                 } else if (filter == HumanProvenanceFilters.SEQUENCER_RUN_NAME) {
