@@ -3,20 +3,16 @@ package net.sourceforge.seqware.common.business.impl;
 import java.util.Date;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.dao.RegistrationDAO;
-import net.sourceforge.seqware.common.invitation.InvitationParams;
-import net.sourceforge.seqware.common.invitation.RandomInvitationCode;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.RegistrationDTO;
 import net.sourceforge.seqware.common.util.Log;
 import org.springframework.beans.BeanUtils;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 
 /**
  * <p>
  * RegistrationServiceImpl class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -34,10 +30,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Sets a private member variable with an instance of an implementation of RegistrationDAO. This method is called by the Spring
      * framework at run time.
-     * 
+     *
      * @see RegistrationDAO
      */
     @Override
@@ -49,7 +45,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     /* Inserts an instance of Registration into the database. */
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param registrationDTO
      */
     @Override
@@ -62,73 +58,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     /* Updates an instance of Registration in the database. */
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param registrationDTO
      */
     @Override
     public void update(RegistrationDTO registrationDTO) {
         Registration registration = this.populateRegistration(registrationDTO);
         registrationDAO.update(registration);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void insert(String[] emails, InvitationParams invitationParams, MailSender sender) {
-        boolean isInvitatonCode = invitationParams.getIsInvitationCode();
-        String subjectEmail = invitationParams.getSubjectEmail();
-        String templateEmail = invitationParams.getTemplateEmail();
-
-        String patternEmail = "@email@";
-        String patternCode = "@invitation.code@";
-        String patternEnter = "@enter@";
-
-        RandomInvitationCode ric = new RandomInvitationCode();
-        SimpleMailMessage[] mailMessageArray = new SimpleMailMessage[emails.length];
-        for (int index = 0; index < emails.length; index++) {
-            String email = emails[index].trim().toLowerCase();
-
-            String invitationCode = null;
-            if (isInvitatonCode) {
-                invitationCode = ric.nextInvitationCode();
-            }
-
-            RegistrationDTO registrationDTO = new RegistrationDTO();
-            registrationDTO.setEmailAddress(email);
-            registrationDTO.setConfirmEmailAddress(email);
-
-            registrationDTO.setInvitationCode(invitationCode);
-
-            registrationDTO.setFirstName("");
-            registrationDTO.setLastName("");
-            registrationDTO.setLIMSAdmin(false);
-            registrationDTO.setJoinDevelopersMailingList(false);
-            registrationDTO.setJoinUsersMailingList(false);
-
-            Log.debug("Email = " + registrationDTO.getEmailAddress());
-            insert(registrationDTO);
-
-            // set email param
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(email);
-
-            String textEmail = templateEmail;
-
-            // logger.debug("TEXT1 = " + textEmail);
-
-            textEmail = replace(textEmail, patternEmail, email);
-            textEmail = replace(textEmail, patternCode, invitationCode);
-            textEmail = replace(textEmail, patternEnter, "\n");
-
-            // logger.debug("TEXT2 = " + textEmail);
-
-            message.setSubject(subjectEmail);
-            message.setText(textEmail);
-
-            mailMessageArray[index] = message;
-        }
-
-        Log.info("Sending email ....");
-        sender.send(mailMessageArray);
     }
 
     private String replace(String str, String pattern, String replace) {
@@ -148,7 +84,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of Registration in the database by the Registration emailAddress, and copies the Registration properties to an
      * instance of RegistrationDTO.
      */
@@ -176,7 +112,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of Registration in the database by the Registration emailAddress and password, and copies the Registration
      * properties to an instance of RegistrationDTO.
      */
@@ -198,7 +134,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Determines if an email address has already been used.
      */
     @Override

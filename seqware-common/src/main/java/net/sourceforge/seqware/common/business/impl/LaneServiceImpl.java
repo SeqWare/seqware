@@ -15,13 +15,11 @@ import net.sourceforge.seqware.common.dao.IUSDAO;
 import net.sourceforge.seqware.common.dao.LaneDAO;
 import net.sourceforge.seqware.common.dao.ProcessingDAO;
 import net.sourceforge.seqware.common.model.File;
-import net.sourceforge.seqware.common.model.FileType;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.model.UploadSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
  * <p>
  * LaneServiceImpl class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -53,10 +51,10 @@ public class LaneServiceImpl implements LaneService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Sets a private member variable with an instance of an implementation of LaneDAO. This method is called by the Spring framework at run
      * time.
-     * 
+     *
      * @see LaneDAO
      */
     @Override
@@ -67,7 +65,7 @@ public class LaneServiceImpl implements LaneService {
     /**
      * Sets a private member variable with an instance of an implementation of ProcessingDAO. This method is called by the Spring framework
      * at run time.
-     * 
+     *
      * @param processingDAO
      *            implementation of ProcessingDAO
      * @see ProcessingDAO
@@ -79,7 +77,7 @@ public class LaneServiceImpl implements LaneService {
     /**
      * Sets a private member variable with an instance of an implementation of FileDAO. This method is called by the Spring framework at run
      * time.
-     * 
+     *
      * @param fileDAO
      *            implementation of FileDAO
      * @see fileDAO
@@ -91,7 +89,7 @@ public class LaneServiceImpl implements LaneService {
     /**
      * Sets a private member variable with an instance of an implementation of IUSDAO. This method is called by the Spring framework at run
      * time.
-     * 
+     *
      * @see iusDAO
      * @param IUSDAO
      *            a {@link net.sourceforge.seqware.common.dao.IUSDAO} object.
@@ -151,113 +149,10 @@ public class LaneServiceImpl implements LaneService {
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * @param uploadSeqence
-     */
-    @Override
-    public Integer insertLane(Registration registration, Sample sample, UploadSequence uploadSeqence, FileType fileType) throws Exception {
-        Set<File> files = new TreeSet<>();
-        String folderStore = uploadSeqence.getFolderStore();
-
-        if (uploadSeqence.getUseOneURL()) {
-            files.add(createFile(registration, uploadSeqence.getFileURL(), fileType.getMetaType(), folderStore));
-        } else {
-            MultipartFile fileOne = uploadSeqence.getFileOne();
-            if (fileOne != null && !fileOne.isEmpty()) {
-                java.io.File uploadFile = fileDAO.saveFile(fileOne, folderStore, registration);
-                files.add(createFile(registration, uploadFile.getPath(), fileType.getMetaType(), folderStore));
-            }
-        }
-
-        if (uploadSeqence.isUsePairedFile()) {
-            if (uploadSeqence.getUseTwoURL()) {
-                files.add(createFile(registration, uploadSeqence.getFileTwoURL(), fileType.getMetaType(), folderStore));
-            } else {
-                MultipartFile fileTwo = uploadSeqence.getFileTwo();
-                if (fileTwo != null && !fileTwo.isEmpty()) {
-                    java.io.File uploadFile = fileDAO.saveFile(fileTwo, folderStore, registration);
-                    files.add(createFile(registration, uploadFile.getPath(), fileType.getMetaType(), folderStore));
-                }
-            }
-        }
-
-        /*
-         * if(uploadSeqence.getUseURL()){ files.add(createFile(uploadSeqence.getFileURL(), fileType.getMetaType(), folderStore,
-         * registration));
-         * 
-         * if(uploadSeqence.isUsePairedFile()){ files.add(createFile(uploadSeqence.getFileTwoURL(), fileType.getMetaType(), folderStore,
-         * registration)); } } else{ MultipartFile fileOne = uploadSeqence.getFileOne(); MultipartFile fileTwo = uploadSeqence.getFileTwo();
-         * if(fileOne!= null && !fileOne.isEmpty()){ java.io.File uploadFile = fileDAO.saveFile(fileOne, folderStore, registration);
-         * files.add(createFile(uploadFile.getPath(), fileType.getMetaType(), folderStore, registration)); }
-         * 
-         * if(fileTwo!=null && !fileTwo.isEmpty()){ java.io.File uploadFile = fileDAO.saveFile(fileTwo, folderStore, registration);
-         * files.add(createFile(uploadFile.getPath(), fileType.getMetaType(), folderStore, registration)); } }
-         */
-        // create new IUS
-        IUS ius = new IUS();
-
-        // create new processing
-        Processing newProcessing = insertProcessing(registration, files);
-
-        // create new Processing
-        Set<Processing> processings = new TreeSet<>();
-        processings.add(newProcessing);
-
-        // set new Processing
-        ius.setProcessings(processings);
-
-        // create new lane
-        Lane lane = new Lane();
-        lane.setOwner(sample.getOwner());
-        insert(registration, lane);
-
-        // set new Lane
-        ius.setLane(lane);
-        SortedSet<IUS> newIUS = new TreeSet<>();
-        newIUS.add(ius);
-        lane.setIUS(newIUS);
-
-        // set IUS into new processing
-        newProcessing.setIUS(newIUS);
-
-        // get old IUD
-        Set<IUS> oldIUS = sample.getIUS();
-        // and add them to new processing
-        newIUS.addAll(oldIUS);
-
-        // clear old IUD
-        oldIUS.clear();
-        // and set new IUD as current
-        oldIUS.addAll(newIUS);
-
-        // set exixst Sample
-        ius.setSample(sample);
-        // sample.setIUS(newIUS);
-
-        // insert new IUS
-        ius.setCreateTimestamp(new Date());
-        IUSDAO.insert(registration, ius);
-
-        // create new Lane
-        // Lane lane = new Lane();
-        // lane.setSample(sample);
-        // lane.setOwner(sample.getOwner());
-        // lane.setProcessings(processings);
-
-        // set lanes
-        // newProcessing.getLanes().add(lane);
-
-        // insert(lane);
-
-        return newProcessing.getProcessingId();
-    }
-
-    /**
      * <p>
      * updateLane.
      * </p>
-     * 
+     *
      * @param sample
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @param fileOne
@@ -359,7 +254,7 @@ public class LaneServiceImpl implements LaneService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Inserts an instance of Lane into the database.
      */
     @Override
@@ -371,7 +266,7 @@ public class LaneServiceImpl implements LaneService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of Lane in the database.
      */
     @Override
@@ -381,9 +276,9 @@ public class LaneServiceImpl implements LaneService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Deletes an instance of Lane in the database.
-     * 
+     *
      * @param lane
      * @param deleteRealFiles
      */
@@ -403,7 +298,7 @@ public class LaneServiceImpl implements LaneService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of Lane in the database by the Lane emailAddress, and copies the Lane properties to an instance of Lane.
      */
     @Override
@@ -467,40 +362,10 @@ public class LaneServiceImpl implements LaneService {
     }
 
     /**
-     * {@inheritDoc}
-     * 
-     * Determines if an email address has already been used.
-     */
-    @Override
-    public boolean hasNameBeenUsed(String oldName, String newName) {
-        boolean nameUsed = false;
-        boolean checkName = true;
-
-        if (newName != null) {
-
-            if (oldName != null) {
-                /*
-                 * We do not want to check if an name address has been used if the user is updating an existing lane and has not changed the
-                 * nameAddress.
-                 */
-                checkName = !newName.trim().equalsIgnoreCase(oldName.trim());
-            }
-
-            if (checkName) {
-                Lane lane = this.findByName(newName.trim().toLowerCase());
-                if (lane != null) {
-                    nameUsed = true;
-                }
-            }
-        }
-        return nameUsed;
-    }
-
-    /**
      * <p>
      * listFile.
      * </p>
-     * 
+     *
      * @param reqistration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param typeNode
@@ -650,7 +515,7 @@ public class LaneServiceImpl implements LaneService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
