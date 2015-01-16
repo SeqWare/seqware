@@ -131,11 +131,11 @@ public class ProvenanceUtility {
                             String errorText = "The study with the name \"" + value + "\" could not be found.";
                             Log.error(errorText);
                             throw new NotFoundException(errorText);
-                        } else {
-                            for (Study study : studiesByName) {
-                                swaStrings.add(String.valueOf(study.getSwAccession()));
-                            }
                         }
+                        for (Study study : studiesByName) {
+                            swaStrings.add(String.valueOf(study.getSwAccession()));
+                        }
+                        
                     }
                 } else if (filter == HumanProvenanceFilters.SAMPLE_NAME || filter == HumanProvenanceFilters.ROOT_SAMPLE_NAME) {
                     for (String value : (List<String>) swaValues) {
@@ -145,11 +145,11 @@ public class ProvenanceUtility {
                             String errorText = "The sample with the name \"" + value + "\" could not be found.";
                             Log.error(errorText);
                             throw new NotFoundException(errorText);
-                        } else {
-                            for (Sample sample : samplesByName) {
-                                swaStrings.add(String.valueOf(sample.getSwAccession()));
-                            }
                         }
+                        for (Sample sample : samplesByName) {
+                            swaStrings.add(String.valueOf(sample.getSwAccession()));
+                        }
+                        
                     }
                 } else if (filter == HumanProvenanceFilters.SEQUENCER_RUN_NAME) {
                     for (String value : (List<String>) swaValues) {
