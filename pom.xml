@@ -1194,7 +1194,7 @@
                             <content>${project.build.directory}/site/</content>
                             <tryUpdate>true</tryUpdate>
                             <skipDeletedFiles>true</skipDeletedFiles>
-                            <scmBranch>master</scmBranch>
+                            <scmBranch>develop</scmBranch>
                         </configuration>
                     </execution>
                 </executions>
