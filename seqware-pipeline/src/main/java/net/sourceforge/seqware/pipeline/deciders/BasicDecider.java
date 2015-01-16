@@ -613,8 +613,11 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             if (swid == null || swid.trim().isEmpty()) {
                 swid = file.getAttribute(Header.LANE_SWA.getTitle());
             }
+            // seqware-2002 it is possible that both are null if the path goes through sample_processing
+            if (swid == null || swid.trim().isEmpty()) {
+                return;
+            }
             workflowParentAccessionsToRun.add(swid);
-
         }
     }
 
@@ -1040,16 +1043,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             handleAttributes(map, row, Header.SEQUENCER_RUN_ATTRIBUTES, Header.SEQUENCER_RUN_TAG_PREFIX);
             handleAttributes(map, row, Header.PROCESSING_ATTRIBUTES, Header.PROCESSING_TAG_PREFIX);
             handleAttributes(map, row, Header.FILE_ATTRIBUTES, Header.FILE_TAG_PREFIX);
-
-            // handle additional quirks that don't belong in the files report here FindAllTheFiles
-            // parent sample name and parent sample swid end with ':' for some reason and OicrDecider seems to have code relying on this
-            String parentSampleName = map.get(Header.PARENT_SAMPLE_NAME.getTitle());
-            parentSampleName += ":";
-            map.put(Header.PARENT_SAMPLE_NAME.getTitle(), parentSampleName);
-            String parentSampleSWID = map.get(Header.PARENT_SAMPLE_SWA.getTitle());
-            parentSampleSWID += ":";
-            map.put(Header.PARENT_SAMPLE_SWA.getTitle(), parentSampleSWID);
-
         }
         return list;
     }

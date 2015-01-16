@@ -1190,11 +1190,11 @@
                             <goal>publish-scm</goal>
                         </goals>
                         <configuration>
-                            <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/unstable.seqware.io.git</pubScmUrl>
+                            <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/seqware.github.com.git</pubScmUrl>
                             <content>${project.build.directory}/site/</content>
                             <tryUpdate>true</tryUpdate>
                             <skipDeletedFiles>true</skipDeletedFiles>
-                            <scmBranch>gh-pages</scmBranch>
+                            <scmBranch>master</scmBranch>
                         </configuration>
                     </execution>
                 </executions>

@@ -55,7 +55,7 @@ tires, and see if this is something you want to use.
 
 Getting the local VM is a two-step process.  First, download (or install via
 your OS's package management system) the VirtualBox application. This is a
-great piece of software that will let you run the SeqWare CentOS VM on whatever
+great piece of software that will let you run the SeqWare Ubuntu VM on whatever
 OS you currently have.
 
 * [Oracle Virtual Box](https://www.virtualbox.org/)
@@ -64,14 +64,14 @@ Next, you will need to download our current VM image which is linked below.
 Please make sure you are using the latest version, when we post a new one we
 will tweet about it so consider following us on Twitter.
 
-* [SeqWare-1.0.13.ova](https://s3.amazonaws.com/oicr.vm/public/Seqware_1.0.13_Bindle_1.2_pre-release.ova)
+* [SeqWare_1.1.0-beta.0.ova](https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0-beta.0.ova)
 * [SeqWare-1.0.13.ova (this is the VM we recommend for the ICGC PanCancer project for data train 2.0)](https://s3.amazonaws.com/oicr.vm/public/Seqware_1.0.13_Bindle_1.2.1.ova)
 
 Open VirtualBox and use the "Import Appliance" tool to create a new SeqWare VM
 on your system. Make sure you set the memory to the max you can afford, I
 recommend at least 12GB of memory for the VM.  You can then launch it and you
 will be presented with a fairly standard Linux desktop with links to the
-project's documentation to give you an idea of where to begin (the "Getting
+project documentation to give you an idea of where to begin (the "Getting
 Started" guide here provides a walk-through of using this VM).
 
 <p class="warning"><strong>Note:</strong>
@@ -91,10 +91,12 @@ makes use of various virtualization extensions which most modern PCs support
 ### Logging In
 
 The login username is <kbd>vagrant</kbd> and the password is <kbd>vagrant</kbd>. If you need to become <kbd>root</kbd> use <kbd>sudo bash</kbd>.
+You will initially login as the vagrant user and will then switch to the seqware user which has been setup with our utilities. 
 
 By default the VM will open port 2222 for ssh. You can connect to the running VM from an external console using the following command: 
 
     sshpass -p 'vagrant' ssh -p 2222 vagrant@localhost
+    sudo -u seqware -i
 
 <p class="warning"><strong>Note:</strong>
 Obviously, you will not want to run this VM anywhere that is network-accessible. If you do, make sure to disable the above login and use SSH keys.
@@ -125,9 +127,9 @@ Instance](http://aws.amazon.com/ec2/instance-types/). These machines provide
 sufficient for analyzing a human exome within about 4 hours depending on the
 specifics of your workflows.
 
-For development purposes, we have also have had success with m1.xlarge
+For development purposes, we have also have had success with m3.xlarge
 instances. For noninteractive build and integration tests, we have also had
-success with the m1.medium instance type. However, note that these instance
+success with the m3.medium instance type. However, note that these instance
 types are not recommended for production use. 
 
 If you are interested in building complete clusters on the Amazon cloud please
@@ -150,7 +152,7 @@ Signup for the Amazon cloud [here](http://aws.amazon.com/)
 
 ### Running the VM
 
-What makes Amazon's cloud so amazingly awesome is its excellent support for
+What makes AWS EC2 so amazingly awesome is its excellent support for
 both graphical UIs and programmatic APIs for controlling the cloud.  It is your
 choice on how you want to launch the VM, either through the console or via one
 of the many command line and programmatic tools available. The details are
@@ -161,6 +163,8 @@ should be very helpful in learning how to use Linux VMs on Amazon's cloud.
 
 #### Unstable Public AMI(s):
 
+* ** ami-9c6b05f4 **
+: 20141223 (SeqWare-1.1.0-beta.0) Make sure you launch in Virginia and select the instance type "m3.xlarge" since the AMI is designed specifically to work with this type (we configure SGE based on the CPU and memory of this instance).
 * ** ami-c82c80bf **
 : 20141015 (SeqWare-1.1.0-alpha.4, Bindle 2.0-alpha.1 (d)) Make sure you launch in Ireland and select the instance type "m3.2xlarge" since the AMI is designed specifically to work with this type (we configure SGE based on the CPU and memory of this instance).
 * ** ami-c8e55da0 **
@@ -172,14 +176,21 @@ An example of the launching wizard in the Amazon AWS console can be seen below:
 
 <p class="warning"><strong>Tip:</strong>Make sure you open port 22 for SSH, port 8080 for the SeqWare Portal and Web Service, and port 80 for our landing page that you can access at http://ec2hostname/, you fill in ec2hostname with the name of the server Amazon provisions for you.</p>
 
+<p class="warning"><strong>Note:</strong>
+Note that Amazon may attempt to mount an ephemeral disk "on top" of part of our installation. Either disable all ephermeral storage on the "Add storage" screen or run the following command when you first login. 
+
+sudo umount /mnt
+</p>
+
+
 ### Logging In
 
 There is no graphical desktop to log into.  Instead you will need to follow the directions on the Amazon site for using <kbd>ssh</kbd> to log into your running VM.  There you will have a command line interface to interact with the SeqWare tools. You can also view the SeqWare Portal and SeqWare Web Service remotely in your browser if you have previously opened the ports 22, 8080, and 80.
 
 Specifically, follow [this](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html) Amazon guide for logging into your SeqWare instance using ssh.
 
-You will want to login as the "ubuntu" user and then use "sudo su - seqware" to become the SeqWare user and walk through the steps of the tutorials.
-
+You will want to login as the "ubuntu" user, use "sudo umount /mnt" to disable any ephemeral drives, and then use "sudo -u seqware -i" to become the SeqWare user and walk through the steps of the tutorials.
+dd
 
 ### What Can You Do With It?
 
@@ -204,7 +215,7 @@ this unless you a familiar with Linux and a cloud/virtualization
 technology such as VirtualBox, OpenStack, Google Compute Engine, or Amazon Web
 Services.</p>
 
-This option leverages the excellent [Vagrant](http://www.vagrantup.com/)
+Follow the instructions at [Bindle](https://github.com/CloudBindle/Bindle).
 
 ## Next Steps
 
