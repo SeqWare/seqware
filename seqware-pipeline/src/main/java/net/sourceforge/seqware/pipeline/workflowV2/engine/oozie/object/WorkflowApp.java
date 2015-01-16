@@ -34,7 +34,8 @@ public class WorkflowApp {
     public static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings()
             .containsKey(SqwKeys.OOZIE_BATCH_THRESHOLD.getSettingKey()) ? ConfigTools.getSettings().get(
             SqwKeys.OOZIE_BATCH_THRESHOLD.getSettingKey()) : "5");
-    public static final String JOB_PREFIX = "swa_";
+    // note: jobs must be prefixed with a valid character from the alphabet
+    public static final String JOB_PREFIX = "s";
 
     private final AbstractWorkflowDataModel wfdm;
     /**
@@ -486,7 +487,8 @@ public class WorkflowApp {
         if (!wfdm.getFiles().isEmpty()) {
             Set<OozieJob> newParents = new LinkedHashSet<>();
             for (Map.Entry<String, SqwFile> entry : wfdm.getFiles().entrySet()) {
-                AbstractJob abstractProvisionXJob = new BashJob("provisionFile_" + entry.getKey().replaceAll("\\.", "_"));
+                AbstractJob abstractProvisionXJob = new BashJob("pf" + (entry.getValue().isInput() ? "i" : "o") + "_"
+                        + entry.getKey().replaceAll("\\.", "_"));
                 abstractProvisionXJob.getFiles().add(entry.getValue());
                 OozieProvisionFileJob oozieProvisionXJob = new OozieProvisionFileJob(abstractProvisionXJob, entry.getValue(), JOB_PREFIX
                         + workflowRunAccession + "_" + abstractProvisionXJob.getAlgo() + "_" + this.jobs.size(), this.uniqueWorkingDir,
@@ -581,7 +583,7 @@ public class WorkflowApp {
                 // create a provisionfile job
                 if (file.isInput()) {
                     // create a provisionFileJob;
-                    AbstractJob abstractProvisionInJob = new BashJob("provisionFile_in");
+                    AbstractJob abstractProvisionInJob = new BashJob("pfi");
                     abstractProvisionInJob.getFiles().add(file);
                     OozieProvisionFileJob oozieProvisionInJob = new OozieProvisionFileJob(abstractProvisionInJob, file, JOB_PREFIX
                             + workflowRunAccession + "_" + abstractProvisionInJob.getAlgo() + "_" + jobs.size(), this.uniqueWorkingDir,
@@ -615,7 +617,7 @@ public class WorkflowApp {
                     }
                 } else {
                     // create a provisionFileJob;
-                    AbstractJob abstractProvisionOutJob = new BashJob("provisionFile_out");
+                    AbstractJob abstractProvisionOutJob = new BashJob("pfo");
                     abstractProvisionOutJob.getFiles().add(file);
                     OozieProvisionFileJob oozieProvisionOutJob = new OozieProvisionFileJob(abstractProvisionOutJob, file, JOB_PREFIX
                             + workflowRunAccession + "_" + abstractProvisionOutJob.getAlgo() + "_" + jobs.size(), this.uniqueWorkingDir,
@@ -689,8 +691,7 @@ public class WorkflowApp {
          * @return
          */
         private BatchedOozieProvisionFileJob createBucket() {
-            String name = JOB_PREFIX + workflowRunAccession + "_provisionFile_" + (input ? "In" : "Out") + "_" + uniqueName + "_Batch_"
-                    + currentBucketCount;
+            String name = JOB_PREFIX + workflowRunAccession + "_pf" + (input ? "i" : "o") + "_" + uniqueName + "_b" + currentBucketCount;
             currentBucketCount += BUCKET_SIZE;
             AbstractJob abstractBucketJob = new BashJob(name);
             currentBucket = new BatchedOozieProvisionFileJob(abstractBucketJob, name, WorkflowApp.this.uniqueWorkingDir,
