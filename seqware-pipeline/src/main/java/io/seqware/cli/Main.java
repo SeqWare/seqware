@@ -1443,9 +1443,21 @@ public class Main {
                     kill("seqware: cannot write to '%s'.", out);
                 }
             } else {
-                out(WorkflowRuns.workflowRunIni(Integer.parseInt(swid)));
+                outWithoutFormatting(WorkflowRuns.workflowRunIni(Integer.parseInt(swid)));
             }
         }
+    }
+
+    /**
+     * Prints to the console without applying any formatting. Useful for situations where output contains unintended formatting strings,
+     * which would break the {@link #out(String format, Object... args)} function. For example, if you try to print an INI file containing
+     * the line "refExclude=XX,GL%,hs37d5,XX_001234" the <i>substring</i> "%,h" will cause String.format to throw an exception and fail. So
+     * it is sometimes necessary to print output with no consideration to formatting.
+     *
+     * @param output
+     */
+    private static void outWithoutFormatting(String output) {
+        System.out.println(output);
     }
 
     private static void workflowRunReport(List<String> args) {
