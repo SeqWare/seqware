@@ -361,7 +361,7 @@ In this following example the same workflow as above is executed with the oozie-
     $ seqware bundle launch --dir target/Workflow_Bundle_* --engine oozie-sge
 
 This will cause the workflow to run and not exit until it finishes.  You can also monitor the workflow using the Hue web
-application installed at http://hostname:8888/oozie/. For our VMs the username
+application installed at http://hostname:11000/oozie/. For our VMs the username
 and password are "seqware". This is a great way to monitor and debug workflows,
 you can very easily get to the logs for each step, for example.
 
