@@ -7,10 +7,10 @@ toc_includes_sections: true
 
 ---
 
-This document will describe how to connect a host to a SeqWare client that is running inside a local VirtualBox image. Please see [this tutorial](/docs/2-installation/#option-2-installing-with-a-local-vm) if you do not know how to start up an instance of SeqWare inside a VirtualBox image.
+This document will describe how to connect a host to a SeqWare client that is running inside a local VirtualBox image. Please see [this tutorial](/docs/2-installation/#option-2-installing-with-a-local-vm) if you do not know how to start up an instance of SeqWare inside VirtualBox.
 
 ##0. Set up port forwarding
-Now that you have an instance of SeqWare running inside a VirtualBox image...
+Now that you have an instance of SeqWare running inside VirtualBox...
  
 You will want to set up your VirtualBox port forwarding so that your local client can access the services running withing the virtual machine.
  
