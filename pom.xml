@@ -779,6 +779,13 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-scm-publish-plugin</artifactId>
                     <version>1.1</version>
+                    <configuration>
+                        <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/seqware.github.com.git</pubScmUrl>
+                        <content>${project.build.directory}/site/</content>
+                        <tryUpdate>true</tryUpdate>
+                        <skipDeletedFiles>true</skipDeletedFiles>
+                        <scmBranch>master</scmBranch>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -1190,13 +1197,6 @@
                         <goals>
                             <goal>publish-scm</goal>
                         </goals>
-                        <configuration>
-                            <pubScmUrl>scm:git:ssh://git@github.com/SeqWare/seqware.github.com.git</pubScmUrl>
-                            <content>${project.build.directory}/site/</content>
-                            <tryUpdate>true</tryUpdate>
-                            <skipDeletedFiles>true</skipDeletedFiles>
-                            <scmBranch>master</scmBranch>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
