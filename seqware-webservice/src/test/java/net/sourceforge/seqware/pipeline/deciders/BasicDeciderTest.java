@@ -408,6 +408,9 @@ public class BasicDeciderTest extends PluginTest {
 
     @Test
     public void testDecidingWithAttributes() {
+        BasicTestDatabaseCreator.resetDatabaseWithUsers();
+        Reports.triggerProvenanceReport();
+        
         // swap out the decider
         instance = new AttributeCheckingDecider();
         // instance = new BasicDecider();
