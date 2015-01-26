@@ -21,7 +21,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * SequencerRunDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -40,7 +40,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -54,7 +54,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      * @return
@@ -151,7 +151,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of SequencerRun in the database by the SequencerRun name.
      */
     @Override
@@ -168,17 +168,17 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of SequencerRun in the database by the SequencerRun ID.
      */
     @Override
-    public SequencerRun findByID(Integer expID) {
-        String query = "from SequencerRun as sequencerRun where sequencerRun.sequencerRunId = ?";
-        SequencerRun sequencerRun = null;
+    public SequencerRunWizardDTO findByID(Integer expID) {
+        String query = "from SequencerRunWizardDTO as sequencerRun where sequencerRun.sequencerRunId = ?";
+        SequencerRunWizardDTO sequencerRun = null;
         Object[] parameters = { expID };
         List list = this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            sequencerRun = (SequencerRun) list.get(0);
+            sequencerRun = (SequencerRunWizardDTO) list.get(0);
         }
         return sequencerRun;
     }
@@ -229,7 +229,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     /**
      * Filter WizardDTO classes here
-     * 
+     *
      * @param res
      */
     private void filterResult(List<SequencerRun> res) {
@@ -293,7 +293,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -312,7 +312,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override

@@ -9,7 +9,7 @@ import net.sourceforge.seqware.common.model.SequencerRunWizardDTO;
  * <p>
  * SequencerRunDAO interface.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -19,7 +19,7 @@ public interface SequencerRunDAO {
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return
@@ -30,7 +30,7 @@ public interface SequencerRunDAO {
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param sequencerRun
@@ -43,7 +43,7 @@ public interface SequencerRunDAO {
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      * @return
@@ -54,7 +54,7 @@ public interface SequencerRunDAO {
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param sequencerRun
@@ -67,7 +67,7 @@ public interface SequencerRunDAO {
      * <p>
      * update.
      * </p>
-     * 
+     *
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
@@ -77,7 +77,7 @@ public interface SequencerRunDAO {
      * <p>
      * update.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param sequencerRun
@@ -89,7 +89,7 @@ public interface SequencerRunDAO {
      * <p>
      * delete.
      * </p>
-     * 
+     *
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
@@ -99,7 +99,7 @@ public interface SequencerRunDAO {
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param isAsc
@@ -112,7 +112,7 @@ public interface SequencerRunDAO {
      * <p>
      * findByName.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
@@ -123,18 +123,18 @@ public interface SequencerRunDAO {
      * <p>
      * findByID.
      * </p>
-     * 
+     *
      * @param expID
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun findByID(Integer expID);
+    public SequencerRunWizardDTO findByID(Integer expID);
 
     /**
      * <p>
      * findBySWAccession.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
@@ -145,7 +145,7 @@ public interface SequencerRunDAO {
      * <p>
      * updateDetached.
      * </p>
-     * 
+     *
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
@@ -156,7 +156,7 @@ public interface SequencerRunDAO {
      * <p>
      * updateDetached.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param sequencerRun
@@ -169,7 +169,7 @@ public interface SequencerRunDAO {
      * <p>
      * findByOwnerID.
      * </p>
-     * 
+     *
      * @param registrationId
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
@@ -180,7 +180,7 @@ public interface SequencerRunDAO {
      * <p>
      * findByCriteria.
      * </p>
-     * 
+     *
      * @param criteria
      *            a {@link java.lang.String} object.
      * @param isCaseSens
@@ -193,7 +193,7 @@ public interface SequencerRunDAO {
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     public List<SequencerRun> list();
