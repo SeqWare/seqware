@@ -13,6 +13,8 @@ Once logging into the remote instance you need to "switch user" to
 
     $ sudo su - seqware
 
+In some instances using AWS, it may be necessasry to run `sudo umount /dev/xvdc` as ubuntu user before switching to seqware user.
+
 Both the VirtualBox VM and Amazon AMI include a start page that links to key information
 for the VM such as the URLs for the installed Portal, Web Service, key file locations, etc.
 On the VirtualBox VM, just click the "Start Here" link on the desktop.  For the Amazon instance
