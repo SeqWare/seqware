@@ -249,20 +249,20 @@ dateJob is now the final job that manipulates the dir1/output file.
 
         // a simple bash job to call mkdir
         // note that this job uses the system's mkdir (which depends on the system being *nix)
-        Job mkdirJob = this.getWorkflow().createBashJob("bash_mkdir");
+        Job mkdirJob = this.getWorkflow().createBashJob("bash_mkdir").setMaxMemory("3000");
         mkdirJob.getCommand().addArgument("mkdir test1");
 
         String inputFilePath = this.getFiles().get("file_in_0").getProvisionedPath();
 
         // a simple bash job to cat a file into a test file
         // the file is not saved to the metadata database
-        Job copyJob1 = this.getWorkflow().createBashJob("bash_cp");
+        Job copyJob1 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("3000");
         copyJob1.setCommand(catPath + " " + inputFilePath + "> test1/test.out");
         copyJob1.addParent(mkdirJob);
 
         // a simple bash job to echo to an output file and concat an input file
         // the file IS saved to the metadata database
-        Job copyJob2 = this.getWorkflow().createBashJob("bash_cp");
+        Job copyJob2 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("3000");
         copyJob2.getCommand().addArgument(echoPath).addArgument(greeting).addArgument(" > ").addArgument("dir1/output");
         copyJob2.getCommand().addArgument(";");
         copyJob2.getCommand().addArgument(catPath + " " +inputFilePath+ " >> dir1/output");
@@ -272,7 +272,7 @@ dateJob is now the final job that manipulates the dir1/output file.
         outputFile.getAnnotations().put("provision.file.annotation.key.1", "provision.annotation.value.1");
 
 
-	Job dateJob = this.getWorkflow().createBashJob("date");
+	Job dateJob = this.getWorkflow().createBashJob("date").setMaxMemory("3000");
 	dateJob.setCommand("date >> dir1/output");
 	dateJob.addParent(copyJob2);
         dateJob.addFile(outputFile);

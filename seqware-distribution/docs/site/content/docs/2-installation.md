@@ -66,6 +66,24 @@ will tweet about it so consider following us on Twitter.
 
 * [SeqWare_1.1.0-beta.0.ova](https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0-beta.0.ova)
 * [SeqWare-1.0.13.ova (this is the VM we recommend for the ICGC PanCancer project for data train 2.0)](https://s3.amazonaws.com/oicr.vm/public/Seqware_1.0.13_Bindle_1.2.1.ova)
+ 
+If you run into issues downloading the VM, please try wget and use md5sum to verify your download. For example:
+
+    $ wget https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0-beta.0.ova
+    --2015-01-23 11:40:31--  https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0-beta.0.ova
+    Resolving s3.amazonaws.com (s3.amazonaws.com)... 54.231.17.200
+    Connecting to s3.amazonaws.com (s3.amazonaws.com)|54.231.17.200|:443... connected.
+    HTTP request sent, awaiting response... 200 OK
+    Length: 2644320768 (2.5G) [application/octet-stream]
+    Saving to: `seqware_1.1.0-beta.0.ova'
+
+    100%[==========================================================================================>] 2,644,320,768     15.6M/s   in 3m 26s  
+
+    2015-01-23 11:44:01 (12.2 MB/s) - `seqware_1.1.0-beta.0.ova' saved [2644320768/2644320768]
+
+    $ md5sum seqware_1.1.0-beta.0.ova 
+    107b75726de602750e1f82f84f0b20f5  seqware_1.1.0-beta.0.ova
+
 
 Open VirtualBox and use the "Import Appliance" tool to create a new SeqWare VM
 on your system. Make sure you set the memory to the max you can afford, I

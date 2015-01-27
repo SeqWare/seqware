@@ -19,7 +19,7 @@ import net.sourceforge.seqware.common.util.Log;
  * <p>
  * SequencerRunServiceImpl class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -39,10 +39,10 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Sets a private member variable with an instance of an implementation of SequencerRunDAO. This method is called by the Spring
      * framework at run time.
-     * 
+     *
      * @see SequencerRunDAO
      */
     @Override
@@ -53,7 +53,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     /**
      * Sets a private member variable with an instance of an implementation of LaneDAO. This method is called by the Spring framework at run
      * time.
-     * 
+     *
      * @param laneDAO
      *            implementation of LaneDAO
      * @see LaneDAO
@@ -65,7 +65,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
     /**
      * Sets a private member variable with an instance of an implementation of FileDAO. This method is called by the Spring framework at run
      * time.
-     * 
+     *
      * @param fileDAO
      *            implementation of FileDAO
      * @see FileDAO
@@ -76,9 +76,9 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Inserts an instance of SequencerRun into the database.
-     * 
+     *
      * @return
      */
     @Override
@@ -109,7 +109,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /**
      * This is being used to create a new SequencerRun object and the correct number of assocated Lanes
-     * 
+     *
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      * @return
@@ -164,7 +164,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of SequencerRun in the database.
      */
     @Override
@@ -181,7 +181,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Deletes an instance of SequencerRun in the database.
      */
     @Override
@@ -237,7 +237,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of SequencerRun in the database by the SequencerRun emailAddress, and copies the SequencerRun properties to an
      * instance of SequencerRun.
      */
@@ -256,8 +256,8 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /** {@inheritDoc} */
     @Override
-    public SequencerRun findByID(Integer expID) {
-        SequencerRun sequencerRun = null;
+    public SequencerRunWizardDTO findByID(Integer expID) {
+        SequencerRunWizardDTO sequencerRun = null;
         if (expID != null) {
             try {
                 sequencerRun = sequencerRunDAO.findByID(expID);
@@ -302,7 +302,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Determines if an email address has already been used.
      */
     @Override
@@ -363,7 +363,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -374,7 +374,7 @@ public class SequencerRunServiceImpl implements SequencerRunService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
