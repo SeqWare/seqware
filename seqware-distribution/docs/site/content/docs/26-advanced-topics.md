@@ -18,3 +18,6 @@ If you wish to monitor Oozie from the command line, please follow [these instruc
 
 ## Setting up a host as a SeqWare client
 To set up a seqware client on your machine, see [here](/docs/26-advanced-topics/setting-up-a-host-as-a-seqware-client/).
+
+## Command-line tab-completion for SeqWare
+To make it easier to use SeqWare, you can install a bash completion script that will help your shell auto-complete SeqWare commands with the <kbd>TAB</kbd> key. See [here](/docs/26-advanced-topics/seqware-command-tab-completion/), for further instructions.

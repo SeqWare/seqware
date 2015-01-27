@@ -13,15 +13,15 @@ This guide is for updating your SeqWare Command Line Executable (CLI) executable
 
 
 ##1. Download SeqWare
-Download the version of SeqWare that you need from Artifactory. Make sure you copy the one JAR with "-full" at the end of its name, e.g. seqware-distribution-1.1.0-beta.1.jar
+Download the version of SeqWare that you need from Artifactory. Make sure you copy the one JAR with "-full" at the end of its name, e.g. seqware-distribution-<%= seqware_release_version %>.jar
    <pre><code>#!console
-user@localhost:~$ wget https://seqwaremaven.oicr.on.ca/artifactory/simple/seqware-release/com/github/seqware/seqware-distribution/1.1.0-beta.1/seqware-distribution-1.1.0-beta.1-full.jar
+user@localhost:~$ wget https://seqwaremaven.oicr.on.ca/artifactory/simple/seqware-release/com/github/seqware/seqware-distribution/<%= seqware_release_version %>/seqware-distribution-<%= seqware_release_version %>-full.jar
 </code></pre>
 
 ##2.Copy the jar
 Copy this jar to your seqware self-installs directory.
    <pre><code>#!console
-user@localhost:~$ mv seqware-distribution-1.1.0-beta.1-full.jar ~/.seqware/self-installs
+user@localhost:~$ mv seqware-distribution-<%= seqware_release_version %>-full.jar ~/.seqware/self-installs
 </code></pre>
 
 ##3. Edit your script
@@ -31,14 +31,14 @@ Open up your ~/bin/seqware script that you had installed previously and change t
 # Ensure this file is executable via `chmod a+x seqware`, then place it
 # somewhere on your $PATH, like ~/bin. The rest of SeqWare will be
 # installed upon first run into the ~/.seqware directory.
-DEFAULT_SEQWARE_VERSION="1.1.0-beta.1"
+DEFAULT_SEQWARE_VERSION="<%= seqware_release_version %>"
 </code></pre>
 
 ##4. Run seqware
 Run `seqware` with no arguments. This will trigger SeqWare to download the sanity check file that corresponds to the new version.
    <pre><code>#!console
 someUser@someHost:~$ seqware
-Downloading SeqWare Check to /home/someUser/.seqware/self-installs/seqware-sanity-check-1.1.0-beta.1-jar-paired-with-distribution.jar now...
+Downloading SeqWare Check to /home/someUser/.seqware/self-installs/seqware-sanity-check-<%= seqware_release_version %>-jar-paired-with-distribution.jar now...
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100  174k  100  174k    0     0  7158k      0 --:--:-- --:--:-- --:--:-- 7262k

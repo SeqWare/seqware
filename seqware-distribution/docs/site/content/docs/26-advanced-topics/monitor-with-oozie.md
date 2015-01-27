@@ -8,7 +8,7 @@ toc_includes_sections: true
 ---
 
 ##Installing the Oozie client.
-1. Add the cdh4 repository (detailed cdh4 guide is here:<a href="http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/4.2.0/CDH4-Installation-Guide/cdh4ig_topic_4_4.html">http://www.cloudera.com/content/cloudera-content/cloudera-docs/CDH4/4.2.0/CDH4-Installation-Guide/cdh4ig_topic_4_4.html</a>) to your sources list (`/etc/apt/sources.list.d/cloudera.list`)
+1. Add the cdh4 repository (detailed cdh4 guide is here:<a href="http://www.cloudera.com/content/cloudera/en/documentation/cdh4/v4-5-0/CDH4-Installation-Guide/cdh4ig_topic_4.html">http://www.cloudera.com/content/cloudera/en/documentation/cdh4/v4-5-0/CDH4-Installation-Guide/cdh4ig_topic_4.html</a>) to your sources list (`/etc/apt/sources.list.d/cloudera.list`)
    <pre><code>
 deb [arch=amd64] http://archive.cloudera.com/cdh4/ubuntu/precise/amd64/cdh precise-cdh4 contrib
 deb-src http://archive.cloudera.com/cdh4/ubuntu/precise/amd64/cdh precise-cdh4 contrib
@@ -58,12 +58,14 @@ user@localhost:~$ oozie job -kill &lt;OOZIE_JOB_ID&gt; </code></pre>
 ##Restarting a terminated Oozie job
 1. You will need a "job.properties" file which is used to configure the job when it resumes. If you don't have one, you can create one. Here is an example:
    <pre><code>#!properties
-nameNode=hdfs://hsqwstage-node2.hpc.oicr.on.ca:8020
-jobTracker=hsqwstage-node2.hpc.oicr.on.ca:8021
+nameNode=hdfs://localhost:18020
+jobTracker=localhost:18021
 queueName=default
-oozie.wf.application.path=<OOZIE APP PATH, eg: hdfs://hsqwstage-node2.hpc.oicr.on.ca:8020/user/mlaszloffy/seqware_workflow/oozie-da66ddd3-1f1b-4441-8f04-658db9a8644a>
+oozie.wf.application.path=<OOZIE APP PATH, eg: hdfs://localhost:18020/user/someUser/seqware_workflow/oozie-da66ddd3-1f1b-4441-8f04-658db9a8644a>
 oozie.wf.rerun.failnodes=true
 </code></pre>
+*Note:* The host and port numbers shown assume that you are running SeqWare in a VirtualBox instance, with the port forwarding configured. See [here](/docs/26-advanced-topics/setting-up-a-host-as-a-seqware-client/#0-set-up-port-forwarding) for more details. If you are not connecting to SeqWare running inside a local virtual machine, you may want to adjust these values.
+
 2. Re-run the oozie job using the properties file:
    <pre><code>#!console
 user@localhost:~$ oozie job -rerun &lt;OOZIE_JOB_ID&gt; -config job.properties

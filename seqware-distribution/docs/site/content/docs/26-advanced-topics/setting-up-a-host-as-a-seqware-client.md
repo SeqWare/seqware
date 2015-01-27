@@ -36,11 +36,11 @@ Forwarded ports are:
 ##1. Download the seqware script.
 The list of releases of SeqWare can be found here: <a href="https://github.com/SeqWare/seqware/releases">https://github.com/SeqWare/seqware/releases</a>
 
-In your browser, the URL for a specific version's script is: <a href="https://github.com/SeqWare/seqware/releases/download/1.1.0-beta.1/seqware">https://github.com/SeqWare/seqware/releases/doiwnload/1.1.0-beta.1/seqware</a>
+In your browser, the URL for a specific version's script is: <a href="https://github.com/SeqWare/seqware/releases/download/<%= seqware_release_version %>/seqware">https://github.com/SeqWare/seqware/releases/doiwnload/<%= seqware_release_version %>/seqware</a>
 
 In your terminal, you can get it like this:
    <pre><code>#!console
-user@host:~$ curl -L https://github.com/SeqWare/seqware/releases/download/1.1.0-beta.1/seqware > seqware
+user@host:~$ curl -L https://github.com/SeqWare/seqware/releases/download/<%= seqware_release_version %>/seqware > seqware
 </code></pre>
 Copy the script to a directory that is on your Path, such as `~/bin` or `/usr/bin`.
    <pre><code>#!console
