@@ -121,7 +121,7 @@ public class SequencerRunIDResource extends DatabaseIDResource {
         }
         try {
             SequencerRunService srs = BeanFactory.getSequencerRunServiceBean();
-            SequencerRunWizardDTO sequencerRun = (SequencerRunWizardDTO) testIfNull(srs.findByID(newSequencerRun.getSequencerRunId()));
+            SequencerRunWizardDTO sequencerRun = testIfNull(srs.findByID(newSequencerRun.getSequencerRunId()));
             sequencerRun.givesPermission(registration);
 
             // simple types
