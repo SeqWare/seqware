@@ -19,7 +19,9 @@ package io.seqware.pipeline.whitestar;
 import java.nio.file.Path;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 /**
  * Run a helloworld using whitestar.
@@ -27,6 +29,9 @@ import org.junit.Test;
  * @author dyuen
  */
 public class WhiteStarMetadataET {
+
+    @Rule
+    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 
     @BeforeClass
     public static void setupWhiteStarTest() {
