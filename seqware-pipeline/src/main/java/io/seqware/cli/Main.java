@@ -980,7 +980,6 @@ public class Main {
             out("");
             out("Objects:");
             out("  experiment");
-            out("  file");
             out("  ius");
             out("  lane");
             out("  sample");
