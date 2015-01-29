@@ -87,11 +87,10 @@ public class CreateTest {
     @Test
     public void createFileError() throws Exception {
 
-        String[] mainArgs = new String[] { "create", "file", "--workflow-accession", "123", "--parent-accession", "321", "--file",
-                "a:b:c" };
+        String[] mainArgs = new String[] { "create", "file", "--workflow-accession", "123", "--parent-accession", "321", "--file", "a:b:c" };
         testWithError(mainArgs, "seqware: 'file' is not a valid object type.  See 'seqware create --help'.");
     }
-    
+
     @Test
     public void createWithErrorNoParentAccession() throws Exception {
 
@@ -149,13 +148,20 @@ public class CreateTest {
         PluginRunner spiedRunner = PowerMockito.spy(new PluginRunner());
 
         String[] mainArgs = new String[] { "create", "sample", "--experiment-accession", "123", "--description", "TestDescription",
-                "--organism-id", "234", "--title", "SomeTitle" };
+                "--organism-id", "234", "--title", "SomeTitle", "--parent-sample-accession", "789" };
 
         final String[] runnerArgs = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--table",
                 "sample", "--create", "--field", "description::TestDescription", "--field", "experiment_accession::123", "--field",
-                "organism_id::234", "--field", "title::SomeTitle" };
+                "parent_sample_accession::789", "--field", "organism_id::234", "--field", "title::SomeTitle" };
 
         testWithSuccess(spiedRunner, mainArgs, runnerArgs);
+    }
+
+    @Test
+    public void createSampleErrorNoParentAccessionTest() throws Exception {
+        String[] mainArgs = new String[] { "create", "sample", "--experiment-accession", "123", "--description", "TestDescription",
+                "--organism-id", "234", "--title", "SomeTitle" };
+        testWithError(mainArgs, "seqware: missing required flag '--parent-sample-accession'.");
     }
 
     @Test
@@ -198,27 +204,30 @@ public class CreateTest {
 
         testWithSuccess(spiedRunner, mainArgs, runnerArgs);
     }
-    
+
     @Test
     public void createWorkflowRunTest() throws Exception {
         PluginRunner spiedRunner = PowerMockito.spy(new PluginRunner());
 
-        String[] mainArgs = new String[] { "create", "workflow-run", "--workflow-accession", "123", "--parent-accession", "321", "--file", "a::b::c" };
+        String[] mainArgs = new String[] { "create", "workflow-run", "--workflow-accession", "123", "--parent-accession", "321", "--file",
+                "a::b::c" };
 
         final String[] runnerArgs = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--table",
-                "workflow_run", "--create", "--field", "workflow_accession::123", "--field", "status::completed", "--file", "a::b::c", "--parent-accession", "321" };
+                "workflow_run", "--create", "--field", "workflow_accession::123", "--field", "status::completed", "--file", "a::b::c",
+                "--parent-accession", "321" };
 
         testWithSuccess(spiedRunner, mainArgs, runnerArgs);
     }
-    
+
     @Test
     public void createWorkflowRunTestNoFile() throws Exception {
         PluginRunner spiedRunner = PowerMockito.spy(new PluginRunner());
 
-        String[] mainArgs = new String[] { "create", "workflow-run", "--workflow-accession", "123", "--parent-accession", "321"};
+        String[] mainArgs = new String[] { "create", "workflow-run", "--workflow-accession", "123", "--parent-accession", "321" };
 
         final String[] runnerArgs = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--table",
-                "workflow_run", "--create", "--field", "workflow_accession::123", "--field", "status::completed", "--parent-accession", "321" };
+                "workflow_run", "--create", "--field", "workflow_accession::123", "--field", "status::completed", "--parent-accession",
+                "321" };
 
         testWithSuccess(spiedRunner, mainArgs, runnerArgs);
     }

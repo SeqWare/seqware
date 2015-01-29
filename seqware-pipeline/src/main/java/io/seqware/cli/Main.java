@@ -865,11 +865,12 @@ public class Main {
             out("Required fields:");
             out("  --description <val>");
             out("  --experiment-accession <val>");
+            out("  --parent-sample-accession <val>");
             out("  --organism-id <val>           Dynamic-valued field");
             out("  --title <val>");
             out("");
         } else {
-            runCreateTable(args, "sample", "description", "experiment_accession", "organism_id", "title");
+            runCreateTable(args, "sample", "description", "experiment_accession", "parent_sample_accession", "organism_id", "title");
         }
     }
 
