@@ -158,8 +158,8 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         public Integer call() throws Exception {
             CommandLine cmdLine;
             File scriptsDir = job.getScriptsDir();
-            String optionsFileName = OozieJob.optsFileName(job.getName());
-            String runnerFileName = OozieJob.runnerFileName(job.getName());
+            String optionsFileName = OozieJob.optsFileName(job.getLongName());
+            String runnerFileName = OozieJob.runnerFileName(job.getLongName());
 
             if (WhiteStarWorkflowEngine.this.useSge) {
                 cmdLine = new CommandLine("qsub");
@@ -194,9 +194,9 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 } catch (IOException e) {
                     throw rethrow(e);
                 } finally {
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".e" + time),
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getLongName() + ".e" + time),
                             outputStream.toString(StandardCharsets.UTF_8.name()), StandardCharsets.UTF_8);
-                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getName() + ".o" + time),
+                    FileUtils.write(new File(scriptsDir.getAbsolutePath() + "/" + job.getLongName() + ".o" + time),
                             errorStream.toString(StandardCharsets.UTF_8.name()), StandardCharsets.UTF_8);
                 }
 
