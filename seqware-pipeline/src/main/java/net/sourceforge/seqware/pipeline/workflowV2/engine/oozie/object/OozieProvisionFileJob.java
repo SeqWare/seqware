@@ -16,8 +16,8 @@ public class OozieProvisionFileJob extends OozieJob {
     private final SqwFile file;
 
     public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
-            String slotsSgeParamFormat, String maxMemorySgeParamFormat) {
-        super(job, name, oozie_working_dir, useSge, seqwareJar, slotsSgeParamFormat, maxMemorySgeParamFormat);
+            String slotsSgeParamFormat, String maxMemorySgeParamFormat, StringTruncator truncator) {
+        super(job, name, oozie_working_dir, useSge, seqwareJar, slotsSgeParamFormat, maxMemorySgeParamFormat, truncator);
         // oozie provision file jobs should only require 2GB, leaving a margin of safety
         String startMem = ConfigTools.getSettings().get(SqwKeys.SW_CONTROL_NODE_MEMORY.getSettingKey());
         job.setMaxMemory(startMem == null ? "3000" : startMem);
@@ -60,7 +60,7 @@ public class OozieProvisionFileJob extends OozieJob {
     }
 
     private File emitRunnerScript() {
-        File localFile = file(scriptsDir, runnerFileName(name), true);
+        File localFile = file(scriptsDir, runnerFileName(this.getLongName()), true);
         ArrayList<String> args = generateRunnerLine();
         writeScript(concat(" ", args), localFile);
         return localFile;
@@ -71,7 +71,8 @@ public class OozieProvisionFileJob extends OozieJob {
 
         /*
          * So, despite the fact that ProvisionFiles knows the destination of the file, we still need the following since ProvisionFiles
-         * reports just the filename as the destination, and then Runner prepends that file name with the value of the following. Madness.
+         * reports just the filename as the destination, and then Runner prepends that file longName with the value of the following.
+         * Madness.
          * 
          * Based on code from pegasus.object.ProvisionFilesJob.buildCommandString()
          */

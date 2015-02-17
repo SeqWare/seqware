@@ -134,7 +134,6 @@
                                 <ignorePathToDelete>metadb-schema</ignorePathToDelete>
                                 <ignorePathToDelete>pictures</ignorePathToDelete>
                             </ignorePathsToDelete>
-                            <tryUpdate>true</tryUpdate>
                         </configuration>
                     </execution>
                 </executions>

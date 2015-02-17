@@ -9,6 +9,17 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.1.0-beta.1 (2015-01-16)
+
+A minor release implementing a few fixes and updates needed for PDE integration testing. 
+
+### Defect
+* [SEQWARE-2002] - Could not link workflow run to its parents
+* [SEQWARE-2005] - Workflow job names must be 50 characters or less (oozie restriction)
+
+### Improvement
+* [SEQWARE-2003] - OicrDecider handling of trailing delimiter in parent sample name and parent swid fields
+
 ## 1.1.0-beta.0 (2014-12-23)
 
 This is a major release implementing all remaining features for the 1.1.0 beta release. Following releases in this series will be limited to hotfixes. 

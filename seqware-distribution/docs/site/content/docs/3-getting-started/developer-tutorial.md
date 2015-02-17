@@ -349,7 +349,6 @@ to run the workflow above you will need to do the following:
 * Ensure your .seqware/settings file includes the correct parameters. If you are using our VM this will be true.
 * Jobs are run by the 'mapred' user not the seqware user (this is not the case with oozie-sge, mentioned below). So when you author and run workflows make sure the output destination can be written to by mapred. In the future we will eliminate this constraint.
 * Workflows include bash jobs but in the future we will add other Hadoop-specific types (e.g. MapReduce). For now these are not implemented.
-* The monitoring tools for Oozie are good, but check out Hue for even better interaction (it should already be running on port 8888 on the VM). You can monitor and debug workflows through this very nice web interface.
 * This engine will only work on the 1.0.0 release of SeqWare or newer. The 0.13.6.x and earlier releases will only work with the Pegasus workflow engine.
 
 We also provide an alternate "engine" that will allow jobs to be managed and scheduled by Oozie but
@@ -361,7 +360,7 @@ In this following example the same workflow as above is executed with the oozie-
     $ seqware bundle launch --dir target/Workflow_Bundle_* --engine oozie-sge
 
 This will cause the workflow to run and not exit until it finishes.  You can also monitor the workflow using the Hue web
-application installed at http://hostname:8888/oozie/. For our VMs the username
+application installed at http://hostname:11000/oozie/. For our VMs the username
 and password are "seqware". This is a great way to monitor and debug workflows,
 you can very easily get to the logs for each step, for example.
 
