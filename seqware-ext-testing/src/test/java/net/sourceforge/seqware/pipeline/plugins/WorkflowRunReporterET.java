@@ -90,7 +90,7 @@ public class WorkflowRunReporterET {
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
         // former is for Java 7, latter is for Java 8, Looks like we didn't solve the sorting problem
         Assert.assertTrue("incorrect output checksum " + checksumCRC32 + " " + FileUtils.readFileToString(retrievedFile),
-                checksumCRC32 == 3873030870L || checksumCRC32 == 2196935470L);
+                checksumCRC32 == 3873030870L || checksumCRC32 == 2196935470L || checksumCRC32 == 3273287955L);
     }
 
     @Test
