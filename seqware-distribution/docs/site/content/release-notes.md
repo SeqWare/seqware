@@ -9,6 +9,16 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.1.0-rc.0 (2015-02-17)
+
+This release primarily captures the state of SeqWare before deployment in the staging environment for OICR GSI (Genome Sequencing Informatics). 
+
+### Defect
+* [SEQWARE-2007] - command "seqware workflow-run ini" fails if "--out" not specified
+
+### Story
+* [SEQWARE-2012] - Oozie job name length redux
+
 ## 1.1.0-beta.1 (2015-01-16)
 
 A minor release implementing a few fixes and updates needed for PDE integration testing. 
