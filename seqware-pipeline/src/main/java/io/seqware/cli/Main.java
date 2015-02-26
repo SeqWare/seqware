@@ -1300,11 +1300,14 @@ public class Main {
             out("  --override <key=value>     Override specific parameters from the workflow.ini");
             out("  --ini <ini-file>           An ini file to configure the workflow run ");
             out("                             Repeat this parameter to provide multiple files");
+            out("  --input-file <input-file>  Track input files to workflow runs");
+            out("                             Repeat this parameter to provide multiple files");
             out("");
         } else {
             String wfId = reqVal(args, "--accession");
             String host = reqVal(args, "--host");
             List<String> iniFiles = optVals(args, "--ini");
+            List<String> inputFiles = optVals(args, "--input-file");
             String engine = optVal(args, "--engine", null);
             List<String> parentIds = optVals(args, "--parent-accession");
             List<String> override = optVals(args, "--override");
@@ -1328,6 +1331,10 @@ public class Main {
             if (!parentIds.isEmpty()) {
                 runnerArgs.add("--parent-accessions");
                 runnerArgs.add(cdl(parentIds));
+            }
+            if (!inputFiles.isEmpty()) {
+                runnerArgs.add("--input-files");
+                runnerArgs.add(cdl(inputFiles));
             }
             if (host != null) {
                 runnerArgs.add("--host");
