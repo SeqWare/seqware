@@ -764,6 +764,13 @@ public class Main {
                     runnerArgs.add("--file");
                     runnerArgs.add(file);
                 }
+                List<String> inputFiles = optVals(args, "--input-file");
+                for (String file : inputFiles) {
+                    runnerArgs.add("--input-file");
+                    // validate
+                    int swid = swid(file);
+                    runnerArgs.add(String.valueOf(swid));
+                }
 
                 // workflow runs should also have parent accessions in order to be visible to deciders
                 List<String> parentAccessions = optVals(args, "--parent-accession");
@@ -931,7 +938,9 @@ public class Main {
             out("  --parent-accession <swid>  The SWID of a parent to the workflow run");
             out("                             Repeat this parameter to provide multiple parents");
             out("Optional fields:");
-            out("  --file <type::meta-type::path>       Add files as a part of the workflow run.");
+            out("  --file <type::meta-type::path>       Add (output) files as a part of the workflow run.");
+            out("                                       Repeat this parameter to add multiple files");
+            out("  --input-file <swid>                  Add (input) files as a part of the workflow run.");
             out("                                       Repeat this parameter to add multiple files");
             out("");
         } else {
