@@ -212,6 +212,7 @@ public class WorkflowLifecycle extends Plugin {
             totalParams.add("--" + this.metadataWriteBackOffSpec.options().iterator().next());
         }
         if (options.has(this.nonOptionSpec)) {
+	    totalParams.add("--");
             for (String val : options.valuesOf(this.nonOptionSpec)) {
                 totalParams.add(val);
             }
