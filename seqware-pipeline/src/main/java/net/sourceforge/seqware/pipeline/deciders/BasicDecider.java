@@ -48,7 +48,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import joptsimple.NonOptionArgumentSpec;
-import joptsimple.OptionSpec;
+import joptsimple.OptionSpecBuilder;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
 import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
 import net.sourceforge.seqware.common.metadata.Metadata;
@@ -96,15 +96,16 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private int rerunMax = 5;
     private String host = null;
 
-    private final Map<String, OptionSpec> configureFileProvenanceParams;
     private final NonOptionArgumentSpec<String> nonOptionSpec;
+    private final OptionSpecBuilder ignorePreviousRunsSpec;
+    private final OptionSpecBuilder forceRunAllSpec;
 
     public BasicDecider() {
         super();
         parser.acceptsAll(Arrays.asList("wf-accession"), "The workflow accession of the workflow").withRequiredArg();
 
         // configure parameters used to parse provenance report
-        configureFileProvenanceParams = ProvenanceUtility.configureFileProvenanceParams(parser);
+        ProvenanceUtility.configureFileProvenanceParams(parser);
 
         parser.acceptsAll(Arrays.asList("group-by"),
                 "Optional: Group by one of the headings in FindAllTheFiles. Default: FILE_SWA. One of LANE_SWA or IUS_SWA.")
@@ -112,7 +113,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
         parser.acceptsAll(Arrays.asList("parent-wf-accessions"),
                 "The workflow accessions of the parent workflows, comma-separated with no spaces. May also specify the meta-type.")
                 .withRequiredArg();
-        parser.acceptsAll(Arrays.asList("ignore-previous-runs"),
+        this.ignorePreviousRunsSpec = parser.acceptsAll(Arrays.asList("ignore-previous-runs"),
                 "Forces the decider to run all matches regardless of whether they've been run before or not");
         parser.acceptsAll(Arrays.asList("meta-types"),
                 "The comma-separated meta-type(s) of the files to run this workflow with. Alternatively, use parent-wf-accessions.")
@@ -121,7 +122,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
                 Arrays.asList("check-wf-accessions"),
                 "The comma-separated, no spaces, workflow accessions of the workflow that perform the same function (e.g. older versions). Any files that have been processed with these workflows will be skipped.")
                 .withRequiredArg();
-        parser.acceptsAll(Arrays.asList("force-run-all"),
+        this.forceRunAllSpec = parser.acceptsAll(Arrays.asList("force-run-all"),
                 "Forces the decider to run all matches regardless of whether they've been run before or not");
         parser.acceptsAll(Arrays.asList("test"), "Testing mode. Prints the INI files to standard out and does not submit the workflow.");
         parser.acceptsAll(Arrays.asList("no-meta-db", "no-metadata"), "Optional: a flag that prevents metadata writeback (which is done "
@@ -252,9 +253,7 @@ public class BasicDecider extends Plugin implements DeciderInterface {
             // Separate out this logic
             // workflowAccessionsToCheck.add(workflowAccession);
         }
-        if (ignorePreviousRuns == null) {
-            ignorePreviousRuns = options.has("force-run-all");
-        }
+        ignorePreviousRuns = options.has(this.ignorePreviousRunsSpec) || options.has(this.forceRunAllSpec);
 
         // test turns off all of the submission functions and just prints to stdout
         if (test == null) {

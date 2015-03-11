@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import joptsimple.ArgumentAcceptingOptionSpec;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
 import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
 import net.sourceforge.seqware.common.model.LibrarySelection;
@@ -49,7 +50,7 @@ import org.openide.util.lookup.ServiceProvider;
  * expand this tool to make it both more generic and to increase the number of tables that can be added to. Here's a list of TODO items we
  * should add at some point: * TODO: ability to update rows in addition to creating and listing them * FIXME: better support for lookup
  * tables rather than just hard-coding
- * 
+ *
  * @author Brian O'Connor <briandoconnor@gmail.com>
  * @version $Id: $Id
  */
@@ -75,6 +76,7 @@ public class Metadata extends Plugin {
     protected boolean interactive = false;
     // list of files
     ArrayList<FileMetadata> files = new ArrayList<>();
+    private final ArgumentAcceptingOptionSpec<Integer> inputFileSpec;
 
     /**
      * <p>
@@ -102,6 +104,10 @@ public class Metadata extends Plugin {
                 Arrays.asList("file"),
                 "Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.")
                 .withRequiredArg();
+        inputFileSpec = parser
+                .acceptsAll(Arrays.asList("input-file"),
+                        "Optional: one or more --input-file options can be specified when you create a workflow_run. This is encoded as a SWID")
+                .withRequiredArg().ofType(Integer.class);
         parser.acceptsAll(Arrays.asList("parent-accession"),
                 "Optional: one or more --parent-accession options can be specified when you create a workflow_run.").withRequiredArg();
         parser.acceptsAll(Arrays.asList("create", "c"),
@@ -112,7 +118,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -124,7 +130,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -134,7 +140,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -211,7 +217,7 @@ public class Metadata extends Plugin {
 
     /**
      * list the fields available to set
-     * 
+     *
      * @param table
      * @return
      */
@@ -311,7 +317,7 @@ public class Metadata extends Plugin {
     }
 
     /**
-     * 
+     *
      * @return ReturnValue
      */
     protected ReturnValue addWorkflow() {
@@ -331,11 +337,11 @@ public class Metadata extends Plugin {
             Log.error("You need to supply name, version, and description for the workflow table.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
-        return (localRet);
+        return localRet;
     }
 
     /**
-     * 
+     *
      * @return ReturnValue
      */
     protected ReturnValue addWorkflowRun() {
@@ -386,6 +392,12 @@ public class Metadata extends Plugin {
             metadata.update_processing_status(processingId, ProcessingStatus.success);
             // SEQWARE-1692 - need to update workflow with the status
             WorkflowRun wr = metadata.getWorkflowRun(workflowRunAccession);
+
+            // add desired input files
+            for (Integer inputFileAccession : options.valuesOf(inputFileSpec)) {
+                wr.getInputFileAccessions().add(inputFileAccession);
+            }
+
             String statusField = fields.get("status");
             WorkflowRunStatus status = statusField == null ? null : WorkflowRunStatus.valueOf(statusField);
             wr.setStatus(status);
@@ -400,11 +412,11 @@ public class Metadata extends Plugin {
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
 
-        return (localRet);
+        return localRet;
     }
 
     /**
-     * 
+     *
      * @return ReturnValue
      */
     protected ReturnValue addFile() {
@@ -451,11 +463,11 @@ public class Metadata extends Plugin {
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
 
-        return (localRet);
+        return localRet;
     }
 
     /**
-     * 
+     *
      * @return ReturnValue
      */
     protected ReturnValue addStudy() {
@@ -479,11 +491,11 @@ public class Metadata extends Plugin {
             // Log.error("You need to supply title, description, accession, center_name, and center_project_name for the study table along with an integer for study_type [1: Whole Genome Sequencing, 2: Metagenomics, 3: Transcriptome Analysis, 4: Resequencing, 5: Epigenetics, 6: Synthetic Genomics, 7: Forensic or Paleo-genomics, 8: Gene Regulation Study, 9: Cancer Genomics, 10: Population Genomics, 11: Other]. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
-        return (localRet);
+        return localRet;
     }
 
     /**
-     * 
+     *
      * @return ReturnValue
      */
     protected ReturnValue addExperiment() {
@@ -520,11 +532,11 @@ public class Metadata extends Plugin {
             // Log.error("You need to supply study_accession (reported if you create a study using this tool), title, and description for the experiment table along with an integer for platform_id [9: Illumina Genome Analyzer II, 20: Illumina HiSeq 2000, 26: Illumina MiSeq]. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
-        return (localRet);
+        return localRet;
     }
 
     /**
-     * 
+     *
      * @return ReturnValue
      */
     protected ReturnValue addSample() {
@@ -596,9 +608,9 @@ public class Metadata extends Plugin {
     }
 
     /**
-     * 
+     *
      * @return ReturnValue
-     * 
+     *
      */
     protected ReturnValue addSequencerRun() {
         String[] necessaryFields = { "platform_accession", "name", "description", "paired_end", "skip", "file_path" };
@@ -628,7 +640,7 @@ public class Metadata extends Plugin {
             // Log.error("You need to supply name, description, platform_accession [see platform lookup], the complete file path of the run, and 'true' or 'false' for paired_end and skip. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
-        return (localRet);
+        return localRet;
     }
 
     protected ReturnValue addLane() {
@@ -691,7 +703,7 @@ public class Metadata extends Plugin {
             // Log.error("You need to supply name, description, lane_accession, sample_accession, barcode and 'true' or 'false' for skip. Alternatively, enable --interactive mode.");
             localRet.setExitStatus(ReturnValue.INVALIDPARAMETERS);
         }
-        return (localRet);
+        return localRet;
     }
 
     private void printErrorMessage(String[] requiredFields, String[] optionalFields) {
@@ -716,7 +728,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param string
      */
     @Override
@@ -733,7 +745,7 @@ public class Metadata extends Plugin {
     }
 
     /**
-     * 
+     *
      * @return ReturnValue
      */
     protected ReturnValue parseFields() {
@@ -746,7 +758,7 @@ public class Metadata extends Plugin {
                 Log.info("  Field: " + t[0] + " value " + t[1]);
             }
         }
-        return (localRet);
+        return localRet;
     }
 
     protected ReturnValue parseFiles() {
@@ -760,7 +772,7 @@ public class Metadata extends Plugin {
                 print("You need to encode the file as '<type>::<file-meta-type>::<file-path>'\n");
             }
         }
-        return (localRet);
+        return localRet;
     }
 
     protected int[] parseParentAccessions() {
@@ -774,12 +786,12 @@ public class Metadata extends Plugin {
         for (int i = 0; i < localRet.length; i++) {
             localRet[i] = parents.get(i);
         }
-        return (localRet);
+        return localRet;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -790,7 +802,7 @@ public class Metadata extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
