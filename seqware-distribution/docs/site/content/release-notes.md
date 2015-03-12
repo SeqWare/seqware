@@ -14,10 +14,10 @@ Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=4453317
 
 This release primarily captures the state of SeqWare before deployment in production for OICR GSI (Genome Sequencing Informatics). 
 
-## Defect
+### Defect
 * [SEQWARE-2017] - BasicDecider --force-run-all versus --ignore-previous-runs
 
-## Improvement
+### Improvement
 * [SEQWARE-2016] - Ability to specify parent/input file accession(s) to seqware create workflow-run
 
 ## 1.1.0-rc.0 (2015-02-17)
