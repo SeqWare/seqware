@@ -32,7 +32,18 @@
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
             <version>2.3.2</version>
-            <scope>provided</scope>
+            <!-- <scope>provided</scope> -->
+        </dependency>
+		<dependency>
+			<artifactId>jaxb-api</artifactId>
+			<groupId>javax.xml.bind</groupId>
+			<type>jar</type>
+			<version>2.2.2</version>
+		</dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
@@ -53,49 +64,28 @@
         <dependency>
             <groupId>com.sun.jersey.contribs</groupId>
             <artifactId>jersey-moxy</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
-            <artifactId>jersey-gf-server</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-client</artifactId>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-core</artifactId>
+            <!-- <scope>provided</scope> -->
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>seqware-meta-db</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <artifactId>jackson-core-asl</artifactId>
-            <groupId>org.codehaus.jackson</groupId>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <artifactId>jaxb-api</artifactId>
-            <groupId>javax.xml.bind</groupId>
-            <type>jar</type>
-            <version>2.2.2</version>
-        </dependency>
-        <dependency>
-            <artifactId>jaxb-impl</artifactId>
-            <groupId>com.sun.xml.bind</groupId>
-            <type>jar</type>
-            <version>2.2.3-1</version>
-        </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>seqware-admin-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
         <dependency>
             <artifactId>bean-validator</artifactId>
             <groupId>org.glassfish</groupId>
             <type>jar</type>
             <version>3.0-JBoss-4.0.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
+            <artifactId>jersey-gf-server</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -108,15 +98,16 @@
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
+       </dependency>
+       <dependency>
+            <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
+            <artifactId>jersey-gf-server</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>2.7</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
@@ -128,6 +119,12 @@
     </dependencies>
 
     <build>
+    	<resources>
+    		<resource>
+    			<directory>src/main/resources</directory>
+    			<filtering>true</filtering>
+    		</resource>
+    	</resources>
         <plugins>
             <plugin>
                 <groupId>org.glassfish.embedded</groupId>
