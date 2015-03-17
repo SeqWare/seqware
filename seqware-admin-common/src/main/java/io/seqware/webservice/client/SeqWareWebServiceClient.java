@@ -16,6 +16,19 @@
  */
 package io.seqware.webservice.client;
 
+import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
+import io.seqware.webservice.generated.controller.ModelAccessionIDTuple;
+import io.seqware.webservice.generated.model.Processing;
+import io.seqware.webservice.generated.model.ProcessingFiles;
+import io.seqware.webservice.generated.model.Sample;
+import io.seqware.webservice.generated.model.Study;
+import io.seqware.webservice.generated.model.WorkflowRun;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
@@ -24,15 +37,6 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
-import io.seqware.webservice.controller.ModelAccessionIDTuple;
-import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
-import io.seqware.webservice.generated.model.Processing;
-import io.seqware.webservice.generated.model.ProcessingFiles;
-import io.seqware.webservice.generated.model.Sample;
-import io.seqware.webservice.generated.model.WorkflowRun;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Separate custom code from base client that would be destroyed during a regeneration
@@ -90,6 +94,25 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
         WebResource resource = getClient().resource(baseUri);
         resource = resource.path(java.text.MessageFormat.format("utility/translateSWID/{0}", id));
         return resource.accept(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(ModelAccessionIDTuple.class);
+    }
+    
+    public Collection<Sample> getSamplesByName(String name)
+    {
+    	WebResource resource = getClient().resource(baseUri);
+    	ClientResponse response = resource.path(java.text.MessageFormat.format("io.seqware.webservice.model.sample/withName/{0}", name)).accept(javax.ws.rs.core.MediaType.APPLICATION_XML).get(ClientResponse.class);
+    	Sample[] samples = response.getEntity(Sample[].class);
+    	return Arrays.asList(samples);
+    	
+    }
+    
+    public Study createStudy(Study study) 
+    {
+    	WebResource resource = getClient().resource(baseUri);
+    	Study newStudy = resource.path("io.seqware.webservice.model.study/createStudy")
+    							.accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
+    							.post(Study.class,study);
+    	
+    	return newStudy;
     }
 
     /**
