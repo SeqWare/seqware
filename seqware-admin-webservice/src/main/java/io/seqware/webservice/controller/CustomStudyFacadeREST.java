@@ -36,8 +36,7 @@ public class CustomStudyFacadeREST extends StudyFacadeREST {
 		{
 			super.create(s);
 			System.out.println("Study ID: "+s.getStudyId());
-			if (s.getShareStudyCollection()== null || s.getStudyAttributeCollection().size() ==0)
-				throw new RuntimeException("there should have been attributes but there aren't any!");
+
 			for (StudyAttribute attrib : s.getStudyAttributeCollection())
 			{
 				attrib.setStudyId(s);
