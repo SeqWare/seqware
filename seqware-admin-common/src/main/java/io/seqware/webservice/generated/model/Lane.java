@@ -4,10 +4,13 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,14 +23,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * 
@@ -54,80 +60,107 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Lane implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="lane_lane_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="lane_lane_id_seq")
     @Basic(optional = false)
     @Column(name = "lane_id")
     private Integer laneId;
+
     @Size(max = 2147483647)
     @Column(name = "name")
     private String name;
+    
     @Size(max = 2147483647)
     @Column(name = "alias")
     private String alias;
+    
     @Size(max = 2147483647)
     @Column(name = "description")
     private String description;
+    
     @Column(name = "lane_index")
     private Integer laneIndex;
+    
     @Size(max = 2147483647)
     @Column(name = "cycle_descriptor")
     private String cycleDescriptor;
+    
     @Column(name = "cycle_count")
     private Integer cycleCount;
+    
     @Size(max = 2147483647)
     @Column(name = "cycle_sequence")
     private String cycleSequence;
+    
     @Column(name = "skip")
     private Boolean skip;
+    
     @Size(max = 2147483647)
     @Column(name = "tags")
     private String tags;
+    
     @Size(max = 2147483647)
     @Column(name = "regions")
     private String regions;
+    
     @Column(name = "sw_accession", insertable = false, updatable = false)
     private Integer swAccession;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "create_tstmp")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTstmp;
+    
     @Column(name = "update_tstmp")
     @Version
     private Timestamp updateTstmp;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "laneId")
     private Collection<LaneAttribute> laneAttributeCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "laneId")
     private Collection<ProcessingLanes> processingLanesCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "laneId")
     private Collection<LaneWorkflowRuns> laneWorkflowRunsCollection;
+    
     @JoinColumn(name = "study_type", referencedColumnName = "study_type_id")
     @ManyToOne
     private StudyType studyType;
+    
     @JoinColumn(name = "sequencer_run_id", referencedColumnName = "sequencer_run_id")
     @ManyToOne
     private SequencerRun sequencerRunId;
+    
     @JoinColumn(name = "sample_id", referencedColumnName = "sample_id")
     @ManyToOne
     private Sample sampleId;
+    
     @JoinColumn(name = "owner_id", referencedColumnName = "registration_id")
     @ManyToOne
     private Registration ownerId;
+    
     @JoinColumn(name = "organism_id", referencedColumnName = "organism_id")
     @ManyToOne
     private Organism organismId;
+    
     @JoinColumn(name = "library_strategy", referencedColumnName = "library_strategy_id")
     @ManyToOne
     private LibraryStrategy libraryStrategy;
+    
     @JoinColumn(name = "library_source", referencedColumnName = "library_source_id")
     @ManyToOne
     private LibrarySource librarySource;
+    
     @JoinColumn(name = "library_selection", referencedColumnName = "library_selection_id")
     @ManyToOne
     private LibrarySelection librarySelection;
+    
     @JoinColumn(name = "type", referencedColumnName = "lane_type_id")
     @ManyToOne
     private LaneType type;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "laneId")
     private Collection<Ius> iusCollection;
 
@@ -143,6 +176,8 @@ public class Lane implements Serializable {
         this.createTstmp = createTstmp;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getLaneId() {
         return laneId;
     }
@@ -255,7 +290,6 @@ public class Lane implements Serializable {
         this.updateTstmp = updateTstmp;
     }
 
-    @XmlTransient
     public Collection<LaneAttribute> getLaneAttributeCollection() {
         return laneAttributeCollection;
     }

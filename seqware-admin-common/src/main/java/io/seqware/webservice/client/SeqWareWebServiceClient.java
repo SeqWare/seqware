@@ -18,6 +18,7 @@ package io.seqware.webservice.client;
 
 import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
 import io.seqware.webservice.generated.controller.ModelAccessionIDTuple;
+import io.seqware.webservice.generated.model.Lane;
 import io.seqware.webservice.generated.model.Processing;
 import io.seqware.webservice.generated.model.ProcessingFiles;
 import io.seqware.webservice.generated.model.Sample;
@@ -115,6 +116,16 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
     	return newStudy;
     }
 
+    public Lane createLane(Lane lane)
+    {
+    	WebResource resource = getClient().resource(baseUri);
+    	Lane newLane = resource.path("io.seqware.webservice.model.lane/createLane")
+    							.accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
+    							.post(Lane.class,lane);
+    	
+    	return newLane;
+    }
+    
     /**
      * Example for using the client
      * 
