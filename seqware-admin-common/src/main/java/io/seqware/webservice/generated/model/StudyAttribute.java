@@ -5,6 +5,7 @@
 package io.seqware.webservice.generated.model;
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,9 +16,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -35,24 +38,30 @@ import javax.xml.bind.annotation.XmlRootElement;
         @NamedQuery(name = "StudyAttribute.findByUnits", query = "SELECT s FROM StudyAttribute s WHERE s.units = :units") })
 public class StudyAttribute implements Serializable {
     private static final long serialVersionUID = 1L;
+    
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="study_attribute_study_attribute_id_seq", sequenceName="study_attribute_study_attribute_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="study_attribute_study_attribute_id_seq")
     @Basic(optional = false)
     @Column(name = "study_attribute_id")
     private Integer studyAttributeId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "tag")
     private String tag;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "value")
     private String value;
+    
     @Size(max = 2147483647)
     @Column(name = "units")
     private String units;
+    
     @JoinColumn(name = "study_id", referencedColumnName = "study_id")
     @ManyToOne(optional = false)
     private Study studyId;
@@ -102,10 +111,11 @@ public class StudyAttribute implements Serializable {
         this.units = units;
     }
 
+    @XmlIDREF
     public Study getStudyId() {
         return studyId;
     }
-
+    
     public void setStudyId(Study studyId) {
         this.studyId = studyId;
     }

@@ -5,9 +5,11 @@
 package io.seqware.webservice.generated.model;
 
 import java.io.Serializable;
+import io.seqware.webservice.adapter.IntegerAdapter;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,14 +23,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * 
@@ -56,72 +62,92 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Study implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="study_study_id_seq",sequenceName="study_study_id_seq",allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="study_study_id_seq")
     @Basic(optional = false)
     @Column(name = "study_id")
     private Integer studyId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "title")
     private String title;
+    
     @Size(max = 2147483647)
     @Column(name = "alias")
     private String alias;
+    
     @Size(max = 2147483647)
     @Column(name = "description")
     private String description;
+    
     @Size(max = 2147483647)
     @Column(name = "accession")
     private String accession;
+    
     @Size(max = 2147483647)
     @Column(name = "abstract")
     private String abstract1;
+    
     @Size(max = 2147483647)
     @Column(name = "new_type")
     private String newType;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "center_name")
     private String centerName;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 2147483647)
     @Column(name = "center_project_name")
     private String centerProjectName;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "project_id")
     private int projectId;
+    
     @Size(max = 2147483647)
     @Column(name = "status")
     private String status;
+    
     @Column(name = "sw_accession", insertable = false, updatable = false)
     private Integer swAccession;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "create_tstmp")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTstmp;
+    
     @Column(name = "update_tstmp")
     @Version
     private Timestamp updateTstmp;
+    
     @JoinColumn(name = "existing_type", referencedColumnName = "study_type_id")
     @ManyToOne(optional = false)
     private StudyType existingType;
+    
     @JoinColumn(name = "owner_id", referencedColumnName = "registration_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Registration ownerId;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "studyId")
     private Collection<Experiment> experimentCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "studyId")
     private Collection<StudyAttribute> studyAttributeCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "studyId")
     private Collection<ShareStudy> shareStudyCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "studyId")
     private Collection<ProcessingStudies> processingStudiesCollection;
-
+    
     public Study() {
     }
 
@@ -137,7 +163,9 @@ public class Study implements Serializable {
         this.projectId = projectId;
         this.createTstmp = createTstmp;
     }
-
+    
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getStudyId() {
         return studyId;
     }
@@ -275,11 +303,10 @@ public class Study implements Serializable {
         this.experimentCollection = experimentCollection;
     }
 
-    @XmlTransient
+    @XmlElement
     public Collection<StudyAttribute> getStudyAttributeCollection() {
         return studyAttributeCollection;
     }
-
     public void setStudyAttributeCollection(Collection<StudyAttribute> studyAttributeCollection) {
         this.studyAttributeCollection = studyAttributeCollection;
     }
