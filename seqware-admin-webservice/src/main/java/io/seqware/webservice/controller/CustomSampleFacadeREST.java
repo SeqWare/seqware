@@ -4,18 +4,24 @@
  */
 package io.seqware.webservice.controller;
 
-import com.sun.jersey.api.ConflictException;
 import io.seqware.webservice.generated.controller.SampleFacadeREST;
 import io.seqware.webservice.generated.model.Sample;
+
+import java.util.Collection;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+
+import com.sun.jersey.api.ConflictException;
 
 /**
  * 
@@ -72,5 +78,42 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
             }
             throw new ConflictException("could not remove null parent hierarchy relationship");
         }
+    }
+    
+    @Path("withName/{name}")
+    @GET
+    @Produces({ "application/xml" })
+    public Collection<Sample> getByName(@PathParam("name") String name)
+    {
+    	Query q = super.getEntityManager().createNamedQuery("Sample.findByName");
+    	q.setParameter("name", name);
+    	Collection<Sample> samples = q.getResultList();
+    	return samples;
+    }
+
+    @Path("numberWithName/{name}")
+    @GET
+    public String countByName(@PathParam("name") String name)
+    {
+    	Query q = super.getEntityManager().createNamedQuery("Sample.findByName");
+    	q.setParameter("name", name);
+    	Collection<Sample> samples = q.getResultList();
+    	return String.valueOf(samples!=null?samples.size():0);
+    }
+    
+    @Path("create")
+    @Consumes({ "application/xml", "application/json" })
+    @Produces({ "application/xml" })
+    public Sample createNewSample() {
+    	//Mandatory fields are organism_id, owner_id, experiment_id
+    	Sample s = new Sample();
+    	super.create(s);
+    	/*Organism organismId;
+		s.setOrganismId(organismId);
+    	Registration ownerId;
+		s.setOwnerId(ownerId);
+    	Experiment experimentId;
+		s.setExperimentId(experimentId);*/
+    	return null;
     }
 }
