@@ -4,7 +4,10 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.model.SkippableEntity;
+
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
         @NamedQuery(name = "FileReport.findByExperimentId", query = "SELECT f FROM FileReport f WHERE f.experimentId = :experimentId"),
         @NamedQuery(name = "FileReport.findByChildSampleId", query = "SELECT f FROM FileReport f WHERE f.childSampleId = :childSampleId"),
         @NamedQuery(name = "FileReport.findByProcessingId", query = "SELECT f FROM FileReport f WHERE f.processingId = :processingId") })
-public class FileReport implements Serializable {
+public class FileReport implements Serializable, SkippableEntity {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

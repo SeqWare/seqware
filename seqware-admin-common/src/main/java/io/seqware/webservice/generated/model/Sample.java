@@ -4,11 +4,13 @@
  */
 package io.seqware.webservice.generated.model;
 
-import com.sun.xml.bind.CycleRecoverable;
+import io.seqware.webservice.model.SkippableEntity;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -38,6 +40,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -71,7 +74,7 @@ import org.apache.log4j.Logger;
         @NamedQuery(name = "Sample.findBySwAccession", query = "SELECT s FROM Sample s WHERE s.swAccession = :swAccession"),
         @NamedQuery(name = "Sample.findByCreateTstmp", query = "SELECT s FROM Sample s WHERE s.createTstmp = :createTstmp"),
         @NamedQuery(name = "Sample.findByUpdateTstmp", query = "SELECT s FROM Sample s WHERE s.updateTstmp = :updateTstmp") })
-public class Sample implements Serializable, CycleRecoverable {
+public class Sample implements Serializable, SkippableEntity {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -468,17 +471,6 @@ public class Sample implements Serializable, CycleRecoverable {
     @Override
     public String toString() {
         return "io.seqware.webservice.model.Sample[ sampleId=" + sampleId + " ]";
-    }
-
-    /**
-     * from http://wiki.eclipse.org/EclipseLink/Release/2.4.0/JAXB_RI_Extensions/Cycle_Recoverable
-     * 
-     * @param cntxt
-     * @return
-     */
-    @Override
-    public Object onCycleDetected(Context cntxt) {
-        return this.getSampleId();
     }
 
     /**

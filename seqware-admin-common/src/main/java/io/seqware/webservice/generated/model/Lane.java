@@ -5,6 +5,7 @@
 package io.seqware.webservice.generated.model;
 
 import io.seqware.webservice.adapter.IntegerAdapter;
+import io.seqware.webservice.model.SkippableEntity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -57,7 +58,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
         @NamedQuery(name = "Lane.findBySwAccession", query = "SELECT l FROM Lane l WHERE l.swAccession = :swAccession"),
         @NamedQuery(name = "Lane.findByCreateTstmp", query = "SELECT l FROM Lane l WHERE l.createTstmp = :createTstmp"),
         @NamedQuery(name = "Lane.findByUpdateTstmp", query = "SELECT l FROM Lane l WHERE l.updateTstmp = :updateTstmp") })
-public class Lane implements Serializable {
+public class Lane implements Serializable, SkippableEntity {
     private static final long serialVersionUID = 1L;
     @Id
     @SequenceGenerator(name="lane_lane_id_seq", allocationSize=1)

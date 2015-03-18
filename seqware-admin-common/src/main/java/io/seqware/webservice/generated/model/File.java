@@ -4,9 +4,12 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.model.SkippableEntity;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,6 +29,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
@@ -47,7 +51,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
         @NamedQuery(name = "File.findBySwAccession", query = "SELECT f FROM File f WHERE f.swAccession = :swAccession"),
         @NamedQuery(name = "File.findBySize", query = "SELECT f FROM File f WHERE f.size = :size"),
         @NamedQuery(name = "File.findBySkip", query = "SELECT f FROM File f WHERE f.skip = :skip") })
-public class File implements Serializable {
+public class File implements Serializable, SkippableEntity {
     @JoinTable(name = "workflow_run_input_files", joinColumns = { @JoinColumn(name = "file_id", referencedColumnName = "file_id") }, inverseJoinColumns = { @JoinColumn(name = "workflow_run_id", referencedColumnName = "workflow_run_id") })
     @ManyToMany
     private Collection<WorkflowRun> workflowRunCollection;
