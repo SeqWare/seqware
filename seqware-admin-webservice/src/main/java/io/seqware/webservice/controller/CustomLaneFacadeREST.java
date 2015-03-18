@@ -4,11 +4,14 @@
  */
 package io.seqware.webservice.controller;
 
+import java.util.Collection;
+
 import io.seqware.webservice.generated.controller.LaneFacadeREST;
 import io.seqware.webservice.generated.model.Lane;
 import io.seqware.webservice.generated.model.LaneAttribute;
 
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.Consumes;
@@ -23,34 +26,36 @@ import javax.ws.rs.Produces;
 @Stateless
 @Path("io.seqware.webservice.model.lane")
 public class CustomLaneFacadeREST extends LaneFacadeREST {
-	
-	@Path("/createLane")
-	@POST
-	@Consumes({ javax.ws.rs.core.MediaType.APPLICATION_JSON, javax.ws.rs.core.MediaType.APPLICATION_XML })
-	@Produces({ javax.ws.rs.core.MediaType.APPLICATION_XML })
-	public Lane createLane(Lane lane)
-	{
-		try
-		{
-			super.create(lane);
-			for (LaneAttribute attrib : lane.getLaneAttributeCollection())
-			{
-				attrib.setLaneId(lane);
-				this.getEntityManager().persist(attrib);
-			}
-		}
-		catch (ConstraintViolationException e)
-		{
-			System.out.println("ContraintViolations detected: "+e.getMessage());
-			for(ConstraintViolation<?> e1 : e.getConstraintViolations())
-			{
-				System.out.println(e1.getInvalidValue());
-				System.out.println(e1.getMessage());
-				System.out.println(e1);
-				System.out.println(e1.getConstraintDescriptor());
-				System.out.println(e1.getPropertyPath());
-			}
-		}
-		return lane;
-	}
+
+    @Path("/createLane")
+    @POST
+    @Consumes({ javax.ws.rs.core.MediaType.APPLICATION_JSON, javax.ws.rs.core.MediaType.APPLICATION_XML })
+    @Produces({ javax.ws.rs.core.MediaType.APPLICATION_XML })
+    public Lane createLane(Lane lane) {
+        try {
+            super.create(lane);
+            persistAttributes(lane.getLaneAttributeCollection(), lane, this.getEntityManager());
+        } catch (ConstraintViolationException e) {
+            handleConstraintViolation(e);
+        }
+        return lane;
+    }
+
+    private void persistAttributes(Collection<LaneAttribute> attributes, Lane parent, EntityManager em) {
+        for (LaneAttribute attribute : attributes) {
+            attribute.setLaneId(parent);
+            em.persist(attribute);
+        }
+    }
+
+    private void handleConstraintViolation(ConstraintViolationException e) {
+        System.out.println("ContraintViolations detected: " + e.getMessage());
+        for (ConstraintViolation<?> e1 : e.getConstraintViolations()) {
+            System.out.println(e1.getInvalidValue());
+            System.out.println(e1.getMessage());
+            System.out.println(e1);
+            System.out.println(e1.getConstraintDescriptor());
+            System.out.println(e1.getPropertyPath());
+        }
+    }
 }

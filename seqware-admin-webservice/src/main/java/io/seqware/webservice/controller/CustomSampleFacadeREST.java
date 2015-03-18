@@ -79,7 +79,12 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
             throw new ConflictException("could not remove null parent hierarchy relationship");
         }
     }
-    
+
+    /**
+     * Get samples where the samples' name matches "name"
+     * @param name
+     * @return
+     */
     @Path("withName/{name}")
     @GET
     @Produces({ "application/xml" })
@@ -91,6 +96,11 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
     	return samples;
     }
 
+    /**
+     * Get the number of samples whose name matches "name"
+     * @param name
+     * @return
+     */
     @Path("numberWithName/{name}")
     @GET
     public String countByName(@PathParam("name") String name)
@@ -105,15 +115,11 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
     @Consumes({ "application/xml", "application/json" })
     @Produces({ "application/xml" })
     public Sample createNewSample() {
-    	//Mandatory fields are organism_id, owner_id, experiment_id
+    	
     	Sample s = new Sample();
+    	//TODO: Add code to persist sample attributes
     	super.create(s);
-    	/*Organism organismId;
-		s.setOrganismId(organismId);
-    	Registration ownerId;
-		s.setOwnerId(ownerId);
-    	Experiment experimentId;
-		s.setExperimentId(experimentId);*/
+    	
     	return null;
     }
 }

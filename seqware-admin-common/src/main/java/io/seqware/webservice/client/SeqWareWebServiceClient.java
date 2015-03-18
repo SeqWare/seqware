@@ -18,6 +18,7 @@ package io.seqware.webservice.client;
 
 import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
 import io.seqware.webservice.generated.controller.ModelAccessionIDTuple;
+import io.seqware.webservice.generated.model.Experiment;
 import io.seqware.webservice.generated.model.Lane;
 import io.seqware.webservice.generated.model.Processing;
 import io.seqware.webservice.generated.model.ProcessingFiles;
@@ -97,6 +98,11 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
         return resource.accept(javax.ws.rs.core.MediaType.APPLICATION_JSON).get(ModelAccessionIDTuple.class);
     }
     
+    /**
+     * Gets samples, by name.
+     * @param name the name of the sample to search for.
+     * @return A list of samples whose name matches the input.
+     */
     public Collection<Sample> getSamplesByName(String name)
     {
     	WebResource resource = getClient().resource(baseUri);
@@ -108,23 +114,44 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
     
     public Study createStudy(Study study) 
     {
-    	WebResource resource = getClient().resource(baseUri);
-    	Study newStudy = resource.path("io.seqware.webservice.model.study/createStudy")
-    							.accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
-    							.post(Study.class,study);
-    	
-    	return newStudy;
+        return this.getWebResource()
+                .path("createStudy")
+                .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
+                .post(Study.class,study);
     }
 
     public Lane createLane(Lane lane)
     {
-    	WebResource resource = getClient().resource(baseUri);
-    	Lane newLane = resource.path("io.seqware.webservice.model.lane/createLane")
-    							.accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
-    							.post(Lane.class,lane);
-    	
-    	return newLane;
+    	return this.getWebResource()
+    	        .path("createLane")
+    	        .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
+    	        .post(Lane.class,lane);
     }
+    
+    public void skip(String entityId)
+    {
+        this.getWebResource()
+                .path(java.text.MessageFormat.format("skip/{0}", entityId))
+                .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
+                .post();
+    }
+
+    public void unskip(String entityId)
+    {
+        this.getWebResource()
+                .path(java.text.MessageFormat.format("unskip/{0}", entityId))
+                .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
+                .post();
+    }
+    
+    public Experiment createExperiment(Experiment experiment)
+    {
+        return this.getWebResource()
+                .path("createExperiment")
+                .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
+                .post(Experiment.class,experiment);
+    }
+
     
     /**
      * Example for using the client
