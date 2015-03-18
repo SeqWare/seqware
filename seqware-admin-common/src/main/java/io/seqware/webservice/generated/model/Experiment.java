@@ -4,6 +4,7 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Timestamp;
@@ -21,14 +22,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * 
@@ -62,87 +66,116 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Experiment implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="experiment_experiment_id_seq",sequenceName="experiment_experiment_id_seq",allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="experiment_experiment_id_seq")
     @Basic(optional = false)
     @Column(name = "experiment_id")
     private Integer experimentId;
+    
     @Size(max = 2147483647)
     @Column(name = "name")
     private String name;
+    
     @Size(max = 2147483647)
     @Column(name = "title")
     private String title;
+    
     @Size(max = 2147483647)
     @Column(name = "description")
     private String description;
+    
     @Size(max = 2147483647)
     @Column(name = "alias")
     private String alias;
+    
     @Size(max = 2147483647)
     @Column(name = "accession")
     private String accession;
+    
     @Size(max = 2147483647)
     @Column(name = "status")
     private String status;
+    
     @Size(max = 2147483647)
     @Column(name = "center_name")
     private String centerName;
+    
     @Size(max = 2147483647)
     @Column(name = "sequence_space")
     private String sequenceSpace;
+    
     @Size(max = 2147483647)
     @Column(name = "base_caller")
     private String baseCaller;
+    
     @Size(max = 2147483647)
     @Column(name = "quality_scorer")
     private String qualityScorer;
+    
     @Column(name = "quality_number_of_levels")
     private Integer qualityNumberOfLevels;
+    
     @Column(name = "quality_multiplier")
     private Integer qualityMultiplier;
+    
     @Size(max = 2147483647)
     @Column(name = "quality_type")
     private String qualityType;
+    
     @Column(name = "expected_number_runs")
     private Integer expectedNumberRuns;
+    
     @Column(name = "expected_number_spots")
     private BigInteger expectedNumberSpots;
+    
     @Column(name = "expected_number_reads")
     private BigInteger expectedNumberReads;
+    
     @Column(name = "sw_accession", insertable = false, updatable = false)
     private Integer swAccession;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "create_tstmp")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTstmp;
+    
     @Column(name = "update_tstmp")
     @Version
     private Timestamp updateTstmp;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "experimentId")
     private Collection<ExperimentAttribute> experimentAttributeCollection;
+    
     @JoinColumn(name = "study_id", referencedColumnName = "study_id")
     @ManyToOne(optional = false)
     private Study studyId;
+    
     @JoinColumn(name = "owner_id", referencedColumnName = "registration_id")
     @ManyToOne
     private Registration ownerId;
+    
     @JoinColumn(name = "platform_id", referencedColumnName = "platform_id")
     @ManyToOne
     private Platform platformId;
+    
     @JoinColumn(name = "experiment_spot_design_id", referencedColumnName = "experiment_spot_design_id")
     @ManyToOne
     private ExperimentSpotDesign experimentSpotDesignId;
+    
     @JoinColumn(name = "experiment_library_design_id", referencedColumnName = "experiment_library_design_id")
     @ManyToOne
     private ExperimentLibraryDesign experimentLibraryDesignId;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "experimentId")
     private Collection<ProcessingExperiments> processingExperimentsCollection;
+    
     @OneToMany(mappedBy = "experimentId")
     private Collection<Sample> sampleCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "experimentId")
     private Collection<ExperimentLink> experimentLinkCollection;
-
+    
     public Experiment() {
     }
 
@@ -155,6 +188,8 @@ public class Experiment implements Serializable {
         this.createTstmp = createTstmp;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getExperimentId() {
         return experimentId;
     }
@@ -315,7 +350,6 @@ public class Experiment implements Serializable {
         this.updateTstmp = updateTstmp;
     }
 
-    @XmlTransient
     public Collection<ExperimentAttribute> getExperimentAttributeCollection() {
         return experimentAttributeCollection;
     }

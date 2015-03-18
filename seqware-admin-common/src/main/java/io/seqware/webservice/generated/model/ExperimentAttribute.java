@@ -17,6 +17,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -91,6 +92,7 @@ public class ExperimentAttribute implements Serializable {
         this.units = units;
     }
 
+    @XmlIDREF
     public Experiment getExperimentId() {
         return experimentId;
     }
