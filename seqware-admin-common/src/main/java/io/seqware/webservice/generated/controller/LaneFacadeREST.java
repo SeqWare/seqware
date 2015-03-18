@@ -4,6 +4,7 @@
  */
 package io.seqware.webservice.generated.controller;
 
+import io.seqware.webservice.controller.SkippableEntityFacade;
 import io.seqware.webservice.generated.model.Lane;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -24,7 +25,7 @@ import javax.ws.rs.Produces;
  */
 @Stateless
 @Path("io.seqware.webservice.model.lane")
-public class LaneFacadeREST extends AbstractFacade<Lane> {
+public class LaneFacadeREST extends SkippableEntityFacade<Lane> {
     @PersistenceContext(unitName = "io.seqware_seqware-admin-webservice_war_1.0-SNAPSHOTPU")
     private EntityManager em;
 
