@@ -122,4 +122,14 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
     	
     	return null;
     }
+    
+/*    @Path("where/{field}/matches/{value}")
+    @GET
+    @Produces({ "application/xml", "application/json" })
+    @Override
+    public List<Sample> findByField(@PathParam("field") String field, @PathParam("value") String value)
+    {
+        return super.findByField(field, value);
+    }*/
+    
 }

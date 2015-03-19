@@ -82,7 +82,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>seqware-admin-webservice</artifactId>
+            <artifactId>seqware-admin-common</artifactId>
             <classifier>classes</classifier>
             <version>${project.version}</version>
             <scope>compile</scope>

@@ -26,6 +26,9 @@ import io.seqware.webservice.generated.model.Sample;
 import io.seqware.webservice.generated.model.Study;
 import io.seqware.webservice.generated.model.WorkflowRun;
 
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -152,6 +155,28 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
                 .post(Experiment.class,experiment);
     }
 
+    public <T extends Serializable> List<T> getEntitiesWhereFieldMatchesValue(final Class<T> clazz, String field, String value)
+    {
+        ParameterizedType parameterizedGenericType = new ParameterizedType() {
+            public Type[] getActualTypeArguments() {
+                return new Type[] { clazz };
+            }
+
+            public Type getRawType() {
+                return List.class;
+            }
+
+            public Type getOwnerType() {
+                return List.class;
+            }
+        };
+        
+        List<T> results = this.getWebResource()
+                           .path(java.text.MessageFormat.format("where/{0}/matches/{1}", field, value))
+                           .get(new GenericType<List<T>>(parameterizedGenericType) {});
+        
+        return results;
+    }
     
     /**
      * Example for using the client
