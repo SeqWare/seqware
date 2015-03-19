@@ -32,25 +32,6 @@
 			<artifactId>jersey-moxy</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<!-- <dependency>
-		  <groupId>org.eclipse.persistence</groupId>
-		  <artifactId>org.eclipse.persistence.moxy</artifactId>
-		  <version>2.2.0-M6</version>
-		  <scope>provided</scope>
-		</dependency> -->
-		<!-- <dependency>
-		  <groupId>org.eclipse.persistence</groupId>
-		  <artifactId>org.eclipse.persistence.core</artifactId>
-		  <version>2.2.0-M6</version>
-		  I think this is only needed if you use the moxy classes, otherwise set scope to "provided"
-		  <scope>provided</scope>
-		</dependency> -->
-        <!-- <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>eclipselink</artifactId>
-            <version>2.3.2</version>
-            <scope>provided</scope>
-        </dependency> -->
 		<dependency>
 			<groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
 			<artifactId>jersey-gf-server</artifactId>

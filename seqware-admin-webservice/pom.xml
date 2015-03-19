@@ -25,22 +25,11 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>eclipselink</artifactId>
             <version>2.3.2</version>
             <!-- <scope>provided</scope> -->
         </dependency>
-		<dependency>
-			<artifactId>jaxb-api</artifactId>
-			<groupId>javax.xml.bind</groupId>
-			<type>jar</type>
-			<version>2.2.2</version>
-		</dependency>
-
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
@@ -60,11 +49,6 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-moxy</artifactId>
-            <!-- <scope>provided</scope> -->
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -103,11 +87,6 @@
             <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
             <artifactId>jersey-gf-server</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-client</artifactId>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>
