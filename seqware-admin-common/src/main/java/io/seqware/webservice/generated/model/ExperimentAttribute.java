@@ -4,7 +4,10 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.annotations.ParentEntity;
+
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -97,6 +100,7 @@ public class ExperimentAttribute implements Serializable {
         return experimentId;
     }
 
+    @ParentEntity
     public void setExperimentId(Experiment experimentId) {
         this.experimentId = experimentId;
     }

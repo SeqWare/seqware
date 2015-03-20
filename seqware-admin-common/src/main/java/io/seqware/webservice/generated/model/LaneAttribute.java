@@ -4,6 +4,8 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.annotations.ParentEntity;
+
 import java.io.Serializable;
 
 import javax.persistence.Basic;
@@ -100,6 +102,7 @@ public class LaneAttribute implements Serializable {
         return laneId;
     }
 
+    @ParentEntity
     public void setLaneId(Lane laneId) {
         this.laneId = laneId;
     }

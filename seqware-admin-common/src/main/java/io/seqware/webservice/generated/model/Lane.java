@@ -5,7 +5,7 @@
 package io.seqware.webservice.generated.model;
 
 import io.seqware.webservice.adapter.IntegerAdapter;
-import io.seqware.webservice.model.SkippableEntity;
+import io.seqware.webservice.annotations.ChildEntities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -43,6 +43,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @Entity
 @Table(name = "lane")
 @XmlRootElement
+@io.seqware.webservice.annotations.SkippableEntity
 @NamedQueries({ @NamedQuery(name = "Lane.findAll", query = "SELECT l FROM Lane l"),
         @NamedQuery(name = "Lane.findByLaneId", query = "SELECT l FROM Lane l WHERE l.laneId = :laneId"),
         @NamedQuery(name = "Lane.findByName", query = "SELECT l FROM Lane l WHERE l.name = :name"),
@@ -58,7 +59,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
         @NamedQuery(name = "Lane.findBySwAccession", query = "SELECT l FROM Lane l WHERE l.swAccession = :swAccession"),
         @NamedQuery(name = "Lane.findByCreateTstmp", query = "SELECT l FROM Lane l WHERE l.createTstmp = :createTstmp"),
         @NamedQuery(name = "Lane.findByUpdateTstmp", query = "SELECT l FROM Lane l WHERE l.updateTstmp = :updateTstmp") })
-public class Lane implements Serializable, SkippableEntity {
+public class Lane implements Serializable/*, SkippableEntity*/ {
     private static final long serialVersionUID = 1L;
     @Id
     @SequenceGenerator(name="lane_lane_id_seq", allocationSize=1)
@@ -291,6 +292,7 @@ public class Lane implements Serializable, SkippableEntity {
         this.updateTstmp = updateTstmp;
     }
 
+    @ChildEntities(tag="attributes",childType=LaneAttribute.class)
     public Collection<LaneAttribute> getLaneAttributeCollection() {
         return laneAttributeCollection;
     }

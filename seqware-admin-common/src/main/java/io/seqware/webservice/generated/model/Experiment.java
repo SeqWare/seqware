@@ -5,11 +5,14 @@
 package io.seqware.webservice.generated.model;
 
 import io.seqware.webservice.adapter.IntegerAdapter;
+import io.seqware.webservice.annotations.ChildEntities;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -350,6 +353,7 @@ public class Experiment implements Serializable {
         this.updateTstmp = updateTstmp;
     }
 
+    @ChildEntities(tag="experimentAttributs", childType=ExperimentAttribute.class)
     public Collection<ExperimentAttribute> getExperimentAttributeCollection() {
         return experimentAttributeCollection;
     }

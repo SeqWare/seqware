@@ -4,8 +4,6 @@
  */
 package io.seqware.webservice.generated.model;
 
-import io.seqware.webservice.model.SkippableEntity;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -50,6 +48,7 @@ import org.apache.log4j.Logger;
 @Entity
 @Table(name = "sample")
 @XmlRootElement
+@io.seqware.webservice.annotations.SkippableEntity
 @NamedQueries({
         @NamedQuery(name = "Sample.findAll", query = "SELECT s FROM Sample s"),
         @NamedQuery(name = "Sample.findBySampleId", query = "SELECT s FROM Sample s WHERE s.sampleId = :sampleId"),
@@ -74,7 +73,7 @@ import org.apache.log4j.Logger;
         @NamedQuery(name = "Sample.findBySwAccession", query = "SELECT s FROM Sample s WHERE s.swAccession = :swAccession"),
         @NamedQuery(name = "Sample.findByCreateTstmp", query = "SELECT s FROM Sample s WHERE s.createTstmp = :createTstmp"),
         @NamedQuery(name = "Sample.findByUpdateTstmp", query = "SELECT s FROM Sample s WHERE s.updateTstmp = :updateTstmp") })
-public class Sample implements Serializable, SkippableEntity {
+public class Sample implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

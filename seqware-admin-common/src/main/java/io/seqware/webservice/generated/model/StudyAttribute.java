@@ -4,6 +4,8 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.annotations.ParentEntity;
+
 import java.io.Serializable;
 
 import javax.persistence.Basic;
@@ -115,7 +117,8 @@ public class StudyAttribute implements Serializable {
     public Study getStudyId() {
         return studyId;
     }
-    
+   
+    @ParentEntity
     public void setStudyId(Study studyId) {
         this.studyId = studyId;
     }

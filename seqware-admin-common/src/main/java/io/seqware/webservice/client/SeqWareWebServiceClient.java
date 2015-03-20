@@ -18,12 +18,9 @@ package io.seqware.webservice.client;
 
 import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
 import io.seqware.webservice.generated.controller.ModelAccessionIDTuple;
-import io.seqware.webservice.generated.model.Experiment;
-import io.seqware.webservice.generated.model.Lane;
 import io.seqware.webservice.generated.model.Processing;
 import io.seqware.webservice.generated.model.ProcessingFiles;
 import io.seqware.webservice.generated.model.Sample;
-import io.seqware.webservice.generated.model.Study;
 import io.seqware.webservice.generated.model.WorkflowRun;
 
 import java.io.Serializable;
@@ -102,6 +99,21 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
     }
     
     /**
+     * This method will call the createAndReturn web method.
+     * @param responseType The type of object to be returned.
+     * @param entity The entity to persist.
+     * @return An updated form of <em>entity</em>, after it has been persisted. 
+     * All database-generated fields (such as IDs) should be populated on this returned
+     * object.
+     */
+    public <T> T createAndReturn(Class<T> responseType, T entity) {
+        return this.getWebResource()
+                .path("createAndReturn")
+                .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
+                .post(responseType,entity);
+    }
+    
+    /**
      * Gets samples, by name.
      * @param name the name of the sample to search for.
      * @return A list of samples whose name matches the input.
@@ -115,7 +127,7 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
     	
     }
     
-    public Study createStudy(Study study) 
+/*    public Study createStudy(Study study) 
     {
         return this.getWebResource()
                 .path("createStudy")
@@ -126,11 +138,11 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
     public Lane createLane(Lane lane)
     {
     	return this.getWebResource()
-    	        .path("createLane")
+    	        .path("createAndReturn")
     	        .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
     	        .post(Lane.class,lane);
     }
-    
+*/    
     public void skip(String entityId)
     {
         this.getWebResource()
@@ -147,14 +159,14 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
                 .post();
     }
     
-    public Experiment createExperiment(Experiment experiment)
+/*    public Experiment createExperiment(Experiment experiment)
     {
         return this.getWebResource()
-                .path("createExperiment")
+                .path("createAndReturn")
                 .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
                 .post(Experiment.class,experiment);
     }
-
+*/
     public <T extends Serializable> List<T> getEntitiesWhereFieldMatchesValue(final Class<T> clazz, String field, String value)
     {
         ParameterizedType parameterizedGenericType = new ParameterizedType() {

@@ -4,23 +4,27 @@
  */
 package io.seqware.webservice.generated.controller;
 
-import java.lang.annotation.Annotation;
-import java.sql.SQLException;
+import io.seqware.webservice.annotations.ChildEntities;
+import io.seqware.webservice.annotations.ParentEntity;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.metamodel.EntityType;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
-
-import com.sun.jersey.spi.inject.Errors.ErrorMessage;
 
 /**
  * 
@@ -61,68 +65,113 @@ public abstract class AbstractFacade<T> {
     
     protected String getEntityTableName()
     {
-        String tableName = entityClass.getSimpleName(); 
-        for (Annotation a : entityClass.getAnnotations())
-        {
-            if (a.annotationType().getName().equals("javax.persistence.Table"))
+        return getEntityManager().getMetamodel().entity(this.entityClass).getName();
+    }
+
+    /**
+     * Generic method to create an entity and return it.
+     * @param entity
+     * @return
+     */
+    @Path("/createAndReturn")
+    @POST
+    @Consumes({ "application/xml", "application/json" })
+    @Produces({ "application/xml" })
+    public T createAndReturn(T entity)
+    {
+        //save the given entity into the database
+        try {
+            this.getEntityManager().persist(entity);
+            
+            // To persist seqware attributes (and other child entities), we need to know:
+            // 1) if this entity has any children, and if so, what is the accessor method.
+            // 2) how to set *this* entity as the parent of the children.
+            // We'll use the magic of annotations to do this!
+            // In the entity classes, @ChildEntities will mark a method that
+            // can return a set of child entities and @ParentEntity will be used to mark a method that can set a reference
+            // to a parent. We'll search through the given entity and any children looking for these methods so we can use them.
+            for (Method getChildrenMethod : entityClass.getMethods())
             {
-                try {
-                    if (a.annotationType().getField("name") != null)
+                //We found a method that creates child entities!
+                if (getChildrenMethod.isAnnotationPresent(ChildEntities.class))
+                {
+                    Class<?> childType = getChildrenMethod.getAnnotation(ChildEntities.class).childType();
+                    for (Method setParentMethod : childType.getMethods())
                     {
-                       tableName =  (String) a.annotationType().getField("name").get(entityTableName);
-                       if (tableName == null || entityTableName.equals("") || entityTableName.equals("null"))
-                       {
-                           tableName = entityClass.getSimpleName();       
-                       }
-                       return tableName;
+                        //Look to see if there's a method that can set the parent entity.
+                        //TODO: Error handling if these annotations are not properly set. Also, add some logic to break this *inner* loop 
+                        //once this method is found. 
+                        if (setParentMethod.isAnnotationPresent(ParentEntity.class))
+                        {
+                            try {
+                                List children = (List) getChildrenMethod.invoke(entity);
+                                //TODO: It would be nice if I could use childType here instead of Object.
+                                for (Object child : children)
+                                {
+                                    setParentMethod.invoke(child, entity);
+                                    this.getEntityManager().persist(child);
+                                }
+                            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                                throw new WebApplicationException(Status.INTERNAL_SERVER_ERROR);
+                            }
+                        }
                     }
-                } catch (NoSuchFieldException e) {
-                    tableName = entityClass.getSimpleName();
-                    return tableName;
-                } catch (SecurityException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
                 }
             }
         }
-        return tableName;
+        catch (ConstraintViolationException e)
+        {
+            String errMsg = "Constraint violation detected: "+e.getMessage()+"; ";
+            for (ConstraintViolation<?> e1 : e.getConstraintViolations()) {
+                errMsg += e1.getMessage() +"; "+ e1.getPropertyPath();
+            }
+            Response response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errMsg).build();
+            throw new WebApplicationException(response);
+        }
+        return entity;
     }
-
+    
+    /**
+     * Generic method to search for an entity where a specific field matches a specific value.
+     * @param field
+     * @param value
+     * @return
+     */
     @Path("/where/{field}/matches/{value}")
     @GET
     @Produces({ "application/xml", "application/json" })
     public List<T> findByField(@PathParam("field") String field, @PathParam("value") String value)
     {
-        //CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
-        //CriteriaQuery<T> critQuery = builder.createQuery(this.entityClass);
         EntityType<T> entity = getEntityManager().getMetamodel().entity(this.entityClass);
-        //Root<T> root = critQuery.from(entity);
         entity.getName();
-        String entityName = entity.getName();//this.getEntityTableName();
+        String entityName = entity.getName();
+        //NOTE: if you try to access an entity via an ID of another entity (such as query "Experiment" where the studyId = something),
+        //JPA will try to match the Experiment table against a Study OBJECT. This might require a new generic method that
+        //matches an entity against another entity...
         String fieldName = entity.getAttribute(field).getName();
-        //Query q = getEntityManager().createNativeQuery("SELECT * FROM "+entityName+" WHERE "+fieldName+" = ?");
-        Query q = getEntityManager().createQuery("SELECT e FROM "+entityName+" e WHERE e."+fieldName+" = :value");
-        //q.setParameter(1, entityName);
-        //q.setParameter(2, fieldName);
-        //q.setParameter(3, value);
-        //q.setParameter(1, value);
-        q.setParameter("value", value);
         
+        //If the field chosen refers to another object, we need to get that other object.
+//        if (entity.getAttribute(field).getPersistentAttributeType() == PersistentAttributeType.ONE_TO_MANY)
+//        {
+//            
+//        }
+        
+        //TODO: Look into using string-based criteria queries for this: http://docs.oracle.com/javaee/6/tutorial/doc/gkjbq.html
+        Query q = getEntityManager().createQuery("SELECT e FROM "+entityName+" e WHERE e."+fieldName+" = :value");
+        q.setParameter("value", value);
+        //TODO: Find a better way to return intelligible SQL errors, rather than force the user to look through server logs.
         List<T> results = null;
-//        try
-//        {
+        try
+        {
             results = q.getResultList();
-//        }
-//        catch (Exception e)
-//        {
-//            throw new WebApplicationException (e.getMessage());
-//        }
+        }
+        catch (Exception e)
+        {
+            Response response = Response.status(Status.INTERNAL_SERVER_ERROR).entity("Could not find entity by field: "+e.getMessage()).build();
+            throw new WebApplicationException(response);
+        }
         return results; 
     }
 

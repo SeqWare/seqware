@@ -4,8 +4,6 @@
  */
 package io.seqware.webservice.generated.model;
 
-import io.seqware.webservice.model.SkippableEntity;
-
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -39,6 +37,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @Table(name = "file")
 @XmlRootElement
+@io.seqware.webservice.annotations.SkippableEntity
 @NamedQueries({ @NamedQuery(name = "File.findAll", query = "SELECT f FROM File f"),
         @NamedQuery(name = "File.findByFileId", query = "SELECT f FROM File f WHERE f.fileId = :fileId"),
         @NamedQuery(name = "File.findByFilePath", query = "SELECT f FROM File f WHERE f.filePath = :filePath"),
@@ -51,7 +50,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
         @NamedQuery(name = "File.findBySwAccession", query = "SELECT f FROM File f WHERE f.swAccession = :swAccession"),
         @NamedQuery(name = "File.findBySize", query = "SELECT f FROM File f WHERE f.size = :size"),
         @NamedQuery(name = "File.findBySkip", query = "SELECT f FROM File f WHERE f.skip = :skip") })
-public class File implements Serializable, SkippableEntity {
+public class File implements Serializable {
     @JoinTable(name = "workflow_run_input_files", joinColumns = { @JoinColumn(name = "file_id", referencedColumnName = "file_id") }, inverseJoinColumns = { @JoinColumn(name = "workflow_run_id", referencedColumnName = "workflow_run_id") })
     @ManyToMany
     private Collection<WorkflowRun> workflowRunCollection;

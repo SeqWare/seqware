@@ -4,8 +4,6 @@
  */
 package io.seqware.webservice.generated.model;
 
-import io.seqware.webservice.model.SkippableEntity;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -39,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "ius")
 @XmlRootElement
+@io.seqware.webservice.annotations.SkippableEntity
 @NamedQueries({ @NamedQuery(name = "Ius.findAll", query = "SELECT i FROM Ius i"),
         @NamedQuery(name = "Ius.findByIusId", query = "SELECT i FROM Ius i WHERE i.iusId = :iusId"),
         @NamedQuery(name = "Ius.findByName", query = "SELECT i FROM Ius i WHERE i.name = :name"),
@@ -49,7 +48,7 @@ import javax.xml.bind.annotation.XmlTransient;
         @NamedQuery(name = "Ius.findByCreateTstmp", query = "SELECT i FROM Ius i WHERE i.createTstmp = :createTstmp"),
         @NamedQuery(name = "Ius.findByUpdateTstmp", query = "SELECT i FROM Ius i WHERE i.updateTstmp = :updateTstmp"),
         @NamedQuery(name = "Ius.findBySkip", query = "SELECT i FROM Ius i WHERE i.skip = :skip") })
-public class Ius implements Serializable, SkippableEntity {
+public class Ius implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

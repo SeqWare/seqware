@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.jersey.api.client.UniformInterfaceException;
+
 import io.seqware.webservice.client.SeqWareWebServiceClient;
 import io.seqware.webservice.generated.model.Experiment;
 import io.seqware.webservice.generated.model.ExperimentAttribute;
@@ -59,21 +61,25 @@ public class TestClient {
         experiment.setExperimentAttributeCollection(experimentAttributes);
 
         SeqWareWebServiceClient experimentClient = clients.get("experiment");
-        try {
+       /* try {
             // Calling the default (generated) create_* methods doesn't return anything, so you won't know what the ID
             // of the newly created object is. Not terribly useful.
             experimentClient.create_XML(experiment);
             System.out.println("Experiment ID: " + experiment.getExperimentId());
             System.out.println("attributes: " + experiment.getExperimentAttributeCollection());
-        } catch (Exception e) {
+        } catch (UniformInterfaceException e) {
+            System.out.println("message: "+e.getMessage()+"\n\n");
+            System.out.println("entity: "+e.getResponse().getEntity(String.class));
             e.printStackTrace();
-        }
+        }*/
         try {
             // Custom "create" method, will return the updated object.
-            experiment = experimentClient.createExperiment(experiment);
+            experiment = experimentClient.createAndReturn(Experiment.class, experiment);
             System.out.println("Experiment ID: " + experiment.getExperimentId());
             System.out.println("attributes: " + experiment.getExperimentAttributeCollection());
-        } catch (Exception e) {
+        } catch (UniformInterfaceException e) {
+            System.out.println("message: "+e.getMessage()+"\n\n");
+            System.out.println("entity: "+e.getResponse().getEntity(String.class));
             e.printStackTrace();
         }
     }
@@ -97,15 +103,15 @@ public class TestClient {
         laneAttrib1.setValue("some value 1");
 
         LaneAttribute laneAttrib2 = new LaneAttribute();
-        laneAttrib2.setTag("some tag 1");
-        laneAttrib2.setValue("some value 1");
+        laneAttrib2.setTag("some tag 2");
+        laneAttrib2.setValue("some value 2");
 
         laneAttributes.add(laneAttrib1);
         laneAttributes.add(laneAttrib2);
 
         lane.setLaneAttributeCollection(laneAttributes);
 
-        Lane newLane = laneClient.createLane(lane);
+        Lane newLane = laneClient.createAndReturn(Lane.class, lane);//createLane(lane);
         System.out.println("new lane ID: " + newLane.getLaneId());
 
         System.out.println("# New Lane attributes: " + newLane.getLaneAttributeCollection());
@@ -163,7 +169,7 @@ public class TestClient {
 
         s.setStudyAttributeCollection(studyAttributeCollection);
         SeqWareWebServiceClient studyClient = clients.get("study");
-        Study genStudy = studyClient.createStudy(s);
+        Study genStudy = studyClient.createAndReturn(Study.class,s);//Study(s);
         System.out.println("New study ID: " + genStudy.getStudyId());
         System.out.println("number of attributes: " + genStudy.getStudyAttributeCollection().size());
         // print the study's own Id and the study's Id, according to the attribute

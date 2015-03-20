@@ -133,5 +133,5 @@ public class SeqWareWebserviceClient {
     public void setWebResource(WebResource webResource) {
         this.webResource = webResource;
     }
-
+    
 }
