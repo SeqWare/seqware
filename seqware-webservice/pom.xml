@@ -504,6 +504,10 @@
                     <artifactId>google-collections</artifactId>
                     <groupId>com.google.collections</groupId>
                 </exclusion>
+                <exclusion>
+                	<artifactId>joda-time</artifactId>
+                	<groupId>joda-time</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
