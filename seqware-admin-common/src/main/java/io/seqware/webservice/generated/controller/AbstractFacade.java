@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.persistence.metamodel.Attribute.PersistentAttributeType;
 import javax.persistence.metamodel.EntityType;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -151,17 +152,38 @@ public abstract class AbstractFacade<T> {
         //JPA will try to match the Experiment table against a Study OBJECT. This might require a new generic method that
         //matches an entity against another entity...
         String fieldName = entity.getAttribute(field).getName();
-        
-        //If the field chosen refers to another object, we need to get that other object.
-//        if (entity.getAttribute(field).getPersistentAttributeType() == PersistentAttributeType.ONE_TO_MANY)
-//        {
-//            
-//        }
-        
+
         //TODO: Look into using string-based criteria queries for this: http://docs.oracle.com/javaee/6/tutorial/doc/gkjbq.html
         Query q = getEntityManager().createQuery("SELECT e FROM "+entityName+" e WHERE e."+fieldName+" = :value");
-        q.setParameter("value", value);
-        //TODO: Find a better way to return intelligible SQL errors, rather than force the user to look through server logs.
+
+        //If the field chosen is some kind of foreign key, we must get that other entity first. 
+        if (entity.getAttribute(field).getPersistentAttributeType() != PersistentAttributeType.BASIC)
+        {
+            Class<?> otherEntityType = entity.getAttribute(field).getJavaType();
+            //System.out.println("other entity field: "+entity.getAttribute(field).getName());
+            //System.out.println("other entity type: "+otherEntityType.getName());
+            //Before we can search, we need to case "value" to the correct PK type.
+            Class<?> otherEntityIDType =  this.getEntityManager().getMetamodel().entity(otherEntityType).getIdType().getJavaType();
+            Object valueToSearch = null;
+            //If the othe entity ID field type is numeric, you MUST run the query with a Number object or you'll get a class-cast error because you can't cast
+            //from String to Integer, and it seems like the JRE doesn't try to do a parseInt for you, so the getNumericValue will try
+            //to parse the string into a number.
+            if (Number.class.isAssignableFrom(otherEntityIDType))
+            {
+                valueToSearch = getNumericValue(value, otherEntityIDType);
+            }
+            else
+            {
+                valueToSearch = otherEntityIDType.cast(value);
+            }
+            Object otherEntity = getEntityManager().find(otherEntityType,valueToSearch);
+            q.setParameter("value", otherEntity);
+        }
+        else
+        {
+            q.setParameter("value", value);
+        }
+        
         List<T> results = null;
         try
         {
@@ -173,6 +195,26 @@ public abstract class AbstractFacade<T> {
             throw new WebApplicationException(response);
         }
         return results; 
+    }
+
+    private Object getNumericValue(String value, Class<?> otherEntityIDType) {
+        Object numericValue = null;
+        for (Method parseMethod : otherEntityIDType.getMethods())
+        {
+            //It would be nice it java.lang.Number had a general "parse" or "tryParse" method, instead of needing me to 
+            //search for a parse* method and invoke that.
+            if (parseMethod.getName().startsWith("parse"))
+            {
+                try {
+                    numericValue = parseMethod.invoke(null, value);
+                    return numericValue;
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+        }
+        return numericValue;
     }
 
     public List<T> findAll() {

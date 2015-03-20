@@ -4,11 +4,10 @@
  */
 package io.seqware.webservice.generated.model;
 
-import java.io.Serializable;
-
 import io.seqware.webservice.adapter.IntegerAdapter;
 import io.seqware.webservice.annotations.ChildEntities;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;

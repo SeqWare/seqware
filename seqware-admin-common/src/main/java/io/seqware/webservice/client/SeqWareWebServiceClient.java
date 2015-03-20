@@ -126,23 +126,11 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
     	return Arrays.asList(samples);
     	
     }
-    
-/*    public Study createStudy(Study study) 
-    {
-        return this.getWebResource()
-                .path("createStudy")
-                .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
-                .post(Study.class,study);
-    }
 
-    public Lane createLane(Lane lane)
-    {
-    	return this.getWebResource()
-    	        .path("createAndReturn")
-    	        .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
-    	        .post(Lane.class,lane);
-    }
-*/    
+    /**
+     * Sets the "skip" field on an entity to TRUE
+     * @param entityId The Id of the entity to skip.
+     */
     public void skip(String entityId)
     {
         this.getWebResource()
@@ -151,6 +139,10 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
                 .post();
     }
 
+    /**
+     * Sets the "skip" field on an entity to FALSE.
+     * @param entityId The Id of the entity to un-skip.
+     */
     public void unskip(String entityId)
     {
         this.getWebResource()
@@ -159,19 +151,20 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
                 .post();
     }
     
-/*    public Experiment createExperiment(Experiment experiment)
-    {
-        return this.getWebResource()
-                .path("createAndReturn")
-                .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
-                .post(Experiment.class,experiment);
-    }
-*/
-    public <T extends Serializable> List<T> getEntitiesWhereFieldMatchesValue(final Class<T> clazz, String field, String value)
+    /**
+     * A generic method that will find some entity, where some field matches a given value. <br/>
+     * @param returnType The type of entity that will be returned.
+     * @param field The field to search on.
+     * @param value The value to match <em>field</em> to.
+     * @return A List of objects of <em>returnType</em>.<br/>
+     * Usage:<br/>
+     * <code>List&lt;Sample&gt; samples2 = sampleClient.&lt;Sample&gt;getEntitiesWhereFieldMatchesValue(Sample.class,"name", "Fifty");</code>
+     */
+    public <T extends Serializable> List<T> getEntitiesWhereFieldMatchesValue(final Class<T> returnType, String field, String value)
     {
         ParameterizedType parameterizedGenericType = new ParameterizedType() {
             public Type[] getActualTypeArguments() {
-                return new Type[] { clazz };
+                return new Type[] { returnType };
             }
 
             public Type getRawType() {
