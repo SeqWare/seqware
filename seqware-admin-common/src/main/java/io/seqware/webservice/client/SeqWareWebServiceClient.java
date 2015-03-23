@@ -17,7 +17,7 @@
 package io.seqware.webservice.client;
 
 import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
-import io.seqware.webservice.generated.controller.ModelAccessionIDTuple;
+import io.seqware.webservice.controller.ModelAccessionIDTuple;
 import io.seqware.webservice.generated.model.Processing;
 import io.seqware.webservice.generated.model.ProcessingFiles;
 import io.seqware.webservice.generated.model.Sample;
