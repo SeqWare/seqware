@@ -4,6 +4,8 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -36,8 +38,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.log4j.Logger;
 
@@ -177,6 +181,8 @@ public class Sample implements Serializable {
         this.createTstmp = createTstmp;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getSampleId() {
         return sampleId;
     }

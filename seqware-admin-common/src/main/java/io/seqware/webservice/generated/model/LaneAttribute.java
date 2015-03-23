@@ -102,7 +102,7 @@ public class LaneAttribute implements Serializable {
         return laneId;
     }
 
-    @ParentEntity
+    @ParentEntity(parentType = Lane.class)
     public void setLaneId(Lane laneId) {
         this.laneId = laneId;
     }

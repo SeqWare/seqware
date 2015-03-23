@@ -118,7 +118,7 @@ public class StudyAttribute implements Serializable {
         return studyId;
     }
    
-    @ParentEntity
+    @ParentEntity(parentType = Study.class)
     public void setStudyId(Study studyId) {
         this.studyId = studyId;
     }

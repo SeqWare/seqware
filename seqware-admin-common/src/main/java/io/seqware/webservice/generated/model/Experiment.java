@@ -176,9 +176,6 @@ public class Experiment implements Serializable {
     @OneToMany(mappedBy = "experimentId")
     private Collection<Sample> sampleCollection;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "experimentId")
-    private Collection<ExperimentLink> experimentLinkCollection;
-    
     public Experiment() {
     }
 
@@ -418,15 +415,6 @@ public class Experiment implements Serializable {
 
     public void setSampleCollection(Collection<Sample> sampleCollection) {
         this.sampleCollection = sampleCollection;
-    }
-
-    @XmlTransient
-    public Collection<ExperimentLink> getExperimentLinkCollection() {
-        return experimentLinkCollection;
-    }
-
-    public void setExperimentLinkCollection(Collection<ExperimentLink> experimentLinkCollection) {
-        this.experimentLinkCollection = experimentLinkCollection;
     }
 
     @Override

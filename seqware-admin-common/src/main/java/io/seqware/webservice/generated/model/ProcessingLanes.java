@@ -4,7 +4,10 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.annotations.ParentEntity;
+
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +20,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -113,10 +117,12 @@ public class ProcessingLanes implements Serializable {
         this.processingId = processingId;
     }
 
+    @XmlIDREF
     public Lane getLaneId() {
         return laneId;
     }
 
+    @ParentEntity(parentType = Lane.class)
     public void setLaneId(Lane laneId) {
         this.laneId = laneId;
     }

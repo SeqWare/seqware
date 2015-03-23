@@ -100,7 +100,7 @@ public class ExperimentAttribute implements Serializable {
         return experimentId;
     }
 
-    @ParentEntity
+    @ParentEntity(parentType = Experiment.class)
     public void setExperimentId(Experiment experimentId) {
         this.experimentId = experimentId;
     }

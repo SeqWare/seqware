@@ -4,6 +4,8 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.annotations.ParentEntity;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -27,6 +29,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -197,10 +200,12 @@ public class Ius implements Serializable {
         this.iusAttributeCollection = iusAttributeCollection;
     }
 
+    @XmlIDREF
     public Sample getSampleId() {
         return sampleId;
     }
 
+    @ParentEntity(parentType = Sample.class)
     public void setSampleId(Sample sampleId) {
         this.sampleId = sampleId;
     }
@@ -213,10 +218,12 @@ public class Ius implements Serializable {
         this.ownerId = ownerId;
     }
 
+    @XmlIDREF
     public Lane getLaneId() {
         return laneId;
     }
 
+    @ParentEntity(parentType = Lane.class)
     public void setLaneId(Lane laneId) {
         this.laneId = laneId;
     }
