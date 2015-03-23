@@ -16,8 +16,8 @@
  */
 package io.seqware.webservice.client;
 
-import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
 import io.seqware.webservice.controller.ModelAccessionIDTuple;
+import io.seqware.webservice.generated.client.SeqWareWebserviceClient;
 import io.seqware.webservice.generated.model.Processing;
 import io.seqware.webservice.generated.model.ProcessingFiles;
 import io.seqware.webservice.generated.model.Sample;
@@ -26,7 +26,6 @@ import io.seqware.webservice.generated.model.WorkflowRun;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -113,20 +112,13 @@ public class SeqWareWebServiceClient extends io.seqware.webservice.generated.cli
                 .post(responseType,entity);
     }
     
-    /**
-     * Gets samples, by name.
-     * @param name the name of the sample to search for.
-     * @return A list of samples whose name matches the input.
-     */
-    public Collection<Sample> getSamplesByName(String name)
-    {
-    	WebResource resource = getClient().resource(baseUri);
-    	ClientResponse response = resource.path(java.text.MessageFormat.format("io.seqware.webservice.model.sample/withName/{0}", name)).accept(javax.ws.rs.core.MediaType.APPLICATION_XML).get(ClientResponse.class);
-    	Sample[] samples = response.getEntity(Sample[].class);
-    	return Arrays.asList(samples);
-    	
+    public <T> T updateAndReturn(Class<T> responseType, T entity) {
+        return this.getWebResource()
+                .path("updateAndReturn")
+                .accept(javax.ws.rs.core.MediaType.APPLICATION_XML)
+                .post(responseType, entity);
     }
-
+    
     /**
      * Sets the "skip" field on an entity to TRUE
      * @param entityId The Id of the entity to skip.
