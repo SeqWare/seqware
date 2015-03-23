@@ -1,6 +1,7 @@
 package io.seqware.webservice.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -77,11 +78,56 @@ public class TestClient {
             experiment = experimentClient.createAndReturn(Experiment.class, experiment);
             System.out.println("Experiment ID: " + experiment.getExperimentId());
             System.out.println("attributes: " + experiment.getExperimentAttributeCollection());
+            for (ExperimentAttribute ea : experiment.getExperimentAttributeCollection())
+            {
+                System.out.println(ea + " tag: "+ea.getTag() + " val: "+ea.getValue());
+            }
         } catch (UniformInterfaceException e) {
             System.out.println("message: "+e.getMessage()+"\n\n");
             System.out.println("entity: "+e.getResponse().getEntity(String.class));
             e.printStackTrace();
         }
+        
+        experiment.setName("Updated Name");
+        experiment.setAlias("Updated Alias");
+        // To update child entities:
+        // 1) move them to a new data structure (if you can update the Collection in-place, that would probably work too, though I'm not sure it's possible). 
+        ExperimentAttribute[] tmpAttributeCollection = new ExperimentAttribute[experiment.getExperimentAttributeCollection().size()-1] ;
+        tmpAttributeCollection = experiment.getExperimentAttributeCollection().toArray(tmpAttributeCollection);
+        // 2) modify them
+        for (ExperimentAttribute ea : tmpAttributeCollection)
+        {
+            ea.setValue(ea.getValue() + " - updated");
+        }
+        // 3) move the new structure back into the main entity
+        experiment.setExperimentAttributeCollection( Arrays.asList(tmpAttributeCollection) );
+        System.out.println("Experiment attributes updated: ");
+        for (ExperimentAttribute ea : experiment.getExperimentAttributeCollection())
+        {
+            System.out.println(ea + " tag: "+ea.getTag() + " val: "+ea.getValue());
+        }
+        // 4) Update the entity
+        Experiment updatedExperiment = experimentClient.updateAndReturn(Experiment.class, experiment);
+        // 5) verification is below:
+        System.out.println(updatedExperiment.getName());
+        System.out.println(updatedExperiment.getAlias());
+        System.out.println(updatedExperiment.getExperimentId());
+        System.out.println(updatedExperiment.getExperimentAttributeCollection());
+        for (ExperimentAttribute ea : updatedExperiment.getExperimentAttributeCollection())
+        {
+            System.out.println(ea + " tag: "+ea.getTag() + " val: "+ea.getValue());
+        }
+        
+        Experiment retrievedExperiment = experimentClient.find_XML(Experiment.class, String.valueOf(experiment.getExperimentId()));
+        System.out.println(retrievedExperiment.getName());
+        System.out.println(retrievedExperiment.getAlias());
+        System.out.println(retrievedExperiment.getExperimentId());
+        System.out.println(retrievedExperiment.getExperimentAttributeCollection());
+        for (ExperimentAttribute ea : retrievedExperiment.getExperimentAttributeCollection())
+        {
+            System.out.println(ea + " tag: "+ea.getTag() + " val: "+ea.getValue());
+        }
+
     }
 
     private static void createLane() {
@@ -192,7 +238,7 @@ public class TestClient {
         String numSamples = sampleClient.countREST();
         System.out.println("Number of samples: " + numSamples);
 
-        List<Sample> samples = (List<Sample>) sampleClient.getSamplesByName("Fifty");
+        List<Sample> samples = (List<Sample>) getSamplesByName("Fifty");
         System.out.println(samples.size());
         System.out.println("Sample ID: " + samples.get(0).getSampleId());
 
@@ -208,5 +254,22 @@ public class TestClient {
         createStudy();
         createLane();
         createExperiment();
+        
+        //Demonstrate an error when you try to skip an entity that is not skippable.
+        try
+        {
+            clients.get("studytype").skip("1");
+        }
+        catch (UniformInterfaceException e)
+        {
+            System.out.println("Exception Message: "+e.getMessage());
+            System.out.println("Exception Response Entity: "+e.getResponse().getEntity(String.class));
+        }
+    }
+
+    private static List<Sample> getSamplesByName(String string)
+    {
+        List<Sample> samples = clients.get("sample").getEntitiesWhereFieldMatchesValue(Sample.class, "name", "Fifty");
+        return samples;
     }
 }
