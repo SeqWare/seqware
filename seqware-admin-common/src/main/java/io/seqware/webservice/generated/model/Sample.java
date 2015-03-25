@@ -5,6 +5,7 @@
 package io.seqware.webservice.generated.model;
 
 import io.seqware.webservice.adapter.IntegerAdapter;
+import io.seqware.webservice.annotations.ChildEntities;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -30,6 +31,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Persistence;
 import javax.persistence.PostLoad;
 import javax.persistence.Query;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -44,6 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.log4j.Logger;
+
+import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * 
@@ -77,10 +81,11 @@ import org.apache.log4j.Logger;
         @NamedQuery(name = "Sample.findBySwAccession", query = "SELECT s FROM Sample s WHERE s.swAccession = :swAccession"),
         @NamedQuery(name = "Sample.findByCreateTstmp", query = "SELECT s FROM Sample s WHERE s.createTstmp = :createTstmp"),
         @NamedQuery(name = "Sample.findByUpdateTstmp", query = "SELECT s FROM Sample s WHERE s.updateTstmp = :updateTstmp") })
-public class Sample implements Serializable {
+public class Sample implements Serializable, CycleRecoverable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="sample_sample_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="sample_sample_id_seq")
     @Basic(optional = false)
     @Column(name = "sample_id")
     private Integer sampleId;
@@ -142,13 +147,18 @@ public class Sample implements Serializable {
     @Column(name = "update_tstmp")
     @Version
     private Timestamp updateTstmp;
+    
     @JoinTable(name = "sample_hierarchy", joinColumns = { @JoinColumn(name = "parent_id", referencedColumnName = "sample_id") }, inverseJoinColumns = { @JoinColumn(name = "sample_id", referencedColumnName = "sample_id") })
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     private Collection<Sample> sampleCollection;
+    
+    //Rename to "parentSampleId"?
     @ManyToMany(mappedBy = "sampleCollection")
     private Collection<Sample> sampleCollection1;
+    
     @OneToMany(mappedBy = "sampleId")
     private Collection<Lane> laneCollection;
+    
     @JoinColumn(name = "owner_id", referencedColumnName = "registration_id")
     @ManyToOne
     private Registration ownerId;
@@ -160,14 +170,18 @@ public class Sample implements Serializable {
     private Experiment experimentId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sampleId")
     private Collection<Ius> iusCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sampleId")
     private Collection<ProcessingSamples> processingSamplesCollection;
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sampleId")
     private Collection<SampleAttribute> sampleAttributeCollection;
+    
     @OneToMany(mappedBy = "parentId")
-    private Collection<SampleRelationship> sampleRelationshipCollection;
+    private Collection<SampleRelationship> parentSampleRelationshipCollection;
+    
     @OneToMany(mappedBy = "childId")
-    private Collection<SampleRelationship> sampleRelationshipCollection1;
+    private Collection<SampleRelationship> childSampleRelationshipCollection;
 
     public Sample() {
     }
@@ -359,10 +373,12 @@ public class Sample implements Serializable {
         this.updateTstmp = updateTstmp;
     }
 
+    @ChildEntities(childType=Sample.class)
     public Collection<Sample> getSampleCollection() {
         return sampleCollection;
     }
 
+    //@ParentEntity(parentType=Sample.class)
     public void setSampleCollection(Collection<Sample> sampleCollection) {
         this.sampleCollection = sampleCollection;
     }
@@ -408,7 +424,8 @@ public class Sample implements Serializable {
         this.experimentId = experimentId;
     }
 
-    @XmlTransient
+    //@XmlTransient
+    @ChildEntities(childType=Ius.class)
     public Collection<Ius> getIusCollection() {
         return iusCollection;
     }
@@ -426,7 +443,7 @@ public class Sample implements Serializable {
         this.processingSamplesCollection = processingSamplesCollection;
     }
 
-    @XmlTransient
+    @ChildEntities(childType=SampleAttribute.class)
     public Collection<SampleAttribute> getSampleAttributeCollection() {
         return sampleAttributeCollection;
     }
@@ -436,21 +453,21 @@ public class Sample implements Serializable {
     }
 
     @XmlTransient
-    public Collection<SampleRelationship> getSampleRelationshipCollection() {
-        return sampleRelationshipCollection;
+    public Collection<SampleRelationship> getParentSampleRelationshipCollection() {
+        return parentSampleRelationshipCollection;
     }
 
-    public void setSampleRelationshipCollection(Collection<SampleRelationship> sampleRelationshipCollection) {
-        this.sampleRelationshipCollection = sampleRelationshipCollection;
+    public void setParentSampleRelationshipCollection(Collection<SampleRelationship> sampleRelationshipCollection) {
+        this.parentSampleRelationshipCollection = sampleRelationshipCollection;
     }
 
     @XmlTransient
-    public Collection<SampleRelationship> getSampleRelationshipCollection1() {
-        return sampleRelationshipCollection1;
+    public Collection<SampleRelationship> getChildSampleRelationshipCollection() {
+        return childSampleRelationshipCollection;
     }
 
-    public void setSampleRelationshipCollection1(Collection<SampleRelationship> sampleRelationshipCollection1) {
-        this.sampleRelationshipCollection1 = sampleRelationshipCollection1;
+    public void setChildSampleRelationshipCollection(Collection<SampleRelationship> sampleRelationshipCollection1) {
+        this.childSampleRelationshipCollection = sampleRelationshipCollection1;
     }
 
     @Override
@@ -478,6 +495,17 @@ public class Sample implements Serializable {
         return "io.seqware.webservice.model.Sample[ sampleId=" + sampleId + " ]";
     }
 
+    /**
+    * from http://wiki.eclipse.org/EclipseLink/Release/2.4.0/JAXB_RI_Extensions/Cycle_Recoverable
+    *
+    * @param cntxt
+    * @return
+    */
+    @Override
+    public Object onCycleDetected(Context cntxt) {
+        return this.getSampleId();
+    }
+    
     /**
      * For debugging (silly generated classes have no model base class) TODO: create a base class and fix this
      */
