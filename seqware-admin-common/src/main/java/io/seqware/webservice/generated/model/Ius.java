@@ -4,6 +4,7 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
 import io.seqware.webservice.annotations.ParentEntity;
 
 import java.io.Serializable;
@@ -23,15 +24,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * 
@@ -54,7 +58,8 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Ius implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="ius_ius_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="ius_id_seq")
     @Basic(optional = false)
     @Column(name = "ius_id")
     private Integer iusId;
@@ -110,6 +115,8 @@ public class Ius implements Serializable {
         this.createTstmp = createTstmp;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getIusId() {
         return iusId;
     }

@@ -40,6 +40,43 @@ public class TestClient {
         clients.put("lane", new SeqWareWebServiceClient("lane", URL));
         clients.put("experiment", new SeqWareWebServiceClient("experiment", URL));
     }
+    
+    private static void createSamples()
+    {
+        Sample rootSample = new Sample();
+        Sample childSample1 = new Sample();
+        Sample childSample2 = new Sample();
+        Sample grandchildSample = new Sample();
+        
+        rootSample.setName("Root Sample");
+        rootSample.setCreateTstmp(new Date());
+        rootSample.setAlias("The Root Sample Alias!");
+        rootSample.setCommonName("common name");
+        rootSample.setAnonymizedName("kjsdkjawe983298rvhq3");
+        rootSample.setDescription("Testing creation of sample hierarchies");
+
+        childSample1.setName("Child Sample 1");
+        childSample1.setCreateTstmp(new Date());
+        childSample2.setName("Child Sample 2");
+        childSample2.setCreateTstmp(new Date());
+        grandchildSample.setName("Grand child sample");
+        grandchildSample.setCreateTstmp(new Date());
+        
+        Collection<Sample> grandchildren = new ArrayList<Sample>(2);
+        grandchildren.add(grandchildSample);
+        
+        //Build up the relationships.
+        childSample2.setSampleCollection(grandchildren);
+
+        Collection<Sample> children = new ArrayList<Sample>(2);
+        children.add(childSample1);
+        children.add(childSample2);
+        
+        rootSample.setSampleCollection(children);
+        
+        Sample newSample = clients.get("sample").createAndReturn(Sample.class, rootSample);
+        System.out.println("Sample ID: "+newSample.getSampleId());
+    }
 
     private static void createExperiment() {
         Experiment experiment = new Experiment();
@@ -265,6 +302,8 @@ public class TestClient {
             System.out.println("Exception Message: "+e.getMessage());
             System.out.println("Exception Response Entity: "+e.getResponse().getEntity(String.class));
         }
+        
+        createSamples();
     }
 
     private static List<Sample> getSamplesByName(String string)
