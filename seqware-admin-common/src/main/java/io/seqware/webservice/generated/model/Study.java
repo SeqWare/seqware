@@ -38,6 +38,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 /**
  * 
  * @author boconnor
@@ -307,6 +309,7 @@ public class Study implements Serializable {
 
     @XmlElement
     @ChildEntities(tag="studyAttributes", childType=StudyAttribute.class)
+    @JsonManagedReference
     public Collection<StudyAttribute> getStudyAttributeCollection() {
         return studyAttributeCollection;
     }

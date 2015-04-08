@@ -46,6 +46,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import com.sun.xml.bind.CycleRecoverable;
 
@@ -150,14 +152,14 @@ public class Sample implements Serializable, CycleRecoverable {
     
     @JoinTable(name = "sample_hierarchy", joinColumns = { @JoinColumn(name = "parent_id", referencedColumnName = "sample_id") }, inverseJoinColumns = { @JoinColumn(name = "sample_id", referencedColumnName = "sample_id") })
     @ManyToMany(cascade=CascadeType.ALL)
-    private Collection<Sample> sampleCollection;
+    private Collection<Sample> childSamples;
     
     //Rename to "parentSampleId"?
-    @ManyToMany(mappedBy = "sampleCollection")
-    private Collection<Sample> sampleCollection1;
+    @ManyToMany(mappedBy = "childSamples")
+    private Collection<Sample> parentSamples;
     
-    @OneToMany(mappedBy = "sampleId")
-    private Collection<Lane> laneCollection;
+//    @OneToMany(mappedBy = "sampleId")
+//    private Collection<Lane> laneCollection;
     
     @JoinColumn(name = "owner_id", referencedColumnName = "registration_id")
     @ManyToOne
@@ -168,8 +170,8 @@ public class Sample implements Serializable, CycleRecoverable {
     @JoinColumn(name = "experiment_id", referencedColumnName = "experiment_id")
     @ManyToOne
     private Experiment experimentId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sampleId")
-    private Collection<Ius> iusCollection;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sampleId")
+//    private Collection<Ius> iusCollection;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sampleId")
     private Collection<ProcessingSamples> processingSamplesCollection;
@@ -197,6 +199,7 @@ public class Sample implements Serializable, CycleRecoverable {
 
     @XmlID
     @XmlJavaTypeAdapter(value=IntegerAdapter.class)
+    @JsonBackReference
     public Integer getSampleId() {
         return sampleId;
     }
@@ -374,32 +377,35 @@ public class Sample implements Serializable, CycleRecoverable {
     }
 
     @ChildEntities(childType=Sample.class)
-    public Collection<Sample> getSampleCollection() {
-        return sampleCollection;
+    @JsonManagedReference
+    public Collection<Sample> getChildSamples() {
+        return childSamples;
     }
 
     //@ParentEntity(parentType=Sample.class)
-    public void setSampleCollection(Collection<Sample> sampleCollection) {
-        this.sampleCollection = sampleCollection;
+    public void setChildSamples(Collection<Sample> sampleCollection) {
+        this.childSamples = sampleCollection;
     }
 
-    public Collection<Sample> getSampleCollection1() {
-        return sampleCollection1;
+    @JsonManagedReference
+    public Collection<Sample> getParentSamples() {
+        return parentSamples;
     }
 
-    public void setSampleCollection1(Collection<Sample> sampleCollection1) {
-        this.sampleCollection1 = sampleCollection1;
+    public void setParentSamples(Collection<Sample> sampleCollection1) {
+        this.parentSamples = sampleCollection1;
     }
 
-    @XmlTransient
-    public Collection<Lane> getLaneCollection() {
-        return laneCollection;
-    }
+//    @XmlTransient
+//    public Collection<Lane> getLaneCollection() {
+//        return laneCollection;
+//    }
+//
+//    public void setLaneCollection(Collection<Lane> laneCollection) {
+//        this.laneCollection = laneCollection;
+//    }
 
-    public void setLaneCollection(Collection<Lane> laneCollection) {
-        this.laneCollection = laneCollection;
-    }
-
+    @JsonBackReference
     public Registration getOwnerId() {
         return ownerId;
     }
@@ -408,6 +414,7 @@ public class Sample implements Serializable, CycleRecoverable {
         this.ownerId = ownerId;
     }
 
+    @JsonBackReference
     public Organism getOrganismId() {
         return organismId;
     }
@@ -416,6 +423,7 @@ public class Sample implements Serializable, CycleRecoverable {
         this.organismId = organismId;
     }
 
+    @JsonBackReference
     public Experiment getExperimentId() {
         return experimentId;
     }
@@ -424,15 +432,15 @@ public class Sample implements Serializable, CycleRecoverable {
         this.experimentId = experimentId;
     }
 
-    //@XmlTransient
-    @ChildEntities(childType=Ius.class)
-    public Collection<Ius> getIusCollection() {
-        return iusCollection;
-    }
-
-    public void setIusCollection(Collection<Ius> iusCollection) {
-        this.iusCollection = iusCollection;
-    }
+//    //@XmlTransient
+//    @ChildEntities(childType=Ius.class)
+//    public Collection<Ius> getIusCollection() {
+//        return iusCollection;
+//    }
+//
+//    public void setIusCollection(Collection<Ius> iusCollection) {
+//        this.iusCollection = iusCollection;
+//    }
 
     @XmlTransient
     public Collection<ProcessingSamples> getProcessingSamplesCollection() {
@@ -444,6 +452,7 @@ public class Sample implements Serializable, CycleRecoverable {
     }
 
     @ChildEntities(childType=SampleAttribute.class)
+    @JsonManagedReference
     public Collection<SampleAttribute> getSampleAttributeCollection() {
         return sampleAttributeCollection;
     }
@@ -530,7 +539,7 @@ public class Sample implements Serializable, CycleRecoverable {
         Long firstResult = (Long) query.getSingleResult();
         if (firstResult != null && firstResult > 0) {
             Logger.getLogger(Sample.class).info(this.getSampleId() + ": Found root sample flag");
-            this.getSampleCollection1().add(null);
+            this.getParentSamples().add(null);
             return;
         }
         Logger.getLogger(Sample.class).info(this.getSampleId() + ": Did not find root sample flag");

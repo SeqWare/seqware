@@ -37,6 +37,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 /**
  * 
  * @author boconnor
@@ -408,6 +410,7 @@ public class Experiment implements Serializable {
         this.processingExperimentsCollection = processingExperimentsCollection;
     }
 
+    @JsonManagedReference
     @XmlTransient
     public Collection<Sample> getSampleCollection() {
         return sampleCollection;

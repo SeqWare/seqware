@@ -28,6 +28,8 @@ import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+
 /**
  * 
  * @author boconnor
@@ -114,6 +116,7 @@ public class SampleAttribute implements Serializable {
     }
 
     @XmlIDREF
+    @JsonBackReference
     public Sample getSampleId() {
         return sampleId;
     }

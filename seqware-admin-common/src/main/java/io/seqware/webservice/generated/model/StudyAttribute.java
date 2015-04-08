@@ -25,6 +25,8 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+
 /**
  * 
  * @author boconnor
@@ -114,6 +116,7 @@ public class StudyAttribute implements Serializable {
     }
 
     @XmlIDREF
+    @JsonBackReference
     public Study getStudyId() {
         return studyId;
     }

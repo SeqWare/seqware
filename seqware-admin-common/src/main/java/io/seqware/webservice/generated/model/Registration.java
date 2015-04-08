@@ -7,6 +7,7 @@ package io.seqware.webservice.generated.model;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,6 +25,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 /**
  * 
@@ -360,6 +363,7 @@ public class Registration implements Serializable {
         this.shareWorkflowRunCollection = shareWorkflowRunCollection;
     }
 
+    @JsonManagedReference
     @XmlTransient
     public Collection<Sample> getSampleCollection() {
         return sampleCollection;
