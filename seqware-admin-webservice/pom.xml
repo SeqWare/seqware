@@ -54,11 +54,87 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>seqware-meta-db</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+            	<exclusion>
+                	<groupId>org.slf4j</groupId>
+                	<artifactId>slf4j-api</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
+        <dependency>
+        	<groupId>com.wordnik</groupId>
+        	<artifactId>swagger-annotations</artifactId>
+        	<version>1.5.3-M1</version>
+        </dependency>
+        <dependency>
+		  <groupId>com.wordnik</groupId>
+		  <artifactId>swagger-jersey-jaxrs</artifactId>
+		  <version>1.5.3-M1</version>
+		  <exclusions>
+		  	<exclusion>
+		  		<groupId>com.wordnik</groupId>
+		  		<artifactId>swagger-annotations</artifactId>
+		  	</exclusion>
+		  	<exclusion>
+		  		<groupId>com.sun.jersey</groupId>
+		  		<artifactId>jersey-core</artifactId>
+		  	</exclusion>
+		  	<exclusion>
+		  		<groupId>com.sun.jersey</groupId>
+		  		<artifactId>jersey-server</artifactId>
+		  	</exclusion>
+		  	<exclusion>
+		  		<groupId>com.sun.jersey</groupId>
+		  		<artifactId>jersey-client</artifactId>
+		  	</exclusion>
+		  	<exclusion>
+		  		<groupId>com.sun.jersey.contribs</groupId>
+		  		<artifactId>jersey-multipart</artifactId>
+		  	</exclusion>
+		  </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>com.wordnik</groupId>
+			<artifactId>swagger-core</artifactId>
+			<version>1.5.3-M1</version>
+	 		<exclusions>
+	 			<exclusion>
+					<artifactId>joda-time</artifactId>
+					<groupId>joda-time</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-annotations</artifactId>
+					<groupId>com.fasterxml.jackson.core</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>validation-api</artifactId>
+					<groupId>javax.validation</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-annotations</artifactId>
+					<groupId>com.fasterxml.jackson.datatype</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>seqware-admin-common</artifactId>
 			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
         <dependency>
             <artifactId>bean-validator</artifactId>
@@ -83,6 +159,11 @@
             <version>6.0</version>
             <scope>provided</scope>
        </dependency>
+		<dependency>
+		    <groupId>org.jboss.spec.javax.ejb</groupId>
+		    <artifactId>jboss-ejb-api_3.2_spec</artifactId>
+		    <version>1.0.0.Final</version>
+		</dependency>		 
        <dependency>
             <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
             <artifactId>jersey-gf-server</artifactId>
@@ -99,16 +180,12 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-		 <dependency>
-		  <groupId>log4j</groupId>
-		  <artifactId>log4j</artifactId>
-		</dependency>
     </dependencies>
 
     <build>
     	<resources>
     		<resource>
-    			<directory>src/main/resources</directory>
+    			<directory>${basedir}/src/main/resources</directory>
     			<filtering>true</filtering>
     		</resource>
     	</resources>
@@ -256,6 +333,36 @@
                     <forkMode>pertest</forkMode>
                 </configuration>
             </plugin>
+	        <plugin>
+	          <groupId>com.github.kongchen</groupId>
+	          <artifactId>swagger-maven-plugin</artifactId>
+	          <version>3.0-M1</version>
+	          <configuration>
+	            <apiSources>
+	              <apiSource>
+	                <locations>io.seqware.webservice.controller;io.seqware.webservice.generated.controller</locations>
+	                <basePath>http://localhost:38080/seqware-admin-webservice/webresources</basePath>
+	                <swaggerDirectory>${basedir}/src/main/webapp/generated/swagger-ui</swaggerDirectory>
+	                <!-- <supportSpringMvc>false</supportSpringMvc> -->
+	                <apiInfo>
+	                	<title>Seqware Admin Webservice</title>
+	                	<description>Seqware Admin Webservice</description>
+	                </apiInfo>
+	                <!-- <outputTemplate>src/main/resources/html.mustache</outputTemplate> -->
+        			<!-- <mustacheFileRoot>${basedir}/src/main/resources/</mustacheFileRoot> -->
+        			<outputPath>${basedir}/generated/document.html</outputPath>
+	              </apiSource>
+	            </apiSources>
+	          </configuration>
+	          <executions>
+	            <execution>
+	              <phase>process-classes</phase>
+	                <goals>
+	                  <goal>generate</goal>
+	                </goals>
+	            </execution>
+	          </executions>
+	        </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
