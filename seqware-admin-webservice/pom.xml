@@ -153,12 +153,12 @@
             <artifactId>jersey-multipart</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <!-- <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
-       </dependency>
+       </dependency> -->
 		<dependency>
 		    <groupId>org.jboss.spec.javax.ejb</groupId>
 		    <artifactId>jboss-ejb-api_3.2_spec</artifactId>

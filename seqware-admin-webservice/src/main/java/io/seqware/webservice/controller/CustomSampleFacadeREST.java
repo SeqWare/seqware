@@ -22,6 +22,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import com.sun.jersey.api.ConflictException;
+import com.wordnik.swagger.annotations.Api;
 //import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
@@ -30,7 +31,7 @@ import com.wordnik.swagger.annotations.ApiOperation;
  * @author dyuen
  */
 @Stateless
-//@Api(value="/io.seqware.webservice.model.sample")
+@Api(value="/io.seqware.webservice.model.sample")
 @Path("io.seqware.webservice.model.sample")
 public class CustomSampleFacadeREST extends SampleFacadeREST {
     
@@ -41,6 +42,7 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
      * @param id
      * @return 
      */
+    @ApiOperation(value="Create a null hierarchy of samples")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     @PUT
     @Path("{id}/createNullHierarchy")

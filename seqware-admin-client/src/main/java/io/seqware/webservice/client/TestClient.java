@@ -66,13 +66,13 @@ public class TestClient {
         grandchildren.add(grandchildSample);
         
         //Build up the relationships.
-        childSample2.setSampleCollection(grandchildren);
+        childSample2.setChildSamples(grandchildren);
 
         Collection<Sample> children = new ArrayList<Sample>(2);
         children.add(childSample1);
         children.add(childSample2);
         
-        rootSample.setSampleCollection(children);
+        rootSample.setChildSamples(children);
         
         Sample newSample = clients.get("sample").createAndReturn(Sample.class, rootSample);
         System.out.println("Sample ID: "+newSample.getSampleId());

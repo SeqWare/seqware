@@ -5,7 +5,9 @@
 package io.seqware.webservice.generated.controller;
 
 import io.seqware.webservice.generated.model.Workflow;
+
 import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,6 +19,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+
+import com.wordnik.swagger.annotations.ApiOperation;
 
 /**
  * 
@@ -54,6 +58,7 @@ public class WorkflowFacadeREST extends AbstractFacade<Workflow> {
 
     @GET
     @Path("{id}")
+    @ApiOperation(value="Finds a workflow by ID")
     @Produces({ "application/xml", "application/json" })
     public Workflow find(@PathParam("id") Integer id) {
         return super.find(id);
