@@ -184,23 +184,27 @@ public abstract class AbstractFacade<T> {
             //Before we can search, we need to case "value" to the correct PK type.
             Class<?> otherEntityIDType =  this.getEntityManager().getMetamodel().entity(otherEntityType).getIdType().getJavaType();
             Object valueToSearch = null;
-            //If the othe entity ID field type is numeric, you MUST run the query with a Number object or you'll get a class-cast error because you can't cast
+            //If the other entity ID field type is numeric, you MUST run the query with a Number object or you'll get a class-cast error because you can't cast
             //from String to Integer, and it seems like the JRE doesn't try to do a parseInt for you, so the getNumericValue will try
             //to parse the string into a number.
-            if (Number.class.isAssignableFrom(otherEntityIDType))
-            {
-                valueToSearch = getNumericValue(value, otherEntityIDType);
-            }
-            else
-            {
-                valueToSearch = otherEntityIDType.cast(value);
-            }
+            valueToSearch = handlePossibleNumericField(value, otherEntityIDType);
             Object otherEntity = getEntityManager().find(otherEntityType,valueToSearch);
             q.setParameter("value", otherEntity);
         }
         else
         {
-            q.setParameter("value", value);
+            Object valueToSearch = null;
+            Class<?> valueType =  this.getEntityManager().getMetamodel().entity(this.entityClass).getAttribute(fieldName).getJavaType();
+            /*if (Number.class.isAssignableFrom(valueType))
+            {
+                valueToSearch = getNumericValue(value, valueType);
+            }
+            else
+            {
+                valueToSearch = valueType.cast(value);
+            }*/
+            valueToSearch = handlePossibleNumericField(value, valueType);
+            q.setParameter("value", valueToSearch);
         }
         
         List<T> results = null;
@@ -216,9 +220,22 @@ public abstract class AbstractFacade<T> {
         return results; 
     }
 
-    private Object getNumericValue(String value, Class<?> otherEntityIDType) {
+    private Object handlePossibleNumericField(String value, Class<?> fieldType) {
+        Object valueToSearch;
+        if (Number.class.isAssignableFrom(fieldType))
+        {
+            valueToSearch = getNumericValue(value, fieldType);
+        }
+        else
+        {
+            valueToSearch = fieldType.cast(value);
+        }
+        return valueToSearch;
+    }
+
+    private Object getNumericValue(String value, Class<?> idType) {
         Object numericValue = null;
-        for (Method parseMethod : otherEntityIDType.getMethods())
+        for (Method parseMethod : idType.getMethods())
         {
             //It would be nice it java.lang.Number had a general "parse" or "tryParse" method, instead of needing me to 
             //search for a parse* method and invoke that.
