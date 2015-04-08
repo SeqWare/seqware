@@ -22,12 +22,15 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import com.sun.jersey.api.ConflictException;
+//import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 
 /**
  * 
  * @author dyuen
  */
 @Stateless
+//@Api(value="/io.seqware.webservice.model.sample")
 @Path("io.seqware.webservice.model.sample")
 public class CustomSampleFacadeREST extends SampleFacadeREST {
     
@@ -85,6 +88,7 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
      * @param name
      * @return
      */
+    @ApiOperation(value="Find a sample by name.")
     @Path("withName/{name}")
     @GET
     @Produces({ "application/xml" })
@@ -101,6 +105,7 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
      * @param name
      * @return
      */
+    @ApiOperation(value="Find the number of samples with the same name.")
     @Path("numberWithName/{name}")
     @GET
     public String countByName(@PathParam("name") String name)

@@ -27,6 +27,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.wordnik.swagger.annotations.ApiOperation;
+
 /**
  * 
  * @author boconnor
@@ -51,7 +53,8 @@ public abstract class AbstractFacade<T> {
     public void edit(T entity) {
         getEntityManager().merge(entity);
     }
-    
+   
+    @ApiOperation(value="Update and return an entity")
     @Path("/updateAndReturn")
     @POST
     @Consumes({ "application/xml", "application/json" })
@@ -84,6 +87,7 @@ public abstract class AbstractFacade<T> {
      * @param entity
      * @return
      */
+    @ApiOperation(value="Creates and returns an entity.")
     @Path("/createAndReturn")
     @POST
     @Consumes({ "application/xml", "application/json" })
@@ -120,6 +124,8 @@ public abstract class AbstractFacade<T> {
                                 //TODO: It would be nice if I could use childType here instead of Object.
                                 for (Object child : children)
                                 {
+                                    System.out.println(setParentMethod.getName());
+                                    System.out.println(setParentMethod.getParameterTypes()[0].getName());
                                     setParentMethod.invoke(child, entity);
                                     this.getEntityManager().persist(child);
                                 }
@@ -139,6 +145,7 @@ public abstract class AbstractFacade<T> {
             for (ConstraintViolation<?> e1 : e.getConstraintViolations()) {
                 errMsg += e1.getMessage() +"; "+ e1.getPropertyPath();
             }
+            System.err.println(errMsg);
             Response response = Response.status(Status.INTERNAL_SERVER_ERROR).entity(errMsg).build();
             throw new WebApplicationException(response);
         }
@@ -151,6 +158,7 @@ public abstract class AbstractFacade<T> {
      * @param value
      * @return
      */
+    @ApiOperation(value="Search for an entity where a epcific field matches a specific value", response=List.class)
     @Path("/where/{field}/matches/{value}")
     @GET
     @Produces({ "application/xml", "application/json" })

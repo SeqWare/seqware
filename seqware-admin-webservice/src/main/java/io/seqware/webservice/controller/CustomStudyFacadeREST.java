@@ -16,14 +16,19 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+
 /**
  * 
  * @author dyuen
  */
 @Stateless
+@Api(value="/io.seqware.webservice.model.study")
 @Path("io.seqware.webservice.model.study")
 public class CustomStudyFacadeREST extends StudyFacadeREST {
 	
+        @ApiOperation(value="Creates a study")
 	@Path("/createStudy")
 	@POST
 	@Consumes({ javax.ws.rs.core.MediaType.APPLICATION_JSON, javax.ws.rs.core.MediaType.APPLICATION_XML })

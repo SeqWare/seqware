@@ -16,8 +16,6 @@
  */
 package io.seqware.webservice.controller;
 
-import com.sun.jersey.api.ConflictException;
-import com.sun.jersey.api.NotFoundException;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.webservice.generated.controller.WorkflowRunFacadeREST;
 import io.seqware.webservice.generated.model.File;
@@ -30,9 +28,11 @@ import io.seqware.webservice.generated.model.ProcessingIus;
 import io.seqware.webservice.generated.model.ProcessingRelationship;
 import io.seqware.webservice.generated.model.SequencerRun;
 import io.seqware.webservice.generated.model.WorkflowRun;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -45,12 +45,16 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import com.sun.jersey.api.ConflictException;
+import com.sun.jersey.api.NotFoundException;
+
 /**
  * 
  * @author dyuen
  */
 @Stateless
 @Path("io.seqware.webservice.model.workflowrun")
+//@Api
 public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
 
     /**

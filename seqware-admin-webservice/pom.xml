@@ -341,7 +341,7 @@
 	            <apiSources>
 	              <apiSource>
 	                <locations>io.seqware.webservice.controller;io.seqware.webservice.generated.controller</locations>
-	                <basePath>http://localhost:38080/seqware-admin-webservice/webresources</basePath>
+	                <basePath>/seqware-admin-webservice/webresources</basePath>
 	                <swaggerDirectory>${basedir}/src/main/webapp/generated/swagger-ui</swaggerDirectory>
 	                <!-- <supportSpringMvc>false</supportSpringMvc> -->
 	                <apiInfo>
