@@ -49,12 +49,15 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * 
  * @author boconnor
  */
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="sampleId")
 @Entity
 @Table(name = "sample")
 @XmlRootElement
@@ -199,7 +202,7 @@ public class Sample implements Serializable, CycleRecoverable {
 
     @XmlID
     @XmlJavaTypeAdapter(value=IntegerAdapter.class)
-    @JsonBackReference
+    @JsonBackReference(value="parentSample")
     public Integer getSampleId() {
         return sampleId;
     }
@@ -377,21 +380,23 @@ public class Sample implements Serializable, CycleRecoverable {
     }
 
     @ChildEntities(childType=Sample.class)
-    @JsonManagedReference
+    @JsonManagedReference("parentSample")
     public Collection<Sample> getChildSamples() {
         return childSamples;
     }
 
     //@ParentEntity(parentType=Sample.class)
+    @JsonManagedReference("parentSample")
     public void setChildSamples(Collection<Sample> sampleCollection) {
         this.childSamples = sampleCollection;
     }
 
-    @JsonManagedReference
+    @JsonManagedReference("parentSample")
     public Collection<Sample> getParentSamples() {
         return parentSamples;
     }
 
+    @JsonManagedReference("parentSample")
     public void setParentSamples(Collection<Sample> sampleCollection1) {
         this.parentSamples = sampleCollection1;
     }

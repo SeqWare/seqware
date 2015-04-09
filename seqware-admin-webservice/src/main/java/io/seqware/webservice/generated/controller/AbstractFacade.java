@@ -179,8 +179,6 @@ public abstract class AbstractFacade<T> {
         if (entity.getAttribute(field).getPersistentAttributeType() != PersistentAttributeType.BASIC)
         {
             Class<?> otherEntityType = entity.getAttribute(field).getJavaType();
-            //System.out.println("other entity field: "+entity.getAttribute(field).getName());
-            //System.out.println("other entity type: "+otherEntityType.getName());
             //Before we can search, we need to case "value" to the correct PK type.
             Class<?> otherEntityIDType =  this.getEntityManager().getMetamodel().entity(otherEntityType).getIdType().getJavaType();
             Object valueToSearch = null;
@@ -195,14 +193,7 @@ public abstract class AbstractFacade<T> {
         {
             Object valueToSearch = null;
             Class<?> valueType =  this.getEntityManager().getMetamodel().entity(this.entityClass).getAttribute(fieldName).getJavaType();
-            /*if (Number.class.isAssignableFrom(valueType))
-            {
-                valueToSearch = getNumericValue(value, valueType);
-            }
-            else
-            {
-                valueToSearch = valueType.cast(value);
-            }*/
+            
             valueToSearch = handlePossibleNumericField(value, valueType);
             q.setParameter("value", valueToSearch);
         }

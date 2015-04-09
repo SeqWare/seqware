@@ -7,23 +7,18 @@ package io.seqware.webservice.controller;
 import io.seqware.webservice.generated.controller.SampleFacadeREST;
 import io.seqware.webservice.generated.model.Sample;
 
-import java.util.Collection;
-
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 
 import com.sun.jersey.api.ConflictException;
 import com.wordnik.swagger.annotations.Api;
-//import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 
 /**
@@ -84,59 +79,4 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
             throw new ConflictException("could not remove null parent hierarchy relationship");
         }
     }
-
-    /**
-     * Get samples where the samples' name matches "name"
-     * @param name
-     * @return
-     */
-    @ApiOperation(value="Find a sample by name.")
-    @Path("withName/{name}")
-    @GET
-    @Produces({ "application/xml" })
-    public Collection<Sample> getByName(@PathParam("name") String name)
-    {
-    	Query q = super.getEntityManager().createNamedQuery("Sample.findByName");
-    	q.setParameter("name", name);
-    	Collection<Sample> samples = q.getResultList();
-    	return samples;
-    }
-
-    /**
-     * Get the number of samples whose name matches "name"
-     * @param name
-     * @return
-     */
-    @ApiOperation(value="Find the number of samples with the same name.")
-    @Path("numberWithName/{name}")
-    @GET
-    public String countByName(@PathParam("name") String name)
-    {
-    	Query q = super.getEntityManager().createNamedQuery("Sample.findByName");
-    	q.setParameter("name", name);
-    	Collection<Sample> samples = q.getResultList();
-    	return String.valueOf(samples!=null?samples.size():0);
-    }
-    
-    @Path("create")
-    @Consumes({ "application/xml", "application/json" })
-    @Produces({ "application/xml" })
-    public Sample createNewSample() {
-    	
-    	Sample s = new Sample();
-    	//TODO: Add code to persist sample attributes
-    	super.create(s);
-    	
-    	return null;
-    }
-    
-/*    @Path("where/{field}/matches/{value}")
-    @GET
-    @Produces({ "application/xml", "application/json" })
-    @Override
-    public List<Sample> findByField(@PathParam("field") String field, @PathParam("value") String value)
-    {
-        return super.findByField(field, value);
-    }*/
-    
 }
