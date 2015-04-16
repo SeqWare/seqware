@@ -5,7 +5,9 @@
 package io.seqware.webservice.generated.controller;
 
 import io.seqware.webservice.generated.model.Sample;
+
 import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,7 +19,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+
 import org.apache.log4j.Logger;
+
+import com.wordnik.swagger.annotations.ApiOperation;
 
 /**
  * 
@@ -60,6 +65,7 @@ public class SampleFacadeREST extends AbstractFacade<Sample> {
     @GET
     @Path("{id}")
     @Produces({ "application/xml", "application/json" })
+    @ApiOperation(value="Find an entity by its primary key.",hidden=false, tags={"Generic find by ID"})
     public Sample find(@PathParam("id") Integer id) {
       Sample find = super.find(id);
       if (Logger.getLogger(Sample.class).isDebugEnabled()){

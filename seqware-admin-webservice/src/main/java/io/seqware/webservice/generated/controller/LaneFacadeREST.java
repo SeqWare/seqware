@@ -20,6 +20,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import com.wordnik.swagger.annotations.ApiOperation;
+
 /**
  * 
  * @author boconnor
@@ -57,6 +59,7 @@ public class LaneFacadeREST extends AbstractFacade<Lane> {
     @GET
     @Path("{id}")
     @Produces({ "application/xml", "application/json" })
+    @ApiOperation(value="Find an entity by its primary key.",hidden=false, tags={"Generic find by ID"})
     public Lane find(@PathParam("id") Integer id) {
         return super.find(id);
     }

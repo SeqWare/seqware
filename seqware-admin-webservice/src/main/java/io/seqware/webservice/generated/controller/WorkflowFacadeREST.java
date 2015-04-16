@@ -58,8 +58,8 @@ public class WorkflowFacadeREST extends AbstractFacade<Workflow> {
 
     @GET
     @Path("{id}")
-    @ApiOperation(value="Finds a workflow by ID")
     @Produces({ "application/xml", "application/json" })
+    @ApiOperation(value="Find an entity by its primary key.",hidden=false, tags={"Generic find by ID"})
     public Workflow find(@PathParam("id") Integer id) {
         return super.find(id);
     }

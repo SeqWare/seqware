@@ -5,7 +5,9 @@
 package io.seqware.webservice.generated.controller;
 
 import io.seqware.webservice.generated.model.ExpenseAttribute;
+
 import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

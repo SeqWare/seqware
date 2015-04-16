@@ -28,6 +28,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 
 /**
  * 
@@ -54,12 +55,12 @@ public abstract class AbstractFacade<T> {
         getEntityManager().merge(entity);
     }
    
-    @ApiOperation(value="Update and return an entity")
+    @ApiOperation(value="Update and return an entity", tags={"Generic update method"})
     @Path("/updateAndReturn")
     @POST
     @Consumes({ "application/xml", "application/json" })
     @Produces({ "application/xml" })
-    public T updateAndReturn(T entity)
+    public T updateAndReturn(@ApiParam T entity)
     {
         return this.getEntityManager().merge(entity);
     }
@@ -87,12 +88,13 @@ public abstract class AbstractFacade<T> {
      * @param entity
      * @return
      */
-    @ApiOperation(value="Creates and returns an entity.")
+    @ApiOperation(value="Creates and returns an entity.",tags={ "Generic creation method"})
     @Path("/createAndReturn")
     @POST
     @Consumes({ "application/xml", "application/json" })
-    @Produces({ "application/xml" })
-    public T createAndReturn(T entity)
+    @Produces({ "application/xml", "application/json" })
+    //@TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public T createAndReturn(@ApiParam T entity)
     {
         //save the given entity into the database
         try {
@@ -158,7 +160,7 @@ public abstract class AbstractFacade<T> {
      * @param value
      * @return
      */
-    @ApiOperation(value="Search for an entity where a epcific field matches a specific value", response=List.class)
+    @ApiOperation(value="Search for an entity where a epcific field matches a specific value", response=List.class, tags={ "Generic search method"})
     @Path("/where/{field}/matches/{value}")
     @GET
     @Produces({ "application/xml", "application/json" })
@@ -257,7 +259,9 @@ public abstract class AbstractFacade<T> {
         if (this.entityIDFieldName == null || this.entityIDFieldName.equals("")) this.entityIDFieldName = this.getEntityIDFieldName();
     }
     
+    //TODO: Skip may also need to create a "skip reason" attribute associated with the skipped entity. Also need to know if that should be deleted when unskipping and entity.
     @Path("/skip/{id}")
+    @ApiOperation(value="Set an entity to be \"skipped\"", tags={ "Generic (un)skip method" })
     @POST
     public void skip(@PathParam("id") String id) {
         // first check to see if this is a skippable entity.
@@ -278,6 +282,7 @@ public abstract class AbstractFacade<T> {
     }
 
     @Path("/unskip/{id}")
+    @ApiOperation(value="Set an entity to be \"unskipped\"", tags={"Generic (un)skip method"})
     @POST
     public void unskip(@PathParam("id") String id) {
         if (this.entityClass.isAnnotationPresent(io.seqware.webservice.annotations.SkippableEntity.class)) {

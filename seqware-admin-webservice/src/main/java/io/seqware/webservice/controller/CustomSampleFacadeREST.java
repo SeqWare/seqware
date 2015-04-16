@@ -58,6 +58,7 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
         }
     }
 
+    @ApiOperation(value="Remove a null hierarchy.")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     @DELETE
     @Path("{id}/removeNullHierarchy")
