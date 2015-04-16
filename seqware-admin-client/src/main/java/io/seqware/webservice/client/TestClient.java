@@ -20,6 +20,8 @@ import io.seqware.webservice.generated.model.Sample;
 import io.seqware.webservice.generated.model.Study;
 import io.seqware.webservice.generated.model.StudyAttribute;
 import io.seqware.webservice.generated.model.StudyType;
+import io.seqware.webservice.generated.model.Workflow;
+import io.seqware.webservice.generated.model.WorkflowRun;
 
 public class TestClient {
     private static String URL = "http://localhost:38080/seqware-admin-webservice/webresources";
@@ -27,6 +29,15 @@ public class TestClient {
     private static Map<String, SeqWareWebServiceClient> clients = new HashMap<String, SeqWareWebServiceClient>();
     private static Map<ClientKeys, SeqWareWebServiceClient> _clients = new HashMap<ClientKeys, SeqWareWebServiceClient>();
 
+    /*
+     * TODO Examples:
+     *  - Function: Get All Samples for a Study (via Study -> Experiment -> Sample )
+     *  - Function: Get all Files for a Study (or all Samples in a Study)
+     *  - Create Workflow, Workflow Run with associated Processing records; chain of connected Workflow Runs
+     *  - Authentication for "risky" operations (create/update/deletion) - in the server side. 
+     *  - Validate entities for null (and other) issues before sending to service? 
+     */
+    
     enum ClientKeys {
         lane, experiment, workflow, sample, study, studytype, registration
     }
@@ -39,6 +50,7 @@ public class TestClient {
         clients.put("registration", new SeqWareWebServiceClient("registration", URL));
         clients.put("lane", new SeqWareWebServiceClient("lane", URL));
         clients.put("experiment", new SeqWareWebServiceClient("experiment", URL));
+        clients.put("workflowrun", new SeqWareWebServiceClient("workflowrun", URL));
     }
     
     private static void createSamples()
@@ -84,6 +96,7 @@ public class TestClient {
         experiment.setCreateTstmp(new Date());
         Study study = clients.get("study").find_XML(Study.class, "40");
         experiment.setStudyId(study);
+        
 
         Collection<ExperimentAttribute> experimentAttributes = new ArrayList<ExperimentAttribute>(2);
         ExperimentAttribute eAttr1 = new ExperimentAttribute();
@@ -112,6 +125,8 @@ public class TestClient {
         }*/
         try {
             // Custom "create" method, will return the updated object.
+            if (experiment.getStudyId()==null)
+                throw new RuntimeException("Should not be null");
             experiment = experimentClient.createAndReturn(Experiment.class, experiment);
             System.out.println("Experiment ID: " + experiment.getExperimentId());
             System.out.println("attributes: " + experiment.getExperimentAttributeCollection());
@@ -304,8 +319,35 @@ public class TestClient {
         }
         
         createSamples();
+        createWorkflowRun();
+        
     }
 
+    private static void createWorkflowRun()
+    {
+        Workflow wf = new Workflow();
+        List<Workflow> wfList = new ArrayList<Workflow>();
+        SeqWareWebServiceClient workflowClient = clients.get("workflow");
+        wfList = (List<Workflow> )workflowClient.getEntitiesWhereFieldMatchesValue(Workflow.class, "name", "GATKRecalibrationAndVariantCalling");
+        System.out.println("# workflows with name GATKRecalibrationAndVariantCalling: "+wfList.size());
+        wf = wfList.get(0);
+        
+        WorkflowRun wfRun = new WorkflowRun();
+        //wfRun.setWorkflowId(wf);
+        SeqWareWebServiceClient workflowRunClient = clients.get("workflowrun");
+        
+        wfRun.setCreateTstmp(new Date());
+        try
+        {
+            wfRun = workflowRunClient.createAndReturn(WorkflowRun.class, wfRun);
+            System.out.println("Workflow Run ID is: "+wfRun.getWorkflowRunId());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
     private static List<Sample> getSamplesByName(String string)
     {
         List<Sample> samples = clients.get("sample").getEntitiesWhereFieldMatchesValue(Sample.class, "name", "Fifty");
