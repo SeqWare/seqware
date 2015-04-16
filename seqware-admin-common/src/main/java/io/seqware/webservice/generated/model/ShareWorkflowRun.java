@@ -4,8 +4,11 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,7 +23,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * 
@@ -74,6 +79,8 @@ public class ShareWorkflowRun implements Serializable {
         this.createTstmp = createTstmp;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)    
     public Integer getShareWorkflowRunId() {
         return shareWorkflowRunId;
     }

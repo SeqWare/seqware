@@ -6,6 +6,7 @@ package io.seqware.webservice.generated.model;
 
 import io.seqware.webservice.adapter.IntegerAdapter;
 import io.seqware.webservice.annotations.ParentEntity;
+import io.seqware.webservice.annotations.SkippableEntity;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -38,6 +39,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -46,7 +51,8 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 @Entity
 @Table(name = "ius")
 @XmlRootElement
-@io.seqware.webservice.annotations.SkippableEntity
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="iusId")
+@SkippableEntity
 @NamedQueries({ @NamedQuery(name = "Ius.findAll", query = "SELECT i FROM Ius i"),
         @NamedQuery(name = "Ius.findByIusId", query = "SELECT i FROM Ius i WHERE i.iusId = :iusId"),
         @NamedQuery(name = "Ius.findByName", query = "SELECT i FROM Ius i WHERE i.name = :name"),
@@ -220,6 +226,8 @@ public class Ius implements Serializable {
         this.sampleId = sampleId;
     }
 
+    @XmlIDREF
+    @JsonBackReference
     public Registration getOwnerId() {
         return ownerId;
     }
@@ -238,7 +246,7 @@ public class Ius implements Serializable {
         this.laneId = laneId;
     }
 
-    @XmlTransient
+    @JsonManagedReference
     public Collection<ProcessingIus> getProcessingIusCollection() {
         return processingIusCollection;
     }

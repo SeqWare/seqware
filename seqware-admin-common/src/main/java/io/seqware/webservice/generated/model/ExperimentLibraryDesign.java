@@ -4,8 +4,11 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.util.Collection;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,8 +22,16 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -29,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "experiment_library_design")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="experimentLibraryDesignId")
 @NamedQueries({
         @NamedQuery(name = "ExperimentLibraryDesign.findAll", query = "SELECT e FROM ExperimentLibraryDesign e"),
         @NamedQuery(name = "ExperimentLibraryDesign.findByExperimentLibraryDesignId", query = "SELECT e FROM ExperimentLibraryDesign e WHERE e.experimentLibraryDesignId = :experimentLibraryDesignId"),
@@ -85,6 +97,8 @@ public class ExperimentLibraryDesign implements Serializable {
         this.experimentLibraryDesignId = experimentLibraryDesignId;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getExperimentLibraryDesignId() {
         return experimentLibraryDesignId;
     }
@@ -149,7 +163,8 @@ public class ExperimentLibraryDesign implements Serializable {
         this.nominalSdev = nominalSdev;
     }
 
-    @XmlTransient
+    @JsonManagedReference
+    @XmlIDREF
     public Collection<Experiment> getExperimentCollection() {
         return experimentCollection;
     }
@@ -158,6 +173,7 @@ public class ExperimentLibraryDesign implements Serializable {
         this.experimentCollection = experimentCollection;
     }
 
+    @JsonBackReference
     public LibraryStrategy getStrategy() {
         return strategy;
     }
@@ -166,6 +182,7 @@ public class ExperimentLibraryDesign implements Serializable {
         this.strategy = strategy;
     }
 
+    @JsonBackReference
     public LibrarySource getSource() {
         return source;
     }
@@ -174,6 +191,7 @@ public class ExperimentLibraryDesign implements Serializable {
         this.source = source;
     }
 
+    @JsonBackReference
     public LibrarySelection getSelection() {
         return selection;
     }

@@ -4,8 +4,11 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.util.Collection;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,8 +24,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -31,6 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "workflow_param")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="workflowParamId")
 @NamedQueries({
         @NamedQuery(name = "WorkflowParam.findAll", query = "SELECT w FROM WorkflowParam w"),
         @NamedQuery(name = "WorkflowParam.findByWorkflowParamId", query = "SELECT w FROM WorkflowParam w WHERE w.workflowParamId = :workflowParamId"),
@@ -90,6 +102,8 @@ public class WorkflowParam implements Serializable {
         this.displayName = displayName;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(IntegerAdapter.class)
     public Integer getWorkflowParamId() {
         return workflowParamId;
     }
@@ -146,7 +160,7 @@ public class WorkflowParam implements Serializable {
         this.defaultValue = defaultValue;
     }
 
-    @XmlTransient
+    @JsonManagedReference
     public Collection<WorkflowParamValue> getWorkflowParamValueCollection() {
         return workflowParamValueCollection;
     }
@@ -155,6 +169,8 @@ public class WorkflowParam implements Serializable {
         this.workflowParamValueCollection = workflowParamValueCollection;
     }
 
+    @JsonBackReference
+    @XmlIDREF
     public Workflow getWorkflowId() {
         return workflowId;
     }

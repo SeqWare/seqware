@@ -4,7 +4,10 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +21,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * 
@@ -63,6 +71,8 @@ public class WorkflowParamValue implements Serializable {
         this.displayName = displayName;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(IntegerAdapter.class)
     public Integer getWorkflowParamValueId() {
         return workflowParamValueId;
     }
@@ -87,6 +97,8 @@ public class WorkflowParamValue implements Serializable {
         this.value = value;
     }
 
+    @XmlIDREF
+    @JsonBackReference
     public WorkflowParam getWorkflowParamId() {
         return workflowParamId;
     }

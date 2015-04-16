@@ -4,6 +4,8 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -23,10 +25,18 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -35,6 +45,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 @Entity
 @Table(name = "registration")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="registrationId")
 @NamedQueries({
         @NamedQuery(name = "Registration.findAll", query = "SELECT r FROM Registration r"),
         @NamedQuery(name = "Registration.findByRegistrationId", query = "SELECT r FROM Registration r WHERE r.registrationId = :registrationId"),
@@ -161,6 +172,8 @@ public class Registration implements Serializable {
         this.payee = payee;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getRegistrationId() {
         return registrationId;
     }
@@ -273,7 +286,6 @@ public class Registration implements Serializable {
         this.payee = payee;
     }
 
-    @XmlTransient
     public Collection<Invoice> getInvoiceCollection() {
         return invoiceCollection;
     }
@@ -282,7 +294,11 @@ public class Registration implements Serializable {
         this.invoiceCollection = invoiceCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="study")
+    @XmlElementWrapper
     public Collection<Study> getStudyCollection() {
         return studyCollection;
     }
@@ -291,7 +307,11 @@ public class Registration implements Serializable {
         this.studyCollection = studyCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="file")
+    @XmlElementWrapper
     public Collection<File> getFileCollection() {
         return fileCollection;
     }
@@ -300,7 +320,11 @@ public class Registration implements Serializable {
         this.fileCollection = fileCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="experiment")
+    @XmlElementWrapper
     public Collection<Experiment> getExperimentCollection() {
         return experimentCollection;
     }
@@ -309,7 +333,11 @@ public class Registration implements Serializable {
         this.experimentCollection = experimentCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="processing")
+    @XmlElementWrapper
     public Collection<Processing> getProcessingCollection() {
         return processingCollection;
     }
@@ -318,7 +346,11 @@ public class Registration implements Serializable {
         this.processingCollection = processingCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="workflowRun")
+    @XmlElementWrapper
     public Collection<WorkflowRun> getWorkflowRunCollection() {
         return workflowRunCollection;
     }
@@ -327,7 +359,11 @@ public class Registration implements Serializable {
         this.workflowRunCollection = workflowRunCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="sequencerRun")
+    @XmlElementWrapper
     public Collection<SequencerRun> getSequencerRunCollection() {
         return sequencerRunCollection;
     }
@@ -336,7 +372,11 @@ public class Registration implements Serializable {
         this.sequencerRunCollection = sequencerRunCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="workflow")
+    @XmlElementWrapper
     public Collection<Workflow> getWorkflowCollection() {
         return workflowCollection;
     }
@@ -345,7 +385,11 @@ public class Registration implements Serializable {
         this.workflowCollection = workflowCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="lane")
+    @XmlElementWrapper
     public Collection<Lane> getLaneCollection() {
         return laneCollection;
     }
@@ -354,7 +398,11 @@ public class Registration implements Serializable {
         this.laneCollection = laneCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="shareWorkflowRun")
+    @XmlElementWrapper
     public Collection<ShareWorkflowRun> getShareWorkflowRunCollection() {
         return shareWorkflowRunCollection;
     }
@@ -364,7 +412,10 @@ public class Registration implements Serializable {
     }
 
     @JsonManagedReference
-    @XmlTransient
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="sample")
+    @XmlElementWrapper
+    @XmlIDREF
     public Collection<Sample> getSampleCollection() {
         return sampleCollection;
     }
@@ -373,7 +424,11 @@ public class Registration implements Serializable {
         this.sampleCollection = sampleCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="shareStudy")
+    @XmlElementWrapper
     public Collection<ShareStudy> getShareStudyCollection() {
         return shareStudyCollection;
     }
@@ -382,7 +437,11 @@ public class Registration implements Serializable {
         this.shareStudyCollection = shareStudyCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="ius")
+    @XmlElementWrapper
     public Collection<Ius> getIusCollection() {
         return iusCollection;
     }

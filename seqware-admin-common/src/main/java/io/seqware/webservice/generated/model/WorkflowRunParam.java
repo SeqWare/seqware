@@ -4,7 +4,10 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +20,15 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -26,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "workflow_run_param")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="workflowRunParamId")
 @NamedQueries({
         @NamedQuery(name = "WorkflowRunParam.findAll", query = "SELECT w FROM WorkflowRunParam w"),
         @NamedQuery(name = "WorkflowRunParam.findByWorkflowRunParamId", query = "SELECT w FROM WorkflowRunParam w WHERE w.workflowRunParamId = :workflowRunParamId"),
@@ -62,6 +74,8 @@ public class WorkflowRunParam implements Serializable {
         this.workflowRunParamId = workflowRunParamId;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(IntegerAdapter.class)
     public Integer getWorkflowRunParamId() {
         return workflowRunParamId;
     }
@@ -102,6 +116,8 @@ public class WorkflowRunParam implements Serializable {
         this.value = value;
     }
 
+    @JsonBackReference
+    @XmlIDREF
     public WorkflowRun getWorkflowRunId() {
         return workflowRunId;
     }

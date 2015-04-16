@@ -32,12 +32,19 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -46,6 +53,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 @Entity
 @Table(name = "experiment")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="experimentId")
 @NamedQueries({
         @NamedQuery(name = "Experiment.findAll", query = "SELECT e FROM Experiment e"),
         @NamedQuery(name = "Experiment.findByExperimentId", query = "SELECT e FROM Experiment e WHERE e.experimentId = :experimentId"),
@@ -353,14 +361,20 @@ public class Experiment implements Serializable {
     }
 
     @ChildEntities(tag="experimentAttributs", childType=ExperimentAttribute.class)
+    @XmlElement(name="experimentAttribute")
+    @XmlElementWrapper
+    @JsonManagedReference
     public Collection<ExperimentAttribute> getExperimentAttributeCollection() {
         return experimentAttributeCollection;
     }
-
+    
     public void setExperimentAttributeCollection(Collection<ExperimentAttribute> experimentAttributeCollection) {
         this.experimentAttributeCollection = experimentAttributeCollection;
     }
 
+    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlIDREF
     public Study getStudyId() {
         return studyId;
     }
@@ -369,6 +383,9 @@ public class Experiment implements Serializable {
         this.studyId = studyId;
     }
 
+    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlIDREF
     public Registration getOwnerId() {
         return ownerId;
     }
@@ -377,6 +394,9 @@ public class Experiment implements Serializable {
         this.ownerId = ownerId;
     }
 
+    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlIDREF
     public Platform getPlatformId() {
         return platformId;
     }
@@ -385,6 +405,9 @@ public class Experiment implements Serializable {
         this.platformId = platformId;
     }
 
+    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlIDREF
     public ExperimentSpotDesign getExperimentSpotDesignId() {
         return experimentSpotDesignId;
     }
@@ -393,6 +416,9 @@ public class Experiment implements Serializable {
         this.experimentSpotDesignId = experimentSpotDesignId;
     }
 
+    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlIDREF
     public ExperimentLibraryDesign getExperimentLibraryDesignId() {
         return experimentLibraryDesignId;
     }
@@ -401,7 +427,9 @@ public class Experiment implements Serializable {
         this.experimentLibraryDesignId = experimentLibraryDesignId;
     }
 
-    @XmlTransient
+    @JsonManagedReference
+    @XmlElement(name="processingExperiment")
+    @XmlElementWrapper
     public Collection<ProcessingExperiments> getProcessingExperimentsCollection() {
         return processingExperimentsCollection;
     }
@@ -411,11 +439,12 @@ public class Experiment implements Serializable {
     }
 
     @JsonManagedReference
-    @XmlTransient
+    @XmlElement(name="sample")
+    @XmlElementWrapper
     public Collection<Sample> getSampleCollection() {
         return sampleCollection;
     }
-
+    
     public void setSampleCollection(Collection<Sample> sampleCollection) {
         this.sampleCollection = sampleCollection;
     }

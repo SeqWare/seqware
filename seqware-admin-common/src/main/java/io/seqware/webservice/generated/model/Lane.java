@@ -33,8 +33,13 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -43,6 +48,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @Entity
 @Table(name = "lane")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="laneId")
 @SkippableEntity
 @NamedQueries({ @NamedQuery(name = "Lane.findAll", query = "SELECT l FROM Lane l"),
         @NamedQuery(name = "Lane.findByLaneId", query = "SELECT l FROM Lane l WHERE l.laneId = :laneId"),
@@ -321,6 +327,8 @@ public class Lane implements Serializable {
         this.laneWorkflowRunsCollection = laneWorkflowRunsCollection;
     }
 
+    @JsonBackReference
+    @XmlIDREF
     public StudyType getStudyType() {
         return studyType;
     }

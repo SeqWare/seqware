@@ -5,6 +5,7 @@
 package io.seqware.webservice.generated.model;
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -102,6 +104,7 @@ public class WorkflowRunAttribute implements Serializable {
         this.unit = unit;
     }
 
+    @XmlIDREF
     public WorkflowRun getWorkflowRunId() {
         return workflowRunId;
     }

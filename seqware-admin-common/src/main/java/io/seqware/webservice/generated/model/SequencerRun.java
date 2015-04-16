@@ -4,6 +4,9 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+import io.seqware.webservice.annotations.SkippableEntity;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -27,8 +30,15 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -37,7 +47,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "sequencer_run")
 @XmlRootElement
-@io.seqware.webservice.annotations.SkippableEntity
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="sequencerRunId")
+@SkippableEntity
 @NamedQueries({
         @NamedQuery(name = "SequencerRun.findAll", query = "SELECT s FROM SequencerRun s"),
         @NamedQuery(name = "SequencerRun.findBySequencerRunId", query = "SELECT s FROM SequencerRun s WHERE s.sequencerRunId = :sequencerRunId"),
@@ -180,6 +191,8 @@ public class SequencerRun implements Serializable {
         this.createTstmp = createTstmp;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(IntegerAdapter.class)
     public Integer getSequencerRunId() {
         return sequencerRunId;
     }
@@ -420,6 +433,7 @@ public class SequencerRun implements Serializable {
         this.skip = skip;
     }
 
+    @JsonBackReference
     public Registration getOwnerId() {
         return ownerId;
     }
@@ -436,7 +450,7 @@ public class SequencerRun implements Serializable {
         this.platformId = platformId;
     }
 
-    @XmlTransient
+    @JsonManagedReference
     public Collection<ProcessingSequencerRuns> getProcessingSequencerRunsCollection() {
         return processingSequencerRunsCollection;
     }
@@ -445,7 +459,7 @@ public class SequencerRun implements Serializable {
         this.processingSequencerRunsCollection = processingSequencerRunsCollection;
     }
 
-    @XmlTransient
+    @JsonManagedReference
     public Collection<Lane> getLaneCollection() {
         return laneCollection;
     }
@@ -454,7 +468,7 @@ public class SequencerRun implements Serializable {
         this.laneCollection = laneCollection;
     }
 
-    @XmlTransient
+    @JsonManagedReference
     public Collection<SequencerRunAttribute> getSequencerRunAttributeCollection() {
         return sequencerRunAttributeCollection;
     }

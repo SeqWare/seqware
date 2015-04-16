@@ -4,8 +4,11 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.util.Collection;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,8 +20,15 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -27,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "experiment_spot_design")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="experimentSpotDesignId")
 @NamedQueries({
         @NamedQuery(name = "ExperimentSpotDesign.findAll", query = "SELECT e FROM ExperimentSpotDesign e"),
         @NamedQuery(name = "ExperimentSpotDesign.findByExperimentSpotDesignId", query = "SELECT e FROM ExperimentSpotDesign e WHERE e.experimentSpotDesignId = :experimentSpotDesignId"),
@@ -67,6 +78,8 @@ public class ExperimentSpotDesign implements Serializable {
         this.experimentSpotDesignId = experimentSpotDesignId;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getExperimentSpotDesignId() {
         return experimentSpotDesignId;
     }
@@ -115,7 +128,8 @@ public class ExperimentSpotDesign implements Serializable {
         this.adapterSpec = adapterSpec;
     }
 
-    @XmlTransient
+    @JsonManagedReference
+    @XmlIDREF
     public Collection<Experiment> getExperimentCollection() {
         return experimentCollection;
     }
@@ -124,7 +138,8 @@ public class ExperimentSpotDesign implements Serializable {
         this.experimentCollection = experimentCollection;
     }
 
-    @XmlTransient
+    @JsonManagedReference
+    @XmlIDREF
     public Collection<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecCollection() {
         return experimentSpotDesignReadSpecCollection;
     }

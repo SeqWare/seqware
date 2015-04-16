@@ -4,8 +4,11 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.util.Collection;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,8 +22,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -29,6 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "study_type")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="studyTypeId")
 @NamedQueries({ @NamedQuery(name = "StudyType.findAll", query = "SELECT s FROM StudyType s"),
         @NamedQuery(name = "StudyType.findByStudyTypeId", query = "SELECT s FROM StudyType s WHERE s.studyTypeId = :studyTypeId"),
         @NamedQuery(name = "StudyType.findByName", query = "SELECT s FROM StudyType s WHERE s.name = :name"),
@@ -65,6 +79,8 @@ public class StudyType implements Serializable {
         this.name = name;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getStudyTypeId() {
         return studyTypeId;
     }
@@ -89,7 +105,11 @@ public class StudyType implements Serializable {
         this.description = description;
     }
 
-    @XmlTransient
+    @JsonIdentityReference(alwaysAsId=true)
+    @JsonManagedReference
+    @XmlIDREF
+    @XmlElement(name="study")
+    @XmlElementWrapper(name="studies")
     public Collection<Study> getStudyCollection() {
         return studyCollection;
     }
@@ -98,7 +118,10 @@ public class StudyType implements Serializable {
         this.studyCollection = studyCollection;
     }
 
-    @XmlTransient
+    @JsonManagedReference
+    @XmlIDREF
+    @XmlElement(name="lane")
+    @XmlElementWrapper(name="lanes")
     public Collection<Lane> getLaneCollection() {
         return laneCollection;
     }

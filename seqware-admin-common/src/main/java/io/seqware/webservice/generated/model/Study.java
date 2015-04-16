@@ -33,12 +33,18 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -47,6 +53,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 @Entity
 @Table(name = "study")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="studyId")
 @NamedQueries({
         @NamedQuery(name = "Study.findAll", query = "SELECT s FROM Study s"),
         @NamedQuery(name = "Study.findByStudyId", query = "SELECT s FROM Study s WHERE s.studyId = :studyId"),
@@ -282,6 +289,7 @@ public class Study implements Serializable {
         this.updateTstmp = updateTstmp;
     }
 
+    
     public StudyType getExistingType() {
         return existingType;
     }
@@ -290,6 +298,7 @@ public class Study implements Serializable {
         this.existingType = existingType;
     }
 
+    @JsonBackReference
     public Registration getOwnerId() {
         return ownerId;
     }
@@ -298,17 +307,22 @@ public class Study implements Serializable {
         this.ownerId = ownerId;
     }
 
-    @XmlTransient
+    @XmlElement(name="experiment")
+    @XmlElementWrapper
+    @JsonManagedReference
+    @XmlIDREF
     public Collection<Experiment> getExperimentCollection() {
         return experimentCollection;
     }
 
+    @JsonManagedReference
     public void setExperimentCollection(Collection<Experiment> experimentCollection) {
         this.experimentCollection = experimentCollection;
     }
 
     @XmlElement
     @ChildEntities(tag="studyAttributes", childType=StudyAttribute.class)
+    @XmlElementWrapper
     @JsonManagedReference
     public Collection<StudyAttribute> getStudyAttributeCollection() {
         return studyAttributeCollection;

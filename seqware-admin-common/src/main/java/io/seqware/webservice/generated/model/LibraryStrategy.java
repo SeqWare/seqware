@@ -4,8 +4,11 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.util.Collection;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,8 +20,15 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -27,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "library_strategy")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="libraryStrategyId")
 @NamedQueries({
         @NamedQuery(name = "LibraryStrategy.findAll", query = "SELECT l FROM LibraryStrategy l"),
         @NamedQuery(name = "LibraryStrategy.findByLibraryStrategyId", query = "SELECT l FROM LibraryStrategy l WHERE l.libraryStrategyId = :libraryStrategyId"),
@@ -57,6 +68,8 @@ public class LibraryStrategy implements Serializable {
         this.libraryStrategyId = libraryStrategyId;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(IntegerAdapter.class)
     public Integer getLibraryStrategyId() {
         return libraryStrategyId;
     }
@@ -81,7 +94,8 @@ public class LibraryStrategy implements Serializable {
         this.description = description;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
     public Collection<Lane> getLaneCollection() {
         return laneCollection;
     }
@@ -90,7 +104,8 @@ public class LibraryStrategy implements Serializable {
         this.laneCollection = laneCollection;
     }
 
-    @XmlTransient
+    @JsonManagedReference
+    @XmlIDREF
     public Collection<ExperimentLibraryDesign> getExperimentLibraryDesignCollection() {
         return experimentLibraryDesignCollection;
     }

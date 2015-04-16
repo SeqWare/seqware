@@ -4,10 +4,13 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -28,9 +31,20 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -39,6 +53,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @Table(name = "workflow_run")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="workflowRunId")
 @NamedQueries({
         @NamedQuery(name = "WorkflowRun.findAll", query = "SELECT w FROM WorkflowRun w"),
         @NamedQuery(name = "WorkflowRun.findByWorkflowRunId", query = "SELECT w FROM WorkflowRun w WHERE w.workflowRunId = :workflowRunId"),
@@ -153,6 +168,8 @@ public class WorkflowRun implements Serializable {
         this.createTstmp = createTstmp;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getWorkflowRunId() {
         return workflowRunId;
     }
@@ -297,7 +314,10 @@ public class WorkflowRun implements Serializable {
         this.workflowEngine = workflowEngine;
     }
 
-    // XmlTransient
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="processing")
+    @XmlElementWrapper
     public Collection<Processing> getProcessingCollection() {
         return processingCollection;
     }
@@ -306,7 +326,10 @@ public class WorkflowRun implements Serializable {
         this.processingCollection = processingCollection;
     }
 
-    // XmlTransient
+    @JsonManagedReference
+    @JsonIdentityReference(alwaysAsId=true)
+    @XmlElement(name="ancestorProcessing")
+    @XmlElementWrapper(name="ancestorProcessingCollection")
     public Collection<Processing> getProcessingCollection1() {
         return processingCollection1;
     }
@@ -315,6 +338,9 @@ public class WorkflowRun implements Serializable {
         this.processingCollection1 = processingCollection1;
     }
 
+    @XmlIDREF
+    @JsonIdentityReference
+    @JsonBackReference
     public Workflow getWorkflowId() {
         return workflowId;
     }
@@ -322,7 +348,8 @@ public class WorkflowRun implements Serializable {
     public void setWorkflowId(Workflow workflowId) {
         this.workflowId = workflowId;
     }
-
+    
+    @JsonIdentityReference
     public Registration getOwnerId() {
         return ownerId;
     }
@@ -340,7 +367,9 @@ public class WorkflowRun implements Serializable {
         this.iusWorkflowRunsCollection = iusWorkflowRunsCollection;
     }
 
-    @XmlTransient
+    @JsonManagedReference
+    @XmlElement(name="workflowRunAttribute")
+    @XmlElementWrapper
     public Collection<WorkflowRunAttribute> getWorkflowRunAttributeCollection() {
         return workflowRunAttributeCollection;
     }
@@ -367,7 +396,9 @@ public class WorkflowRun implements Serializable {
         this.shareWorkflowRunCollection = shareWorkflowRunCollection;
     }
 
-    @XmlTransient
+    @JsonManagedReference
+    @XmlElement(name="workflowRunParam")
+    @XmlElementWrapper
     public Collection<WorkflowRunParam> getWorkflowRunParamCollection() {
         return workflowRunParamCollection;
     }
@@ -403,7 +434,7 @@ public class WorkflowRun implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
+    @JsonManagedReference
     public Collection<File> getFileCollection() {
         return fileCollection;
     }
@@ -411,5 +442,4 @@ public class WorkflowRun implements Serializable {
     public void setFileCollection(Collection<File> fileCollection) {
         this.fileCollection = fileCollection;
     }
-
 }

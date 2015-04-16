@@ -4,7 +4,10 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +20,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -26,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "experiment_spot_design_read_spec")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="experimentSpotDesignReadSpecId")
 @NamedQueries({
         @NamedQuery(name = "ExperimentSpotDesignReadSpec.findAll", query = "SELECT e FROM ExperimentSpotDesignReadSpec e"),
         @NamedQuery(name = "ExperimentSpotDesignReadSpec.findByExperimentSpotDesignReadSpecId", query = "SELECT e FROM ExperimentSpotDesignReadSpec e WHERE e.experimentSpotDesignReadSpecId = :experimentSpotDesignReadSpecId"),
@@ -75,6 +85,8 @@ public class ExperimentSpotDesignReadSpec implements Serializable {
         this.experimentSpotDesignReadSpecId = experimentSpotDesignReadSpecId;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getExperimentSpotDesignReadSpecId() {
         return experimentSpotDesignReadSpecId;
     }
@@ -147,6 +159,7 @@ public class ExperimentSpotDesignReadSpec implements Serializable {
         this.expectedBasecall = expectedBasecall;
     }
 
+    @JsonBackReference
     public ExperimentSpotDesign getExperimentSpotDesignId() {
         return experimentSpotDesignId;
     }

@@ -4,7 +4,10 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +20,17 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 /**
  * 
@@ -26,6 +39,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "processing_experiments")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="processingExperimentsId")
 @NamedQueries({
         @NamedQuery(name = "ProcessingExperiments.findAll", query = "SELECT p FROM ProcessingExperiments p"),
         @NamedQuery(name = "ProcessingExperiments.findByProcessingExperimentsId", query = "SELECT p FROM ProcessingExperiments p WHERE p.processingExperimentsId = :processingExperimentsId"),
@@ -65,6 +79,8 @@ public class ProcessingExperiments implements Serializable {
         this.processingExperimentsId = processingExperimentsId;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(IntegerAdapter.class)
     public Integer getProcessingExperimentsId() {
         return processingExperimentsId;
     }
@@ -105,6 +121,9 @@ public class ProcessingExperiments implements Serializable {
         this.swAccession = swAccession;
     }
 
+    @XmlIDREF
+    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId=true)
     public Processing getProcessingId() {
         return processingId;
     }
@@ -113,6 +132,9 @@ public class ProcessingExperiments implements Serializable {
         this.processingId = processingId;
     }
 
+    @XmlIDREF
+    @JsonBackReference
+    @JsonIdentityReference(alwaysAsId=true)
     public Experiment getExperimentId() {
         return experimentId;
     }

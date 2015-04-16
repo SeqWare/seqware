@@ -22,6 +22,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 public class SeqWareWebserviceClient {
     private WebResource webResource;
     private Client client;
+    //TODO: One day, hostname:port should come from some kind of config at startup.
     private static final String BASE_URI = "http://localhost:38080/seqware-admin-webservice/webresources";
 
     public SeqWareWebserviceClient() {

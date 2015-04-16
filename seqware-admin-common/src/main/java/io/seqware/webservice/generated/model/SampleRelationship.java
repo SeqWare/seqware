@@ -5,6 +5,7 @@
 package io.seqware.webservice.generated.model;
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -70,6 +72,7 @@ public class SampleRelationship implements Serializable {
         this.relationship = relationship;
     }
 
+    @XmlIDREF
     public Sample getParentId() {
         return parentId;
     }
@@ -78,6 +81,7 @@ public class SampleRelationship implements Serializable {
         this.parentId = parentId;
     }
 
+    @XmlIDREF
     public Sample getChildId() {
         return childId;
     }

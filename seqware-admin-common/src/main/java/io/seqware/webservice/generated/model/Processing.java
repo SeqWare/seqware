@@ -4,10 +4,13 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,8 +30,16 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -37,6 +48,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "processing")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="processingId")
 @NamedQueries({
         @NamedQuery(name = "Processing.findAll", query = "SELECT p FROM Processing p"),
         @NamedQuery(name = "Processing.findByProcessingId", query = "SELECT p FROM Processing p WHERE p.processingId = :processingId"),
@@ -155,6 +167,8 @@ public class Processing implements Serializable {
         this.createTstmp = createTstmp;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getProcessingId() {
         return processingId;
     }
@@ -347,7 +361,8 @@ public class Processing implements Serializable {
         this.processingLanesCollection = processingLanesCollection;
     }
 
-    @XmlTransient
+    @XmlIDREF
+    @JsonManagedReference
     public Collection<ProcessingExperiments> getProcessingExperimentsCollection() {
         return processingExperimentsCollection;
     }

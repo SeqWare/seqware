@@ -4,6 +4,8 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -25,10 +27,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -37,6 +46,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 @Entity
 @Table(name = "file")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="fileId")
 @io.seqware.webservice.annotations.SkippableEntity
 @NamedQueries({ @NamedQuery(name = "File.findAll", query = "SELECT f FROM File f"),
         @NamedQuery(name = "File.findByFileId", query = "SELECT f FROM File f WHERE f.fileId = :fileId"),
@@ -112,6 +122,8 @@ public class File implements Serializable {
         this.filePath = filePath;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getFileId() {
         return fileId;
     }
@@ -209,6 +221,8 @@ public class File implements Serializable {
         this.fileAttributeCollection = fileAttributeCollection;
     }
 
+    @XmlIDREF
+    @JsonBackReference
     public Registration getOwnerId() {
         return ownerId;
     }

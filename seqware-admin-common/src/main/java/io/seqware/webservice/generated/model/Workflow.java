@@ -4,10 +4,13 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,8 +29,17 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 /**
  * 
@@ -36,6 +48,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "workflow")
 @XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="workflowId")
 @NamedQueries({
         @NamedQuery(name = "Workflow.findAll", query = "SELECT w FROM Workflow w"),
         @NamedQuery(name = "Workflow.findByWorkflowId", query = "SELECT w FROM Workflow w WHERE w.workflowId = :workflowId"),
@@ -141,6 +154,8 @@ public class Workflow implements Serializable {
         this.createTstmp = createTstmp;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getWorkflowId() {
         return workflowId;
     }
@@ -293,7 +308,9 @@ public class Workflow implements Serializable {
         this.workflowEngine = workflowEngine;
     }
 
-    @XmlTransient
+    @XmlElement(name="workflowParam")
+    @XmlElementWrapper
+    @JsonManagedReference
     public Collection<WorkflowParam> getWorkflowParamCollection() {
         return workflowParamCollection;
     }
@@ -302,7 +319,9 @@ public class Workflow implements Serializable {
         this.workflowParamCollection = workflowParamCollection;
     }
 
-    @XmlTransient
+    @XmlElement(name="workflowParam")
+    @XmlElementWrapper
+    @JsonManagedReference
     public Collection<WorkflowRun> getWorkflowRunCollection() {
         return workflowRunCollection;
     }
@@ -311,7 +330,9 @@ public class Workflow implements Serializable {
         this.workflowRunCollection = workflowRunCollection;
     }
 
-    @XmlTransient
+    @XmlElement(name="workflowAttribute")
+    @XmlElementWrapper
+    @JsonManagedReference
     public Collection<WorkflowAttribute> getWorkflowAttributeCollection() {
         return workflowAttributeCollection;
     }
@@ -320,6 +341,7 @@ public class Workflow implements Serializable {
         this.workflowAttributeCollection = workflowAttributeCollection;
     }
 
+    @JsonBackReference
     public Registration getOwnerId() {
         return ownerId;
     }

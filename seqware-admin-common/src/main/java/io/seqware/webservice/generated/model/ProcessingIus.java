@@ -5,6 +5,7 @@
 package io.seqware.webservice.generated.model;
 
 import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,12 +20,18 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 /**
  * 
  * @author boconnor
  */
 @Entity
 @Table(name = "processing_ius")
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="processingIusId")
 @XmlRootElement
 @NamedQueries({
         @NamedQuery(name = "ProcessingIus.findAll", query = "SELECT p FROM ProcessingIus p"),
@@ -113,6 +120,7 @@ public class ProcessingIus implements Serializable {
         this.processingId = processingId;
     }
 
+    @JsonBackReference
     public Ius getIusId() {
         return iusId;
     }

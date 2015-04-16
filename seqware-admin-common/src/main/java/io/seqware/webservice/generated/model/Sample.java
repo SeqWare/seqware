@@ -41,8 +41,8 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.log4j.Logger;
@@ -429,10 +429,12 @@ public class Sample implements Serializable, CycleRecoverable {
     }
 
     @JsonBackReference
+    @XmlIDREF
     public Experiment getExperimentId() {
         return experimentId;
     }
 
+    @JsonBackReference
     public void setExperimentId(Experiment experimentId) {
         this.experimentId = experimentId;
     }
@@ -447,7 +449,7 @@ public class Sample implements Serializable, CycleRecoverable {
 //        this.iusCollection = iusCollection;
 //    }
 
-    @XmlTransient
+    //@XmlTransient
     public Collection<ProcessingSamples> getProcessingSamplesCollection() {
         return processingSamplesCollection;
     }
@@ -466,7 +468,7 @@ public class Sample implements Serializable, CycleRecoverable {
         this.sampleAttributeCollection = sampleAttributeCollection;
     }
 
-    @XmlTransient
+    //@XmlTransient
     public Collection<SampleRelationship> getParentSampleRelationshipCollection() {
         return parentSampleRelationshipCollection;
     }
@@ -475,7 +477,7 @@ public class Sample implements Serializable, CycleRecoverable {
         this.parentSampleRelationshipCollection = sampleRelationshipCollection;
     }
 
-    @XmlTransient
+    //@XmlTransient
     public Collection<SampleRelationship> getChildSampleRelationshipCollection() {
         return childSampleRelationshipCollection;
     }

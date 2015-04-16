@@ -4,6 +4,7 @@
  */
 package io.seqware.webservice.generated.model;
 
+import io.seqware.webservice.adapter.IntegerAdapter;
 import io.seqware.webservice.annotations.ParentEntity;
 
 import java.io.Serializable;
@@ -20,8 +21,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * 
@@ -63,6 +68,8 @@ public class ExperimentAttribute implements Serializable {
         this.experimentAttributeId = experimentAttributeId;
     }
 
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
     public Integer getExperimentAttributeId() {
         return experimentAttributeId;
     }
@@ -96,6 +103,7 @@ public class ExperimentAttribute implements Serializable {
     }
 
     @XmlIDREF
+    @JsonBackReference
     public Experiment getExperimentId() {
         return experimentId;
     }
