@@ -22,22 +22,27 @@
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-mockito</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-easymock</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.objenesis</groupId>
@@ -91,11 +96,11 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- <dependency>
+		<dependency>
 			<groupId>com.wordnik</groupId>
 			<artifactId>swagger-annotations</artifactId>
 			<version>1.5.0-M2</version>
-		</dependency> -->
+		</dependency>
 		<dependency>
 			<groupId>com.wordnik</groupId>
 			<artifactId>swagger-jersey-jaxrs</artifactId>
@@ -323,14 +328,12 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<configuration>
 					<usedDependencies>
-						<!-- not sure why maven-dependency-plugin misses this, we compile it 
-							explicitly -->
-						<!-- TODO: Add swagger and logging libraries here -->
+						<!-- not sure why maven-dependency-plugin misses this, we compile it explicitly -->
 						<usedDependency>com.sun.jersey:jersey-json</usedDependency>
-						<usedDependency>com.wordnik:swagger-annotations</usedDependency>
 						<usedDependency>com.wordnik:swagger-jersey-jaxrs</usedDependency>
 						<usedDependency>com.wordnik:swagger-core</usedDependency>
 						<usedDependency>log4j:log4j</usedDependency>
+						<usedDependency>org.slf4j:slf4j-log4j12</usedDependency>
 					</usedDependencies>
 				</configuration>
 				<executions>
