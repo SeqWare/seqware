@@ -23,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -40,6 +41,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * 
@@ -70,10 +72,11 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
         @NamedQuery(name = "Workflow.findByWorkflowClass", query = "SELECT w FROM Workflow w WHERE w.workflowClass = :workflowClass"),
         @NamedQuery(name = "Workflow.findByWorkflowType", query = "SELECT w FROM Workflow w WHERE w.workflowType = :workflowType"),
         @NamedQuery(name = "Workflow.findByWorkflowEngine", query = "SELECT w FROM Workflow w WHERE w.workflowEngine = :workflowEngine") })
-public class Workflow implements Serializable {
+public class Workflow implements Serializable, CycleRecoverable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="workflow_workflow_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="workflow_workflow_id_seq")
     @Basic(optional = false)
     @Column(name = "workflow_id")
     private Integer workflowId;
@@ -319,7 +322,7 @@ public class Workflow implements Serializable {
         this.workflowParamCollection = workflowParamCollection;
     }
 
-    @XmlElement(name="workflowParam")
+    @XmlElement(name="workflowRun")
     @XmlElementWrapper
     @JsonManagedReference
     public Collection<WorkflowRun> getWorkflowRunCollection() {
@@ -373,6 +376,11 @@ public class Workflow implements Serializable {
     @Override
     public String toString() {
         return "io.seqware.webservice.model.Workflow[ workflowId=" + workflowId + " ]";
+    }
+
+    @Override
+    public Object onCycleDetected(Context arg0) {
+        return this.workflowId;
     }
 
 }

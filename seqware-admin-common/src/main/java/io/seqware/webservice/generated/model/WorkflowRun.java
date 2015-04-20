@@ -25,6 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,7 +35,7 @@ import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlIDREF;
+//import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -45,6 +46,7 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sun.xml.bind.CycleRecoverable;
 
 /**
  * 
@@ -74,12 +76,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
         @NamedQuery(name = "WorkflowRun.findByUpdateTstmp", query = "SELECT w FROM WorkflowRun w WHERE w.updateTstmp = :updateTstmp"),
         @NamedQuery(name = "WorkflowRun.findBySwAccession", query = "SELECT w FROM WorkflowRun w WHERE w.swAccession = :swAccession"),
         @NamedQuery(name = "WorkflowRun.findByWorkflowEngine", query = "SELECT w FROM WorkflowRun w WHERE w.workflowEngine = :workflowEngine") })
-public class WorkflowRun implements Serializable {
+public class WorkflowRun implements Serializable, CycleRecoverable {
     @ManyToMany(mappedBy = "workflowRunCollection")
     private Collection<File> fileCollection;
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name="workflow_run_workflow_run_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="workflow_run_workflow_run_id_seq")
     @Basic(optional = false)
     @Column(name = "workflow_run_id")
     private Integer workflowRunId;
@@ -338,7 +341,8 @@ public class WorkflowRun implements Serializable {
         this.processingCollection1 = processingCollection1;
     }
 
-    @XmlIDREF
+    @XmlElement
+    //@XmlIDREF
     @JsonIdentityReference
     @JsonBackReference
     public Workflow getWorkflowId() {
@@ -441,5 +445,11 @@ public class WorkflowRun implements Serializable {
 
     public void setFileCollection(Collection<File> fileCollection) {
         this.fileCollection = fileCollection;
+    }
+
+    @Override
+    public Object onCycleDetected(Context arg0)
+    {
+        return this.workflowRunId;
     }
 }

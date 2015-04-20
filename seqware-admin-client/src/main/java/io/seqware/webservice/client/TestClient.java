@@ -24,7 +24,7 @@ import io.seqware.webservice.generated.model.Workflow;
 import io.seqware.webservice.generated.model.WorkflowRun;
 
 public class TestClient {
-    private static String URL = "http://localhost:38080/seqware-admin-webservice/webresources";
+    private static String URL = "http://localhost:38081/seqware-admin-webservice/webresources";
 
     private static Map<String, SeqWareWebServiceClient> clients = new HashMap<String, SeqWareWebServiceClient>();
     private static Map<ClientKeys, SeqWareWebServiceClient> _clients = new HashMap<ClientKeys, SeqWareWebServiceClient>();
@@ -51,6 +51,35 @@ public class TestClient {
         clients.put("lane", new SeqWareWebServiceClient("lane", URL));
         clients.put("experiment", new SeqWareWebServiceClient("experiment", URL));
         clients.put("workflowrun", new SeqWareWebServiceClient("workflowrun", URL));
+    }
+
+    private static List<Sample> getSamplesForStudy(String studyId)
+    {
+        List<Sample> samples = null;
+        
+        SeqWareWebServiceClient studyClient = clients.get("study");
+        SeqWareWebServiceClient sampleClient = clients.get("sample");
+        SeqWareWebServiceClient experimentClient = clients.get("experiment");
+        
+        List<Study> studies = studyClient.getEntitiesWhereFieldMatchesValue(Study.class, "studyId", studyId);
+        for (Study study : studies)
+        {
+            List<Experiment> experiments = experimentClient.getEntitiesWhereFieldMatchesValue(Experiment.class, "studyId", study.getStudyId().toString());
+            for (Experiment experiment : experiments)
+            {
+                List<Sample> experimentSamples = sampleClient.getEntitiesWhereFieldMatchesValue(Sample.class, "experimentId", experiment.getExperimentId().toString());
+                if (samples == null)
+                {
+                    samples = experimentSamples;
+                }
+                else
+                {
+                    samples.addAll(experimentSamples);
+                }
+            }
+        }
+        
+        return samples;
     }
     
     private static void createSamples()
@@ -305,7 +334,12 @@ public class TestClient {
         
         createStudy();
         createLane();
-        createExperiment();
+        //createExperiment();
+        
+        String studyId = "13";
+        List<Sample> studySamples = getSamplesForStudy(studyId);
+        System.out.println("# samples in study "+studyId+": "+studySamples.size());
+        System.out.println(studySamples);
         
         //Demonstrate an error when you try to skip an entity that is not skippable.
         try
@@ -331,14 +365,17 @@ public class TestClient {
         wfList = (List<Workflow> )workflowClient.getEntitiesWhereFieldMatchesValue(Workflow.class, "name", "GATKRecalibrationAndVariantCalling");
         System.out.println("# workflows with name GATKRecalibrationAndVariantCalling: "+wfList.size());
         wf = wfList.get(0);
+        System.out.println("Workflow ID: "+wf.getWorkflowId());
         
         WorkflowRun wfRun = new WorkflowRun();
-        //wfRun.setWorkflowId(wf);
-        SeqWareWebServiceClient workflowRunClient = clients.get("workflowrun");
-        
+        wfRun.setWorkflowId(wf);
         wfRun.setCreateTstmp(new Date());
+        wfRun.setHost("myHost");
+        wfRun.setName("test workflowRun creation");
+        //wf.getWorkflowRunCollection().add(wfRun);
         try
         {
+            SeqWareWebServiceClient workflowRunClient = clients.get("workflowrun");
             wfRun = workflowRunClient.createAndReturn(WorkflowRun.class, wfRun);
             System.out.println("Workflow Run ID is: "+wfRun.getWorkflowRunId());
         }

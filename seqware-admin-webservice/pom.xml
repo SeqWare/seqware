@@ -17,8 +17,12 @@
 		<version>1.2.0-alpha.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-
 	<dependencies>
+		<dependency>
+		  <groupId>org.powermock</groupId>
+		  <artifactId>powermock-reflect</artifactId>
+		  <scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-core</artifactId>
@@ -220,11 +224,6 @@
 			<groupId>org.jboss.spec.javax.ejb</groupId>
 			<artifactId>jboss-ejb-api_3.2_spec</artifactId>
 			<version>1.0.0.Final</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
-			<artifactId>jersey-gf-server</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
