@@ -64,7 +64,7 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * This plugin lets you monitor the status of running workflows and updates the metadata object with their status.
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -101,7 +101,7 @@ public class WorkflowStatusChecker extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -131,7 +131,7 @@ public class WorkflowStatusChecker extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -141,7 +141,7 @@ public class WorkflowStatusChecker extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -203,7 +203,7 @@ public class WorkflowStatusChecker extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -214,7 +214,7 @@ public class WorkflowStatusChecker extends Plugin {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override
@@ -281,18 +281,8 @@ public class WorkflowStatusChecker extends Plugin {
         }
 
         private void checkWhiteStar() {
-            String err;
-            String out;
-
-            File dir = OozieJob.scriptsDir(wr.getCurrentWorkingDir());
-            if (dir.exists()) {
-                out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, null), "stdout");
-                err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, null), "stderr");
-            } else {
-                // working dir has been deleted, do not wipe-out the stored output
-                out = wr.getStdOut();
-                err = wr.getStdErr();
-            }
+            String out = extractStdOut(wr, null);
+            String err = extractStdErr(wr, null);
 
             synchronized (METADATA_SYNC) {
                 wr.setStdErr(err);
@@ -381,16 +371,9 @@ public class WorkflowStatusChecker extends Plugin {
                 String out;
 
                 if (wr.getWorkflowEngine().equals("oozie-sge")) {
-                    File dir = OozieJob.scriptsDir(wr.getCurrentWorkingDir());
-                    if (dir.exists()) {
-                        Set<String> extIds = sgeIds(wfJob);
-                        out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, extIds), "stdout");
-                        err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, extIds), "stderr");
-                    } else {
-                        // working dir has been deleted, do not wipe-out the stored output
-                        out = wr.getStdOut();
-                        err = wr.getStdErr();
-                    }
+                    Set<String> extIds = sgeIds(wfJob);
+                    out = extractStdOut(wr, extIds);
+                    err = extractStdErr(wr, extIds);
                 } else {
                     StringBuilder sb = new StringBuilder();
                     for (WorkflowAction action : wfJob.getActions()) {
@@ -585,7 +568,7 @@ public class WorkflowStatusChecker extends Plugin {
 
     /**
      * Stolen from https://stackoverflow.com/questions/93655/stripping-invalid-xml-characters-in-java/9635310#9635310
-     * 
+     *
      * @param input
      * @return
      */
@@ -599,6 +582,46 @@ public class WorkflowStatusChecker extends Plugin {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Extract stderr from a workflow run
+     *
+     * @param wr
+     * @param set
+     *            filter SGE results using a particular id
+     * @return
+     */
+    public static String extractStdErr(WorkflowRun wr, Set<String> set) {
+        String err;
+        File dir = OozieJob.scriptsDir(wr.getCurrentWorkingDir());
+        if (dir.exists()) {
+            err = sgeConcat(sgeFiles(SGE_ERR_FILE, dir, null), "stderr");
+        } else {
+            // working dir has been deleted, do not wipe-out the stored output
+            err = wr.getStdErr();
+        }
+        return err;
+    }
+
+    /**
+     * Extract stdout from a workflow run
+     *
+     * @param wr
+     * @param set
+     *            filter SGE results using a particular id
+     * @return
+     */
+    public static String extractStdOut(WorkflowRun wr, Set<String> set) {
+        String out;
+        File dir = OozieJob.scriptsDir(wr.getCurrentWorkingDir());
+        if (dir.exists()) {
+            out = sgeConcat(sgeFiles(SGE_OUT_FILE, dir, null), "stdout");
+        } else {
+            // working dir has been deleted, do not wipe-out the stored output
+            out = wr.getStdOut();
+        }
+        return out;
     }
 
 }

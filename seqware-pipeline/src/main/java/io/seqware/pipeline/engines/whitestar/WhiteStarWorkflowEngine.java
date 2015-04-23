@@ -141,7 +141,8 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
             }
             pool.shutdown();
             if (failure) {
-                alterWorkflowRunStatus(Integer.parseInt(this.jobId), WorkflowRunStatus.failed);
+                int swid = Integer.parseInt(this.jobId);
+                alterWorkflowRunStatus(swid, WorkflowRunStatus.failed);
                 return new ReturnValue(ReturnValue.FAILURE);
             }
         }

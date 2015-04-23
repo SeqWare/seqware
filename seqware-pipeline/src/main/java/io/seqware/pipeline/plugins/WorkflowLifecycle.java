@@ -1,6 +1,7 @@
 package io.seqware.pipeline.plugins;
 
 import com.google.common.collect.Lists;
+import io.seqware.common.model.WorkflowRunStatus;
 import static io.seqware.pipeline.plugins.WorkflowScheduler.OVERRIDE_INI_DESC;
 import static io.seqware.pipeline.plugins.WorkflowScheduler.validateEngineString;
 import java.io.File;
@@ -11,6 +12,7 @@ import java.util.List;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionSpecBuilder;
+import net.sourceforge.seqware.common.metadata.MetadataInMemory;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -143,6 +145,16 @@ public class WorkflowLifecycle extends Plugin {
         } finally {
             if (!options.has(noRunSpec)) {
                 runStatusCheckerPlugin();
+            }
+            // on failure, if running with in-memory metadata, output stderr and stdout
+            if (metadata instanceof MetadataInMemory) {
+                int workflowRunSWID = Integer.parseInt(workflowRunAccession);
+                if (metadata.getWorkflowRun(workflowRunSWID).getStatus().equals(WorkflowRunStatus.failed)) {
+                    String stdout = metadata.getWorkflowRunReportStdOut(workflowRunSWID);
+                    String stderr = metadata.getWorkflowRunReportStdErr(workflowRunSWID);
+                    Log.stdoutWithTime("Output for stdout due to workflow run failure: \n " + stdout);
+                    Log.stderrWithTime("Output for stderr due to workflow run failure: \n " + stderr);
+                }
             }
         }
         return new ReturnValue();
