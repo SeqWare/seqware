@@ -55,7 +55,7 @@ public enum SqwKeys {
     OOZIE_QUEUENAME(null, Categories.LAUNCH, true, "Hadoop queue onto which to schedule jobs", "default"),
     OOZIE_WORK_DIR(null, Categories.LAUNCH, true,
             "Working directory where your workflow steps execute and where we store generated scripts and logs", "/usr/tmp/seqware-oozie"),
-    OOZIE_RETRY_MAX(null, Categories.LAUNCH, false, "Number of times that Oozie will retry user steps in workflows", "5"),
+    OOZIE_RETRY_MAX(null, Categories.LAUNCH, false, "Number of times that Oozie and Whitestar will retry user steps in workflows", "5"),
     OOZIE_RETRY_INTERVAL(null, Categories.LAUNCH, false, "Minutes to wait before retry for user steps in workflows", "5"),
     OOZIE_BATCH_THRESHOLD(null, Categories.LAUNCH, false,
             "Above this threshold, provision file events on the same job/workflow will be batched together", "10"),

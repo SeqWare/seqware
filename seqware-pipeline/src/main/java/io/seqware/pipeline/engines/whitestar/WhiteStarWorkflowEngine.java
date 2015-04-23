@@ -1,6 +1,9 @@
 package io.seqware.pipeline.engines.whitestar;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.pipeline.SqwKeys;
 import io.seqware.pipeline.api.WorkflowEngine;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -8,6 +11,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -30,6 +34,7 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.Executor;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.Path;
 
 /**
@@ -112,35 +117,52 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         // run this workflow synchronously
         List<List<OozieJob>> jobs = this.workflowApp.getOrderedJobs();
 
-        for (List<OozieJob> rowOfJobs : jobs) {
-            boolean failure = false;
-            // for each row of Jobs in the DAG
-            ExecutorService pool;
-            if (this.parallel) {
-                pool = Executors.newFixedThreadPool(rowOfJobs.size());
-            } else {
-                pool = Executors.newSingleThreadExecutor();
+        for (int j = 0; j < jobs.size(); j++) {
+            List<OozieJob> rowOfJobs = jobs.get(j);
+            // determine number of possible retry loops
+            int retryLoops = ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_RETRY_MAX.getSettingKey()) ? Integer.parseInt(ConfigTools
+                    .getSettings().get(SqwKeys.OOZIE_RETRY_MAX.getSettingKey())) : Integer.parseInt(SqwKeys.OOZIE_RETRY_MAX
+                    .getDefaultValue());
+            int totalAttempts = retryLoops + 1;
+            List<OozieJob> jobsLeft = Lists.newArrayList(rowOfJobs);
+            for (int i = 1; i <= totalAttempts && !jobsLeft.isEmpty(); i++) {
+                List<String> jobNames = Lists.newArrayList();
+                for (OozieJob job : jobsLeft) {
+                    jobNames.add(job.getLongName());
+                }
+                Log.stdoutWithTime("Row #" + j + " , Attempt #" + i + " out of " + totalAttempts + " : " + StringUtils.join(jobNames, ","));
+                // for each row of Jobs in the DAG
+                ExecutorService pool;
+                if (this.parallel) {
+                    pool = Executors.newFixedThreadPool(jobsLeft.size());
+                } else {
+                    pool = Executors.newSingleThreadExecutor();
+                }
+                Map<Future<?>, OozieJob> jobMap = Maps.newHashMap();
+                List<Future<?>> futures = new ArrayList<>(jobsLeft.size());
+                for (OozieJob job : jobsLeft) {
+                    Future<Integer> future = pool.submit(new ExecutionThread(job));
+                    jobMap.put(future, job);
+                    futures.add(future);
+                }
+                jobsLeft.clear();
+                // join
+                for (Future<?> future : futures) {
+                    try {
+                        int get = (Integer) future.get();
+                        if (get != 0) {
+                            jobsLeft.add(jobMap.get(future));
+                            Log.stdoutWithTime("Workflow step failed: " + get);
+                        }
+                    } catch (InterruptedException | ExecutionException ex) {
+                        Log.stdoutWithTime("Workflow step was interrupted or threw an exception");
+                        jobsLeft.add(jobMap.get(future));
+                    }
+                }
+                pool.shutdown();
             }
 
-            List<Future<?>> futures = new ArrayList<>(rowOfJobs.size());
-            for (OozieJob job : rowOfJobs) {
-                futures.add(pool.submit(new ExecutionThread(job)));
-            }
-            // join
-            for (Future<?> future : futures) {
-                try {
-                    int get = (Integer) future.get();
-                    if (get != 0) {
-                        failure = true;
-                        Log.stdoutWithTime("Workflow step failed: " + get);
-                    }
-                } catch (InterruptedException | ExecutionException ex) {
-                    Log.stdoutWithTime("Workflow step was interrupted or threw an exception");
-                    failure = true;
-                }
-            }
-            pool.shutdown();
-            if (failure) {
+            if (!jobsLeft.isEmpty()) {
                 int swid = Integer.parseInt(this.jobId);
                 alterWorkflowRunStatus(swid, WorkflowRunStatus.failed);
                 return new ReturnValue(ReturnValue.FAILURE);
