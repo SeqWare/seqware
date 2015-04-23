@@ -34,9 +34,9 @@ import org.apache.hadoop.fs.Path;
 
 /**
  * This is a synchronous bare-bones implementation of the WorkflowEngine for prototyping and debugging.
- * 
+ *
  * This re-uses much of the OozieWorkflowXml generation code in order to generate the required Bash scripts and supporting files.
- * 
+ *
  * @author dyuen
  */
 public class WhiteStarWorkflowEngine implements WorkflowEngine {
@@ -52,7 +52,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
     private final boolean parallel;
 
     /**
-     * 
+     *
      * @param objectModel
      * @param useSge
      * @param threadsSgeParamFormat
@@ -111,8 +111,10 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
 
         // run this workflow synchronously
         List<List<OozieJob>> jobs = this.workflowApp.getOrderedJobs();
-        for (List<OozieJob> rowOfJobs : jobs) {
 
+        for (List<OozieJob> rowOfJobs : jobs) {
+            boolean failure = false;
+            // for each row of Jobs in the DAG
             ExecutorService pool;
             if (this.parallel) {
                 pool = Executors.newFixedThreadPool(rowOfJobs.size());
@@ -125,26 +127,35 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 futures.add(pool.submit(new ExecutionThread(job)));
             }
             // join
-            try {
-                for (Future<?> future : futures) {
-                    future.get();
+            for (Future<?> future : futures) {
+                try {
+                    int get = (Integer) future.get();
+                    if (get != 0) {
+                        failure = true;
+                        Log.stdoutWithTime("Workflow step failed: " + get);
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    Log.stdoutWithTime("Workflow step was interrupted or threw an exception");
+                    failure = true;
                 }
-            } catch (InterruptedException | ExecutionException ex) {
-                Log.fatal(ex);
-                throw new RuntimeException(ex);
-            } finally {
-                pool.shutdown();
+            }
+            pool.shutdown();
+            if (failure) {
+                alterWorkflowRunStatus(Integer.parseInt(this.jobId), WorkflowRunStatus.failed);
+                return new ReturnValue(ReturnValue.FAILURE);
             }
         }
+        alterWorkflowRunStatus(Integer.parseInt(this.jobId), WorkflowRunStatus.completed);
+        return ret;
+    }
 
-        Log.stdoutWithTime("Setting workflow-run status to complete for: " + this.jobId);
+    private void alterWorkflowRunStatus(int jobId, WorkflowRunStatus status) {
+        Log.stdoutWithTime("Setting workflow-run status to complete for: " + jobId);
         // set the status to completed
         Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
-        WorkflowRun workflowRun = ws.getWorkflowRun(Integer.parseInt(this.jobId));
-        workflowRun.setStatus(WorkflowRunStatus.completed);
+        WorkflowRun workflowRun = ws.getWorkflowRun(jobId);
+        workflowRun.setStatus(status);
         ws.updateWorkflowRun(workflowRun);
-
-        return ret;
     }
 
     private final class ExecutionThread implements Callable<Integer> {
@@ -161,14 +172,14 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
             String optionsFileName = OozieJob.optsFileName(job.getLongName());
             String runnerFileName = OozieJob.runnerFileName(job.getLongName());
 
-            if (WhiteStarWorkflowEngine.this.useSge) {
+            if (!WhiteStarWorkflowEngine.this.useSge) {
+                cmdLine = new CommandLine("bash");
+            } else {
                 cmdLine = new CommandLine("qsub");
                 cmdLine.addArgument("-sync");
                 cmdLine.addArgument("yes");
                 cmdLine.addArgument("-@");
                 cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + optionsFileName);
-            } else {
-                cmdLine = new CommandLine("bash");
             }
 
             cmdLine.addArgument(scriptsDir.getAbsolutePath() + "/" + runnerFileName);
@@ -176,6 +187,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
             Executor executor = new DefaultExecutor();
             executor.setWorkingDirectory(scriptsDir);
             Log.stdoutWithTime("Running command: " + cmdLine.toString());
+
             // record output ourselves if not using sge
             if (!WhiteStarWorkflowEngine.this.useSge) {
                 // we can only use the last 9 characters to fit into an int
@@ -190,7 +202,8 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                     executor.execute(cmdLine);
                     // grab stdout and stderr
                 } catch (ExecuteException e) {
-                    throw rethrow(e);
+                    Log.error("Fatal error in workflow at step: " + job.getLongName());
+                    return -1;
                 } catch (IOException e) {
                     throw rethrow(e);
                 } finally {
@@ -201,8 +214,14 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 }
 
             } else {
-                executor.execute(cmdLine);
+                try {
+                    executor.execute(cmdLine);
+                } catch (ExecuteException ex) {
+                    Log.error("Fatal error in workflow at step: " + job.getLongName());
+                    return -1;
+                }
             }
+
             return 0;
         }
     }
@@ -211,12 +230,12 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
     public ReturnValue watchWorkflow(String jobToken) {
         Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
         WorkflowRun workflowRun = ws.getWorkflowRun(Integer.parseInt(jobToken));
-        Log.stdout("Workflow run " + jobToken + " is now " + workflowRun.getStatus().name());
+        Log.stdout("Workflow run " + jobToken + " is currently " + workflowRun.getStatus().name());
         return new ReturnValue(workflowRun.getStatus() == WorkflowRunStatus.completed ? ReturnValue.SUCCESS : ReturnValue.FAILURE);
     }
 
     /**
-     * 
+     *
      */
     private void populateNfsWorkDir() {
         File lib = new File(this.nfsWorkDir, "lib");

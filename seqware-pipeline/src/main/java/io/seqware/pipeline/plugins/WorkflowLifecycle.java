@@ -134,11 +134,10 @@ public class WorkflowLifecycle extends Plugin {
             runWorkflowSchedulerPlugin(tempBundleFile, tempSchedulerFile);
             // launch the workflow
             runWorkflowLauncherPlugin(tempSchedulerFile);
-            // watch the workflow
+            // watch the workflow if it is an asynchronous launcher
             if (options.has(this.waitSpec)) {
                 runWatcherPlugin();
             }
-            // watch the workflow if necessary
         } catch (IOException e) {
             throw new ExitException(ReturnValue.FILENOTWRITABLE);
         } finally {
@@ -212,7 +211,7 @@ public class WorkflowLifecycle extends Plugin {
             totalParams.add("--" + this.metadataWriteBackOffSpec.options().iterator().next());
         }
         if (options.has(this.nonOptionSpec)) {
-	    totalParams.add("--");
+            totalParams.add("--");
             for (String val : options.valuesOf(this.nonOptionSpec)) {
                 totalParams.add(val);
             }
@@ -240,7 +239,7 @@ public class WorkflowLifecycle extends Plugin {
         runPlugin(WorkflowLauncher.class, schedulerParams.toArray(new String[schedulerParams.size()]));
     }
 
-    private void runPlugin(Class plugin, String[] params) {
+    private void runPlugin(Class<?> plugin, String[] params) {
         PluginRunner p = new PluginRunner();
         List<String> a = new ArrayList<>();
         a.add("--plugin");
