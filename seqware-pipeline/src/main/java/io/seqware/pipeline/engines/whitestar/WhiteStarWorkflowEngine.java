@@ -1,7 +1,12 @@
 package io.seqware.pipeline.engines.whitestar;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
 import io.seqware.pipeline.api.WorkflowEngine;
@@ -9,14 +14,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -116,64 +121,135 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
 
         // run this workflow synchronously
         List<List<OozieJob>> jobs = this.workflowApp.getOrderedJobs();
+        int swid = Integer.parseInt(this.jobId);
 
         for (int j = 0; j < jobs.size(); j++) {
             List<OozieJob> rowOfJobs = jobs.get(j);
             // determine number of possible retry loops
-            int retryLoops = ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_RETRY_MAX.getSettingKey()) ? Integer.parseInt(ConfigTools
-                    .getSettings().get(SqwKeys.OOZIE_RETRY_MAX.getSettingKey())) : Integer.parseInt(SqwKeys.OOZIE_RETRY_MAX
-                    .getDefaultValue());
+            int retryLoops = Integer.parseInt(ConfigTools.getSettingsValue(SqwKeys.OOZIE_RETRY_MAX));
             int totalAttempts = retryLoops + 1;
-            List<OozieJob> jobsLeft = Lists.newArrayList(rowOfJobs);
+            SortedSet<OozieJob> jobsLeft = Collections.synchronizedSortedSet(new TreeSet<>(rowOfJobs));
+            final SortedSet<OozieJob> jobsFailed = Collections.synchronizedSortedSet(new TreeSet<OozieJob>());
+
             for (int i = 1; i <= totalAttempts && !jobsLeft.isEmpty(); i++) {
-                List<String> jobNames = Lists.newArrayList();
-                for (OozieJob job : jobsLeft) {
-                    jobNames.add(job.getLongName());
-                }
-                Log.stdoutWithTime("Row #" + j + " , Attempt #" + i + " out of " + totalAttempts + " : " + StringUtils.join(jobNames, ","));
+                Log.stdoutWithTime("Row #" + j + " , Attempt #" + i + " out of " + totalAttempts + " : " + StringUtils.join(jobsLeft, ","));
                 // for each row of Jobs in the DAG
-                ExecutorService pool;
-                if (this.parallel) {
-                    pool = Executors.newFixedThreadPool(jobsLeft.size());
-                } else {
-                    pool = Executors.newSingleThreadExecutor();
-                }
-                Map<Future<?>, OozieJob> jobMap = Maps.newHashMap();
-                List<Future<?>> futures = new ArrayList<>(jobsLeft.size());
-                for (OozieJob job : jobsLeft) {
-                    Future<Integer> future = pool.submit(new ExecutionThread(job));
-                    jobMap.put(future, job);
-                    futures.add(future);
-                }
-                jobsLeft.clear();
-                // join
-                for (Future<?> future : futures) {
-                    try {
-                        int get = (Integer) future.get();
-                        if (get != 0) {
-                            jobsLeft.add(jobMap.get(future));
-                            Log.stdoutWithTime("Workflow step failed: " + get);
+                ListeningExecutorService pool = null;
+                try {
+                    if (this.parallel) {
+                        pool = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(jobsLeft.size()));
+                    } else {
+                        pool = MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor());
+                    }
+                    // keep track of memory for submitted jobs and ensure it doesn't reach our limits
+                    int memoryLimit = Integer.parseInt(ConfigTools.getSettingsValue(SqwKeys.WHITESTAR_MEMORY_LIMIT));
+
+                    if (!validateJobMemoryLimits(jobsLeft, memoryLimit, swid)) {
+                        return new ReturnValue(ReturnValue.FAILURE);
+                    }
+                    ListenableFuture<List<Integer>> batch;
+                    while (!jobsLeft.isEmpty()) {
+                        batch = scheduleMemoryLimitedBatch(jobsLeft, pool, jobsFailed);
+                        try {
+                            batch.get();
+                        } catch (InterruptedException | ExecutionException ex) {
+                            Log.stdoutWithTime("\tBatch of jobs failed: " + Joiner.on(",").join(jobsFailed));
+                            break;
                         }
-                    } catch (InterruptedException | ExecutionException ex) {
-                        Log.stdoutWithTime("Workflow step was interrupted or threw an exception");
-                        jobsLeft.add(jobMap.get(future));
+                    }
+                } finally {
+                    if (pool != null) {
+                        pool.shutdown();
                     }
                 }
-                pool.shutdown();
+                jobsLeft.addAll(jobsFailed);
+                jobsFailed.clear();
             }
 
             if (!jobsLeft.isEmpty()) {
-                int swid = Integer.parseInt(this.jobId);
                 alterWorkflowRunStatus(swid, WorkflowRunStatus.failed);
                 return new ReturnValue(ReturnValue.FAILURE);
             }
         }
-        alterWorkflowRunStatus(Integer.parseInt(this.jobId), WorkflowRunStatus.completed);
+        alterWorkflowRunStatus(swid, WorkflowRunStatus.completed);
         return ret;
     }
 
+    /**
+     * Schedule a batch of jobs dependent on the memory limit.
+     *
+     * @param jobsLeft
+     *            a list of jobs to be scheduled, scheduled jobs will be removed
+     * @param pool
+     *            an execution service to schedule jobs to
+     * @param jobsFailed
+     *            will contain a list of jobs that failed
+     * @return a future that will return when all jobs are complete
+     */
+    private ListenableFuture<List<Integer>> scheduleMemoryLimitedBatch(final Set<OozieJob> jobsLeft, final ListeningExecutorService pool,
+            final Set<OozieJob> jobsFailed) {
+        int memoryLimit = Integer.parseInt(ConfigTools.getSettingsValue(SqwKeys.WHITESTAR_MEMORY_LIMIT));
+        int memoryUsed = 0;
+        List<OozieJob> currentBatch = Lists.newArrayList();
+        for (OozieJob job : jobsLeft) {
+            int memoryAttempt = Integer.parseInt(job.getJobObject().getMaxMemory());
+            if (memoryUsed + memoryAttempt <= memoryLimit) {
+                // add job to batch
+                currentBatch.add(job);
+                memoryUsed += memoryAttempt;
+            }
+        }
+        Log.stdoutWithTime("\tSubmitting " + memoryUsed + "M batch with: " + Joiner.on(",").join(currentBatch));
+        List<ListenableFuture<Integer>> memoryBatchFutures = Lists.newArrayList();
+        for (final OozieJob job : currentBatch) {
+            ListenableFuture<Integer> future = pool.submit(new ExecutionThread(job));
+            Futures.addCallback(future, new FutureCallback<Integer>() {
+                @Override
+                public void onSuccess(Integer result) {
+                    if (result != null && result == 0) {
+                        Log.stdoutWithTime("\tWorkflow step succeeded: " + job.getLongName());
+                    } else {
+                        jobsFailed.add(job);
+                        Log.stdoutWithTime("\tWorkflow step failed: " + job.getLongName());
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    Log.stdoutWithTime("\tWorkflow step " + job.getLongName() + " was interrupted or threw an exception");
+                    jobsFailed.add(job);
+                }
+
+            });
+            memoryBatchFutures.add(future);
+        }
+        jobsLeft.removeAll(currentBatch);
+        return Futures.allAsList(memoryBatchFutures);
+    }
+
+    /**
+     *
+     * @param jobsLeft
+     * @param memoryLimit
+     * @param swid
+     * @return true iff all jobs are under the memory limit
+     * @throws NumberFormatException
+     */
+    private boolean validateJobMemoryLimits(Set<OozieJob> jobsLeft, int memoryLimit, int swid) {
+        // validate that all jobs are under the memory limit
+        for (OozieJob job : jobsLeft) {
+            int memoryAttempt = Integer.parseInt(job.getJobObject().getMaxMemory());
+            if (memoryAttempt > memoryLimit) {
+                Log.stdoutWithTime("Workflow step " + job.getLongName() + " exceeds the memory limit of " + memoryLimit);
+                alterWorkflowRunStatus(swid, WorkflowRunStatus.failed);
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void alterWorkflowRunStatus(int jobId, WorkflowRunStatus status) {
-        Log.stdoutWithTime("Setting workflow-run status to complete for: " + jobId);
+        Log.stdoutWithTime("Setting workflow-run status to " + status + " for: " + jobId);
         // set the status to completed
         Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
         WorkflowRun workflowRun = ws.getWorkflowRun(jobId);
@@ -209,7 +285,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
 
             Executor executor = new DefaultExecutor();
             executor.setWorkingDirectory(scriptsDir);
-            Log.stdoutWithTime("Running command: " + cmdLine.toString());
+            Log.stdoutWithTime("\tRunning command: " + cmdLine.toString());
 
             // record output ourselves if not using sge
             if (!WhiteStarWorkflowEngine.this.useSge) {
@@ -225,7 +301,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                     executor.execute(cmdLine);
                     // grab stdout and stderr
                 } catch (ExecuteException e) {
-                    Log.error("Fatal error in workflow at step: " + job.getLongName());
+                    Log.debug("\tFatal error in workflow at step: " + job.getLongName());
                     return -1;
                 } catch (IOException e) {
                     throw rethrow(e);
@@ -240,7 +316,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 try {
                     executor.execute(cmdLine);
                 } catch (ExecuteException ex) {
-                    Log.error("Fatal error in workflow at step: " + job.getLongName());
+                    Log.debug("Fatal error in workflow at step: " + job.getLongName());
                     return -1;
                 }
             }

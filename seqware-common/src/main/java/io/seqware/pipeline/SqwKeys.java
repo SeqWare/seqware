@@ -60,6 +60,7 @@ public enum SqwKeys {
     OOZIE_BATCH_THRESHOLD(null, Categories.LAUNCH, false,
             "Above this threshold, provision file events on the same job/workflow will be batched together", "10"),
     OOZIE_BATCH_SIZE(null, Categories.LAUNCH, false, "Number of provision file events that should be batched together", "100"),
+    WHITESTAR_MEMORY_LIMIT(null, Categories.WHITESTAR, false, "Restrict the number of parallel jobs invoked in WhiteStar to this amount of memory",String.valueOf(Integer.MAX_VALUE)),
     FS_HDFS_IMPL("FS.HDFS.IMPL", Categories.LAUNCH, true, "HDFS implementation class", "org.apache.hadoop.hdfs.DistributedFileSystem"),
     OOZIE_SGE_THREADS_PARAM_FORMAT(null, Categories.LAUNCH, false,
             "Only used for 'oozie-sge' engine. Format of qsub flag for specifying number of threads. "
@@ -171,6 +172,7 @@ public enum SqwKeys {
                 "Settings used to configure the installation of workflow bundles"),
         LAUNCH(
                 "Oozie engine settings. Only used for both 'oozie' and 'oozie-sge' engines."),
+        WHITESTAR("WhiteStar engine settings. Only used for the 'whitestar' series of engines."),
         OOZIE_SGE(
                 "Oozie-SGE engine settings. Only used for 'oozie-sge' engine."),
         ADMIN("Settings used for administrators"),
