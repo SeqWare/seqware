@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Invoice extends PermissionsAware implements Serializable, Comparable<Invoice> {
+public class Invoice extends PermissionsAware implements Serializable, Comparable<Invoice>, FirstTierModel {
     /**
      * LEFT OFF WITH: this needs to be finished
      */

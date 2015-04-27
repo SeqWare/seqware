@@ -1874,10 +1874,25 @@ public class Main {
             out("Description:");
             out("  Retry a failed or cancelled workflow run.");
             out("");
-            out("Required parameters:");
+            out("Parameters:");
             out("  --accession <swid>  The SWID of the workflow run, comma separated (no-spaces) for multiple SWIDs");
+            out("  --working-dir <dir> The working directory of the whitestar run");
             out("");
         } else {
+            List<String> optVals = optVals(args, "--working-dir");
+            if (!optVals.isEmpty()) {
+                for (String val : optVals) {
+                    List<String> runnerArgs = new ArrayList<>();
+                    runnerArgs.add("--plugin");
+                    runnerArgs.add("io.seqware.pipeline.plugins.WorkflowRelauncher");
+                    runnerArgs.add("--");
+                    runnerArgs.add("--working-dir");
+                    runnerArgs.add(val);
+                    run(runnerArgs);
+                }
+                return;
+            }
+
             List<String> reqVals = reqVals(args, "--accession");
             List<Integer> swids = Lists.newArrayList();
             for (String val : reqVals) {

@@ -57,9 +57,10 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
     private final String threadsSgeParamFormat;
     private final String maxMemorySgeParamFormat;
 
-    private final File nfsWorkDir;
+    private File nfsWorkDir;
     private WorkflowApp workflowApp;
     private final boolean parallel;
+    private Persistence persistence;
 
     /**
      *
@@ -88,6 +89,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
     private static File initNfsWorkDir(AbstractWorkflowDataModel model) {
         try {
             File nfsWorkDir = FileTools.createDirectoryWithUniqueName(new File(model.getEnv().getOOZIE_WORK_DIR()), "oozie");
+
             boolean setWritable = nfsWorkDir.setWritable(true, false);
             if (!setWritable) {
                 throw new RuntimeException("Unable to write to working directory");
@@ -105,23 +107,47 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
 
     @Override
     public void prepareWorkflow(AbstractWorkflowDataModel objectModel) {
+        prepareWorkflow(objectModel, null);
+    }
+
+    /**
+     *
+     * @param objectModel
+     * @param nfsWorkDir
+     *            pass a working directory to skip creation of scripts in the generated-scripts
+     */
+    public void prepareWorkflow(AbstractWorkflowDataModel objectModel, File nfsWorkDir) {
         // parse objectmodel
-        this.populateNfsWorkDir();
+        if (nfsWorkDir == null) {
+            this.populateNfsWorkDir();
+        } else {
+            this.nfsWorkDir = nfsWorkDir;
+        }
         /** regardless of the truth, tell the workflow app that we're always using sge in order to generate all generated scripts */
         this.workflowApp = new WorkflowApp(objectModel, this.nfsWorkDir.getAbsolutePath(), new Path("dummy-value"), true, new File(
                 seqwareJarPath(objectModel)), this.threadsSgeParamFormat, this.maxMemorySgeParamFormat);
         // go ahead and create the required script files
-        this.workflowApp.serializeXML();
+        if (nfsWorkDir == null) {
+            this.workflowApp.serializeXML();
+        }
         this.jobId = objectModel.getWorkflow_run_accession();
+        this.persistence = new Persistence(this.nfsWorkDir);
     }
 
     @Override
     public ReturnValue runWorkflow() {
+        return runWorkflow(new TreeSet<String>());
+    }
+
+    public ReturnValue runWorkflow(SortedSet<String> set) {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
         // run this workflow synchronously
         List<List<OozieJob>> jobs = this.workflowApp.getOrderedJobs();
+        SortedSet<String> completedJobs = Collections.synchronizedSortedSet(set);
+
         int swid = Integer.parseInt(this.jobId);
+        persistence.persistState(Integer.parseInt(this.jobId), completedJobs);
 
         for (int j = 0; j < jobs.size(); j++) {
             List<OozieJob> rowOfJobs = jobs.get(j);
@@ -129,6 +155,18 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
             int retryLoops = Integer.parseInt(ConfigTools.getSettingsValue(SqwKeys.OOZIE_RETRY_MAX));
             int totalAttempts = retryLoops + 1;
             SortedSet<OozieJob> jobsLeft = Collections.synchronizedSortedSet(new TreeSet<>(rowOfJobs));
+            Set<OozieJob> jobsToRemove = new TreeSet<>();
+            // filter out completed jobs from a pervious run
+            for (OozieJob job : jobsLeft) {
+                if (completedJobs.contains(job.getLongName())) {
+                    jobsToRemove.add(job);
+                }
+            }
+            if (jobsToRemove.size() > 0) {
+                Log.stdoutWithTime("Skipping " + Joiner.on(",").join(jobsToRemove) + " found in persistent map");
+                jobsLeft.removeAll(jobsToRemove);
+            }
+
             final SortedSet<OozieJob> jobsFailed = Collections.synchronizedSortedSet(new TreeSet<OozieJob>());
 
             for (int i = 1; i <= totalAttempts && !jobsLeft.isEmpty(); i++) {
@@ -145,11 +183,12 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                     int memoryLimit = Integer.parseInt(ConfigTools.getSettingsValue(SqwKeys.WHITESTAR_MEMORY_LIMIT));
 
                     if (!validateJobMemoryLimits(jobsLeft, memoryLimit, swid)) {
+                        alterWorkflowRunStatus(swid, WorkflowRunStatus.failed);
                         return new ReturnValue(ReturnValue.FAILURE);
                     }
                     ListenableFuture<List<Integer>> batch;
                     while (!jobsLeft.isEmpty()) {
-                        batch = scheduleMemoryLimitedBatch(jobsLeft, pool, jobsFailed);
+                        batch = scheduleMemoryLimitedBatch(jobsLeft, pool, jobsFailed, completedJobs);
                         try {
                             batch.get();
                         } catch (InterruptedException | ExecutionException ex) {
@@ -184,10 +223,12 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
      *            an execution service to schedule jobs to
      * @param jobsFailed
      *            will contain a list of jobs that failed
+     * @param completedJobs
+     *            set of completed jobs
      * @return a future that will return when all jobs are complete
      */
     private ListenableFuture<List<Integer>> scheduleMemoryLimitedBatch(final Set<OozieJob> jobsLeft, final ListeningExecutorService pool,
-            final Set<OozieJob> jobsFailed) {
+            final Set<OozieJob> jobsFailed, final SortedSet<String> completedJobs) {
         int memoryLimit = Integer.parseInt(ConfigTools.getSettingsValue(SqwKeys.WHITESTAR_MEMORY_LIMIT));
         int memoryUsed = 0;
         List<OozieJob> currentBatch = Lists.newArrayList();
@@ -208,6 +249,8 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 public void onSuccess(Integer result) {
                     if (result != null && result == 0) {
                         Log.stdoutWithTime("\tWorkflow step succeeded: " + job.getLongName());
+                        completedJobs.add(job.getLongName());
+                        persistence.persistState(Integer.parseInt(WhiteStarWorkflowEngine.this.jobId), completedJobs);
                     } else {
                         jobsFailed.add(job);
                         Log.stdoutWithTime("\tWorkflow step failed: " + job.getLongName());

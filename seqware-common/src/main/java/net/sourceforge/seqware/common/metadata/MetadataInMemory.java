@@ -44,6 +44,7 @@ import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
+import net.sourceforge.seqware.common.model.FirstTierModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -337,9 +338,25 @@ public class MetadataInMemory implements Metadata {
         return returnValue;
     }
 
+    private synchronized int getCurrentSwAccession() {
+        int currKey = MetadataInMemory.getStore().rowKeySet().size();
+        return currKey;
+    }
+
     private synchronized int getNextSwAccession() {
         int nextKey = MetadataInMemory.getStore().rowKeySet().size() + 1;
         return nextKey;
+    }
+
+    public void loadEntity(FirstTierModel model) {
+        // populate store up to the desiredkey
+        int currSWID = getCurrentSwAccession();
+        while (currSWID < model.getSwAccession()) {
+            int swid = getNextSwAccession();
+            MetadataInMemory.getStore().put(swid, Integer.class, swid);
+            currSWID = getCurrentSwAccession();
+        }
+        MetadataInMemory.getStore().put(model.getSwAccession(), model.getClass(), model);
     }
 
     @Override
