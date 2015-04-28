@@ -170,7 +170,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 }
             }
             if (jobsToRemove.size() > 0) {
-                Log.stdoutWithTime("Skipping " + Joiner.on(",").join(jobsToRemove) + " found in persistent map");
+                Log.stdoutWithTime("Skipping " + Joiner.on(",").join(jobsToRemove) + " found in persistent set of completed steps");
                 jobsLeft.removeAll(jobsToRemove);
             }
 
