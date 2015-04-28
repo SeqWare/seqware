@@ -16,9 +16,7 @@
  */
 package io.seqware.pipeline.engines.whitestar;
 
-import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.SortedSet;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -58,18 +56,6 @@ public class PersistenceTest {
         assertTrue("workflow is not attached", run.getWorkflow() != null);
         assertTrue("workflow run sw_accession incorrect", run.getWorkflowRunId() == 10);
         assertTrue("workflow sw_accession incorrect", run.getWorkflow().getSwAccession() == 1);
-    }
-
-    /**
-     * Test of persistState method, of class Persistence.
-     */
-    @Test
-    public void testPersistState() throws IOException {
-        Persistence oldPersist = new Persistence(path.toFile());
-        WorkflowRun run = oldPersist.readWorkflowRun();
-        SortedSet<String> readCompletedJobs = oldPersist.readCompletedJobs();
-        Persistence newPersist = new Persistence(Files.createTempDirectory("test").toFile());
-        newPersist.persistState(run.getSwAccession(), readCompletedJobs);
     }
 
 }

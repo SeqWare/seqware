@@ -110,8 +110,9 @@ public class Persistence {
         try {
             // write state of workflow run
             Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
-            WorkflowRun workflowRun = new WorkflowRun();
-            Workflow workflow = new Workflow();
+            Metadata ws = MetadataFactory.get(ConfigTools.getSettings());
+            WorkflowRun workflowRun = ws.getWorkflowRunWithWorkflow(String.valueOf(swid));
+            Workflow workflow = workflowRun.getWorkflow();
             workflowRun.setWorkflow(null);
             workflow.setWorkflowRuns(null);
             if (workflow.getWorkflowParams() != null) {
