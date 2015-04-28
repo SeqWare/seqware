@@ -1,0 +1,84 @@
+{
+  "sw_accession": 1,
+  "name": "HelloWorld",
+  "description": "Add a description of the workflow here.",
+  "version": "1.0-SNAPSHOT",
+  "seqware_version": "1.1.1-SNAPSHOT",
+  "base_ini_file": "${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/config/HelloWorldWorkflow.ini",
+  "cwd": "/home/dyuen/testing/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1-SNAPSHOT",
+  "workflow_class": "${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/classes/io/seqware/HelloWorldWorkflow.java",
+  "workflow_type": "java",
+  "workflow_engine": "Oozie",
+  "create_timestamp": "Apr 28, 2015 4:46:08 PM",
+  "update_timestamp": "Apr 28, 2015 4:46:08 PM",
+  "is_private": false,
+  "is_public": false,
+  "workflow_params": [
+    {
+      "workflow_param_id": 9,
+      "type": "text",
+      "key": "echo",
+      "default_value": "${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/bin/gnu-coreutils-5.67/echo",
+      "display": false,
+      "display_name": "echo"
+    },
+    {
+      "workflow_param_id": 8,
+      "type": "text",
+      "key": "output_dir",
+      "default_value": "seqware-results",
+      "display": false,
+      "display_name": "output_dir"
+    },
+    {
+      "workflow_param_id": 7,
+      "type": "text",
+      "key": "manual_output",
+      "default_value": "false",
+      "display": false,
+      "display_name": "manual_output"
+    },
+    {
+      "workflow_param_id": 6,
+      "type": "text",
+      "key": "cat",
+      "default_value": "${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/bin/gnu-coreutils-5.67/cat",
+      "display": false,
+      "display_name": "cat"
+    },
+    {
+      "workflow_param_id": 5,
+      "type": "text",
+      "key": "greeting",
+      "default_value": "Testing",
+      "display": true,
+      "display_name": "Greeting"
+    },
+    {
+      "workflow_param_id": 4,
+      "type": "text",
+      "key": "output_prefix",
+      "default_value": "./",
+      "display": false,
+      "display_name": "output_prefix"
+    },
+    {
+      "workflow_param_id": 3,
+      "type": "file",
+      "key": "input_file",
+      "default_value": "${workflow_bundle_dir}/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/data/input.txt",
+      "display": false,
+      "file_meta_type": "text/plain",
+      "display_name": "input_file"
+    },
+    {
+      "workflow_param_id": 2,
+      "type": "text",
+      "key": "seqware-output-lines-number",
+      "default_value": "20",
+      "display": false,
+      "display_name": "seqware-output-lines-number"
+    }
+  ],
+  "workflow_attributes": []
+}

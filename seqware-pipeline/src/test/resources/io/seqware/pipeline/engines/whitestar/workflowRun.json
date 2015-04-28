@@ -1,0 +1,15 @@
+{
+  "workflow_run_id": 10,
+  "sw_accession": 10,
+  "create_timestamp": "Apr 28, 2015 4:46:08 PM",
+  "update_timestamp": "Apr 28, 2015 4:46:08 PM",
+  "is_selected": false,
+  "is_has_file": false,
+  "status": "submitted",
+  "host": "odl-dyuen",
+  "ini_file": "parent_accession\u003d0\nmetadata\u003dno-metadata\noutput_prefix\u003d./\nmanual_output\u003dfalse\ngreeting\u003dTesting\nworkflow_run_accession\u003d0\nparent_accessions\u003d0\necho\u003d/home/dyuen/testing/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1-SNAPSHOT/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/bin/gnu-coreutils-5.67/echo\nseqware-output-lines-number\u003d20\nparent-accessions\u003d0\ninput_file\u003d/home/dyuen/testing/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1-SNAPSHOT/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/data/input.txt\ncat\u003d/home/dyuen/testing/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1-SNAPSHOT/Workflow_Bundle_HelloWorld/1.0-SNAPSHOT/bin/gnu-coreutils-5.67/cat\noutput_dir\u003dseqware-results\nworkflow-run-accession\u003d0\nworkflow_bundle_dir\u003d/home/dyuen/testing/HelloWorld/target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1-SNAPSHOT\n",
+  "workflow_run_attributes": [],
+  "workflow_engine": "whitestar",
+  "workflow_accession": 1,
+  "owner_user_name": "admin@admin.com"
+}

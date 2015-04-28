@@ -139,6 +139,13 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
         return runWorkflow(new TreeSet<String>());
     }
 
+    /**
+     * Run a workflow, steps contained within set are skipped.
+     *
+     * @param set
+     *            a sorted set of workflow steps
+     * @return
+     */
     public ReturnValue runWorkflow(SortedSet<String> set) {
         ReturnValue ret = new ReturnValue(ReturnValue.SUCCESS);
 
