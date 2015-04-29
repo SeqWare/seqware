@@ -113,7 +113,7 @@ public class DebugWorkflowTutorialET {
         // package bundles
         String listCommand = " bundle launch --dir BuggyWorkflow/target/Workflow_Bundle_BuggyWorkflow_1.0-SNAPSHOT_SeqWare_"
                 + SEQWARE_VERSION + "/";
-        String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.RUNNERERR, tempDir);
+        String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.FAILURE, tempDir);
         Log.stderr(listOutput);
         Assert.assertTrue("Workflow did not fail as expected",
                 listOutput.contains("The method 'do_run' exited abnormally so the Runner will terminate here!"));
