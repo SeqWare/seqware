@@ -119,6 +119,7 @@ public class WorkflowLifecycle extends Plugin {
 
     @Override
     public ReturnValue do_run() {
+        boolean success = true;
         try {
             File tempBundleFile = File.createTempFile("bundle_manager", "out");
             tempBundleFile.deleteOnExit();
@@ -147,8 +148,8 @@ public class WorkflowLifecycle extends Plugin {
                 runStatusCheckerPlugin();
             }
             // on failure, if running with in-memory metadata, output stderr and stdout
+            int workflowRunSWID = Integer.parseInt(workflowRunAccession);
             if (metadata instanceof MetadataInMemory) {
-                int workflowRunSWID = Integer.parseInt(workflowRunAccession);
                 if (metadata.getWorkflowRun(workflowRunSWID).getStatus().equals(WorkflowRunStatus.failed)) {
                     String stdout = metadata.getWorkflowRunReportStdOut(workflowRunSWID);
                     String stderr = metadata.getWorkflowRunReportStdErr(workflowRunSWID);
@@ -156,6 +157,12 @@ public class WorkflowLifecycle extends Plugin {
                     Log.stderrWithTime("Output for stderr due to workflow run failure: \n " + stderr);
                 }
             }
+            if (metadata.getWorkflowRun(workflowRunSWID).getStatus().equals(WorkflowRunStatus.failed)) {
+                success = false;
+            }
+        }
+        if (!success) {
+            return new ReturnValue(ReturnValue.FAILURE);
         }
         return new ReturnValue();
     }

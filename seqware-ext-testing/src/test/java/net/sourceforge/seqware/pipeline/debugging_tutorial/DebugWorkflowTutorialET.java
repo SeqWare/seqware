@@ -29,9 +29,9 @@ import org.junit.Test;
 
 /**
  * These tests support the tutorial for debugging workflows.
- * 
+ *
  * We will verify that error reporting in the WorkflowLauncher and stderr come back as expected.
- * 
+ *
  * @author dyuen
  */
 public class DebugWorkflowTutorialET {
