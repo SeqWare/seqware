@@ -20,13 +20,16 @@ import io.seqware.Reports;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedPluginTest;
 import net.sourceforge.seqware.pipeline.plugins.ModuleRunner;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 /**
  * Runs tests for the ModuleRunner class.
@@ -35,8 +38,15 @@ import org.junit.Test;
  */
 public class ModuleRunnerTest extends ExtendedPluginTest {
 
+    /**
+     * This allows us to intercept and ignore the various System.exit calls within runner so they don't take down the tests as well
+     */
+    @Rule
+    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
+
     @BeforeClass
     public static void beforeClass() {
+        System.out.println("beforeClass");
         BasicTestDatabaseCreator.resetDatabaseWithUsers();
         Reports.triggerProvenanceReport();
     }
@@ -44,28 +54,35 @@ public class ModuleRunnerTest extends ExtendedPluginTest {
     @Before
     @Override
     public void setUp() {
+        System.out.println("before setUp");
         instance = new ModuleRunner();
+        System.out.println("before call to super");
         super.setUp();
+        System.out.println("after setUp");
     }
 
     public ModuleRunnerTest() {
     }
 
     @Test
-    public void testNormalRun() throws IOException {
+    public void normalRunTest() throws IOException {
         System.out.println("testNormalRun");
         Path parentAccession = Files.createTempFile("accession", "test");
         FileUtils.write(parentAccession.toFile(), "836");
-        launchPlugin("--metadata --metadata-parent-accession-file " + parentAccession.toAbsolutePath()
-                + " --module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner -- --gcr-algorithm bash_cp --gcr-command echo");
+        exit.expectSystemExitWithStatus(ReturnValue.SUCCESS);
+        launchPlugin("--metadata", "--metadata-parent-accession-file", parentAccession.toAbsolutePath().toString(), "--module",
+                "net.sourceforge.seqware.pipeline.modules.GenericCommandRunner", "--", "--gcr-algorithm", "bash_cp", "--gcr-command",
+                "echo");
     }
 
     @Test
     public void testBlankParentAccessionFileFail() throws IOException {
         System.out.println("testBlankParentAccessionFile");
         Path parentAccession = Files.createTempFile("accession", "test");
-        launchPlugin("--metadata --metadata-parent-accession-file " + parentAccession.toAbsolutePath()
-                + " --module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner -- --gcr-algorithm bash_cp --gcr-command echo");
+        exit.expectSystemExitWithStatus(ReturnValue.METADATAINVALIDIDCHAIN);
+        launchPlugin("--metadata", "--metadata-parent-accession-file", parentAccession.toAbsolutePath().toString(), "--module",
+                "net.sourceforge.seqware.pipeline.modules.GenericCommandRunner", "--", "--gcr-algorithm", "bash_cp", "--gcr-command",
+                "echo");
     }
 
     @Test
@@ -73,8 +90,10 @@ public class ModuleRunnerTest extends ExtendedPluginTest {
         System.out.println("testInvalidAccessionFile");
         Path parentAccession = Files.createTempFile("accession", "test");
         FileUtils.write(parentAccession.toFile(), "-1");
-        launchPlugin("--metadata --metadata-parent-accession-file " + parentAccession.toAbsolutePath()
-                + " --module net.sourceforge.seqware.pipeline.modules.GenericCommandRunner -- --gcr-algorithm bash_cp --gcr-command echo");
+        exit.expectSystemExitWithStatus(ReturnValue.SQLQUERYFAILED);
+        launchPlugin("--metadata", "--metadata-parent-accession-file", parentAccession.toAbsolutePath().toString(), "--module",
+                "net.sourceforge.seqware.pipeline.modules.GenericCommandRunner", "--", "--gcr-algorithm", "bash_cp", "--gcr-command",
+                "echo");
     }
 
 }
