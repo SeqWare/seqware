@@ -36,6 +36,7 @@ import org.junit.contrib.java.lang.system.ExpectedSystemExit;
  *
  * @author dyuen
  */
+
 public class ModuleRunnerTest extends ExtendedPluginTest {
 
     /**
@@ -46,7 +47,6 @@ public class ModuleRunnerTest extends ExtendedPluginTest {
 
     @BeforeClass
     public static void beforeClass() {
-        System.out.println("beforeClass");
         BasicTestDatabaseCreator.resetDatabaseWithUsers();
         Reports.triggerProvenanceReport();
     }
@@ -54,23 +54,30 @@ public class ModuleRunnerTest extends ExtendedPluginTest {
     @Before
     @Override
     public void setUp() {
-        System.out.println("before setUp");
         instance = new ModuleRunner();
-        System.out.println("before call to super");
         super.setUp();
-        System.out.println("after setUp");
     }
 
     public ModuleRunnerTest() {
     }
 
     @Test
-    public void normalRunTest() throws IOException {
-        System.out.println("testNormalRun");
+    public void normalParentAccessionRunTest() throws IOException {
+        System.out.println("normalParentAccessionRunTest");
         Path parentAccession = Files.createTempFile("accession", "test");
         FileUtils.write(parentAccession.toFile(), "836");
         exit.expectSystemExitWithStatus(ReturnValue.SUCCESS);
         launchPlugin("--metadata", "--metadata-parent-accession-file", parentAccession.toAbsolutePath().toString(), "--module",
+                "net.sourceforge.seqware.pipeline.modules.GenericCommandRunner", "--", "--gcr-algorithm", "bash_cp", "--gcr-command",
+                "echo");
+    }
+
+    @Test
+    public void normalAccessionFileRunTest() throws IOException {
+        System.out.println("normalAccessionFileRunTest");
+        Path resultAccession = Files.createTempFile("accession", "test");
+        exit.expectSystemExitWithStatus(ReturnValue.SUCCESS);
+        launchPlugin("--metadata", "--metadata-processing-accession-file", resultAccession.toAbsolutePath().toString(), "--module",
                 "net.sourceforge.seqware.pipeline.modules.GenericCommandRunner", "--", "--gcr-algorithm", "bash_cp", "--gcr-command",
                 "echo");
     }

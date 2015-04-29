@@ -212,19 +212,20 @@ public class Runner {
         System.exit(-1);
     }
 
-    private void writeProcessingAccessionToFile(File file, boolean append) {
+    private void writeStringToFile(File file, boolean append, String output) {
         int maxTries = (Integer) options.valueOf("metadata-tries-number");
         for (int i = 0; i <= maxTries; i++) {
+            Log.fatal("On try " + i + " of " + maxTries);
             // Break on success
-            if (LockingFileTools.lockAndWrite(file, processingAccession + System.getProperty("line.separator"), append)) {
+            if (LockingFileTools.lockAndWrite(file, output, append)) {
                 break;
             } // Sleep if going to try again
             else if (i < maxTries) {
                 ProcessTools.sleep((Integer) options.valueOf("metadata-tries-delay"));
             } // Return error if failed on last try
-            else {
+            if (maxTries == i) {
                 ReturnValue retval = new ReturnValue();
-                retval.printAndAppendtoStderr("Could not write to processingAccession File for metadata");
+                retval.printAndAppendtoStderr("Could not write to " + file.getAbsolutePath() + " for metadata");
                 retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
                 meta.update_processing_event(processingID, retval);
                 meta.update_processing_status(processingID, ProcessingStatus.failed);
@@ -643,24 +644,7 @@ public class Runner {
 
                 try {
                     if ((file.exists() || file.createNewFile()) && file.canWrite()) {
-                        int maxTries = (Integer) options.valueOf("metadata-tries-number");
-                        for (int i = 0; i <= maxTries; i++) {
-                            // Break on success
-                            if (LockingFileTools.lockAndAppend(file, workflowRunAccession + System.getProperty("line.separator"))) {
-                                break;
-                            } // Sleep if going to try again
-                            else if (i < maxTries) {
-                                ProcessTools.sleep((Integer) options.valueOf("metadata-tries-delay"));
-                            } // Return error if failed on last try
-                            else {
-                                ReturnValue retval = new ReturnValue();
-                                retval.printAndAppendtoStderr("Could not write to processingID File for metadata");
-                                retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
-                                meta.update_processing_event(workflowRunAccession, retval);
-                                meta.update_processing_status(workflowRunAccession, ProcessingStatus.failed);
-                                System.exit(retval.getExitStatus());
-                            }
-                        }
+                        this.writeStringToFile(file, true, workflowRunAccession + System.getProperty("line.separator"));
                     } else {
                         Log.error("Could not create processingAccession File for metadata");
                         System.exit(ReturnValue.METADATAINVALIDIDCHAIN);
@@ -894,35 +878,18 @@ public class Runner {
             // Try to write to each processingIDFile until success or timeout
             for (File file : processingIDFiles) {
                 Log.debug("Writing out accession to " + file.toString());
-                int maxTries = (Integer) options.valueOf("metadata-tries-number");
-                for (int i = 0; i <= maxTries; i++) {
-                    // Break on success
-                    if (LockingFileTools.lockAndAppend(file, processingID + System.getProperty("line.separator"))) {
-                        break;
-                    } // Sleep if going to try again
-                    else if (i < maxTries) {
-                        ProcessTools.sleep((Integer) options.valueOf("metadata-tries-delay"));
-                    } // Return error if failed on last try
-                    else {
-                        ReturnValue retval = new ReturnValue();
-                        retval.printAndAppendtoStderr("Could not write to processingID File for metadata");
-                        retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
-                        meta.update_processing_event(processingID, retval);
-                        meta.update_processing_status(processingID, ProcessingStatus.failed);
-                        System.exit(retval.getExitStatus());
-                    }
-                }
+                this.writeStringToFile(file, true, processingID + System.getProperty("line.separator"));
             }
             Log.debug("Completed processingIDFiles");
 
             // Try to write to each processingAccessionFile until success or timeout
             for (File file : processingAccessionFiles) {
                 Log.debug("Writing out to " + file.toString());
-                writeProcessingAccessionToFile(file, true);
+                writeStringToFile(file, true, processingAccession + System.getProperty("line.separator"));
             }
             Log.debug("Completed processingAccessionFiles");
             if (processingAccessionFileCheck != null) {
-                writeProcessingAccessionToFile(processingAccessionFileCheck, false);
+                writeStringToFile(processingAccessionFileCheck, true, processingAccession + System.getProperty("line.separator"));
             }
             Log.debug("Completed processingAccessionFileCheck");
             meta.update_processing_status(processingID, ProcessingStatus.success);
