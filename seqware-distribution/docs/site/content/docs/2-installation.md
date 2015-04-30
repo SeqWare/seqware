@@ -64,7 +64,7 @@ Next, you will need to download our current VM image which is linked below.
 Please make sure you are using the latest version, when we post a new one we
 will tweet about it so consider following us on Twitter.
 
-* [SeqWare_1.1.0-beta.0.ova](https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0-beta.0.ova)
+* [SeqWare_1.1.0.ova](https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0.ova)
 * [SeqWare-1.0.13.ova (this is the VM we recommend for the ICGC PanCancer project for data train 2.0)](https://s3.amazonaws.com/oicr.vm/public/Seqware_1.0.13_Bindle_1.2.1.ova)
  
 If you run into issues downloading the VM, please try wget and use md5sum to verify your download. For example:
