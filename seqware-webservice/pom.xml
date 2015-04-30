@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
+        <version>1.1.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -133,7 +133,7 @@
                 </executions>
 
                 <configuration>
-                    <!-- <argLine>${argLine} -Xms512m -Xmx512m</argLine> -->
+                    <argLine>${argLine} -Xms512m -Xmx512m</argLine>
                     <forkMode>pertest</forkMode>
                     <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state -->
 		    <runOrder>reversealphabetical</runOrder>
@@ -141,7 +141,6 @@
                         <include>**/WSResourceTestSuite.java</include>
                         <include>**/plugins/*.java</include>
                         <include>**/deciders/*.java</include>
-                        <include>**/runner/*.java</include>
                     </includes>
                 </configuration>
             </plugin>
