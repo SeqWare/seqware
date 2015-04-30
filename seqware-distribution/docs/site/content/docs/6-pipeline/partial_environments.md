@@ -89,6 +89,17 @@ Next, you will need to run your workflows without metadata being recorded for in
 
 	$ seqware bundle launch --dir target/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_<%= seqware_release_version %>/ --engine whitestar --no-metadata
 
+## Additional Notes 
+
+When working with SeqWare Whitestar, there are some additional changes in functionality from Oozie-based versions of SeqWare that should be noted. The first obvious change is that workflows are launched and run synchronously without scheduling. Additional notes are below:
+
+* The number of times that Whitestar will attempt a particular step in a workflow is configurable based on the OOZIE_RETRY_MAX key in your ~/.seqware/settings. You can set this to 0 if you do not want steps to be retried at all
+* When retrying workflows with Whitestar, you will need to use "seqware workflow-run retry --working-dir" rather than using an accession due the possibility that you may not be running with metadata. For example, in order to retry one of the workflows above you would use the following 
+
+        $ seqware workflow-run retry --working-dir /usr/tmp/oozie/oozie-2f30c387-6a75-4cd4-8ade-d32208721cff
+
+* All jobs in a level of a DAG will be launched by default. However, you can override this behaviour by setting the key WHITESTAR_MEMORY_LIMIT in your ~/.seqware/settings. For example, setting that to 3000 will mean that 3000MB worth of jobs will be launched at a time.    
+
 
 ## Summary
 

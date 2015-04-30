@@ -43,7 +43,7 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
     // none persistents(for Summary Launch Workflow Page)
     private Sample sample;
     private List<File> files;
-    final Logger logger = LoggerFactory.getLogger(WorkflowParam.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkflowParam.class);
 
     /**
      * <p>
@@ -500,16 +500,16 @@ public class WorkflowParam extends PermissionsAware implements Serializable, Com
             hasPermission = workflow.givesPermission(registration, considered);
         } else {// orphaned WorkflowParam
             if (registration.isLIMSAdmin()) {
-                logger.warn("Modifying Orphan WorkflowParam: " + this.getDisplayName());
+                LOGGER.warn("Modifying Orphan WorkflowParam: " + this.getDisplayName());
                 hasPermission = true;
             } else {
-                logger.warn("Not modifying Orphan WorkflowParam: " + this.getDisplayName());
+                LOGGER.warn("Not modifying Orphan WorkflowParam: " + this.getDisplayName());
                 hasPermission = false;
             }
         }
 
         if (!hasPermission) {
-            logger.info("WorkflowParam does not give permission");
+            LOGGER.info("WorkflowParam does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " does not have permission to modify "
                     + this.getDisplayName());
         }

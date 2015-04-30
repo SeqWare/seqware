@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $Id
  */
 public class SequencerRun extends PermissionsAware implements Serializable, Comparable<SequencerRun>, ParentAccessionModel,
-        Annotatable<SequencerRunAttribute> {
+        Annotatable<SequencerRunAttribute>, FirstTierModel {
 
     private static final long serialVersionUID = 3681328115923390568L;
     private Integer sequencerRunId;
@@ -271,6 +271,7 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
      *
      * @return a {@link java.lang.Integer} object.
      */
+    @Override
     public Integer getSwAccession() {
         return swAccession;
     }
@@ -564,35 +565,35 @@ public class SequencerRun extends PermissionsAware implements Serializable, Comp
 
     /*
      * public Lane getLane1() { return lane1; }
-     *
+     * 
      * public void setLane1(Lane lane1) { this.lane1 = lane1; }
-     *
+     * 
      * public Lane getLane2() { return lane2; }
-     *
+     * 
      * public void setLane2(Lane lane2) { this.lane2 = lane2; }
-     *
+     * 
      * public Lane getLane3() { return lane3; }
-     *
+     * 
      * public void setLane3(Lane lane3) { this.lane3 = lane3; }
-     *
+     * 
      * public Lane getLane4() { return lane4; }
-     *
+     * 
      * public void setLane4(Lane lane4) { this.lane4 = lane4; }
-     *
+     * 
      * public Lane getLane5() { return lane5; }
-     *
+     * 
      * public void setLane5(Lane lane5) { this.lane5 = lane5; }
-     *
+     * 
      * public Lane getLane6() { return lane6; }
-     *
+     * 
      * public void setLane6(Lane lane6) { this.lane6 = lane6; }
-     *
+     * 
      * public Lane getLane7() { return lane7; }
-     *
+     * 
      * public void setLane7(Lane lane7) { this.lane7 = lane7; }
-     *
+     * 
      * public Lane getLane8() { return lane8; }
-     *
+     * 
      * public void setLane8(Lane lane8) { this.lane8 = lane8; }
      */
 

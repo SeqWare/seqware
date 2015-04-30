@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $Id
  */
 public class Experiment extends PermissionsAware implements Serializable, Comparable<Experiment>, ParentAccessionModel,
-        Annotatable<ExperimentAttribute> {
+        Annotatable<ExperimentAttribute>, FirstTierModel {
 
     private static final long serialVersionUID = 2L;
     private Integer experimentId;
@@ -150,19 +150,19 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
 
     /*
      * public int compareTo(Experiment that) { if(that == null) return -1;
-     *
+     * 
      * if(that.getName() == this.getName()) // when both names are null return 0;
-     *
+     * 
      * if(that.getName() == null) return -1; // when only the other name is null
-     *
+     * 
      * return(that.getName().compareTo(this.getName())); }
-     *
+     * 
      * public String toString() { return new ToStringBuilder(this) .append("experimentId", getExperimentId()) .append("name", getName())
      * .toString(); }
-     *
+     * 
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Experiment) ) return false;
      * Experiment castOther = (Experiment) other; return new EqualsBuilder() .append(this.getName(), castOther.getName()) .isEquals(); }
-     *
+     * 
      * public int hashCode() { return new HashCodeBuilder() .append(getName()) .toHashCode(); }
      */
     /**
@@ -425,6 +425,7 @@ public class Experiment extends PermissionsAware implements Serializable, Compar
      *
      * @return a {@link java.lang.Integer} object.
      */
+    @Override
     public Integer getSwAccession() {
         return swAccession;
     }

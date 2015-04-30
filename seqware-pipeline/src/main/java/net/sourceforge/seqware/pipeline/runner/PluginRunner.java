@@ -25,10 +25,10 @@ import org.openide.util.Lookup;
  * <p>
  * PluginRunner class.
  * </p>
- * 
+ *
  * @author briandoconnor@gmail.com
  * @since 20110925
- * 
+ *
  *        The PluginRunner is a command line utility that will provide a mechanism to extend the core functionality of SeqWare Pipeline in a
  *        more organized way then the current collection of Perl and other utilities used haphazardly in this subproject. The idea is that
  *        core SeqWare Pipeline functionality should be implemented in Java and packaged as a single jar file making the code more
@@ -55,7 +55,7 @@ public class PluginRunner {
      * <p>
      * main.
      * </p>
-     * 
+     *
      * @param args
      *            an array of {@link java.lang.String} objects.
      */
@@ -73,7 +73,7 @@ public class PluginRunner {
      * <p>
      * run.
      * </p>
-     * 
+     *
      * @param args
      *            an array of {@link java.lang.String} objects.
      */
@@ -122,7 +122,7 @@ public class PluginRunner {
     }
 
     /**
-     * 
+     *
      * @param parser
      *            The options parser object
      * @param errorMessage
@@ -267,7 +267,7 @@ public class PluginRunner {
 
     /**
      * This method invokes each of the plugin methods in turn and evaluates if there are errors.
-     * 
+     *
      * @return ReturnValue which includes information about status and any errors
      */
     private void invokePluginMethods() {
@@ -296,7 +296,7 @@ public class PluginRunner {
 
     /**
      * This method calls the specified plugin method and checks for errors.
-     * 
+     *
      * @param app
      * @param methodName
      */
@@ -347,7 +347,7 @@ public class PluginRunner {
             this.config = ConfigTools.getSettings();
         } catch (Exception e) {
             Log.stderr("Error reading settings file: " + e.getMessage());
-            Log.fatal("Error readind settings file", e);
+            Log.fatal("Error reading settings file", e);
             throw new ExitException(ReturnValue.SETTINGSFILENOTFOUND);
         }
     }
