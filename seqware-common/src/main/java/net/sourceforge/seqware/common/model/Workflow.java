@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Workflow extends PermissionsAware implements Serializable, Comparable<Workflow>, Annotatable<WorkflowAttribute> {
+public class Workflow extends PermissionsAware implements Serializable, Comparable<Workflow>, Annotatable<WorkflowAttribute>, FirstTierModel {
     /**
      * LEFT OFF WITH: this needs to be finished
      */
@@ -212,6 +212,7 @@ public class Workflow extends PermissionsAware implements Serializable, Comparab
      *
      * @return a {@link java.lang.Integer} object.
      */
+    @Override
     public Integer getSwAccession() {
         return swAccession;
     }

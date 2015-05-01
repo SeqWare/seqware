@@ -22,6 +22,7 @@ import com.google.common.collect.Table;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.SequencerRunStatus;
 import io.seqware.common.model.WorkflowRunStatus;
+import io.seqware.pipeline.SqwKeys;
 import java.io.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
+import net.sourceforge.seqware.common.model.FirstTierModel;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
 import net.sourceforge.seqware.common.model.Lane;
@@ -69,6 +71,7 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 
 /**
  * This stores some metadata in memory as an exploration of running workflows without a running database or web service.
@@ -82,14 +85,14 @@ public class MetadataInMemory implements Metadata {
     /**
      * Stores SWID/id -> Model object. Unlike the postgres database, we re-use the sw accession as the id
      */
-    private static final Table<Integer, Class, Object> STORE = HashBasedTable.create();
+    private static final Table<Integer, Class<?>, Object> STORE = HashBasedTable.create();
 
     /**
      * Not really thread-safe, why does Guava not have a synchronized wrapper?
      *
      * @return the store
      */
-    private static synchronized Table<Integer, Class, Object> getStore() {
+    private static synchronized Table<Integer, Class<?>, Object> getStore() {
         return STORE;
     }
 
@@ -230,6 +233,7 @@ public class MetadataInMemory implements Metadata {
         wr.setWorkflowRunId(wr.getSwAccession());
         wr.setCreateTimestamp(new Date());
         wr.setUpdateTimestamp(new Date());
+        wr.setOwnerUserName(ConfigTools.getSettings().get(SqwKeys.SW_REST_USER.getSettingKey()));
         Workflow workflow = (Workflow) MetadataInMemory.getStore().get(workflowAccession, Workflow.class);
         wr.setWorkflow(workflow);
         MetadataInMemory.getStore().put(wr.getSwAccession(), WorkflowRun.class, wr);
@@ -334,9 +338,25 @@ public class MetadataInMemory implements Metadata {
         return returnValue;
     }
 
+    private synchronized int getCurrentSwAccession() {
+        int currKey = MetadataInMemory.getStore().rowKeySet().size();
+        return currKey;
+    }
+
     private synchronized int getNextSwAccession() {
         int nextKey = MetadataInMemory.getStore().rowKeySet().size() + 1;
         return nextKey;
+    }
+
+    public void loadEntity(FirstTierModel model) {
+        // populate store up to the desiredkey
+        int currSWID = getCurrentSwAccession();
+        while (currSWID < model.getSwAccession()) {
+            int swid = getNextSwAccession();
+            MetadataInMemory.getStore().put(swid, Integer.class, swid);
+            currSWID = getCurrentSwAccession();
+        }
+        MetadataInMemory.getStore().put(model.getSwAccession(), model.getClass(), model);
     }
 
     @Override
@@ -520,12 +540,14 @@ public class MetadataInMemory implements Metadata {
 
     @Override
     public String getWorkflowRunReportStdErr(int workflowRunSWID) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        WorkflowRun wr = (WorkflowRun) MetadataInMemory.getStore().get(workflowRunSWID, WorkflowRun.class);
+        return wr.getStdErr() == null ? "" : wr.getStdErr();
     }
 
     @Override
     public String getWorkflowRunReportStdOut(int workflowRunSWID) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        WorkflowRun wr = (WorkflowRun) MetadataInMemory.getStore().get(workflowRunSWID, WorkflowRun.class);
+        return wr.getStdOut() == null ? "" : wr.getStdOut();
     }
 
     @Override

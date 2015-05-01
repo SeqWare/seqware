@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class WorkflowRun extends PermissionsAware implements Serializable, Comparable<WorkflowRun>, Annotatable<WorkflowRunAttribute> {
+public class WorkflowRun extends PermissionsAware implements Serializable, Comparable<WorkflowRun>, Annotatable<WorkflowRunAttribute>, FirstTierModel {
 
     private static final long serialVersionUID = 1L;
     private Integer workflowRunId;
@@ -252,6 +252,7 @@ public class WorkflowRun extends PermissionsAware implements Serializable, Compa
      *
      * @return a {@link java.lang.Integer} object.
      */
+    @Override
     public Integer getSwAccession() {
         return swAccession;
     }

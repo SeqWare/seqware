@@ -25,7 +25,8 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Lane extends PermissionsAware implements Serializable, Comparable<Lane>, ParentAccessionModel, Annotatable<LaneAttribute> {
+public class Lane extends PermissionsAware implements Serializable, Comparable<Lane>, ParentAccessionModel, Annotatable<LaneAttribute>,
+        FirstTierModel {
 
     private static final long serialVersionUID = 5681328115923390568L;
     private Integer laneId;
@@ -125,18 +126,18 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     /*
      * public int compareTo(Lane that) { if(that == null || getSwAccession() == null) return -1;
-     *
+     * 
      * if(that.getSwAccession() == this.getSwAccession()) // when both names are null return 0;
-     *
+     * 
      * if(that.getSwAccession() == null) return -1; // when only the other name is null
-     *
+     * 
      * return(that.getSwAccession().compareTo(this.getSwAccession())); }
-     *
+     * 
      * public String toString() { return new ToStringBuilder(this) .append("laneId", getLaneId()) .toString(); }
-     *
+     * 
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Lane) ) return false; Lane
      * castOther = (Lane) other; return new EqualsBuilder() .append(this.getSwAccession(), castOther.getSwAccession()) .isEquals(); }
-     *
+     * 
      * public int hashCode() { return new HashCodeBuilder() .append(getSwAccession()) .toHashCode(); }
      */
     /**
@@ -687,7 +688,7 @@ public class Lane extends PermissionsAware implements Serializable, Comparable<L
 
     /*
      * public String getSampleName() { return sampleName; }
-     *
+     * 
      * public void setSampleName(String sampleName) { this.sampleName = sampleName; }
      */
     /**

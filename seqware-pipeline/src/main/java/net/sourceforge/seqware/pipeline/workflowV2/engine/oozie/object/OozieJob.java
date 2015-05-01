@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import io.seqware.pipeline.SqwKeys;
 import java.io.File;
@@ -19,7 +20,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-public abstract class OozieJob {
+public abstract class OozieJob implements Comparable<OozieJob> {
     /**
      * Variable identifier to be used within the qsub threads parameter to specify the value.
      */
@@ -477,6 +478,11 @@ public abstract class OozieJob {
      */
     public String getShortName() {
         return shortName;
+    }
+
+    @Override
+    public int compareTo(OozieJob that) {
+        return ComparisonChain.start().compare(this.longName, that.longName).result();
     }
 
 }

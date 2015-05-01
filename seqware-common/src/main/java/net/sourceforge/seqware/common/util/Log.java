@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.common.util;
 
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +29,7 @@ import org.apache.log4j.PatternLayout;
  * <p>
  * Log class.
  * </p>
- * 
+ *
  * @author yongliang
  * @version $Id: $Id
  */
@@ -39,7 +40,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#debug(Object)}.
-     * 
+     *
      * @param message
      *            the message to log.
      */
@@ -51,7 +52,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#debug(Object,Throwable)}.
-     * 
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -65,7 +66,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#debug(Object)}.
-     * 
+     *
      * @param message
      *            the message to log.
      */
@@ -77,7 +78,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#debug(Object,Throwable)}.
-     * 
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -91,7 +92,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#info(Object)}.
-     * 
+     *
      * @param message
      *            the message to log.
      */
@@ -103,7 +104,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#info(Object,Throwable)}.
-     * 
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -117,7 +118,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#warn(Object)}.
-     * 
+     *
      * @param message
      *            the message to log.
      */
@@ -129,7 +130,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#warn(Object,Throwable)}.
-     * 
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -143,7 +144,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#error(Object)}.
-     * 
+     *
      * @param message
      *            the message to log.
      */
@@ -155,7 +156,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#error(Object,Throwable)}.
-     * 
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -169,7 +170,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#fatal(Object)}.
-     * 
+     *
      * @param message
      *            the message to log.
      */
@@ -181,7 +182,7 @@ public class Log {
 
     /**
      * See {@link org.apache.log4j.Logger#fatal(Object,Throwable)}.
-     * 
+     *
      * @param message
      *            the message to log.
      * @param t
@@ -197,7 +198,7 @@ public class Log {
      * <p>
      * stdout.
      * </p>
-     * 
+     *
      * @param message
      *            a {@link java.lang.String} object.
      */
@@ -207,22 +208,30 @@ public class Log {
 
     /**
      * Output to stdout with the time pre-pended
-     * 
+     *
      * @param message
      *            a {@link java.lang.String} object.
      */
     public static void stdoutWithTime(final String message) {
+        outputWithTime(message, System.out);
+    }
+
+    public static void stderrWithTime(final String message) {
+        outputWithTime(message, System.err);
+    }
+
+    private static void outputWithTime(final String message, PrintStream stream) {
         // get current date time with Date()
         Date date = new Date();
-        System.out.print("[" + DATE_FORMAT.format(date) + "] | ");
-        System.out.println(message);
+        stream.print("[" + DATE_FORMAT.format(date) + "] | ");
+        stream.println(message);
     }
 
     /**
      * <p>
      * stderr.
      * </p>
-     * 
+     *
      * @param message
      *            a {@link java.lang.String} object.
      */
@@ -232,7 +241,7 @@ public class Log {
 
     /**
      * override the log4j.properties
-     * 
+     *
      * @param b
      *            a boolean.
      */
@@ -279,7 +288,7 @@ public class Log {
 
     /**
      * Examine stack trace to get caller
-     * 
+     *
      * @param level
      *            method stack depth
      * @return who called the logger
