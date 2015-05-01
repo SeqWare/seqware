@@ -13,7 +13,7 @@ import net.sourceforge.seqware.common.util.maptools.MapTools;
  * <p>
  * ConfigTools class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -24,7 +24,7 @@ public class ConfigTools {
 
     /**
      * The output keys are always uppercase!
-     * 
+     *
      * @return a {@link java.util.Map} object.
      */
     public static Map<String, String> getSettings() {
@@ -51,10 +51,21 @@ public class ConfigTools {
     }
 
     /**
+     * Get the value of a key if defined or the default value if not defined.
+     * 
+     * @param key
+     * @return
+     */
+    public static String getSettingsValue(SqwKeys key) {
+        Map<String, String> settings = ConfigTools.getSettings();
+        return settings.containsKey(key.getSettingKey()) ? settings.get(key.getSettingKey()) : key.getDefaultValue();
+    }
+
+    /**
      * <p>
      * getProperty.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      * @return a {@link java.lang.String} object.

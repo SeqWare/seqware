@@ -24,7 +24,8 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class Study extends PermissionsAware implements Serializable, ParentAccessionModel, Comparable<Study>, Annotatable<StudyAttribute> {
+public class Study extends PermissionsAware implements Serializable, ParentAccessionModel, Comparable<Study>, Annotatable<StudyAttribute>,
+        FirstTierModel {
 
     private static final long serialVersionUID = 2L;
     private Integer studyId;
@@ -124,19 +125,19 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
 
     /*
      * public int compareTo(Study that) { if(that == null) return -1;
-     *
+     * 
      * if(that.getTitle() == this.getTitle()) // when both names are null return 0;
-     *
+     * 
      * if(that.getTitle() == null) return -1; // when only the other name is null
-     *
+     * 
      * return(that.getTitle().compareTo(this.getTitle())); }
-     *
+     * 
      * public String toString() { return new ToStringBuilder(this) .append("studyId", getStudyId()) .append("title", getTitle())
      * .append("swAccession", getSwAccession()) .toString(); }
-     *
+     * 
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Study) ) return false; Study
      * castOther = (Study) other; return new EqualsBuilder() .append(this.getTitle(), castOther.getTitle()) .isEquals(); }
-     *
+     * 
      * public int hashCode() { return new HashCodeBuilder() .append(getTitle()) .toHashCode(); }
      */
     /**
@@ -169,6 +170,7 @@ public class Study extends PermissionsAware implements Serializable, ParentAcces
      *
      * @return a {@link java.lang.Integer} object.
      */
+    @Override
     public Integer getSwAccession() {
         return swAccession;
     }

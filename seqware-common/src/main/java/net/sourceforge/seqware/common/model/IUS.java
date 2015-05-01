@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class IUS extends PermissionsAware implements Serializable, Comparable<IUS>, ParentAccessionModel, Annotatable<IUSAttribute> {
+public class IUS extends PermissionsAware implements Serializable, Comparable<IUS>, ParentAccessionModel, Annotatable<IUSAttribute>, FirstTierModel {
 
     private static final long serialVersionUID = 3472028115923390568L;
     private Integer iusId;
