@@ -91,7 +91,7 @@ Next, you will need to run your workflows without metadata being recorded for in
 
 ## Additional Notes 
 
-When working with SeqWare Whitestar, there are some additional changes in functionality from Oozie-based versions of SeqWare that should be noted. The first obvious change is that workflows are launched and run synchronously without scheduling. Additional notes are below:
+When working with SeqWare Whitestar, there are some additional changes in functionality from Oozie-based versions of SeqWare that should be noted. The first obvious change is that workflows are launched and run synchronously without scheduling. Additional notes applicable to version 1.1.1 are below:
 
 * The number of times that Whitestar will attempt a particular step in a workflow is configurable based on the OOZIE_RETRY_MAX key in your ~/.seqware/settings. You can set this to 0 if you do not want steps to be retried at all
 * When retrying workflows with Whitestar, you will need to use "seqware workflow-run retry --working-dir" rather than using an accession due the possibility that you may not be running with metadata. For example, in order to retry one of the workflows above you would use the following 
