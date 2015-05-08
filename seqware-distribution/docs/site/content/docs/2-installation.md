@@ -69,7 +69,7 @@ will tweet about it so consider following us on Twitter.
  
 If you run into issues downloading the VM, please try wget and use md5sum to verify your download. For example:
 
-    $ wget https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0-beta.0.ova
+    $ wget https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0.ova
     --2015-01-23 11:40:31--  https://s3.amazonaws.com/oicr.vm/public/seqware_1.1.0-beta.0.ova
     Resolving s3.amazonaws.com (s3.amazonaws.com)... 54.231.17.200
     Connecting to s3.amazonaws.com (s3.amazonaws.com)|54.231.17.200|:443... connected.
