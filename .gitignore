@@ -62,3 +62,6 @@ seqware-vagrant/vagrant_cluster_launch.json
 
 # python cache
 scripts/deciders/__pycache__
+
+# maven files
+*.versionsBackup

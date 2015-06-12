@@ -155,8 +155,9 @@
     <modules>
         <module>seqware-meta-db</module>
         <module>seqware-common</module>
-        <module>seqware-pipeline</module>
         <module>seqware-admin-webservice</module>
+        <module>seqware-admin-common</module>
+        <module>seqware-pipeline</module>
         <module>seqware-ext-admin-testing</module>
         <module>seqware-webservice</module>
         <module>seqware-archetypes/seqware-archetype-decider</module>
@@ -716,6 +717,11 @@
             <dependency>
                 <groupId>org.powermock</groupId>
                 <artifactId>powermock-core</artifactId>
+                <version>${powermock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-reflect</artifactId>
                 <version>${powermock.version}</version>
             </dependency>
             <dependency>

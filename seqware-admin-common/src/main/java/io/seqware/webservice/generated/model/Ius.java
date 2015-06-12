@@ -1,0 +1,283 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package io.seqware.webservice.generated.model;
+
+import io.seqware.webservice.adapter.IntegerAdapter;
+import io.seqware.webservice.annotations.ParentEntity;
+import io.seqware.webservice.annotations.SkippableEntity;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Collection;
+import java.util.Date;
+
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+/**
+ * 
+ * @author boconnor
+ */
+@Entity
+@Table(name = "ius")
+@XmlRootElement
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="iusId")
+@SkippableEntity
+@NamedQueries({ @NamedQuery(name = "Ius.findAll", query = "SELECT i FROM Ius i"),
+        @NamedQuery(name = "Ius.findByIusId", query = "SELECT i FROM Ius i WHERE i.iusId = :iusId"),
+        @NamedQuery(name = "Ius.findByName", query = "SELECT i FROM Ius i WHERE i.name = :name"),
+        @NamedQuery(name = "Ius.findByAlias", query = "SELECT i FROM Ius i WHERE i.alias = :alias"),
+        @NamedQuery(name = "Ius.findByDescription", query = "SELECT i FROM Ius i WHERE i.description = :description"),
+        @NamedQuery(name = "Ius.findByTag", query = "SELECT i FROM Ius i WHERE i.tag = :tag"),
+        @NamedQuery(name = "Ius.findBySwAccession", query = "SELECT i FROM Ius i WHERE i.swAccession = :swAccession"),
+        @NamedQuery(name = "Ius.findByCreateTstmp", query = "SELECT i FROM Ius i WHERE i.createTstmp = :createTstmp"),
+        @NamedQuery(name = "Ius.findByUpdateTstmp", query = "SELECT i FROM Ius i WHERE i.updateTstmp = :updateTstmp"),
+        @NamedQuery(name = "Ius.findBySkip", query = "SELECT i FROM Ius i WHERE i.skip = :skip") })
+public class Ius implements Serializable {
+    private static final long serialVersionUID = 1L;
+    @Id
+    @SequenceGenerator(name="ius_ius_id_seq", allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="ius_id_seq")
+    @Basic(optional = false)
+    @Column(name = "ius_id")
+    private Integer iusId;
+    @Size(max = 2147483647)
+    @Column(name = "name")
+    private String name;
+    @Size(max = 2147483647)
+    @Column(name = "alias")
+    private String alias;
+    @Size(max = 2147483647)
+    @Column(name = "description")
+    private String description;
+    @Size(max = 2147483647)
+    @Column(name = "tag")
+    private String tag;
+    @Column(name = "sw_accession", insertable = false, updatable = false)
+    private Integer swAccession;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "create_tstmp")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createTstmp;
+    @Column(name = "update_tstmp")
+    @Version
+    private Timestamp updateTstmp;
+    @Column(name = "skip")
+    private Boolean skip;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "iusId")
+    private Collection<IusWorkflowRuns> iusWorkflowRunsCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "iusId")
+    private Collection<IusAttribute> iusAttributeCollection;
+    @JoinColumn(name = "sample_id", referencedColumnName = "sample_id")
+    @ManyToOne(optional = false)
+    private Sample sampleId;
+    @JoinColumn(name = "owner_id", referencedColumnName = "registration_id")
+    @ManyToOne
+    private Registration ownerId;
+    @JoinColumn(name = "lane_id", referencedColumnName = "lane_id")
+    @ManyToOne(optional = false)
+    private Lane laneId;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "iusId")
+    private Collection<ProcessingIus> processingIusCollection;
+
+    public Ius() {
+    }
+
+    public Ius(Integer iusId) {
+        this.iusId = iusId;
+    }
+
+    public Ius(Integer iusId, Date createTstmp) {
+        this.iusId = iusId;
+        this.createTstmp = createTstmp;
+    }
+
+    @XmlID
+    @XmlJavaTypeAdapter(value=IntegerAdapter.class)
+    public Integer getIusId() {
+        return iusId;
+    }
+
+    public void setIusId(Integer iusId) {
+        this.iusId = iusId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public Integer getSwAccession() {
+        return swAccession;
+    }
+
+    public void setSwAccession(Integer swAccession) {
+        this.swAccession = swAccession;
+    }
+
+    public Date getCreateTstmp() {
+        return createTstmp;
+    }
+
+    public void setCreateTstmp(Date createTstmp) {
+        this.createTstmp = createTstmp;
+    }
+
+    public Timestamp getUpdateTstmp() {
+        return updateTstmp;
+    }
+
+    public void setUpdateTstmp(Timestamp updateTstmp) {
+        this.updateTstmp = updateTstmp;
+    }
+
+    public Boolean getSkip() {
+        return skip;
+    }
+
+    public void setSkip(Boolean skip) {
+        this.skip = skip;
+    }
+
+    @XmlTransient
+    public Collection<IusWorkflowRuns> getIusWorkflowRunsCollection() {
+        return iusWorkflowRunsCollection;
+    }
+
+    public void setIusWorkflowRunsCollection(Collection<IusWorkflowRuns> iusWorkflowRunsCollection) {
+        this.iusWorkflowRunsCollection = iusWorkflowRunsCollection;
+    }
+
+    @XmlTransient
+    public Collection<IusAttribute> getIusAttributeCollection() {
+        return iusAttributeCollection;
+    }
+
+    public void setIusAttributeCollection(Collection<IusAttribute> iusAttributeCollection) {
+        this.iusAttributeCollection = iusAttributeCollection;
+    }
+
+    @XmlIDREF
+    @JsonBackReference
+    public Sample getSampleId() {
+        return sampleId;
+    }
+
+    @ParentEntity(parentType = Sample.class)
+    public void setSampleId(Sample sampleId) {
+        this.sampleId = sampleId;
+    }
+
+    @XmlIDREF
+    @JsonBackReference
+    public Registration getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Registration ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    @XmlIDREF
+    public Lane getLaneId() {
+        return laneId;
+    }
+
+    @ParentEntity(parentType = Lane.class)
+    public void setLaneId(Lane laneId) {
+        this.laneId = laneId;
+    }
+
+    @JsonManagedReference
+    public Collection<ProcessingIus> getProcessingIusCollection() {
+        return processingIusCollection;
+    }
+
+    public void setProcessingIusCollection(Collection<ProcessingIus> processingIusCollection) {
+        this.processingIusCollection = processingIusCollection;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (iusId != null ? iusId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+        if (!(object instanceof Ius)) {
+            return false;
+        }
+        Ius other = (Ius) object;
+        if ((this.iusId == null && other.iusId != null) || (this.iusId != null && !this.iusId.equals(other.iusId))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "io.seqware.webservice.model.Ius[ iusId=" + iusId + " ]";
+    }
+
+}

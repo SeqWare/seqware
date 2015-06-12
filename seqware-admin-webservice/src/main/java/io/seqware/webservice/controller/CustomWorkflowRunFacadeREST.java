@@ -16,8 +16,6 @@
  */
 package io.seqware.webservice.controller;
 
-import com.sun.jersey.api.ConflictException;
-import com.sun.jersey.api.NotFoundException;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.webservice.generated.controller.WorkflowRunFacadeREST;
 import io.seqware.webservice.generated.model.File;
@@ -30,9 +28,11 @@ import io.seqware.webservice.generated.model.ProcessingIus;
 import io.seqware.webservice.generated.model.ProcessingRelationship;
 import io.seqware.webservice.generated.model.SequencerRun;
 import io.seqware.webservice.generated.model.WorkflowRun;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -45,12 +45,19 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
+import com.sun.jersey.api.ConflictException;
+import com.sun.jersey.api.NotFoundException;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
+
 /**
  * 
  * @author dyuen
  */
 @Stateless
 @Path("io.seqware.webservice.model.workflowrun")
+@Api(value="/io.seqware.webservice.model.workflowrun")
 public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
 
     /**
@@ -60,12 +67,13 @@ public class CustomWorkflowRunFacadeREST extends WorkflowRunFacadeREST {
      * @param victims
      * @param targetClass
      */
+    @ApiOperation(value="Recursively delete a workflowrun.")
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     @DELETE
     @Path("{id}/rdelete/{targetClass}")
     @Consumes({ "application/json" })
-    public void deleteRecursive(@PathParam("id") Integer id, Set<ModelAccessionIDTuple> victims,
-            @PathParam("targetClass") String targetClass) {
+    public void deleteRecursive(@ApiParam(required=true) @PathParam("id") Integer id, @ApiParam(name="victims") Set<ModelAccessionIDTuple> victims,
+            @ApiParam(required=true) @PathParam("targetClass") String targetClass) {
         Set<ModelAccessionIDTuple> victimsFound = handleTargetting(targetClass, id, true, victims);
 
         if (victims.equals(victimsFound)) {

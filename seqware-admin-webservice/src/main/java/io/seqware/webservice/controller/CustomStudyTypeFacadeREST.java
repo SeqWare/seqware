@@ -5,8 +5,11 @@
 package io.seqware.webservice.controller;
 
 import io.seqware.webservice.generated.controller.StudyTypeFacadeREST;
+
 import javax.ejb.Stateless;
 import javax.ws.rs.Path;
+
+import com.wordnik.swagger.annotations.Api;
 
 /**
  * 
@@ -14,5 +17,6 @@ import javax.ws.rs.Path;
  */
 @Stateless
 @Path("io.seqware.webservice.model.studytype")
+@Api(value="/io.seqware.webservice.model.studytype")
 public class CustomStudyTypeFacadeREST extends StudyTypeFacadeREST {
 }

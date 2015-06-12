@@ -82,8 +82,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>seqware-admin-webservice</artifactId>
-            <classifier>classes</classifier>
+            <artifactId>seqware-admin-common</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
@@ -315,6 +314,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+		  <groupId>org.powermock</groupId>
+		  <artifactId>powermock-reflect</artifactId>
+		  <version>1.5.6</version>
+		  <scope>test</scope>
+		</dependency>
         <dependency>
             <artifactId>powermock-core</artifactId>
             <groupId>org.powermock</groupId>

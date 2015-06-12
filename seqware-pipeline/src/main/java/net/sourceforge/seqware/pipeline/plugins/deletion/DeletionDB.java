@@ -5,6 +5,7 @@ import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import io.seqware.pipeline.SqwKeys;
 import io.seqware.webservice.client.SeqWareWebServiceClient;
+//import io.seqware.webservice.controller.ModelAccessionIDTuple;
 import io.seqware.webservice.controller.ModelAccessionIDTuple;
 import io.seqware.webservice.generated.model.WorkflowRun;
 import java.io.File;

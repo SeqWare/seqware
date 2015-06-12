@@ -322,6 +322,12 @@ public class WorkflowStatusChecker extends Plugin {
                             oc.kill(jobId);
                             nextSqwStatus = WorkflowRunStatus.cancelled;
                             break;
+                        //TODO: Need to handle Oozie status "KILLED"
+/*                        case KILLED:
+                          //It's *already* dead in Oozie so don't need to kill it, just mark it as "failed"
+                          nextSqwStatus = WorkflowRunStatus.failed;
+                          break;
+*/                        
                         default:
                             // Let others propagate as normal
                             nextSqwStatus = convertOozieToSeqware(wfJob.getStatus());

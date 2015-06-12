@@ -5,14 +5,20 @@
 package io.seqware.webservice.controller;
 
 import io.seqware.webservice.generated.controller.StudyFacadeREST;
+
 import javax.ejb.Stateless;
 import javax.ws.rs.Path;
+
+import com.wordnik.swagger.annotations.Api;
 
 /**
  * 
  * @author dyuen
  */
 @Stateless
+@Api(value="/io.seqware.webservice.model.study")
 @Path("io.seqware.webservice.model.study")
 public class CustomStudyFacadeREST extends StudyFacadeREST {
+	
+
 }

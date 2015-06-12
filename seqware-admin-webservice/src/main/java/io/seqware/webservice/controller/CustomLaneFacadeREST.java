@@ -5,6 +5,7 @@
 package io.seqware.webservice.controller;
 
 import io.seqware.webservice.generated.controller.LaneFacadeREST;
+
 import javax.ejb.Stateless;
 import javax.ws.rs.Path;
 
@@ -15,4 +16,5 @@ import javax.ws.rs.Path;
 @Stateless
 @Path("io.seqware.webservice.model.lane")
 public class CustomLaneFacadeREST extends LaneFacadeREST {
+
 }

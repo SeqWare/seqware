@@ -4,9 +4,9 @@
  */
 package io.seqware.webservice.controller;
 
-import com.sun.jersey.api.ConflictException;
 import io.seqware.webservice.generated.controller.SampleFacadeREST;
 import io.seqware.webservice.generated.model.Sample;
+
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -17,11 +17,16 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import com.sun.jersey.api.ConflictException;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+
 /**
  * 
  * @author dyuen
  */
 @Stateless
+@Api(value="/io.seqware.webservice.model.sample")
 @Path("io.seqware.webservice.model.sample")
 public class CustomSampleFacadeREST extends SampleFacadeREST {
     
@@ -32,6 +37,7 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
      * @param id
      * @return 
      */
+    @ApiOperation(value="Create a null hierarchy of samples")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     @PUT
     @Path("{id}/createNullHierarchy")
@@ -52,6 +58,7 @@ public class CustomSampleFacadeREST extends SampleFacadeREST {
         }
     }
 
+    @ApiOperation(value="Remove a null hierarchy.")
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     @DELETE
     @Path("{id}/removeNullHierarchy")
