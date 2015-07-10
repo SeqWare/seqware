@@ -26,7 +26,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * IUSDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -45,9 +45,9 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Inserts an instance of Lane into the database.
-     * 
+     *
      * @return
      */
     @Override
@@ -59,7 +59,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of Lane in the database.
      */
     @Override
@@ -189,7 +189,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     public List<IUS> findByOwnerID(Integer registrationId) {
         String query = "from IUS as ius where ius.owner.registrationId = ?";
         Object[] parameters = { registrationId };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<IUS>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */
@@ -199,7 +199,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
         String query = "from IUS as ius where ius.swAccession = ?";
         IUS obj = null;
         Object[] parameters = { swAccession };
-        List<IUS> list = this.getHibernateTemplate().find(query, parameters);
+        List<IUS> list = (List<IUS>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             obj = (IUS) list.get(0);
         }
@@ -331,7 +331,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override

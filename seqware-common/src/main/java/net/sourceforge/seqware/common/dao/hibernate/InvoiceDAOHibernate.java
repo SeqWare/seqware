@@ -18,7 +18,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * InvoiceDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -60,7 +60,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -148,9 +148,9 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
         String query = "from Invoice as invoice where invoice.swAccession = ?";
         Invoice invoice = null;
         Object[] parameters = { swAccession };
-        List<Invoice> list = this.getHibernateTemplate().find(query, parameters);
+        List<Invoice> list = (List<Invoice>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            invoice = (Invoice) list.get(0);
+            invoice = list.get(0);
         } else {
             Log.error("Could not find invoice of swaccession = " + swAccession);
         }

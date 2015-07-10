@@ -10,7 +10,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * IUSAttributeDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -41,7 +41,7 @@ public class IUSAttributeDAOHibernate extends HibernateDaoSupport implements IUS
     public List<IUSAttribute> findAll(IUS ius) {
         String query = "from IUSAttribute as ia where ia.ius.iusId = ?";
         Object[] parameters = { ius.getIusId() };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<IUSAttribute>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */

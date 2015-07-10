@@ -26,7 +26,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * WorkflowRunDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -68,7 +68,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
      * <p>
      * update.
      * </p>
-     * 
+     *
      * @param workflowRun
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @param laneIds
@@ -100,7 +100,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -263,9 +263,9 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         String query = "from WorkflowRun as workflowRun where workflowRun.swAccession = ?";
         WorkflowRun workflowRun = null;
         Object[] parameters = { swAccession };
-        List<WorkflowRun> list = this.getHibernateTemplate().find(query, parameters);
+        List<WorkflowRun> list = (List<WorkflowRun>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            workflowRun = (WorkflowRun) list.get(0);
+            workflowRun = list.get(0);
         }
         return workflowRun;
     }
@@ -276,7 +276,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     public List<WorkflowRun> findByOwnerID(Integer registrationID) {
         String query = "from WorkflowRun as workflowRun where workflowRun.owner.registrationId = ?";
         Object[] parameters = { registrationID };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<WorkflowRun>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */
