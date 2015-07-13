@@ -149,7 +149,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
         String query = "from File as file where file.swAccession = ?";
         File file = null;
         Object[] parameters = { swAccession };
-        List<File> list = this.getHibernateTemplate().find(query, parameters);
+        List<File> list = (List<File>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             file = (File) list.get(0);
         }
@@ -162,7 +162,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     public List<File> findByOwnerId(Integer registrationId) {
         String query = "from File as file where file.owner.registrationId = ?";
         Object[] parameters = { registrationId };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<File>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */
@@ -276,7 +276,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
         String query = "from File";
 
         @SuppressWarnings("unchecked")
-        List<File> list = this.getHibernateTemplate().find(query);
+        List<File> list = (List<File>) this.getHibernateTemplate().find(query);
 
         for (File e : list) {
             l.add(e);

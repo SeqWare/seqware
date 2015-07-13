@@ -20,7 +20,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * ProcessingDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -50,7 +50,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of Processing in the database.
      */
     @Override
@@ -62,7 +62,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of Processing in the database. This is likely to not work given the complex tree structures created with
      * processing entries.
      */
@@ -74,7 +74,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * WITH RECURSIVE "processing_root_to_leaf" ("child_id", "parent_id") AS ( SELECT p."child_id" as "child_id", p."parent_id" FROM
      * "processing_relationship" p where p."parent_id" = 53851 UNION ALL SELECT p."child_id", rl."parent_id" FROM "processing_root_to_leaf"
      * rl, "processing_relationship" p WHERE p."parent_id" = rl."child_id" ) --select * from "processing_root_to_leaf" p; select distinct
@@ -208,7 +208,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of Processing in the database by the Processing emailAddress.
      */
     @Override
@@ -225,9 +225,9 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of SequencerRun in the database by the SequencerRun ID.
-     * 
+     *
      * @param id
      */
     @Override
@@ -249,9 +249,9 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         String query = "from Processing as processing where processing.swAccession = ?";
         Processing processing = null;
         Object[] parameters = { swAccession };
-        List<Processing> list = this.getHibernateTemplate().find(query, parameters);
+        List<Processing> list = (List<Processing>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            processing = (Processing) list.get(0);
+            processing = list.get(0);
         }
         return processing;
     }
@@ -262,7 +262,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
     public List<Processing> findByOwnerID(Integer registrationId) {
         String query = "from Processing as processing where processing.owner.registrationId = ?";
         Object[] parameters = { registrationId };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<Processing>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */

@@ -25,7 +25,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * StudyDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -44,7 +44,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param study
      */
     @Override
@@ -56,7 +56,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param study
      */
     @Override
@@ -74,10 +74,10 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This deletion will result in just the study and experiments being deleted but the samples and IUS will remain. This will potentially
      * cause orphans which is not really at all good. A better solution is to never delete but just use a deletion attribute.
-     * 
+     *
      */
     @Override
     public void delete(Study study) {
@@ -100,7 +100,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param isAsc
      */
     @Override
@@ -179,7 +179,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param isAsc
      */
     @Override
@@ -205,7 +205,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param isAsc
      */
     @Override
@@ -773,7 +773,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param isAsc
      */
     @Override
@@ -989,7 +989,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of Study in the database by the Study name.
      */
     @Override
@@ -997,15 +997,15 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
         String query = "from Study as study where lower(study.title) = ?";
         Study study = null;
         Object[] parameters = { title.toLowerCase() };
-        List<Study> list = this.getHibernateTemplate().find(query, parameters);
+        List<Study> list = (List<Study>) this.getHibernateTemplate().find(query, parameters);
         return list;
     }
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of Study in the database by the Study ID.
-     * 
+     *
      * @param expID
      */
     @Override
@@ -1027,9 +1027,9 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
         String query = "from Study as study where study.swAccession = ?";
         Study study = null;
         Object[] parameters = { swAccession };
-        List<Study> list = this.getHibernateTemplate().find(query, parameters);
+        List<Study> list = (List<Study>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            study = (Study) list.get(0);
+            study = list.get(0);
         }
         return study;
     }
@@ -1040,7 +1040,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     public List<Study> findByOwnerID(Integer registrationId) {
         String query = "from Study as study where study.owner.registrationId = ?";
         Object[] parameters = { registrationId };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<Study>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */
@@ -1136,7 +1136,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param study
      */
     @Override
