@@ -12,3 +12,5 @@ before_script:
 script: mvn -B clean install -DskipITs=false
 addons:
   postgresql: "9.4"
+# try container-based integration testing
+sudo: false
