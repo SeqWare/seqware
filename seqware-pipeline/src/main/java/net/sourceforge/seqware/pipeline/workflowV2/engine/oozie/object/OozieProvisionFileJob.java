@@ -73,7 +73,7 @@ public class OozieProvisionFileJob extends OozieJob {
          * So, despite the fact that ProvisionFiles knows the destination of the file, we still need the following since ProvisionFiles
          * reports just the filename as the destination, and then Runner prepends that file longName with the value of the following.
          * Madness.
-         * 
+         *
          * Based on code from pegasus.object.ProvisionFilesJob.buildCommandString()
          */
         if (file.getOutputPath() == null) {
@@ -149,6 +149,7 @@ public class OozieProvisionFileJob extends OozieJob {
         ArrayList<String> args = new ArrayList<>();
         String pathToJRE = createPathToJava();
         args.add(pathToJRE + "java");
+        args.add("-XX:+UseSerialGC");
         args.add("-Xmx" + jobObj.getCommand().getMaxMemory());
         args.add("-classpath");
         args.add(seqwareJarPath);
