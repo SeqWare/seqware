@@ -20,7 +20,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * WorkflowDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -62,7 +62,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     @Override
@@ -153,9 +153,9 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
         String query = "from Workflow as workflow where workflow.swAccession = ?";
         Workflow workflow = null;
         Object[] parameters = { swAccession };
-        List<Workflow> list = this.getHibernateTemplate().find(query, parameters);
+        List<Workflow> list = (List<Workflow>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            workflow = (Workflow) list.get(0);
+            workflow = list.get(0);
         } else {
             Log.error("Could not find workflow of swaccession = " + swAccession);
         }

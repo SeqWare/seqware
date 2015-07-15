@@ -14,7 +14,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * ShareWorkflowRunDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -30,7 +30,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Inserts an instance of ShareWorkflowRun into the database.
      */
     @Override
@@ -40,7 +40,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of ShareWorkflowRun in the database.
      */
     @Override
@@ -51,7 +51,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of ShareWorkflowRun in the database.
      */
     @Override
@@ -62,7 +62,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of ShareWorkflowRun in the database by the ShareWorkflowRun ID.
      */
     @Override
@@ -79,7 +79,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of ShareWorkflowRun in the database by the ShareWorkflowRun ID.
      */
     @Override
@@ -101,9 +101,9 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
         String query = "from ShareWorkflowRun as shareWorkflowRun where shareWorkflowRun.swAccession = ?";
         ShareWorkflowRun shareWorkflowRun = null;
         Object[] parameters = { swAccession };
-        List<ShareWorkflowRun> list = this.getHibernateTemplate().find(query, parameters);
+        List<ShareWorkflowRun> list = (List<ShareWorkflowRun>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            shareWorkflowRun = (ShareWorkflowRun) list.get(0);
+            shareWorkflowRun = list.get(0);
         }
         return shareWorkflowRun;
     }

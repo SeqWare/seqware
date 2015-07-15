@@ -19,7 +19,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * SampleReportDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -241,7 +241,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
         String query = "from SampleReportRow as sr where sr.sequencerRun.sequencerRunId = ?";
         Object[] parameters = { sr.getSequencerRunId() };
         @SuppressWarnings({ "unchecked" })
-        List<SampleReportRow> list = this.getHibernateTemplate().find(query, parameters);
+        List<SampleReportRow> list = (List<SampleReportRow>) this.getHibernateTemplate().find(query, parameters);
         return list;
     }
 
@@ -250,7 +250,7 @@ public class SampleReportDAOHibernate extends HibernateDaoSupport implements Sam
     public List<SampleReportRow> getRowsWithSequencerRuns() {
         String query = "from SampleReportRow as sr where sr.sequencerRun.sequencerRunId is not null";
         @SuppressWarnings({ "unchecked" })
-        List<SampleReportRow> list = this.getHibernateTemplate().find(query);
+        List<SampleReportRow> list = (List<SampleReportRow>) this.getHibernateTemplate().find(query);
         return list;
     }
 

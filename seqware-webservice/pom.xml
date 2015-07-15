@@ -278,7 +278,7 @@
                 </exclusion>
                 <exclusion>
                     <artifactId>jasper-compiler</artifactId>
-                    <groupId>tomcat</groupId>
+		    <groupId>tomcat</groupId>
                 </exclusion>
                 <exclusion>
                     <artifactId>rendersnake</artifactId>
@@ -303,6 +303,10 @@
                 <exclusion>
                     <groupId>commons-httpclient</groupId>
                     <artifactId>commons-httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpcore</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -356,7 +360,7 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
@@ -440,6 +444,12 @@
         <dependency>
             <groupId>org.restlet.jee</groupId>
             <artifactId>org.restlet.ext.json</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.inject</groupId>
@@ -452,6 +462,10 @@
             <artifactId>org.restlet.test</artifactId>
             <scope>test</scope>
             <exclusions>
+                <exclusion>
+                    <groupId>joda-time</groupId>
+                    <artifactId>joda-time</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>junit</groupId>
                     <artifactId>junit</artifactId>
@@ -509,7 +523,7 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>1.8</version>
+            <version>1.9</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>

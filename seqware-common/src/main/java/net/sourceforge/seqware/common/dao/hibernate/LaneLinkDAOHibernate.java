@@ -9,7 +9,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * LaneLinkDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -40,7 +40,7 @@ public class LaneLinkDAOHibernate extends HibernateDaoSupport implements LaneLin
     public List<LaneAttribute> findAll(Lane lane) {
         String query = "from LaneAttribute as ia where ia.lane.laneId = ?";
         Object[] parameters = { lane.getLaneId() };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<LaneAttribute>) this.getHibernateTemplate().find(query, parameters);
     }
 
 }

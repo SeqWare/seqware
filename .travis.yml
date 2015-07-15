@@ -11,4 +11,6 @@ before_script:
   - cp .travis/settings ~/.seqware
 script: mvn -B clean install -DskipITs=false
 addons:
-  postgresql: "9.3"
+  postgresql: "9.4"
+# try container-based integration testing
+sudo: false
