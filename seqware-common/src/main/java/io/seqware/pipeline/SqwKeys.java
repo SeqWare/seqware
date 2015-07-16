@@ -67,7 +67,7 @@ public enum SqwKeys {
                     + "If present, ${threads} will be replaced with the job-specific value.", "-pe serial ${threads}"),
     OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT(null , Categories.LAUNCH, true, "Format of qsub flag for specifying the max memory. "
             + "If present, ${maxMemory} will be replaced with the job-specific value.", "-l h_vmem=${maxMemory}M"),
-    SW_CONTROL_NODE_MEMORY(null, Categories.ADMIN, false, "In atypical environments, the default h_vmem constraint for SGE is too stringent. Override them using this (units in megabytes)", "4000"),
+    SW_CONTROL_NODE_MEMORY(null, Categories.ADMIN, false, "In atypical environments, the default h_vmem constraint for SGE is too stringent. Override them using this (units in megabytes)", "3000"),
     SW_ADMIN_REST_URL(null, Categories.ADMIN, false, "Location of the admin web service, currently used for deletion", "http://localhost:38080/seqware-admin-webservice"),
     SW_LOCK_ID(null, Categories.ADMIN, false, "Used to override the JUnique lock used to ensure that utilities don't run concurrently","seqware"),
     SW_ENCRYPT_KEY(null, Categories.ADMIN, false,"Legacy key used to encrypt provisioned files", "seqware"),

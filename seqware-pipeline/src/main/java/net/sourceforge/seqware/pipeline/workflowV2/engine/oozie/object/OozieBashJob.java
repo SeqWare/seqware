@@ -118,6 +118,7 @@ public class OozieBashJob extends OozieJob {
         ArrayList<String> args = new ArrayList<>();
         String pathToJRE = createPathToJava();
         args.add(pathToJRE + "java");
+        args.add("-XX:+UseSerialGC");
         args.add("-Xmx" + jobObj.getCommand().getMaxMemory());
         args.add("-classpath");
         args.add(seqwareJarPath);

@@ -126,21 +126,21 @@ Next, modify the Java workflow class to have a large number of errors
 
 		// a simple bash job to call mkdir
 		// note that this job uses the system's mkdir (which depends on the system being *nix)
-		// this also translates into a 4000 h_vmem limit when using sge
-		Job mkdirJob = this.getWorkflow().createBashJob("bash_mkdir").setMaxMemory("4000");
+		// this also translates into a 3000 h_vmem limit when using sge
+		Job mkdirJob = this.getWorkflow().createBashJob("bash_mkdir").setMaxMemory("3000");
 		mkdirJob.getCommand().addArgument("mkdir test1");
 
 		String inputFilePath = this.getFiles().get("file_in_0").getProvisionedPath();
 
 		// a simple bash job to cat a file into a test file
 		// the file is not saved to the metadata database
-		Job copyJob1 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("4000");
+		Job copyJob1 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("3000");
 		copyJob1.setCommand(catPath + " " + inputFilePath + "> test1/test.out");
 		copyJob1.addParent(mkdirJob);
 
 		// a simple bash job to echo to an output file and concat an input file
 		// the file IS saved to the metadata database
-		Job copyJob2 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("4000");
+		Job copyJob2 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("3000");
 		copyJob2.getCommand().addArgument(echoPath).addArgument(greeting).addArgument(" > ").addArgument("dir1/output");
 		copyJob2.getCommand().addArgument(";");
 		copyJob2.getCommand().addArgument(catPath + " " + inputFilePath + " >> dir1/output");
@@ -279,8 +279,8 @@ The previous section concerned workflows that fail during launch time when the w
 
 		// a simple bash job to call mkdir
 		// note that this job uses the system's mkdir (which depends on the system being *nix)
-		// this also translates into a 4000 h_vmem limit when using sge
-		Job mkdirJob = this.getWorkflow().createBashJob("bash_mkdir").setMaxMemory("4000");
+		// this also translates into a 3000 h_vmem limit when using sge
+		Job mkdirJob = this.getWorkflow().createBashJob("bash_mkdir").setMaxMemory("3000");
 		mkdirJob.getCommand().addArgument("mkdir $fubar_test");
 		// mkdirJob.getCommand().addArgument("mkdir test1");
 
@@ -288,14 +288,14 @@ The previous section concerned workflows that fail during launch time when the w
 
 		// a simple bash job to cat a file into a test file
 		// the file is not saved to the metadata database
-		Job copyJob1 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("4000");
+		Job copyJob1 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("3000");
 		copyJob1.setCommand(catPath + " " + inputFilePath + "> fubar/test.out");
 		// copyJob1.setCommand(catPath + " " + inputFilePath + "> test1/test.out");
 		copyJob1.addParent(mkdirJob);
 
 		// a simple bash job to echo to an output file and concat an input file
 		// the file IS saved to the metadata database
-		Job copyJob2 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("4000");
+		Job copyJob2 = this.getWorkflow().createBashJob("bash_cp").setMaxMemory("3000");
 		copyJob2.getCommand().addArgument(echoPath).addArgument(greeting).addArgument(" > ").addArgument("fubar/output");
 		// copyJob2.getCommand().addArgument(echoPath).addArgument(greeting).addArgument(" > ").addArgument("dir1/output");
 		copyJob2.getCommand().addArgument(";");
