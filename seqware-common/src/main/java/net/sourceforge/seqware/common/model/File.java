@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * @author boconnor
  * @version $Id: $Id
  */
-public class File extends PermissionsAware implements Serializable, Comparable<File>, Annotatable<FileAttribute> {
+public class File extends PermissionsAware implements Serializable, Comparable<File>, Annotatable<FileAttribute>, FirstTierModel {
 
     private static final long serialVersionUID = 3681322115923390568L;
     private Integer fileId;
@@ -268,6 +268,7 @@ public class File extends PermissionsAware implements Serializable, Comparable<F
      *
      * @return a {@link java.lang.Integer} object.
      */
+    @Override
     public Integer getSwAccession() {
         return swAccession;
     }

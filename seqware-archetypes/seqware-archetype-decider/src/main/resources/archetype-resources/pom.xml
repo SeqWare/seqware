@@ -15,7 +15,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <seqware-version>1.2.0-alpha.0-SNAPSHOT</seqware-version>
+        <seqware-version>1.2.0-alpha.1-SNAPSHOT</seqware-version>
         <workflow-version>1.0</workflow-version>
         <workflow-name>${workflow-name}</workflow-name>
     </properties>
@@ -28,8 +28,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>

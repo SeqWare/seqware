@@ -36,7 +36,7 @@ public class Engines {
 
     /**
      * Check whether the workflow engine is Oozie-based.
-     * 
+     *
      * @param engine
      * @return
      */
@@ -46,7 +46,7 @@ public class Engines {
 
     /**
      * Check whether the workflow engine is whitestar-based.
-     * 
+     *
      * @param engine
      * @return
      */
@@ -56,7 +56,7 @@ public class Engines {
 
     /**
      * Check whether the workflow engine supports parallel operation.
-     * 
+     *
      * @param engine
      * @return
      */
@@ -66,7 +66,7 @@ public class Engines {
 
     /**
      * Check whether the workflow engine supports cancel.
-     * 
+     *
      * @param engine
      * @return
      */
@@ -75,8 +75,8 @@ public class Engines {
     }
 
     /**
-     * Check whether the workflow engine supports retry.
-     * 
+     * Check whether the workflow engine supports retry. Here we mean asynchronous retry.
+     *
      * @param engine
      * @return
      */

@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $Id
  */
 public class Processing extends PermissionsAware implements Serializable, Comparable<Processing>, ParentAccessionModel,
-        Annotatable<ProcessingAttribute> {
+        Annotatable<ProcessingAttribute>, FirstTierModel {
 
     private static final long serialVersionUID = 4681328115923390568L;
     private Integer processingId;
@@ -154,14 +154,14 @@ public class Processing extends PermissionsAware implements Serializable, Compar
 
     /*
      * public int compareTo(Processing that) { return(that.getSwAccession().compareTo(this.getSwAccession())); }
-     *
+     * 
      * public String toString() { return new ToStringBuilder(this) .append("processingId", getProcessingId()) .append("filePath",
      * getFilePath()) .toString(); }
-     *
+     * 
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Processing) ) return false;
      * Processing castOther = (Processing) other; return new EqualsBuilder() .append(this.getSwAccession(), castOther.getSwAccession())
      * .isEquals(); }
-     *
+     * 
      * public int hashCode() { return new HashCodeBuilder() .append(getSwAccession()) .toHashCode(); }
      */
     /**

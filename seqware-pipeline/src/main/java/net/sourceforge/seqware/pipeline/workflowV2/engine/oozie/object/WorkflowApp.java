@@ -201,7 +201,7 @@ public class WorkflowApp {
 
         // 2GB should be more than enough for start_0 based on metrics in PDE dev, leaving a margin of safety
         String startMem = ConfigTools.getSettings().get(SqwKeys.SW_CONTROL_NODE_MEMORY.getSettingKey());
-        abstractRootJob.setMaxMemory(startMem == null ? "3000" : startMem);
+        abstractRootJob.setMaxMemory(startMem == null ? SqwKeys.SW_CONTROL_NODE_MEMORY.getDefaultValue() : startMem);
         OozieJob oozieRootJob = new OozieBashJob(abstractRootJob, JOB_PREFIX + workflowRunAccession + "_start_" + this.jobs.size(),
                 this.uniqueWorkingDir, this.useSge, this.seqwareJar, this.threadsSgeParamFormat, this.maxMemorySgeParamFormat,
                 this.stringTruncator);

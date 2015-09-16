@@ -11,7 +11,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * ExperimentAttributeDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -42,7 +42,7 @@ public class ExperimentAttributeDAOHibernate extends HibernateDaoSupport impleme
     public List<ExperimentAttribute> findAll(Experiment experiment) {
         String query = "from ExperimentAttribute as ea where ea.experiment.experimentId = ?";
         Object[] parameters = { experiment.getExperimentId() };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<ExperimentAttribute>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */

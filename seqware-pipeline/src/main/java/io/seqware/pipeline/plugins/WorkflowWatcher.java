@@ -15,9 +15,9 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  * The Workflow Watcher is only responsible for watching workflows and reporting on their status in a real-time manner.
- * 
+ *
  * This started as a fork of the WorkflowLauncher intended to de-tangle the functions of launching, scheduling, waiting, etc.
- * 
+ *
  * @author dyuen
  */
 @ServiceProvider(service = PluginInterface.class)
@@ -70,7 +70,8 @@ public class WorkflowWatcher extends Plugin {
                 Integer.parseInt(workflowRunAccession), workflowRunWithWorkflow.getWorkflowEngine());
         WorkflowEngine workflowEngine = WorkflowTools.getWorkflowEngine(dataModel, config, false);
 
-        return workflowEngine.watchWorkflow(workflowRunWithWorkflow.getStatusCmd());
+        workflowEngine.watchWorkflow(workflowRunWithWorkflow.getStatusCmd());
+        return new ReturnValue();
     }
 
 }

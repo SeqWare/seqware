@@ -190,9 +190,9 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         String query = "from SequencerRun as sequencerRun where sequencerRun.swAccession = ?";
         SequencerRun sequencerRun = null;
         Object[] parameters = { swAccession };
-        List<SequencerRun> list = this.getHibernateTemplate().find(query, parameters);
+        List<SequencerRun> list = (List<SequencerRun>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            sequencerRun = (SequencerRun) list.get(0);
+            sequencerRun = list.get(0);
         }
         return sequencerRun;
     }
@@ -203,7 +203,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     public List<SequencerRun> findByOwnerID(Integer registrationId) {
         String query = "from SequencerRun as sequencerRun where sequencerRun.owner.registrationId = ?";
         Object[] parameters = { registrationId };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<SequencerRun>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */

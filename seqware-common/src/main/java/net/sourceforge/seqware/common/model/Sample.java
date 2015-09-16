@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $Id
  */
 public class Sample extends PermissionsAware implements Serializable, Comparable<Sample>, ParentAccessionModel,
-        Annotatable<SampleAttribute> {
+        Annotatable<SampleAttribute>, FirstTierModel {
 
     // Attributes relied upon by seqware code
 
@@ -164,18 +164,18 @@ public class Sample extends PermissionsAware implements Serializable, Comparable
 
     /*
      * public int compareTo(Sample that) { if(that == null) return -1;
-     *
+     * 
      * if(that.getSwAccession() == this.getSwAccession()) // when both names are null return 0;
-     *
+     * 
      * if(that.getSwAccession() == null) return -1; // when only the other name is null
-     *
+     * 
      * return(that.getSwAccession().compareTo(this.getSwAccession())); }
-     *
+     * 
      * public String toString() { return new ToStringBuilder(this) .append("sampleId", getSampleId()) .toString(); }
-     *
+     * 
      * public boolean equals(Object other) { if ( (this == other ) ) return true; if ( !(other instanceof Sample) ) return false; Sample
      * castOther = (Sample) other; return new EqualsBuilder() .append(this.getSwAccession(), castOther.getSwAccession()) .isEquals(); }
-     *
+     * 
      * public int hashCode() { return new HashCodeBuilder() .append(getSwAccession()) .toHashCode(); }
      */
     /**

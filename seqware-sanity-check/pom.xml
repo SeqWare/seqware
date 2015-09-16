@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent> 
-        <version>1.2.0-alpha.0-SNAPSHOT</version> 
-        <groupId>com.github.seqware</groupId> 
-        <artifactId>seqware</artifactId> 
-        <relativePath>../pom.xml</relativePath> 
+    <parent>
+        <version>1.2.0-alpha.1-SNAPSHOT</version>
+        <groupId>com.github.seqware</groupId>
+        <artifactId>seqware</artifactId>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>seqware-sanity-check</artifactId>
@@ -45,6 +45,20 @@
             <artifactId>seqware-pipeline</artifactId>
             <type>jar</type>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jetty-util</artifactId>
+                    <groupId>org.mortbay.jetty</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -117,11 +131,11 @@
         </dependency>
 
     </dependencies>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <build>
         <resources>
             <resource>
@@ -136,9 +150,9 @@
                     <archive>
                         <manifest>
                             <mainClass>io.seqware.pipeline.plugins.sanity.SanityCheck</mainClass>
-                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
-                         <manifestEntries>
+                        <manifestEntries>
                             <Implementation-Build>${buildNumber}</Implementation-Build>
                         </manifestEntries>
                     </archive>
@@ -181,13 +195,13 @@
                         </manifest>
                       </archive>
                     </configuration>
-                  </plugin>	     
+                  </plugin>
             -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-			
+
                 <configuration>
                     <systemPropertyVariables>
                         <cliPath>${project.parent.basedir}/seqware-pipeline/target/seqware</cliPath>
@@ -198,13 +212,13 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>${maven-failsafe-plugin.version}</version>
-			
+
                 <configuration>
                     <systemPropertyVariables>
                         <cliPath>${project.parent.basedir}/seqware-pipeline/target/seqware</cliPath>
                     </systemPropertyVariables>
                 </configuration>
-                        
+
                 <executions>
                     <execution>
                         <id>integration-test</id>
@@ -232,7 +246,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${maven-failsafe-plugin.version}</version>
-			
+
                         <configuration>
                             <includes>
                                 <include>**/IT*.java</include>
@@ -252,16 +266,16 @@
                     <plugin>
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat6-maven-plugin</artifactId>
-                        <configuration>   
+                        <configuration>
                             <contextFile>../seqware-webservice/target/seqware-webservice-${project.version}/META-INF/context.xml</contextFile>
                             <webapps>
                                 <webapp>
-                                    <groupId>com.github.seqware</groupId> 
-                                    <artifactId>seqware-webservice</artifactId> 
-                                    <version>${project.version}</version> 
-                                    <type>war</type>                                     
-                                    <asWebapp>true</asWebapp>  
-                                </webapp>                           
+                                    <groupId>com.github.seqware</groupId>
+                                    <artifactId>seqware-webservice</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>war</type>
+                                    <asWebapp>true</asWebapp>
+                                </webapp>
                             </webapps>
                             <skip>${skipITs}</skip>
                         </configuration>
