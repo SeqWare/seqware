@@ -70,7 +70,7 @@ public class FileLinkerParser {
     }
 
     private static Map<Integer, List<FileMetadata>> fileMetadataFromFileInfo(List<FileLinkerLine> lines) {
-        Map<Integer, List<FileMetadata>> result = Maps.newHashMap();
+        Map<Integer, List<FileMetadata>> result = Maps.newTreeMap();
         for (FileLinkerLine line : lines) {
             FileMetadata fileMetadata = new FileMetadata();
             fileMetadata.setMetaType(line.getMimeType());

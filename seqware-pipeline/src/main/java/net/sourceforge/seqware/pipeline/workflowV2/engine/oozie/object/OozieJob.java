@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import io.seqware.pipeline.SqwKeys;
 import java.io.File;
@@ -19,7 +20,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-public abstract class OozieJob {
+public abstract class OozieJob implements Comparable<OozieJob> {
     /**
      * Variable identifier to be used within the qsub threads parameter to specify the value.
      */
@@ -47,7 +48,8 @@ public abstract class OozieJob {
 
     protected String okTo = "done";
     // private String errorTo; always to fail now
-    protected String name;
+    private String longName;
+    private String shortName;
     protected Collection<String> parentAccessions;
     protected String wfrAccession;
     protected boolean wfrAncesstor;
@@ -64,10 +66,12 @@ public abstract class OozieJob {
     protected final File scriptsDir;
     private boolean useCheckFile = false;
     protected final File seqwareJar;
+    private final StringTruncator stringTruncator;
 
-    public OozieJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar, String threadsSgeParamFormat,
-            String maxMemorySgeParamFormat) {
-        this.name = name;
+    public OozieJob(AbstractJob job, String longName, String oozie_working_dir, boolean useSge, File seqwareJar,
+            String threadsSgeParamFormat, String maxMemorySgeParamFormat, StringTruncator truncator) {
+        this.longName = longName;
+        this.shortName = truncator.translateName(longName);
         this.jobObj = job;
         this.oozie_working_dir = oozie_working_dir;
         this.parents = new ArrayList<>();
@@ -80,6 +84,7 @@ public abstract class OozieJob {
         this.maxMemorySgeParamFormat = maxMemorySgeParamFormat;
         this.scriptsDir = scriptsDir(oozie_working_dir);
         this.seqwareJar = seqwareJar;
+        this.stringTruncator = truncator;
 
         if (useSge) {
             if (this.seqwareJarPath == null) {
@@ -97,7 +102,7 @@ public abstract class OozieJob {
 
     public final Element serializeXML() {
         Element element = new Element("action", WorkflowApp.NAMESPACE);
-        element.setAttribute("name", this.name);
+        element.setAttribute("name", this.getShortName());
         element.setAttribute("retry-max", ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_RETRY_MAX.getSettingKey()) ? ConfigTools
                 .getSettings().get(SqwKeys.OOZIE_RETRY_MAX.getSettingKey()) : "1");
         element.setAttribute(
@@ -171,7 +176,7 @@ public abstract class OozieJob {
 
         if (this.isUseCheckFile()) {
             args.add("--metadata-processing-accession-file-lock");
-            // arbitrarily choose the first accession file to mutate for use as the name of the lock file
+            // arbitrarily choose the first accession file to mutate for use as the longName of the lock file
             args.add(getAccessionFile().get(0) + ".lock");
         }
 
@@ -191,7 +196,7 @@ public abstract class OozieJob {
     }
 
     protected File emitOptionsFile() {
-        File file = file(scriptsDir, optsFileName(name), false);
+        File file = file(scriptsDir, optsFileName(longName), false);
 
         ArrayList<String> args = new ArrayList<>();
         args.add("-b");
@@ -201,7 +206,7 @@ public abstract class OozieJob {
         args.add("-o");
         args.add(scriptsDir.getAbsolutePath());
         args.add("-N");
-        args.add(name);
+        args.add(longName);
 
         if (jobObj.getQsubOptions() != null) {
             args.add(jobObj.getQsubOptions());
@@ -307,8 +312,13 @@ public abstract class OozieJob {
         return sb.toString();
     }
 
-    public String getName() {
-        return this.name;
+    public void setLongName(String longName) {
+        this.longName = longName;
+        this.shortName = stringTruncator.translateName(longName);
+    }
+
+    public String getLongName() {
+        return this.longName;
     }
 
     public String getOozieWorkingDir() {
@@ -381,17 +391,17 @@ public abstract class OozieJob {
         if (obj == null || obj instanceof OozieJob == false) return false;
         if (obj == this) return true;
         OozieJob rhs = (OozieJob) obj;
-        return new EqualsBuilder().appendSuper(super.equals(obj)).append(name, rhs.name).isEquals();
+        return new EqualsBuilder().appendSuper(super.equals(obj)).append(longName, rhs.longName).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(name).toHashCode();
+        return new HashCodeBuilder(17, 37).append(longName).toHashCode();
     }
 
     @Override
     public String toString() {
-        return this.name;
+        return this.longName;
     }
 
     /**
@@ -413,7 +423,7 @@ public abstract class OozieJob {
     }
 
     public List<String> getAccessionFile() {
-        return Lists.newArrayList(this.oozie_working_dir + "/" + this.getName() + "_accession");
+        return Lists.newArrayList(this.oozie_working_dir + "/" + this.getLongName() + "_accession");
     }
 
     /**
@@ -450,7 +460,7 @@ public abstract class OozieJob {
     }
 
     protected File emitAnnotations(Map<String, String> annotations) {
-        File file = file(scriptsDir, annotationFileName(name), true);
+        File file = file(scriptsDir, annotationFileName(longName), true);
         StringBuilder buf = new StringBuilder();
         for (Map.Entry<String, String> entry : annotations.entrySet()) {
             buf.append(entry.getKey()).append('\t').append(entry.getValue()).append('\n');
@@ -461,6 +471,18 @@ public abstract class OozieJob {
             throw new RuntimeException(ex);
         }
         return file;
+    }
+
+    /**
+     * @return the shortName
+     */
+    public String getShortName() {
+        return shortName;
+    }
+
+    @Override
+    public int compareTo(OozieJob that) {
+        return ComparisonChain.start().compare(this.longName, that.longName).result();
     }
 
 }

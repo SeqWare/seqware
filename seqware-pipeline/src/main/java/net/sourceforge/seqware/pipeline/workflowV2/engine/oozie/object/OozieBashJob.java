@@ -15,8 +15,8 @@ public class OozieBashJob extends OozieJob {
     private File jobScript = null;
 
     public OozieBashJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
-            String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
-        super(job, name, oozie_working_dir, useSge, seqwareJar, threadsSgeParamFormat, maxMemorySgeParamFormat);
+            String threadsSgeParamFormat, String maxMemorySgeParamFormat, StringTruncator truncator) {
+        super(job, name, oozie_working_dir, useSge, seqwareJar, threadsSgeParamFormat, maxMemorySgeParamFormat, truncator);
     }
 
     @Override
@@ -59,13 +59,13 @@ public class OozieBashJob extends OozieJob {
     }
 
     private File emitJobScript() {
-        File file = file(scriptsDir, scriptFileName(name), true);
+        File file = file(scriptsDir, scriptFileName(this.getLongName()), true);
         writeScript(concat(" ", jobObj.getCommand().getArguments()), file);
         return file;
     }
 
     private File emitRunnerScript() {
-        File file = file(scriptsDir, runnerFileName(name), true);
+        File file = file(scriptsDir, runnerFileName(this.getLongName()), true);
         ArrayList<String> args = generateRunnerLine();
         writeScript(concat(" ", args), file);
 
@@ -118,6 +118,7 @@ public class OozieBashJob extends OozieJob {
         ArrayList<String> args = new ArrayList<>();
         String pathToJRE = createPathToJava();
         args.add(pathToJRE + "java");
+        args.add("-XX:+UseSerialGC");
         args.add("-Xmx" + jobObj.getCommand().getMaxMemory());
         args.add("-classpath");
         args.add(seqwareJarPath);

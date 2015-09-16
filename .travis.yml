@@ -1,6 +1,8 @@
 notifications:
   slack: oicr:S9k4EowgQv9AnbCfEZHSzCsg
 language: java
+jdk:
+  - oraclejdk8
 before_script: 
   - psql -c "create user seqware with password 'seqware' createdb;" -U postgres
   - psql -c "ALTER USER seqware WITH superuser;" -U postgres
@@ -9,4 +11,6 @@ before_script:
   - cp .travis/settings ~/.seqware
 script: mvn -B clean install -DskipITs=false
 addons:
-  postgresql: "9.3"
+  postgresql: "9.4"
+# try container-based integration testing
+sudo: false

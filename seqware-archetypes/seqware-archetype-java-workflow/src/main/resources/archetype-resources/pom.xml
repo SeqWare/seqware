@@ -19,7 +19,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <seqware-version>1.1.0-beta.2-SNAPSHOT</seqware-version>
+        <seqware-version>1.2.0-alpha.1-SNAPSHOT</seqware-version>
         <skipITs>true</skipITs>
         <workflow-full-name>Workflow_Bundle_${workflow-name}_${workflow-version}_SeqWare_${seqware-version}</workflow-full-name>
         <workflow-dir>${project.build.directory}/${workflow-full-name}/Workflow_Bundle_${workflow-name}/${workflow-version}</workflow-dir>
@@ -28,7 +28,7 @@
     <dependencies>
         <dependency>
             <groupId>io.seqware</groupId>
-            <artifactId>seqware-bin-linux-x86-64-jre-7.0.51</artifactId>
+            <artifactId>seqware-bin-linux-x86-64-jre-8.0.45</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>
@@ -97,8 +97,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
       

@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <parent>
-        <version>1.1.0-beta.2-SNAPSHOT</version>
+        <version>1.2.0-alpha.1-SNAPSHOT</version>
         <groupId>com.github.seqware</groupId>
         <artifactId>seqware</artifactId>
         <relativePath>../pom.xml</relativePath>
@@ -266,7 +266,8 @@
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk</artifactId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+	    <version>${aws-java-sdk.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-codec</groupId>
@@ -378,11 +379,6 @@
             <groupId>stax</groupId>
             <type>jar</type>
             <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <artifactId>spring-context-support</artifactId>
-            <groupId>org.springframework</groupId>
-            <type>jar</type>
         </dependency>
         <dependency>
             <artifactId>spring-context</artifactId>

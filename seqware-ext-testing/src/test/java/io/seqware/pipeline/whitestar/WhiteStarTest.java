@@ -33,7 +33,9 @@ import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
 /**
  * Run a helloworld using whitestar.
@@ -41,6 +43,9 @@ import org.junit.Test;
  * @author dyuen
  */
 public class WhiteStarTest {
+
+    @Rule
+    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 
     @BeforeClass
     public static void setupWhiteStarTest() {
@@ -126,6 +131,8 @@ public class WhiteStarTest {
         // whiteStarProperties.add("SW_REST_URL=http://localhost:8889/seqware-webservice");
         // use this in our regression testing framework
         whiteStarProperties.add("SW_REST_URL=http://master:8080/SeqWareWebService");
+        whiteStarProperties.add("OOZIE_SGE_THREADS_PARAM_FORMAT=-pe serial ${threads}");
+        whiteStarProperties.add("OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT=-l h_vmem=${maxMemory}M");
         Path createTempFile = Files.createTempFile("whitestar", "properties");
         FileUtils.writeLines(createTempFile.toFile(), whiteStarProperties);
         return createTempFile;

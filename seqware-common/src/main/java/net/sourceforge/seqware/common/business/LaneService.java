@@ -4,17 +4,14 @@ import java.util.List;
 import java.util.SortedSet;
 import net.sourceforge.seqware.common.dao.LaneDAO;
 import net.sourceforge.seqware.common.model.File;
-import net.sourceforge.seqware.common.model.FileType;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Registration;
-import net.sourceforge.seqware.common.model.Sample;
-import net.sourceforge.seqware.common.model.UploadSequence;
 
 /**
  * <p>
  * LaneService interface.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -27,7 +24,7 @@ public interface LaneService {
      * <p>
      * setLaneDAO.
      * </p>
-     * 
+     *
      * @param laneDAO
      *            a {@link net.sourceforge.seqware.common.dao.LaneDAO} object.
      */
@@ -37,7 +34,7 @@ public interface LaneService {
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param lane
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
@@ -47,7 +44,7 @@ public interface LaneService {
      * <p>
      * insert.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param lane
@@ -60,7 +57,7 @@ public interface LaneService {
      * <p>
      * update.
      * </p>
-     * 
+     *
      * @param lane
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
@@ -70,7 +67,7 @@ public interface LaneService {
      * <p>
      * update.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param lane
@@ -82,7 +79,7 @@ public interface LaneService {
      * <p>
      * delete.
      * </p>
-     * 
+     *
      * @param lane
      * @param deleteRealFiles
      */
@@ -92,7 +89,7 @@ public interface LaneService {
      * <p>
      * findByName.
      * </p>
-     * 
+     *
      * @param name
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
@@ -103,7 +100,7 @@ public interface LaneService {
      * <p>
      * findByID.
      * </p>
-     * 
+     *
      * @param laneID
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
@@ -114,7 +111,7 @@ public interface LaneService {
      * <p>
      * findBySWAccession.
      * </p>
-     * 
+     *
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
@@ -123,41 +120,9 @@ public interface LaneService {
 
     /**
      * <p>
-     * hasNameBeenUsed.
-     * </p>
-     * 
-     * @param oldName
-     *            a {@link java.lang.String} object.
-     * @param newName
-     *            a {@link java.lang.String} object.
-     * @return a boolean.
-     */
-    public boolean hasNameBeenUsed(String oldName, String newName);
-
-    /**
-     * <p>
-     * insertLane.
-     * </p>
-     * 
-     * @param registration
-     *            a {@link net.sourceforge.seqware.common.model.Registration} object.
-     * @param sample
-     *            a {@link net.sourceforge.seqware.common.model.Sample} object.
-     * @param uploadSequence
-     *            a {@link net.sourceforge.seqware.common.model.UploadSequence} object.
-     * @param fileType
-     *            a {@link net.sourceforge.seqware.common.model.FileType} object.
-     * @return a {@link java.lang.Integer} object.
-     * @throws java.lang.Exception
-     *             if any.
-     */
-    public Integer insertLane(Registration registration, Sample sample, UploadSequence uploadSequence, FileType fileType) throws Exception;
-
-    /**
-     * <p>
      * listFile.
      * </p>
-     * 
+     *
      * @param reqistration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param typeNode
@@ -176,7 +141,7 @@ public interface LaneService {
      * <p>
      * getFiles.
      * </p>
-     * 
+     *
      * @param laneId
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
@@ -187,7 +152,7 @@ public interface LaneService {
      * <p>
      * isHasFile.
      * </p>
-     * 
+     *
      * @param laneId
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
@@ -198,7 +163,7 @@ public interface LaneService {
      * <p>
      * getFiles.
      * </p>
-     * 
+     *
      * @param studyId
      *            a {@link java.lang.Integer} object.
      * @param metaType
@@ -211,7 +176,7 @@ public interface LaneService {
      * <p>
      * isHasFile.
      * </p>
-     * 
+     *
      * @param studyId
      *            a {@link java.lang.Integer} object.
      * @param metaType
@@ -224,7 +189,7 @@ public interface LaneService {
      * <p>
      * setWithHasFile.
      * </p>
-     * 
+     *
      * @param list
      *            a {@link java.util.SortedSet} object.
      * @return a {@link java.util.SortedSet} object.
@@ -235,7 +200,7 @@ public interface LaneService {
      * <p>
      * listWithHasFile.
      * </p>
-     * 
+     *
      * @param list
      *            a {@link java.util.SortedSet} object.
      * @param metaType
@@ -248,7 +213,7 @@ public interface LaneService {
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @param laneIds
      *            a {@link java.util.List} object.
      * @return a {@link java.util.List} object.
@@ -259,7 +224,7 @@ public interface LaneService {
      * <p>
      * updateDetached.
      * </p>
-     * 
+     *
      * @param lane
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
@@ -270,7 +235,7 @@ public interface LaneService {
      * <p>
      * updateDetached.
      * </p>
-     * 
+     *
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @param lane
@@ -283,7 +248,7 @@ public interface LaneService {
      * <p>
      * findByOwnerID.
      * </p>
-     * 
+     *
      * @param registrationId
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
@@ -294,7 +259,7 @@ public interface LaneService {
      * <p>
      * findByCriteria.
      * </p>
-     * 
+     *
      * @param criteria
      *            a {@link java.lang.String} object.
      * @param isCaseSens
@@ -307,7 +272,7 @@ public interface LaneService {
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @return a {@link java.util.List} object.
      */
     public List<Lane> list();

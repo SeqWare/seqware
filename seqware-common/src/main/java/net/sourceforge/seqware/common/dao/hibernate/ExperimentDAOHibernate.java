@@ -22,7 +22,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * ExperimentDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -41,7 +41,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param experiment
      */
     @Override
@@ -53,7 +53,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param experiment
      */
     @Override
@@ -69,10 +69,10 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * This deletion will result in just the experiment being deleted but the samples and IUS will remain. This will potentially cause
      * orphans which is not really at all good. A better solution is to never delete but just use a deletion attribute.
-     * 
+     *
      * @param experiment
      */
     @Override
@@ -127,7 +127,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
      * <p>
      * list.
      * </p>
-     * 
+     *
      * @param study
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.util.List} object.
@@ -387,7 +387,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param experimentId
      */
     @Override
@@ -497,7 +497,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param experimentId
      */
     @Override
@@ -604,7 +604,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of Experiment in the database by the Experiment name.
      */
     @Override
@@ -621,9 +621,9 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of Experiment in the database by the Experiment ID.
-     * 
+     *
      * @param expID
      */
     @Override
@@ -645,7 +645,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
         String query = "from Experiment as experiment where experiment.swAccession = ?";
         Experiment experiment = null;
         Object[] parameters = { swAccession };
-        List<Experiment> list = this.getHibernateTemplate().find(query, parameters);
+        List<Experiment> list = (List<Experiment>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
             experiment = (Experiment) list.get(0);
         }
@@ -672,7 +672,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     public List<Experiment> findByOwnerID(Integer registrationID) {
         String query = "from Experiment as experiment where experiment.owner.registrationId = ?";
         Object[] parameters = { registrationID };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<Experiment>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */
@@ -730,7 +730,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param experiment
      */
     @Override

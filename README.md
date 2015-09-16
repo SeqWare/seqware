@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.org/SeqWare/seqware.svg?branch=master)](https://travis-ci.org/SeqWare/seqware)
+[![Build Status](https://travis-ci.org/SeqWare/seqware.svg?branch=develop)](https://travis-ci.org/SeqWare/seqware)
 [![DOI](https://zenodo.org/badge/4360/SeqWare/seqware.svg)](http://dx.doi.org/10.5281/zenodo.13358)
+
 
 ## Introduction 
 

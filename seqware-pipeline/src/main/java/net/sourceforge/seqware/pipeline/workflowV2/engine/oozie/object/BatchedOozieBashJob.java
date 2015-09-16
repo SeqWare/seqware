@@ -9,16 +9,16 @@ import org.jdom.Element;
 
 /**
  * Container for batching up jobs
- * 
+ *
  * @author dyuen
  */
 public class BatchedOozieBashJob extends OozieJob {
 
-    private List<OozieBashJob> batchedJobs = new ArrayList<>();
+    private final List<OozieBashJob> batchedJobs = new ArrayList<>();
 
     public BatchedOozieBashJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
-            String threadsSgeParamFormat, String maxMemorySgeParamFormat) {
-        super(job, name, oozie_working_dir, useSge, seqwareJar, threadsSgeParamFormat, maxMemorySgeParamFormat);
+            String threadsSgeParamFormat, String maxMemorySgeParamFormat, StringTruncator truncator) {
+        super(job, name, oozie_working_dir, useSge, seqwareJar, threadsSgeParamFormat, maxMemorySgeParamFormat, truncator);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class BatchedOozieBashJob extends OozieJob {
     }
 
     public void attachJob(OozieBashJob job) {
-        // mutate name in order to avoid repeats
-        job.name = job.name + "_" + batchedJobs.size();
+        // mutate longName in order to avoid repeats
+        job.setLongName(job.getLongName() + "_" + batchedJobs.size());
         batchedJobs.add(job);
     }
 
@@ -59,7 +59,7 @@ public class BatchedOozieBashJob extends OozieJob {
     }
 
     private File emitRunnerScript() {
-        File localFile = file(scriptsDir, runnerFileName(name), true);
+        File localFile = file(scriptsDir, runnerFileName(this.getLongName()), true);
 
         ArrayList<String> args = new ArrayList<>();
         for (OozieBashJob batchedJob : batchedJobs) {

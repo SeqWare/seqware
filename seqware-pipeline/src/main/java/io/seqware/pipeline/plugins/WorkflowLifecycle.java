@@ -1,6 +1,7 @@
 package io.seqware.pipeline.plugins;
 
 import com.google.common.collect.Lists;
+import io.seqware.common.model.WorkflowRunStatus;
 import static io.seqware.pipeline.plugins.WorkflowScheduler.OVERRIDE_INI_DESC;
 import static io.seqware.pipeline.plugins.WorkflowScheduler.validateEngineString;
 import java.io.File;
@@ -11,6 +12,7 @@ import java.util.List;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionSpecBuilder;
+import net.sourceforge.seqware.common.metadata.MetadataInMemory;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -117,6 +119,7 @@ public class WorkflowLifecycle extends Plugin {
 
     @Override
     public ReturnValue do_run() {
+        boolean success = true;
         try {
             File tempBundleFile = File.createTempFile("bundle_manager", "out");
             tempBundleFile.deleteOnExit();
@@ -134,17 +137,32 @@ public class WorkflowLifecycle extends Plugin {
             runWorkflowSchedulerPlugin(tempBundleFile, tempSchedulerFile);
             // launch the workflow
             runWorkflowLauncherPlugin(tempSchedulerFile);
-            // watch the workflow
+            // watch the workflow if it is an asynchronous launcher
             if (options.has(this.waitSpec)) {
                 runWatcherPlugin();
             }
-            // watch the workflow if necessary
         } catch (IOException e) {
             throw new ExitException(ReturnValue.FILENOTWRITABLE);
         } finally {
             if (!options.has(noRunSpec)) {
                 runStatusCheckerPlugin();
             }
+            // on failure, if running with in-memory metadata, output stderr and stdout
+            int workflowRunSWID = Integer.parseInt(workflowRunAccession);
+            if (metadata instanceof MetadataInMemory) {
+                if (metadata.getWorkflowRun(workflowRunSWID).getStatus().equals(WorkflowRunStatus.failed)) {
+                    String stdout = metadata.getWorkflowRunReportStdOut(workflowRunSWID);
+                    String stderr = metadata.getWorkflowRunReportStdErr(workflowRunSWID);
+                    Log.stdoutWithTime("Output for stdout due to workflow run failure: \n " + stdout);
+                    Log.stderrWithTime("Output for stderr due to workflow run failure: \n " + stderr);
+                }
+            }
+            if (metadata.getWorkflowRun(workflowRunSWID).getStatus().equals(WorkflowRunStatus.failed)) {
+                success = false;
+            }
+        }
+        if (!success) {
+            return new ReturnValue(ReturnValue.FAILURE);
         }
         return new ReturnValue();
     }
@@ -212,6 +230,7 @@ public class WorkflowLifecycle extends Plugin {
             totalParams.add("--" + this.metadataWriteBackOffSpec.options().iterator().next());
         }
         if (options.has(this.nonOptionSpec)) {
+            totalParams.add("--");
             for (String val : options.valuesOf(this.nonOptionSpec)) {
                 totalParams.add(val);
             }
@@ -239,7 +258,7 @@ public class WorkflowLifecycle extends Plugin {
         runPlugin(WorkflowLauncher.class, schedulerParams.toArray(new String[schedulerParams.size()]));
     }
 
-    private void runPlugin(Class plugin, String[] params) {
+    private void runPlugin(Class<?> plugin, String[] params) {
         PluginRunner p = new PluginRunner();
         List<String> a = new ArrayList<>();
         a.add("--plugin");

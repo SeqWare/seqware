@@ -10,7 +10,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * ProcessingAttributeDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -41,7 +41,7 @@ public class ProcessingAttributeDAOHibernate extends HibernateDaoSupport impleme
     public List<ProcessingAttribute> findAll(Processing processing) {
         String query = "from ProcessingAttribute as ia where ia.processing.processingId = ?";
         Object[] parameters = { processing.getProcessingId() };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<ProcessingAttribute>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */

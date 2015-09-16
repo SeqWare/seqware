@@ -23,7 +23,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * <p>
  * LaneDAOHibernate class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -42,9 +42,9 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Inserts an instance of Lane into the database.
-     * 
+     *
      * @return
      */
     @Override
@@ -56,7 +56,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Updates an instance of Lane in the database.
      */
     @Override
@@ -67,7 +67,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Deletes an instance of Lane in the database.
      */
     @Override
@@ -136,7 +136,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param laneId
      */
     @Override
@@ -169,7 +169,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param laneId
      */
     @Override
@@ -230,7 +230,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
      * <p>
      * delete.
      * </p>
-     * 
+     *
      * @param lanes
      *            a {@link java.util.SortedSet} object.
      */
@@ -347,7 +347,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * Finds an instance of Lane in the database by the Lane emailAddress.
      */
     @Override
@@ -364,7 +364,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param expID
      */
     @Override
@@ -385,9 +385,9 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         String query = "from Lane as lane where lane.swAccession = ?";
         Lane lane = null;
         Object[] parameters = { swAccession };
-        List<Lane> list = this.getHibernateTemplate().find(query, parameters);
+        List<Lane> list = (List<Lane>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            lane = (Lane) list.get(0);
+            lane = list.get(0);
         }
         return lane;
     }
@@ -398,7 +398,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     public List<Lane> findByOwnerID(Integer registrationId) {
         String query = "from Lane as lane where lane.owner.registrationId = ?";
         Object[] parameters = { registrationId };
-        return this.getHibernateTemplate().find(query, parameters);
+        return (List<Lane>) this.getHibernateTemplate().find(query, parameters);
     }
 
     /** {@inheritDoc} */
@@ -467,7 +467,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @return
      */
     @Override

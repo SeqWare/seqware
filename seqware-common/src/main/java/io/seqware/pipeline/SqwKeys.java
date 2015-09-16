@@ -55,11 +55,12 @@ public enum SqwKeys {
     OOZIE_QUEUENAME(null, Categories.LAUNCH, true, "Hadoop queue onto which to schedule jobs", "default"),
     OOZIE_WORK_DIR(null, Categories.LAUNCH, true,
             "Working directory where your workflow steps execute and where we store generated scripts and logs", "/usr/tmp/seqware-oozie"),
-    OOZIE_RETRY_MAX(null, Categories.LAUNCH, false, "Number of times that Oozie will retry user steps in workflows", "5"),
+    OOZIE_RETRY_MAX(null, Categories.LAUNCH, false, "Number of times that Oozie and Whitestar will retry user steps in workflows", "5"),
     OOZIE_RETRY_INTERVAL(null, Categories.LAUNCH, false, "Minutes to wait before retry for user steps in workflows", "5"),
     OOZIE_BATCH_THRESHOLD(null, Categories.LAUNCH, false,
             "Above this threshold, provision file events on the same job/workflow will be batched together", "10"),
     OOZIE_BATCH_SIZE(null, Categories.LAUNCH, false, "Number of provision file events that should be batched together", "100"),
+    WHITESTAR_MEMORY_LIMIT(null, Categories.WHITESTAR, false, "Restrict the number of parallel jobs invoked in WhiteStar to this amount of memory",String.valueOf(Integer.MAX_VALUE)),
     FS_HDFS_IMPL("FS.HDFS.IMPL", Categories.LAUNCH, true, "HDFS implementation class", "org.apache.hadoop.hdfs.DistributedFileSystem"),
     OOZIE_SGE_THREADS_PARAM_FORMAT(null, Categories.LAUNCH, false,
             "Only used for 'oozie-sge' engine. Format of qsub flag for specifying number of threads. "
@@ -171,6 +172,7 @@ public enum SqwKeys {
                 "Settings used to configure the installation of workflow bundles"),
         LAUNCH(
                 "Oozie engine settings. Only used for both 'oozie' and 'oozie-sge' engines."),
+        WHITESTAR("WhiteStar engine settings. Only used for the 'whitestar' series of engines."),
         OOZIE_SGE(
                 "Oozie-SGE engine settings. Only used for 'oozie-sge' engine."),
         ADMIN("Settings used for administrators"),
