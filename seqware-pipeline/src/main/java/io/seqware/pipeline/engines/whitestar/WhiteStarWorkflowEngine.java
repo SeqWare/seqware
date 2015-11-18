@@ -10,24 +10,11 @@ import com.google.common.util.concurrent.MoreExecutors;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
 import io.seqware.pipeline.api.WorkflowEngine;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
-import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.filetools.FileTools;
 import net.sourceforge.seqware.pipeline.workflowV2.AbstractWorkflowDataModel;
@@ -41,6 +28,22 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.Path;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+
+import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 
 /**
  * This is a synchronous bare-bones implementation of the WorkflowEngine for prototyping and debugging.
@@ -136,7 +139,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
 
     @Override
     public ReturnValue runWorkflow() {
-        return runWorkflow(new TreeSet<String>());
+        return runWorkflow(new ConcurrentSkipListSet<String>());
     }
 
     /**
@@ -163,7 +166,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
             int totalAttempts = retryLoops + 1;
             SortedSet<OozieJob> jobsLeft = Collections.synchronizedSortedSet(new TreeSet<>(rowOfJobs));
             Set<OozieJob> jobsToRemove = new TreeSet<>();
-            // filter out completed jobs from a pervious run
+            // filter out completed jobs from a previous run
             for (OozieJob job : jobsLeft) {
                 if (completedJobs.contains(job.getLongName())) {
                     jobsToRemove.add(job);
@@ -174,7 +177,7 @@ public class WhiteStarWorkflowEngine implements WorkflowEngine {
                 jobsLeft.removeAll(jobsToRemove);
             }
 
-            final SortedSet<OozieJob> jobsFailed = Collections.synchronizedSortedSet(new TreeSet<OozieJob>());
+            final SortedSet<OozieJob> jobsFailed = Collections.synchronizedSortedSet(new ConcurrentSkipListSet<OozieJob>());
 
             for (int i = 1; i <= totalAttempts && !jobsLeft.isEmpty(); i++) {
                 Log.stdoutWithTime("Row #" + j + " , Attempt #" + i + " out of " + totalAttempts + " : " + StringUtils.join(jobsLeft, ","));
