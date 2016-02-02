@@ -4,6 +4,8 @@
 
 ## Introduction 
 
+[![Join the chat at https://gitter.im/SeqWare/seqware](https://badges.gitter.im/SeqWare/seqware.svg)](https://gitter.im/SeqWare/seqware?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This README is just a quick overview of building SeqWare. See our
 [project homepage](http://seqware.github.com) for much more documentation.
 
