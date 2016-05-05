@@ -11,7 +11,7 @@ before_install:
 - docker pull seqware/seqware_test_environment:develop
 
 script: 
-- docker run -ti --rm  -v $HOME/seqware:/mnt/home/seqware/gitroot/seqware seqware/seqware_test_environment:develop /bin/bash -c "cd ~/gitroot/seqware && sudo chown -R seqware:seqware . && mvn -B clean install -DskipITs=false"
+- docker run -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v  $HOME/SeqWare/seqware:/home/seqware/gitroot/seqware seqware/seqware_test_environment:develop /bin/bash -c "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && mvn -B clean install -DskipITs=false"
 
 # sudo required for docker based testing
 sudo: required 
