@@ -165,7 +165,7 @@ if [ "$1" = "self-install" ]; then
 	# for testing, if you have a local release version, just use it
         SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar"
     else
-        SEQWARE_URL="http://wrench.res.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar"
+        SEQWARE_URL="https://seqwaremaven.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-distribution/$SEQWARE_VERSION/seqware-distribution-$SEQWARE_VERSION-full.jar"
     fi
 
     $HTTP_CLIENT "$SEQWARE_JAR.pending" "$SEQWARE_URL"
@@ -193,7 +193,7 @@ elif [ "$1" = "self-check-install" ]; then
 	# for testing, if you have a local release version, just use it
         SEQWARE_URL="file:///$HOME/.m2/repository/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
     else
-        SEQWARE_URL="http://wrench.res.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
+        SEQWARE_URL="https://seqwaremaven.oicr.on.ca/artifactory/seqware-release/com/github/seqware/seqware-sanity-check/$SEQWARE_VERSION/seqware-sanity-check-$SEQWARE_VERSION-jar-paired-with-distribution.jar"
     fi
 
     $HTTP_CLIENT "$SEQWARE_CHECK_JAR.pending" "$SEQWARE_URL"
