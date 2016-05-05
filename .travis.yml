@@ -15,7 +15,7 @@ script:
 - echo $TRAVIS_BUILD_DIR
 - ls -l ~/.m2/settings.xml 
 - wc -l $HOME/.m2/settings.xml
-- docker run -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR/SeqWare/seqware:/home/seqware/gitroot/seqware seqware/seqware_test_environment:develop /bin/bash -c "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && mvn -B clean install -DskipITs=false"
+- docker run -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR:/home/seqware/gitroot/seqware seqware/seqware_test_environment:develop /bin/bash -c "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && mvn -B clean install -DskipITs=false"
 
 # sudo required for docker based testing
 sudo: required 
