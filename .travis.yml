@@ -21,7 +21,7 @@ script:
 
 after_success:
 - docker pull seqware/documentation_builder:1.2
-- docker run -v id_seqware-jenkins-docker:/root/.ssh/private_key.pem seqware/documentation_builder:1.2 sh -c 'chown -R root /root/.ssh && chmod -R 600 /root/.ssh/* && ssh-add ~/.ssh/id_rsa &&  git pull && git checkout develop && locale && export LC_ALL="en_US.UTF-8" && export LANG="en_US.UTF-8" && locale && mvn clean install -DskipTests && mvn site-deploy'
+- docker run -v id_seqware-jenkins-docker:/root/.ssh/private_key.pem seqware/documentation_builder:1.2 sh -c 'chown -R root /root/.ssh && chmod -R 600 /root/.ssh/* && eval `ssh-agent -s`  && ssh-add ~/.ssh/id_rsa &&  git pull && git checkout develop && locale && export LC_ALL="en_US.UTF-8" && export LANG="en_US.UTF-8" && locale && mvn clean install -DskipTests && mvn site-deploy'
 
 # sudo required for docker based testing
 sudo: required 
