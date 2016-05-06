@@ -1193,6 +1193,7 @@
                 <version>2.10.1</version>
                 <configuration>
                     <notimestamp>true</notimestamp>
+		    <additionalparam>-Xdoclint:none</additionalparam>
                 </configuration>
                 <executions>
                     <execution>
