@@ -11,14 +11,20 @@ cache:
 services:
   - docker
 
-# encryption used for documentation key
+# encryption used for key used to upload documentation
 before_install:
 - docker pull seqware/seqware_test_environment:1.1
 - openssl aes-256-cbc -K $encrypted_b1a0a7dd1d17_key -iv $encrypted_b1a0a7dd1d17_iv -in id_seqware-jenkins-docker.enc -out id_seqware-jenkins-docker -d
 
+# mount the .m2 directory to prevent downloading dependencies twice
+# mount the build directory so that the correct commits are already checked out
+# take ownership in the container and then copy the ~/.seqware/settings file to properly configure tests
+# build once to test the webservice without extended tests
+# build again to test with only the extended tests which conflict with the webservice tests since the tomcat7 plugin doesn't seem to close bound port
 script: 
-- docker run -h master -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR:/home/seqware/gitroot/seqware seqware/seqware_test_environment:1.1 /test-start.sh "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && cp .travis/settings ~/.seqware  && export MAVEN_OPTS=\"-Xmx2048m -XX:MaxPermSize=1024m\" && mvn -B clean install -DskipITs=false && mvn -B clean install -DskipITs=false -P 'extITs,embeddedTomcat' -rf :seqware-ext-testing"
+- docker run -h master -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR:/home/seqware/gitroot/seqware seqware/seqware_test_environment:1.1 /test-start.sh "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && cp .travis/settings ~/.seqware  && export MAVEN_OPTS=\"-Xmx2048m -XX:MaxPermSize=1024m\" && mvn -B clean install -DskipITs=false"
 
+# on success, we upload a new copy of documentation to the location as specified in the pom.xml
 after_success:
 - docker pull seqware/documentation_builder:1.2
 - docker run -v id_seqware-jenkins-docker:/root/.ssh/private_key.pem seqware/documentation_builder:1.2 sh -c 'chown -R root /root/.ssh && chmod -R 600 /root/.ssh/* && ssh-add ~/.ssh/id_rsa &&  git pull && git checkout develop && locale && export LC_ALL="en_US.UTF-8" && export LANG="en_US.UTF-8" && locale && mvn clean install -DskipTests && mvn site-deploy'
