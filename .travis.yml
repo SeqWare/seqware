@@ -9,19 +9,15 @@ services:
 
 # encryption used for documentation key
 before_install:
-- docker pull seqware/seqware_test_environment:develop
+- docker pull seqware/seqware_test_environment:1.1
 - openssl aes-256-cbc -K $encrypted_b1a0a7dd1d17_key -iv $encrypted_b1a0a7dd1d17_iv -in id_seqware-jenkins-docker.enc -out id_seqware-jenkins-docker -d
 
 script: 
-- pwd
-- echo $TRAVIS_BUILD_DIR
-- ls -l ~/.m2/settings.xml 
-- wc -l $HOME/.m2/settings.xml
-- docker run -h master -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR:/home/seqware/gitroot/seqware seqware/seqware_test_environment:develop /start.sh "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && mvn -B clean install -DskipITs=false"
+- docker run -h master -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR:/home/seqware/gitroot/seqware seqware/seqware_test_environment:1.1 /test-start.sh "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && mvn -B clean install -DskipITs=false"
 
 after_success:
-- docker pull seqware/documentation_builder 
-- docker run -v id_seqware-jenkins-docker:/root/.ssh/private_key.pem seqware/documentation_builder sh -c 'chown -R root /root/.ssh && chmod -R 600 /root/.ssh/* && ssh-add ~/.ssh/id_rsa &&  git pull && git checkout develop && locale && export LC_ALL="en_US.UTF-8" && export LANG="en_US.UTF-8" && locale && mvn clean install -DskipTests && mvn site-deploy'
+- docker pull seqware/documentation_builder:1.2
+- docker run -v id_seqware-jenkins-docker:/root/.ssh/private_key.pem seqware/documentation_builder:1.2 sh -c 'chown -R root /root/.ssh && chmod -R 600 /root/.ssh/* && ssh-add ~/.ssh/id_rsa &&  git pull && git checkout develop && locale && export LC_ALL="en_US.UTF-8" && export LANG="en_US.UTF-8" && locale && mvn clean install -DskipTests && mvn site-deploy'
 
 # sudo required for docker based testing
 sudo: required 
