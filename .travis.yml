@@ -13,7 +13,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_b1a0a7dd1d17_key -iv $encrypted_b1a0a7dd1d17_iv -in id_seqware-jenkins-docker.enc -out id_seqware-jenkins-docker -d
 
 script: 
-- docker run -h master -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR:/home/seqware/gitroot/seqware seqware/seqware_test_environment:1.1 /test-start.sh "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && mvn -B clean install -DskipITs=false"
+- docker run -h master -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR:/home/seqware/gitroot/seqware seqware/seqware_test_environment:1.1 /test-start.sh "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && export MAVEN_OPTS=\"-Xmx2048m -XX:MaxPermSize=1024m\" && mvn -B clean install -DskipITs=false -P 'extITs'"
 
 after_success:
 - docker pull seqware/documentation_builder:1.2
