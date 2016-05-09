@@ -24,7 +24,7 @@ SW_REST_PASS=admin
 # these will be DEPRECATED and applications that 
 # directly connect to the DB will be moved to REST
 SW_DB_USER=seqware
-SW_DB_PASS=password
+SW_DB_PASS=seqware
 SW_DB_SERVER=localhost
 SW_DB=test_seqware_meta_db
 # 
@@ -37,6 +37,9 @@ AWS_SECRET_KEY=
 # the default engine to use if otherwise unspecified (one of: pegasus, oozie, oozie-sge)
 SW_DEFAULT_WORKFLOW_ENGINE=oozie-sge
 # SEQWARE PIPELINE
+MAPRED.JOB.TRACKER=master:8021
+FS.DEFAULTFS=master:8020
+FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem
 
 # Number of times that Oozie will retry user steps in workflows
 OOZIE_RETRY_MAX=5
@@ -50,11 +53,11 @@ OOZIE_BATCH_SIZE=100
 # OOZIE WORKFLOW ENGINE SETTINGS
 # only used if you specify "-–workflow-engine Oozie" to WorkflowLauncher
 #
-OOZIE_URL=http://localhost:11000/oozie
+OOZIE_URL=http://master:11000/oozie
 OOZIE_APP_ROOT=seqware_workflow
-OOZIE_APP_PATH=hdfs://localhost:8020/user/seqware/
-OOZIE_JOBTRACKER=localhost:8021
-OOZIE_NAMENODE=hdfs://localhost:8020
+OOZIE_APP_PATH=hdfs://master:8020/user/seqware/
+OOZIE_JOBTRACKER=master:8021
+OOZIE_NAMENODE=hdfs://master:8020
 OOZIE_QUEUENAME=default
 OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
 #
