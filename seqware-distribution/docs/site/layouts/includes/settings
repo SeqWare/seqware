@@ -84,7 +84,7 @@ OOZIE_NAMENODE=hdfs://localhost:8020
 OOZIE_QUEUENAME=default
 # required: Working directory where your workflow steps execute and where we store generated scripts and logs
 OOZIE_WORK_DIR=/usr/tmp/seqware-oozie
-# optional: Number of times that Oozie will retry user steps in workflows
+# optional: Number of times that Oozie and Whitestar will retry user steps in workflows
 OOZIE_RETRY_MAX=5
 # optional: Minutes to wait before retry for user steps in workflows
 OOZIE_RETRY_INTERVAL=5
@@ -92,6 +92,16 @@ OOZIE_RETRY_INTERVAL=5
 OOZIE_BATCH_THRESHOLD=10
 # optional: Number of provision file events that should be batched together
 OOZIE_BATCH_SIZE=100
+
+# WHITESTAR
+# WhiteStar engine settings. Only used for the 'whitestar' series of engines.
+
+# optional: Restrict the number of parallel jobs invoked in WhiteStar to this amount of memory
+WHITESTAR_MEMORY_LIMIT=2147483647
+
+# LAUNCH
+# Oozie engine settings. Only used for both 'oozie' and 'oozie-sge' engines.
+
 # required: HDFS implementation class
 FS.HDFS.IMPL=org.apache.hadoop.hdfs.DistributedFileSystem
 # optional: Only used for 'oozie-sge' engine. Format of qsub flag for specifying number of threads. If present, ${threads} will be replaced with the job-specific value.
@@ -112,6 +122,12 @@ SW_LOCK_ID=seqware
 SW_ENCRYPT_KEY=seqware
 # optional: Legacy key used to decrypt provisioned files
 SW_DECRYPT_KEY=seqware
+
+# LAUNCH
+# Oozie engine settings. Only used for both 'oozie' and 'oozie-sge' engines.
+
+# optional: Used to determine whether provisioned (out) files should be run through MD5 before and after provisioning
+SW_PROVISION_FILES_MD5=true
 
 # TESTING
 # Used for regression testing
