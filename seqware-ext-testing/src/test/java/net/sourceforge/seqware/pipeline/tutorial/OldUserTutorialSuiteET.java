@@ -27,7 +27,7 @@ import org.junit.runners.Suite;
  * 
  * @author dyuen
  */
-@Ignore
+@Ignore("see https://github.com/SeqWare/seqware/issues/324")
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = { UserPhase1.class, UserPhase2.class, UserPhase3.class, UserPhase4.class, UserPhase5.class, UserPhase6.class })
 public class OldUserTutorialSuiteET extends TutorialSuite {

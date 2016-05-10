@@ -44,7 +44,7 @@ public class BasicDeciderTutorialET {
     }
 
     @Test
-    @Ignore
+    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void runThroughTutorial() throws IOException {
         // create some top level metadata
         Main main = new Main();

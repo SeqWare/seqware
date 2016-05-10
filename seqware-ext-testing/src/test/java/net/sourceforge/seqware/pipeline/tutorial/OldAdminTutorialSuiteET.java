@@ -27,7 +27,7 @@ import org.junit.runners.Suite;
  * 
  * @author dyuen
  */
-@Ignore
+@Ignore("see https://github.com/SeqWare/seqware/issues/324")
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = { AdminPhase1.class })
 public class OldAdminTutorialSuiteET extends TutorialSuite {
