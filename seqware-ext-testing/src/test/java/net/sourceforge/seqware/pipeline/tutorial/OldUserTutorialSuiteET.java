@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.tutorial;
 
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -26,6 +27,7 @@ import org.junit.runners.Suite;
  * 
  * @author dyuen
  */
+@Ignore
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = { UserPhase1.class, UserPhase2.class, UserPhase3.class, UserPhase4.class, UserPhase5.class, UserPhase6.class })
 public class OldUserTutorialSuiteET extends TutorialSuite {
