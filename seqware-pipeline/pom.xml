@@ -123,7 +123,6 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.10.5</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -135,13 +134,13 @@
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
-            <version>1.5.6</version>
+            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
-            <version>1.5.6</version>
+            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -342,7 +341,7 @@
             <artifactId>powermock-core</artifactId>
             <groupId>org.powermock</groupId>
             <type>jar</type>
-            <version>1.5.6</version>
+            <version>${powermock.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
