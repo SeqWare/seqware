@@ -13,6 +13,7 @@ services:
 
 # encryption used for documentation key, pull containers before since Docker Hub can timeout and it should not break a long build
 before_install:
+- sudo rm /etc/mavenrc
 - export MAVEN_OPTS="-Xmx4096m -XX:MaxPermSize=1024m"
 - docker pull seqware/seqware_test_environment:1.2
 - docker pull seqware/documentation_builder:1.3
