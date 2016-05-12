@@ -37,7 +37,7 @@
         <guava.version>19.0</guava.version>
         <restlet.version>2.2.2</restlet.version>
         <opencsv.version>2.3</opencsv.version>
-        <maven-assembly-plugin.version>2.5.5</maven-assembly-plugin.version>
+        <maven-assembly-plugin.version>2.6</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>6.1.26</jetty-maven-plugin.version>
         <github.url>scm:git:git@github.com:SeqWare/seqware.git</github.url>
         <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
