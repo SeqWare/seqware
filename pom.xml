@@ -23,7 +23,7 @@
         <!-- while merging com.amazonaws.services.s3.transfer.MultipleFileUpload , I couldn't compile without setting a version here -->
         <aws-java-sdk.version>1.10.77</aws-java-sdk.version>
         <jackson.version>1.9.13</jackson.version>
-        <spring.version>4.1.7.RELEASE</spring.version>
+        <spring.version>4.2.6.RELEASE</spring.version>
         <hibernate.version>3.6.6.Final</hibernate.version>
         <hibernate.jpa.version>1.0.1.Final</hibernate.jpa.version>
         <hibernate-validator.version>4.2.0.Final</hibernate-validator.version>
