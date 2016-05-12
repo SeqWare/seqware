@@ -21,7 +21,7 @@ script:
 
 after_success:
 - docker pull seqware/documentation_builder:1.2
-- docker run -v $TRAVIS_BUILD_DIR/seqware_jenkins.id_rsa:/root/.ssh/private_key.pem seqware/documentation_builder:1.2 sh -c 'chown -R root $TRAVIS_BUILD_DIR &&  chown root /root/.ssh/private_key.pem && chmod -R 600 /root/.ssh/private_key.pem && eval `ssh-agent -s` && ssh-add /root/.ssh/private_key.pem && locale && export LC_ALL="en_US.UTF-8" && export LANG="en_US.UTF-8" && locale && mvn site-deploy'
+- docker run -v $TRAVIS_BUILD_DIR/seqware_jenkins.id_rsa:/root/.ssh/private_key.pem seqware/documentation_builder:1.2 sh -c 'chown -R root . &&  chown root /root/.ssh/private_key.pem && chmod -R 600 /root/.ssh/private_key.pem && eval `ssh-agent -s` && ssh-add /root/.ssh/private_key.pem && locale && export LC_ALL="en_US.UTF-8" && export LANG="en_US.UTF-8" && locale && mvn site-deploy'
 
 # sudo required for docker based testing
 sudo: required 
