@@ -76,7 +76,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
+                <version>1.8</version>
                 <executions>
                     <execution>
                         <id>copy-rename-context</id>
@@ -102,9 +102,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
-<!-- try this as an integration test instead -->
+                    <!-- try this as an integration test instead -->
                     <skipTests>true</skipTests>
-                    <argLine>${argLine} -Xms512m -Xmx512m</argLine>
+                    <!-- <argLine>${argLine} -Xms512m -Xmx512m</argLine> -->
                     <forkMode>pertest</forkMode>
                     <includes>
                         <include>**/WSResourceTestSuite.java</include>
@@ -133,10 +133,10 @@
                 </executions>
 
                 <configuration>
-                    <argLine>${argLine} -Xms512m -Xmx512m</argLine>
+                    <!-- <argLine>${argLine} -Xms512m -Xmx512m</argLine> -->
                     <forkMode>pertest</forkMode>
                     <!-- enforce that our WSResourceTests run before the plugin tests, this sucks and our tests shouldn't have state -->
-		    <runOrder>reversealphabetical</runOrder>
+		            <runOrder>reversealphabetical</runOrder>
                     <includes>
                         <include>**/WSResourceTestSuite.java</include>
                         <include>**/plugins/*.java</include>
@@ -664,6 +664,7 @@
                     <plugin>
                         <groupId>org.apache.tomcat.maven</groupId>
                         <artifactId>tomcat7-maven-plugin</artifactId>
+                        <version>2.2</version>
                         <configuration>
                             <contextFile>target/seqware-webservice-${project.version}/META-INF/context.xml</contextFile>
                             <useNaming>true</useNaming>
