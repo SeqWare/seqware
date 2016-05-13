@@ -9,7 +9,7 @@ markdown:              advanced
 
 ##  AttributeAnnotator
 net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator
-Experimental plugin. Allows the annotation of objects in the database with 'skip' values.
+Allows the annotation of objects in the database with 'skip' values.
 
 | Command-line option | Description |
 |--------------------|--------------|
@@ -75,6 +75,7 @@ Import objects into the database using different file formats.
 |--f, --field|Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
 |--file|Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.|
 |--import-json-sequencer-run|The location of the RunInfo json file to import.|
+|--input-file|Optional: one or more --input-file options can be specified when you create a workflow_run. This is encoded as a SWID|
 |--interactive|Optional: turn on interactive input |
 |--lf, --list-fields|Optional: if provided along with the --table option this will list out the fields for that table and their type.|
 |--list-tables, --lt|Optional: if provided will list out the tables this tools knows how to read and/or write to.|
@@ -236,6 +237,7 @@ This plugin lets you list, read, and write to a collection of tables in the unde
 |--c, --create|Optional: indicates you want to create a new row, must supply --table and all the required --field params.|
 |--f, --field|Optional: the field you are interested in writing. This is encoded as '<field_name>::<value>', you should use single quotes when the value includes spaces. You supply multiple --field arguments for a given table insert.|
 |--file|Optional: one file option can be specified when you create a file, one or more --file options can be specified when you create a workflow_run. This is encoded as '<algorithm>::<file-meta-type>::<file-path>', you should use single quotes when the value includes spaces.|
+|--input-file|Optional: one or more --input-file options can be specified when you create a workflow_run. This is encoded as a SWID|
 |--interactive|Optional: Interactively prompt for fields during creation|
 |--lf, --list-fields|Optional: if provided along with the --table option this will list out the fields for that table and their type.|
 |--list-tables, --lt|Optional: if provided will list out the tables this tools knows how to read and/or write to.|
@@ -314,6 +316,17 @@ A plugin that lets you (install)/schedule/launch/watch/status check workflows in
 |--wait|Optional: a flag that indicates the launcher should launch a workflow then monitor it's progress, waiting for it to exit, and returning 0 if everything is OK, non-zero if there are errors. This is useful for testing or if something else is calling the WorkflowLauncher. Without this option the launcher will immediately return with a 0 return value regardless if the workflow ultimately works.|
 |--workflow-accession|The accession for an installed workflow, must be provided unless a bundle is.|
 |--workflow-engine|Optional: Specifies a workflow engine, one of: oozie, oozie-sge, whitestar, whitestar-parallel, whitestar-sge. Defaults to oozie.|
+
+
+##  WorkflowRelauncher
+io.seqware.pipeline.plugins.WorkflowRelauncher
+A plugin that lets you re-launch failed workflow runs.
+
+| Command-line option | Description |
+|--------------------|--------------|
+|--?, --h, --help|Provides this help message.|
+|--[arguments]||
+|--w, --working-dir|Required: The working directory of the workflow run to watch|
 
 
 ##  WorkflowRescheduler

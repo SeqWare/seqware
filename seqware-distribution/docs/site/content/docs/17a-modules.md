@@ -15,6 +15,7 @@ This is a simple command runner.
 |--------------------|--------------|
 |--[arguments]||
 |--gcr-algorithm|You can pass in an algorithm name that will be recorded in the metadb if you are writing back to the metadb, otherwise GenericCommandRunner is used.|
+|--gcr-annotation-file|Specify this option to create annotations on the processing event that is created describing this command. |
 |--gcr-check-output-file|Specify the path to the file.|
 |--gcr-command|The command being executed (quote as needed).|
 |--gcr-output-file|Specify this option one or more times for each output file created by the command called by this module. The argument is a '::' delimited list of type, meta_type, and file_path.|
@@ -58,6 +59,7 @@ net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles
 |--------------------|--------------|
 |--[arguments]||
 |--a, --algorithm|Optional: by default the algorithm is 'ProvisionFiles' but you can override here if you like.|
+|--annotation-file|Specify this option to create annotations on the processing event that is created describing this command. |
 |--d, --decrypt-key|Optional: if specified this key will be used to decrypt data when reading from its source.|
 |--decrypt-key-from-settings, --dkfs|Optional: if flag is specified then the key will be read from the SW_DECRYPT_KEY field in your SeqWare settings file and used to decrypt data as its pulled from the source.  If this option is specified along with --decrypt-key the key provided by the latter will be used.|
 |--e, --encrypt-key|Optional: if specified this key will be used to encrypt data before writing to its destination.|

@@ -3,14 +3,25 @@ notifications:
 language: java
 jdk:
   - oraclejdk8
-before_script: 
-  - psql -c "create user seqware with password 'seqware' createdb;" -U postgres
-  - psql -c "ALTER USER seqware WITH superuser;" -U postgres
-  - psql -c 'create database test_seqware_meta_db with owner = seqware;' -U postgres
-  - mkdir ~/.seqware
-  - cp .travis/settings ~/.seqware
-script: mvn -B clean install -DskipITs=false
-addons:
-  postgresql: "9.4"
-# try container-based integration testing
-sudo: false
+
+cache:
+  directories:
+  - $HOME/.m2
+
+services:
+  - docker
+
+# encryption used for documentation key
+before_install:
+- docker pull seqware/seqware_test_environment:1.2
+- openssl aes-256-cbc -K $encrypted_b1a0a7dd1d17_key -iv $encrypted_b1a0a7dd1d17_iv -in seqware_jenkins.id_rsa.enc -out seqware_jenkins.id_rsa -d
+
+script: 
+- docker run -h master -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR:/home/seqware/gitroot/seqware seqware/seqware_test_environment:1.2 /test-start.sh "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && cp .travis/settings ~/.seqware  && export MAVEN_OPTS=\"-Xmx2048m -XX:MaxPermSize=1024m\" && mvn -B clean install -DskipITs=false &&  cp seqware-pipeline/target/seqware ~/bin &&  mvn -B clean install -pl seqware-ext-testing -DskipITs=false -P 'extITs,embeddedTomcat'"
+
+after_success:
+- docker pull seqware/documentation_builder:1.2
+- docker run -v $TRAVIS_BUILD_DIR/seqware_jenkins.id_rsa:/root/.ssh/private_key.pem seqware/documentation_builder:1.2 sh -c 'chown -R root $TRAVIS_BUILD_DIR &&  chown root /root/.ssh/private_key.pem && chmod -R 600 /root/.ssh/private_key.pem && eval `ssh-agent -s` && ssh-add /root/.ssh/private_key.pem && locale && export LC_ALL="en_US.UTF-8" && export LANG="en_US.UTF-8" && locale && mvn site-deploy'
+
+# sudo required for docker based testing
+sudo: required 

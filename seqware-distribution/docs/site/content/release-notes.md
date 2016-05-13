@@ -9,6 +9,22 @@ markdown:  basic
 Procedure now is at https://wiki.oicr.on.ca/pages/viewpage.action?pageId=44533172
 -->
 
+## 1.1.1 (2015-05-01)
+
+This release contains a couple of fixes for metadata tracking. It also contains a few new features for WhiteStar including retry of workflows, retry of workflow steps, and memory limits on parallel execution. 
+
+
+### Defect
+* [SEQWARE-2022] - net.sourceforge.seqware.pipeline.runner.Runner.postProcessMetadata() unreachable error handling block
+* [SEQWARE-2023] - net.sourceforge.seqware.pipeline.runner.Runner does not validate "metadata-parent-accession-file" accessions
+
+### Story
+* [SEQWARE-2025] - Add whitestar step-retry
+
+### Task
+* [SEQWARE-2020] - Improve whitestar error reporting
+* [SEQWARE-2021] - Whitestar retry capability
+* [SEQWARE-2024] - SeqWare Whitestar should take into account memory
 
 ## 1.1.0 (2015-03-12)
 

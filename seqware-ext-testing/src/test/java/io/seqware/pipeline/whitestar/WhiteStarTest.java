@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.apache.commons.exec.environment.EnvironmentUtils;
@@ -49,7 +50,7 @@ public class WhiteStarTest {
 
     @BeforeClass
     public static void setupWhiteStarTest() {
-
+        ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
     }
 
     @AfterClass
@@ -128,9 +129,9 @@ public class WhiteStarTest {
         whiteStarProperties.add("SW_DEFAULT_WORKFLOW_ENGINE=" + engine);
         whiteStarProperties.add("OOZIE_WORK_DIR=/tmp");
         // use this if running locally via mvn tomcat7:run
-        // whiteStarProperties.add("SW_REST_URL=http://localhost:8889/seqware-webservice");
+        whiteStarProperties.add("SW_REST_URL=http://localhost:8889/seqware-webservice");
         // use this in our regression testing framework
-        whiteStarProperties.add("SW_REST_URL=http://master:8080/SeqWareWebService");
+        // whiteStarProperties.add("SW_REST_URL=http://master:8080/SeqWareWebService");
         whiteStarProperties.add("OOZIE_SGE_THREADS_PARAM_FORMAT=-pe serial ${threads}");
         whiteStarProperties.add("OOZIE_SGE_MAX_MEMORY_PARAM_FORMAT=-l h_vmem=${maxMemory}M");
         Path createTempFile = Files.createTempFile("whitestar", "properties");
