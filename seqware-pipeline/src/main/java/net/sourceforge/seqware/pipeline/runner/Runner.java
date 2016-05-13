@@ -1,25 +1,6 @@
 package net.sourceforge.seqware.pipeline.runner;
 
 import io.seqware.common.model.ProcessingStatus;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.lang.reflect.Method;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
@@ -41,6 +22,27 @@ import net.sourceforge.seqware.pipeline.module.ModuleMethod;
 import net.sourceforge.seqware.pipeline.module.StderrRedirect;
 import net.sourceforge.seqware.pipeline.module.StdoutRedirect;
 import org.apache.commons.io.FileUtils;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 // FIXME: auto-adding to rc.data, support "," delimited
 // FIXME: When adding STDOUT/STDERR to metadb, we should add a timestamp or something else to make it easier to merge. Right now, it is hard to tell which stdout message corresponds to which step in stderr 
@@ -597,7 +599,7 @@ public class Runner {
             try {
                 // if the file exists, check to see if it has a valid processing accession first
                 if (file.exists() && file.canRead()) {
-                    String readFileToString = FileUtils.readFileToString(file).trim();
+                    String readFileToString = FileUtils.readFileToString(file, StandardCharsets.UTF_8).trim();
                     try {
                         int processingAccessionFromFile = Integer.valueOf(readFileToString);
                         Processing proc = meta.getProcessing(processingAccessionFromFile);

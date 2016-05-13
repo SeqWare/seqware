@@ -16,10 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.tutorial;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
@@ -28,6 +24,12 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Build and install a bundle, used by both the User tutorial and the Developer tutorial
@@ -94,7 +96,7 @@ public class DeveloperPhase1 {
     @Test
     public void testModifyingTheWorkflow() throws IOException {
         Log.info("Editing java client at " + JavaClient.getAbsolutePath());
-        List<String> readLines = FileUtils.readLines(JavaClient);
+        List<String> readLines = FileUtils.readLines(JavaClient, StandardCharsets.UTF_8);
         // edit lines to match tutorial changes
         boolean linesAdded = false;
         for (int i = 0; i < readLines.size(); i++) {

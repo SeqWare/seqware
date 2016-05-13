@@ -5,13 +5,6 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.transfer.MultipleFileUpload;
 import com.amazonaws.services.s3.transfer.TransferManager;
 import io.seqware.pipeline.SqwKeys;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -21,6 +14,14 @@ import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.openide.util.lookup.ServiceProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -165,7 +166,7 @@ public class S3UploadDirectory extends Module {
         while (myUpload.isDone() == false) {
             System.out.println("Transfer: " + myUpload.getDescription());
             System.out.println("  - State: " + myUpload.getState());
-            System.out.println("  - Progress: " + myUpload.getProgress().getBytesTransfered());
+            System.out.println("  - Progress: " + myUpload.getProgress().getBytesTransferred());
             try {
                 // Do work while we wait for our upload to complete...
                 Thread.sleep(5000);

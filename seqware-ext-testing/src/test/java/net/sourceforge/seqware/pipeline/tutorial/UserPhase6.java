@@ -17,9 +17,6 @@
 package net.sourceforge.seqware.pipeline.tutorial;
 
 import com.google.common.io.Files;
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import net.sourceforge.seqware.pipeline.plugins.PluginRunnerET;
@@ -28,6 +25,11 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 
 /**
  * Tests downloading results in the tutorial
@@ -95,7 +97,7 @@ public class UserPhase6 {
         // check that we have at least one run in the output
         boolean runFound = false;
         String workflowRunSWID = null;
-        for (String line : FileUtils.readLines(foundFile)) {
+        for (String line : FileUtils.readLines(foundFile, StandardCharsets.UTF_8)) {
             if (line.contains("seqwarearchetypejavaworkflow")) {
                 runFound = true;
                 String[] parts = line.split("\t");

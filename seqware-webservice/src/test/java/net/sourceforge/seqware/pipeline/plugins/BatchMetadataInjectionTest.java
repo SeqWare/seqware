@@ -16,23 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import net.sourceforge.seqware.common.metadata.MetadataNoConnection;
 import net.sourceforge.seqware.common.model.FileProvenanceParam;
 import net.sourceforge.seqware.common.model.IUS;
@@ -40,7 +23,6 @@ import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.Study;
 import net.sourceforge.seqware.common.util.jsontools.JSONHelper;
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreator;
-import static net.sourceforge.seqware.pipeline.plugins.PluginTest.metadata;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.LaneInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.ParseMiseqFile;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
@@ -56,6 +38,25 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 
@@ -407,7 +408,7 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
         File fileLinkerFile = new File(fileName);
 
         // Starts writing to file
-        FileUtils.writeStringToFile(fileLinkerFile, header);
+        FileUtils.writeStringToFile(fileLinkerFile, header, StandardCharsets.UTF_8);
         fileLinkerFile.deleteOnExit();
 
         // Creates the random files
@@ -418,10 +419,10 @@ public class BatchMetadataInjectionTest extends ExtendedPluginTest {
 
             File file = new File(FileUtils.getTempDirectoryPath() + "/" + randomName + count + ".txt");
             file.createNewFile();
-            FileUtils.write(file, "Hello World!");
+            FileUtils.write(file, "Hello World!",StandardCharsets.UTF_8);
             String line = ".,.,.," + String.valueOf(s) + ",.,.," + FileUtils.getTempDirectoryPath() + "/" + randomName + count + ".txt\n";
 
-            FileUtils.writeStringToFile(fileLinkerFile, line, true);
+            FileUtils.writeStringToFile(fileLinkerFile, line, StandardCharsets.UTF_8, true);
             file.deleteOnExit();
         }
 

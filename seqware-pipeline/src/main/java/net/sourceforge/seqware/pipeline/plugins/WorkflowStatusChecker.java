@@ -20,9 +20,29 @@ import io.seqware.Engines;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.oozie.action.sge.JobStatus;
 import io.seqware.pipeline.SqwKeys;
+import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.module.ReturnValue.ExitStatus;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
+import net.sourceforge.seqware.pipeline.plugin.Plugin;
+import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import net.sourceforge.seqware.pipeline.tools.RunLock;
+import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
+import org.apache.commons.io.FileUtils;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.oozie.client.OozieClient;
+import org.apache.oozie.client.WorkflowAction;
+import org.apache.oozie.client.WorkflowJob;
+import org.apache.xerces.util.XMLChar;
+import org.openide.util.lookup.ServiceProvider;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringBufferInputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,24 +63,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.module.ReturnValue.ExitStatus;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.filetools.FileTools;
-import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
-import net.sourceforge.seqware.pipeline.plugin.Plugin;
-import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.pipeline.tools.RunLock;
-import net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob;
-import org.apache.commons.io.FileUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.oozie.client.OozieClient;
-import org.apache.oozie.client.WorkflowAction;
-import org.apache.oozie.client.WorkflowJob;
-import org.apache.xerces.util.XMLChar;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * This plugin lets you monitor the status of running workflows and updates the metadata object with their status.
@@ -532,7 +534,7 @@ public class WorkflowStatusChecker extends Plugin {
             sb.append(new Date(f.lastModified()));
             sb.append("\nContents Excerpt:\n");
             try {
-                sb.append(stripInvalidXmlCharacters(FileUtils.readFileToString(f)));
+                sb.append(stripInvalidXmlCharacters(FileUtils.readFileToString(f, StandardCharsets.UTF_8)));
             } catch (IOException ex) {
                 sb.append(" *** ERROR READING FILE: ");
                 sb.append(ex.getMessage());
