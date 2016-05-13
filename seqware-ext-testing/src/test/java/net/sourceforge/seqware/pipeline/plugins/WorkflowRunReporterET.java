@@ -17,16 +17,18 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import com.google.common.io.Files;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * These tests support command-line tools found in the SeqWare User Tutorial, in this case, WorkflowRunReporter
@@ -51,7 +53,7 @@ public class WorkflowRunReporterET {
         Log.info(listOutput);
         File retrievedFile = new File(createTempDir, testOutFile.getName());
         Assert.assertTrue("output file does not exist", retrievedFile.exists());
-        List<String> readLines = FileUtils.readLines(testOutFile);
+        List<String> readLines = FileUtils.readLines(testOutFile, StandardCharsets.UTF_8);
         Assert.assertTrue("incorrect number of lines", readLines.size() == 2);
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
         Assert.assertTrue("incorrect output checksum" + checksumCRC32, checksumCRC32 == 255117433L);
@@ -85,11 +87,11 @@ public class WorkflowRunReporterET {
         Log.info(listOutput);
         File retrievedFile = new File(createTempDir, testOutFile.getName());
         Assert.assertTrue("output file does not exist", retrievedFile.exists());
-        List<String> readLines = FileUtils.readLines(testOutFile);
+        List<String> readLines = FileUtils.readLines(testOutFile,StandardCharsets.UTF_8);
         Assert.assertTrue("incorrect number of lines ", readLines.size() == 7);
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
         // former is for Java 7, latter is for Java 8, Looks like we didn't solve the sorting problem
-        Assert.assertTrue("incorrect output checksum " + checksumCRC32 + " " + FileUtils.readFileToString(retrievedFile),
+        Assert.assertTrue("incorrect output checksum " + checksumCRC32 + " " + FileUtils.readFileToString(retrievedFile,StandardCharsets.UTF_8),
                 checksumCRC32 == 3873030870L || checksumCRC32 == 2196935470L || checksumCRC32 == 3273287955L);
     }
 
@@ -104,11 +106,11 @@ public class WorkflowRunReporterET {
         Log.info(listOutput);
         File retrievedFile = new File(createTempDir, testOutFile.getName());
         Assert.assertTrue("output file does not exist", retrievedFile.exists());
-        List<String> readLines = FileUtils.readLines(testOutFile);
+        List<String> readLines = FileUtils.readLines(testOutFile,StandardCharsets.UTF_8);
         Assert.assertTrue("incorrect number of lines ", readLines.size() == 4);
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
         // former is for Java 7, latter is for Java 8, Looks like we didn't solve the sorting problem
-        Assert.assertTrue("incorrect output checksum " + checksumCRC32 + " " + FileUtils.readFileToString(retrievedFile),
+        Assert.assertTrue("incorrect output checksum " + checksumCRC32 + " " + FileUtils.readFileToString(retrievedFile,StandardCharsets.UTF_8),
                 checksumCRC32 == 562223107L || checksumCRC32 == 4072825873L);
     }
 

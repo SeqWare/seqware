@@ -1,23 +1,6 @@
 package net.sourceforge.seqware.pipeline.plugins.checkdb;
 
 import io.seqware.pipeline.SqwKeys;
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
@@ -41,6 +24,25 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.rendersnake.HtmlCanvas;
+
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * A database validation tool for your SeqWare metadb
@@ -160,7 +162,7 @@ public final class CheckDB extends Plugin {
             }
             html._body()._html();
             File createTempFile = File.createTempFile("report", ".html");
-            FileUtils.write(createTempFile, html.toHtml());
+            FileUtils.write(createTempFile, html.toHtml(), StandardCharsets.UTF_8);
             Log.stdout("Printed report to " + createTempFile.getAbsolutePath());
             ret.setUrl(createTempFile.toURI().toURL().toString());
         } catch (IOException ex) {

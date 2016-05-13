@@ -3,11 +3,6 @@ package io.seqware.pipeline.plugins;
 import io.seqware.Engines;
 import io.seqware.pipeline.SqwKeys;
 import io.seqware.pipeline.api.Scheduler;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionParser;
@@ -20,6 +15,13 @@ import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Workflow Scheduler is only responsible for scheduling workflows.
@@ -197,7 +199,7 @@ public class WorkflowScheduler extends Plugin {
             if (options.has(outFile)) {
                 try {
                     java.io.File file = new java.io.File(options.valueOf(this.outFile));
-                    FileUtils.write(file, String.valueOf(ret.getReturnValue()));
+                    FileUtils.write(file, String.valueOf(ret.getReturnValue()), StandardCharsets.UTF_8);
                 } catch (IOException ex) {
                     return new ReturnValue(ExitStatus.FILENOTWRITABLE);
                 }
