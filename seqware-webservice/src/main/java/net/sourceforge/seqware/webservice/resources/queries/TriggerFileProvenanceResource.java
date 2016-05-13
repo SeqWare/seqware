@@ -1,7 +1,5 @@
 package net.sourceforge.seqware.webservice.resources.queries;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.util.Log;
@@ -12,6 +10,10 @@ import org.restlet.Context;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.data.Status;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 
 public class TriggerFileProvenanceResource extends BasicRestlet {
 
@@ -28,7 +30,7 @@ public class TriggerFileProvenanceResource extends BasicRestlet {
         MetadataDB mdb = null;
         try {
             Log.info("Executing file provenance update");
-            String query = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("file-provenance-report.sql"));
+            String query = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("file-provenance-report.sql"), StandardCharsets.UTF_8);
             mdb = DBAccess.get();
             mdb.executeUpdate(query);
             response.setStatus(Status.SUCCESS_NO_CONTENT);

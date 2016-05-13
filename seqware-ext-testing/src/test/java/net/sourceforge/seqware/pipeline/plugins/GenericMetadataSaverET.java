@@ -17,14 +17,16 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import com.google.common.io.Files;
-import java.io.File;
-import java.io.IOException;
-import java.util.Random;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Random;
 
 /**
  * These tests support command-line tools found in the SeqWare User Tutorial, in this case, GenericMetadataSaver
@@ -53,7 +55,7 @@ public class GenericMetadataSaverET {
         // create a random new file and check that the file we want to save metadata about exists
         File inputFile = File.createTempFile("input", "out");
         final String content = "This is a funky funky test file";
-        FileUtils.write(inputFile, content);
+        FileUtils.write(inputFile, content, StandardCharsets.UTF_8);
 
         Random generator = new Random();
         String random = String.valueOf(generator.nextInt());

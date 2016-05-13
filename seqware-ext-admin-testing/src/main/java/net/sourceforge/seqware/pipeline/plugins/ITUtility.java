@@ -17,11 +17,6 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import com.google.common.io.Files;
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.util.Log;
@@ -31,7 +26,12 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.junit.Assert;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -180,8 +180,9 @@ public class ITUtility {
         exec.setExitValue(expectedReturnValue);
         try {
             int exitValue = exec.execute(commandline, environment);
-            Assert.assertTrue("exit value for full jar with no params should be " + expectedReturnValue + " was " + exitValue,
-                    exitValue == expectedReturnValue);
+            if (exitValue != expectedReturnValue){
+                throw new RuntimeException("exit value for full jar with no params should be " + expectedReturnValue + " was " + exitValue);
+            }
             String output = outputStream.toString();
             return output;
         } catch (ExecuteException e) {

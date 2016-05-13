@@ -11,20 +11,6 @@ import io.seqware.Studies;
 import io.seqware.WorkflowRuns;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicBoolean;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.model.Annotatable;
@@ -42,6 +28,22 @@ import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /*
  * TODO:
@@ -1454,7 +1456,7 @@ public class Main {
 
             if (out != null) {
                 try {
-                    FileUtils.writeStringToFile(new File(out), WorkflowRuns.workflowRunIni(Integer.parseInt(swid)));
+                    FileUtils.writeStringToFile(new File(out), WorkflowRuns.workflowRunIni(Integer.parseInt(swid)), StandardCharsets.UTF_8);
                 } catch (IOException ex) {
                     kill("seqware: cannot write to '%s'.", out);
                 }

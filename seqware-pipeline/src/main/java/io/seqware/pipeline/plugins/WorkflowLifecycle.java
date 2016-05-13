@@ -2,13 +2,6 @@ package io.seqware.pipeline.plugins;
 
 import com.google.common.collect.Lists;
 import io.seqware.common.model.WorkflowRunStatus;
-import static io.seqware.pipeline.plugins.WorkflowScheduler.OVERRIDE_INI_DESC;
-import static io.seqware.pipeline.plugins.WorkflowScheduler.validateEngineString;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.NonOptionArgumentSpec;
 import joptsimple.OptionSpecBuilder;
@@ -25,6 +18,16 @@ import net.sourceforge.seqware.pipeline.runner.PluginRunner;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner.ExitException;
 import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static io.seqware.pipeline.plugins.WorkflowScheduler.OVERRIDE_INI_DESC;
+import static io.seqware.pipeline.plugins.WorkflowScheduler.validateEngineString;
 
 /**
  *
@@ -131,7 +134,7 @@ public class WorkflowLifecycle extends Plugin {
                 runBundleManagerPlugin(options.valueOf(this.bundleDirSpec), tempBundleFile);
             } else {
                 // otherwise simulate a workflow installed by placing a sw_accession in the bundle_manager output file
-                FileUtils.write(tempBundleFile, String.valueOf(options.valueOf(workflowAccessionSpec)));
+                FileUtils.write(tempBundleFile, String.valueOf(options.valueOf(workflowAccessionSpec)), StandardCharsets.UTF_8);
             }
             // schedule the workflow
             runWorkflowSchedulerPlugin(tempBundleFile, tempSchedulerFile);
@@ -187,7 +190,7 @@ public class WorkflowLifecycle extends Plugin {
 
     private void runWorkflowSchedulerPlugin(File outFile, File tempSchedulerFile) throws IOException {
         // if there is only one workflow in the file, use it. Otherwise ask for name and version
-        List<String> readLines = FileUtils.readLines(outFile);
+        List<String> readLines = FileUtils.readLines(outFile,StandardCharsets.UTF_8);
         this.workflowAccession = null;
         if (readLines.size() == 1) {
             workflowAccession = readLines.get(0);
@@ -240,7 +243,7 @@ public class WorkflowLifecycle extends Plugin {
 
     private void runWorkflowLauncherPlugin(File outFile) throws IOException {
         // if there is only one workflow in the file, use it. Otherwise ask for name and version
-        List<String> readLines = FileUtils.readLines(outFile);
+        List<String> readLines = FileUtils.readLines(outFile,StandardCharsets.UTF_8);
         this.workflowRunAccession = null;
         if (readLines.size() == 1) {
             workflowRunAccession = readLines.get(0);

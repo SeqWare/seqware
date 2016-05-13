@@ -4,13 +4,6 @@ import com.google.common.collect.Lists;
 import io.seqware.Engines;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -20,6 +13,15 @@ import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.apache.commons.io.FileUtils;
 import org.openide.util.lookup.ServiceProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The Workflow Rescheduler can schedule a new workflow based on the configuration of a previously launched workflow.
@@ -154,7 +156,7 @@ public class WorkflowRescheduler extends Plugin {
                     this.metadata.updateWorkflowRun(oldWorkflowRun);
 
                     if (options.has(outFileSpec)) {
-                        FileUtils.write(outputFile, String.valueOf(newWorkflowRun) + "\n", true);
+                        FileUtils.write(outputFile, String.valueOf(newWorkflowRun) + "\n", StandardCharsets.UTF_8,true);
                     }
                 }
 

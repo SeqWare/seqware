@@ -16,11 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import joptsimple.OptionException;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.LibrarySelection;
@@ -32,6 +27,12 @@ import net.sourceforge.seqware.common.model.StudyType;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.ConsoleAdapter;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -522,8 +523,7 @@ public abstract class BatchMetadataParser {
         } else {
             Exception e = new Exception("A value must be provided for " + title + ", using --field "
                     + (fieldName == null ? "No field known" : fieldName.toString()));
-            throw new OptionException(fields.keySet(), e) {
-            };
+            throw new RuntimeException(e);
         }
     }
 

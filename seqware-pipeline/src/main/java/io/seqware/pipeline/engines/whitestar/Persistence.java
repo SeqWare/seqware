@@ -20,11 +20,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.metadata.MetadataInMemory;
@@ -32,9 +27,17 @@ import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.util.Log;
-import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import static net.sourceforge.seqware.common.util.Rethrow.rethrow;
 
 /**
  * This is a KISS implementation of persistence for WhiteStar relying upon JSON text files in the working directory.
@@ -68,7 +71,7 @@ public class Persistence {
     public synchronized SortedSet<String> readCompletedJobs() {
         try {
             Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
-            String statesString = FileUtils.readFileToString(new File(persistDir, STATE_FILENAME));
+            String statesString = FileUtils.readFileToString(new File(persistDir, STATE_FILENAME), StandardCharsets.UTF_8);
             Type collectionType = new TypeToken<SortedSet<String>>() {
             }.getType();
             SortedSet<String> states = gson.fromJson(statesString, collectionType);
@@ -83,8 +86,8 @@ public class Persistence {
     public synchronized WorkflowRun readWorkflowRun() {
         try {
             Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
-            String workflowRunString = FileUtils.readFileToString(new File(persistDir, WORKFLOW_RUN_FILENAME));
-            String workflowString = FileUtils.readFileToString(new File(persistDir, WORKFLOW_FILENAME));
+            String workflowRunString = FileUtils.readFileToString(new File(persistDir, WORKFLOW_RUN_FILENAME),StandardCharsets.UTF_8);
+            String workflowString = FileUtils.readFileToString(new File(persistDir, WORKFLOW_FILENAME),StandardCharsets.UTF_8);
             WorkflowRun workflowRun = gson.fromJson(workflowRunString, WorkflowRun.class);
             Workflow workflow = gson.fromJson(workflowString, Workflow.class);
             workflowRun.setWorkflow(workflow);
@@ -121,9 +124,9 @@ public class Persistence {
                 }
             }
             // ugly, need to avoid circular reference before serialization
-            FileUtils.write(new File(persistDir, WORKFLOW_RUN_FILENAME), gson.toJson(workflowRun));
-            FileUtils.write(new File(persistDir, WORKFLOW_FILENAME), gson.toJson(workflow));
-            FileUtils.write(new File(persistDir, STATE_FILENAME), gson.toJson(completedJobs));
+            FileUtils.write(new File(persistDir, WORKFLOW_RUN_FILENAME), gson.toJson(workflowRun),StandardCharsets.UTF_8);
+            FileUtils.write(new File(persistDir, WORKFLOW_FILENAME), gson.toJson(workflow),StandardCharsets.UTF_8);
+            FileUtils.write(new File(persistDir, STATE_FILENAME), gson.toJson(completedJobs),StandardCharsets.UTF_8);
             workflowRun.setWorkflow(workflow);
             SortedSet<WorkflowRun> set = new TreeSet<>();
             set.add(workflowRun);
