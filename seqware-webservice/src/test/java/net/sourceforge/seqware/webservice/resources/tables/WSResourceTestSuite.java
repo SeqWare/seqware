@@ -18,7 +18,6 @@ package net.sourceforge.seqware.webservice.resources.tables;
 
 import net.sourceforge.seqware.common.util.testtools.BasicTestDatabaseCreatorWrapper;
 import net.sourceforge.seqware.common.util.testtools.JndiDatasourceCreator;
-import org.hibernate.SessionFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -58,30 +57,14 @@ import org.junit.runners.Suite;
         net.sourceforge.seqware.common.metadata.MetadataWSTest.class, net.sourceforge.seqware.common.metadata.MetadataDBTest.class })
 public class WSResourceTestSuite {
 
-    protected SessionFactory sessionFactory = null;
-
     @BeforeClass
     public static void setUpClass() throws Exception {
         BasicTestDatabaseCreatorWrapper.resetDatabaseWithUsers();
         JndiDatasourceCreator.create();
-        // SeqWareWebServiceMain.main(null);
     }
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-        // SeqWareWebServiceMain.stop();
         BasicTestDatabaseCreatorWrapper.dropDatabase();
     }
-    // @Before
-    // public void setUp() {
-    // sessionFactory = BeanFactory.getSessionFactoryBean();
-    // Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-    // TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
-    // }
-    //
-    // @After
-    // public void tearDown() {
-    // SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(sessionFactory);
-    // SessionFactoryUtils.closeSession(sessionHolder.getSession());
-    // }
 }

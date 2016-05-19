@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -16,7 +15,6 @@ import java.util.Set;
  * @author boconnor
  * @version $Id: $Id
  */
-@Entity
 public class Registration extends PermissionsAware implements Serializable, Comparable<Registration> {
 
     /**

@@ -20,16 +20,6 @@ import com.google.common.collect.Lists;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
-import java.net.URISyntaxException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
 import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Experiment;
@@ -56,6 +46,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.net.URISyntaxException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
 
 /**
  *
@@ -226,7 +227,7 @@ public class MetadataWSTest {
 
     }
 
-    protected void testTimestamp(String sql, final String colname, Date beforeDate) {
+    void testTimestamp(String sql, final String colname, Date beforeDate) {
         logger.debug(sql);
         try {
             Date date = DBAccess.get().executeQuery(sql, new ResultSetHandler<Date>() {
@@ -258,7 +259,7 @@ public class MetadataWSTest {
         }
     }
 
-    protected void testCount(String sql, int expectedCount) {
+    private void testCount(String sql, int expectedCount) {
         logger.debug(sql);
         try {
             int count = DBAccess.get().executeQuery(sql, new ResultSetHandler<Integer>() {

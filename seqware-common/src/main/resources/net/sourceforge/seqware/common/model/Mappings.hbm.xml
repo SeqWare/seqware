@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC
-  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="net.sourceforge.seqware.common.model">
 
-  <!-- ********** **************** File Type **************** ********** -->
+    <!-- ********** **************** File Type **************** ********** -->
     <class name="FileType" table="file_type" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             File type table.
@@ -16,7 +16,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">file_type_file_type_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">file_type_file_type_id_seq</param>
             </generator>
         </id>
 
@@ -26,7 +28,7 @@
 
     </class>
 
- <!-- ******** WorkflowRun share ******** -->
+    <!-- ******** WorkflowRun share ******** -->
     <class name="ShareWorkflowRun" table="share_workflow_run" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             Workflow run share table.
@@ -39,7 +41,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">share_workflow_run_share_workflow_run_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">share_workflow_run_share_workflow_run_id_seq</param>
             </generator>
         </id>
 
@@ -53,21 +57,21 @@
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
         <property name="workflowRunId" column="workflow_run_id" type="integer"/>
         <property name="active" column="active" type="boolean"/>
-	<!--property name="email" column="email" type="string"/-->
+        <!--property name="email" column="email" type="string"/-->
 
         <many-to-one
-            name="registration"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="registration_id"
-    />
+                name="registration"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="registration_id"
+        />
 
     </class>
 
-  <!-- ******** Study share ******** -->
+    <!-- ******** Study share ******** -->
     <class name="ShareStudy" table="share_study" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             Study share table.
@@ -80,7 +84,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">share_study_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">share_study_id_seq</param>
             </generator>
         </id>
 
@@ -94,23 +100,22 @@
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
         <property name="studyId" column="study_id" type="integer"/>
         <property name="active" column="active" type="boolean"/>
-	<!--property name="email" column="email" type="string"/-->
+        <!--property name="email" column="email" type="string"/-->
 
         <many-to-one
-            name="registration"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="registration_id"
-    />
+                name="registration"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="registration_id"
+        />
 
     </class>
 
 
-
-  <!-- ********** **************** Workflow **************** ********** -->
+    <!-- ********** **************** Workflow **************** ********** -->
     <class name="Workflow" table="workflow" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
         <meta attribute="class-description">
             An Workflow.
@@ -122,7 +127,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">workflow_workflow_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">workflow_workflow_id_seq</param>
             </generator>
         </id>
 
@@ -152,43 +159,43 @@
         <property name="workflowEngine" column="workflow_engine" type="string"/>
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
         <set
-            name="workflowRuns"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
-            <key column="workflow_id" />
-            <one-to-many class="WorkflowRun" />
+                name="workflowRuns"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
+            <key column="workflow_id"/>
+            <one-to-many class="WorkflowRun"/>
         </set>
 
         <set
-            name="workflowParams"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
-            <key column="workflow_id" />
-            <one-to-many class="WorkflowParam" />
+                name="workflowParams"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
+            <key column="workflow_id"/>
+            <one-to-many class="WorkflowParam"/>
         </set>
         <set name="workflowAttributes" inverse="true" lazy="true" table="workflow_attribute" cascade="all-delete-orphan" fetch="select">
-            <key column="workflow_id" />
-            <one-to-many class="WorkflowAttribute" />
+            <key column="workflow_id"/>
+            <one-to-many class="WorkflowAttribute"/>
         </set>
     </class>
 
 
-  <!-- ********** **************** Invoice **************** ********** -->
+    <!-- ********** **************** Invoice **************** ********** -->
     <class name="Invoice" table="invoice" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
         <meta attribute="class-description">
             An Invoice.
@@ -200,13 +207,15 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">invoice_invoice_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">invoice_invoice_id_seq</param>
             </generator>
         </id>
 
         <version name="createTimestamp" column="create_tstmp" type="timestamp" unsaved-value="null"/>
 
-        
+
         <property name="swAccession" column="sw_accession" type="integer" generated="insert">
             <meta attribute="use-in-equals">true</meta>
             <meta attribute="use-in-tostring">true</meta>
@@ -217,8 +226,7 @@
         <property name="state" column="state">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">net.sourceforge.seqware.common.model.InvoiceState</param>
-                <!-- Persist the name instead of the ordinal. 12 is the int value of java.sql.Types.VARCHAR -->
-                <param name="type">12</param>
+                <param name="useNamed">true</param>
             </type>
         </property>
         <property name="finalized" column="finalized" type="boolean"/>
@@ -231,24 +239,24 @@
 
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
         />
-        
+
         <set
-            name="expenses"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
-            <key column="invoice_id" />
-            <one-to-many class="Expense" />
+                name="expenses"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
+            <key column="invoice_id"/>
+            <one-to-many class="Expense"/>
         </set>
 
         <!-- set name="invoiceAttributes" inverse="true" lazy="true" table="invoice_attribute" fetch="select">
@@ -258,8 +266,8 @@
             <one-to-many class="InvoiceAttribute" />
         </set-->
     </class>
-    
-    
+
+
     <!-- ********** **************** Expense **************** ********** -->
     <class name="Expense" table="expense" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
         <meta attribute="class-description">
@@ -272,18 +280,20 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">expense_expense_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">expense_expense_id_seq</param>
             </generator>
         </id>
 
         <version name="finishedTimestamp" column="expense_finished_tstmp" type="timestamp" unsaved-value="null"/>
 
-        
+
         <property name="swAccession" column="sw_accession" type="integer" generated="insert">
             <meta attribute="use-in-equals">true</meta>
             <meta attribute="use-in-tostring">true</meta>
         </property>
-        
+
         <property name="agent" column="agent" type="string"/>
         <property name="expenseType" column="expense_type" type="string"/>
         <property name="description" column="description" type="string"/>
@@ -293,27 +303,27 @@
         <property name="addedSurcharge" column="added_surcharge" type="double"/>
 
         <many-to-one
-            name="workflowRun"
-            class="WorkflowRun"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="workflow_run_id"
-            not-found="ignore"
+                name="workflowRun"
+                class="WorkflowRun"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="workflow_run_id"
+                not-found="ignore"
         />
 
         <many-to-one
-            name="invoice"
-            class="Invoice"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="invoice_id"
-            not-found="ignore"
+                name="invoice"
+                class="Invoice"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="invoice_id"
+                not-found="ignore"
         />
-        
+
         <!-- set name="invoiceAttributes" inverse="true" lazy="true" table="invoice_attribute" fetch="select">
             <key>
                 <column name="invoice_id" not-null="true" />
@@ -322,7 +332,7 @@
         </set-->
     </class>
 
-  <!-- ********** **************** Workflow_Param **************** ********** -->
+    <!-- ********** **************** Workflow_Param **************** ********** -->
     <class name="WorkflowParam" table="workflow_param" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An WorkflowParam.
@@ -334,11 +344,13 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">workflow_param_workflow_param_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">workflow_param_workflow_param_id_seq</param>
             </generator>
         </id>
 
-    <!--version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/-->
+        <!--version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/-->
 
         <property name="type" column="type" type="string"/>
         <property name="key" column="key" type="string"/>
@@ -348,28 +360,28 @@
         <property name="displayName" column="display_name" type="string"/>
 
         <many-to-one
-            name="workflow"
-            class="Workflow"
-            cascade="all"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="workflow_id"
-    />
+                name="workflow"
+                class="Workflow"
+                cascade="all"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="workflow_id"
+        />
 
         <set
-            name="values"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
-            <key column="workflow_param_id" />
-            <one-to-many class="WorkflowParamValue" />
+                name="values"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
+            <key column="workflow_param_id"/>
+            <one-to-many class="WorkflowParamValue"/>
         </set>
 
     </class>
 
-  <!-- ********** **************** Workflow_Param_Value **************** ********** -->
+    <!-- ********** **************** Workflow_Param_Value **************** ********** -->
     <class name="WorkflowParamValue" table="workflow_param_value" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An WorkflowParamValue.
@@ -381,7 +393,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">workflow_param_value_workflow_param_value_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">workflow_param_value_workflow_param_value_id_seq</param>
             </generator>
         </id>
 
@@ -389,18 +403,18 @@
         <property name="displayName" column="display_name" type="string"/>
 
         <many-to-one
-            name="workflowParam"
-            class="WorkflowParam"
-            cascade="all"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="workflow_param_id"
-    />
+                name="workflowParam"
+                class="WorkflowParam"
+                cascade="all"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="workflow_param_id"
+        />
 
     </class>
 
-  <!-- ********** **************** Workflow_Run **************** ********** -->
+    <!-- ********** **************** Workflow_Run **************** ********** -->
     <class name="WorkflowRun" table="workflow_run" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An WorkflowRun.
@@ -412,7 +426,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">workflow_run_workflow_run_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">workflow_run_workflow_run_id_seq</param>
             </generator>
         </id>
 
@@ -430,8 +446,7 @@
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">io.seqware.common.model.WorkflowRunStatus</param>
-                <!-- Persist the name instead of the ordinal. 12 is the int value of java.sql.Types.VARCHAR -->
-                <param name="type">12</param>
+                <param name="useNamed">true</param>
             </type>
         </property>
         <property name="statusCmd" column="status_cmd" type="string"/>
@@ -444,95 +459,97 @@
         <property name="stdErr" column="stderr" type="string"/>
         <property name="stdOut" column="stdout" type="string"/>
         <!-- <property name="dax" type="string" column="dax" /> -->
-        <property name="iniFile" type="string" column="ini_file" />
+        <property name="iniFile" type="string" column="ini_file"/>
         <property name="workflowEngine" type="string" column="workflow_engine"/>
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
         <many-to-one
-            name="workflow"
-            class="Workflow"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="workflow_id"
-    />
+                name="workflow"
+                class="Workflow"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="workflow_id"
+        />
 
         <set
-            name="processings"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
-            <key column="workflow_run_id" />
-            <one-to-many class="Processing" />
+                name="processings"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
+            <key column="workflow_run_id"/>
+            <one-to-many class="Processing"/>
         </set>
 
         <set
-            name="offspringProcessings"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
-            <key column="ancestor_workflow_run_id" />
-            <one-to-many class="Processing" />
+                name="offspringProcessings"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
+            <key column="ancestor_workflow_run_id"/>
+            <one-to-many class="Processing"/>
         </set>
 
 
-    <!--set
-      name="processings"
-      lazy="true"
-      inverse="true"
-      cascade="all"
-      sort="natural">
-      <key column="workflow_run_id" />
-      <one-to-many class="Processing" />
-    </set-->
+        <!--set
+          name="processings"
+          lazy="true"
+          inverse="true"
+          cascade="all"
+          sort="natural">
+          <key column="workflow_run_id" />
+          <one-to-many class="Processing" />
+        </set-->
 
         <set
-            name="sharedWorkflowRuns"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural"  access="field">
+                name="sharedWorkflowRuns"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural" access="field">
             <key column="workflow_run_id"/>
             <one-to-many class="ShareWorkflowRun"/>
         </set>
 
         <set
-            name="workflowRunParams"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
+                name="workflowRunParams"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
             <key column="workflow_run_id"/>
             <one-to-many class="WorkflowRunParam"/>
         </set>
 
-        <set name="ius" table = "ius_workflow_runs" cascade="all" sort="natural">
+        <set name="ius" table="ius_workflow_runs" cascade="all" sort="natural">
             <key column="workflow_run_id"/>
             <many-to-many class="IUS" column="ius_id" unique="true"/>
         </set>
 
-        <set name="lanes" table = "lane_workflow_runs" cascade="all" sort="natural">
+        <set name="lanes" table="lane_workflow_runs" cascade="all" sort="natural">
             <key column="workflow_run_id"/>
             <many-to-many class="Lane" column="lane_id" unique="true"/>
         </set>
-        <set name="workflowRunAttributes" inverse="true" lazy="true" table="workflow_run_attribute" fetch="select" cascade="all-delete-orphan">
-            <key column="workflow_run_id" />
-            <one-to-many class="WorkflowRunAttribute" />
+        <set name="workflowRunAttributes" inverse="true" lazy="true" table="workflow_run_attribute" fetch="select"
+             cascade="all-delete-orphan">
+            <key column="workflow_run_id"/>
+            <one-to-many class="WorkflowRunAttribute"/>
         </set>
-        <set name="inputFileAccessions" inverse="false" lazy="false" table="workflow_run_input_files" fetch="select" cascade="all-delete-orphan">
+        <set name="inputFileAccessions" inverse="false" lazy="false" table="workflow_run_input_files" fetch="select"
+             cascade="all-delete-orphan">
             <key column="workflow_run_id"/>
             <!-- <element type="integer" column="file_id" not-null="true" /> -->
             <element type="integer">
@@ -542,7 +559,7 @@
         </set>
     </class>
 
-  <!-- ********** **************** Workflow_Run_Param **************** ********** -->
+    <!-- ********** **************** Workflow_Run_Param **************** ********** -->
     <class name="WorkflowRunParam" table="workflow_run_param" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An WorkflowRunParam.
@@ -554,11 +571,13 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">workflow_run_param_workflow_run_param_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">workflow_run_param_workflow_run_param_id_seq</param>
             </generator>
         </id>
 
-    <!--version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/-->
+        <!--version name="updateTimestamp" column="update_tstmp" type="timestamp" unsaved-value="null"/-->
 
         <property name="type" column="type" type="string"/>
         <property name="key" column="key" type="string"/>
@@ -566,20 +585,20 @@
         <property name="parentProcessingAccession" column="parent_processing_accession" type="integer"/>
 
         <many-to-one
-            name="workflowRun"
-            class="WorkflowRun"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="workflow_run_id"
-    />
+                name="workflowRun"
+                class="WorkflowRun"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="workflow_run_id"
+        />
 
     </class>
 
-  <!-- ********* Start SRA ********* -->
+    <!-- ********* Start SRA ********* -->
 
-  <!-- ********** **************** Study **************** ********** -->
+    <!-- ********** **************** Study **************** ********** -->
     <class name="Study" table="study" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             A Study is a container for a sequencing investigation that may comprise multiple experiments.
@@ -591,7 +610,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">study_study_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">study_study_id_seq</param>
             </generator>
         </id>
 
@@ -619,92 +640,94 @@
 
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
 
-    <!--property name="ownerId" column="owner_id" type="integer"/-->
+        <!--property name="ownerId" column="owner_id" type="integer"/-->
 
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
         <many-to-one
-            name="existingType"
-            class="StudyType"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="existing_type"
-    />
+                name="existingType"
+                class="StudyType"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="existing_type"
+        />
 
         <set
-            name="experiments"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
+                name="experiments"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
             <key column="study_id"/>
             <one-to-many class="Experiment"/>
         </set>
 
         <set
-            name="sharedStudies"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
+                name="sharedStudies"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
             <key column="study_id"/>
             <one-to-many class="ShareStudy"/>
         </set>
 
-        <set name="processings" table = "processing_studies" cascade="all">
+        <set name="processings" table="processing_studies" cascade="all">
             <key column="study_id"/>
             <many-to-many class="Processing" column="processing_id" unique="true"/>
         </set>
 
         <set name="studyAttributes" inverse="true" lazy="true" table="study_attribute" fetch="select" cascade="all-delete-orphan">
-            <key column="study_id" />
-            <one-to-many class="StudyAttribute" />
+            <key column="study_id"/>
+            <one-to-many class="StudyAttribute"/>
         </set>
 
 
     </class>
 
-  <!-- ********** **************** StudyAttribute **************** ********** -->
+    <!-- ********** **************** StudyAttribute **************** ********** -->
     <class name="StudyAttribute" table="study_attribute" schema="public">
         <id name="studyAttributeId" type="int">
-            <column name="study_attribute_id" />
+            <column name="study_attribute_id"/>
 
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">study_attribute_study_attribute_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">study_attribute_study_attribute_id_seq</param>
             </generator>
         </id>
 
         <many-to-one name="study" class="Study" fetch="select">
-            <column name="study_id" not-null="true" />
+            <column name="study_id" not-null="true"/>
         </many-to-one>
 
         <property name="tag" type="string">
-            <column name="tag" not-null="true" />
+            <column name="tag" not-null="true"/>
         </property>
 
         <property name="value" type="string">
-            <column name="value" not-null="true" />
+            <column name="value" not-null="true"/>
         </property>
 
         <property name="units" type="string">
-            <column name="units" />
+            <column name="units"/>
         </property>
     </class>
 
 
-  <!-- ********** **************** StudyType **************** ********** -->
+    <!-- ********** **************** StudyType **************** ********** -->
     <class name="StudyType" table="study_type" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             A Study Type.
@@ -716,7 +739,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">study_type_study_type_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">study_type_study_type_id_seq</param>
             </generator>
         </id>
 
@@ -725,7 +750,7 @@
 
     </class>
 
-  <!-- ********** **************** Experiment **************** ********** -->
+    <!-- ********** **************** Experiment **************** ********** -->
     <class name="Experiment" table="experiment" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An Experiment.
@@ -737,7 +762,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">experiment_experiment_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">experiment_experiment_id_seq</param>
             </generator>
         </id>
 
@@ -772,108 +799,111 @@
         <property name="expectedNumberReads" column="expected_number_reads" type="long"/>
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
         <many-to-one
-            name="study"
-            class="Study"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="study_id"
-    />
+                name="study"
+                class="Study"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="study_id"
+        />
 
         <many-to-one
-            name="platform"
-            class="Platform"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="platform_id"
-    />
+                name="platform"
+                class="Platform"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="platform_id"
+        />
 
         <many-to-one
-            name="experimentLibraryDesign"
-            class="ExperimentLibraryDesign"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="experiment_library_design_id"
-    />
+                name="experimentLibraryDesign"
+                class="ExperimentLibraryDesign"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="experiment_library_design_id"
+        />
 
         <many-to-one
-            name="experimentSpotDesign"
-            class="ExperimentSpotDesign"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="experiment_spot_design_id"
-    />
+                name="experimentSpotDesign"
+                class="ExperimentSpotDesign"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="experiment_spot_design_id"
+        />
 
         <set
-            name="samples"
-            lazy="false"
-            inverse="true"
-            cascade="all"
-            sort="natural">
+                name="samples"
+                lazy="false"
+                inverse="true"
+                cascade="all"
+                sort="natural">
             <key column="experiment_id"/>
             <one-to-many class="Sample"/>
         </set>
 
         <set name="experimentAttributes" inverse="true" lazy="true" table="experiment_attribute" fetch="select" cascade="all-delete-orphan">
-            <key column="experiment_id" />
-            <one-to-many class="ExperimentAttribute" />
+            <key column="experiment_id"/>
+            <one-to-many class="ExperimentAttribute"/>
         </set>
 
 
-        <set name="processings" table = "processing_experiments" cascade="all">
+        <set name="processings" table="processing_experiments" cascade="all">
             <key column="experiment_id"/>
             <many-to-many class="Processing" column="processing_id" unique="true"/>
         </set>
     </class>
 
-  <!-- ********** **************** ExperimentAttribute **************** ********** -->
+    <!-- ********** **************** ExperimentAttribute **************** ********** -->
     <class name="ExperimentAttribute" table="experiment_attribute" schema="public">
         <id name="experimentAttributeId" type="int">
-            <column name="experiment_attribute_id" />
+            <column name="experiment_attribute_id"/>
 
-             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">experiment_attribute_experiment_attribute_id_seq</param>
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">experiment_attribute_experiment_attribute_id_seq</param>
             </generator>
         </id>
 
         <many-to-one name="experiment" class="Experiment" fetch="select">
-            <column name="experiment_id" not-null="true" />
+            <column name="experiment_id" not-null="true"/>
         </many-to-one>
 
         <property name="tag" type="string">
-            <column name="tag" />
+            <column name="tag"/>
         </property>
 
         <property name="value" type="string">
-            <column name="value" />
+            <column name="value"/>
         </property>
 
         <property name="units" type="string">
-            <column name="units" />
+            <column name="units"/>
         </property>
     </class>
 
 
-  <!-- ********** **************** ExperimentLibraryDesign **************** ********** -->
-    <class name="ExperimentLibraryDesign" table="experiment_library_design" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+    <!-- ********** **************** ExperimentLibraryDesign **************** ********** -->
+    <class name="ExperimentLibraryDesign" table="experiment_library_design" dynamic-insert="true" dynamic-update="true"
+           optimistic-lock="version">
         <meta attribute="class-description">
             An Experiment Library Design.
         </meta>
@@ -884,7 +914,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">experiment_library_design_experiment_library_design_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">experiment_library_design_experiment_library_design_id_seq</param>
             </generator>
         </id>
 
@@ -901,36 +933,36 @@
         <property name="nominalSdev" column="nominal_sdev" type="double"/>
 
         <many-to-one
-            name="strategy"
-            class="LibraryStrategy"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="strategy"
-    />
+                name="strategy"
+                class="LibraryStrategy"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="strategy"
+        />
         <many-to-one
-            name="source"
-            class="LibrarySource"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="source"
-    />
+                name="source"
+                class="LibrarySource"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="source"
+        />
         <many-to-one
-            name="selection"
-            class="LibrarySelection"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="selection"
-    />
+                name="selection"
+                class="LibrarySelection"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="selection"
+        />
 
     </class>
 
-  <!-- ********** **************** ExperimentSpotDesign **************** ********** -->
+    <!-- ********** **************** ExperimentSpotDesign **************** ********** -->
     <class name="ExperimentSpotDesign" table="experiment_spot_design" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An Experiment Spot Design.
@@ -942,7 +974,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">experiment_spot_design_experiment_spot_design_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">experiment_spot_design_experiment_spot_design_id_seq</param>
             </generator>
         </id>
 
@@ -952,22 +986,23 @@
         <property name="tagSpec" column="tag_spec" type="string"/>
         <property name="adapterSpec" column="adapter_spec" type="string"/>
 
-    <!-- cascade="all" -->
+        <!-- cascade="all" -->
 
         <set
-            name="readSpecs"
-            lazy="true"
-            inverse="true"
-            order-by="read_index desc"
-            sort="net.sourceforge.seqware.common.model.comparator.ExperimentSpotDesignReadSpecComparator">
+                name="readSpecs"
+                lazy="true"
+                inverse="true"
+                order-by="read_index desc"
+                sort="net.sourceforge.seqware.common.model.comparator.ExperimentSpotDesignReadSpecComparator">
             <key column="experiment_spot_design_id"/>
             <one-to-many class="ExperimentSpotDesignReadSpec"/>
         </set>
 
     </class>
 
-  <!-- ********** **************** ExperimentSpotDesignReadSpec **************** ********** -->
-    <class name="ExperimentSpotDesignReadSpec" table="experiment_spot_design_read_spec" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
+    <!-- ********** **************** ExperimentSpotDesignReadSpec **************** ********** -->
+    <class name="ExperimentSpotDesignReadSpec" table="experiment_spot_design_read_spec" dynamic-insert="true" dynamic-update="true"
+           optimistic-lock="version">
         <meta attribute="class-description">
             An Experiment Spot Design Read Spec.
         </meta>
@@ -978,7 +1013,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">experiment_spot_design_read_s_experiment_spot_design_read_s_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">experiment_spot_design_read_s_experiment_spot_design_read_s_seq</param>
             </generator>
         </id>
 
@@ -992,19 +1029,19 @@
         <property name="length" column="length" type="integer"/>
 
         <many-to-one
-            name="experimentSpotDesign"
-            class="ExperimentSpotDesign"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="experiment_spot_design_id"
-    />
+                name="experimentSpotDesign"
+                class="ExperimentSpotDesign"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="experiment_spot_design_id"
+        />
 
     </class>
 
 
-  <!-- ********** **************** Sample **************** ********** -->
+    <!-- ********** **************** Sample **************** ********** -->
     <class name="Sample" table="sample" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An Sample.
@@ -1016,7 +1053,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">sample_sample_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">sample_sample_id_seq</param>
             </generator>
         </id>
 
@@ -1037,7 +1076,7 @@
         <property name="name" column="name" type="string"/>
         <property name="description" column="description" type="string"/>
         <property name="type" column="type" type="string"/>
-    <!--property name="title" column="title" type="string"/-->
+        <!--property name="title" column="title" type="string"/-->
         <property name="alias" column="alias" type="string"/>
         <property name="individualName" column="individual_name" type="string"/>
         <property name="anonymizedName" column="anonymized_name" type="string"/>
@@ -1050,122 +1089,124 @@
         <property name="skip" column="skip" type="boolean"/>
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
         <many-to-one
-            name="experiment"
-            class="Experiment"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="experiment_id"
-    />
+                name="experiment"
+                class="Experiment"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="experiment_id"
+        />
 
         <many-to-one
-            name="organism"
-            class="Organism"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="organism_id"
-    />
+                name="organism"
+                class="Organism"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="organism_id"
+        />
 
-    <!--set
-      name="lanes"
-      lazy="true"
-      inverse="true"
-      cascade="all"
-      sort="natural">
-      <key column="sample_id" />
-      <one-to-many class="Lane" />
-    </set-->
+        <!--set
+          name="lanes"
+          lazy="true"
+          inverse="true"
+          cascade="all"
+          sort="natural">
+          <key column="sample_id" />
+          <one-to-many class="Lane" />
+        </set-->
 
         <set
-            name="IUS"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
-            <key column="sample_id" />
-            <one-to-many class="IUS" />
+                name="IUS"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
+            <key column="sample_id"/>
+            <one-to-many class="IUS"/>
         </set>
 
-        <set name="processings" table = "processing_samples" cascade="all">
+        <set name="processings" table="processing_samples" cascade="all">
             <key column="sample_id"/>
             <many-to-many class="Processing" column="processing_id" unique="true"/>
         </set>
 
-        <set name="children" table = "sample_hierarchy" 
-            inverse="false" cascade="all" lazy="true" fetch="select">
+        <set name="children" table="sample_hierarchy"
+             inverse="false" cascade="all" lazy="true" fetch="select">
             <key>
-                <column name="parent_id" not-null="true" />
+                <column name="parent_id" not-null="true"/>
             </key>
             <many-to-many entity-name="net.sourceforge.seqware.common.model.Sample">
                 <column name="sample_id" unique="true"/>
-            </many-to-many> 
+            </many-to-many>
         </set>
 
-        <set name="parents" table = "sample_hierarchy" 
-            inverse="false" cascade="all" lazy="true" fetch="select">
+        <set name="parents" table="sample_hierarchy"
+             inverse="false" cascade="all" lazy="true" fetch="select">
             <key>
-                <column name="sample_id" not-null="true" />
+                <column name="sample_id" not-null="true"/>
             </key>
             <many-to-many entity-name="net.sourceforge.seqware.common.model.Sample">
                 <column name="parent_id" unique="true"/>
-            </many-to-many> 
+            </many-to-many>
         </set>
-<!--        <set name="parents" table = "sample_hierarchy" inverse="true">
-            <key column="sample_id"/>
-            <many-to-many class="Sample" column="parent_id" unique="true"/>
-        </set>-->
+        <!--        <set name="parents" table = "sample_hierarchy" inverse="true">
+                    <key column="sample_id"/>
+                    <many-to-many class="Sample" column="parent_id" unique="true"/>
+                </set>-->
 
         <set name="sampleAttributes" inverse="true" lazy="true" cascade="all-delete-orphan" table="sample_attribute" fetch="select">
-            <key column="sample_id" />
-            <one-to-many class="SampleAttribute" />
+            <key column="sample_id"/>
+            <one-to-many class="SampleAttribute"/>
         </set>
 
     </class>
 
-  <!-- ********* End SRA ********* -->
+    <!-- ********* End SRA ********* -->
 
-  <!-- ********* **************** Sample_Attribute **************** ********* -->
+    <!-- ********* **************** Sample_Attribute **************** ********* -->
     <class name="SampleAttribute" table="sample_attribute" schema="public">
         <id name="sampleAttributeId" type="int">
-            <column name="sample_attribute_id" />
-             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">sample_attribute_sample_attribute_id_seq</param>
+            <column name="sample_attribute_id"/>
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">sample_attribute_sample_attribute_id_seq</param>
             </generator>
         </id>
 
         <many-to-one name="sample" class="Sample" fetch="select">
-            <column name="sample_id" not-null="true" />
+            <column name="sample_id" not-null="true"/>
         </many-to-one>
 
         <property name="tag" type="string">
-            <column name="tag" not-null="true" />
+            <column name="tag" not-null="true"/>
         </property>
 
         <property name="value" type="string">
-            <column name="value" not-null="true" />
+            <column name="value" not-null="true"/>
         </property>
 
         <property name="units" type="string">
-            <column name="units" />
+            <column name="units"/>
         </property>
     </class>
 
 
-  <!-- ********* **************** Registration **************** ********* -->
+    <!-- ********* **************** Registration **************** ********* -->
     <class name="Registration" table="registration" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="implement-equals">true</meta>
         <meta attribute="implement-tostring">true</meta>
@@ -1174,13 +1215,15 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
 
-      <!-- generator class="native"></generator -->
+            <!-- generator class="native"></generator -->
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">registration_registration_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">registration_registration_id_seq</param>
             </generator>
         </id>
 
-    <!-- 'version' must be before any 'property' -->
+        <!-- 'version' must be before any 'property' -->
         <version column="last_update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
 
@@ -1198,15 +1241,15 @@
         <property name="lastName" column="last_name" type="string" not-null="true"/>
         <property name="institution" column="institution" type="string" not-null="false"/>
 
-        <property name="LIMSAdmin" column="lims_admin" type="boolean" not-null="true" />
-        <property name="payee" column="payee" type="boolean" not-null="false" />
+        <property name="LIMSAdmin" column="lims_admin" type="boolean" not-null="true"/>
+        <property name="payee" column="payee" type="boolean" not-null="false"/>
 
-        <property name="joinDevelopersMailingList" 	column="developer_ml" type="boolean" not-null="true" />
-        <property name="joinUsersMailingList" 		column="user_ml" type="boolean" not-null="true" />
-        <property name="invitationCode" column="invitation_code" type="string" />
+        <property name="joinDevelopersMailingList" column="developer_ml" type="boolean" not-null="true"/>
+        <property name="joinUsersMailingList" column="user_ml" type="boolean" not-null="true"/>
+        <property name="invitationCode" column="invitation_code" type="string"/>
     </class>
 
-  <!-- ********** **************** SequencerRun **************** ********** -->
+    <!-- ********** **************** SequencerRun **************** ********** -->
     <class name="SequencerRun" table="sequencer_run" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
         <meta attribute="class-description">
             Represents a physical run of the sequencing machine.
@@ -1219,7 +1262,9 @@
             <meta attribute="use-in-tostring">true</meta>
             <meta attribute="use-in-equals">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">sequencer_run_sequencer_run_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">sequencer_run_sequencer_run_id_seq</param>
             </generator>
         </id>
 
@@ -1233,8 +1278,7 @@
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">io.seqware.common.model.SequencerRunStatus</param>
-                <!-- Persist the name instead of the ordinal. 12 is the int value of java.sql.Types.VARCHAR -->
-                <param name="type">12</param>
+                <param name="useNamed">true</param>
             </type>
         </property>
         <property name="instrumentName" column="instrument_name" type="string"/>
@@ -1261,62 +1305,63 @@
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
         <many-to-one
-            name="platform"
-            class="Platform"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="platform_id"
-    />
+                name="platform"
+                class="Platform"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="platform_id"
+        />
 
-    <!-- set
-      name="processings"
-      lazy="true"
-      inverse="true"
-      cascade="all"
-      sort="natural"
-    >  <key column="sequencer_run_id" />
-      <one-to-many class="Processing" />
-    </set -->
+        <!-- set
+          name="processings"
+          lazy="true"
+          inverse="true"
+          cascade="all"
+          sort="natural"
+        >  <key column="sequencer_run_id" />
+          <one-to-many class="Processing" />
+        </set -->
 
         <set
-            name="lanes"
-            lazy="true"
-            inverse="true"
-            cascade="none"
-            sort="natural"
+                name="lanes"
+                lazy="true"
+                inverse="true"
+                cascade="none"
+                sort="natural"
 
         >
-            <key column="sequencer_run_id" />
-            <one-to-many class="Lane" />
+            <key column="sequencer_run_id"/>
+            <one-to-many class="Lane"/>
         </set>
 
-        <set name="processings" table = "processing_sequencer_runs" cascade="all">
+        <set name="processings" table="processing_sequencer_runs" cascade="all">
             <key column="sequencer_run_id"/>
             <many-to-many class="Processing" column="processing_id" unique="true"/>
         </set>
 
-        <set name="sequencerRunAttributes" inverse="true" lazy="true" table="sequencer_run_attribute" fetch="select" cascade="all-delete-orphan">
-            <key column="sample_id" />
-            <one-to-many class="SequencerRunAttribute" />
+        <set name="sequencerRunAttributes" inverse="true" lazy="true" table="sequencer_run_attribute" fetch="select"
+             cascade="all-delete-orphan">
+            <key column="sample_id"/>
+            <one-to-many class="SequencerRunAttribute"/>
         </set>
 
     </class>
 
 
-   <!-- ********** **************** SequencerRunWizardDTO **************** ********** -->
+    <!-- ********** **************** SequencerRunWizardDTO **************** ********** -->
     <class name="SequencerRunWizardDTO" table="sequencer_run" dynamic-insert="true" dynamic-update="true" optimistic-lock="none">
         <meta attribute="class-description">
             Represents a physical run of the sequencing machine.
@@ -1328,7 +1373,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">sequencer_run_sequencer_run_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">sequencer_run_sequencer_run_id_seq</param>
             </generator>
         </id>
 
@@ -1338,8 +1385,7 @@
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">io.seqware.common.model.SequencerRunStatus</param>
-                <!-- Persist the name instead of the ordinal. 12 is the int value of java.sql.Types.VARCHAR -->
-                <param name="type">12</param>
+                <param name="useNamed">true</param>
             </type>
         </property>
         <property name="instrumentName" column="instrument_name" type="string"/>
@@ -1370,44 +1416,45 @@
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
         <many-to-one
-            name="platform"
-            class="Platform"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="platform_id"
-    />
+                name="platform"
+                class="Platform"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="platform_id"
+        />
 
         <set
-            name="lanes"
-            lazy="false"
-            inverse="true"
-            cascade="none"
-            sort="natural">
-            <key column="sequencer_run_id" />
-            <one-to-many class="Lane" />
+                name="lanes"
+                lazy="false"
+                inverse="true"
+                cascade="none"
+                sort="natural">
+            <key column="sequencer_run_id"/>
+            <one-to-many class="Lane"/>
         </set>
 
-        <set name="sequencerRunAttributes" inverse="true" lazy="true" table="sequencer_run_attribute" fetch="select" cascade="all-delete-orphan">
-            <key column="sample_id" />
-            <one-to-many class="SequencerRunAttribute" />
+        <set name="sequencerRunAttributes" inverse="true" lazy="true" table="sequencer_run_attribute" fetch="select"
+             cascade="all-delete-orphan">
+            <key column="sample_id"/>
+            <one-to-many class="SequencerRunAttribute"/>
         </set>
 
     </class>
 
-  <!-- ********** **************** Platform **************** ********** -->
+    <!-- ********** **************** Platform **************** ********** -->
     <class name="Platform" table="platform" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             Represents a sequencer platform.
@@ -1419,7 +1466,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">platform_platform_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">platform_platform_id_seq</param>
             </generator>
         </id>
 
@@ -1433,7 +1482,7 @@
 
     </class>
 
-  <!-- ********** **************** LibrarySelection **************** ********** -->
+    <!-- ********** **************** LibrarySelection **************** ********** -->
     <class name="LibrarySelection" table="library_selection" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             Represents a sequencer librarySelection.
@@ -1445,7 +1494,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">library_selection_library_selection_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">library_selection_library_selection_id_seq</param>
             </generator>
         </id>
 
@@ -1458,7 +1509,7 @@
 
     </class>
 
-  <!-- ********** **************** LibrarySource **************** ********** -->
+    <!-- ********** **************** LibrarySource **************** ********** -->
     <class name="LibrarySource" table="library_source" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             Represents a sequencer librarySource.
@@ -1470,7 +1521,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">library_source_library_source_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">library_source_library_source_id_seq</param>
             </generator>
         </id>
 
@@ -1483,7 +1536,7 @@
 
     </class>
 
-  <!-- ********** **************** LibraryStrategy **************** ********** -->
+    <!-- ********** **************** LibraryStrategy **************** ********** -->
     <class name="LibraryStrategy" table="library_strategy" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             Represents a sequencer libraryStrategy.
@@ -1495,7 +1548,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">library_strategy_library_strategy_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">library_strategy_library_strategy_id_seq</param>
             </generator>
         </id>
 
@@ -1508,7 +1563,7 @@
 
     </class>
 
-  <!-- ************* **************** Lane **************** ************* -->
+    <!-- ************* **************** Lane **************** ************* -->
     <class name="Lane" table="lane" dynamic-insert="true" dynamic-update="true" select-before-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An lane.
@@ -1520,9 +1575,11 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">lane_lane_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">lane_lane_id_seq</param>
             </generator>
-      <!-- generator class="native"></generator -->
+            <!-- generator class="native"></generator -->
         </id>
 
         <version column="update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
@@ -1536,159 +1593,163 @@
         <property name="cycleDescriptor" column="cycle_descriptor" type="string"/>
         <property name="laneIndex" column="lane_index" type="integer"/>
         <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
-        
+
         <many-to-one
-            name="libraryStrategy"
-            class="LibraryStrategy"
-            cascade="none"
-            column="library_strategy"
-            not-found="ignore"
-        />
-        
-        <many-to-one
-            name="librarySelection"
-            class="LibrarySelection"
-            cascade="none"
-            column="library_selection"
-            not-found="ignore"
-        />
-         
-        <many-to-one
-            name="librarySource"
-            class="LibrarySource"
-            cascade="none"
-            column="library_source"
-            not-found="ignore"
+                name="libraryStrategy"
+                class="LibraryStrategy"
+                cascade="none"
+                column="library_strategy"
+                not-found="ignore"
         />
 
         <many-to-one
-            name="sequencerRun"
-            class="SequencerRun"
-            cascade="all"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="sequencer_run_id"
-    />
+                name="librarySelection"
+                class="LibrarySelection"
+                cascade="none"
+                column="library_selection"
+                not-found="ignore"
+        />
 
-    <!--many-to-one
-      name="sample"
-      class="Sample"
-      cascade="none"
-      outer-join="auto"
-      update="true"
-      insert="true"
-      column="sample_id"
-    /-->
+        <many-to-one
+                name="librarySource"
+                class="LibrarySource"
+                cascade="none"
+                column="library_source"
+                not-found="ignore"
+        />
+
+        <many-to-one
+                name="sequencerRun"
+                class="SequencerRun"
+                cascade="all"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="sequencer_run_id"
+        />
+
+        <!--many-to-one
+          name="sample"
+          class="Sample"
+          cascade="none"
+          outer-join="auto"
+          update="true"
+          insert="true"
+          column="sample_id"
+        /-->
 
         <property name="description" column="description" type="string"/>
         <property name="skip" column="skip" type="boolean"/>
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
-    <!--set
-      name="processings"
-      lazy="false"
-      inverse="true"
-      cascade="all"
-      sort="natural">
-    <key column="lane_id" />
-        <one-to-many class="Processing" />
-    </set-->
+        <!--set
+          name="processings"
+          lazy="false"
+          inverse="true"
+          cascade="all"
+          sort="natural">
+        <key column="lane_id" />
+            <one-to-many class="Processing" />
+        </set-->
 
         <set
-            name="IUS"
-            lazy="true"
-            inverse="true"
-            cascade="all"
-            sort="natural">
-            <key column="lane_id" />
-            <one-to-many class="IUS" />
+                name="IUS"
+                lazy="true"
+                inverse="true"
+                cascade="all"
+                sort="natural">
+            <key column="lane_id"/>
+            <one-to-many class="IUS"/>
         </set>
 
-	<!-- cascade="all" inverse="true"  cascade="all"-->
-        <set name="processings" table = "processing_lanes" cascade="all">
+        <!-- cascade="all" inverse="true"  cascade="all"-->
+        <set name="processings" table="processing_lanes" cascade="all">
             <key column="lane_id"/>
             <many-to-many class="Processing" column="processing_id" unique="true"/>
         </set>
 
-        <set name="workflowRuns" table = "lane_workflow_runs" cascade="all">
+        <set name="workflowRuns" table="lane_workflow_runs" cascade="all">
             <key column="lane_id"/>
             <many-to-many class="WorkflowRun" column="workflow_run_id" unique="true"/>
         </set>
 
         <set name="laneAttributes" inverse="true" lazy="true" table="lane_attribute" fetch="select" cascade="all-delete-orphan">
-            <key column="lane_id" />
-            <one-to-many class="LaneAttribute" />
+            <key column="lane_id"/>
+            <one-to-many class="LaneAttribute"/>
         </set>
 
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
     </class>
 
-  <!-- ************* **************** LaneAttribute **************** ************* -->
+    <!-- ************* **************** LaneAttribute **************** ************* -->
     <class name="LaneAttribute" table="lane_attribute" schema="public">
         <id name="laneAttributeId" type="int">
-            <column name="lane_attribute_id" />
+            <column name="lane_attribute_id"/>
 
-             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">lane_attribute_lane_attribute_id_seq</param>
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">lane_attribute_lane_attribute_id_seq</param>
             </generator>
         </id>
 
         <many-to-one name="lane" class="Lane" fetch="select">
-            <column name="lane_id" not-null="true" />
+            <column name="lane_id" not-null="true"/>
         </many-to-one>
 
         <property name="tag" type="string">
-            <column name="tag" />
+            <column name="tag"/>
         </property>
 
         <property name="value" type="string">
-            <column name="value" />
+            <column name="value"/>
         </property>
 
         <property name="units" type="string">
-            <column name="units" />
+            <column name="units"/>
         </property>
     </class>
 
     <!-- ************* **************** SequencerRunAttribute **************** ************* -->
     <class name="SequencerRunAttribute" table="sequencer_run_attribute" schema="public">
         <id name="sequencerRunAttributeId" type="int">
-            <column name="sequencer_run_attribute_id" />
+            <column name="sequencer_run_attribute_id"/>
 
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">sequencer_run_attribute_sequencer_run_attribute_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">sequencer_run_attribute_sequencer_run_attribute_id_seq</param>
             </generator>
         </id>
 
         <many-to-one name="sequencerRunWizardDTO" class="SequencerRunWizardDTO" fetch="select">
-            <column name="sample_id" not-null="true" />
+            <column name="sample_id" not-null="true"/>
         </many-to-one>
 
         <property name="tag" type="string">
-            <column name="tag" />
+            <column name="tag"/>
         </property>
 
         <property name="value" type="string">
-            <column name="value" />
+            <column name="value"/>
         </property>
 
         <property name="units" type="string">
-            <column name="units" />
+            <column name="units"/>
         </property>
     </class>
 
-  <!-- ************* **************** IUS **************** ************* -->
+    <!-- ************* **************** IUS **************** ************* -->
     <class name="IUS" table="ius" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An IUS.
@@ -1700,7 +1761,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">ius_ius_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">ius_ius_id_seq</param>
             </generator>
         </id>
 
@@ -1716,84 +1779,86 @@
         <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
         <property name="skip" column="skip" type="boolean"/>
         <many-to-one
-            name="lane"
-            class="Lane"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="lane_id"
-    />
+                name="lane"
+                class="Lane"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="lane_id"
+        />
 
         <many-to-one
-            name="sample"
-            class="Sample"
-            cascade="all"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="sample_id"
-    />
+                name="sample"
+                class="Sample"
+                cascade="all"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="sample_id"
+        />
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
-	<!-- cascade="all" inverse="true"  cascade="all"-->
-        <set name="processings" table = "processing_ius" cascade="all">
+        <!-- cascade="all" inverse="true"  cascade="all"-->
+        <set name="processings" table="processing_ius" cascade="all">
             <key column="ius_id"/>
             <many-to-many class="Processing" column="processing_id" unique="true"/>
         </set>
 
-        <set name="workflowRuns" table = "ius_workflow_runs" cascade="all">
+        <set name="workflowRuns" table="ius_workflow_runs" cascade="all">
             <key column="ius_id"/>
             <many-to-many class="WorkflowRun" column="workflow_run_id" unique="true"/>
         </set>
 
         <set name="iusAttributes" inverse="true" lazy="true" table="ius_attribute" fetch="select" cascade="all-delete-orphan">
-            <key column="ius_id" />
-            <one-to-many class="IUSAttribute" />
+            <key column="ius_id"/>
+            <one-to-many class="IUSAttribute"/>
         </set>
 
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
 
     </class>
 
-  <!-- ************* **************** IUSAttribute **************** ************* -->
+    <!-- ************* **************** IUSAttribute **************** ************* -->
     <class name="IUSAttribute" table="ius_attribute" schema="public">
         <id name="iusAttributeId" type="int">
-            <column name="ius_attribute_id" />
+            <column name="ius_attribute_id"/>
 
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">ius_attribute_ius_attribute_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">ius_attribute_ius_attribute_id_seq</param>
             </generator>
         </id>
 
         <many-to-one name="ius" class="IUS" fetch="select">
-            <column name="ius_id" not-null="true" />
+            <column name="ius_id" not-null="true"/>
         </many-to-one>
 
         <property name="tag" type="string">
-            <column name="tag" />
+            <column name="tag"/>
         </property>
 
         <property name="value" type="string">
-            <column name="value" />
+            <column name="value"/>
         </property>
 
         <property name="units" type="string">
-            <column name="units" />
+            <column name="units"/>
         </property>
     </class>
 
-  <!-- ************* **************** Organism **************** ************* -->
+    <!-- ************* **************** Organism **************** ************* -->
     <class name="Organism" table="organism" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             An Organism object.
@@ -1805,7 +1870,9 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">organism_organism_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">organism_organism_id_seq</param>
             </generator>
         </id>
 
@@ -1819,7 +1886,7 @@
 
     </class>
 
-  <!-- ********** **************** Processing **************** ********** -->
+    <!-- ********** **************** Processing **************** ********** -->
     <class name="Processing" table="processing" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             A sample-processing step.
@@ -1831,27 +1898,29 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">processing_processing_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">processing_processing_id_seq</param>
             </generator>
-      <!-- generator class="native"></generator -->
+            <!-- generator class="native"></generator -->
         </id>
 
         <version column="update_tstmp" name="updateTimestamp" type="timestamp" unsaved-value="null"/>
 
-    <!-- property name="filePath" column="file_path" type="string">
-      <meta attribute="use-in-equals">true</meta>
-      <meta attribute="use-in-tostring">true</meta>
-    </property -->
+        <!-- property name="filePath" column="file_path" type="string">
+          <meta attribute="use-in-equals">true</meta>
+          <meta attribute="use-in-tostring">true</meta>
+        </property -->
 
-    <!-- many-to-one
-      name="lane"
-      class="Lane"
-      cascade="none"
-      outer-join="auto"
-      update="true"
-      insert="true"
-      column="lane_id"
-    / -->
+        <!-- many-to-one
+          name="lane"
+          class="Lane"
+          cascade="none"
+          outer-join="auto"
+          update="true"
+          insert="true"
+          column="lane_id"
+        / -->
 
         <many-to-one name="workflowRunByAncestorWorkflowRunId"
                      class="WorkflowRun"
@@ -1859,95 +1928,95 @@
                      cascade="all"
                      update="true"
                      insert="true"
-                     column="ancestor_workflow_run_id" />
+                     column="ancestor_workflow_run_id"/>
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
         <many-to-one
-            name="workflowRun"
-            class="WorkflowRun"
-            cascade="all"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="workflow_run_id"
-    />
+                name="workflowRun"
+                class="WorkflowRun"
+                cascade="all"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="workflow_run_id"
+        />
 
-	<!-- cascade="all" -->
-        <set name="lanes" table = "processing_lanes" inverse="true">
+        <!-- cascade="all" -->
+        <set name="lanes" table="processing_lanes" inverse="true">
             <key column="processing_id"/>
             <many-to-many class="Lane" column="lane_id" unique="true"/>
         </set>
 
-        <set name="studies" table = "processing_studies" inverse="true">
+        <set name="studies" table="processing_studies" inverse="true">
             <key column="processing_id"/>
             <many-to-many class="Study" column="study_id" unique="true"/>
         </set>
 
-        <set name="experiments" table = "processing_experiments" inverse="true">
+        <set name="experiments" table="processing_experiments" inverse="true">
             <key column="processing_id"/>
             <many-to-many class="Experiment" column="experiment_id" unique="true"/>
         </set>
 
-        <set name="samples" table = "processing_samples" inverse="true">
+        <set name="samples" table="processing_samples" inverse="true">
             <key column="processing_id"/>
             <many-to-many class="Sample" column="sample_id" unique="true"/>
         </set>
 
-        <set name="sequencerRuns" table = "processing_sequencer_runs" inverse="true">
+        <set name="sequencerRuns" table="processing_sequencer_runs" inverse="true">
             <key column="processing_id"/>
             <many-to-many class="SequencerRun" column="sequencer_run_id" unique="true"/>
         </set>
 
-        <set name="IUS" table = "processing_ius" inverse="true" cascade="all">
+        <set name="IUS" table="processing_ius" inverse="true" cascade="all">
             <key column="processing_id"/>
             <many-to-many class="IUS" column="ius_id" unique="true"/>
         </set>
 
-        <set name="files" table = "processing_files" cascade="all" lazy="false" access="field">
+        <set name="files" table="processing_files" cascade="all" lazy="false" access="field">
             <key column="processing_id"/>
             <many-to-many class="File" column="file_id" unique="true"/>
         </set>
 
-    <!--set name="lanes" table = "ius" cascade="all" lazy="true">
-      <key column="sample_id"/>
-      <many-to-many class="Lanes" column="lane_id" unique="true"/>
-    </set-->
+        <!--set name="lanes" table = "ius" cascade="all" lazy="true">
+          <key column="sample_id"/>
+          <many-to-many class="Lanes" column="lane_id" unique="true"/>
+        </set-->
 
-	<!-- cascade="all" inverse="true" lazy="true" -->
-        <set name="children" table = "processing_relationship" cascade="all" lazy="true">
+        <!-- cascade="all" inverse="true" lazy="true" -->
+        <set name="children" table="processing_relationship" cascade="all" lazy="true">
             <key column="parent_id"/>
             <many-to-many class="Processing" column="child_id" unique="true"/>
         </set>
 
-        <set name="parents" table = "processing_relationship" inverse="true">
+        <set name="parents" table="processing_relationship" inverse="true">
             <key column="child_id"/>
             <many-to-many class="Processing" column="parent_id" unique="true"/>
         </set>
 
         <set name="processingAttributes" inverse="true" lazy="true" table="processing_attribute" fetch="select" cascade="all-delete-orphan">
-            <key column="processing_id" />
-            <one-to-many class="ProcessingAttribute" />
+            <key column="processing_id"/>
+            <one-to-many class="ProcessingAttribute"/>
         </set>
 
- 	<!--set
-      name="children"
-	  table = "processing_relationship"
-      lazy="false"
-      inverse="true"
-      cascade="all"
-      sort="natural">
-      <key column="parent_id" />
-      <one-to-many class="Processing" />
-    </set-->
+        <!--set
+         name="children"
+         table = "processing_relationship"
+         lazy="false"
+         inverse="true"
+         cascade="all"
+         sort="natural">
+         <key column="parent_id" />
+         <one-to-many class="Processing" />
+       </set-->
 
         <property name="taskGroup" column="task_group" type="boolean"/>
         <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
@@ -1955,8 +2024,7 @@
         <property name="status" column="status">
             <type name="org.hibernate.type.EnumType">
                 <param name="enumClass">io.seqware.common.model.ProcessingStatus</param>
-                <!-- Persist the name instead of the ordinal. 12 is the int value of java.sql.Types.VARCHAR -->
-                <param name="type">12</param>
+                <param name="useNamed">true</param>
             </type>
         </property>
         <property name="exitStatus" column="exit_status" type="integer"/>
@@ -1968,287 +2036,303 @@
         <property name="createTimestamp" column="create_tstmp" type="timestamp" not-null="true"/>
         <property name="runStartTimestamp" column="run_start_tstmp" type="timestamp"/>
         <property name="runStopTimestamp" column="run_stop_tstmp" type="timestamp"/>
-        <property name="parameters" type="string" column="parameters" />
-        <property name="stdout" type="string" column="stdout" />
-        <property name="stderr" type="string" column="stderr" />
-	<!--property name="workflowRunId" column="workflow_run_id" type="integer"/-->
+        <property name="parameters" type="string" column="parameters"/>
+        <property name="stdout" type="string" column="stdout"/>
+        <property name="stderr" type="string" column="stderr"/>
+        <!--property name="workflowRunId" column="workflow_run_id" type="integer"/-->
     </class>
 
-  <!-- ********** **************** Processing_Attribute **************** ********** -->
+    <!-- ********** **************** Processing_Attribute **************** ********** -->
     <class name="ProcessingAttribute" table="processing_attribute" schema="public">
         <id name="processingAttributeId" type="int">
-            <column name="processing_attribute_id" />
+            <column name="processing_attribute_id"/>
 
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">processing_attribute_processing_attribute_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">processing_attribute_processing_attribute_id_seq</param>
             </generator>
         </id>
 
         <many-to-one name="processing" class="Processing" fetch="select">
-            <column name="processing_id" not-null="true" />
+            <column name="processing_id" not-null="true"/>
         </many-to-one>
 
         <property name="tag" type="string">
-            <column name="tag" />
+            <column name="tag"/>
         </property>
 
         <property name="value" type="string">
-            <column name="value" />
+            <column name="value"/>
         </property>
 
         <property name="units" type="string">
-            <column name="units" />
+            <column name="units"/>
         </property>
     </class>
 
-  <!-- ********** **************** Processing_Studies **************** ********** -->
+    <!-- ********** **************** Processing_Studies **************** ********** -->
     <class name="ProcessingStudies" table="processing_studies" schema="public">
         <id name="processingStudiesId" type="integer" column="processing_studies_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">processing_studies_processing_studies_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">processing_studies_processing_studies_id_seq</param>
             </generator>
-      <!-- generator class="native"></generator -->
-<!--            <generator class="assigned" />-->
+            <!-- generator class="native"></generator -->
+            <!--            <generator class="assigned" />-->
         </id>
 
         <many-to-one name="processing" class="Processing" fetch="select">
-            <column name="processing_id" not-null="true" />
+            <column name="processing_id" not-null="true"/>
         </many-to-one>
 
         <many-to-one name="study" class="Study" fetch="select">
-            <column name="study_id" not-null="true" />
+            <column name="study_id" not-null="true"/>
         </many-to-one>
 
         <property name="description" type="string">
-            <column name="description" />
+            <column name="description"/>
         </property>
 
         <property name="label" type="string">
-            <column name="label" />
+            <column name="label"/>
         </property>
 
         <property name="url" type="string">
-            <column name="url" />
+            <column name="url"/>
         </property>
 
         <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
+            <column name="sw_accession"/>
         </property>
     </class>
 
 
-  <!-- ********** **************** Processing_Sequencer_Runs **************** ********** -->
+    <!-- ********** **************** Processing_Sequencer_Runs **************** ********** -->
     <class name="ProcessingSequencerRuns" table="processing_sequencer_runs" schema="public">
         <id name="processingSequencerRunsId" type="integer" column="processing_sequencer_runs_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">processing_sequencer_runs_processing_sequencer_runs_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">processing_sequencer_runs_processing_sequencer_runs_id_seq</param>
             </generator>
-<!--            <generator class="assigned" />-->
+            <!--            <generator class="assigned" />-->
         </id>
 
         <many-to-one name="processing" class="Processing" fetch="select">
-            <column name="processing_id" not-null="true" />
+            <column name="processing_id" not-null="true"/>
         </many-to-one>
 
         <many-to-one name="sequencerRun" class="SequencerRun" fetch="select">
-            <column name="sequencer_run_id" not-null="true" />
+            <column name="sequencer_run_id" not-null="true"/>
         </many-to-one>
 
         <property name="description" type="string">
-            <column name="description" />
+            <column name="description"/>
         </property>
 
         <property name="label" type="string">
-            <column name="label" />
+            <column name="label"/>
         </property>
 
         <property name="url" type="string">
-            <column name="url" />
+            <column name="url"/>
         </property>
 
         <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
+            <column name="sw_accession"/>
         </property>
     </class>
 
 
-  <!-- ********** **************** Processing_Samples **************** ********** -->
+    <!-- ********** **************** Processing_Samples **************** ********** -->
     <class name="ProcessingSamples" table="processing_samples" schema="public">
         <id name="processingSamplesId" type="integer" column="processing_samples_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">processing_samples_processing_samples_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">processing_samples_processing_samples_id_seq</param>
             </generator>
-<!--            <generator class="assigned" />-->
+            <!--            <generator class="assigned" />-->
         </id>
 
         <many-to-one name="processing" class="Processing" fetch="select">
-            <column name="processing_id" not-null="true" />
+            <column name="processing_id" not-null="true"/>
         </many-to-one>
 
         <many-to-one name="sample" class="Sample" fetch="select">
-            <column name="sample_id" not-null="true" />
+            <column name="sample_id" not-null="true"/>
         </many-to-one>
 
         <property name="description" type="string">
-            <column name="description" />
+            <column name="description"/>
         </property>
 
         <property name="label" type="string">
-            <column name="label" />
+            <column name="label"/>
         </property>
 
         <property name="url" type="string">
-            <column name="url" />
+            <column name="url"/>
         </property>
 
         <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
+            <column name="sw_accession"/>
         </property>
     </class>
 
 
-  <!-- ********** **************** Processing_Relationship **************** ********** -->
+    <!-- ********** **************** Processing_Relationship **************** ********** -->
     <class name="ProcessingRelationship" table="processing_relationship" schema="public">
         <id name="processingRelationshipId" type="integer" column="processing_relationship_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">processing_relationship_processing_relationship_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">processing_relationship_processing_relationship_id_seq</param>
             </generator>
-<!--            <generator class="assigned" />-->
+            <!--            <generator class="assigned" />-->
         </id>
 
         <many-to-one name="processingByParentId" class="Processing" fetch="select">
-            <column name="parent_id" />
+            <column name="parent_id"/>
         </many-to-one>
 
         <many-to-one name="processingByChildId" class="Processing" fetch="select">
-            <column name="child_id" />
+            <column name="child_id"/>
         </many-to-one>
 
         <property name="relationship" type="string">
-            <column name="relationship" />
+            <column name="relationship"/>
         </property>
     </class>
 
 
-  <!-- ********** **************** Processing_Lanes **************** ********** -->
+    <!-- ********** **************** Processing_Lanes **************** ********** -->
     <class name="ProcessingLanes" table="processing_lanes" schema="public">
         <id name="processingLanesId" type="integer" column="processing_lanes_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">processing_lanes_processing_lanes_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">processing_lanes_processing_lanes_id_seq</param>
             </generator>
-<!--            <generator class="assigned" />-->
+            <!--            <generator class="assigned" />-->
         </id>
 
         <many-to-one name="processing" class="Processing" fetch="select">
-            <column name="processing_id" not-null="true" />
+            <column name="processing_id" not-null="true"/>
         </many-to-one>
 
         <many-to-one name="lane" class="Lane" fetch="select">
-            <column name="lane_id" not-null="true" />
+            <column name="lane_id" not-null="true"/>
         </many-to-one>
 
         <property name="description" type="string">
-            <column name="description" />
+            <column name="description"/>
         </property>
 
         <property name="label" type="string">
-            <column name="label" />
+            <column name="label"/>
         </property>
 
         <property name="url" type="string">
-            <column name="url" />
+            <column name="url"/>
         </property>
 
         <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
+            <column name="sw_accession"/>
         </property>
     </class>
 
 
- <!-- ********** **************** Processing_IUS **************** ********** -->
+    <!-- ********** **************** Processing_IUS **************** ********** -->
     <class name="ProcessingIus" table="processing_ius" schema="public">
-        <id name="processingIusId" type="integer" column="processing_ius_id" >
+        <id name="processingIusId" type="integer" column="processing_ius_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">processing_ius_processing_ius_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">processing_ius_processing_ius_id_seq</param>
             </generator>
-<!--            <generator class="assigned" />-->
+            <!--            <generator class="assigned" />-->
         </id>
 
         <many-to-one name="ius" class="IUS" fetch="select">
-            <column name="ius_id" not-null="true" />
+            <column name="ius_id" not-null="true"/>
         </many-to-one>
 
         <many-to-one name="processing" class="Processing" fetch="select">
-            <column name="processing_id" not-null="true" />
+            <column name="processing_id" not-null="true"/>
         </many-to-one>
 
         <property name="description" type="string">
-            <column name="description" />
+            <column name="description"/>
         </property>
 
         <property name="label" type="string">
-            <column name="label" />
+            <column name="label"/>
         </property>
 
         <property name="url" type="string">
-            <column name="url" />
+            <column name="url"/>
         </property>
 
         <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
+            <column name="sw_accession"/>
         </property>
     </class>
 
- <!-- ********** **************** Processing_Experiments **************** ********** -->
+    <!-- ********** **************** Processing_Experiments **************** ********** -->
     <class name="ProcessingExperiments" table="processing_experiments" schema="public">
         <id name="processingExperimentsId" type="integer" column="processing_experiments_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">processing_experiments_processing_experiments_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">processing_experiments_processing_experiments_id_seq</param>
             </generator>
-<!--            <generator class="assigned" />-->
+            <!--            <generator class="assigned" />-->
         </id>
 
         <many-to-one name="processing" class="Processing" fetch="select">
-            <column name="processing_id" not-null="true" />
+            <column name="processing_id" not-null="true"/>
         </many-to-one>
 
         <many-to-one name="experiment" class="Experiment" fetch="select">
-            <column name="experiment_id" not-null="true" />
+            <column name="experiment_id" not-null="true"/>
         </many-to-one>
 
         <property name="description" type="string">
-            <column name="description" />
+            <column name="description"/>
         </property>
 
         <property name="label" type="string">
-            <column name="label" />
+            <column name="label"/>
         </property>
 
         <property name="url" type="string">
-            <column name="url" />
+            <column name="url"/>
         </property>
 
         <property name="swAccession" type="java.lang.Integer" generated="insert">
-            <column name="sw_accession" />
+            <column name="sw_accession"/>
         </property>
     </class>
 
 
- <!-- ********** **************** File **************** ********** -->
+    <!-- ********** **************** File **************** ********** -->
     <class name="File" table="file" dynamic-insert="true" dynamic-update="true" optimistic-lock="version">
         <meta attribute="class-description">
             A sample-file output.
@@ -2260,64 +2344,66 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
-                <param name="sequence">file_file_id_seq</param>
+                <param name="optimizer">none</param>
+                <param name="increment_size">1</param>
+                <param name="sequence_name">file_file_id_seq</param>
             </generator>
         </id>
 
         <many-to-one name="fileType" class="FileType" fetch="select">
-            <column name="file_type_id" />
+            <column name="file_type_id"/>
         </many-to-one>
 
         <many-to-one
-            name="owner"
-            class="Registration"
-            cascade="none"
-            outer-join="auto"
-            update="true"
-            insert="true"
-            column="owner_id"
-            not-found="ignore"
-    />
+                name="owner"
+                class="Registration"
+                cascade="none"
+                outer-join="auto"
+                update="true"
+                insert="true"
+                column="owner_id"
+                not-found="ignore"
+        />
 
-        <set name="processings" table = "processing_files" lazy="false">
+        <set name="processings" table="processing_files" lazy="false">
             <key column="file_id"/>
             <many-to-many class="Processing" column="processing_id" unique="true"/>
         </set>
 
-    <!--set name="files" table = "processing_files" cascade="all" lazy="true">
-      <key column="processing_id"/>
-      <many-to-many class="File" column="file_id" unique="true"/>
-    </set-->
+        <!--set name="files" table = "processing_files" cascade="all" lazy="true">
+          <key column="processing_id"/>
+          <many-to-many class="File" column="file_id" unique="true"/>
+        </set-->
 
-    <!-- set
-      name="workflowRuns"
-      lazy="true"
-      inverse="true"
-      cascade="all"
-      sort="natural">
-      <key column="workflow_id" />
-      <one-to-many class="WorkflowRun" />
-    </set-->
+        <!-- set
+          name="workflowRuns"
+          lazy="true"
+          inverse="true"
+          cascade="all"
+          sort="natural">
+          <key column="workflow_id" />
+          <one-to-many class="WorkflowRun" />
+        </set-->
 
         <property name="swAccession" column="sw_accession" type="integer" generated="insert"/>
         <property name="filePath" column="file_path" type="string"/>
         <property name="type" column="type" type="string"/>
         <property name="metaType" column="meta_type" type="string"/>
         <property name="description" column="description" type="string"/>
-        <property name="md5sum" type="string" column="md5sum" />
-        <property name="url" type="string" column="url" />
-        <property name="urlLabel" type="string" column="url_label" />
+        <property name="md5sum" type="string" column="md5sum"/>
+        <property name="url" type="string" column="url"/>
+        <property name="urlLabel" type="string" column="url_label"/>
         <property name="skip" column="skip" type="boolean"/>
 
         <set name="fileAttributes" inverse="true" lazy="true" table="file_attribute" fetch="select" cascade="all-delete-orphan">
-           <key column="file_id" not-null="true" /> 
-            <one-to-many class="FileAttribute" />
+            <key column="file_id" not-null="true"/>
+            <one-to-many class="FileAttribute"/>
         </set>
         <property name="size" column="size" type="long"/>
     </class>
 
-  <!-- ********** **************** FileReportRow **************** ********** -->
-    <class name="FileReportRow" table="file_report" >
+    <!-- ********** **************** FileReportRow **************** ********** -->
+    <class name="FileReportRow" table="file_report">
         <meta attribute="class-description">
             The class holder FileReport entities.
         </meta>
@@ -2331,88 +2417,88 @@
         </id>
 
         <many-to-one
-            name="study"
-            class="Study"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="study_id"
-	    />
+                name="study"
+                class="Study"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="study_id"
+        />
 
         <many-to-one
-            name="experiment"
-            class="Experiment"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="experiment_id"
-	    />
+                name="experiment"
+                class="Experiment"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="experiment_id"
+        />
 
         <many-to-one
-            name="sample"
-            class="Sample"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="sample_id"
-	    />
+                name="sample"
+                class="Sample"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="sample_id"
+        />
 
         <many-to-one
-            name="childSample"
-            class="Sample"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="child_sample_id"
-	    />
+                name="childSample"
+                class="Sample"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="child_sample_id"
+        />
 
         <many-to-one
-            name="ius"
-            class="IUS"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="ius_id"
-	    />
+                name="ius"
+                class="IUS"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="ius_id"
+        />
 
         <many-to-one
-            name="lane"
-            class="Lane"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="lane_id"
-	    />
+                name="lane"
+                class="Lane"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="lane_id"
+        />
 
         <many-to-one
-            name="processing"
-            class="Processing"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="processing_id"
-	    />
+                name="processing"
+                class="Processing"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="processing_id"
+        />
 
         <many-to-one
-            name="file"
-            class="File"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="file_id"
-	    />
+                name="file"
+                class="File"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="file_id"
+        />
     </class>
 
-	<!-- ********** **************** SampleReportRow **************** ********** -->
-    <class name="SampleReportRow" table="sample_report" >
+    <!-- ********** **************** SampleReportRow **************** ********** -->
+    <class name="SampleReportRow" table="sample_report">
         <meta attribute="class-description">
             The class holder for the SampleReport entities.
         </meta>
@@ -2426,64 +2512,64 @@
         </id>
 
         <many-to-one
-            name="study"
-            class="Study"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="study_id"
-	    />
+                name="study"
+                class="Study"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="study_id"
+        />
 
         <many-to-one
-            name="childSample"
-            class="Sample"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="child_sample_id"
-	    />
+                name="childSample"
+                class="Sample"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="child_sample_id"
+        />
 
         <many-to-one
-            name="workflow"
-            class="Workflow"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="workflow_id"
-	    />
+                name="workflow"
+                class="Workflow"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="workflow_id"
+        />
 
-	    <many-to-one
-            name="sequencerRun"
-            class="SequencerRun"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="sequencer_run_id"
-	    />
+        <many-to-one
+                name="sequencerRun"
+                class="SequencerRun"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="sequencer_run_id"
+        />
 
-	    <many-to-one
-            name="lane"
-            class="Lane"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="lane_id"
-	    />
+        <many-to-one
+                name="lane"
+                class="Lane"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="lane_id"
+        />
 
-	    <many-to-one
-            name="ius"
-            class="IUS"
-            cascade="none"
-            outer-join="auto"
-            update="false"
-            insert="false"
-            column="ius_id"
-	    />
+        <many-to-one
+                name="ius"
+                class="IUS"
+                cascade="none"
+                outer-join="auto"
+                update="false"
+                insert="false"
+                column="ius_id"
+        />
 
         <property name="status" column="status" type="string"/>
     </class>

@@ -46,15 +46,24 @@
             <param-value>HTTP HTTPS FILE</param-value>
         </init-param>
 
-    </servlet>  
-  
-   <!-- Catch all requests -->  
+    </servlet>
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- Catch all requests -->
     <servlet-mapping>  
         <servlet-name>RestletServlet</servlet-name>  
         <url-pattern>/*</url-pattern>  
-    </servlet-mapping>  
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>*.form</url-pattern>
+    </servlet-mapping>
 
-    
+
     <resource-ref>
         <description>Seqware Metadata DB</description>
         <res-ref-name>jdbc/SeqWareMetaDB</res-ref-name>

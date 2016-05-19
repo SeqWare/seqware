@@ -20,16 +20,23 @@
                 <value>net/sourceforge/seqware/common/model/Mappings.hbm.xml</value>
             </list>
         </property>
-        <property name="packagesToScan" value="net.sourceforge.seqware.common.model" />
+
+        <property name="packagesToScan">
+            <array>
+                <value>net.sourceforge.seqware.common.model</value>
+                <value>io.seqware.common.model</value>
+            </array>
+        </property>
         <property name="hibernateProperties">
             <props>
-                <prop key="hibernate.use_sql_comments">true</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.use_sql_comments">false</prop>
                 <prop key="hibernate.format_sql">true</prop>
-                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
-                <!-- <prop key="hibernate.show_sql">true</prop> -->
+                <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL92Dialect</prop>
                 <prop key="hibernate.default_entity_mode">pojo</prop>
                 <prop key="hibernate.cache.use_second_level_cache">false</prop>
-                <!-- prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop -->
+                <prop key="hibernate.connection.url">jdbc:postgresql://localhost:5432/test_seqware_meta_db</prop>
+                <prop key="hibernate.connection.driver_class">org.postgresql.Driver</prop>
             </props>
         </property>
     </bean>
