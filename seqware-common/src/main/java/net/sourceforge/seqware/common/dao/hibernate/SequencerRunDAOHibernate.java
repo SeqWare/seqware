@@ -15,7 +15,7 @@ import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 /**
  * <p>
@@ -46,7 +46,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     @Override
     public Integer insert(SequencerRun sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
-        getSession().flush();
+        currentSession().flush();
         return (sequencerRun.getSwAccession());
     }
 
@@ -62,7 +62,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     @Override
     public Integer insert(SequencerRunWizardDTO sequencerRun) {
         this.getHibernateTemplate().save(sequencerRun);
-        getSession().flush();
+        currentSession().flush();
         return (sequencerRun.getSwAccession());
     }
 
@@ -70,7 +70,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
     @Override
     public void update(SequencerRun sequencerRun) {
         this.getHibernateTemplate().update(sequencerRun);
-        getSession().flush();
+        currentSession().flush();
     }
 
     /** {@inheritDoc} */
@@ -105,14 +105,14 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
             // +
             // " from SequencerRun as sequencerRun order by sequencerRun.createTimestamp asc ))";
             parameters = null;
-            list = this.getSession().createSQLQuery(query).addEntity(SequencerRun.class).list();
+            list = this.currentSession().createSQLQuery(query).addEntity(SequencerRun.class).list();
         } else {
             query = "select * from sequencer_run as sr where sr.owner_id = ? order by sr.create_tstmp " + sortValue + ";";
             // query =
             // "from SequencerRun as sequencerRun where sequencerRun.owner.registrationId=? "
             // +
             // "order by sequencerRun.createTimestamp " + sortValue;
-            list = this.getSession().createSQLQuery(query).addEntity(SequencerRun.class).setInteger(0, registration.getRegistrationId())
+            list = this.currentSession().createSQLQuery(query).addEntity(SequencerRun.class).setInteger(0, registration.getRegistrationId())
                     .list();
         }
 
@@ -214,7 +214,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
                 + " or cast(sr.swAccession as string) like :sw " + " or sr.name like :name order by sr.description ";
         String queryStringICase = "from SequencerRun as sr where " + " lower(sr.description) like :description "
                 + " or cast(sr.swAccession as string) like :sw " + " or lower(sr.name) like :name order by sr.description ";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
+        Query query = isCaseSens ? this.currentSession().createQuery(queryStringCase) : this.currentSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -346,7 +346,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
 
     private SequencerRun reattachSequencerRun(SequencerRun sequencerRun) throws IllegalStateException, DataAccessResourceFailureException {
         SequencerRun dbObject = sequencerRun;
-        if (!getSession().contains(sequencerRun)) {
+        if (!currentSession().contains(sequencerRun)) {
             dbObject = findByID(sequencerRun.getSequencerRunId());
         }
         return dbObject;

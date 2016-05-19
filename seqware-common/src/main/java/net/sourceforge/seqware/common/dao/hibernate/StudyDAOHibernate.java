@@ -19,7 +19,7 @@ import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 /**
  * <p>
@@ -50,7 +50,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     @Override
     public Integer insert(Study study) {
         this.getHibernateTemplate().save(study);
-        this.getSession().flush();
+        this.currentSession().flush();
         return study.getSwAccession();
     }
 
@@ -62,14 +62,14 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     @Override
     public void update(Study study) {
         this.getHibernateTemplate().update(study);
-        getSession().flush();
+        currentSession().flush();
     }
 
     /** {@inheritDoc} */
     @Override
     public void merge(Study study) {
         this.getHibernateTemplate().merge(study);
-        getSession().flush();
+        currentSession().flush();
     }
 
     /**
@@ -112,7 +112,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
          */
 
         /*
-         * Criteria criteria = this.getSession().createCriteria(Study.class); criteria.add(Expression.eq("owner_id",
+         * Criteria criteria = this.currentSession().createCriteria(Study.class); criteria.add(Expression.eq("owner_id",
          * registration.getRegistrationId())); criteria.addOrder(Order.asc("create_tstmp")); criteria.setFirstResult(100);
          * criteria.setMaxResults(50); List pageResults=criteria.list();
          */
@@ -354,7 +354,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) )";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, studyId).setInteger(1, studyId)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, studyId).setInteger(1, studyId)
                 .setInteger(2, studyId).setInteger(3, studyId).setInteger(4, studyId).setInteger(5, studyId).setInteger(6, studyId)
                 .setInteger(7, studyId).setInteger(8, studyId).setInteger(9, studyId).setInteger(10, studyId).setInteger(11, studyId)
                 .list();
@@ -514,7 +514,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, studyId).setInteger(1, studyId)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, studyId).setInteger(1, studyId)
                 .setInteger(2, studyId).setInteger(3, studyId).setInteger(4, studyId).setInteger(5, studyId).setInteger(6, studyId)
                 .setInteger(7, studyId).setInteger(8, studyId).setInteger(9, studyId).setInteger(10, studyId).setInteger(11, studyId)
                 .setInteger(12, studyId).list();
@@ -636,7 +636,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) )";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, studyId).setInteger(1, studyId)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, studyId).setInteger(1, studyId)
                 .setInteger(2, studyId).setInteger(3, studyId).setInteger(4, studyId).setInteger(5, studyId).setString(6, metaType)
                 .setInteger(7, studyId).setInteger(8, studyId).setInteger(9, studyId).setInteger(10, studyId).setInteger(11, studyId)
                 .setInteger(12, studyId).list();
@@ -762,7 +762,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, studyId).setInteger(1, studyId)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, studyId).setInteger(1, studyId)
                 .setInteger(2, studyId).setInteger(3, studyId).setInteger(4, studyId).setInteger(5, studyId).setString(6, metaType)
                 .setInteger(7, studyId).setInteger(8, studyId).setInteger(9, studyId).setInteger(10, studyId).setInteger(11, studyId)
                 .setInteger(12, studyId).list();
@@ -958,11 +958,11 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
         List list;
 
         if (registration.isLIMSAdmin()) {
-            list = this.getSession().createSQLQuery(query).addEntity(Study.class).setString(0, metaType).setString(1, metaType)
+            list = this.currentSession().createSQLQuery(query).addEntity(Study.class).setString(0, metaType).setString(1, metaType)
                     .setString(2, metaType).setString(3, metaType).setString(4, metaType).setString(5, metaType).setString(6, metaType)
                     .setString(7, metaType).list();
         } else {
-            list = this.getSession().createSQLQuery(query).addEntity(Study.class).setInteger(0, registration.getRegistrationId())
+            list = this.currentSession().createSQLQuery(query).addEntity(Study.class).setInteger(0, registration.getRegistrationId())
                     .setInteger(1, registration.getRegistrationId()).setInteger(2, registration.getRegistrationId())
                     .setInteger(3, registration.getRegistrationId()).setInteger(4, registration.getRegistrationId())
                     .setInteger(5, registration.getRegistrationId()).setInteger(6, registration.getRegistrationId()).setString(7, metaType)
@@ -1052,7 +1052,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
         String queryStringICase = "from Study as study where lower(study.title) like :title "
                 + " or lower(study.description) like :description "
                 + " or cast(study.swAccession as string) like :sw order by study.title, study.description";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
+        Query query = isCaseSens ? this.currentSession().createQuery(queryStringCase) : this.currentSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -1069,14 +1069,14 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
     public List<Study> findByCriteria(String criteria) {
 
         String queryStringCase = "from Study as s where ";
-        Query query = this.getSession().createQuery(queryStringCase + " " + criteria);
+        Query query = this.currentSession().createQuery(queryStringCase + " " + criteria);
 
         return query.list();
     }
 
     // @Override
     // public List search() {
-    // Session session = this.getSession();
+    // Session session = this.currentSession();
     // FullTextSession fullTextSession = Search.getFullTextSession(session);
     // Transaction tx = fullTextSession.beginTransaction();
     // // create native Lucene query unsing the query DSL
@@ -1128,7 +1128,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
         } else if (registration.isLIMSAdmin() || (study.givesPermission(registration) && dbObject.givesPermission(registration))) {
             localLogger.info("Updating study object");
             update(study);
-            getSession().flush();
+            currentSession().flush();
         } else {
             localLogger.error("StudyDAOHibernate update Not authorized");
         }
@@ -1147,7 +1147,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
         } else if (registration.isLIMSAdmin() || study.givesPermission(registration)) {
             localLogger.info("insert study object");
             insert(study);
-            this.getSession().flush();
+            this.currentSession().flush();
             swAccession = study.getSwAccession();
         } else {
             localLogger.error("StudyDAOHibernate insert Not authorized");
@@ -1173,7 +1173,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
 
     private Study reattachStudy(Study study) throws IllegalStateException, DataAccessResourceFailureException {
         Study dbObject = study;
-        if (!getSession().contains(study)) {
+        if (!currentSession().contains(study)) {
             dbObject = findByID(study.getStudyId());
         }
         return dbObject;
@@ -1200,7 +1200,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
                 + " WHERE wr.status = :status";
 
         @SuppressWarnings("rawtypes")
-        List list = this.getSession().createSQLQuery(query).setInteger("study", study.getStudyId()).setString("status", status.name())
+        List list = this.currentSession().createSQLQuery(query).setInteger("study", study.getStudyId()).setString("status", status.name())
                 .list();
 
         return ((BigInteger) list.get(0)).intValue();

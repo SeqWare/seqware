@@ -16,9 +16,6 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.ExperimentService;
 import net.sourceforge.seqware.common.business.SampleService;
@@ -30,7 +27,7 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.xmltools.JaxbObject;
 import net.sourceforge.seqware.common.util.xmltools.XmlTools;
 import org.hibernate.Query;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
@@ -38,6 +35,10 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * <p>

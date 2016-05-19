@@ -1,8 +1,5 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import net.sourceforge.seqware.common.dao.WorkflowDAO;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
@@ -14,7 +11,11 @@ import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -41,7 +42,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     @Override
     public Integer insert(Workflow workflow) {
         this.getHibernateTemplate().save(workflow);
-        this.getSession().flush();
+        this.currentSession().flush();
         return workflow.getSwAccession();
     }
 
@@ -49,7 +50,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
     @Override
     public void update(Workflow workflow) {
         getHibernateTemplate().update(workflow);
-        getSession().flush();
+        this.currentSession().flush();
     }
 
     /** {@inheritDoc} */
@@ -170,7 +171,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
                 + " or cast(w.swAccession as string) like :sw " + " or w.name like :name order by w.name, w.description";
         String queryStringICase = "from Workflow as w where lower(w.description) like :description "
                 + " or cast(w.swAccession as string) like :sw " + " or lower(w.name) like :name order by w.name, w.description";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
+        Query query = isCaseSens ? this.currentSession().createQuery(queryStringCase) : this.currentSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -254,7 +255,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
                     + "on (wr.workflow_run_id = iwr.workflow_run_id) " + "join workflow w " + "on (w.workflow_id = wr.workflow_id) ";
         }
 
-        SQLQuery sqlQuery = this.getSession().createSQLQuery(query);
+        SQLQuery sqlQuery = this.currentSession().createSQLQuery(query);
         if (sr != null) {
             sqlQuery.setInteger("seq_run_id", sr.getSequencerRunId());
         }
@@ -284,7 +285,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
 
     private Workflow reattachWorkflow(Workflow workflow) throws IllegalStateException {
         Workflow dbObject = workflow;
-        if (!getSession().contains(workflow)) {
+        if (!this.currentSession().contains(workflow)) {
             dbObject = findByID(workflow.getWorkflowId());
         }
         return dbObject;

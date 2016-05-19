@@ -1,8 +1,5 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import net.sourceforge.seqware.common.dao.WorkflowParamValueDAO;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowParamValue;
@@ -11,7 +8,11 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -37,7 +38,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
     /** {@inheritDoc} */
     @Override
     public Integer insert(WorkflowParamValue workflowParamValue) {
-        // this.getSession().evict(workflowParam.getWorkflow());
+        // this.currentSession().evict(workflowParam.getWorkflow());
         return (Integer) this.getHibernateTemplate().save(workflowParamValue);
     }
 
@@ -45,7 +46,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
     @Override
     public void update(WorkflowParamValue workflowParamValue) {
         getHibernateTemplate().update(workflowParamValue);
-        getSession().flush();
+        this.currentSession().flush();
     }
 
     /** {@inheritDoc} */
@@ -141,7 +142,7 @@ public class WorkflowParamValueDAOHibernate extends HibernateDaoSupport implemen
     private WorkflowParamValue reattachWorkflowParamValue(WorkflowParamValue workflowParam) throws IllegalStateException,
             DataAccessResourceFailureException {
         WorkflowParamValue dbObject = workflowParam;
-        if (!getSession().contains(workflowParam)) {
+        if (!this.currentSession().contains(workflowParam)) {
             dbObject = findByID(workflowParam.getWorkflowParamValueId());
         }
         return dbObject;

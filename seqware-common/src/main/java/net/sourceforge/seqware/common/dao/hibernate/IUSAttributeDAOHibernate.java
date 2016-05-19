@@ -4,7 +4,7 @@ import java.util.List;
 import net.sourceforge.seqware.common.dao.IUSAttributeDAO;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.IUSAttribute;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 /**
  * <p>

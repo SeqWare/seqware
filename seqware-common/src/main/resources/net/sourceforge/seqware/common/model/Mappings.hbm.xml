@@ -15,7 +15,7 @@
         <id name="fileTypeId" type="integer" column="file_type_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">file_type_file_type_id_seq</param>
             </generator>
         </id>
@@ -38,7 +38,7 @@
         <id name="shareWorkflowRunId" type="integer" column="share_workflow_run_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">share_workflow_run_share_workflow_run_id_seq</param>
             </generator>
         </id>
@@ -79,7 +79,7 @@
         <id name="shareStudyId" type="integer" column="share_study_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">share_study_id_seq</param>
             </generator>
         </id>
@@ -121,7 +121,7 @@
         <id name="workflowId" type="integer" column="workflow_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">workflow_workflow_id_seq</param>
             </generator>
         </id>
@@ -199,7 +199,7 @@
         <id name="invoiceId" type="integer" column="invoice_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">invoice_invoice_id_seq</param>
             </generator>
         </id>
@@ -271,7 +271,7 @@
         <id name="expenseId" type="integer" column="expense_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">expense_expense_id_seq</param>
             </generator>
         </id>
@@ -333,7 +333,7 @@
         <id name="workflowParamId" type="integer" column="workflow_param_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">workflow_param_workflow_param_id_seq</param>
             </generator>
         </id>
@@ -380,7 +380,7 @@
         <id name="workflowParamValueId" type="integer" column="workflow_param_value_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">workflow_param_value_workflow_param_value_id_seq</param>
             </generator>
         </id>
@@ -411,7 +411,7 @@
         <id name="workflowRunId" type="integer" column="workflow_run_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">workflow_run_workflow_run_id_seq</param>
             </generator>
         </id>
@@ -536,7 +536,8 @@
             <key column="workflow_run_id"/>
             <!-- <element type="integer" column="file_id" not-null="true" /> -->
             <element type="integer">
-                <column name="file_id" read="(select f.sw_accession from file f where f.file_id=file_id)" write="(select f.file_id from file f WHERE f.sw_accession = ?)"/>
+                <!-- <column name="file_id" read="(select f.sw_accession from file f where f.file_id=file_id)" write="(select f.file_id from file f WHERE f.sw_accession = ?)"/> -->
+                <column name="file_id"/>
             </element>
         </set>
     </class>
@@ -552,7 +553,7 @@
         <id name="workflowRunParamId" type="integer" column="workflow_run_param_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">workflow_run_param_workflow_run_param_id_seq</param>
             </generator>
         </id>
@@ -589,7 +590,7 @@
         <id name="studyId" type="integer" column="study_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">study_study_id_seq</param>
             </generator>
         </id>
@@ -680,7 +681,7 @@
         <id name="studyAttributeId" type="int">
             <column name="study_attribute_id" />
 
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">study_attribute_study_attribute_id_seq</param>
             </generator>
         </id>
@@ -714,7 +715,7 @@
         <id name="studyTypeId" type="integer" column="study_type_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">study_type_study_type_id_seq</param>
             </generator>
         </id>
@@ -735,7 +736,7 @@
         <id name="experimentId" type="integer" column="experiment_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">experiment_experiment_id_seq</param>
             </generator>
         </id>
@@ -848,7 +849,7 @@
         <id name="experimentAttributeId" type="int">
             <column name="experiment_attribute_id" />
 
-             <generator class="sequence">
+             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">experiment_attribute_experiment_attribute_id_seq</param>
             </generator>
         </id>
@@ -882,7 +883,7 @@
         <id name="experimentLibraryDesignId" type="integer" column="experiment_library_design_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">experiment_library_design_experiment_library_design_id_seq</param>
             </generator>
         </id>
@@ -940,7 +941,7 @@
         <id name="experimentSpotDesignId" type="integer" column="experiment_spot_design_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">experiment_spot_design_experiment_spot_design_id_seq</param>
             </generator>
         </id>
@@ -976,7 +977,7 @@
         <id name="experimentSpotDesignReadSpecId" type="integer" column="experiment_spot_design_read_spec_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">experiment_spot_design_read_s_experiment_spot_design_read_s_seq</param>
             </generator>
         </id>
@@ -1014,7 +1015,7 @@
         <id name="sampleId" type="integer" column="sample_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">sample_sample_id_seq</param>
             </generator>
         </id>
@@ -1141,7 +1142,7 @@
     <class name="SampleAttribute" table="sample_attribute" schema="public">
         <id name="sampleAttributeId" type="int">
             <column name="sample_attribute_id" />
-             <generator class="sequence">
+             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">sample_attribute_sample_attribute_id_seq</param>
             </generator>
         </id>
@@ -1174,7 +1175,7 @@
             <meta attribute="use-in-tostring">true</meta>
 
       <!-- generator class="native"></generator -->
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">registration_registration_id_seq</param>
             </generator>
         </id>
@@ -1217,7 +1218,7 @@
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
             <meta attribute="use-in-equals">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">sequencer_run_sequencer_run_id_seq</param>
             </generator>
         </id>
@@ -1326,7 +1327,7 @@
         <id name="sequencerRunId" type="integer" column="sequencer_run_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">sequencer_run_sequencer_run_id_seq</param>
             </generator>
         </id>
@@ -1417,7 +1418,7 @@
         <id name="platformId" type="integer" column="platform_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">platform_platform_id_seq</param>
             </generator>
         </id>
@@ -1443,7 +1444,7 @@
         <id name="librarySelectionId" type="integer" column="library_selection_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">library_selection_library_selection_id_seq</param>
             </generator>
         </id>
@@ -1468,7 +1469,7 @@
         <id name="librarySourceId" type="integer" column="library_source_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">library_source_library_source_id_seq</param>
             </generator>
         </id>
@@ -1493,7 +1494,7 @@
         <id name="libraryStrategyId" type="integer" column="library_strategy_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">library_strategy_library_strategy_id_seq</param>
             </generator>
         </id>
@@ -1518,7 +1519,7 @@
         <id name="laneId" type="integer" column="lane_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">lane_lane_id_seq</param>
             </generator>
       <!-- generator class="native"></generator -->
@@ -1638,7 +1639,7 @@
         <id name="laneAttributeId" type="int">
             <column name="lane_attribute_id" />
 
-             <generator class="sequence">
+             <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">lane_attribute_lane_attribute_id_seq</param>
             </generator>
         </id>
@@ -1665,7 +1666,7 @@
         <id name="sequencerRunAttributeId" type="int">
             <column name="sequencer_run_attribute_id" />
 
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">sequencer_run_attribute_sequencer_run_attribute_id_seq</param>
             </generator>
         </id>
@@ -1698,7 +1699,7 @@
         <id name="iusId" type="integer" column="ius_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">ius_ius_id_seq</param>
             </generator>
         </id>
@@ -1770,7 +1771,7 @@
         <id name="iusAttributeId" type="int">
             <column name="ius_attribute_id" />
 
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">ius_attribute_ius_attribute_id_seq</param>
             </generator>
         </id>
@@ -1803,7 +1804,7 @@
         <id name="organismId" type="integer" column="organism_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">organism_organism_id_seq</param>
             </generator>
         </id>
@@ -1829,7 +1830,7 @@
         <id name="processingId" type="integer" column="processing_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">processing_processing_id_seq</param>
             </generator>
       <!-- generator class="native"></generator -->
@@ -1978,7 +1979,7 @@
         <id name="processingAttributeId" type="int">
             <column name="processing_attribute_id" />
 
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">processing_attribute_processing_attribute_id_seq</param>
             </generator>
         </id>
@@ -2005,7 +2006,7 @@
         <id name="processingStudiesId" type="integer" column="processing_studies_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">processing_studies_processing_studies_id_seq</param>
             </generator>
       <!-- generator class="native"></generator -->
@@ -2043,7 +2044,7 @@
         <id name="processingSequencerRunsId" type="integer" column="processing_sequencer_runs_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">processing_sequencer_runs_processing_sequencer_runs_id_seq</param>
             </generator>
 <!--            <generator class="assigned" />-->
@@ -2080,7 +2081,7 @@
         <id name="processingSamplesId" type="integer" column="processing_samples_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">processing_samples_processing_samples_id_seq</param>
             </generator>
 <!--            <generator class="assigned" />-->
@@ -2117,7 +2118,7 @@
         <id name="processingRelationshipId" type="integer" column="processing_relationship_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">processing_relationship_processing_relationship_id_seq</param>
             </generator>
 <!--            <generator class="assigned" />-->
@@ -2142,7 +2143,7 @@
         <id name="processingLanesId" type="integer" column="processing_lanes_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">processing_lanes_processing_lanes_id_seq</param>
             </generator>
 <!--            <generator class="assigned" />-->
@@ -2179,7 +2180,7 @@
         <id name="processingIusId" type="integer" column="processing_ius_id" >
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">processing_ius_processing_ius_id_seq</param>
             </generator>
 <!--            <generator class="assigned" />-->
@@ -2215,7 +2216,7 @@
         <id name="processingExperimentsId" type="integer" column="processing_experiments_id">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">processing_experiments_processing_experiments_id_seq</param>
             </generator>
 <!--            <generator class="assigned" />-->
@@ -2258,7 +2259,7 @@
         <id name="fileId" type="integer" column="file_id" unsaved-value="none">
             <meta attribute="scope-set">public</meta>
             <meta attribute="use-in-tostring">true</meta>
-            <generator class="sequence">
+            <generator class="org.hibernate.id.enhanced.SequenceStyleGenerator">
                 <param name="sequence">file_file_id_seq</param>
             </generator>
         </id>

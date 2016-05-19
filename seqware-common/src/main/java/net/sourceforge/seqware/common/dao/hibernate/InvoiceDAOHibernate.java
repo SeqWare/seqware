@@ -12,7 +12,7 @@ import net.sourceforge.seqware.common.util.NullBeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
     @Override
     public Integer insert(Invoice invoice) {
         this.getHibernateTemplate().save(invoice);
-        this.getSession().flush();
+        this.currentSession().flush();
         return invoice.getSwAccession();
     }
 
@@ -47,7 +47,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
     @Override
     public void update(Invoice invoice) {
         getHibernateTemplate().update(invoice);
-        getSession().flush();
+        currentSession().flush();
     }
 
     /** {@inheritDoc} */
@@ -215,7 +215,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
 
     private Invoice reattachInvoice(Invoice invoice) throws IllegalStateException {
         Invoice dbObject = invoice;
-        if (!getSession().contains(invoice)) {
+        if (!currentSession().contains(invoice)) {
             dbObject = findByID(invoice.getInvoiceId());
         }
         return dbObject;

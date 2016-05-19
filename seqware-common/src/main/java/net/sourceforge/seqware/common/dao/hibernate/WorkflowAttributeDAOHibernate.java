@@ -1,14 +1,15 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.util.List;
 import net.sourceforge.seqware.common.dao.WorkflowAttributeDAO;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowAttribute;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 /**

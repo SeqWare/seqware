@@ -17,7 +17,7 @@ import org.hibernate.SQLQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 /**
  * <p>
@@ -50,7 +50,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     @Override
     public Integer insert(Lane lane) {
         this.getHibernateTemplate().save(lane);
-        getSession().flush();
+        currentSession().flush();
         return (lane.getSwAccession());
     }
 
@@ -62,7 +62,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     @Override
     public void update(Lane lane) {
         this.getHibernateTemplate().update(lane);
-        getSession().flush();
+        currentSession().flush();
     }
 
     /**
@@ -74,7 +74,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
     public void delete(Lane lane) {
         // first delete records from processing_lanes
         String query = "DELETE FROM processing_lanes as pl where pl.lane_id = ?";
-        SQLQuery sql = this.getSession().createSQLQuery(query);
+        SQLQuery sql = this.currentSession().createSQLQuery(query);
         sql.setInteger(0, lane.getLaneId());
         sql.executeUpdate();
 
@@ -100,7 +100,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id)  "
                 + "where ln.lane_id = ? )";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setInteger(1, laneId).list();
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setInteger(1, laneId).list();
 
         for (Object file : list) {
             File fl = (File) file;
@@ -127,7 +127,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id)  "
                 + "where ln.lane_id = ? ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setInteger(1, laneId).list();
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setInteger(1, laneId).list();
 
         isHasFile = (list.size() > 0);
 
@@ -156,7 +156,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id)  "
                 + "where ln.lane_id = ? )";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setString(1, metaType)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setString(1, metaType)
                 .setInteger(2, laneId).list();
 
         for (Object file : list) {
@@ -188,7 +188,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
                 + "inner join ius i on (i.ius_id = pr_i.ius_id) " + "inner join lane ln on (ln.lane_id = i.lane_id)  "
                 + "where ln.lane_id = ? ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setString(1, metaType)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, laneId).setString(1, metaType)
                 .setInteger(2, laneId).list();
 
         isHasFile = (list.size() > 0);
@@ -209,7 +209,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
         String query = "SELECT * FROM Lane as l where l.lane_id in (" + paramQuery + ")";
 
-        SQLQuery sql = this.getSession().createSQLQuery(query).addEntity(Lane.class);
+        SQLQuery sql = this.currentSession().createSQLQuery(query).addEntity(Lane.class);
 
         for (int i = 0; i < laneIds.size(); i++) {
             sql.setInteger(i, laneIds.get(i));
@@ -241,14 +241,14 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         }
 
         for (Lane lane : lanes) {
-            this.getSession().evict(lane.getSequencerRun());
-            this.getSession().evict(lane.getSample());
+            this.currentSession().evict(lane.getSequencerRun());
+            this.currentSession().evict(lane.getSample());
 
             Set<Processing> processings = lane.getProcessings();
             for (Processing processing : processings) {
-                this.getSession().evict(processing);
+                this.currentSession().evict(processing);
             }
-            this.getSession().evict(lane);
+            this.currentSession().evict(lane);
         }
 
         String paramQuery = "";
@@ -263,7 +263,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         // delete processing_lanes
         String query = "DELETE FROM processing_lanes as pl where pl.lane_id in (" + paramQuery + ")";
 
-        SQLQuery sql = this.getSession().createSQLQuery(query);
+        SQLQuery sql = this.currentSession().createSQLQuery(query);
 
         int iter = 0;
         for (Lane lane : lanes) {
@@ -276,7 +276,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
         // get ius by lane_id
         query = "SELECT ius_id FROM ius as i where i.lane_id in (" + paramQuery + ")";
-        sql = this.getSession().createSQLQuery(query);
+        sql = this.currentSession().createSQLQuery(query);
         iter = 0;
         for (Lane lane : lanes) {
             localLogger.debug("iter: " + iter + "; ius laneId = " + lane.getLaneId());
@@ -303,7 +303,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
             // delete ius_link
             query = "DELETE FROM ius_link as link where link.ius_id in (" + iusParamQuery + ")";
-            sql = this.getSession().createSQLQuery(query);
+            sql = this.currentSession().createSQLQuery(query);
             iter = 0;
             for (Integer iusId : listIUSId) {
                 sql.setInteger(iter, iusId);
@@ -313,7 +313,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
             // delete ius_attribute
             query = "DELETE FROM ius_attribute as attribute where attribute.ius_id in (" + iusParamQuery + ")";
-            sql = this.getSession().createSQLQuery(query);
+            sql = this.currentSession().createSQLQuery(query);
             iter = 0;
             for (Integer iusId : listIUSId) {
                 sql.setInteger(iter, iusId);
@@ -324,7 +324,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
         // delete ius for lanes
         query = "DELETE FROM ius as i where i.lane_id in (" + paramQuery + ")";
-        sql = this.getSession().createSQLQuery(query);
+        sql = this.currentSession().createSQLQuery(query);
         iter = 0;
         for (Lane lane : lanes) {
             sql.setInteger(iter, lane.getLaneId());
@@ -335,7 +335,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
         // delete lanes
         query = "DELETE FROM lane as l where l.lane_id in (" + paramQuery + ")";
-        sql = this.getSession().createSQLQuery(query);
+        sql = this.currentSession().createSQLQuery(query);
         iter = 0;
         for (Lane lane : lanes) {
             sql.setInteger(iter, lane.getLaneId());
@@ -409,7 +409,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
                 + " or l.name like :name order by l.name, l.description";
         String queryStringICase = "from Lane as l where  lower(l.description) like :description "
                 + " or cast(l.swAccession as string) like :sw " + " or lower(l.name) like :name order by l.name, l.description";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
+        Query query = isCaseSens ? this.currentSession().createQuery(queryStringCase) : this.currentSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -501,7 +501,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
 
     private Lane reattachLane(Lane lane) throws IllegalStateException, DataAccessResourceFailureException {
         Lane dbObject = lane;
-        if (!getSession().contains(lane)) {
+        if (!currentSession().contains(lane)) {
             dbObject = findByID(lane.getLaneId());
         }
         return dbObject;
