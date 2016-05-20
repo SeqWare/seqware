@@ -1,11 +1,12 @@
 package net.sourceforge.seqware.common.dao;
 
-import java.util.List;
-import java.util.Set;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.Workflow;
 import net.sourceforge.seqware.common.model.WorkflowRun;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -24,7 +25,7 @@ public interface WorkflowRunDAO {
      *            Workflow run to be inserted.
      * @return The SeqWare Accession number for the newly inserted workflow.
      */
-    public Integer insert(WorkflowRun workflowRun);
+    Integer insert(WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -37,7 +38,7 @@ public interface WorkflowRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, WorkflowRun workflowRun);
+    Integer insert(Registration registration, WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -47,7 +48,7 @@ public interface WorkflowRunDAO {
      * @param workflowRun
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public void update(WorkflowRun workflowRun);
+    void update(WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -59,7 +60,7 @@ public interface WorkflowRunDAO {
      * @param workflowRun
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public void update(Registration registration, WorkflowRun workflowRun);
+    void update(Registration registration, WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -69,7 +70,7 @@ public interface WorkflowRunDAO {
      * @param workflowRun
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public void delete(WorkflowRun workflowRun);
+    void delete(WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -81,7 +82,7 @@ public interface WorkflowRunDAO {
      * @param laneIds
      *            a {@link java.util.List} object.
      */
-    public void update(WorkflowRun workflowRun, List<Integer> laneIds);
+    void update(WorkflowRun workflowRun, List<Integer> laneIds);
 
     /**
      * <p>
@@ -90,7 +91,7 @@ public interface WorkflowRunDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> list();
+    List<WorkflowRun> list();
 
     // public List<WorkflowRun> list(Registration registration);
     // public List<WorkflowRun> listMyShared(Registration registration);
@@ -107,7 +108,7 @@ public interface WorkflowRunDAO {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> list(Registration registration, Boolean isAsc);
+    List<WorkflowRun> list(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -120,7 +121,7 @@ public interface WorkflowRunDAO {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc);
+    List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -133,7 +134,7 @@ public interface WorkflowRunDAO {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc);
+    List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -146,7 +147,7 @@ public interface WorkflowRunDAO {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listRunning(Registration registration, Boolean isAsc);
+    List<WorkflowRun> listRunning(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -157,7 +158,7 @@ public interface WorkflowRunDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun findByName(String name);
+    WorkflowRun findByName(String name);
 
     /**
      * <p>
@@ -168,7 +169,7 @@ public interface WorkflowRunDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun findByID(Integer wfrID);
+    WorkflowRun findByID(Integer wfrID);
 
     /**
      * <p>
@@ -179,7 +180,7 @@ public interface WorkflowRunDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun findBySWAccession(Integer swAccession);
+    WorkflowRun findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -190,7 +191,7 @@ public interface WorkflowRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun updateDetached(WorkflowRun workflowRun);
+    WorkflowRun updateDetached(WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -203,7 +204,7 @@ public interface WorkflowRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun updateDetached(Registration registration, WorkflowRun workflowRun);
+    WorkflowRun updateDetached(Registration registration, WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -214,7 +215,7 @@ public interface WorkflowRunDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> findByOwnerID(Integer registrationID);
+    List<WorkflowRun> findByOwnerID(Integer registrationID);
 
     /**
      * <p>
@@ -227,7 +228,7 @@ public interface WorkflowRunDAO {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> findByCriteria(String criteria, boolean isCaseSens);
+    List<WorkflowRun> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -238,7 +239,7 @@ public interface WorkflowRunDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> findByCriteria(String criteria);
+    List<WorkflowRun> findByCriteria(String criteria);
 
     /**
      * <p>
@@ -249,7 +250,7 @@ public interface WorkflowRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Workflow> listRelatedWorkflows(Registration registration);
+    List<Workflow> listRelatedWorkflows(Registration registration);
 
     /**
      * <p>
@@ -260,5 +261,5 @@ public interface WorkflowRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      * @return a {@link java.util.Set} object.
      */
-    public Set<WorkflowRun> findRunsForIUS(IUS ius);
+    Set<WorkflowRun> findRunsForIUS(IUS ius);
 }

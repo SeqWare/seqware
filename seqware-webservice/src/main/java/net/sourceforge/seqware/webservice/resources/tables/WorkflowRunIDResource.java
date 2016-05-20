@@ -16,14 +16,6 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.IUSService;
@@ -52,6 +44,14 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * <p>
@@ -210,7 +210,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
         wr.setTemplate(newWR.getTemplate());
         wr.setSeqwareRevision(newWR.getSeqwareRevision());
         wr.setUserName(newWR.getUserName());
-        wr.setUpdateTimestamp(new Date());
+//        wr.setUpdateTimestamp(new Date());
         wr.setStdErr(newWR.getStdErr());
         wr.setStdOut(newWR.getStdOut());
         wr.setWorkflowEngine(newWR.getWorkflowEngine());
@@ -267,6 +267,7 @@ public class WorkflowRunIDResource extends DatabaseIDResource {
                 wr.getWorkflowRunParams().addAll(createWorkflowRunParameters);
             }
         }
+
         wrs.update(registration, wr);
 
         // direct DB calls

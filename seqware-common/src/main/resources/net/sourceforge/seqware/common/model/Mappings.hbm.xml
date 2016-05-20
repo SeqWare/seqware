@@ -553,8 +553,7 @@
             <key column="workflow_run_id"/>
             <!-- <element type="integer" column="file_id" not-null="true" /> -->
             <element type="integer">
-                <!-- <column name="file_id" read="(select f.sw_accession from file f where f.file_id=file_id)" write="(select f.file_id from file f WHERE f.sw_accession = ?)"/> -->
-                <column name="file_id"/>
+                <column name="file_id" read="(select f.sw_accession from file f where f.file_id=file_id)" write="(select f.file_id from file f WHERE f.sw_accession = ?)"/>
             </element>
         </set>
     </class>

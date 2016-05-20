@@ -1,11 +1,5 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import net.sourceforge.seqware.common.dao.WorkflowRunDAO;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Processing;
@@ -21,6 +15,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
