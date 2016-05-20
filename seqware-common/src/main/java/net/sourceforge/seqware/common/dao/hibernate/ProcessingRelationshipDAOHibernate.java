@@ -60,7 +60,7 @@ public class ProcessingRelationshipDAOHibernate extends HibernateDaoSupport impl
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, processingRelationship);
-            return (ProcessingRelationship) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

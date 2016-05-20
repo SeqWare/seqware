@@ -164,7 +164,7 @@ public class InvoiceDAOHibernate extends HibernateDaoSupport implements InvoiceD
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, invoice);
-            return (Invoice) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached invoice", e);
         }

@@ -30,5 +30,5 @@ public interface Annotatable<T> {
      *
      * @return
      */
-    public Set<T> getAnnotations();
+    Set<T> getAnnotations();
 }

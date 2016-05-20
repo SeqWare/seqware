@@ -24,7 +24,7 @@ public interface ProcessingSamplesService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ProcessingSamplesDAO} object.
      */
-    public abstract void setProcessingSamplesDAO(ProcessingSamplesDAO dao);
+    void setProcessingSamplesDAO(ProcessingSamplesDAO dao);
 
     /**
      * <p>
@@ -37,7 +37,7 @@ public interface ProcessingSamplesService {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingSamples} object.
      */
-    public abstract ProcessingSamples findByProcessingSample(Processing processing, Sample sample);
+    ProcessingSamples findByProcessingSample(Processing processing, Sample sample);
 
     /**
      * <p>
@@ -47,7 +47,7 @@ public interface ProcessingSamplesService {
      * @param processingSamples
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSamples} object.
      */
-    public abstract void delete(ProcessingSamples processingSamples);
+    void delete(ProcessingSamples processingSamples);
 
     /**
      * <p>
@@ -57,7 +57,7 @@ public interface ProcessingSamplesService {
      * @param processingSamples
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSamples} object.
      */
-    public abstract void update(ProcessingSamples processingSamples);
+    void update(ProcessingSamples processingSamples);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface ProcessingSamplesService {
      * @param processingSamples
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSamples} object.
      */
-    public abstract void insert(ProcessingSamples processingSamples);
+    void insert(ProcessingSamples processingSamples);
 
     /**
      * <p>
@@ -78,7 +78,7 @@ public interface ProcessingSamplesService {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSamples} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingSamples} object.
      */
-    public abstract ProcessingSamples updateDetached(ProcessingSamples processingSamples);
+    ProcessingSamples updateDetached(ProcessingSamples processingSamples);
 
     /**
      * <p>
@@ -87,6 +87,6 @@ public interface ProcessingSamplesService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingSamples> list();
+    List<ProcessingSamples> list();
 
 }

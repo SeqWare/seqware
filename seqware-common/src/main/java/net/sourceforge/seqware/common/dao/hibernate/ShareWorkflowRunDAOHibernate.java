@@ -142,7 +142,7 @@ public class ShareWorkflowRunDAOHibernate extends HibernateDaoSupport implements
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, shareWorkflowRun);
-            return (ShareWorkflowRun) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

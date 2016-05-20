@@ -25,7 +25,7 @@ public interface WorkflowRunParamDAO {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void insert(WorkflowRunParam workflowRunParam);
+    void insert(WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -37,7 +37,7 @@ public interface WorkflowRunParamDAO {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void insert(Registration registration, WorkflowRunParam workflowRunParam);
+    void insert(Registration registration, WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -47,7 +47,7 @@ public interface WorkflowRunParamDAO {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void update(WorkflowRunParam workflowRunParam);
+    void update(WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -59,7 +59,7 @@ public interface WorkflowRunParamDAO {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void update(Registration registration, WorkflowRunParam workflowRunParam);
+    void update(Registration registration, WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -69,7 +69,7 @@ public interface WorkflowRunParamDAO {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void delete(WorkflowRunParam workflowRunParam);
+    void delete(WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -81,7 +81,7 @@ public interface WorkflowRunParamDAO {
      * @param files
      *            a {@link java.util.Map} object.
      */
-    public void insertFilesAsWorkflowRunParam(WorkflowRun workflowRun, Map<String, List<File>> files);
+    void insertFilesAsWorkflowRunParam(WorkflowRun workflowRun, Map<String, List<File>> files);
 
     /**
      * <p>
@@ -95,7 +95,7 @@ public interface WorkflowRunParamDAO {
      * @param files
      *            a {@link java.util.Map} object.
      */
-    public void insertFilesAsWorkflowRunParam(Registration registration, WorkflowRun workflowRun, Map<String, List<File>> files);
+    void insertFilesAsWorkflowRunParam(Registration registration, WorkflowRun workflowRun, Map<String, List<File>> files);
 
     /**
      * <p>
@@ -106,7 +106,7 @@ public interface WorkflowRunParamDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public WorkflowRunParam updateDetached(WorkflowRunParam workflowRunParam);
+    WorkflowRunParam updateDetached(WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -119,7 +119,7 @@ public interface WorkflowRunParamDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public WorkflowRunParam updateDetached(Registration registration, WorkflowRunParam workflowRunParam);
+    WorkflowRunParam updateDetached(Registration registration, WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -128,5 +128,5 @@ public interface WorkflowRunParamDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRunParam> list();
+    List<WorkflowRunParam> list();
 }

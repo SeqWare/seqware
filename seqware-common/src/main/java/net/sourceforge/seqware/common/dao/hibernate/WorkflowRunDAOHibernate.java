@@ -350,7 +350,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbWf, workflowRun);
-            return (WorkflowRun) this.getHibernateTemplate().merge(dbWf);
+            return this.getHibernateTemplate().merge(dbWf);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached WorkflowRun", e);
         }

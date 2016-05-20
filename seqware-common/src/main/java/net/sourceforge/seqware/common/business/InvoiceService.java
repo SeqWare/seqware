@@ -17,7 +17,7 @@ import net.sourceforge.seqware.common.model.Registration;
 public interface InvoiceService {
 
     /** Constant <code>NAME="invoiceService"</code> */
-    public static final String NAME = "invoiceService";
+    String NAME = "invoiceService";
 
     /**
      * <p>
@@ -27,7 +27,7 @@ public interface InvoiceService {
      * @param invoiceDAO
      *            a {@link net.sourceforge.seqware.common.dao.InvoiceDAO} object.
      */
-    public void setInvoiceDAO(InvoiceDAO invoiceDAO);
+    void setInvoiceDAO(InvoiceDAO invoiceDAO);
 
     /**
      * Inserts a new Invoice and returns its sw_accession number.
@@ -36,7 +36,7 @@ public interface InvoiceService {
      *            Invoice to be inserted.
      * @return The SeqWare Accession number for the newly inserted invoice.
      */
-    public Integer insert(Invoice invoice);
+    Integer insert(Invoice invoice);
 
     /**
      * <p>
@@ -49,7 +49,7 @@ public interface InvoiceService {
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Invoice invoice);
+    Integer insert(Registration registration, Invoice invoice);
 
     /**
      * <p>
@@ -59,7 +59,7 @@ public interface InvoiceService {
      * @param invoice
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public void update(Invoice invoice);
+    void update(Invoice invoice);
 
     /**
      * <p>
@@ -71,7 +71,7 @@ public interface InvoiceService {
      * @param invoice
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public void update(Registration registration, Invoice invoice);
+    void update(Registration registration, Invoice invoice);
 
     /**
      * <p>
@@ -81,7 +81,7 @@ public interface InvoiceService {
      * @param invoice
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public void delete(Invoice invoice);
+    void delete(Invoice invoice);
 
     /**
      * <p>
@@ -90,7 +90,7 @@ public interface InvoiceService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Invoice> list();
+    List<Invoice> list();
 
     /**
      * <p>
@@ -101,7 +101,7 @@ public interface InvoiceService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Invoice> list(Registration registration);
+    List<Invoice> list(Registration registration);
 
     /**
      * <p>
@@ -114,7 +114,7 @@ public interface InvoiceService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Invoice> list(Registration registration, InvoiceState state);
+    List<Invoice> list(Registration registration, InvoiceState state);
 
     /**
      * <p>
@@ -125,7 +125,7 @@ public interface InvoiceService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public Invoice findByID(Integer iID);
+    Invoice findByID(Integer iID);
 
     /**
      * <p>
@@ -138,7 +138,7 @@ public interface InvoiceService {
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      * @return a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public Invoice updateDetached(Registration registration, Invoice invoice);
+    Invoice updateDetached(Registration registration, Invoice invoice);
 
     /**
      * <p>
@@ -149,7 +149,7 @@ public interface InvoiceService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public Invoice findBySWAccession(Integer swAccession);
+    Invoice findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -160,6 +160,6 @@ public interface InvoiceService {
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      * @return a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public Invoice updateDetached(Invoice invoice);
+    Invoice updateDetached(Invoice invoice);
 
 }

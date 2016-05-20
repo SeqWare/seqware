@@ -428,7 +428,7 @@ public class LaneDAOHibernate extends HibernateDaoSupport implements LaneDAO {
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, lane);
-            return (Lane) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached lane", e);
         }

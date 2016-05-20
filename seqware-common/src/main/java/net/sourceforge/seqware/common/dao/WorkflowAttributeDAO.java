@@ -21,7 +21,7 @@ public interface WorkflowAttributeDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowAttribute> getAll();
+    List<WorkflowAttribute> getAll();
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface WorkflowAttributeDAO {
      *            a {@link net.sourceforge.seqware.common.model.Workflow} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowAttribute> get(Workflow workflow);
+    List<WorkflowAttribute> get(Workflow workflow);
 
     /**
      * <p>
@@ -43,7 +43,7 @@ public interface WorkflowAttributeDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowAttribute} object.
      */
-    public WorkflowAttribute get(Integer id);
+    WorkflowAttribute get(Integer id);
 
     /**
      * <p>
@@ -54,7 +54,7 @@ public interface WorkflowAttributeDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowAttribute} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer add(WorkflowAttribute workflowAttribute);
+    Integer add(WorkflowAttribute workflowAttribute);
 
     /**
      * <p>
@@ -64,7 +64,7 @@ public interface WorkflowAttributeDAO {
      * @param workflowAttribute
      *            a {@link net.sourceforge.seqware.common.model.WorkflowAttribute} object.
      */
-    public void update(WorkflowAttribute workflowAttribute);
+    void update(WorkflowAttribute workflowAttribute);
 
     /**
      * <p>
@@ -74,6 +74,6 @@ public interface WorkflowAttributeDAO {
      * @param workflowAttribute
      *            a {@link net.sourceforge.seqware.common.model.WorkflowAttribute} object.
      */
-    public void delete(WorkflowAttribute workflowAttribute);
+    void delete(WorkflowAttribute workflowAttribute);
 
 }

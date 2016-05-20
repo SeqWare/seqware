@@ -201,7 +201,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
         Object[] parameters = { swAccession };
         List<IUS> list = (List<IUS>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            obj = (IUS) list.get(0);
+            obj = list.get(0);
         }
         return obj;
     }
@@ -233,7 +233,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, ius);
-            return (IUS) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             logger.error("Error updating detached ius", e);
         }

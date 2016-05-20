@@ -21,7 +21,7 @@ public interface LibrarySourceDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<LibrarySource> list();
+    List<LibrarySource> list();
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface LibrarySourceDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<LibrarySource> list(Registration registration);
+    List<LibrarySource> list(Registration registration);
 
     /**
      * <p>
@@ -43,7 +43,7 @@ public interface LibrarySourceDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySource} object.
      */
-    public LibrarySource findByID(Integer id);
+    LibrarySource findByID(Integer id);
 
     /**
      * <p>
@@ -54,5 +54,5 @@ public interface LibrarySourceDAO {
      *            a {@link net.sourceforge.seqware.common.model.LibrarySource} object.
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySource} object.
      */
-    public LibrarySource updateDetached(LibrarySource librarySource);
+    LibrarySource updateDetached(LibrarySource librarySource);
 }

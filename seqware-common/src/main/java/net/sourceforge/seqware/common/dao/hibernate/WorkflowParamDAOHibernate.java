@@ -74,7 +74,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, workflowParam);
-            return (WorkflowParam) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached WorkflowParam", e);
         }

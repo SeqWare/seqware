@@ -249,7 +249,7 @@ public class SequencerRunDAOHibernate extends HibernateDaoSupport implements Seq
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, sequencerRun);
-            return (SequencerRun) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached SequencerRun", e);
         }

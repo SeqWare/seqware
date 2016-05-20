@@ -151,7 +151,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
         Object[] parameters = { swAccession };
         List<File> list = (List<File>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            file = (File) list.get(0);
+            file = list.get(0);
         }
         return file;
     }
@@ -261,7 +261,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, file);
-            return (File) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Could not update detached file", e);
         }

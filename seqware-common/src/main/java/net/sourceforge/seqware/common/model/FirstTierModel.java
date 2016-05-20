@@ -28,5 +28,5 @@ public interface FirstTierModel {
      * 
      * @return
      */
-    public Integer getSwAccession();
+    Integer getSwAccession();
 }

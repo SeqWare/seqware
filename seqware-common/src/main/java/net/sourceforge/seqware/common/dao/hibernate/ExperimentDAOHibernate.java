@@ -648,7 +648,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
         Object[] parameters = { swAccession };
         List<Experiment> list = (List<Experiment>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            experiment = (Experiment) list.get(0);
+            experiment = list.get(0);
         }
         return experiment;
     }
@@ -660,7 +660,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, experiment);
-            return (Experiment) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Could not update detached experiment", e);
         }

@@ -125,7 +125,7 @@ public class WorkflowRunParamDAOHibernate extends HibernateDaoSupport implements
     /** {@inheritDoc} */
     @Override
     public WorkflowRunParam updateDetached(WorkflowRunParam workflowRunParam) {
-        return (WorkflowRunParam) this.getHibernateTemplate().merge(workflowRunParam);
+        return this.getHibernateTemplate().merge(workflowRunParam);
     }
 
     /** {@inheritDoc} */

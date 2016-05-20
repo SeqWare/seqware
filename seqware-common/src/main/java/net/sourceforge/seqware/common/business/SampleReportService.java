@@ -19,7 +19,7 @@ import net.sourceforge.seqware.common.model.Workflow;
  * @version $Id: $Id
  */
 public interface SampleReportService {
-    public enum Status {
+    enum Status {
         notstarted, pending, running, failed, completed
     }
 

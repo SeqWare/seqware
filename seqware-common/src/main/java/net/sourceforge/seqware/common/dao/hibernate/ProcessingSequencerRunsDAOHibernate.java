@@ -77,7 +77,7 @@ public class ProcessingSequencerRunsDAOHibernate extends HibernateDaoSupport imp
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, processingSequencerRuns);
-            return (ProcessingSequencerRuns) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

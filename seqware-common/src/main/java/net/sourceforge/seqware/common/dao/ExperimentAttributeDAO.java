@@ -22,7 +22,7 @@ public interface ExperimentAttributeDAO {
      * @param experimentAttribute
      *            a {@link net.sourceforge.seqware.common.model.ExperimentAttribute} object.
      */
-    public abstract void insert(ExperimentAttribute experimentAttribute);
+    void insert(ExperimentAttribute experimentAttribute);
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface ExperimentAttributeDAO {
      * @param experimentAttribute
      *            a {@link net.sourceforge.seqware.common.model.ExperimentAttribute} object.
      */
-    public abstract void update(ExperimentAttribute experimentAttribute);
+    void update(ExperimentAttribute experimentAttribute);
 
     /**
      * <p>
@@ -42,7 +42,7 @@ public interface ExperimentAttributeDAO {
      * @param experimentAttribute
      *            a {@link net.sourceforge.seqware.common.model.ExperimentAttribute} object.
      */
-    public abstract void delete(ExperimentAttribute experimentAttribute);
+    void delete(ExperimentAttribute experimentAttribute);
 
     /**
      * <p>
@@ -53,8 +53,7 @@ public interface ExperimentAttributeDAO {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link java.util.List} object.
      */
-    @SuppressWarnings("unchecked")
-    public abstract List<ExperimentAttribute> findAll(Experiment experiment);
+    @SuppressWarnings("unchecked") List<ExperimentAttribute> findAll(Experiment experiment);
 
     /**
      * <p>
@@ -63,6 +62,6 @@ public interface ExperimentAttributeDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ExperimentAttribute> list();
+    List<ExperimentAttribute> list();
 
 }

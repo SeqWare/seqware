@@ -106,7 +106,7 @@ public class StudyTypeDAOHibernate extends HibernateDaoSupport implements StudyT
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, studyType);
-            return (StudyType) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

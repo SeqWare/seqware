@@ -15,7 +15,7 @@ import net.sourceforge.seqware.common.model.Registration;
  */
 public interface PlatformService {
     /** Constant <code>NAME="PlatformService"</code> */
-    public static final String NAME = "PlatformService";
+    String NAME = "PlatformService";
 
     /**
      * <p>
@@ -25,7 +25,7 @@ public interface PlatformService {
      * @param platformDAO
      *            a {@link net.sourceforge.seqware.common.dao.PlatformDAO} object.
      */
-    public void setPlatformDAO(PlatformDAO platformDAO);
+    void setPlatformDAO(PlatformDAO platformDAO);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface PlatformService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Platform> list();
+    List<Platform> list();
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface PlatformService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Platform> list(Registration registration);
+    List<Platform> list(Registration registration);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface PlatformService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
-    public Platform findByID(Integer id);
+    Platform findByID(Integer id);
 
     /**
      * <p>

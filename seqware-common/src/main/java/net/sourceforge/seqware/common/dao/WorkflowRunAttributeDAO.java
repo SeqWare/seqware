@@ -21,7 +21,7 @@ public interface WorkflowRunAttributeDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRunAttribute> getAll();
+    List<WorkflowRunAttribute> getAll();
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface WorkflowRunAttributeDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRunAttribute> get(WorkflowRun workflowRun);
+    List<WorkflowRunAttribute> get(WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -43,7 +43,7 @@ public interface WorkflowRunAttributeDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRunAttribute} object.
      */
-    public WorkflowRunAttribute get(Integer id);
+    WorkflowRunAttribute get(Integer id);
 
     /**
      * <p>
@@ -54,7 +54,7 @@ public interface WorkflowRunAttributeDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunAttribute} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer add(WorkflowRunAttribute workflowRunAttribute);
+    Integer add(WorkflowRunAttribute workflowRunAttribute);
 
     /**
      * <p>
@@ -64,7 +64,7 @@ public interface WorkflowRunAttributeDAO {
      * @param workflowRunAttribute
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunAttribute} object.
      */
-    public void update(WorkflowRunAttribute workflowRunAttribute);
+    void update(WorkflowRunAttribute workflowRunAttribute);
 
     /**
      * <p>
@@ -74,6 +74,6 @@ public interface WorkflowRunAttributeDAO {
      * @param workflowRunAttribute
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunAttribute} object.
      */
-    public void delete(WorkflowRunAttribute workflowRunAttribute);
+    void delete(WorkflowRunAttribute workflowRunAttribute);
 
 }

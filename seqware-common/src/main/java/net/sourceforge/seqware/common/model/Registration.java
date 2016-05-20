@@ -460,11 +460,8 @@ public class Registration extends PermissionsAware implements Serializable, Comp
         boolean hasPermission;
         if (registration == null) {
             hasPermission = false;
-        } else if (registration.equals(this) || registration.isLIMSAdmin()) {
-            hasPermission = true;
-        } else {
-            hasPermission = false;
-        }
+        } else
+            hasPermission = registration.equals(this) || registration.isLIMSAdmin();
         if (!hasPermission) {
             logger.info("Registration does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " not permitted to modify the account of "

@@ -1104,7 +1104,7 @@ public class StudyDAOHibernate extends HibernateDaoSupport implements StudyDAO {
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, study);
-            return (Study) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached study", e);
         }

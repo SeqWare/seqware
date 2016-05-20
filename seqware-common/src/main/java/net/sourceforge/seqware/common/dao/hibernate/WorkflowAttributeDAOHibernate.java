@@ -49,7 +49,7 @@ public class WorkflowAttributeDAOHibernate implements WorkflowAttributeDAO {
     /** {@inheritDoc} */
     @Override
     public WorkflowAttribute get(Integer id) {
-        return (WorkflowAttribute) currentSession().get(WorkflowAttribute.class, id);
+        return currentSession().get(WorkflowAttribute.class, id);
     }
 
     /** {@inheritDoc} */

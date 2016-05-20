@@ -14,7 +14,7 @@ import net.sourceforge.seqware.common.model.ExperimentSpotDesign;
  */
 public interface ExperimentSpotDesignService {
     /** Constant <code>NAME="ExperimentSpotDesignService"</code> */
-    public static final String NAME = "ExperimentSpotDesignService";
+    String NAME = "ExperimentSpotDesignService";
 
     /**
      * <p>
@@ -24,7 +24,7 @@ public interface ExperimentSpotDesignService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ExperimentSpotDesignDAO} object.
      */
-    public void setExperimentSpotDesignDAO(ExperimentSpotDesignDAO dao);
+    void setExperimentSpotDesignDAO(ExperimentSpotDesignDAO dao);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface ExperimentSpotDesignService {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
-    public void insert(ExperimentSpotDesign obj);
+    void insert(ExperimentSpotDesign obj);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface ExperimentSpotDesignService {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
-    public void update(ExperimentSpotDesign obj);
+    void update(ExperimentSpotDesign obj);
 
     /**
      * <p>
@@ -55,7 +55,7 @@ public interface ExperimentSpotDesignService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
-    public ExperimentSpotDesign findByID(Integer expID);
+    ExperimentSpotDesign findByID(Integer expID);
 
     /**
      * <p>
@@ -75,7 +75,7 @@ public interface ExperimentSpotDesignService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ExperimentSpotDesign> list();
+    List<ExperimentSpotDesign> list();
 
 }
 

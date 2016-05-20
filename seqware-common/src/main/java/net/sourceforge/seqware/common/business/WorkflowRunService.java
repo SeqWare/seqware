@@ -25,7 +25,7 @@ import net.sourceforge.seqware.common.model.WorkflowRunParam;
 public interface WorkflowRunService {
 
     /** Constant <code>NAME="WorkflowRunService"</code> */
-    public static final String NAME = "WorkflowRunService";
+    String NAME = "WorkflowRunService";
 
     /**
      * <p>
@@ -35,7 +35,7 @@ public interface WorkflowRunService {
      * @param workflowRunDAO
      *            a {@link net.sourceforge.seqware.common.dao.WorkflowRunDAO} object.
      */
-    public void setWorkflowRunDAO(WorkflowRunDAO workflowRunDAO);
+    void setWorkflowRunDAO(WorkflowRunDAO workflowRunDAO);
 
     /**
      * Inserts a new WorkflowRun and returns its sw_accession number.
@@ -44,7 +44,7 @@ public interface WorkflowRunService {
      *            Workflow run to be inserted.
      * @return The SeqWare Accession number for the newly inserted workflow.
      */
-    public Integer insert(WorkflowRun workflowRun);
+    Integer insert(WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -57,7 +57,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, WorkflowRun workflowRun);
+    Integer insert(Registration registration, WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface WorkflowRunService {
      * @param workflowRun
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public void update(WorkflowRun workflowRun);
+    void update(WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -77,7 +77,7 @@ public interface WorkflowRunService {
      * @param workflowRun
      * @param deleteRealFiles
      */
-    public void delete(WorkflowRun workflowRun, boolean deleteRealFiles);
+    void delete(WorkflowRun workflowRun, boolean deleteRealFiles);
 
     /**
      * <p>
@@ -92,7 +92,7 @@ public interface WorkflowRunService {
      *            a {@link java.util.Map} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(WorkflowRun workflowRun, SortedSet<WorkflowRunParam> workflowRunParams, Map<String, List<File>> allSelectedFiles);
+    Integer insert(WorkflowRun workflowRun, SortedSet<WorkflowRunParam> workflowRunParams, Map<String, List<File>> allSelectedFiles);
 
     /**
      * <p>
@@ -109,7 +109,7 @@ public interface WorkflowRunService {
      *            a {@link java.util.Map} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, WorkflowRun workflowRun, SortedSet<WorkflowRunParam> workflowRunParams,
+    Integer insert(Registration registration, WorkflowRun workflowRun, SortedSet<WorkflowRunParam> workflowRunParams,
             Map<String, List<File>> allSelectedFiles);
 
     /**
@@ -122,7 +122,7 @@ public interface WorkflowRunService {
      * @param laneIds
      *            a {@link java.util.List} object.
      */
-    public void update(WorkflowRun workflowRun, List<Integer> laneIds);
+    void update(WorkflowRun workflowRun, List<Integer> laneIds);
 
     /**
      * <p>
@@ -136,7 +136,7 @@ public interface WorkflowRunService {
      * @param laneIds
      *            a {@link java.util.List} object.
      */
-    public void update(Registration registration, WorkflowRun workflowRun, List<Integer> laneIds);
+    void update(Registration registration, WorkflowRun workflowRun, List<Integer> laneIds);
 
     /**
      * <p>
@@ -148,7 +148,7 @@ public interface WorkflowRunService {
      * @param workflowRun
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public void update(Registration registration, WorkflowRun workflowRun);
+    void update(Registration registration, WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -157,7 +157,7 @@ public interface WorkflowRunService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> list();
+    List<WorkflowRun> list();
 
     /**
      * <p>
@@ -168,7 +168,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> list(Registration registration);
+    List<WorkflowRun> list(Registration registration);
 
     /**
      * <p>
@@ -179,7 +179,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listMyShared(Registration registration);
+    List<WorkflowRun> listMyShared(Registration registration);
 
     /**
      * <p>
@@ -190,7 +190,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listSharedWithMe(Registration registration);
+    List<WorkflowRun> listSharedWithMe(Registration registration);
 
     /**
      * <p>
@@ -201,7 +201,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listSharedWithMeWithSample(Registration registration);
+    List<WorkflowRun> listSharedWithMeWithSample(Registration registration);
 
     /**
      * <p>
@@ -212,7 +212,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listRunning(Registration registration);
+    List<WorkflowRun> listRunning(Registration registration);
 
     /**
      * <p>
@@ -225,7 +225,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> list(Registration registration, Boolean isAsc);
+    List<WorkflowRun> list(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -238,7 +238,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc);
+    List<WorkflowRun> listMyShared(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -251,7 +251,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc);
+    List<WorkflowRun> listSharedWithMe(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -264,7 +264,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listRunning(Registration registration, Boolean isAsc);
+    List<WorkflowRun> listRunning(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -275,7 +275,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun findByName(String name);
+    WorkflowRun findByName(String name);
 
     /**
      * <p>
@@ -286,7 +286,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun findByID(Integer wfrID);
+    WorkflowRun findByID(Integer wfrID);
 
     /**
      * <p>
@@ -297,7 +297,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun findByIDWithIUS(Integer wfrID);
+    WorkflowRun findByIDWithIUS(Integer wfrID);
 
     /**
      * <p>
@@ -308,7 +308,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun findByIDWithIUSAndRunningWR(Integer wfrID);
+    WorkflowRun findByIDWithIUSAndRunningWR(Integer wfrID);
 
     /**
      * <p>
@@ -319,7 +319,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun findBySWAccession(Integer swAccession);
+    WorkflowRun findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -330,7 +330,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> findByOwnerID(Integer registrationID);
+    List<WorkflowRun> findByOwnerID(Integer registrationID);
 
     /**
      * <p>
@@ -341,7 +341,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing getRootProcessing(Integer wfrId);
+    Processing getRootProcessing(Integer wfrId);
 
     /**
      * <p>
@@ -352,7 +352,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer wfrId);
+    List<File> getFiles(Integer wfrId);
 
     /**
      * <p>
@@ -363,7 +363,7 @@ public interface WorkflowRunService {
      *            a {@link java.util.List} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> listWithHasFile(List<WorkflowRun> list);
+    List<WorkflowRun> listWithHasFile(List<WorkflowRun> list);
 
     /**
      * <p>
@@ -374,7 +374,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun updateDetached(WorkflowRun workflowRun);
+    WorkflowRun updateDetached(WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -387,7 +387,7 @@ public interface WorkflowRunService {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> findByCriteria(String criteria, boolean isCaseSens);
+    List<WorkflowRun> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -398,7 +398,7 @@ public interface WorkflowRunService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> findByCriteria(String criteria);
+    List<WorkflowRun> findByCriteria(String criteria);
 
     /**
      * <p>
@@ -409,7 +409,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Workflow> listRelatedWorkflows(Registration registration);
+    List<Workflow> listRelatedWorkflows(Registration registration);
 
     /**
      * <p>
@@ -420,7 +420,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      * @return a {@link java.util.Set} object.
      */
-    public Set<WorkflowRun> findRunsForIUS(IUS ius);
+    Set<WorkflowRun> findRunsForIUS(IUS ius);
 
     /**
      * Find all the workflow runs for the specific sample. This function doesn't look into the nested samples.
@@ -429,7 +429,7 @@ public interface WorkflowRunService {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link java.util.Set} object.
      */
-    public Set<WorkflowRun> findRunsForSample(Sample sample);
+    Set<WorkflowRun> findRunsForSample(Sample sample);
 
     /**
      * <p>
@@ -440,5 +440,5 @@ public interface WorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> findFiles(Integer swAccession);
+    List<File> findFiles(Integer swAccession);
 }

@@ -64,7 +64,7 @@ public class LibraryStrategyDAOHibernate extends HibernateDaoSupport implements 
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, strategy);
-            return (LibraryStrategy) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

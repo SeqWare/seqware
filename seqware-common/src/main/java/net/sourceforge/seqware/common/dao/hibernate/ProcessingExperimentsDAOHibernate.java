@@ -60,7 +60,7 @@ public class ProcessingExperimentsDAOHibernate extends HibernateDaoSupport imple
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, processingExperiments);
-            return (ProcessingExperiments) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

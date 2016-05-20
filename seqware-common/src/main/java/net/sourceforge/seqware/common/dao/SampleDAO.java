@@ -26,7 +26,7 @@ public interface SampleDAO {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Sample sample);
+    Integer insert(Sample sample);
 
     /**
      * <p>
@@ -39,7 +39,7 @@ public interface SampleDAO {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Sample sample);
+    Integer insert(Registration registration, Sample sample);
 
     /**
      * <p>
@@ -49,7 +49,7 @@ public interface SampleDAO {
      * @param sample
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public void update(Sample sample);
+    void update(Sample sample);
 
     /**
      * <p>
@@ -61,7 +61,7 @@ public interface SampleDAO {
      * @param sample
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public void update(Registration registration, Sample sample);
+    void update(Registration registration, Sample sample);
 
     /**
      * <p>
@@ -71,7 +71,7 @@ public interface SampleDAO {
      * @param sample
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public void delete(Sample sample);
+    void delete(Sample sample);
 
     /**
      * <p>
@@ -80,7 +80,7 @@ public interface SampleDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> listComplete();
+    List<Sample> listComplete();
 
     /**
      * <p>
@@ -89,7 +89,7 @@ public interface SampleDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> listIncomplete();
+    List<Sample> listIncomplete();
 
     /**
      * <p>
@@ -100,7 +100,7 @@ public interface SampleDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample findByName(String name);
+    Sample findByName(String name);
 
     /**
      * <p>
@@ -111,7 +111,7 @@ public interface SampleDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public List<Sample> matchName(String name);
+    List<Sample> matchName(String name);
 
     /**
      * <p>
@@ -122,7 +122,7 @@ public interface SampleDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample findByTitle(String title);
+    Sample findByTitle(String title);
 
     /**
      * <p>
@@ -133,7 +133,7 @@ public interface SampleDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample findByID(Integer sampleId);
+    Sample findByID(Integer sampleId);
 
     /**
      * <p>
@@ -144,7 +144,7 @@ public interface SampleDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> listSample(Registration registration);
+    List<Sample> listSample(Registration registration);
 
     /**
      * <p>
@@ -155,7 +155,7 @@ public interface SampleDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer sampleId);
+    List<File> getFiles(Integer sampleId);
 
     /**
      * <p>
@@ -166,7 +166,7 @@ public interface SampleDAO {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer sampleId);
+    boolean isHasFile(Integer sampleId);
 
     /**
      * <p>
@@ -179,7 +179,7 @@ public interface SampleDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer sampleId, String metaType);
+    List<File> getFiles(Integer sampleId, String metaType);
 
     /**
      * <p>
@@ -192,7 +192,7 @@ public interface SampleDAO {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer sampleId, String metaType);
+    boolean isHasFile(Integer sampleId, String metaType);
 
     /**
      * <p>
@@ -203,7 +203,7 @@ public interface SampleDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.Map} object.
      */
-    public Map<Integer, Integer> getCountFiles(Integer expId);
+    Map<Integer, Integer> getCountFiles(Integer expId);
 
     /**
      * <p>
@@ -216,7 +216,7 @@ public interface SampleDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.Map} object.
      */
-    public Map<Integer, Integer> getCountFiles(Integer expId, String metaType);
+    Map<Integer, Integer> getCountFiles(Integer expId, String metaType);
 
     /**
      * <p>
@@ -227,7 +227,7 @@ public interface SampleDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample findBySWAccession(Integer swAccession);
+    Sample findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -238,7 +238,7 @@ public interface SampleDAO {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample updateDetached(Sample sample);
+    Sample updateDetached(Sample sample);
 
     /**
      * <p>
@@ -251,7 +251,7 @@ public interface SampleDAO {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample updateDetached(Registration registration, Sample sample);
+    Sample updateDetached(Registration registration, Sample sample);
 
     /**
      * <p>
@@ -262,7 +262,7 @@ public interface SampleDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> findByOwnerID(Integer registrationId);
+    List<Sample> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -275,7 +275,7 @@ public interface SampleDAO {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> findByCriteria(String criteria, boolean isCaseSens);
+    List<Sample> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -286,7 +286,7 @@ public interface SampleDAO {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> getRootSamples(Study study);
+    List<Sample> getRootSamples(Study study);
 
     /**
      * <p>
@@ -297,7 +297,7 @@ public interface SampleDAO {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample getRootSample(Sample sample);
+    Sample getRootSample(Sample sample);
 
     /**
      * <p>
@@ -306,5 +306,5 @@ public interface SampleDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> list();
+    List<Sample> list();
 }

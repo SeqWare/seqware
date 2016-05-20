@@ -190,7 +190,7 @@ public class WorkflowDAOHibernate extends HibernateDaoSupport implements Workflo
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, workflow);
-            return (Workflow) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached workflow", e);
         }

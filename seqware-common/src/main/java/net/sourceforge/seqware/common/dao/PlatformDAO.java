@@ -22,7 +22,7 @@ public interface PlatformDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Platform> list(Registration registration);
+    List<Platform> list(Registration registration);
 
     /**
      * <p>
@@ -33,7 +33,7 @@ public interface PlatformDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
-    public Platform findByID(Integer id);
+    Platform findByID(Integer id);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface PlatformDAO {
      *            a {@link net.sourceforge.seqware.common.model.Platform} object.
      * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
-    public Platform updateDetached(Platform platform);
+    Platform updateDetached(Platform platform);
 
     /**
      * <p>
@@ -53,5 +53,5 @@ public interface PlatformDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Platform> list();
+    List<Platform> list();
 }

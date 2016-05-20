@@ -22,7 +22,7 @@ public interface IUSAttributeDAO {
      * @param IUSAttribute
      *            a {@link net.sourceforge.seqware.common.model.IUSAttribute} object.
      */
-    public abstract void insert(IUSAttribute IUSAttribute);
+    void insert(IUSAttribute IUSAttribute);
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface IUSAttributeDAO {
      * @param IUSAttribute
      *            a {@link net.sourceforge.seqware.common.model.IUSAttribute} object.
      */
-    public abstract void update(IUSAttribute IUSAttribute);
+    void update(IUSAttribute IUSAttribute);
 
     /**
      * <p>
@@ -42,7 +42,7 @@ public interface IUSAttributeDAO {
      * @param IUSAttribute
      *            a {@link net.sourceforge.seqware.common.model.IUSAttribute} object.
      */
-    public abstract void delete(IUSAttribute IUSAttribute);
+    void delete(IUSAttribute IUSAttribute);
 
     /**
      * <p>
@@ -53,8 +53,7 @@ public interface IUSAttributeDAO {
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      * @return a {@link java.util.List} object.
      */
-    @SuppressWarnings("unchecked")
-    public abstract List<IUSAttribute> findAll(IUS ius);
+    @SuppressWarnings("unchecked") List<IUSAttribute> findAll(IUS ius);
 
     /**
      * <p>
@@ -63,6 +62,6 @@ public interface IUSAttributeDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<IUSAttribute> list();
+    List<IUSAttribute> list();
 
 }

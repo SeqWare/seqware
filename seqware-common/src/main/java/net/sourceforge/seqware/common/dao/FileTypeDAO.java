@@ -19,7 +19,7 @@ public interface FileTypeDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<FileType> list();
+    List<FileType> list();
 
     /**
      * <p>
@@ -30,7 +30,7 @@ public interface FileTypeDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.FileType} object.
      */
-    public FileType findByID(Integer id);
+    FileType findByID(Integer id);
 
     /**
      * <p>
@@ -41,5 +41,5 @@ public interface FileTypeDAO {
      *            a {@link net.sourceforge.seqware.common.model.FileType} object.
      * @return a {@link net.sourceforge.seqware.common.model.FileType} object.
      */
-    public FileType updateDetached(FileType fileType);
+    FileType updateDetached(FileType fileType);
 }

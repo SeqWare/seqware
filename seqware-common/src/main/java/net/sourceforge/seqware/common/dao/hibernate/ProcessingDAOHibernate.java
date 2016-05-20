@@ -292,7 +292,7 @@ public class ProcessingDAOHibernate extends HibernateDaoSupport implements Proce
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, processing);
-            return (Processing) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached processing", e);
         }
