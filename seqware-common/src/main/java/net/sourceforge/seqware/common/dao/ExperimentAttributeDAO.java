@@ -1,8 +1,9 @@
 package net.sourceforge.seqware.common.dao;
 
-import java.util.List;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
+
+import java.util.List;
 
 /**
  * <p>
