@@ -16,7 +16,7 @@ import net.sourceforge.seqware.common.model.WorkflowRunParam;
 public interface WorkflowRunParamService {
 
     /** Constant <code>NAME="WorkflowRunParamService"</code> */
-    public static final String NAME = "WorkflowRunParamService";
+    String NAME = "WorkflowRunParamService";
 
     /**
      * <p>
@@ -26,7 +26,7 @@ public interface WorkflowRunParamService {
      * @param workflowRunParamDAO
      *            a {@link net.sourceforge.seqware.common.dao.WorkflowRunParamDAO} object.
      */
-    public void setWorkflowRunParamDAO(WorkflowRunParamDAO workflowRunParamDAO);
+    void setWorkflowRunParamDAO(WorkflowRunParamDAO workflowRunParamDAO);
 
     /**
      * <p>
@@ -36,7 +36,7 @@ public interface WorkflowRunParamService {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void insert(WorkflowRunParam workflowRunParam);
+    void insert(WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -48,7 +48,7 @@ public interface WorkflowRunParamService {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void insert(Registration registration, WorkflowRunParam workflowRunParam);
+    void insert(Registration registration, WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -58,7 +58,7 @@ public interface WorkflowRunParamService {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void update(WorkflowRunParam workflowRunParam);
+    void update(WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -70,7 +70,7 @@ public interface WorkflowRunParamService {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void update(Registration registration, WorkflowRunParam workflowRunParam);
+    void update(Registration registration, WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -80,7 +80,7 @@ public interface WorkflowRunParamService {
      * @param workflowRunParam
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRunParam} object.
      */
-    public void delete(WorkflowRunParam workflowRunParam);
+    void delete(WorkflowRunParam workflowRunParam);
 
     /**
      * <p>
@@ -113,5 +113,5 @@ public interface WorkflowRunParamService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRunParam> list();
+    List<WorkflowRunParam> list();
 }

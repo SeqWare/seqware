@@ -19,7 +19,7 @@ import net.sourceforge.seqware.common.model.Study;
 public interface SampleService {
 
     /** Constant <code>NAME="sampleService"</code> */
-    public static final String NAME = "sampleService";
+    String NAME = "sampleService";
 
     /**
      * <p>
@@ -29,7 +29,7 @@ public interface SampleService {
      * @param sampleDAO
      *            a {@link net.sourceforge.seqware.common.dao.SampleDAO} object.
      */
-    public void setSampleDAO(SampleDAO sampleDAO);
+    void setSampleDAO(SampleDAO sampleDAO);
 
     /**
      * <p>
@@ -40,7 +40,7 @@ public interface SampleService {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Sample sample);
+    Integer insert(Sample sample);
 
     /**
      * <p>
@@ -53,7 +53,7 @@ public interface SampleService {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Sample sample);
+    Integer insert(Registration registration, Sample sample);
 
     /**
      * <p>
@@ -63,7 +63,7 @@ public interface SampleService {
      * @param sample
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public void update(Sample sample);
+    void update(Sample sample);
 
     /**
      * <p>
@@ -75,7 +75,7 @@ public interface SampleService {
      * @param sample
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public void update(Registration registration, Sample sample);
+    void update(Registration registration, Sample sample);
 
     /**
      * <p>
@@ -85,7 +85,7 @@ public interface SampleService {
      * @param sample
      * @param deleteRealFiles
      */
-    public void delete(Sample sample, boolean deleteRealFiles);
+    void delete(Sample sample, boolean deleteRealFiles);
 
     /**
      * <p>
@@ -96,9 +96,9 @@ public interface SampleService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample findByName(String name);
+    Sample findByName(String name);
 
-    public List<Sample> matchName(String name);
+    List<Sample> matchName(String name);
 
     /**
      * <p>
@@ -109,7 +109,7 @@ public interface SampleService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample findByTitle(String title);
+    Sample findByTitle(String title);
 
     /**
      * <p>
@@ -120,7 +120,7 @@ public interface SampleService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample findByID(Integer id);
+    Sample findByID(Integer id);
 
     /**
      * <p>
@@ -131,7 +131,7 @@ public interface SampleService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample findBySWAccession(Integer swAccession);
+    Sample findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -140,7 +140,7 @@ public interface SampleService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> listComplete();
+    List<Sample> listComplete();
 
     /**
      * <p>
@@ -149,7 +149,7 @@ public interface SampleService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> listIncomplete();
+    List<Sample> listIncomplete();
 
     /**
      * <p>
@@ -162,7 +162,7 @@ public interface SampleService {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean hasNameBeenUsed(String oldName, String newName);
+    boolean hasNameBeenUsed(String oldName, String newName);
 
     /**
      * <p>
@@ -173,7 +173,7 @@ public interface SampleService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> listSample(Registration registration);
+    List<Sample> listSample(Registration registration);
 
     /**
      * <p>
@@ -184,7 +184,7 @@ public interface SampleService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer sampleId);
+    List<File> getFiles(Integer sampleId);
 
     /**
      * <p>
@@ -195,7 +195,7 @@ public interface SampleService {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer sampleId);
+    boolean isHasFile(Integer sampleId);
 
     /**
      * <p>
@@ -208,7 +208,7 @@ public interface SampleService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer studyId, String metaType);
+    List<File> getFiles(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -221,7 +221,7 @@ public interface SampleService {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer studyId, String metaType);
+    boolean isHasFile(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -234,7 +234,7 @@ public interface SampleService {
      *            a {@link java.util.SortedSet} object.
      * @return a {@link java.util.SortedSet} object.
      */
-    public SortedSet<Sample> setWithHasFile(Integer expId, SortedSet<Sample> list);
+    SortedSet<Sample> setWithHasFile(Integer expId, SortedSet<Sample> list);
 
     /**
      * <p>
@@ -249,7 +249,7 @@ public interface SampleService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.SortedSet} object.
      */
-    public SortedSet<Sample> listWithHasFile(Integer expId, SortedSet<Sample> list, String metaType);
+    SortedSet<Sample> listWithHasFile(Integer expId, SortedSet<Sample> list, String metaType);
 
     /**
      * <p>
@@ -260,7 +260,7 @@ public interface SampleService {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample updateDetached(Sample sample);
+    Sample updateDetached(Sample sample);
 
     /**
      * <p>
@@ -273,7 +273,7 @@ public interface SampleService {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample updateDetached(Registration registration, Sample sample);
+    Sample updateDetached(Registration registration, Sample sample);
 
     /**
      * <p>
@@ -284,7 +284,7 @@ public interface SampleService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> findByOwnerID(Integer registrationId);
+    List<Sample> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -297,7 +297,7 @@ public interface SampleService {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> findByCriteria(String criteria, boolean isCaseSens);
+    List<Sample> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -308,7 +308,7 @@ public interface SampleService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> getRootSamples(Study study);
+    List<Sample> getRootSamples(Study study);
 
     /**
      * <p>
@@ -319,7 +319,7 @@ public interface SampleService {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link net.sourceforge.seqware.common.model.Sample} object.
      */
-    public Sample getRootSample(Sample childSample);
+    Sample getRootSample(Sample childSample);
 
     /**
      * <p>
@@ -328,7 +328,7 @@ public interface SampleService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Sample> list();
+    List<Sample> list();
 }
 
 // ex:sw=4:ts=4:

@@ -590,7 +590,6 @@
             <artifactId>hibernate-core</artifactId>
             <groupId>org.hibernate</groupId>
             <type>jar</type>
-            <version>3.6.6.Final</version>
             <exclusions>
                 <exclusion>
                     <groupId>antlr</groupId>
@@ -612,12 +611,14 @@
             <groupId>com.google.guava</groupId>
             <type>jar</type>
         </dependency>
+        <!--
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
-            <version>6.0</version>
+            <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+        -->
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>

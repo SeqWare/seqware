@@ -22,7 +22,7 @@ public interface LibraryStrategyDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<LibraryStrategy> list(Registration registration);
+    List<LibraryStrategy> list(Registration registration);
 
     /**
      * <p>
@@ -33,7 +33,7 @@ public interface LibraryStrategyDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.LibraryStrategy} object.
      */
-    public LibraryStrategy findByID(Integer id);
+    LibraryStrategy findByID(Integer id);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface LibraryStrategyDAO {
      *            a {@link net.sourceforge.seqware.common.model.LibraryStrategy} object.
      * @return a {@link net.sourceforge.seqware.common.model.LibraryStrategy} object.
      */
-    public LibraryStrategy updateDetached(LibraryStrategy strategy);
+    LibraryStrategy updateDetached(LibraryStrategy strategy);
 
     /**
      * <p>
@@ -53,6 +53,6 @@ public interface LibraryStrategyDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<LibraryStrategy> list();
+    List<LibraryStrategy> list();
 
 }

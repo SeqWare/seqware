@@ -25,7 +25,7 @@ public interface LaneDAO {
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      * @return
      */
-    public Integer insert(Lane lane);
+    Integer insert(Lane lane);
 
     /**
      * <p>
@@ -38,7 +38,7 @@ public interface LaneDAO {
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      * @return
      */
-    public Integer insert(Registration registration, Lane lane);
+    Integer insert(Registration registration, Lane lane);
 
     /**
      * <p>
@@ -48,7 +48,7 @@ public interface LaneDAO {
      * @param lane
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
-    public void update(Lane lane);
+    void update(Lane lane);
 
     /**
      * <p>
@@ -60,7 +60,7 @@ public interface LaneDAO {
      * @param lane
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
-    public void update(Registration registration, Lane lane);
+    void update(Registration registration, Lane lane);
 
     /**
      * <p>
@@ -70,7 +70,7 @@ public interface LaneDAO {
      * @param lane
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
-    public void delete(Lane lane);
+    void delete(Lane lane);
 
     /**
      * <p>
@@ -80,7 +80,7 @@ public interface LaneDAO {
      * @param lanes
      *            a {@link java.util.SortedSet} object.
      */
-    public void delete(SortedSet<Lane> lanes);
+    void delete(SortedSet<Lane> lanes);
 
     /**
      * <p>
@@ -91,7 +91,7 @@ public interface LaneDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
-    public Lane findByName(String name);
+    Lane findByName(String name);
 
     /**
      * <p>
@@ -102,7 +102,7 @@ public interface LaneDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
-    public Lane findByID(Integer laneId);
+    Lane findByID(Integer laneId);
 
     /**
      * <p>
@@ -113,7 +113,7 @@ public interface LaneDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer laneId);
+    List<File> getFiles(Integer laneId);
 
     /**
      * <p>
@@ -124,7 +124,7 @@ public interface LaneDAO {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer laneId);
+    boolean isHasFile(Integer laneId);
 
     /**
      * <p>
@@ -137,7 +137,7 @@ public interface LaneDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer studyId, String metaType);
+    List<File> getFiles(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -150,7 +150,7 @@ public interface LaneDAO {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer studyId, String metaType);
+    boolean isHasFile(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -161,7 +161,7 @@ public interface LaneDAO {
      *            a {@link java.util.List} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Lane> list(List<Integer> laneIds);
+    List<Lane> list(List<Integer> laneIds);
 
     /**
      * <p>
@@ -172,7 +172,7 @@ public interface LaneDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
-    public Lane findBySWAccession(Integer swAccession);
+    Lane findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -183,7 +183,7 @@ public interface LaneDAO {
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
-    public Lane updateDetached(Lane lane);
+    Lane updateDetached(Lane lane);
 
     /**
      * <p>
@@ -196,7 +196,7 @@ public interface LaneDAO {
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
-    public Lane updateDetached(Registration registration, Lane lane);
+    Lane updateDetached(Registration registration, Lane lane);
 
     /**
      * <p>
@@ -207,7 +207,7 @@ public interface LaneDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Lane> findByOwnerID(Integer registrationId);
+    List<Lane> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -220,7 +220,7 @@ public interface LaneDAO {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Lane> findByCriteria(String criteria, boolean isCaseSens);
+    List<Lane> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -229,5 +229,5 @@ public interface LaneDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Lane> list();
+    List<Lane> list();
 }

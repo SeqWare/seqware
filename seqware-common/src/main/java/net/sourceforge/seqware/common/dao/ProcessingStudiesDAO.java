@@ -26,7 +26,7 @@ public interface ProcessingStudiesDAO {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract ProcessingStudies findByProcessingStudy(Processing processing, Study study);
+    ProcessingStudies findByProcessingStudy(Processing processing, Study study);
 
     /**
      * <p>
@@ -36,7 +36,7 @@ public interface ProcessingStudiesDAO {
      * @param processingStudies
      *            a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract void delete(ProcessingStudies processingStudies);
+    void delete(ProcessingStudies processingStudies);
 
     /**
      * <p>
@@ -46,7 +46,7 @@ public interface ProcessingStudiesDAO {
      * @param processingStudies
      *            a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract void update(ProcessingStudies processingStudies);
+    void update(ProcessingStudies processingStudies);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface ProcessingStudiesDAO {
      * @param processingStudies
      *            a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract void insert(ProcessingStudies processingStudies);
+    void insert(ProcessingStudies processingStudies);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface ProcessingStudiesDAO {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract ProcessingStudies updateDetached(ProcessingStudies processingStudies);
+    ProcessingStudies updateDetached(ProcessingStudies processingStudies);
 
     /**
      * <p>
@@ -76,6 +76,6 @@ public interface ProcessingStudiesDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingStudies> list();
+    List<ProcessingStudies> list();
 
 }

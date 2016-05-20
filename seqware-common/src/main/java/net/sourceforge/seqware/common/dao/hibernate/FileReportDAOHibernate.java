@@ -7,7 +7,7 @@ import net.sourceforge.seqware.common.dao.FileReportDAO;
 import net.sourceforge.seqware.common.model.FileReportRow;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Study;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
     public List<FileReportRow> getReportForStudy(Study study, String orderField, String sortOrder, int offset, int limit) {
         String query = "from FileReportRow as row where row.study.studyId = ? order by row." + orderField + " " + sortOrder;
         List<FileReportRow> fileReport = new ArrayList<>();
-        List list = this.getSession().createQuery(query).setFirstResult(offset).setMaxResults(limit).setInteger(0, study.getStudyId())
+        List list = this.currentSession().createQuery(query).setFirstResult(offset).setMaxResults(limit).setInteger(0, study.getStudyId())
                 .list();
         for (Object obj : list) {
             fileReport.add((FileReportRow) obj);
@@ -54,7 +54,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
         String query = "from FileReportRow as row where row.lane.sequencerRun.sequencerRunId = ? order by row." + orderField + " "
                 + sortOrder;
         List<FileReportRow> fileReport = new ArrayList<>();
-        List list = this.getSession().createQuery(query).setFirstResult(offset).setMaxResults(limit)
+        List list = this.currentSession().createQuery(query).setFirstResult(offset).setMaxResults(limit)
                 .setInteger(0, seqRun.getSequencerRunId()).list();
         for (Object obj : list) {
             fileReport.add((FileReportRow) obj);
@@ -69,7 +69,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
         String query = "from FileReportRow as row where row.lane.sequencerRun.sequencerRunId != null order by row." + orderField + " "
                 + sortOrder;
         List<FileReportRow> fileReport = new ArrayList<>();
-        List list = this.getSession().createQuery(query).setFirstResult(offset).setMaxResults(limit).list();
+        List list = this.currentSession().createQuery(query).setFirstResult(offset).setMaxResults(limit).list();
         for (Object obj : list) {
             fileReport.add((FileReportRow) obj);
         }
@@ -83,7 +83,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
         if (seqRun == null) {
             String query = "from FileReportRow as row where row.lane.sequencerRun.sequencerRunId != null ";
             List<FileReportRow> fileReport = new ArrayList<>();
-            List list = this.getSession().createQuery(query).list();
+            List list = this.currentSession().createQuery(query).list();
             for (Object obj : list) {
                 fileReport.add((FileReportRow) obj);
             }
@@ -91,7 +91,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
         } else {
             String query = "from FileReportRow as row where row.lane.sequencerRun.sequencerRunId = ? ";
             List<FileReportRow> fileReport = new ArrayList<>();
-            List list = this.getSession().createQuery(query).setInteger(0, seqRun.getSequencerRunId()).list();
+            List list = this.currentSession().createQuery(query).setInteger(0, seqRun.getSequencerRunId()).list();
             for (Object obj : list) {
                 fileReport.add((FileReportRow) obj);
             }
@@ -104,7 +104,7 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
     @Override
     public int countOfRows(Study study) {
         String query = "select count(*) from file_report where study_id = ?";
-        List result = this.getSession().createSQLQuery(query).setInteger(0, study.getStudyId()).list();
+        List result = this.currentSession().createSQLQuery(query).setInteger(0, study.getStudyId()).list();
         int count = 0;
         if (result.size() > 0) {
             count = ((BigInteger) result.get(0)).intValue();
@@ -121,11 +121,11 @@ public class FileReportDAOHibernate extends HibernateDaoSupport implements FileR
         if (sr != null) {
             query = "select count(*) from file_report as fr cross join lane as la "
                     + "where fr.lane_id=la.lane_id and (la.sequencer_run_id = ?)";
-            result = this.getSession().createSQLQuery(query).setInteger(0, sr.getSequencerRunId()).list();
+            result = this.currentSession().createSQLQuery(query).setInteger(0, sr.getSequencerRunId()).list();
         } else {
             query = "select count(*) from file_report as fr cross join lane as la "
                     + "where fr.lane_id=la.lane_id and (la.sequencer_run_id is not null)";
-            result = this.getSession().createSQLQuery(query).list();
+            result = this.currentSession().createSQLQuery(query).list();
 
         }
         int count = 0;

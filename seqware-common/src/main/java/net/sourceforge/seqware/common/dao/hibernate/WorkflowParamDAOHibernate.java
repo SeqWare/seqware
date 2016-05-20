@@ -1,8 +1,5 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import net.sourceforge.seqware.common.dao.WorkflowParamDAO;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.WorkflowParam;
@@ -11,7 +8,11 @@ import org.apache.commons.beanutils.BeanUtilsBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -44,7 +45,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
     @Override
     public void update(WorkflowParam workflowParam) {
         getHibernateTemplate().update(workflowParam);
-        getSession().flush();
+        this.currentSession().flush();
     }
 
     /** {@inheritDoc} */
@@ -73,7 +74,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, workflowParam);
-            return (WorkflowParam) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached WorkflowParam", e);
         }
@@ -83,7 +84,7 @@ public class WorkflowParamDAOHibernate extends HibernateDaoSupport implements Wo
     private WorkflowParam reattachWorkflowParam(WorkflowParam workflowParam) throws IllegalStateException,
             DataAccessResourceFailureException {
         WorkflowParam dbObject = workflowParam;
-        if (!getSession().contains(workflowParam)) {
+        if (!this.currentSession().contains(workflowParam)) {
             dbObject = findByID(workflowParam.getWorkflowParamId());
         }
         return dbObject;

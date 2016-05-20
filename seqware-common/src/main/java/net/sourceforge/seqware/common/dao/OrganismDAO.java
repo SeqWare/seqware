@@ -22,7 +22,7 @@ public interface OrganismDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Organism> list(Registration registration);
+    List<Organism> list(Registration registration);
 
     /**
      * <p>
@@ -33,7 +33,7 @@ public interface OrganismDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Organism} object.
      */
-    public Organism findByID(Integer id);
+    Organism findByID(Integer id);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface OrganismDAO {
      *            a {@link net.sourceforge.seqware.common.model.Organism} object.
      * @return a {@link net.sourceforge.seqware.common.model.Organism} object.
      */
-    public Organism updateDetached(Organism organism);
+    Organism updateDetached(Organism organism);
 
     /**
      * <p>
@@ -53,5 +53,5 @@ public interface OrganismDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Organism> list();
+    List<Organism> list();
 }

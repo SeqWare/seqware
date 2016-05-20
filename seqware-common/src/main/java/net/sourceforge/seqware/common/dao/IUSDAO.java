@@ -25,7 +25,7 @@ public interface IUSDAO {
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      * @return
      */
-    public Integer insert(IUS obj);
+    Integer insert(IUS obj);
 
     /**
      * <p>
@@ -38,7 +38,7 @@ public interface IUSDAO {
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      * @return
      */
-    public Integer insert(Registration registration, IUS obj);
+    Integer insert(Registration registration, IUS obj);
 
     /**
      * <p>
@@ -48,7 +48,7 @@ public interface IUSDAO {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      */
-    public void update(IUS obj);
+    void update(IUS obj);
 
     /**
      * <p>
@@ -60,7 +60,7 @@ public interface IUSDAO {
      * @param ius
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      */
-    public void update(Registration registration, IUS ius);
+    void update(Registration registration, IUS ius);
 
     /**
      * <p>
@@ -70,7 +70,7 @@ public interface IUSDAO {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      */
-    public void delete(IUS obj);
+    void delete(IUS obj);
 
     /**
      * <p>
@@ -81,7 +81,7 @@ public interface IUSDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.IUS} object.
      */
-    public IUS findByID(Integer id);
+    IUS findByID(Integer id);
 
     /**
      * <p>
@@ -92,7 +92,7 @@ public interface IUSDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer iusId);
+    List<File> getFiles(Integer iusId);
 
     /**
      * <p>
@@ -103,7 +103,7 @@ public interface IUSDAO {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer iusId);
+    boolean isHasFile(Integer iusId);
 
     /**
      * <p>
@@ -116,7 +116,7 @@ public interface IUSDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer iusId, String metaType);
+    List<File> getFiles(Integer iusId, String metaType);
 
     /**
      * <p>
@@ -129,7 +129,7 @@ public interface IUSDAO {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer iusId, String metaType);
+    boolean isHasFile(Integer iusId, String metaType);
 
     /**
      * <p>
@@ -140,7 +140,7 @@ public interface IUSDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.IUS} object.
      */
-    public IUS findBySWAccession(Integer swAccession);
+    IUS findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -151,7 +151,7 @@ public interface IUSDAO {
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      * @return a {@link net.sourceforge.seqware.common.model.IUS} object.
      */
-    public IUS updateDetached(IUS ius);
+    IUS updateDetached(IUS ius);
 
     /**
      * <p>
@@ -164,7 +164,7 @@ public interface IUSDAO {
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      * @return a {@link net.sourceforge.seqware.common.model.IUS} object.
      */
-    public IUS updateDetached(Registration registration, IUS ius);
+    IUS updateDetached(Registration registration, IUS ius);
 
     /**
      * <p>
@@ -175,7 +175,7 @@ public interface IUSDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<IUS> findByOwnerID(Integer registrationId);
+    List<IUS> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -188,7 +188,7 @@ public interface IUSDAO {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<IUS> findByCriteria(String criteria, boolean isCaseSens);
+    List<IUS> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -199,7 +199,7 @@ public interface IUSDAO {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.util.List} object.
      */
-    public List<IUS> findBelongsToStudy(Study study);
+    List<IUS> findBelongsToStudy(Study study);
 
     /**
      * <p>
@@ -214,7 +214,7 @@ public interface IUSDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<IUS> find(String sequencerRunName, Integer lane, String sampleName);
+    List<IUS> find(String sequencerRunName, Integer lane, String sampleName);
 
     /**
      * <p>
@@ -223,5 +223,5 @@ public interface IUSDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<IUS> list();
+    List<IUS> list();
 }

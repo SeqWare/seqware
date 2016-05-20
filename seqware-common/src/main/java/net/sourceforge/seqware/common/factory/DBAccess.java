@@ -16,15 +16,16 @@
  */
 package net.sourceforge.seqware.common.factory;
 
-import java.sql.SQLException;
-import java.util.Map;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * <p>
@@ -99,5 +100,10 @@ public class DBAccess {
     }
 
     private DBAccess() {
+    }
+
+    @Override
+    public void finalize(){
+        METADATA_DB_WRAPPER.remove();
     }
 }

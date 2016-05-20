@@ -20,7 +20,7 @@ public interface ExperimentSpotDesignDAO {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
-    public void insert(ExperimentSpotDesign obj);
+    void insert(ExperimentSpotDesign obj);
 
     /**
      * <p>
@@ -30,7 +30,7 @@ public interface ExperimentSpotDesignDAO {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
-    public void update(ExperimentSpotDesign obj);
+    void update(ExperimentSpotDesign obj);
 
     /**
      * <p>
@@ -41,7 +41,7 @@ public interface ExperimentSpotDesignDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
-    public ExperimentSpotDesign findByID(Integer id);
+    ExperimentSpotDesign findByID(Integer id);
 
     /**
      * <p>
@@ -52,7 +52,7 @@ public interface ExperimentSpotDesignDAO {
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
-    public ExperimentSpotDesign updateDetached(ExperimentSpotDesign experiment);
+    ExperimentSpotDesign updateDetached(ExperimentSpotDesign experiment);
 
     /**
      * <p>
@@ -61,5 +61,5 @@ public interface ExperimentSpotDesignDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ExperimentSpotDesign> list();
+    List<ExperimentSpotDesign> list();
 }

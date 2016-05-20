@@ -21,7 +21,7 @@ public interface WorkflowParamValueDAO {
      * @param workflowParamValue
      *            a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      */
-    public Integer insert(WorkflowParamValue workflowParamValue);
+    Integer insert(WorkflowParamValue workflowParamValue);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface WorkflowParamValueDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, WorkflowParamValue workflowParamValue);
+    Integer insert(Registration registration, WorkflowParamValue workflowParamValue);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface WorkflowParamValueDAO {
      * @param workflowParamValue
      *            a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      */
-    public void update(WorkflowParamValue workflowParamValue);
+    void update(WorkflowParamValue workflowParamValue);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface WorkflowParamValueDAO {
      * @param workflowParamValue
      *            a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      */
-    public void update(Registration registration, WorkflowParamValue workflowParamValue);
+    void update(Registration registration, WorkflowParamValue workflowParamValue);
 
     /**
      * <p>
@@ -66,7 +66,7 @@ public interface WorkflowParamValueDAO {
      * @param workflowParamValue
      *            a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      */
-    public void delete(WorkflowParamValue workflowParamValue);
+    void delete(WorkflowParamValue workflowParamValue);
 
     /**
      * <p>
@@ -77,7 +77,7 @@ public interface WorkflowParamValueDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      */
-    public WorkflowParamValue findByID(Integer id);
+    WorkflowParamValue findByID(Integer id);
 
     /**
      * <p>
@@ -88,7 +88,7 @@ public interface WorkflowParamValueDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      */
-    public WorkflowParamValue updateDetached(WorkflowParamValue workflowParamValue);
+    WorkflowParamValue updateDetached(WorkflowParamValue workflowParamValue);
 
     /**
      * <p>
@@ -101,7 +101,7 @@ public interface WorkflowParamValueDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowParamValue} object.
      */
-    public WorkflowParamValue updateDetached(Registration registration, WorkflowParamValue workflowParamValue);
+    WorkflowParamValue updateDetached(Registration registration, WorkflowParamValue workflowParamValue);
 
     /**
      * <p>
@@ -110,5 +110,5 @@ public interface WorkflowParamValueDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowParamValue> list();
+    List<WorkflowParamValue> list();
 }

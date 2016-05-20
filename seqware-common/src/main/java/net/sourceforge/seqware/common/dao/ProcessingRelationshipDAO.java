@@ -25,7 +25,7 @@ public interface ProcessingRelationshipDAO {
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract ProcessingRelationship findByProcessings(Processing processingParent, Processing processingChild);
+    ProcessingRelationship findByProcessings(Processing processingParent, Processing processingChild);
 
     /**
      * <p>
@@ -35,7 +35,7 @@ public interface ProcessingRelationshipDAO {
      * @param processingRelationship
      *            a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract void delete(ProcessingRelationship processingRelationship);
+    void delete(ProcessingRelationship processingRelationship);
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface ProcessingRelationshipDAO {
      * @param processingRelationship
      *            a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract void update(ProcessingRelationship processingRelationship);
+    void update(ProcessingRelationship processingRelationship);
 
     /**
      * <p>
@@ -55,7 +55,7 @@ public interface ProcessingRelationshipDAO {
      * @param processingRelationship
      *            a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract void insert(ProcessingRelationship processingRelationship);
+    void insert(ProcessingRelationship processingRelationship);
 
     /**
      * <p>
@@ -66,7 +66,7 @@ public interface ProcessingRelationshipDAO {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract ProcessingRelationship updateDetached(ProcessingRelationship processingRelationship);
+    ProcessingRelationship updateDetached(ProcessingRelationship processingRelationship);
 
     /**
      * <p>
@@ -75,7 +75,7 @@ public interface ProcessingRelationshipDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingRelationship> list();
+    List<ProcessingRelationship> list();
 
-    public List<ProcessingRelationship> listByParentProcessingId(int processingId);
+    List<ProcessingRelationship> listByParentProcessingId(int processingId);
 }

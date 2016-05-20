@@ -1,9 +1,10 @@
 package net.sourceforge.seqware.common.dao;
 
-import java.util.List;
 import net.sourceforge.seqware.common.model.File;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.Registration;
+
+import java.util.List;
 
 /**
  * <p>
@@ -22,7 +23,7 @@ public interface ProcessingDAO {
      *            Processing to be inserted.
      * @return The SeqWare Accession number for the newly inserted Processing.
      */
-    public Integer insert(Processing processing);
+    Integer insert(Processing processing);
 
     /**
      * <p>
@@ -35,7 +36,7 @@ public interface ProcessingDAO {
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Processing processing);
+    Integer insert(Registration registration, Processing processing);
 
     /**
      * <p>
@@ -45,7 +46,7 @@ public interface ProcessingDAO {
      * @param processing
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public void update(Processing processing);
+    void update(Processing processing);
 
     /**
      * <p>
@@ -57,7 +58,7 @@ public interface ProcessingDAO {
      * @param processing
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public void update(Registration registration, Processing processing);
+    void update(Registration registration, Processing processing);
 
     /**
      * <p>
@@ -67,7 +68,7 @@ public interface ProcessingDAO {
      * @param processing
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public void delete(Processing processing);
+    void delete(Processing processing);
 
     /**
      * <p>
@@ -78,7 +79,7 @@ public interface ProcessingDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing findByFilePath(String filePath);
+    Processing findByFilePath(String filePath);
 
     /**
      * <p>
@@ -89,7 +90,7 @@ public interface ProcessingDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing findByID(Integer processingId);
+    Processing findByID(Integer processingId);
 
     /**
      * <p>
@@ -100,7 +101,7 @@ public interface ProcessingDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer processingId);
+    List<File> getFiles(Integer processingId);
 
     /**
      * <p>
@@ -111,7 +112,7 @@ public interface ProcessingDAO {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer processingId);
+    boolean isHasFile(Integer processingId);
 
     /**
      * <p>
@@ -124,7 +125,7 @@ public interface ProcessingDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer processingId, String metaType);
+    List<File> getFiles(Integer processingId, String metaType);
 
     /**
      * <p>
@@ -137,7 +138,7 @@ public interface ProcessingDAO {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer processingId, String metaType);
+    boolean isHasFile(Integer processingId, String metaType);
 
     /**
      * <p>
@@ -148,7 +149,7 @@ public interface ProcessingDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing findBySWAccession(Integer swAccession);
+    Processing findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -159,7 +160,7 @@ public interface ProcessingDAO {
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing updateDetached(Processing processing);
+    Processing updateDetached(Processing processing);
 
     /**
      * <p>
@@ -172,7 +173,7 @@ public interface ProcessingDAO {
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing updateDetached(Registration registration, Processing processing);
+    Processing updateDetached(Registration registration, Processing processing);
 
     /**
      * <p>
@@ -183,7 +184,7 @@ public interface ProcessingDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Processing> findByOwnerID(Integer registrationId);
+    List<Processing> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -196,7 +197,7 @@ public interface ProcessingDAO {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Processing> findByCriteria(String criteria, boolean isCaseSens);
+    List<Processing> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -205,5 +206,5 @@ public interface ProcessingDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Processing> list();
+    List<Processing> list();
 }

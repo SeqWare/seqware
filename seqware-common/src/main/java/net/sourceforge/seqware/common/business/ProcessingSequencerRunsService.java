@@ -24,7 +24,7 @@ public interface ProcessingSequencerRunsService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ProcessingSequencerRunsDAO} object.
      */
-    public abstract void setProcessingSequencerRunsDAO(ProcessingSequencerRunsDAO dao);
+    void setProcessingSequencerRunsDAO(ProcessingSequencerRunsDAO dao);
 
     /**
      * <p>
@@ -37,7 +37,7 @@ public interface ProcessingSequencerRunsService {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    public abstract ProcessingSequencerRuns findByProcessingSequencerRun(Processing processing, SequencerRun sequencerRun);
+    ProcessingSequencerRuns findByProcessingSequencerRun(Processing processing, SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -47,7 +47,7 @@ public interface ProcessingSequencerRunsService {
      * @param processingSequencerRuns
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    public abstract void delete(ProcessingSequencerRuns processingSequencerRuns);
+    void delete(ProcessingSequencerRuns processingSequencerRuns);
 
     /**
      * <p>
@@ -57,7 +57,7 @@ public interface ProcessingSequencerRunsService {
      * @param processingSequencerRuns
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    public abstract void update(ProcessingSequencerRuns processingSequencerRuns);
+    void update(ProcessingSequencerRuns processingSequencerRuns);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface ProcessingSequencerRunsService {
      * @param processingSequencerRuns
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    public abstract void insert(ProcessingSequencerRuns processingSequencerRuns);
+    void insert(ProcessingSequencerRuns processingSequencerRuns);
 
     /**
      * <p>
@@ -78,7 +78,7 @@ public interface ProcessingSequencerRunsService {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    public abstract ProcessingSequencerRuns updateDetached(ProcessingSequencerRuns processingSequencerRuns);
+    ProcessingSequencerRuns updateDetached(ProcessingSequencerRuns processingSequencerRuns);
 
     /**
      * <p>
@@ -87,6 +87,6 @@ public interface ProcessingSequencerRunsService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingSequencerRuns> list();
+    List<ProcessingSequencerRuns> list();
 
 }

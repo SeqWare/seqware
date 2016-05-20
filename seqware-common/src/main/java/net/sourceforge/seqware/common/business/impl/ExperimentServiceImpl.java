@@ -270,7 +270,7 @@ public class ExperimentServiceImpl implements ExperimentService {
     /** {@inheritDoc} */
     @Override
     public Experiment updateDetached(Experiment experiment) {
-        return (Experiment) experimentDAO.updateDetached(experiment);
+        return experimentDAO.updateDetached(experiment);
     }
 
     /** {@inheritDoc} */

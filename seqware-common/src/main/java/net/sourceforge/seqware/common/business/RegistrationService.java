@@ -14,7 +14,7 @@ import net.sourceforge.seqware.common.model.RegistrationDTO;
  */
 public interface RegistrationService {
     /** Constant <code>NAME="registrationService"</code> */
-    public static final String NAME = "registrationService";
+    String NAME = "registrationService";
 
     /**
      * <p>
@@ -24,7 +24,7 @@ public interface RegistrationService {
      * @param registrationDAO
      *            a {@link net.sourceforge.seqware.common.dao.RegistrationDAO} object.
      */
-    public void setRegistrationDAO(RegistrationDAO registrationDAO);
+    void setRegistrationDAO(RegistrationDAO registrationDAO);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface RegistrationService {
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.RegistrationDTO} object.
      */
-    public void insert(RegistrationDTO registration);
+    void insert(RegistrationDTO registration);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface RegistrationService {
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.RegistrationDTO} object.
      */
-    public void update(RegistrationDTO registration);
+    void update(RegistrationDTO registration);
 
     /**
      * <p>
@@ -55,7 +55,7 @@ public interface RegistrationService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.RegistrationDTO} object.
      */
-    public RegistrationDTO findByEmailAddress(String emailAddress);
+    RegistrationDTO findByEmailAddress(String emailAddress);
 
     /**
      * <p>
@@ -68,7 +68,7 @@ public interface RegistrationService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.RegistrationDTO} object.
      */
-    public RegistrationDTO findByEmailAddressAndPassword(String emailAddress, String password);
+    RegistrationDTO findByEmailAddressAndPassword(String emailAddress, String password);
 
     /**
      * <p>
@@ -79,7 +79,7 @@ public interface RegistrationService {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean hasEmailAddressBeenUsed(String email);
+    boolean hasEmailAddressBeenUsed(String email);
 
     /**
      * <p>

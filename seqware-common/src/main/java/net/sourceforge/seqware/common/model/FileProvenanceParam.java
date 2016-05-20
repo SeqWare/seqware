@@ -7,11 +7,11 @@ public enum FileProvenanceParam {
 
     private final String str;
 
-    private FileProvenanceParam() {
+    FileProvenanceParam() {
         this.str = null;
     }
 
-    private FileProvenanceParam(String str) {
+    FileProvenanceParam(String str) {
         this.str = str;
     }
 

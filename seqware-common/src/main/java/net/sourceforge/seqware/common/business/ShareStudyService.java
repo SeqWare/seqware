@@ -14,7 +14,7 @@ import net.sourceforge.seqware.common.model.ShareStudy;
  */
 public interface ShareStudyService {
     /** Constant <code>NAME="shareStudyService"</code> */
-    public static final String NAME = "shareStudyService";
+    String NAME = "shareStudyService";
 
     /**
      * <p>
@@ -24,7 +24,7 @@ public interface ShareStudyService {
      * @param shareStudyDAO
      *            a {@link net.sourceforge.seqware.common.dao.ShareStudyDAO} object.
      */
-    public void setShareStudyDAO(ShareStudyDAO shareStudyDAO);
+    void setShareStudyDAO(ShareStudyDAO shareStudyDAO);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface ShareStudyService {
      * @param shareStudy
      *            a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public void insert(ShareStudy shareStudy);
+    void insert(ShareStudy shareStudy);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface ShareStudyService {
      * @param shareStudy
      *            a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public void update(ShareStudy shareStudy);
+    void update(ShareStudy shareStudy);
 
     /**
      * <p>
@@ -54,7 +54,7 @@ public interface ShareStudyService {
      * @param shareStudy
      *            a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public void delete(ShareStudy shareStudy);
+    void delete(ShareStudy shareStudy);
 
     /**
      * <p>
@@ -65,7 +65,7 @@ public interface ShareStudyService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public ShareStudy findByID(Integer id);
+    ShareStudy findByID(Integer id);
 
     /**
      * <p>
@@ -78,7 +78,7 @@ public interface ShareStudyService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public ShareStudy findByStudyIdAndRegistrationId(Integer studyId, Integer registrationId);
+    ShareStudy findByStudyIdAndRegistrationId(Integer studyId, Integer registrationId);
 
     /**
      * <p>
@@ -89,7 +89,7 @@ public interface ShareStudyService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public ShareStudy findBySWAccession(Integer swAccession);
+    ShareStudy findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -102,7 +102,7 @@ public interface ShareStudyService {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isExistsShare(Integer studyId, Integer registrationId);
+    boolean isExistsShare(Integer studyId, Integer registrationId);
 
     /**
      * <p>
@@ -122,6 +122,6 @@ public interface ShareStudyService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ShareStudy> list();
+    List<ShareStudy> list();
 
 }

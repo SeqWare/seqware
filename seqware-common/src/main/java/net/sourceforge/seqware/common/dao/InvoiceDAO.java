@@ -22,7 +22,7 @@ public interface InvoiceDAO {
      *            Invoice to be inserted.
      * @return The SeqWare Accession number for the newly inserted invoice.
      */
-    public Integer insert(Invoice invoice);
+    Integer insert(Invoice invoice);
 
     /**
      * <p>
@@ -35,7 +35,7 @@ public interface InvoiceDAO {
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Invoice invoice);
+    Integer insert(Registration registration, Invoice invoice);
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface InvoiceDAO {
      * @param invoice
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public void update(Invoice invoice);
+    void update(Invoice invoice);
 
     /**
      * <p>
@@ -57,7 +57,7 @@ public interface InvoiceDAO {
      * @param invoice
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public void update(Registration registration, Invoice invoice);
+    void update(Registration registration, Invoice invoice);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface InvoiceDAO {
      * @param invoice
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public void delete(Invoice invoice);
+    void delete(Invoice invoice);
 
     /**
      * <p>
@@ -76,7 +76,7 @@ public interface InvoiceDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Invoice> list();
+    List<Invoice> list();
 
     /**
      * <p>
@@ -87,7 +87,7 @@ public interface InvoiceDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Invoice> list(Registration registration);
+    List<Invoice> list(Registration registration);
 
     /**
      * <p>
@@ -100,7 +100,7 @@ public interface InvoiceDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Invoice> list(Registration registration, InvoiceState state);
+    List<Invoice> list(Registration registration, InvoiceState state);
 
     /**
      * <p>
@@ -111,7 +111,7 @@ public interface InvoiceDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public Invoice findByID(Integer wfID);
+    Invoice findByID(Integer wfID);
 
     /**
      * <p>
@@ -122,7 +122,7 @@ public interface InvoiceDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public Invoice findBySWAccession(Integer swAccession);
+    Invoice findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -133,7 +133,7 @@ public interface InvoiceDAO {
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      * @return a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public Invoice updateDetached(Invoice invoice);
+    Invoice updateDetached(Invoice invoice);
 
     /**
      * <p>
@@ -146,6 +146,6 @@ public interface InvoiceDAO {
      *            a {@link net.sourceforge.seqware.common.model.Invoice} object.
      * @return a {@link net.sourceforge.seqware.common.model.Invoice} object.
      */
-    public Invoice updateDetached(Registration registration, Invoice invoice);
+    Invoice updateDetached(Registration registration, Invoice invoice);
 
 }

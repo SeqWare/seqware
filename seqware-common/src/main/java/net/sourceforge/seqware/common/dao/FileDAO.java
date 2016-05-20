@@ -25,7 +25,7 @@ public interface FileDAO {
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      * @return
      */
-    public Integer insert(File file);
+    Integer insert(File file);
 
     /**
      * <p>
@@ -38,7 +38,7 @@ public interface FileDAO {
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      * @return
      */
-    public Integer insert(Registration registration, File file);
+    Integer insert(Registration registration, File file);
 
     /**
      * <p>
@@ -48,7 +48,7 @@ public interface FileDAO {
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public void update(File file);
+    void update(File file);
 
     /**
      * <p>
@@ -60,7 +60,7 @@ public interface FileDAO {
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public void update(Registration registration, File file);
+    void update(Registration registration, File file);
 
     /**
      * <p>
@@ -70,7 +70,7 @@ public interface FileDAO {
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public void delete(File file);
+    void delete(File file);
 
     /**
      * <p>
@@ -80,7 +80,7 @@ public interface FileDAO {
      * @param files
      *            a {@link java.util.List} object.
      */
-    public void deleteAll(List<File> files);
+    void deleteAll(List<File> files);
 
     /**
      * <p>
@@ -90,7 +90,7 @@ public interface FileDAO {
      * @param list
      *            a {@link java.util.List} object.
      */
-    public void deleteAllWithFolderStore(List<File> list);
+    void deleteAllWithFolderStore(List<File> list);
 
     /**
      * <p>
@@ -101,7 +101,7 @@ public interface FileDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File findByID(Integer id);
+    File findByID(Integer id);
 
     /**
      * <p>
@@ -112,7 +112,7 @@ public interface FileDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File findByPath(String path);
+    File findByPath(String path);
 
     /**
      * <p>
@@ -129,7 +129,7 @@ public interface FileDAO {
      * @throws java.io.IOException
      *             if any.
      */
-    public java.io.File saveFile(MultipartFile uploadFile, String folderStore, Registration owner) throws IOException;
+    java.io.File saveFile(MultipartFile uploadFile, String folderStore, Registration owner) throws IOException;
 
     /**
      * <p>
@@ -140,7 +140,7 @@ public interface FileDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File findBySWAccession(Integer swAccession);
+    File findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -151,7 +151,7 @@ public interface FileDAO {
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File updateDetached(File file);
+    File updateDetached(File file);
 
     /**
      * <p>
@@ -164,7 +164,7 @@ public interface FileDAO {
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File updateDetached(Registration registration, File file);
+    File updateDetached(Registration registration, File file);
 
     /**
      * <p>
@@ -175,7 +175,7 @@ public interface FileDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> findByOwnerId(Integer registrationId);
+    List<File> findByOwnerId(Integer registrationId);
 
     /**
      * <p>
@@ -188,7 +188,7 @@ public interface FileDAO {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<File> findByCriteria(String criteria, boolean isCaseSens);
+    List<File> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -197,5 +197,5 @@ public interface FileDAO {
      *
      * @return a {@link java.util.List} object.
      */
-    public List<File> list();
+    List<File> list();
 }

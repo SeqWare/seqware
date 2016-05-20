@@ -15,7 +15,7 @@ import net.sourceforge.seqware.common.model.Registration;
  */
 public interface LibrarySourceService {
     /** Constant <code>NAME="LibrarySourceService"</code> */
-    public static final String NAME = "LibrarySourceService";
+    String NAME = "LibrarySourceService";
 
     /**
      * <p>
@@ -25,7 +25,7 @@ public interface LibrarySourceService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.LibrarySourceDAO} object.
      */
-    public void setLibrarySourceDAO(LibrarySourceDAO dao);
+    void setLibrarySourceDAO(LibrarySourceDAO dao);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface LibrarySourceService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<LibrarySource> list();
+    List<LibrarySource> list();
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface LibrarySourceService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<LibrarySource> list(Registration registration);
+    List<LibrarySource> list(Registration registration);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface LibrarySourceService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySource} object.
      */
-    public LibrarySource findByID(Integer id);
+    LibrarySource findByID(Integer id);
 
     /**
      * <p>

@@ -3,13 +3,6 @@ package net.sourceforge.seqware.common.metadata;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.SequencerRunStatus;
 import io.seqware.common.model.WorkflowRunStatus;
-import java.io.Writer;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
@@ -42,6 +35,14 @@ import net.sourceforge.seqware.common.model.WorkflowParam;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.ReturnValue;
+
+import java.io.Writer;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
 
 public interface Metadata {
 
@@ -83,7 +84,7 @@ public interface Metadata {
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
 
-    public ReturnValue addStudy(String title, String description, String centerName, String centerProjectName, Integer studyTypeId);
+    ReturnValue addStudy(String title, String description, String centerName, String centerProjectName, Integer studyTypeId);
 
     /**
      * <p>
@@ -104,7 +105,7 @@ public interface Metadata {
      *            the value of experimentSpotDesignId
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title,
+    ReturnValue addExperiment(Integer studySwAccession, Integer platformId, String description, String title,
             Integer experimentLibraryDesignId, Integer experimentSpotDesignId);
 
     /**
@@ -123,8 +124,7 @@ public interface Metadata {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description,
-            String title);
+    ReturnValue addSample(Integer experimentAccession, Integer parentSampleAccession, Integer organismId, String description, String title);
 
     /**
      * <p>
@@ -142,8 +142,8 @@ public interface Metadata {
      * @param skip
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip,
-            String filePath, SequencerRunStatus status);
+    ReturnValue addSequencerRun(Integer platformAccession, String name, String description, boolean pairdEnd, boolean skip, String filePath,
+            SequencerRunStatus status);
 
     /**
      * <p>
@@ -163,7 +163,7 @@ public interface Metadata {
      * @param cycleDescriptor
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
-    public ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId,
+    ReturnValue addLane(Integer sequencerRunAccession, Integer studyTypeId, Integer libraryStrategyId, Integer librarySelectionId,
             Integer librarySourceId, String name, String description, String cycleDescriptor, boolean skip, Integer laneNumber);
 
     /**
@@ -180,7 +180,7 @@ public interface Metadata {
      * @return a {@link net.sourceforge.seqware.common.module.ReturnValue} object.
      */
 
-    public ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip);
+    ReturnValue addIUS(Integer laneAccession, Integer sampleAccession, String name, String description, String barcode, boolean skip);
 
     /**
      * <p>
@@ -189,7 +189,7 @@ public interface Metadata {
      *
      * @return a {@link net.sourceforge.seqware.common.model.Platform} object.
      */
-    public List<Platform> getPlatforms();
+    List<Platform> getPlatforms();
 
     /**
      * <p>
@@ -200,7 +200,7 @@ public interface Metadata {
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment getExperiment(int swAccession);
+    Experiment getExperiment(int swAccession);
 
     /**
      * <p>
@@ -209,7 +209,7 @@ public interface Metadata {
      *
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
-    public List<ExperimentLibraryDesign> getExperimentLibraryDesigns();
+    List<ExperimentLibraryDesign> getExperimentLibraryDesigns();
 
     /**
      * <p>
@@ -218,7 +218,7 @@ public interface Metadata {
      *
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs();
+    List<ExperimentSpotDesignReadSpec> getExperimentSpotDesignReadSpecs();
 
     /**
      * <p>
@@ -227,7 +227,7 @@ public interface Metadata {
      *
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesign} object.
      */
-    public List<ExperimentSpotDesign> getExperimentSpotDesigns();
+    List<ExperimentSpotDesign> getExperimentSpotDesigns();
 
     /**
      * <p>
@@ -236,7 +236,7 @@ public interface Metadata {
      *
      * @return a {@link net.sourceforge.seqware.common.model.Organism} object.
      */
-    public List<Organism> getOrganisms();
+    List<Organism> getOrganisms();
 
     /**
      * <p>
@@ -245,7 +245,7 @@ public interface Metadata {
      *
      * @return a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public List<StudyType> getStudyTypes();
+    List<StudyType> getStudyTypes();
 
     /**
      * <p>
@@ -254,7 +254,7 @@ public interface Metadata {
      *
      * @return a {@link net.sourceforge.seqware.common.model.LibraryStrategy} object.
      */
-    public List<LibraryStrategy> getLibraryStrategies();
+    List<LibraryStrategy> getLibraryStrategies();
 
     /**
      * <p>
@@ -263,7 +263,7 @@ public interface Metadata {
      *
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySelection} object.
      */
-    public List<LibrarySelection> getLibrarySelections();
+    List<LibrarySelection> getLibrarySelections();
 
     /**
      * <p>
@@ -272,7 +272,7 @@ public interface Metadata {
      *
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySource} object.
      */
-    public List<LibrarySource> getLibrarySource();
+    List<LibrarySource> getLibrarySource();
 
     /**
      * <p>
@@ -640,12 +640,12 @@ public interface Metadata {
      *            a {@link java.lang.String} object.
      * @return a int.
      */
-    public int getWorkflowAccession(String name, String version);
+    int getWorkflowAccession(String name, String version);
 
     /**
      * Triggers the file provenance report, this is a costly operation so it should be scheduled via a cron or similar
      */
-    public void fileProvenanceReportTrigger();
+    void fileProvenanceReportTrigger();
 
     /**
      * Retrieves the file provenance report, writing it to the specified output stream as a TSV.
@@ -655,7 +655,7 @@ public interface Metadata {
      * @param out
      *            where the TSV content will be written
      */
-    public void fileProvenanceReport(Map<FileProvenanceParam, List<String>> params, Writer out);
+    void fileProvenanceReport(Map<FileProvenanceParam, List<String>> params, Writer out);
 
     /**
      * Retrieves the file provenance report.
@@ -664,21 +664,21 @@ public interface Metadata {
      *            the parameters to filter the results
      * @return the list of each file provenance entry
      */
-    public List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params);
+    List<Map<String, String>> fileProvenanceReport(Map<FileProvenanceParam, List<String>> params);
 
     /**
      * Retrieves all environmental information from the web-service
      *
      * @return
      */
-    public Map<String, String> getEnvironmentReport();
+    Map<String, String> getEnvironmentReport();
 
     /**
      * Check to see if client seqware version matches server version
      *
      * @return
      */
-    public boolean checkClientServerMatchingVersion();
+    boolean checkClientServerMatchingVersion();
 
     /**
      * <p>
@@ -689,7 +689,7 @@ public interface Metadata {
      *            a {@link java.lang.String} object.
      * @return a {@link java.lang.Boolean} object.
      */
-    public Boolean isDuplicateFile(String filepath);
+    Boolean isDuplicateFile(String filepath);
 
     /**
      * <p>
@@ -700,7 +700,7 @@ public interface Metadata {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status);
+    List<WorkflowRun> getWorkflowRunsByStatus(WorkflowRunStatus status);
 
     /**
      * <p>
@@ -711,7 +711,7 @@ public interface Metadata {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      */
-    public WorkflowRun getWorkflowRunWithWorkflow(String workflowRunAccession);
+    WorkflowRun getWorkflowRunWithWorkflow(String workflowRunAccession);
 
     /**
      * <p>
@@ -720,7 +720,7 @@ public interface Metadata {
      *
      * @return a {@link java.util.List} object.
      */
-    public List<Study> getAllStudies();
+    List<Study> getAllStudies();
 
     /**
      * <p>
@@ -729,7 +729,7 @@ public interface Metadata {
      *
      * @return a {@link java.lang.String} object.
      */
-    public String getSequencerRunReport();
+    String getSequencerRunReport();
 
     /**
      * <p>
@@ -999,7 +999,7 @@ public interface Metadata {
      *            a int.
      * @return a {@link java.lang.String} object.
      */
-    public String getWorkflowRunReport(int workflowRunSWID);
+    String getWorkflowRunReport(int workflowRunSWID);
 
     /**
      * <p>
@@ -1010,7 +1010,7 @@ public interface Metadata {
      *            a int.
      * @return a {@link java.lang.String} object.
      */
-    public String getWorkflowRunReportStdErr(int workflowRunSWID);
+    String getWorkflowRunReportStdErr(int workflowRunSWID);
 
     /**
      * <p>
@@ -1021,7 +1021,7 @@ public interface Metadata {
      *            a int.
      * @return a {@link java.lang.String} object.
      */
-    public String getWorkflowRunReportStdOut(int workflowRunSWID);
+    String getWorkflowRunReportStdOut(int workflowRunSWID);
 
     /**
      * <p>
@@ -1036,7 +1036,7 @@ public interface Metadata {
      *            a {@link java.util.Date} object.
      * @return a {@link java.lang.String} object.
      */
-    public String getWorkflowRunReport(int workflowSWID, Date earliestDate, Date latestDate);
+    String getWorkflowRunReport(int workflowSWID, Date earliestDate, Date latestDate);
 
     /**
      * <p>
@@ -1051,9 +1051,9 @@ public interface Metadata {
      *            a {@link java.util.Date} object.
      * @return a {@link java.lang.String} object.
      */
-    public String getWorkflowRunReport(WorkflowRunStatus status, Date earliestDate, Date latestDate);
+    String getWorkflowRunReport(WorkflowRunStatus status, Date earliestDate, Date latestDate);
 
-    public String getWorkflowRunReport(Integer workflowSWID, WorkflowRunStatus status, Date earliestDate, Date latestDate);
+    String getWorkflowRunReport(Integer workflowSWID, WorkflowRunStatus status, Date earliestDate, Date latestDate);
 
     /**
      * <p>
@@ -1066,7 +1066,7 @@ public interface Metadata {
      *            a {@link java.util.Date} object.
      * @return a {@link java.lang.String} object.
      */
-    public String getWorkflowRunReport(Date earliestDate, Date latestDate);
+    String getWorkflowRunReport(Date earliestDate, Date latestDate);
 
     /**
      * <p>
@@ -1077,7 +1077,7 @@ public interface Metadata {
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public net.sourceforge.seqware.common.model.File getFile(int swAccession);
+    net.sourceforge.seqware.common.model.File getFile(int swAccession);
 
     /**
      * <p>
@@ -1088,7 +1088,7 @@ public interface Metadata {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.SortedSet} object.
      */
-    public SortedSet<WorkflowParam> getWorkflowParams(String swAccession);
+    SortedSet<WorkflowParam> getWorkflowParams(String swAccession);
 
     /**
      * <p>
@@ -1098,7 +1098,7 @@ public interface Metadata {
      * @param swAccession
      * @return a Dot format string
      */
-    public String getProcessingRelations(String swAccession);
+    String getProcessingRelations(String swAccession);
 
     /**
      * Get a workflow
@@ -1106,14 +1106,14 @@ public interface Metadata {
      * @param workflowAccession
      * @return
      */
-    public Workflow getWorkflow(int workflowAccession);
+    Workflow getWorkflow(int workflowAccession);
 
     /**
      * Get all of the sequencer runs in the DB.
      *
      * @return a list of Sequencer runs
      */
-    public List<SequencerRun> getAllSequencerRuns();
+    List<SequencerRun> getAllSequencerRuns();
 
     /**
      * <p>
@@ -1124,7 +1124,7 @@ public interface Metadata {
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.Lane} object.
      */
-    public Lane getLane(int laneAccession);
+    Lane getLane(int laneAccession);
 
     /**
      * <p>
@@ -1135,7 +1135,7 @@ public interface Metadata {
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing getProcessing(int processingAccession);
+    Processing getProcessing(int processingAccession);
 
     /**
      * <p>
@@ -1146,7 +1146,7 @@ public interface Metadata {
      *            a int.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun getSequencerRun(int sequencerRunAccession);
+    SequencerRun getSequencerRun(int sequencerRunAccession);
 
     /**
      * Get Lanes from a sequencer run.
@@ -1155,7 +1155,7 @@ public interface Metadata {
      *            the sw_accession of the sequencer run
      * @return the lanes from the run
      */
-    public List<Lane> getLanesFrom(int sequencerRunAccession);
+    List<Lane> getLanesFrom(int sequencerRunAccession);
 
     /**
      * Get IUSes (barcodes) from a lane or sample.
@@ -1164,7 +1164,7 @@ public interface Metadata {
      *            the sw_accession of the lane or sample
      * @return a list of IUSes (barcodes)
      */
-    public List<IUS> getIUSFrom(int laneOrSampleAccession);
+    List<IUS> getIUSFrom(int laneOrSampleAccession);
 
     /**
      * Get experiments from a study.
@@ -1173,7 +1173,7 @@ public interface Metadata {
      *            the sw_accession of the study
      * @return a list of Experiments
      */
-    public List<Experiment> getExperimentsFrom(int studyAccession);
+    List<Experiment> getExperimentsFrom(int studyAccession);
 
     /**
      * Get the samples from an experiment.
@@ -1182,7 +1182,7 @@ public interface Metadata {
      *            the sw_accession of the experiment
      * @return a list of samples
      */
-    public List<Sample> getSamplesFrom(int experimentAccession);
+    List<Sample> getSamplesFrom(int experimentAccession);
 
     /**
      * Get the child samples of a parent sample. These samples are further down the sample hierarchy (more specific). For example, if the
@@ -1192,7 +1192,7 @@ public interface Metadata {
      *            the sw_accession of the parent sample / donor
      * @return a list of child samples.
      */
-    public List<Sample> getChildSamplesFrom(int parentSampleAccession);
+    List<Sample> getChildSamplesFrom(int parentSampleAccession);
 
     /**
      * Get the parent samples of a sample. These samples are further up the sample hierarchy (less specific). For example, if the parent
@@ -1202,7 +1202,7 @@ public interface Metadata {
      *            the sw_accession of the child sample
      * @return a list of parent samples / donors
      */
-    public List<Sample> getParentSamplesFrom(int childSampleAccession);
+    List<Sample> getParentSamplesFrom(int childSampleAccession);
 
     /**
      * Get the models corresponding to potential parent accessions
@@ -1210,7 +1210,7 @@ public interface Metadata {
      * @param potentialParentAccessions
      * @return a list, with null when parent accessions are invalid
      */
-    public List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions);
+    List<ParentAccessionModel> getViaParentAccessions(int[] potentialParentAccessions);
 
     /**
      * Get the models corresponding to potential accessions
@@ -1218,13 +1218,13 @@ public interface Metadata {
      * @param potentialAccessions
      * @return a list, with null when accessions are invalid
      */
-    public List<Object> getViaAccessions(int[] potentialAccessions);
+    List<Object> getViaAccessions(int[] potentialAccessions);
 
-    public List<Study> getStudyByName(String name);
+    List<Study> getStudyByName(String name);
 
-    public List<Sample> getSampleByName(String name);
+    List<Sample> getSampleByName(String name);
 
-    public SequencerRun getSequencerRunByName(String name);
+    SequencerRun getSequencerRunByName(String name);
 
     /**
      * Get ius by sw accession
@@ -1232,7 +1232,7 @@ public interface Metadata {
      * @param swAccession
      * @return
      */
-    public IUS getIUS(int swAccession);
+    IUS getIUS(int swAccession);
 
     /**
      * Get sample by swa
@@ -1240,7 +1240,7 @@ public interface Metadata {
      * @param swAccession
      * @return
      */
-    public Sample getSample(int swAccession);
+    Sample getSample(int swAccession);
 
     /**
      * Get study by swa
@@ -1248,5 +1248,5 @@ public interface Metadata {
      * @param swAccession
      * @return
      */
-    public Study getStudy(int swAccession);
+    Study getStudy(int swAccession);
 }

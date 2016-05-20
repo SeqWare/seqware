@@ -122,9 +122,6 @@ public class ConfigTools {
         String dbName = settings.get(SqwKeys.SW_DB.getSettingKey());
         String user = settings.get(SqwKeys.SW_DB_USER.getSettingKey());
         String pass = settings.get(SqwKeys.SW_DB_PASS.getSettingKey());
-        if (server == null || dbName == null || user == null || pass == null) {
-            return false;
-        }
-        return true;
+        return !(server == null || dbName == null || user == null || pass == null);
     }
 }

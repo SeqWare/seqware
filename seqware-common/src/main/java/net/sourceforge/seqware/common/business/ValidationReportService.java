@@ -17,7 +17,7 @@ public interface ValidationReportService {
      * @see #fileLinkReport(List)
      * @return A list of entries. Each entry indicates the file tested and the number of links the file has.
      */
-    public List<ReportEntry> fileLinkReport();
+    List<ReportEntry> fileLinkReport();
 
     /**
      * Every file must be associated with at least one processing node and this node in turn must be linked (either directly or through a
@@ -31,7 +31,7 @@ public interface ValidationReportService {
      *            A list of file SeqWare accessions to be included in the report.
      * @return A list of entries. Each entry indicates the file tested and the number of links the file has.
      */
-    public List<ReportEntry> fileLinkReport(List<Integer> fileSwas);
+    List<ReportEntry> fileLinkReport(List<Integer> fileSwas);
 
     /**
      * Produces a text representation of a reverse hierarchy tree starting at a file (indicated by the provided fileSwa). The tree included
@@ -44,5 +44,5 @@ public interface ValidationReportService {
      *            SeqWare accession indicating a file.
      * @return A plain text representation of a tree.
      */
-    public String fileReverseHierarchyDisplay(Integer fileSwa);
+    String fileReverseHierarchyDisplay(Integer fileSwa);
 }

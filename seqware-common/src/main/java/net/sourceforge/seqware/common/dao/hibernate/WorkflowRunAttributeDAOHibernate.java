@@ -1,14 +1,15 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.util.List;
 import net.sourceforge.seqware.common.dao.WorkflowRunAttributeDAO;
 import net.sourceforge.seqware.common.model.WorkflowRun;
 import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 /**
@@ -48,7 +49,7 @@ public class WorkflowRunAttributeDAOHibernate implements WorkflowRunAttributeDAO
     /** {@inheritDoc} */
     @Override
     public WorkflowRunAttribute get(Integer id) {
-        return (WorkflowRunAttribute) currentSession().get(WorkflowRunAttribute.class, id);
+        return currentSession().get(WorkflowRunAttribute.class, id);
     }
 
     /** {@inheritDoc} */

@@ -17,7 +17,7 @@ import net.sourceforge.seqware.common.model.Registration;
 public interface FileService {
 
     /** Constant <code>NAME="fileService"</code> */
-    public static final String NAME = "fileService";
+    String NAME = "fileService";
 
     /**
      * <p>
@@ -27,7 +27,7 @@ public interface FileService {
      * @param fileDAO
      *            a {@link net.sourceforge.seqware.common.dao.FileDAO} object.
      */
-    public void setFileDAO(FileDAO fileDAO);
+    void setFileDAO(FileDAO fileDAO);
 
     /**
      * <p>
@@ -37,7 +37,7 @@ public interface FileService {
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public Integer insert(File file);
+    Integer insert(File file);
 
     /**
      * <p>
@@ -50,7 +50,7 @@ public interface FileService {
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      * @return sw_accession for created file
      */
-    public Integer insert(Registration registration, File file);
+    Integer insert(Registration registration, File file);
 
     /**
      * <p>
@@ -62,7 +62,7 @@ public interface FileService {
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public void update(Registration registration, File file);
+    void update(Registration registration, File file);
 
     /**
      * <p>
@@ -72,7 +72,7 @@ public interface FileService {
      * @param file
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public void update(File file);
+    void update(File file);
 
     /**
      * <p>
@@ -82,7 +82,7 @@ public interface FileService {
      * @param file
      * @param deleteRealFiles
      */
-    public void delete(File file, boolean deleteRealFiles);
+    void delete(File file, boolean deleteRealFiles);
 
     /**
      * <p>
@@ -92,7 +92,7 @@ public interface FileService {
      * @param file
      * @param deleteRealFiles
      */
-    public void deleteAll(List<File> file, boolean deleteRealFiles);
+    void deleteAll(List<File> file, boolean deleteRealFiles);
 
     /**
      * <p>
@@ -103,7 +103,7 @@ public interface FileService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File findByID(Integer id);
+    File findByID(Integer id);
 
     /**
      * <p>
@@ -114,7 +114,7 @@ public interface FileService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File findByPath(String path);
+    File findByPath(String path);
 
     /**
      * <p>
@@ -125,7 +125,7 @@ public interface FileService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File findBySWAccession(Integer swAccession);
+    File findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -136,7 +136,7 @@ public interface FileService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> findByOwnerId(Integer registrationId);
+    List<File> findByOwnerId(Integer registrationId);
 
     /**
      * <p>
@@ -147,7 +147,7 @@ public interface FileService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer fileId);
+    List<File> getFiles(Integer fileId);
 
     /**
      * <p>
@@ -160,7 +160,7 @@ public interface FileService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer fileId, String metaType);
+    List<File> getFiles(Integer fileId, String metaType);
 
     /**
      * <p>
@@ -173,7 +173,7 @@ public interface FileService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.Set} object.
      */
-    public Set<File> setWithHasFile(Set<File> list, String metaType);
+    Set<File> setWithHasFile(Set<File> list, String metaType);
 
     /**
      * <p>
@@ -186,7 +186,7 @@ public interface FileService {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isExists(String fileName, String folderStore);
+    boolean isExists(String fileName, String folderStore);
 
     /**
      * <p>
@@ -197,7 +197,7 @@ public interface FileService {
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File updateDetached(File file);
+    File updateDetached(File file);
 
     /**
      * <p>
@@ -210,7 +210,7 @@ public interface FileService {
      *            a {@link net.sourceforge.seqware.common.model.File} object.
      * @return a {@link net.sourceforge.seqware.common.model.File} object.
      */
-    public File updateDetached(Registration registration, File file);
+    File updateDetached(Registration registration, File file);
 
     /**
      * <p>
@@ -223,7 +223,7 @@ public interface FileService {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<File> findByCriteria(String criteria, boolean isCaseSens);
+    List<File> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -232,5 +232,5 @@ public interface FileService {
      *
      * @return a {@link java.util.List} object.
      */
-    public List<File> list();
+    List<File> list();
 }

@@ -18,7 +18,7 @@ import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -50,7 +50,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
     @Override
     public Integer insert(File file) {
         this.getHibernateTemplate().save(file);
-        this.getSession().flush();
+        this.currentSession().flush();
         return file.getSwAccession();
     }
 
@@ -151,7 +151,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
         Object[] parameters = { swAccession };
         List<File> list = (List<File>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            file = (File) list.get(0);
+            file = list.get(0);
         }
         return file;
     }
@@ -194,7 +194,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
                 + " or cast(f.swAccession as string) like :sw or f.filePath like :path order by f.filePath, f.description";
         String queryStringICase = "from File as f where lower(f.description) like :description "
                 + " or cast(f.swAccession as string) like :sw or lower(f.filePath) like :path order by f.filePath, f.description";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
+        Query query = isCaseSens ? this.currentSession().createQuery(queryStringCase) : this.currentSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -261,7 +261,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, file);
-            return (File) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Could not update detached file", e);
         }
@@ -330,7 +330,7 @@ public class FileDAOHibernate extends HibernateDaoSupport implements FileDAO {
 
     private File reattachFile(File file) throws IllegalStateException, DataAccessResourceFailureException {
         File dbObject = file;
-        if (!getSession().contains(file)) {
+        if (!currentSession().contains(file)) {
             dbObject = findByID(file.getFileId());
         }
         return dbObject;

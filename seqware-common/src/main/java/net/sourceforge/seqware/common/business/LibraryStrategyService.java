@@ -15,7 +15,7 @@ import net.sourceforge.seqware.common.model.Registration;
  */
 public interface LibraryStrategyService {
     /** Constant <code>NAME="LibraryStrategyService"</code> */
-    public static final String NAME = "LibraryStrategyService";
+    String NAME = "LibraryStrategyService";
 
     /**
      * <p>
@@ -25,7 +25,7 @@ public interface LibraryStrategyService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.LibraryStrategyDAO} object.
      */
-    public void setLibraryStrategyDAO(LibraryStrategyDAO dao);
+    void setLibraryStrategyDAO(LibraryStrategyDAO dao);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface LibraryStrategyService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<LibraryStrategy> list();
+    List<LibraryStrategy> list();
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface LibraryStrategyService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<LibraryStrategy> list(Registration registration);
+    List<LibraryStrategy> list(Registration registration);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface LibraryStrategyService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.LibraryStrategy} object.
      */
-    public LibraryStrategy findByID(Integer id);
+    LibraryStrategy findByID(Integer id);
 
     /**
      * <p>

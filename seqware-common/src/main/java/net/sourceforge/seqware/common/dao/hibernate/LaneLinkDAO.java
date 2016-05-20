@@ -1,8 +1,9 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.util.List;
 import net.sourceforge.seqware.common.model.Lane;
 import net.sourceforge.seqware.common.model.LaneAttribute;
+
+import java.util.List;
 
 /**
  * <p>
@@ -22,7 +23,7 @@ public interface LaneLinkDAO {
      * @param laneAttribute
      *            a {@link net.sourceforge.seqware.common.model.LaneAttribute} object.
      */
-    public abstract void insert(LaneAttribute laneAttribute);
+    void insert(LaneAttribute laneAttribute);
 
     /**
      * <p>
@@ -32,7 +33,7 @@ public interface LaneLinkDAO {
      * @param laneAttribute
      *            a {@link net.sourceforge.seqware.common.model.LaneAttribute} object.
      */
-    public abstract void update(LaneAttribute laneAttribute);
+    void update(LaneAttribute laneAttribute);
 
     /**
      * <p>
@@ -42,7 +43,7 @@ public interface LaneLinkDAO {
      * @param laneAttribute
      *            a {@link net.sourceforge.seqware.common.model.LaneAttribute} object.
      */
-    public abstract void delete(LaneAttribute laneAttribute);
+    void delete(LaneAttribute laneAttribute);
 
     /**
      * <p>
@@ -54,6 +55,6 @@ public interface LaneLinkDAO {
      * @return a {@link java.util.List} object.
      */
     @SuppressWarnings("unchecked")
-    public abstract List<LaneAttribute> findAll(Lane lane);
+    List<LaneAttribute> findAll(Lane lane);
 
 }

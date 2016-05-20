@@ -24,7 +24,7 @@ public interface ProcessingLanesService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ProcessingLanesDAO} object.
      */
-    public abstract void setProcessingLanesDAO(ProcessingLanesDAO dao);
+    void setProcessingLanesDAO(ProcessingLanesDAO dao);
 
     /**
      * <p>
@@ -37,7 +37,7 @@ public interface ProcessingLanesService {
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    public abstract ProcessingLanes findByProcessingLane(Processing processing, Lane lane);
+    ProcessingLanes findByProcessingLane(Processing processing, Lane lane);
 
     /**
      * <p>
@@ -47,7 +47,7 @@ public interface ProcessingLanesService {
      * @param processingLanes
      *            a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    public abstract void delete(ProcessingLanes processingLanes);
+    void delete(ProcessingLanes processingLanes);
 
     /**
      * <p>
@@ -57,7 +57,7 @@ public interface ProcessingLanesService {
      * @param processingLanes
      *            a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    public abstract void update(ProcessingLanes processingLanes);
+    void update(ProcessingLanes processingLanes);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface ProcessingLanesService {
      * @param processingLanes
      *            a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    public abstract void insert(ProcessingLanes processingLanes);
+    void insert(ProcessingLanes processingLanes);
 
     /**
      * <p>
@@ -78,7 +78,7 @@ public interface ProcessingLanesService {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    public abstract ProcessingLanes updateDetached(ProcessingLanes processingLanes);
+    ProcessingLanes updateDetached(ProcessingLanes processingLanes);
 
     /**
      * <p>
@@ -87,6 +87,6 @@ public interface ProcessingLanesService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingLanes> list();
+    List<ProcessingLanes> list();
 
 }

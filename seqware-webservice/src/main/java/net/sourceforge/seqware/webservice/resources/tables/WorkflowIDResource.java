@@ -16,10 +16,6 @@
  */
 package net.sourceforge.seqware.webservice.resources.tables;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import net.sf.beanlib.CollectionPropertyName;
 import net.sf.beanlib.hibernate3.Hibernate3DtoCopier;
 import net.sourceforge.seqware.common.business.RegistrationService;
@@ -38,6 +34,10 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * <p>
@@ -115,12 +115,9 @@ public class WorkflowIDResource extends DatabaseIDResource {
         try {
             String text = entity.getText();
             newWorkflow = (Workflow) XmlTools.unMarshal(jo, new Workflow(), text);
-        } catch (SAXException ex) {
+        } catch (SAXException | IOException ex) {
             ex.printStackTrace();
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, ex.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, e.getMessage());
         }
         try {
             WorkflowService fs = BeanFactory.getWorkflowServiceBean();
@@ -154,7 +151,6 @@ public class WorkflowIDResource extends DatabaseIDResource {
             workflow.setTemplate(template);
             workflow.setUsername(username);
             workflow.setVersion(version);
-            workflow.setUpdateTimestamp(new Date());
             workflow.setWorkflowClass(newWorkflow.getWorkflowClass());
             workflow.setWorkflowType(newWorkflow.getWorkflowType());
             workflow.setWorkflowEngine(newWorkflow.getWorkflowEngine());

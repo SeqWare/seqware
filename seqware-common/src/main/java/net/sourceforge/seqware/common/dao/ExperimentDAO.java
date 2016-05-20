@@ -25,7 +25,7 @@ public interface ExperimentDAO {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Experiment sequencerRun);
+    Integer insert(Experiment sequencerRun);
 
     /**
      * <p>
@@ -38,7 +38,7 @@ public interface ExperimentDAO {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Experiment sequencerRun);
+    Integer insert(Registration registration, Experiment sequencerRun);
 
     /**
      * <p>
@@ -48,7 +48,7 @@ public interface ExperimentDAO {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public void update(Experiment sequencerRun);
+    void update(Experiment sequencerRun);
 
     /**
      * <p>
@@ -60,7 +60,7 @@ public interface ExperimentDAO {
      * @param experiment
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public void update(Registration registration, Experiment experiment);
+    void update(Registration registration, Experiment experiment);
 
     /**
      * <p>
@@ -70,7 +70,7 @@ public interface ExperimentDAO {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public void delete(Experiment sequencerRun);
+    void delete(Experiment sequencerRun);
 
     /**
      * <p>
@@ -79,7 +79,7 @@ public interface ExperimentDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> list();
+    List<Experiment> list();
 
     /**
      * <p>
@@ -90,7 +90,7 @@ public interface ExperimentDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> list(Registration registration);
+    List<Experiment> list(Registration registration);
 
     /**
      * <p>
@@ -101,7 +101,7 @@ public interface ExperimentDAO {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> list(Study study);
+    List<Experiment> list(Study study);
 
     /**
      * <p>
@@ -112,7 +112,7 @@ public interface ExperimentDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment findByTitle(String title);
+    Experiment findByTitle(String title);
 
     /**
      * <p>
@@ -123,7 +123,7 @@ public interface ExperimentDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment findByID(Integer studyID);
+    Experiment findByID(Integer studyID);
 
     /**
      * <p>
@@ -134,7 +134,7 @@ public interface ExperimentDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment findBySWAccession(Integer swAccession);
+    Experiment findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -145,7 +145,7 @@ public interface ExperimentDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer experimentId);
+    List<File> getFiles(Integer experimentId);
 
     /**
      * <p>
@@ -156,7 +156,7 @@ public interface ExperimentDAO {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer experimentId);
+    boolean isHasFile(Integer experimentId);
 
     /**
      * <p>
@@ -169,7 +169,7 @@ public interface ExperimentDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer expId, String metaType);
+    List<File> getFiles(Integer expId, String metaType);
 
     /**
      * <p>
@@ -182,7 +182,7 @@ public interface ExperimentDAO {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer expId, String metaType);
+    boolean isHasFile(Integer expId, String metaType);
 
     /**
      * <p>
@@ -193,7 +193,7 @@ public interface ExperimentDAO {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment updateDetached(Experiment experiment);
+    Experiment updateDetached(Experiment experiment);
 
     /**
      * <p>
@@ -206,7 +206,7 @@ public interface ExperimentDAO {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment updateDetached(Registration registration, Experiment experiment);
+    Experiment updateDetached(Registration registration, Experiment experiment);
 
     /**
      * <p>
@@ -217,7 +217,7 @@ public interface ExperimentDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> findByOwnerID(Integer registrationID);
+    List<Experiment> findByOwnerID(Integer registrationID);
 
     /**
      * <p>
@@ -230,7 +230,7 @@ public interface ExperimentDAO {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> findByCriteria(String criteria, boolean isCaseSens);
+    List<Experiment> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>

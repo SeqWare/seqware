@@ -14,7 +14,7 @@ import net.sourceforge.seqware.common.model.ShareWorkflowRun;
  */
 public interface ShareWorkflowRunService {
     /** Constant <code>NAME="shareWorkflowRunService"</code> */
-    public static final String NAME = "shareWorkflowRunService";
+    String NAME = "shareWorkflowRunService";
 
     /**
      * <p>
@@ -24,7 +24,7 @@ public interface ShareWorkflowRunService {
      * @param shareWorkflowRunDAO
      *            a {@link net.sourceforge.seqware.common.dao.ShareWorkflowRunDAO} object.
      */
-    public void setShareWorkflowRunDAO(ShareWorkflowRunDAO shareWorkflowRunDAO);
+    void setShareWorkflowRunDAO(ShareWorkflowRunDAO shareWorkflowRunDAO);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface ShareWorkflowRunService {
      * @param shareWorkflowRun
      *            a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public void insert(ShareWorkflowRun shareWorkflowRun);
+    void insert(ShareWorkflowRun shareWorkflowRun);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface ShareWorkflowRunService {
      * @param shareWorkflowRun
      *            a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public void update(ShareWorkflowRun shareWorkflowRun);
+    void update(ShareWorkflowRun shareWorkflowRun);
 
     /**
      * <p>
@@ -54,7 +54,7 @@ public interface ShareWorkflowRunService {
      * @param shareWorkflowRun
      *            a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public void delete(ShareWorkflowRun shareWorkflowRun);
+    void delete(ShareWorkflowRun shareWorkflowRun);
 
     /**
      * <p>
@@ -65,7 +65,7 @@ public interface ShareWorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public ShareWorkflowRun findByID(Integer id);
+    ShareWorkflowRun findByID(Integer id);
 
     /**
      * <p>
@@ -78,7 +78,7 @@ public interface ShareWorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public ShareWorkflowRun findByWorkflowRunIdAndRegistrationId(Integer workflowRunId, Integer registrationId);
+    ShareWorkflowRun findByWorkflowRunIdAndRegistrationId(Integer workflowRunId, Integer registrationId);
 
     /**
      * <p>
@@ -89,7 +89,7 @@ public interface ShareWorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public ShareWorkflowRun findBySWAccession(Integer swAccession);
+    ShareWorkflowRun findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -102,7 +102,7 @@ public interface ShareWorkflowRunService {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isExistsShare(Integer workflowRunId, Integer registrationId);
+    boolean isExistsShare(Integer workflowRunId, Integer registrationId);
 
     /**
      * <p>
@@ -122,5 +122,5 @@ public interface ShareWorkflowRunService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ShareWorkflowRun> list();
+    List<ShareWorkflowRun> list();
 }

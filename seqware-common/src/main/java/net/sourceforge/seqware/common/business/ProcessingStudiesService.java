@@ -24,7 +24,7 @@ public interface ProcessingStudiesService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ProcessingStudiesDAO} object.
      */
-    public abstract void setProcessingStudiesDAO(ProcessingStudiesDAO dao);
+    void setProcessingStudiesDAO(ProcessingStudiesDAO dao);
 
     /**
      * <p>
@@ -37,7 +37,7 @@ public interface ProcessingStudiesService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract ProcessingStudies findByProcessingStudy(Processing processing, Study study);
+    ProcessingStudies findByProcessingStudy(Processing processing, Study study);
 
     /**
      * <p>
@@ -47,7 +47,7 @@ public interface ProcessingStudiesService {
      * @param processingStudies
      *            a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract void delete(ProcessingStudies processingStudies);
+    void delete(ProcessingStudies processingStudies);
 
     /**
      * <p>
@@ -57,7 +57,7 @@ public interface ProcessingStudiesService {
      * @param processingStudies
      *            a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract void update(ProcessingStudies processingStudies);
+    void update(ProcessingStudies processingStudies);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface ProcessingStudiesService {
      * @param processingStudies
      *            a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract void insert(ProcessingStudies processingStudies);
+    void insert(ProcessingStudies processingStudies);
 
     /**
      * <p>
@@ -78,7 +78,7 @@ public interface ProcessingStudiesService {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingStudies} object.
      */
-    public abstract ProcessingStudies updateDetached(ProcessingStudies processingStudies);
+    ProcessingStudies updateDetached(ProcessingStudies processingStudies);
 
     /**
      * <p>
@@ -87,6 +87,6 @@ public interface ProcessingStudiesService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingStudies> list();
+    List<ProcessingStudies> list();
 
 }

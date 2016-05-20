@@ -22,7 +22,7 @@ public interface StudyAttributeDAO {
      * @param studyAttribute
      *            a {@link net.sourceforge.seqware.common.model.StudyAttribute} object.
      */
-    public abstract void insert(StudyAttribute studyAttribute);
+    void insert(StudyAttribute studyAttribute);
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface StudyAttributeDAO {
      * @param studyAttribute
      *            a {@link net.sourceforge.seqware.common.model.StudyAttribute} object.
      */
-    public abstract void update(StudyAttribute studyAttribute);
+    void update(StudyAttribute studyAttribute);
 
     /**
      * <p>
@@ -42,7 +42,7 @@ public interface StudyAttributeDAO {
      * @param studyAttribute
      *            a {@link net.sourceforge.seqware.common.model.StudyAttribute} object.
      */
-    public abstract void delete(StudyAttribute studyAttribute);
+    void delete(StudyAttribute studyAttribute);
 
     /**
      * <p>
@@ -53,8 +53,7 @@ public interface StudyAttributeDAO {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.util.List} object.
      */
-    @SuppressWarnings("unchecked")
-    public abstract List<StudyAttribute> findAll(Study study);
+    @SuppressWarnings("unchecked") List<StudyAttribute> findAll(Study study);
 
     /**
      * <p>
@@ -63,6 +62,6 @@ public interface StudyAttributeDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<StudyAttribute> list();
+    List<StudyAttribute> list();
 
 }

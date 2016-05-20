@@ -21,7 +21,7 @@ public interface ShareWorkflowRunDAO {
      * @param shareWorkflowRun
      *            a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public void insert(ShareWorkflowRun shareWorkflowRun);
+    void insert(ShareWorkflowRun shareWorkflowRun);
 
     /**
      * <p>
@@ -31,7 +31,7 @@ public interface ShareWorkflowRunDAO {
      * @param shareWorkflowRun
      *            a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public void update(ShareWorkflowRun shareWorkflowRun);
+    void update(ShareWorkflowRun shareWorkflowRun);
 
     /**
      * <p>
@@ -41,7 +41,7 @@ public interface ShareWorkflowRunDAO {
      * @param shareWorkflowRun
      *            a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public void delete(ShareWorkflowRun shareWorkflowRun);
+    void delete(ShareWorkflowRun shareWorkflowRun);
 
     /**
      * <p>
@@ -52,7 +52,7 @@ public interface ShareWorkflowRunDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public ShareWorkflowRun findByID(Integer id);
+    ShareWorkflowRun findByID(Integer id);
 
     /**
      * <p>
@@ -65,7 +65,7 @@ public interface ShareWorkflowRunDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public ShareWorkflowRun findByWorkflowRunIdAndRegistrationId(Integer workflowRunId, Integer registrationId);
+    ShareWorkflowRun findByWorkflowRunIdAndRegistrationId(Integer workflowRunId, Integer registrationId);
 
     /**
      * <p>
@@ -76,7 +76,7 @@ public interface ShareWorkflowRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link java.util.List} object.
      */
-    public List<ShareWorkflowRun> list(WorkflowRun workflowRun);
+    List<ShareWorkflowRun> list(WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -89,7 +89,7 @@ public interface ShareWorkflowRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public ShareWorkflowRun getShareWorkflowRun(String email, WorkflowRun workflowRun);
+    ShareWorkflowRun getShareWorkflowRun(String email, WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -100,7 +100,7 @@ public interface ShareWorkflowRunDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public ShareWorkflowRun findBySWAccession(Integer swAccession);
+    ShareWorkflowRun findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -111,7 +111,7 @@ public interface ShareWorkflowRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareWorkflowRun} object.
      */
-    public ShareWorkflowRun updateDetached(ShareWorkflowRun shareWorkflowRun);
+    ShareWorkflowRun updateDetached(ShareWorkflowRun shareWorkflowRun);
 
     /**
      * <p>
@@ -120,6 +120,6 @@ public interface ShareWorkflowRunDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ShareWorkflowRun> list();
+    List<ShareWorkflowRun> list();
 
 }

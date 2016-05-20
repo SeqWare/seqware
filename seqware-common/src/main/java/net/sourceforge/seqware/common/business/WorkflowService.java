@@ -1,10 +1,11 @@
 package net.sourceforge.seqware.common.business;
 
-import java.util.List;
 import net.sourceforge.seqware.common.dao.WorkflowDAO;
 import net.sourceforge.seqware.common.model.Registration;
 import net.sourceforge.seqware.common.model.SequencerRun;
 import net.sourceforge.seqware.common.model.Workflow;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,7 +18,7 @@ import net.sourceforge.seqware.common.model.Workflow;
 public interface WorkflowService {
 
     /** Constant <code>NAME="WorkflowService"</code> */
-    public static final String NAME = "WorkflowService";
+    String NAME = "WorkflowService";
 
     /**
      * <p>
@@ -27,7 +28,7 @@ public interface WorkflowService {
      * @param workflowDAO
      *            a {@link net.sourceforge.seqware.common.dao.WorkflowDAO} object.
      */
-    public void setWorkflowDAO(WorkflowDAO workflowDAO);
+    void setWorkflowDAO(WorkflowDAO workflowDAO);
 
     /**
      * Inserts a new Workflow and returns its sw_accession number.
@@ -36,7 +37,7 @@ public interface WorkflowService {
      *            Workflow to be inserted.
      * @return The SeqWare Accession number for the newly inserted workflow.
      */
-    public Integer insert(Workflow workflow);
+    Integer insert(Workflow workflow);
 
     /**
      * <p>
@@ -49,7 +50,7 @@ public interface WorkflowService {
      *            a {@link net.sourceforge.seqware.common.model.Workflow} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Workflow workflow);
+    Integer insert(Registration registration, Workflow workflow);
 
     /**
      * <p>
@@ -59,7 +60,7 @@ public interface WorkflowService {
      * @param workflow
      *            a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
-    public void update(Workflow workflow);
+    void update(Workflow workflow);
 
     /**
      * <p>
@@ -71,7 +72,7 @@ public interface WorkflowService {
      * @param workflow
      *            a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
-    public void update(Registration registration, Workflow workflow);
+    void update(Registration registration, Workflow workflow);
 
     /**
      * <p>
@@ -81,7 +82,7 @@ public interface WorkflowService {
      * @param workflow
      *            a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
-    public void delete(Workflow workflow);
+    void delete(Workflow workflow);
 
     /**
      * <p>
@@ -90,7 +91,7 @@ public interface WorkflowService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Workflow> list();
+    List<Workflow> list();
 
     /**
      * <p>
@@ -101,7 +102,7 @@ public interface WorkflowService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Workflow> list(Registration registration);
+    List<Workflow> list(Registration registration);
 
     /**
      * <p>
@@ -112,7 +113,7 @@ public interface WorkflowService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Workflow> listMyShared(Registration registration);
+    List<Workflow> listMyShared(Registration registration);
 
     /**
      * <p>
@@ -123,7 +124,7 @@ public interface WorkflowService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Workflow> listSharedWithMe(Registration registration);
+    List<Workflow> listSharedWithMe(Registration registration);
 
     /**
      * <p>
@@ -134,7 +135,7 @@ public interface WorkflowService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Workflow> findByName(String name);
+    List<Workflow> findByName(String name);
 
     /**
      * <p>
@@ -145,7 +146,7 @@ public interface WorkflowService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
-    public Workflow findByID(Integer wfID);
+    Workflow findByID(Integer wfID);
 
     /**
      * <p>
@@ -156,7 +157,7 @@ public interface WorkflowService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
-    public Workflow findByIDWithParams(Integer wfID);
+    Workflow findByIDWithParams(Integer wfID);
 
     /**
      * <p>
@@ -169,7 +170,7 @@ public interface WorkflowService {
      *            a {@link net.sourceforge.seqware.common.model.Workflow} object.
      * @return a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
-    public Workflow updateDetached(Registration registration, Workflow workflow);
+    Workflow updateDetached(Registration registration, Workflow workflow);
 
     /**
      * <p>
@@ -180,7 +181,7 @@ public interface WorkflowService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
-    public Workflow findBySWAccession(Integer swAccession);
+    Workflow findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -191,7 +192,7 @@ public interface WorkflowService {
      *            a {@link net.sourceforge.seqware.common.model.Workflow} object.
      * @return a {@link net.sourceforge.seqware.common.model.Workflow} object.
      */
-    public Workflow updateDetached(Workflow workflow);
+    Workflow updateDetached(Workflow workflow);
 
     /**
      * <p>
@@ -204,7 +205,7 @@ public interface WorkflowService {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Workflow> findByCriteria(String criteria, boolean isCaseSens);
+    List<Workflow> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -215,7 +216,7 @@ public interface WorkflowService {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Workflow> listSequencerRunsWorkflows(SequencerRun sr);
+    List<Workflow> listSequencerRunsWorkflows(SequencerRun sr);
 }
 
 // ex:sw=4:ts=4:

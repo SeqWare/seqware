@@ -22,7 +22,7 @@ public interface SampleAttributeDAO {
      * @param sampleAttribute
      *            a {@link net.sourceforge.seqware.common.model.SampleAttribute} object.
      */
-    public abstract void insert(SampleAttribute sampleAttribute);
+    void insert(SampleAttribute sampleAttribute);
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface SampleAttributeDAO {
      * @param sampleAttribute
      *            a {@link net.sourceforge.seqware.common.model.SampleAttribute} object.
      */
-    public abstract void update(SampleAttribute sampleAttribute);
+    void update(SampleAttribute sampleAttribute);
 
     /**
      * <p>
@@ -42,7 +42,7 @@ public interface SampleAttributeDAO {
      * @param sampleAttribute
      *            a {@link net.sourceforge.seqware.common.model.SampleAttribute} object.
      */
-    public abstract void delete(SampleAttribute sampleAttribute);
+    void delete(SampleAttribute sampleAttribute);
 
     /**
      * <p>
@@ -53,8 +53,7 @@ public interface SampleAttributeDAO {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link java.util.List} object.
      */
-    @SuppressWarnings("unchecked")
-    public abstract List<SampleAttribute> findAll(Sample sample);
+    @SuppressWarnings("unchecked") List<SampleAttribute> findAll(Sample sample);
 
     /**
      * <p>
@@ -63,6 +62,6 @@ public interface SampleAttributeDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<SampleAttribute> list();
+    List<SampleAttribute> list();
 
 }
