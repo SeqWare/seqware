@@ -15,7 +15,7 @@ import net.sourceforge.seqware.common.model.Registration;
  */
 public interface OrganismService {
     /** Constant <code>NAME="OrganismService"</code> */
-    public static final String NAME = "OrganismService";
+    String NAME = "OrganismService";
 
     /**
      * <p>
@@ -25,7 +25,7 @@ public interface OrganismService {
      * @param platformDAO
      *            a {@link net.sourceforge.seqware.common.dao.OrganismDAO} object.
      */
-    public void setOrganismDAO(OrganismDAO platformDAO);
+    void setOrganismDAO(OrganismDAO platformDAO);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface OrganismService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Organism> list();
+    List<Organism> list();
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface OrganismService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Organism> list(Registration registration);
+    List<Organism> list(Registration registration);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface OrganismService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Organism} object.
      */
-    public Organism findByID(Integer id);
+    Organism findByID(Integer id);
 
     /**
      * <p>

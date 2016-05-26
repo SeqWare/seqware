@@ -20,7 +20,7 @@ public interface ExperimentSpotDesignReadSpecDAO {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public void insert(ExperimentSpotDesignReadSpec obj);
+    void insert(ExperimentSpotDesignReadSpec obj);
 
     /**
      * <p>
@@ -30,7 +30,7 @@ public interface ExperimentSpotDesignReadSpecDAO {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public void update(ExperimentSpotDesignReadSpec obj);
+    void update(ExperimentSpotDesignReadSpec obj);
 
     /**
      * <p>
@@ -40,7 +40,7 @@ public interface ExperimentSpotDesignReadSpecDAO {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public void delete(ExperimentSpotDesignReadSpec obj);
+    void delete(ExperimentSpotDesignReadSpec obj);
 
     /**
      * <p>
@@ -51,7 +51,7 @@ public interface ExperimentSpotDesignReadSpecDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public ExperimentSpotDesignReadSpec findByID(Integer id);
+    ExperimentSpotDesignReadSpec findByID(Integer id);
 
     /**
      * <p>
@@ -62,7 +62,7 @@ public interface ExperimentSpotDesignReadSpecDAO {
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public ExperimentSpotDesignReadSpec updateDetached(ExperimentSpotDesignReadSpec experiment);
+    ExperimentSpotDesignReadSpec updateDetached(ExperimentSpotDesignReadSpec experiment);
 
     /**
      * <p>
@@ -71,5 +71,5 @@ public interface ExperimentSpotDesignReadSpecDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ExperimentSpotDesignReadSpec> list();
+    List<ExperimentSpotDesignReadSpec> list();
 }

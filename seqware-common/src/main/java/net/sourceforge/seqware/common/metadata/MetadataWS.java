@@ -3468,7 +3468,7 @@ public class MetadataWS implements Metadata {
     public String getProcessingRelations(String swAccession) {
         String report = null;
         try {
-            report = (String) ll.getString("/processingstructure?swAccession=" + swAccession);
+            report = ll.getString("/processingstructure?swAccession=" + swAccession);
         } catch (Exception e) {
             /** do nothing */
         }

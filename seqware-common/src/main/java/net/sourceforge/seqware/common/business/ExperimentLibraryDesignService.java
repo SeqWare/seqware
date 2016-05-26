@@ -15,7 +15,7 @@ import net.sourceforge.seqware.common.model.Registration;
  */
 public interface ExperimentLibraryDesignService {
     /** Constant <code>NAME="ExperimentLibraryDesignService"</code> */
-    public static final String NAME = "ExperimentLibraryDesignService";
+    String NAME = "ExperimentLibraryDesignService";
 
     /**
      * <p>
@@ -25,7 +25,7 @@ public interface ExperimentLibraryDesignService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ExperimentLibraryDesignDAO} object.
      */
-    public void setExperimentLibraryDesignDAO(ExperimentLibraryDesignDAO dao);
+    void setExperimentLibraryDesignDAO(ExperimentLibraryDesignDAO dao);
 
     /**
      * <p>
@@ -35,7 +35,7 @@ public interface ExperimentLibraryDesignService {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
-    public void insert(ExperimentLibraryDesign obj);
+    void insert(ExperimentLibraryDesign obj);
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface ExperimentLibraryDesignService {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
-    public void update(ExperimentLibraryDesign obj);
+    void update(ExperimentLibraryDesign obj);
 
     /**
      * <p>
@@ -54,7 +54,7 @@ public interface ExperimentLibraryDesignService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ExperimentLibraryDesign> list();
+    List<ExperimentLibraryDesign> list();
 
     /**
      * <p>
@@ -65,7 +65,7 @@ public interface ExperimentLibraryDesignService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<ExperimentLibraryDesign> list(Registration registration);
+    List<ExperimentLibraryDesign> list(Registration registration);
 
     /**
      * <p>
@@ -76,7 +76,7 @@ public interface ExperimentLibraryDesignService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
-    public ExperimentLibraryDesign findByID(Integer expID);
+    ExperimentLibraryDesign findByID(Integer expID);
 
     /**
      * <p>

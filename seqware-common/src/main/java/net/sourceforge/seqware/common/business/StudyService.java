@@ -17,7 +17,7 @@ import net.sourceforge.seqware.common.model.Study;
 public interface StudyService {
 
     /** Constant <code>NAME="StudyService"</code> */
-    public static final String NAME = "StudyService";
+    String NAME = "StudyService";
 
     /**
      * <p>
@@ -27,7 +27,7 @@ public interface StudyService {
      * @param studyDAO
      *            a {@link net.sourceforge.seqware.common.dao.StudyDAO} object.
      */
-    public void setStudyDAO(StudyDAO studyDAO);
+    void setStudyDAO(StudyDAO studyDAO);
 
     /**
      * <p>
@@ -38,7 +38,7 @@ public interface StudyService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Study study);
+    Integer insert(Study study);
 
     /**
      * <p>
@@ -51,7 +51,7 @@ public interface StudyService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Study study);
+    Integer insert(Registration registration, Study study);
 
     /**
      * <p>
@@ -61,7 +61,7 @@ public interface StudyService {
      * @param study
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public void update(Study study);
+    void update(Study study);
 
     /**
      * <p>
@@ -73,7 +73,7 @@ public interface StudyService {
      * @param study
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public void update(Registration registration, Study study);
+    void update(Registration registration, Study study);
 
     /**
      * <p>
@@ -83,7 +83,7 @@ public interface StudyService {
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
-    public void updateOwners(Integer swAccession);
+    void updateOwners(Integer swAccession);
 
     /**
      * <p>
@@ -93,7 +93,7 @@ public interface StudyService {
      * @param study
      * @param deleteRealFiles
      */
-    public void delete(Study study, boolean deleteRealFiles);
+    void delete(Study study, boolean deleteRealFiles);
 
     /**
      * <p>
@@ -103,7 +103,7 @@ public interface StudyService {
      * @param study
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public void merge(Study study);
+    void merge(Study study);
 
     /**
      * <p>
@@ -114,7 +114,7 @@ public interface StudyService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> list(Registration registration);
+    List<Study> list(Registration registration);
 
     /**
      * <p>
@@ -127,7 +127,7 @@ public interface StudyService {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> list(Registration registration, Boolean isAcs);
+    List<Study> list(Registration registration, Boolean isAcs);
 
     /**
      * <p>
@@ -140,7 +140,7 @@ public interface StudyService {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> listMyShared(Registration registration, Boolean isAcs);
+    List<Study> listMyShared(Registration registration, Boolean isAcs);
 
     /**
      * <p>
@@ -151,7 +151,7 @@ public interface StudyService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> listSharedWithMe(Registration registration);
+    List<Study> listSharedWithMe(Registration registration);
 
     /**
      * <p>
@@ -164,7 +164,7 @@ public interface StudyService {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> listSharedWithMe(Registration registration, Boolean isAcs);
+    List<Study> listSharedWithMe(Registration registration, Boolean isAcs);
 
     /**
      * <p>
@@ -175,7 +175,7 @@ public interface StudyService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public List<Study> findByTitle(String title);
+    List<Study> findByTitle(String title);
 
     /**
      * <p>
@@ -186,7 +186,7 @@ public interface StudyService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public Study findByID(Integer expID);
+    Study findByID(Integer expID);
 
     /**
      * <p>
@@ -197,7 +197,7 @@ public interface StudyService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public Study findBySWAccession(Integer swAccession);
+    Study findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -208,7 +208,7 @@ public interface StudyService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> findByOwnerID(Integer registrationId);
+    List<Study> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -221,7 +221,7 @@ public interface StudyService {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> findByCriteria(String criteria, boolean isCaseSens);
+    List<Study> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -232,7 +232,7 @@ public interface StudyService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> findByCriteria(String criteria);
+    List<Study> findByCriteria(String criteria);
 
     /**
      * <p>
@@ -245,7 +245,7 @@ public interface StudyService {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean hasTitleBeenUsed(String oldTitle, String newTitle);
+    boolean hasTitleBeenUsed(String oldTitle, String newTitle);
 
     /**
      * <p>
@@ -256,7 +256,7 @@ public interface StudyService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer studyId);
+    List<File> getFiles(Integer studyId);
 
     /**
      * <p>
@@ -267,7 +267,7 @@ public interface StudyService {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer studyId);
+    boolean isHasFile(Integer studyId);
 
     /**
      * <p>
@@ -278,7 +278,7 @@ public interface StudyService {
      *            a {@link java.util.List} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> listWithHasFile(List<Study> list);
+    List<Study> listWithHasFile(List<Study> list);
 
     /**
      * <p>
@@ -291,7 +291,7 @@ public interface StudyService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer studyId, String metaType);
+    List<File> getFiles(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -304,7 +304,7 @@ public interface StudyService {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer studyId, String metaType);
+    boolean isHasFile(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -317,7 +317,7 @@ public interface StudyService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> listWithHasFile(List<Study> list, String metaType);
+    List<Study> listWithHasFile(List<Study> list, String metaType);
 
     /**
      * <p>
@@ -332,7 +332,7 @@ public interface StudyService {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> listStudyHasFile(Registration registration, String metaType, Boolean isAcs);
+    List<Study> listStudyHasFile(Registration registration, String metaType, Boolean isAcs);
 
     /**
      * <p>
@@ -343,7 +343,7 @@ public interface StudyService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public Study updateDetached(Study study);
+    Study updateDetached(Study study);
 
     /**
      * <p>
@@ -356,7 +356,7 @@ public interface StudyService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public Study updateDetached(Registration registration, Study study);
+    Study updateDetached(Registration registration, Study study);
 
     /**
      * <p>
@@ -365,7 +365,7 @@ public interface StudyService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Study> list();
+    List<Study> list();
 
     /**
      * <p>
@@ -376,7 +376,7 @@ public interface StudyService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a int.
      */
-    public int getRunningCount(Study study);
+    int getRunningCount(Study study);
 
     /**
      * <p>
@@ -387,7 +387,7 @@ public interface StudyService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a int.
      */
-    public int getFinishedCount(Study study);
+    int getFinishedCount(Study study);
 
     /**
      * <p>
@@ -398,7 +398,7 @@ public interface StudyService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a int.
      */
-    public int getFailedCount(Study study);
+    int getFailedCount(Study study);
 }
 
 // ex:sw=4:ts=4:

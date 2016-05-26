@@ -25,7 +25,7 @@ public interface StudyDAO {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Study sequencerRun);
+    Integer insert(Study sequencerRun);
 
     /**
      * <p>
@@ -38,7 +38,7 @@ public interface StudyDAO {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Study sequencerRun);
+    Integer insert(Registration registration, Study sequencerRun);
 
     /**
      * <p>
@@ -48,7 +48,7 @@ public interface StudyDAO {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public void update(Study sequencerRun);
+    void update(Study sequencerRun);
 
     /**
      * <p>
@@ -60,7 +60,7 @@ public interface StudyDAO {
      * @param study
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public void update(Registration registration, Study study);
+    void update(Registration registration, Study study);
 
     /**
      * <p>
@@ -70,7 +70,7 @@ public interface StudyDAO {
      * @param study
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public void delete(Study study);
+    void delete(Study study);
 
     /**
      * <p>
@@ -93,7 +93,7 @@ public interface StudyDAO {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> list(Registration registration, Boolean isAcs);
+    List<Study> list(Registration registration, Boolean isAcs);
 
     /**
      * <p>
@@ -106,7 +106,7 @@ public interface StudyDAO {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> listMyShared(Registration registration, Boolean isAcs);
+    List<Study> listMyShared(Registration registration, Boolean isAcs);
 
     /**
      * <p>
@@ -119,7 +119,7 @@ public interface StudyDAO {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> listSharedWithMe(Registration registration, Boolean isAcs);
+    List<Study> listSharedWithMe(Registration registration, Boolean isAcs);
 
     /**
      * <p>
@@ -130,7 +130,7 @@ public interface StudyDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public List<Study> findByTitle(String title);
+    List<Study> findByTitle(String title);
 
     /**
      * <p>
@@ -141,7 +141,7 @@ public interface StudyDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public Study findByID(Integer studyID);
+    Study findByID(Integer studyID);
 
     /**
      * <p>
@@ -152,7 +152,7 @@ public interface StudyDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer studyId);
+    List<File> getFiles(Integer studyId);
 
     /**
      * <p>
@@ -163,7 +163,7 @@ public interface StudyDAO {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer studyId);
+    boolean isHasFile(Integer studyId);
 
     /**
      * <p>
@@ -176,7 +176,7 @@ public interface StudyDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer studyId, String metaType);
+    List<File> getFiles(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -189,7 +189,7 @@ public interface StudyDAO {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer studyId, String metaType);
+    boolean isHasFile(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -204,7 +204,7 @@ public interface StudyDAO {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> listStudyHasFile(Registration registration, String metaType, Boolean iaAsc);
+    List<Study> listStudyHasFile(Registration registration, String metaType, Boolean iaAsc);
 
     /**
      * <p>
@@ -215,7 +215,7 @@ public interface StudyDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public Study findBySWAccession(Integer swAccession);
+    Study findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -228,7 +228,7 @@ public interface StudyDAO {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> findByCriteria(String criteria, boolean isCaseSens);
+    List<Study> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -239,7 +239,7 @@ public interface StudyDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> findByCriteria(String criteria);
+    List<Study> findByCriteria(String criteria);
 
     /**
      * <p>
@@ -250,7 +250,7 @@ public interface StudyDAO {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public Study updateDetached(Study study);
+    Study updateDetached(Study study);
 
     /**
      * <p>
@@ -263,7 +263,7 @@ public interface StudyDAO {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link net.sourceforge.seqware.common.model.Study} object.
      */
-    public Study updateDetached(Registration registration, Study study);
+    Study updateDetached(Registration registration, Study study);
 
     /**
      * <p>
@@ -274,7 +274,7 @@ public interface StudyDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Study> findByOwnerID(Integer registrationId);
+    List<Study> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -284,7 +284,7 @@ public interface StudyDAO {
      * @param swAccession
      *            a {@link java.lang.Integer} object.
      */
-    public void updateOwners(Integer swAccession);
+    void updateOwners(Integer swAccession);
 
     //
     // List search();
@@ -295,7 +295,7 @@ public interface StudyDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Study> list();
+    List<Study> list();
 
     /**
      * <p>
@@ -308,6 +308,6 @@ public interface StudyDAO {
      *            the status of the workflow runs to count
      * @return the count
      */
-    public int getStatusCount(Study study, WorkflowRunStatus status);
+    int getStatusCount(Study study, WorkflowRunStatus status);
 
 }

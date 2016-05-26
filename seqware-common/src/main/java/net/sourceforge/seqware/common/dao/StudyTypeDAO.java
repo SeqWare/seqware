@@ -21,7 +21,7 @@ public interface StudyTypeDAO {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public void insert(StudyType sequencerRun);
+    void insert(StudyType sequencerRun);
 
     /**
      * <p>
@@ -31,7 +31,7 @@ public interface StudyTypeDAO {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public void update(StudyType sequencerRun);
+    void update(StudyType sequencerRun);
 
     /**
      * <p>
@@ -42,7 +42,7 @@ public interface StudyTypeDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<StudyType> list(Registration registration);
+    List<StudyType> list(Registration registration);
 
     /**
      * <p>
@@ -53,7 +53,7 @@ public interface StudyTypeDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public StudyType findByName(String name);
+    StudyType findByName(String name);
 
     /**
      * <p>
@@ -64,7 +64,7 @@ public interface StudyTypeDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public StudyType findByID(Integer studyTypeID);
+    StudyType findByID(Integer studyTypeID);
 
     /**
      * <p>
@@ -75,7 +75,7 @@ public interface StudyTypeDAO {
      *            a {@link net.sourceforge.seqware.common.model.StudyType} object.
      * @return a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public StudyType updateDetached(StudyType studyType);
+    StudyType updateDetached(StudyType studyType);
 
     /**
      * <p>
@@ -84,5 +84,5 @@ public interface StudyTypeDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<StudyType> list();
+    List<StudyType> list();
 }

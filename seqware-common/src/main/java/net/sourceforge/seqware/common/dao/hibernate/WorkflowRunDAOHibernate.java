@@ -1,11 +1,5 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import net.sourceforge.seqware.common.dao.WorkflowRunDAO;
 import net.sourceforge.seqware.common.model.IUS;
 import net.sourceforge.seqware.common.model.Processing;
@@ -20,7 +14,14 @@ import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     @Override
     public Integer insert(WorkflowRun workflowRun) {
         this.getHibernateTemplate().save(workflowRun);
-        this.getSession().flush();
+        this.currentSession().flush();
         return workflowRun.getSwAccession();
     }
 
@@ -55,7 +56,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
     @Override
     public void update(WorkflowRun workflowRun) {
         getHibernateTemplate().update(workflowRun);
-        getSession().flush();
+        currentSession().flush();
     }
 
     /** {@inheritDoc} */
@@ -85,7 +86,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         String query = "update processing set  workflow_id=? where processing_id in "
                 + "(select  processing_id from processing_lanes where lane_id in (" + paramQuery + ") )";
 
-        SQLQuery sql = this.getSession().createSQLQuery(query);
+        SQLQuery sql = this.currentSession().createSQLQuery(query);
 
         sql.setInteger(0, workflowRun.getWorkflowRunId());
         for (int i = 0; i < laneIds.size(); i++) {
@@ -93,7 +94,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         }
 
         sql.executeUpdate();
-        getSession().flush();
+        currentSession().flush();
     }
 
     /**
@@ -131,7 +132,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         ArrayList<WorkflowRun> workflowRuns = new ArrayList<>();
         localLogger.debug("Get WFR LIST. " + registration.getEmailAddress());
         /*
-         * Criteria criteria = this.getSession().createCriteria(Study.class); criteria.add(Expression.eq("owner_id",
+         * Criteria criteria = this.currentSession().createCriteria(Study.class); criteria.add(Expression.eq("owner_id",
          * registration.getRegistrationId())); criteria.addOrder(Order.asc("create_tstmp")); criteria.setFirstResult(100);
          * criteria.setMaxResults(50); List pageResults=criteria.list();
          */
@@ -287,7 +288,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
                 + " or wr.name like :name order by wr.name";
         String queryStringICase = "from WorkflowRun as wr where cast(wr.swAccession as string) like :sw "
                 + " or lower(wr.name) like :name order by wr.name";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
+        Query query = isCaseSens ? this.currentSession().createQuery(queryStringCase) : this.currentSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -318,7 +319,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
                 + " SELECT wr.* FROM Rec r" + " JOIN processing p" + " ON (p.processing_id = r.id)"
                 + " JOIN workflow_run wr ON (p.workflow_run_id = wr.workflow_run_id)";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(WorkflowRun.class).setInteger(0, ius.getIusId())
+        List list = this.currentSession().createSQLQuery(query).addEntity(WorkflowRun.class).setInteger(0, ius.getIusId())
                 .setInteger(1, ius.getIusId()).list();
 
         for (Object wfRunObj : list) {
@@ -349,7 +350,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbWf, workflowRun);
-            return (WorkflowRun) this.getHibernateTemplate().merge(dbWf);
+            return this.getHibernateTemplate().merge(dbWf);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Error updating detached WorkflowRun", e);
         }
@@ -362,12 +363,12 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
 
         /*
          * Not sure why this doesn't work but I think the :sw sub is only good for a value and not an HQL phrase String queryStringCase =
-         * "from WorkflowRun as wr where :sw"; Query query = this.getSession().createQuery(queryStringCase); query.setString("sw",
+         * "from WorkflowRun as wr where :sw"; Query query = this.currentSession().createQuery(queryStringCase); query.setString("sw",
          * criteria);
          */
 
         String queryStringCase = "from WorkflowRun as wr where ";
-        Query query = this.getSession().createQuery(queryStringCase + " " + criteria);
+        Query query = this.currentSession().createQuery(queryStringCase + " " + criteria);
 
         return query.list();
     }
@@ -417,7 +418,7 @@ public class WorkflowRunDAOHibernate extends HibernateDaoSupport implements Work
 
     private WorkflowRun reattachWorkflowRun(WorkflowRun workflowRun) throws IllegalStateException, DataAccessResourceFailureException {
         WorkflowRun dbObject = workflowRun;
-        if (!getSession().contains(workflowRun)) {
+        if (!currentSession().contains(workflowRun)) {
             dbObject = findByID(workflowRun.getWorkflowRunId());
         }
         return dbObject;

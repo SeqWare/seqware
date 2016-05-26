@@ -23,7 +23,7 @@ public interface ProcessingRelationshipService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ProcessingRelationshipDAO} object.
      */
-    public abstract void setProcessingRelationshipDAO(ProcessingRelationshipDAO dao);
+    void setProcessingRelationshipDAO(ProcessingRelationshipDAO dao);
 
     /**
      * <p>
@@ -36,7 +36,7 @@ public interface ProcessingRelationshipService {
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract ProcessingRelationship findByProcessings(Processing processingParent, Processing processingChild);
+    ProcessingRelationship findByProcessings(Processing processingParent, Processing processingChild);
 
     /**
      * <p>
@@ -46,7 +46,7 @@ public interface ProcessingRelationshipService {
      * @param processingRelationship
      *            a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract void delete(ProcessingRelationship processingRelationship);
+    void delete(ProcessingRelationship processingRelationship);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface ProcessingRelationshipService {
      * @param processingRelationship
      *            a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract void update(ProcessingRelationship processingRelationship);
+    void update(ProcessingRelationship processingRelationship);
 
     /**
      * <p>
@@ -66,7 +66,7 @@ public interface ProcessingRelationshipService {
      * @param processingRelationship
      *            a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract void insert(ProcessingRelationship processingRelationship);
+    void insert(ProcessingRelationship processingRelationship);
 
     /**
      * <p>
@@ -77,7 +77,7 @@ public interface ProcessingRelationshipService {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingRelationship} object.
      */
-    public abstract ProcessingRelationship updateDetached(ProcessingRelationship processingRelationship);
+    ProcessingRelationship updateDetached(ProcessingRelationship processingRelationship);
 
     /**
      * <p>
@@ -86,8 +86,8 @@ public interface ProcessingRelationshipService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingRelationship> list();
+    List<ProcessingRelationship> list();
 
-    public List<ProcessingRelationship> listByParentProcessingId(int parentId);
+    List<ProcessingRelationship> listByParentProcessingId(int parentId);
 
 }

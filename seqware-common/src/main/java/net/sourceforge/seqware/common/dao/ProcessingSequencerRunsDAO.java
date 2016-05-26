@@ -26,8 +26,7 @@ public interface ProcessingSequencerRunsDAO {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    @SuppressWarnings("rawtypes")
-    public abstract ProcessingSequencerRuns findByProcessingSequencerRun(Processing processing, SequencerRun sequencerRun);
+    @SuppressWarnings("rawtypes") ProcessingSequencerRuns findByProcessingSequencerRun(Processing processing, SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -37,7 +36,7 @@ public interface ProcessingSequencerRunsDAO {
      * @param processingSequencerRuns
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    public abstract void delete(ProcessingSequencerRuns processingSequencerRuns);
+    void delete(ProcessingSequencerRuns processingSequencerRuns);
 
     /**
      * <p>
@@ -47,7 +46,7 @@ public interface ProcessingSequencerRunsDAO {
      * @param processingSequencerRuns
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    public abstract void update(ProcessingSequencerRuns processingSequencerRuns);
+    void update(ProcessingSequencerRuns processingSequencerRuns);
 
     /**
      * <p>
@@ -57,7 +56,7 @@ public interface ProcessingSequencerRunsDAO {
      * @param processingSequencerRuns
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    public abstract void insert(ProcessingSequencerRuns processingSequencerRuns);
+    void insert(ProcessingSequencerRuns processingSequencerRuns);
 
     /**
      * <p>
@@ -68,7 +67,7 @@ public interface ProcessingSequencerRunsDAO {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingSequencerRuns} object.
      */
-    public abstract ProcessingSequencerRuns updateDetached(ProcessingSequencerRuns processingSequencerRuns);
+    ProcessingSequencerRuns updateDetached(ProcessingSequencerRuns processingSequencerRuns);
 
     /**
      * <p>
@@ -77,6 +76,6 @@ public interface ProcessingSequencerRunsDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingSequencerRuns> list();
+    List<ProcessingSequencerRuns> list();
 
 }

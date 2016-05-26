@@ -15,7 +15,7 @@ import net.sourceforge.seqware.common.model.Registration;
  */
 public interface LibrarySelectionService {
     /** Constant <code>NAME="LibrarySelectionService"</code> */
-    public static final String NAME = "LibrarySelectionService";
+    String NAME = "LibrarySelectionService";
 
     /**
      * <p>
@@ -25,7 +25,7 @@ public interface LibrarySelectionService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.LibrarySelectionDAO} object.
      */
-    public void setLibrarySelectionDAO(LibrarySelectionDAO dao);
+    void setLibrarySelectionDAO(LibrarySelectionDAO dao);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface LibrarySelectionService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<LibrarySelection> list();
+    List<LibrarySelection> list();
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface LibrarySelectionService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<LibrarySelection> list(Registration registration);
+    List<LibrarySelection> list(Registration registration);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface LibrarySelectionService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySelection} object.
      */
-    public LibrarySelection findByID(Integer id);
+    LibrarySelection findByID(Integer id);
 
     /**
      * <p>

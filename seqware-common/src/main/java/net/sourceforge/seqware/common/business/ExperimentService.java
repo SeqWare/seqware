@@ -19,7 +19,7 @@ import net.sourceforge.seqware.common.model.Study;
 public interface ExperimentService {
 
     /** Constant <code>NAME="ExperimentService"</code> */
-    public static final String NAME = "ExperimentService";
+    String NAME = "ExperimentService";
 
     /**
      * <p>
@@ -29,7 +29,7 @@ public interface ExperimentService {
      * @param experimentDAO
      *            a {@link net.sourceforge.seqware.common.dao.ExperimentDAO} object.
      */
-    public void setExperimentDAO(ExperimentDAO experimentDAO);
+    void setExperimentDAO(ExperimentDAO experimentDAO);
 
     /**
      * <p>
@@ -40,7 +40,7 @@ public interface ExperimentService {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Experiment experiment);
+    Integer insert(Experiment experiment);
 
     /**
      * <p>
@@ -53,7 +53,7 @@ public interface ExperimentService {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Experiment experiment);
+    Integer insert(Registration registration, Experiment experiment);
 
     /**
      * <p>
@@ -63,7 +63,7 @@ public interface ExperimentService {
      * @param experiment
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public void update(Experiment experiment);
+    void update(Experiment experiment);
 
     /**
      * <p>
@@ -75,7 +75,7 @@ public interface ExperimentService {
      * @param experiment
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public void update(Registration registration, Experiment experiment);
+    void update(Registration registration, Experiment experiment);
 
     /**
      * <p>
@@ -85,7 +85,7 @@ public interface ExperimentService {
      * @param experiment
      * @param deleteRealFiles
      */
-    public void delete(Experiment experiment, boolean deleteRealFiles);
+    void delete(Experiment experiment, boolean deleteRealFiles);
 
     /**
      * <p>
@@ -94,7 +94,7 @@ public interface ExperimentService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> list();
+    List<Experiment> list();
 
     /**
      * <p>
@@ -105,7 +105,7 @@ public interface ExperimentService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> list(Registration registration);
+    List<Experiment> list(Registration registration);
 
     /**
      * <p>
@@ -116,7 +116,7 @@ public interface ExperimentService {
      *            a {@link net.sourceforge.seqware.common.model.Study} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> list(Study study);
+    List<Experiment> list(Study study);
 
     /**
      * <p>
@@ -127,7 +127,7 @@ public interface ExperimentService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment findByTitle(String name);
+    Experiment findByTitle(String name);
 
     /**
      * <p>
@@ -138,7 +138,7 @@ public interface ExperimentService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment findByID(Integer expID);
+    Experiment findByID(Integer expID);
 
     /**
      * <p>
@@ -149,7 +149,7 @@ public interface ExperimentService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment findBySWAccession(Integer swAccession);
+    Experiment findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -162,7 +162,7 @@ public interface ExperimentService {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean hasTitleBeenUsed(String oldName, String newName);
+    boolean hasTitleBeenUsed(String oldName, String newName);
 
     /**
      * <p>
@@ -173,7 +173,7 @@ public interface ExperimentService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer expId);
+    List<File> getFiles(Integer expId);
 
     /**
      * <p>
@@ -184,7 +184,7 @@ public interface ExperimentService {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer expId);
+    boolean isHasFile(Integer expId);
 
     /**
      * <p>
@@ -197,7 +197,7 @@ public interface ExperimentService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer studyId, String metaType);
+    List<File> getFiles(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -210,7 +210,7 @@ public interface ExperimentService {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer studyId, String metaType);
+    boolean isHasFile(Integer studyId, String metaType);
 
     /**
      * <p>
@@ -221,7 +221,7 @@ public interface ExperimentService {
      *            a {@link java.util.SortedSet} object.
      * @return a {@link java.util.SortedSet} object.
      */
-    public SortedSet<Experiment> setWithHasFile(SortedSet<Experiment> list);
+    SortedSet<Experiment> setWithHasFile(SortedSet<Experiment> list);
 
     /**
      * <p>
@@ -234,7 +234,7 @@ public interface ExperimentService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.SortedSet} object.
      */
-    public SortedSet<Experiment> listWithHasFile(SortedSet<Experiment> list, String metaType);
+    SortedSet<Experiment> listWithHasFile(SortedSet<Experiment> list, String metaType);
 
     /**
      * <p>
@@ -245,7 +245,7 @@ public interface ExperimentService {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment updateDetached(Experiment experiment);
+    Experiment updateDetached(Experiment experiment);
 
     /**
      * <p>
@@ -258,7 +258,7 @@ public interface ExperimentService {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link net.sourceforge.seqware.common.model.Experiment} object.
      */
-    public Experiment updateDetached(Registration registration, Experiment experiment);
+    Experiment updateDetached(Registration registration, Experiment experiment);
 
     /**
      * <p>
@@ -269,7 +269,7 @@ public interface ExperimentService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> findByOwnerID(Integer registrationID);
+    List<Experiment> findByOwnerID(Integer registrationID);
 
     /**
      * <p>
@@ -282,7 +282,7 @@ public interface ExperimentService {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Experiment> findByCriteria(String criteria, boolean isCaseSens);
+    List<Experiment> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>

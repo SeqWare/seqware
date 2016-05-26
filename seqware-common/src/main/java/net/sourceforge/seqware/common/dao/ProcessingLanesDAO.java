@@ -26,8 +26,7 @@ public interface ProcessingLanesDAO {
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    @SuppressWarnings("rawtypes")
-    public abstract ProcessingLanes findByProcessingLane(Processing processing, Lane lane);
+    @SuppressWarnings("rawtypes") ProcessingLanes findByProcessingLane(Processing processing, Lane lane);
 
     /**
      * <p>
@@ -37,7 +36,7 @@ public interface ProcessingLanesDAO {
      * @param processingLanes
      *            a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    public abstract void delete(ProcessingLanes processingLanes);
+    void delete(ProcessingLanes processingLanes);
 
     /**
      * <p>
@@ -47,7 +46,7 @@ public interface ProcessingLanesDAO {
      * @param processingLanes
      *            a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    public abstract void update(ProcessingLanes processingLanes);
+    void update(ProcessingLanes processingLanes);
 
     /**
      * <p>
@@ -57,7 +56,7 @@ public interface ProcessingLanesDAO {
      * @param processingLanes
      *            a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    public abstract void insert(ProcessingLanes processingLanes);
+    void insert(ProcessingLanes processingLanes);
 
     /**
      * <p>
@@ -68,7 +67,7 @@ public interface ProcessingLanesDAO {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingLanes} object.
      */
-    public abstract ProcessingLanes updateDetached(ProcessingLanes processingLanes);
+    ProcessingLanes updateDetached(ProcessingLanes processingLanes);
 
     /**
      * <p>
@@ -77,6 +76,6 @@ public interface ProcessingLanesDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingLanes> list();
+    List<ProcessingLanes> list();
 
 }

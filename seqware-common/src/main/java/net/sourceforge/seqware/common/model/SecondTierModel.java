@@ -27,5 +27,5 @@ public interface SecondTierModel {
      * 
      * @return
      */
-    public int getModelId();
+    int getModelId();
 }

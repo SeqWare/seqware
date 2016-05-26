@@ -21,7 +21,7 @@ public interface LibrarySelectionDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<LibrarySelection> list();
+    List<LibrarySelection> list();
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface LibrarySelectionDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<LibrarySelection> list(Registration registration);
+    List<LibrarySelection> list(Registration registration);
 
     /**
      * <p>
@@ -43,7 +43,7 @@ public interface LibrarySelectionDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySelection} object.
      */
-    public LibrarySelection findByID(Integer id);
+    LibrarySelection findByID(Integer id);
 
     /**
      * <p>
@@ -54,5 +54,5 @@ public interface LibrarySelectionDAO {
      *            a {@link net.sourceforge.seqware.common.model.LibrarySelection} object.
      * @return a {@link net.sourceforge.seqware.common.model.LibrarySelection} object.
      */
-    public LibrarySelection updateDetached(LibrarySelection librarySelection);
+    LibrarySelection updateDetached(LibrarySelection librarySelection);
 }

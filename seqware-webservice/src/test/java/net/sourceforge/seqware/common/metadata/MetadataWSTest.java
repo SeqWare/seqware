@@ -20,16 +20,6 @@ import com.google.common.collect.Lists;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
-import java.net.URISyntaxException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
 import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.factory.DBAccess;
 import net.sourceforge.seqware.common.model.Experiment;
@@ -57,6 +47,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+
 /**
  *
  * @author mtaschuk
@@ -76,7 +76,7 @@ public class MetadataWSTest {
 
     }
 
-    public static boolean useEmbeddedWebService(Map<String, String> settings) {
+    private static boolean useEmbeddedWebService(Map<String, String> settings) {
         return !settings.containsKey(SqwKeys.BASIC_TEST_DB_HOST.getSettingKey());
     }
 
@@ -195,7 +195,7 @@ public class MetadataWSTest {
         Workflow workflow = instance.getWorkflow(Integer.valueOf(workflow_id));
         Assert.assertTrue("workflow retrieved is invalid", workflow.getWorkflowId() == result.getReturnValue());
         SortedSet<WorkflowParam> workflowParams = instance.getWorkflowParams(workflow_id);
-        Assert.assertTrue("invalid number of workflow params retrieved", workflowParams.size() == 34);
+        Assert.assertTrue("invalid number of workflow params retrieved, found " + workflowParams.size(), workflowParams.size() == 34);
         // check out the values of some suspicious values
         for (WorkflowParam param : workflowParams) {
             switch (param.getKey()) {
@@ -226,17 +226,14 @@ public class MetadataWSTest {
 
     }
 
-    protected void testTimestamp(String sql, final String colname, Date beforeDate) {
+    void testTimestamp(String sql, final String colname, Date beforeDate) {
         logger.debug(sql);
         try {
-            Date date = DBAccess.get().executeQuery(sql, new ResultSetHandler<Date>() {
-                @Override
-                public Date handle(ResultSet rs) throws SQLException {
-                    if (rs.next()) {
-                        return rs.getTimestamp(colname);
-                    } else {
-                        return null;
-                    }
+            Date date = DBAccess.get().executeQuery(sql, (ResultSetHandler<Date>) rs -> {
+                if (rs.next()) {
+                    return rs.getTimestamp(colname);
+                } else {
+                    return null;
                 }
             });
 
@@ -258,17 +255,14 @@ public class MetadataWSTest {
         }
     }
 
-    protected void testCount(String sql, int expectedCount) {
+    private void testCount(String sql, int expectedCount) {
         logger.debug(sql);
         try {
-            int count = DBAccess.get().executeQuery(sql, new ResultSetHandler<Integer>() {
-                @Override
-                public Integer handle(ResultSet rs) throws SQLException {
-                    if (rs.next()) {
-                        return rs.getInt("count");
-                    } else {
-                        return 0;
-                    }
+            int count = DBAccess.get().executeQuery(sql, rs -> {
+                if (rs.next()) {
+                    return rs.getInt("count");
+                } else {
+                    return 0;
                 }
             });
 
@@ -307,7 +301,7 @@ public class MetadataWSTest {
     /**
      * Test of add_task_group method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testAdd_task_group() {
         logger.info("add_task_group");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
@@ -327,7 +321,7 @@ public class MetadataWSTest {
     /**
      * Test of add_workflow_run method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testAdd_workflow_run() {
         logger.info("add_workflow_run");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
@@ -341,7 +335,7 @@ public class MetadataWSTest {
     /**
      * Test of add_workflow_run_ancestor method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testAdd_workflow_run_ancestor() {
         logger.info("add_workflow_run_ancestor");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
@@ -358,7 +352,7 @@ public class MetadataWSTest {
     /**
      * Test of associate_processing_event_with_parents_and_child method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testAssociate_processing_event_with_parents_and_child() {
         logger.info("associate_processing_event_with_parents_and_child");
         int processingID = 773;
@@ -374,7 +368,7 @@ public class MetadataWSTest {
     /**
      * Test of get_workflow_info method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testGet_workflow_info() {
         logger.info("get_workflow_info");
         int workflowAccession = 2861;
@@ -386,7 +380,7 @@ public class MetadataWSTest {
     /**
      * Test of get_workflow_run_accession method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testGet_workflow_run_accession() {
         logger.info("get_workflow_run_accession");
         int workflowRunId = 23;
@@ -398,7 +392,7 @@ public class MetadataWSTest {
     /**
      * Test of get_workflow_run_id method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testGet_workflow_run_id() {
         logger.info("get_workflow_run_id");
         int workflowRunAccession = 863;
@@ -412,7 +406,7 @@ public class MetadataWSTest {
      *
      * @throws java.lang.Exception
      */
-    // @Test
+    @Test
     public void testLinkWorkflowRunAndParent() throws Exception {
         logger.info("linkWorkflowRunAndParent");
         int workflowRunId = 24;
@@ -426,7 +420,7 @@ public class MetadataWSTest {
     /**
      * Test of mapProcessingIdToAccession method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testMapProcessingIdToAccession() {
         logger.info("mapProcessingIdToAccession");
         int processingId = 26;
@@ -438,7 +432,7 @@ public class MetadataWSTest {
     /**
      * Test of processing_event_to_task_group method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testProcessing_event_to_task_group() {
         logger.info("processing_event_to_task_group");
         int processingID = 4923;
@@ -456,7 +450,7 @@ public class MetadataWSTest {
     /**
      * Test of update_processing_event method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testUpdate_processing_event() {
         logger.info("update_processing_event");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
@@ -485,23 +479,23 @@ public class MetadataWSTest {
     /**
      * Test of update_processing_status method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testUpdate_processing_status() {
         logger.info("update_processing_status");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
         int processingID = 5247;
-        ProcessingStatus status = ProcessingStatus.success;
+        ProcessingStatus status = ProcessingStatus.failed;
         int expResult = ReturnValue.SUCCESS;
         ReturnValue result = instance.update_processing_status(processingID, status);
         Assert.assertEquals(expResult, result.getExitStatus());
-        testTimestamp("select update_tstmp from processing " + "where processing_id=5247 " + "and status='testUpdate_processing_status()'",
+        testTimestamp("select update_tstmp from processing " + "where processing_id=5247 " + "and status='"+"failed"+"'",
                 "update_tstmp", beforeDate);
     }
 
     /**
      * Test of update_processing_workflow_run method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testUpdate_processing_workflow_run() {
         logger.info("update_processing_workflow_run");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
@@ -518,7 +512,7 @@ public class MetadataWSTest {
     /**
      * Test of update_workflow_run method, of class MetadataWS.
      */
-    // @Test
+    @Test
     public void testUpdate_workflow_run() {
         logger.info("update_workflow_run");
         Date beforeDate = new Timestamp(System.currentTimeMillis());
@@ -539,22 +533,22 @@ public class MetadataWSTest {
         testTimestamp("select update_tstmp from workflow_run " + "where workflow_run_id=32;", "update_tstmp", beforeDate);
     }
 
-    // @Test
+    @Test
     public void testListInstalledWorkflow() {
         logger.info("listInstalledWorkflows");
         instance.listInstalledWorkflows();
     }
 
-    // @Test
+    @Test
     public void testUpdateWorkflow() {
         Date beforeDate = new Timestamp(System.currentTimeMillis());
         logger.info("updateWorkflow");
-        ReturnValue ret = instance.updateWorkflow(15, "http://testtest");
+        ReturnValue ret = instance.updateWorkflow(15, "http://funky");
         Assert.assertEquals("Did not return with a success ReturnValue", ReturnValue.SUCCESS, ret.getExitStatus());
         testTimestamp("select update_tstmp from workflow " + "where workflow_id=15", "update_tstmp", beforeDate);
     }
 
-    // @Test
+    @Test
     public void testGetWorkflowAccession() {
         logger.info("getWorkflowAccession");
         int accession = instance.getWorkflowAccession("FastqQualityReportAndFilter", "0.10.1");

@@ -20,7 +20,7 @@ public interface LibraryDAO {
      *            SeqWare Accession.
      * @return Library.
      */
-    public Sample findBySWAccession(Long swAccession);
+    Sample findBySWAccession(Long swAccession);
 
     /**
      * Returns list of libraries that contain the attribute attributeName=attributeValue. The attribute can occur anywhere in the hierarchy,
@@ -32,12 +32,12 @@ public interface LibraryDAO {
      *            Attribute Value.
      * @return List of Libraries.
      */
-    public List<Sample> getLibraries(String attributeName, String attributeValue);
+    List<Sample> getLibraries(String attributeName, String attributeValue);
 
     /**
      * Returns a complete list of libraries.
      * 
      * @return All libraries.
      */
-    public List<Sample> getLibraries();
+    List<Sample> getLibraries();
 }

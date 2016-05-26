@@ -1,12 +1,13 @@
 package net.sourceforge.seqware.common.model;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
 import net.sourceforge.seqware.common.security.PermissionsAware;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * Registration
@@ -459,11 +460,8 @@ public class Registration extends PermissionsAware implements Serializable, Comp
         boolean hasPermission;
         if (registration == null) {
             hasPermission = false;
-        } else if (registration.equals(this) || registration.isLIMSAdmin()) {
-            hasPermission = true;
-        } else {
-            hasPermission = false;
-        }
+        } else
+            hasPermission = registration.equals(this) || registration.isLIMSAdmin();
         if (!hasPermission) {
             logger.info("Registration does not give permission");
             throw new SecurityException("User " + registration.getEmailAddress() + " not permitted to modify the account of "

@@ -4,7 +4,7 @@ import java.util.List;
 import net.sourceforge.seqware.common.dao.ProcessingAttributeDAO;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.model.ProcessingAttribute;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 /**
  * <p>

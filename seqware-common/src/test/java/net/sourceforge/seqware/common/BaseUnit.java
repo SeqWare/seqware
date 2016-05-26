@@ -4,7 +4,7 @@ import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.orm.hibernate5.SessionFactoryUtils;
 
 /**
  * <p>
@@ -39,8 +39,7 @@ public class BaseUnit {
      */
     protected Session getSession() {
         SessionFactory sessionFactory = BeanFactory.getSessionFactoryBean();
-        Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-        return session;
+        return sessionFactory.getCurrentSession();
     }
 
     /**

@@ -1,8 +1,5 @@
 package net.sourceforge.seqware.common.dao.hibernate;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 import net.sourceforge.seqware.common.dao.ExperimentDAO;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.File;
@@ -16,7 +13,11 @@ import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -47,7 +48,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
     @Override
     public Integer insert(Experiment experiment) {
         this.getHibernateTemplate().save(experiment);
-        this.getSession().flush();
+        this.currentSession().flush();
         return experiment.getSwAccession();
     }
 
@@ -244,7 +245,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) )";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, experimentId).setInteger(1, experimentId)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, experimentId).setInteger(1, experimentId)
                 .setInteger(2, experimentId).setInteger(3, experimentId).setInteger(4, experimentId).setInteger(5, experimentId)
                 .setInteger(6, experimentId).setInteger(7, experimentId).setInteger(8, experimentId).setInteger(9, experimentId).list();
 
@@ -375,7 +376,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, experimentId).setInteger(1, experimentId)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, experimentId).setInteger(1, experimentId)
                 .setInteger(2, experimentId).setInteger(3, experimentId).setInteger(4, experimentId).setInteger(5, experimentId)
                 .setInteger(6, experimentId).setInteger(7, experimentId).setInteger(8, experimentId).setInteger(9, experimentId)
                 .setInteger(10, experimentId).list();
@@ -482,7 +483,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) )";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, experimentId).setInteger(1, experimentId)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, experimentId).setInteger(1, experimentId)
                 .setInteger(2, experimentId).setInteger(3, experimentId).setInteger(4, experimentId).setString(5, metaType)
                 .setInteger(6, experimentId).setInteger(7, experimentId).setInteger(8, experimentId).setInteger(9, experimentId)
                 .setInteger(10, experimentId).list();
@@ -592,7 +593,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
                 + "where (s_rec.parent_id = p_sam.sample_id or s_rec.child_id = p_sam.sample_id) "
                 + "and p_sam.processing_id = pf.processing_id ) ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, experimentId).setInteger(1, experimentId)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, experimentId).setInteger(1, experimentId)
                 .setInteger(2, experimentId).setInteger(3, experimentId).setInteger(4, experimentId).setString(5, metaType)
                 .setInteger(6, experimentId).setInteger(7, experimentId).setInteger(8, experimentId).setInteger(9, experimentId)
                 .setInteger(10, experimentId).list();
@@ -647,7 +648,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
         Object[] parameters = { swAccession };
         List<Experiment> list = (List<Experiment>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            experiment = (Experiment) list.get(0);
+            experiment = list.get(0);
         }
         return experiment;
     }
@@ -659,7 +660,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, experiment);
-            return (Experiment) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             localLogger.error("Could not update detached experiment", e);
         }
@@ -684,7 +685,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
         String queryStringICase = "from Experiment as ex where lower(ex.title) like :title "
                 + " or lower(ex.description) like :description " + " or cast(ex.swAccession as string) like :sw "
                 + " or lower(ex.name) like :name order by ex.title, ex.name, ex.description";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
+        Query query = isCaseSens ? this.currentSession().createQuery(queryStringCase) : this.currentSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -722,7 +723,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
         } else if (registration.isLIMSAdmin() || (experiment.givesPermission(registration) && dbObject.givesPermission(registration))) {
             localLogger.info("updating experiment object");
             update(experiment);
-            getSession().flush();
+            currentSession().flush();
         } else {
             localLogger.error("ExperimentDAOHibernate update not authorized");
         }
@@ -741,7 +742,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
         } else if (registration.isLIMSAdmin() || experiment.givesPermission(registration)) {
             localLogger.info("insert experiment object");
             swAccession = insert(experiment);
-            getSession().flush();
+            currentSession().flush();
         } else {
             localLogger.error("ExperimentDAOHibernate insert not authorized");
         }
@@ -765,7 +766,7 @@ public class ExperimentDAOHibernate extends HibernateDaoSupport implements Exper
 
     private Experiment reattachExperiment(Experiment experiment) throws IllegalStateException, DataAccessResourceFailureException {
         Experiment dbObject = experiment;
-        if (!getSession().contains(experiment)) {
+        if (!currentSession().contains(experiment)) {
             dbObject = findByID(experiment.getExperimentId());
         }
         return dbObject;

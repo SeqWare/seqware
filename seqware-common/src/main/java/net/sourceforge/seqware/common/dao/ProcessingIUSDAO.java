@@ -26,7 +26,7 @@ public interface ProcessingIUSDAO {
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract ProcessingIus findByProcessingIUS(Processing processing, IUS ius);
+    ProcessingIus findByProcessingIUS(Processing processing, IUS ius);
 
     /**
      * <p>
@@ -36,7 +36,7 @@ public interface ProcessingIUSDAO {
      * @param processingIus
      *            a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract void delete(ProcessingIus processingIus);
+    void delete(ProcessingIus processingIus);
 
     /**
      * <p>
@@ -46,7 +46,7 @@ public interface ProcessingIUSDAO {
      * @param processingIus
      *            a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract void update(ProcessingIus processingIus);
+    void update(ProcessingIus processingIus);
 
     /**
      * <p>
@@ -56,7 +56,7 @@ public interface ProcessingIUSDAO {
      * @param processingIus
      *            a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract void insert(ProcessingIus processingIus);
+    void insert(ProcessingIus processingIus);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface ProcessingIUSDAO {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract ProcessingIus updateDetached(ProcessingIus processingIus);
+    ProcessingIus updateDetached(ProcessingIus processingIus);
 
     /**
      * <p>
@@ -76,6 +76,6 @@ public interface ProcessingIUSDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingIus> list();
+    List<ProcessingIus> list();
 
 }

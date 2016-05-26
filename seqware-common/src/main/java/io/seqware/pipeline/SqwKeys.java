@@ -91,8 +91,7 @@ public enum SqwKeys {
     private final String overrideName;
     private final boolean required;
 
-    private SqwKeys(String overrideName, Categories category, boolean required, String description, String defaultValue,
-            String... possibleValues) {
+    SqwKeys(String overrideName, Categories category, boolean required, String description, String defaultValue, String... possibleValues) {
         this.overrideName = overrideName;
         this.category = category;
         this.description = description;

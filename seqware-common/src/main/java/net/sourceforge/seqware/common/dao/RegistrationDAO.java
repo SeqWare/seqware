@@ -19,7 +19,7 @@ public interface RegistrationDAO {
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
-    public void insert(Registration registration);
+    void insert(Registration registration);
 
     /**
      * <p>
@@ -29,7 +29,7 @@ public interface RegistrationDAO {
      * @param registration
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
-    public void update(Registration registration);
+    void update(Registration registration);
 
     /**
      * <p>
@@ -40,7 +40,7 @@ public interface RegistrationDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
-    public Registration findByEmailAddress(String emailAddress);
+    Registration findByEmailAddress(String emailAddress);
 
     /**
      * <p>
@@ -53,7 +53,7 @@ public interface RegistrationDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
-    public Registration findByEmailAddressAndPassword(String emailAddress, String password);
+    Registration findByEmailAddressAndPassword(String emailAddress, String password);
 
     /**
      * <p>
@@ -64,5 +64,5 @@ public interface RegistrationDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link net.sourceforge.seqware.common.model.Registration} object.
      */
-    public Registration updateDetached(Registration registration);
+    Registration updateDetached(Registration registration);
 }

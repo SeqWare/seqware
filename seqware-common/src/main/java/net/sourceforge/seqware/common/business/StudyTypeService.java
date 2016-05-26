@@ -15,7 +15,7 @@ import net.sourceforge.seqware.common.model.StudyType;
  */
 public interface StudyTypeService {
     /** Constant <code>NAME="StudyTypeService"</code> */
-    public static final String NAME = "StudyTypeService";
+    String NAME = "StudyTypeService";
 
     /**
      * <p>
@@ -25,7 +25,7 @@ public interface StudyTypeService {
      * @param studyTypeDAO
      *            a {@link net.sourceforge.seqware.common.dao.StudyTypeDAO} object.
      */
-    public void setStudyTypeDAO(StudyTypeDAO studyTypeDAO);
+    void setStudyTypeDAO(StudyTypeDAO studyTypeDAO);
 
     /**
      * <p>
@@ -35,7 +35,7 @@ public interface StudyTypeService {
      * @param studyType
      *            a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public void insert(StudyType studyType);
+    void insert(StudyType studyType);
 
     /**
      * <p>
@@ -45,7 +45,7 @@ public interface StudyTypeService {
      * @param studyType
      *            a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public void update(StudyType studyType);
+    void update(StudyType studyType);
 
     /**
      * <p>
@@ -54,7 +54,7 @@ public interface StudyTypeService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<StudyType> list();
+    List<StudyType> list();
 
     /**
      * <p>
@@ -65,7 +65,7 @@ public interface StudyTypeService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<StudyType> list(Registration registration);
+    List<StudyType> list(Registration registration);
 
     /**
      * <p>
@@ -76,7 +76,7 @@ public interface StudyTypeService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public StudyType findByName(String name);
+    StudyType findByName(String name);
 
     /**
      * <p>
@@ -87,7 +87,7 @@ public interface StudyTypeService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.StudyType} object.
      */
-    public StudyType findByID(Integer expID);
+    StudyType findByID(Integer expID);
 
     /**
      * <p>

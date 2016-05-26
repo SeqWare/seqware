@@ -24,7 +24,7 @@ public interface ProcessingExperimentsService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ProcessingExperimentsDAO} object.
      */
-    public abstract void setProcessingExperimentsDAO(ProcessingExperimentsDAO dao);
+    void setProcessingExperimentsDAO(ProcessingExperimentsDAO dao);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface ProcessingExperimentsService {
      * @param processingExperiments
      *            a {@link net.sourceforge.seqware.common.model.ProcessingExperiments} object.
      */
-    public abstract void delete(ProcessingExperiments processingExperiments);
+    void delete(ProcessingExperiments processingExperiments);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface ProcessingExperimentsService {
      * @param processingExperiments
      *            a {@link net.sourceforge.seqware.common.model.ProcessingExperiments} object.
      */
-    public abstract void update(ProcessingExperiments processingExperiments);
+    void update(ProcessingExperiments processingExperiments);
 
     /**
      * <p>
@@ -54,7 +54,7 @@ public interface ProcessingExperimentsService {
      * @param processingExperiments
      *            a {@link net.sourceforge.seqware.common.model.ProcessingExperiments} object.
      */
-    public abstract void insert(ProcessingExperiments processingExperiments);
+    void insert(ProcessingExperiments processingExperiments);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface ProcessingExperimentsService {
      *            a {@link net.sourceforge.seqware.common.model.Experiment} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingExperiments} object.
      */
-    public abstract ProcessingExperiments findByProcessingExperiment(Processing processing, Experiment experiment);
+    ProcessingExperiments findByProcessingExperiment(Processing processing, Experiment experiment);
 
     /**
      * <p>
@@ -78,7 +78,7 @@ public interface ProcessingExperimentsService {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingExperiments} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingExperiments} object.
      */
-    public abstract ProcessingExperiments updateDetached(ProcessingExperiments processingExperiments);
+    ProcessingExperiments updateDetached(ProcessingExperiments processingExperiments);
 
     /**
      * <p>
@@ -87,6 +87,6 @@ public interface ProcessingExperimentsService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingExperiments> list();
+    List<ProcessingExperiments> list();
 
 }

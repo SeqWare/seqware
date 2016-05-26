@@ -21,7 +21,7 @@ import net.sourceforge.seqware.common.model.WorkflowRun;
 public interface ProcessingService {
 
     /** Constant <code>NAME="processingService"</code> */
-    public static final String NAME = "processingService";
+    String NAME = "processingService";
 
     /**
      * <p>
@@ -31,7 +31,7 @@ public interface ProcessingService {
      * @param processingDAO
      *            a {@link net.sourceforge.seqware.common.dao.ProcessingDAO} object.
      */
-    public void setProcessingDAO(ProcessingDAO processingDAO);
+    void setProcessingDAO(ProcessingDAO processingDAO);
 
     // public void insert(Processing processing);
     /**
@@ -44,7 +44,7 @@ public interface ProcessingService {
      * @param processing
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public void insert(SequencerRun sequencerRun, Processing processing);
+    void insert(SequencerRun sequencerRun, Processing processing);
 
     /**
      * <p>
@@ -58,7 +58,7 @@ public interface ProcessingService {
      * @param processing
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public void insert(Registration registration, SequencerRun sequencerRun, Processing processing);
+    void insert(Registration registration, SequencerRun sequencerRun, Processing processing);
 
     /**
      * Inserts a new Processing and returns its sw_accession number.
@@ -67,7 +67,7 @@ public interface ProcessingService {
      *            Processing to be inserted.
      * @return The SeqWare Accession number for the newly inserted Processing.
      */
-    public Integer insert(Processing processing);
+    Integer insert(Processing processing);
 
     /**
      * <p>
@@ -80,7 +80,7 @@ public interface ProcessingService {
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link java.lang.Integer} object.
      */
-    public Integer insert(Registration registration, Processing processing);
+    Integer insert(Registration registration, Processing processing);
 
     /**
      * <p>
@@ -92,7 +92,7 @@ public interface ProcessingService {
      * @param processing
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public void update(Registration registration, Processing processing);
+    void update(Registration registration, Processing processing);
 
     /**
      * <p>
@@ -102,7 +102,7 @@ public interface ProcessingService {
      * @param processing
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public void update(Processing processing);
+    void update(Processing processing);
 
     /**
      * <p>
@@ -112,7 +112,7 @@ public interface ProcessingService {
      * @param processing
      * @param deleteRealFiles
      */
-    public void delete(Processing processing, boolean deleteRealFiles);
+    void delete(Processing processing, boolean deleteRealFiles);
 
     // public List<Processing> list();
     // public Processing findByExperiment(Integer expID);
@@ -125,7 +125,7 @@ public interface ProcessingService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing findByID(Integer processingID);
+    Processing findByID(Integer processingID);
 
     /**
      * <p>
@@ -136,7 +136,7 @@ public interface ProcessingService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing findByIDOnlyWithRunningWR(Integer processingID);
+    Processing findByIDOnlyWithRunningWR(Integer processingID);
 
     /**
      * <p>
@@ -147,7 +147,7 @@ public interface ProcessingService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing findBySWAccession(Integer swAccession);
+    Processing findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -158,7 +158,7 @@ public interface ProcessingService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer processingId);
+    List<File> getFiles(Integer processingId);
 
     /**
      * <p>
@@ -171,7 +171,7 @@ public interface ProcessingService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.List} object.
      */
-    public List<File> getFiles(Integer processingId, String metaType);
+    List<File> getFiles(Integer processingId, String metaType);
 
     /**
      * <p>
@@ -182,7 +182,7 @@ public interface ProcessingService {
      *            a {@link java.lang.Integer} object.
      * @return a boolean.
      */
-    public boolean isHasFile(Integer processingId);
+    boolean isHasFile(Integer processingId);
 
     /**
      * <p>
@@ -193,7 +193,7 @@ public interface ProcessingService {
      *            a {@link java.util.Set} object.
      * @return a {@link java.util.Set} object.
      */
-    public Set<Processing> setWithHasFile(Set<Processing> list);
+    Set<Processing> setWithHasFile(Set<Processing> list);
 
     /**
      * <p>
@@ -206,7 +206,7 @@ public interface ProcessingService {
      *            a {@link java.lang.String} object.
      * @return a {@link java.util.Set} object.
      */
-    public Set<Processing> setWithHasFile(Set<Processing> list, String metaType);
+    Set<Processing> setWithHasFile(Set<Processing> list, String metaType);
 
     /**
      * <p>
@@ -217,7 +217,7 @@ public interface ProcessingService {
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing updateDetached(Processing processing);
+    Processing updateDetached(Processing processing);
 
     /**
      * <p>
@@ -230,7 +230,7 @@ public interface ProcessingService {
      *            a {@link net.sourceforge.seqware.common.model.Processing} object.
      * @return a {@link net.sourceforge.seqware.common.model.Processing} object.
      */
-    public Processing updateDetached(Registration registration, Processing processing);
+    Processing updateDetached(Registration registration, Processing processing);
 
     /**
      * <p>
@@ -241,7 +241,7 @@ public interface ProcessingService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<Processing> findByOwnerID(Integer registrationId);
+    List<Processing> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -254,7 +254,7 @@ public interface ProcessingService {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<Processing> findByCriteria(String criteria, boolean isCaseSens);
+    List<Processing> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -267,7 +267,7 @@ public interface ProcessingService {
      *            a {@link net.sourceforge.seqware.common.model.WorkflowRun} object.
      * @return a {@link java.util.Set} object.
      */
-    public Set<Processing> findFor(Sample sample, WorkflowRun workflowRun);
+    Set<Processing> findFor(Sample sample, WorkflowRun workflowRun);
 
     /**
      * <p>
@@ -278,7 +278,7 @@ public interface ProcessingService {
      *            a {@link net.sourceforge.seqware.common.model.Sample} object.
      * @return a {@link java.util.Set} object.
      */
-    public Set<Processing> findFor(Sample sample);
+    Set<Processing> findFor(Sample sample);
 
     /**
      * <p>
@@ -287,7 +287,7 @@ public interface ProcessingService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<Processing> list();
+    List<Processing> list();
 
 }
 

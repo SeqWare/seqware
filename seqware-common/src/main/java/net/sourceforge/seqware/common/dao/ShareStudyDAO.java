@@ -20,7 +20,7 @@ public interface ShareStudyDAO {
      * @param ShareStudy
      *            a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public void insert(ShareStudy ShareStudy);
+    void insert(ShareStudy ShareStudy);
 
     /**
      * <p>
@@ -30,7 +30,7 @@ public interface ShareStudyDAO {
      * @param ShareStudy
      *            a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public void update(ShareStudy ShareStudy);
+    void update(ShareStudy ShareStudy);
 
     /**
      * <p>
@@ -40,7 +40,7 @@ public interface ShareStudyDAO {
      * @param ShareStudy
      *            a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public void delete(ShareStudy ShareStudy);
+    void delete(ShareStudy ShareStudy);
 
     /**
      * <p>
@@ -51,7 +51,7 @@ public interface ShareStudyDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public ShareStudy findByID(Integer id);
+    ShareStudy findByID(Integer id);
 
     /**
      * <p>
@@ -64,7 +64,7 @@ public interface ShareStudyDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public ShareStudy findByStudyIdAndRegistrationId(Integer studyId, Integer registrationId);
+    ShareStudy findByStudyIdAndRegistrationId(Integer studyId, Integer registrationId);
 
     /**
      * <p>
@@ -75,7 +75,7 @@ public interface ShareStudyDAO {
      *            a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      * @return a {@link net.sourceforge.seqware.common.model.ShareStudy} object.
      */
-    public ShareStudy updateDetached(ShareStudy shareStudy);
+    ShareStudy updateDetached(ShareStudy shareStudy);
 
     /**
      * <p>
@@ -84,5 +84,5 @@ public interface ShareStudyDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ShareStudy> list();
+    List<ShareStudy> list();
 }

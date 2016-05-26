@@ -24,7 +24,7 @@ public interface SequencerRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return
      */
-    public Integer insert(SequencerRun sequencerRun);
+    Integer insert(SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -37,7 +37,7 @@ public interface SequencerRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return
      */
-    public Integer insert(Registration registration, SequencerRun sequencerRun);
+    Integer insert(Registration registration, SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -48,7 +48,7 @@ public interface SequencerRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      * @return
      */
-    public Integer insert(SequencerRunWizardDTO sequencerRun);
+    Integer insert(SequencerRunWizardDTO sequencerRun);
 
     /**
      * <p>
@@ -61,7 +61,7 @@ public interface SequencerRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      * @return
      */
-    public Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun);
+    Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun);
 
     /**
      * <p>
@@ -71,7 +71,7 @@ public interface SequencerRunDAO {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public void update(SequencerRun sequencerRun);
+    void update(SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -83,7 +83,7 @@ public interface SequencerRunDAO {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public void update(Registration registration, SequencerRun sequencerRun);
+    void update(Registration registration, SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -93,7 +93,7 @@ public interface SequencerRunDAO {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public void delete(SequencerRun sequencerRun);
+    void delete(SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -106,7 +106,7 @@ public interface SequencerRunDAO {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> list(Registration registration, Boolean isAsc);
+    List<SequencerRun> list(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -117,7 +117,7 @@ public interface SequencerRunDAO {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun findByName(String name);
+    SequencerRun findByName(String name);
 
     /**
      * <p>
@@ -128,7 +128,7 @@ public interface SequencerRunDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRunWizardDTO findByID(Integer expID);
+    SequencerRunWizardDTO findByID(Integer expID);
 
     /**
      * <p>
@@ -139,7 +139,7 @@ public interface SequencerRunDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun findBySWAccession(Integer swAccession);
+    SequencerRun findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -150,7 +150,7 @@ public interface SequencerRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun updateDetached(SequencerRun sequencerRun);
+    SequencerRun updateDetached(SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -163,7 +163,7 @@ public interface SequencerRunDAO {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun updateDetached(Registration registration, SequencerRun sequencerRun);
+    SequencerRun updateDetached(Registration registration, SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -174,7 +174,7 @@ public interface SequencerRunDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> findByOwnerID(Integer registrationId);
+    List<SequencerRun> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -187,7 +187,7 @@ public interface SequencerRunDAO {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> findByCriteria(String criteria, boolean isCaseSens);
+    List<SequencerRun> findByCriteria(String criteria, boolean isCaseSens);
 
     /**
      * <p>
@@ -196,5 +196,5 @@ public interface SequencerRunDAO {
      *
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> list();
+    List<SequencerRun> list();
 }

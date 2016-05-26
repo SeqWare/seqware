@@ -20,7 +20,7 @@ public interface LibraryService {
      * 
      * @return All libraries.
      */
-    public List<Sample> getLibraries();
+    List<Sample> getLibraries();
 
     /**
      * Returns a list of libraries that match all attributes provided in the give attributes Map. Attributes may occur anywhere in the
@@ -30,7 +30,7 @@ public interface LibraryService {
      *            A Map of attributes.
      * @return A list of libraries.
      */
-    public List<Sample> getLibraries(Map<String, String> attributes);
+    List<Sample> getLibraries(Map<String, String> attributes);
 
     /**
      * Returns library matching given SeqWare Accession.
@@ -39,6 +39,6 @@ public interface LibraryService {
      *            SeqWare Accession.
      * @return Library
      */
-    public Sample findBySWAccession(Long swAccession);
+    Sample findBySWAccession(Long swAccession);
 
 }

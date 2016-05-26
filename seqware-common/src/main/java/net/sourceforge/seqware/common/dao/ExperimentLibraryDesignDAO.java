@@ -22,7 +22,7 @@ public interface ExperimentLibraryDesignDAO {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<ExperimentLibraryDesign> list(Registration registration);
+    List<ExperimentLibraryDesign> list(Registration registration);
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface ExperimentLibraryDesignDAO {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
-    public void insert(ExperimentLibraryDesign obj);
+    void insert(ExperimentLibraryDesign obj);
 
     /**
      * <p>
@@ -42,7 +42,7 @@ public interface ExperimentLibraryDesignDAO {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
-    public void update(ExperimentLibraryDesign obj);
+    void update(ExperimentLibraryDesign obj);
 
     /**
      * <p>
@@ -53,7 +53,7 @@ public interface ExperimentLibraryDesignDAO {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
-    public ExperimentLibraryDesign findByID(Integer id);
+    ExperimentLibraryDesign findByID(Integer id);
 
     /**
      * <p>
@@ -64,7 +64,7 @@ public interface ExperimentLibraryDesignDAO {
      *            a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentLibraryDesign} object.
      */
-    public ExperimentLibraryDesign updateDetached(ExperimentLibraryDesign eld);
+    ExperimentLibraryDesign updateDetached(ExperimentLibraryDesign eld);
 
     /**
      * <p>
@@ -73,5 +73,5 @@ public interface ExperimentLibraryDesignDAO {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ExperimentLibraryDesign> list();
+    List<ExperimentLibraryDesign> list();
 }

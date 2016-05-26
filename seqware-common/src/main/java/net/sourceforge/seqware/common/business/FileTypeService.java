@@ -14,7 +14,7 @@ import net.sourceforge.seqware.common.model.FileType;
  */
 public interface FileTypeService {
     /** Constant <code>NAME="FileTypeService"</code> */
-    public static final String NAME = "FileTypeService";
+    String NAME = "FileTypeService";
 
     /**
      * <p>
@@ -24,7 +24,7 @@ public interface FileTypeService {
      * @param fileTypeDAO
      *            a {@link net.sourceforge.seqware.common.dao.FileTypeDAO} object.
      */
-    public void setFileTypeDAO(FileTypeDAO fileTypeDAO);
+    void setFileTypeDAO(FileTypeDAO fileTypeDAO);
 
     /**
      * <p>
@@ -33,7 +33,7 @@ public interface FileTypeService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<FileType> list();
+    List<FileType> list();
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface FileTypeService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.FileType} object.
      */
-    public FileType findByID(Integer id);
+    FileType findByID(Integer id);
 
     /**
      * <p>

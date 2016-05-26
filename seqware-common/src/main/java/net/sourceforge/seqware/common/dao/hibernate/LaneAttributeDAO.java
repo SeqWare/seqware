@@ -22,7 +22,7 @@ public interface LaneAttributeDAO {
      * @param laneAttribute
      *            a {@link net.sourceforge.seqware.common.model.LaneAttribute} object.
      */
-    public abstract void insert(LaneAttribute laneAttribute);
+    void insert(LaneAttribute laneAttribute);
 
     /**
      * <p>
@@ -32,7 +32,7 @@ public interface LaneAttributeDAO {
      * @param laneAttribute
      *            a {@link net.sourceforge.seqware.common.model.LaneAttribute} object.
      */
-    public abstract void update(LaneAttribute laneAttribute);
+    void update(LaneAttribute laneAttribute);
 
     /**
      * <p>
@@ -42,7 +42,7 @@ public interface LaneAttributeDAO {
      * @param laneAttribute
      *            a {@link net.sourceforge.seqware.common.model.LaneAttribute} object.
      */
-    public abstract void delete(LaneAttribute laneAttribute);
+    void delete(LaneAttribute laneAttribute);
 
     /**
      * <p>
@@ -53,7 +53,6 @@ public interface LaneAttributeDAO {
      *            a {@link net.sourceforge.seqware.common.model.Lane} object.
      * @return a {@link java.util.List} object.
      */
-    @SuppressWarnings("unchecked")
-    public abstract List<LaneAttribute> findAll(Lane lane);
+    @SuppressWarnings("unchecked") List<LaneAttribute> findAll(Lane lane);
 
 }

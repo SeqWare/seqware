@@ -14,7 +14,7 @@ import net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec;
  */
 public interface ExperimentSpotDesignReadSpecService {
     /** Constant <code>NAME="ExperimentSpotDesignReadSpecService"</code> */
-    public static final String NAME = "ExperimentSpotDesignReadSpecService";
+    String NAME = "ExperimentSpotDesignReadSpecService";
 
     /**
      * <p>
@@ -24,7 +24,7 @@ public interface ExperimentSpotDesignReadSpecService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ExperimentSpotDesignReadSpecDAO} object.
      */
-    public void setExperimentSpotDesignReadSpecDAO(ExperimentSpotDesignReadSpecDAO dao);
+    void setExperimentSpotDesignReadSpecDAO(ExperimentSpotDesignReadSpecDAO dao);
 
     /**
      * <p>
@@ -34,7 +34,7 @@ public interface ExperimentSpotDesignReadSpecService {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public void insert(ExperimentSpotDesignReadSpec obj);
+    void insert(ExperimentSpotDesignReadSpec obj);
 
     /**
      * <p>
@@ -44,7 +44,7 @@ public interface ExperimentSpotDesignReadSpecService {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public void update(ExperimentSpotDesignReadSpec obj);
+    void update(ExperimentSpotDesignReadSpec obj);
 
     /**
      * <p>
@@ -54,7 +54,7 @@ public interface ExperimentSpotDesignReadSpecService {
      * @param obj
      *            a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public void delete(ExperimentSpotDesignReadSpec obj);
+    void delete(ExperimentSpotDesignReadSpec obj);
 
     /**
      * <p>
@@ -65,7 +65,7 @@ public interface ExperimentSpotDesignReadSpecService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.ExperimentSpotDesignReadSpec} object.
      */
-    public ExperimentSpotDesignReadSpec findByID(Integer expID);
+    ExperimentSpotDesignReadSpec findByID(Integer expID);
 
     /**
      * <p>
@@ -85,7 +85,7 @@ public interface ExperimentSpotDesignReadSpecService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ExperimentSpotDesignReadSpec> list();
+    List<ExperimentSpotDesignReadSpec> list();
 }
 
 // ex:sw=4:ts=4:

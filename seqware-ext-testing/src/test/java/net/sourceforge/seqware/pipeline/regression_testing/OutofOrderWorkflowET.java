@@ -18,14 +18,16 @@ package net.sourceforge.seqware.pipeline.regression_testing;
 
 import com.google.common.io.Files;
 import io.seqware.cli.Main;
-import java.io.File;
-import java.io.IOException;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * This tests a workflow that creates workflow jobs out of order as described by SEQWARE-1890.
@@ -35,6 +37,7 @@ import org.junit.Test;
 public class OutofOrderWorkflowET {
 
     @Test
+    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void runSEQWARE1890() throws IOException {
         // here we test that the first error is properly propagated into the database and reported
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers(false);

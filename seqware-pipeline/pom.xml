@@ -278,7 +278,6 @@
             <artifactId>xml-apis</artifactId>
             <groupId>xml-apis</groupId>
             <type>jar</type>
-            <version>1.4.01</version>
         </dependency>
         <dependency>
             <artifactId>commons-lang3</artifactId>
@@ -358,7 +357,6 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.0.0.GA</version>
             <type>jar</type>
         </dependency>
         <dependency>

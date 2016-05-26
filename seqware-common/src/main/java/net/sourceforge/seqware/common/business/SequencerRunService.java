@@ -17,7 +17,7 @@ import net.sourceforge.seqware.common.model.SequencerRunWizardDTO;
 public interface SequencerRunService {
 
     /** Constant <code>NAME="SequencerRunService"</code> */
-    public static final String NAME = "SequencerRunService";
+    String NAME = "SequencerRunService";
 
     /**
      * <p>
@@ -27,7 +27,7 @@ public interface SequencerRunService {
      * @param sequencerRunDAO
      *            a {@link net.sourceforge.seqware.common.dao.SequencerRunDAO} object.
      */
-    public void setSequencerRunDAO(SequencerRunDAO sequencerRunDAO);
+    void setSequencerRunDAO(SequencerRunDAO sequencerRunDAO);
 
     /**
      * <p>
@@ -38,7 +38,7 @@ public interface SequencerRunService {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return
      */
-    public Integer insert(SequencerRun sequencerRun);
+    Integer insert(SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -51,7 +51,7 @@ public interface SequencerRunService {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return
      */
-    public Integer insert(Registration registration, SequencerRun sequencerRun);
+    Integer insert(Registration registration, SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -62,7 +62,7 @@ public interface SequencerRunService {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      * @return
      */
-    public Integer insert(SequencerRunWizardDTO sequencerRun);
+    Integer insert(SequencerRunWizardDTO sequencerRun);
 
     /**
      * <p>
@@ -75,7 +75,7 @@ public interface SequencerRunService {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRunWizardDTO} object.
      * @return
      */
-    public Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun);
+    Integer insert(Registration registration, SequencerRunWizardDTO sequencerRun);
 
     /**
      * <p>
@@ -85,7 +85,7 @@ public interface SequencerRunService {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public void update(SequencerRun sequencerRun);
+    void update(SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -97,7 +97,7 @@ public interface SequencerRunService {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public void update(Registration registration, SequencerRun sequencerRun);
+    void update(Registration registration, SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -107,7 +107,7 @@ public interface SequencerRunService {
      * @param sequencerRun
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public void delete(SequencerRun sequencerRun);
+    void delete(SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -116,7 +116,7 @@ public interface SequencerRunService {
      *
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> list();
+    List<SequencerRun> list();
 
     /**
      * <p>
@@ -127,7 +127,7 @@ public interface SequencerRunService {
      *            a {@link net.sourceforge.seqware.common.model.Registration} object.
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> list(Registration registration);
+    List<SequencerRun> list(Registration registration);
 
     /**
      * <p>
@@ -140,7 +140,7 @@ public interface SequencerRunService {
      *            a {@link java.lang.Boolean} object.
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> list(Registration registration, Boolean isAsc);
+    List<SequencerRun> list(Registration registration, Boolean isAsc);
 
     /**
      * <p>
@@ -151,7 +151,7 @@ public interface SequencerRunService {
      *            a {@link java.lang.String} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun findByName(String name);
+    SequencerRun findByName(String name);
 
     /**
      * <p>
@@ -162,7 +162,7 @@ public interface SequencerRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRunWizardDTO findByID(Integer expID);
+    SequencerRunWizardDTO findByID(Integer expID);
 
     /**
      * <p>
@@ -173,7 +173,7 @@ public interface SequencerRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun findBySWAccession(Integer swAccession);
+    SequencerRun findBySWAccession(Integer swAccession);
 
     /**
      * <p>
@@ -184,7 +184,7 @@ public interface SequencerRunService {
      *            a {@link java.lang.Integer} object.
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> findByOwnerID(Integer registrationId);
+    List<SequencerRun> findByOwnerID(Integer registrationId);
 
     /**
      * <p>
@@ -197,7 +197,7 @@ public interface SequencerRunService {
      *            a {@link java.lang.String} object.
      * @return a boolean.
      */
-    public boolean hasNameBeenUsed(String oldName, String newName);
+    boolean hasNameBeenUsed(String oldName, String newName);
 
     /**
      * <p>
@@ -208,7 +208,7 @@ public interface SequencerRunService {
      *            a {@link java.util.List} object.
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> setProcCountInfo(List<SequencerRun> list);
+    List<SequencerRun> setProcCountInfo(List<SequencerRun> list);
 
     /**
      * <p>
@@ -219,7 +219,7 @@ public interface SequencerRunService {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun updateDetached(SequencerRun sequencerRun);
+    SequencerRun updateDetached(SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -232,7 +232,7 @@ public interface SequencerRunService {
      *            a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      * @return a {@link net.sourceforge.seqware.common.model.SequencerRun} object.
      */
-    public SequencerRun updateDetached(Registration registration, SequencerRun sequencerRun);
+    SequencerRun updateDetached(Registration registration, SequencerRun sequencerRun);
 
     /**
      * <p>
@@ -245,7 +245,7 @@ public interface SequencerRunService {
      *            a boolean.
      * @return a {@link java.util.List} object.
      */
-    public List<SequencerRun> findByCriteria(String criteria, boolean isCaseSens);
+    List<SequencerRun> findByCriteria(String criteria, boolean isCaseSens);
 }
 
 // ex:sw=4:ts=4:

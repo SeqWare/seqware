@@ -24,7 +24,7 @@ public interface ProcessingIUSService {
      * @param dao
      *            a {@link net.sourceforge.seqware.common.dao.ProcessingIUSDAO} object.
      */
-    public abstract void setProcessingIUSDAO(ProcessingIUSDAO dao);
+    void setProcessingIUSDAO(ProcessingIUSDAO dao);
 
     /**
      * <p>
@@ -37,7 +37,7 @@ public interface ProcessingIUSService {
      *            a {@link net.sourceforge.seqware.common.model.IUS} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract ProcessingIus findByProcessingIUS(Processing processing, IUS ius);
+    ProcessingIus findByProcessingIUS(Processing processing, IUS ius);
 
     /**
      * <p>
@@ -47,7 +47,7 @@ public interface ProcessingIUSService {
      * @param processingIus
      *            a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract void delete(ProcessingIus processingIus);
+    void delete(ProcessingIus processingIus);
 
     /**
      * <p>
@@ -57,7 +57,7 @@ public interface ProcessingIUSService {
      * @param processingIus
      *            a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract void update(ProcessingIus processingIus);
+    void update(ProcessingIus processingIus);
 
     /**
      * <p>
@@ -67,7 +67,7 @@ public interface ProcessingIUSService {
      * @param processingIus
      *            a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract void insert(ProcessingIus processingIus);
+    void insert(ProcessingIus processingIus);
 
     /**
      * <p>
@@ -78,7 +78,7 @@ public interface ProcessingIUSService {
      *            a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      * @return a {@link net.sourceforge.seqware.common.model.ProcessingIus} object.
      */
-    public abstract ProcessingIus updateDetached(ProcessingIus processingIus);
+    ProcessingIus updateDetached(ProcessingIus processingIus);
 
     /**
      * <p>
@@ -87,6 +87,6 @@ public interface ProcessingIUSService {
      * 
      * @return a {@link java.util.List} object.
      */
-    public List<ProcessingIus> list();
+    List<ProcessingIus> list();
 
 }

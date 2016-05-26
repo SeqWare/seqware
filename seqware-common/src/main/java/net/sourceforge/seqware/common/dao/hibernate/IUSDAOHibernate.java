@@ -20,7 +20,7 @@ import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessResourceFailureException;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 /**
  * <p>
@@ -53,7 +53,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     @Override
     public Integer insert(IUS obj) {
         this.getHibernateTemplate().save(obj);
-        getSession().flush();
+        currentSession().flush();
         return (obj.getSwAccession());
     }
 
@@ -66,7 +66,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
     public void update(IUS obj) {
 
         this.getHibernateTemplate().update(obj);
-        getSession().flush();
+        currentSession().flush();
     }
 
     /** {@inheritDoc} */
@@ -91,7 +91,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
                 + "where p.child_id = processing_id " + "UNION ALL " + "select distinct file_id from processing_files pf "
                 + "inner join processing_ius pr_i on (pr_i.processing_id = pf.processing_id) " + "where pr_i.ius_id = ? )";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setInteger(1, iusId).list();
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setInteger(1, iusId).list();
 
         for (Object file : list) {
             File fl = (File) file;
@@ -115,7 +115,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
                 + "where p.child_id = processing_id " + "UNION ALL " + "select distinct file_id from processing_files pf "
                 + "inner join processing_ius pr_i on (pr_i.processing_id = pf.processing_id) " + "where pr_i.ius_id = ? ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setInteger(1, iusId).list();
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setInteger(1, iusId).list();
 
         isHasFile = (list.size() > 0);
 
@@ -137,7 +137,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
                 + "where p.child_id = processing_id " + "UNION ALL " + "select distinct file_id from processing_files pf "
                 + "inner join processing_ius pr_i on (pr_i.processing_id = pf.processing_id) " + "where pr_i.ius_id = ? )";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setString(1, metaType)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setString(1, metaType)
                 .setInteger(2, iusId).list();
 
         for (Object file : list) {
@@ -162,7 +162,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
                 + "where p.child_id = processing_id " + "UNION ALL " + "select distinct file_id from processing_files pf "
                 + "inner join processing_ius pr_i on (pr_i.processing_id = pf.processing_id) " + "where pr_i.ius_id = ? ) LIMIT 1";
 
-        List list = this.getSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setString(1, metaType)
+        List list = this.currentSession().createSQLQuery(query).addEntity(File.class).setInteger(0, iusId).setString(1, metaType)
                 .setInteger(2, iusId).list();
 
         isHasFile = (list.size() > 0);
@@ -201,7 +201,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
         Object[] parameters = { swAccession };
         List<IUS> list = (List<IUS>) this.getHibernateTemplate().find(query, parameters);
         if (list.size() > 0) {
-            obj = (IUS) list.get(0);
+            obj = list.get(0);
         }
         return obj;
     }
@@ -214,7 +214,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
                 + " or cast(i.swAccession as string) like :sw order by i.name, i.description";
         String queryStringICase = "from IUS as i where lower(i.name) like :name " + " or lower(i.description) like :description "
                 + " or cast(i.swAccession as string) like :sw order by i.name, i.description";
-        Query query = isCaseSens ? this.getSession().createQuery(queryStringCase) : this.getSession().createQuery(queryStringICase);
+        Query query = isCaseSens ? this.currentSession().createQuery(queryStringCase) : this.currentSession().createQuery(queryStringICase);
         if (!isCaseSens) {
             criteria = criteria.toLowerCase();
         }
@@ -233,7 +233,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
         try {
             BeanUtilsBean beanUtils = new NullBeanUtils();
             beanUtils.copyProperties(dbObject, ius);
-            return (IUS) this.getHibernateTemplate().merge(dbObject);
+            return this.getHibernateTemplate().merge(dbObject);
         } catch (IllegalAccessException | InvocationTargetException e) {
             logger.error("Error updating detached ius", e);
         }
@@ -273,7 +273,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
         // + " and st.study_id = ? ";
         //
         // List list =
-        // this.getSession().createSQLQuery(query).addEntity(IUS.class).setInteger(0,
+        // this.currentSession().createSQLQuery(query).addEntity(IUS.class).setInteger(0,
         // study.getStudyId())
         // .setInteger(1, study.getStudyId()).list();
         //
@@ -365,7 +365,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
 
     private IUS reattachIUS(IUS ius) throws IllegalStateException, DataAccessResourceFailureException {
         IUS dbObject = ius;
-        if (!getSession().contains(ius)) {
+        if (!currentSession().contains(ius)) {
             dbObject = findByID(ius.getIusId());
         }
         return dbObject;
@@ -382,7 +382,7 @@ public class IUSDAOHibernate extends HibernateDaoSupport implements IUSDAO {
         if (sampleName != null) {
             queryString += " and i.sample.name = :sampleName";
         }
-        Query query = getSession().createQuery(queryString);
+        Query query = currentSession().createQuery(queryString);
         query.setInteger("laneIndex", laneIndex);
         query.setString("sequencerRunName", sequencerRunName);
         if (sampleName != null) {
