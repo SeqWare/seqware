@@ -1,25 +1,23 @@
 package io.seqware.cli.test;
 
-import java.util.Arrays;
-
 import io.seqware.cli.Main;
-import io.seqware.cli.test.WorkflowRunTest.WriteFormattedMessageToBufferAnswer;
-import static org.junit.Assert.*;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.mockito.Matchers.*;
-
 import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 
 @PrepareForTest({ io.seqware.cli.Main.class, net.sourceforge.seqware.pipeline.runner.PluginRunner.class })
 @RunWith(PowerMockRunner.class)
@@ -151,17 +149,24 @@ public class CreateTest {
                 "--organism-id", "234", "--title", "SomeTitle", "--parent-sample-accession", "789" };
 
         final String[] runnerArgs = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--table",
-                "sample", "--create", "--field", "description::TestDescription", "--field", "experiment_accession::123", "--field",
-                "parent_sample_accession::789", "--field", "organism_id::234", "--field", "title::SomeTitle" };
+                "sample", "--create", "--field", "description::TestDescription", "--field", "experiment_accession::123",
+                "--field", "organism_id::234", "--field", "title::SomeTitle", "--field", "parent_sample_accession::789" };
 
         testWithSuccess(spiedRunner, mainArgs, runnerArgs);
     }
 
     @Test
     public void createSampleErrorNoParentAccessionTest() throws Exception {
+        PluginRunner spiedRunner = PowerMockito.spy(new PluginRunner());
+
         String[] mainArgs = new String[] { "create", "sample", "--experiment-accession", "123", "--description", "TestDescription",
-                "--organism-id", "234", "--title", "SomeTitle" };
-        testWithError(mainArgs, "seqware: missing required flag '--parent-sample-accession'.");
+                "--organism-id", "234", "--title", "SomeTitle"};
+
+        final String[] runnerArgs = new String[] { "--plugin", "net.sourceforge.seqware.pipeline.plugins.Metadata", "--", "--table",
+                "sample", "--create", "--field", "description::TestDescription", "--field", "experiment_accession::123",
+                "--field", "organism_id::234", "--field", "title::SomeTitle" };
+
+        testWithSuccess(spiedRunner, mainArgs, runnerArgs);
     }
 
     @Test
