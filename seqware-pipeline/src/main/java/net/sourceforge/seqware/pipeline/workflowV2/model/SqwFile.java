@@ -1,13 +1,14 @@
 package net.sourceforge.seqware.pipeline.workflowV2.model;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * a file object which has all information for provision
@@ -93,7 +94,7 @@ public class SqwFile {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof SqwFile == false) return false;
+        if (!(obj instanceof SqwFile)) return false;
         if (obj == this) return true;
         SqwFile rhs = (SqwFile) obj;
         return new EqualsBuilder().appendSuper(super.equals(obj)).append(type, rhs.type).append(location, rhs.location)
@@ -112,7 +113,7 @@ public class SqwFile {
     /**
      * when forceCopy is true, it will pass "--forcecopy" argument to provisionFileJob
      *
-     * @param forceCopy
+     * @param forceCopy force provision to actually copy rather than symbolically link in the case of local files
      */
     public void setForceCopy(boolean forceCopy) {
         this.forceCopy = forceCopy;

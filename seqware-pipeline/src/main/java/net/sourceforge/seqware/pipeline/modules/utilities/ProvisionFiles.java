@@ -3,18 +3,6 @@ package net.sourceforge.seqware.pipeline.modules.utilities;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.retry.PredefinedRetryPolicies;
 import io.seqware.pipeline.SqwKeys;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import javax.crypto.Cipher;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
@@ -31,6 +19,19 @@ import net.sourceforge.seqware.common.util.filetools.ProvisionFilesUtil;
 import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.openide.util.lookup.ServiceProvider;
+
+import javax.crypto.Cipher;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
@@ -547,13 +548,18 @@ public class ProvisionFiles extends Module {
         // now try to set these up
         reader = filesUtil.getSourceReader(input, bufLen, 0L);
         // just skip this if this option is set
-        if (reader == null && skipIfMissing) {
-            Log.warn("File does not exist: " + input + ". Skipping...");
-            return true;
-        } else if (reader == null) {
-            Log.error("File does not exist: " + input);
-            Log.error("To proceed, run ProvisionFile again with --skip-if-missing");
-            return false;
+        if (reader == null) {
+            // blank the metadata
+            metadata.setFilePath("");
+            metadata.setMetaType("");
+            if (skipIfMissing) {
+                Log.warn("File does not exist: " + input + ". Skipping...");
+                return true;
+            } else {
+                Log.error("File does not exist: " + input);
+                Log.error("To proceed, run ProvisionFile again with --skip-if-missing");
+                return false;
+            }
         }
 
         Map<String, String> settings = ConfigTools.getSettings();
