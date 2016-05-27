@@ -1,10 +1,9 @@
 [![Build Status](https://travis-ci.org/SeqWare/seqware.svg?branch=develop)](https://travis-ci.org/SeqWare/seqware)
 [![DOI](https://zenodo.org/badge/4360/SeqWare/seqware.svg)](http://dx.doi.org/10.5281/zenodo.13358)
+[![Join the chat at https://gitter.im/SeqWare/seqware](https://badges.gitter.im/SeqWare/seqware.svg)](https://gitter.im/SeqWare/seqware?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 ## Introduction 
-
-[![Join the chat at https://gitter.im/SeqWare/seqware](https://badges.gitter.im/SeqWare/seqware.svg)](https://gitter.im/SeqWare/seqware?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This README is just a quick overview of building SeqWare. See our
 [project homepage](http://seqware.github.com) for much more documentation.
