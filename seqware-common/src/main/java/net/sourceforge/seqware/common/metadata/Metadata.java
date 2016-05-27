@@ -521,7 +521,7 @@ public interface Metadata {
      * @throws java.sql.SQLException
      *             if any.
      */
-    boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException;
+    boolean linkWorkflowRunAndParent(int workflowRunId, int... parentAccession) throws SQLException;
 
     /**
      * <p>

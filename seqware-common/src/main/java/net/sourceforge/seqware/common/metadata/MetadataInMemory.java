@@ -23,19 +23,6 @@ import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.SequencerRunStatus;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
-import java.io.Writer;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.ExperimentLibraryDesign;
@@ -72,6 +59,20 @@ import net.sourceforge.seqware.common.model.WorkflowRunAttribute;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+
+import java.io.Writer;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * This stores some metadata in memory as an exploration of running workflows without a running database or web service.
@@ -288,7 +289,7 @@ public class MetadataInMemory implements Metadata {
     }
 
     @Override
-    public boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException {
+    public boolean linkWorkflowRunAndParent(int workflowRunId, int... parentAccession) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
