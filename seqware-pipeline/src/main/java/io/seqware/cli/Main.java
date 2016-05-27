@@ -746,14 +746,16 @@ public class Main {
             runnerArgs.add("--create");
 
             for (String col : cols) {
-                runnerArgs.add("--field");
-                String key = "--" + col.replace('_', '-');
-                String arg = String.format("%s::%s", col, reqVal(args, key));
-                runnerArgs.add(arg);
+                processArgument(args, runnerArgs, col);
             }
 
             // workflow-run tables can have (potentially multiple) file parameters, pass these through after doing some validation
-            if (table.equals("workflow_run")) {
+            if (table.equals("sample")){
+                final boolean match = args.stream().anyMatch(val -> val.contains("--parent-sample-accession"));
+                if (match) {
+                    processArgument(args, runnerArgs, "parent_sample_accession");
+                }
+            } else if (table.equals("workflow_run")) {
                 List<String> files = optVals(args, "--file");
                 for (String file : files) {
                     // do validation
@@ -789,6 +791,13 @@ public class Main {
 
             run(runnerArgs);
         }
+    }
+
+    private static void processArgument(List<String> args, List<String> runnerArgs, String col) {
+        runnerArgs.add("--field");
+        String key = "--" + col.replace('_', '-');
+        String arg = String.format("%s::%s", col, reqVal(args, key));
+        runnerArgs.add(arg);
     }
 
     private static void createExperiment(List<String> args) {
@@ -876,6 +885,8 @@ public class Main {
             out("  --experiment-accession <val>");
             out("  --organism-id <val>           Dynamic-valued field");
             out("  --title <val>");
+            out("Optional fields:");
+            out("  --parent-sample-accession <val>");
             out("");
         } else {
             runCreateTable(args, "sample", "description", "experiment_accession", "organism_id", "title");
@@ -980,7 +991,6 @@ public class Main {
             out("");
             out("Objects:");
             out("  experiment");
-            out("  file");
             out("  ius");
             out("  lane");
             out("  sample");
