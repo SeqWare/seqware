@@ -191,16 +191,18 @@ public class Scheduler {
         Log.stdout("Created workflow run with SWID: " + workflowRunAccession);
         // need to link all the parents to this workflow run accession
         // this is actually linking them in the DB
-        int[] parentsAsArray = new int[parentsLinkedToWR.size()];
-        for (int i = 0; i < parentsLinkedToWR.size() ; i++){
-            parentsAsArray[i] = Integer.parseInt(parentsLinkedToWR.get(i));
-        }
+        if (!parentsLinkedToWR.isEmpty()) {
+            int[] parentsAsArray = new int[parentsLinkedToWR.size()];
+            for (int i = 0; i < parentsLinkedToWR.size(); i++) {
+                parentsAsArray[i] = Integer.parseInt(parentsLinkedToWR.get(i));
+            }
 
-        try {
-            this.metadata.linkWorkflowRunAndParent(workflowRunId, parentsAsArray);
-        } catch (Exception e) {
-            Log.error("Could not link workflow run to its parents " + parentsLinkedToWR.toString());
-            throw Rethrow.rethrow(e);
+            try {
+                this.metadata.linkWorkflowRunAndParent(workflowRunId, parentsAsArray);
+            } catch (Exception e) {
+                Log.error("Could not link workflow run to its parents " + parentsLinkedToWR.toString());
+                throw Rethrow.rethrow(e);
+            }
         }
 
         this.metadata.update_workflow_run(workflowRunId, wi.getCommand(), wi.getTemplatePath(), WorkflowRunStatus.submitted, null, null,
