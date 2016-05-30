@@ -21,28 +21,6 @@ import com.google.gson.Gson;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.SequencerRunStatus;
 import io.seqware.common.model.WorkflowRunStatus;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-import javax.xml.bind.JAXBException;
 import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
@@ -118,6 +96,29 @@ import org.restlet.resource.ResourceException;
 import org.restlet.util.Series;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  *
@@ -1159,18 +1160,28 @@ public class MetadataWS implements Metadata {
      * {@inheritDoc}
      */
     @Override
-    public boolean linkWorkflowRunAndParent(int workflowRunId, int parentAccession) throws SQLException {
+    public boolean linkWorkflowRunAndParent(int workflowRunId, int... parentAccessions) throws SQLException {
+        boolean success = true;
+        WorkflowRun wrWithoutLanes = null;
+        WorkflowRun wrWithLanesAndIUS = null;
+        int accession;
         try {
+            wrWithoutLanes = ll.findWorkflowRun("?id=" + workflowRunId/**
+             * + "&show=lanes,ius"
+             */);
+            // this will, but uses seqware accessions
+            accession = wrWithoutLanes.getSwAccession();
+            wrWithLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
+        }catch (JAXBException | IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        for (int parentAccession : parentAccessions) {
             IUS ius = ll.existsIUS("/" + parentAccession);
             Lane lane = ll.existsLane("/" + parentAccession);
             // this one won't be able to get back lanes and ius
-            WorkflowRun wrWithoutLanes = ll.findWorkflowRun("?id=" + workflowRunId/**
-             * + "&show=lanes,ius"
-             */
-            );
-            // this will, but uses seqware accessions
-            int accession = wrWithoutLanes.getSwAccession();
-            WorkflowRun wrWithLanesAndIUS = ll.findWorkflowRun("/" + accession + "?show=lanes,ius");
+
             if (ius != null) {
                 SortedSet<IUS> iuses = wrWithLanesAndIUS.getIus();
                 if (iuses == null) {
@@ -1178,9 +1189,6 @@ public class MetadataWS implements Metadata {
                 }
                 iuses.add(ius);
                 wrWithLanesAndIUS.setIus(iuses);
-
-                ll.updateWorkflowRun("/" + accession, wrWithLanesAndIUS);
-
             } else if (lane != null) {
                 SortedSet<Lane> lanes = wrWithLanesAndIUS.getLanes();
                 if (lanes == null) {
@@ -1188,21 +1196,18 @@ public class MetadataWS implements Metadata {
                 }
                 lanes.add(lane);
                 wrWithLanesAndIUS.setLanes(lanes);
-
-                ll.updateWorkflowRun("/" + accession, wrWithLanesAndIUS);
-
             } else {
                 Log.error("ERROR: SW Accession is neither a lane nor an IUS: " + parentAccession);
-                return (false);
+                success = false;
             }
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
         }
-        return (true);
+        try {
+            ll.updateWorkflowRun("/" + accession, wrWithLanesAndIUS);
+        }catch (JAXBException | IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        return success;
     }
 
     /**
