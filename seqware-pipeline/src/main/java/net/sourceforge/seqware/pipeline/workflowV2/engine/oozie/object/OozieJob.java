@@ -3,13 +3,6 @@ package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 import io.seqware.pipeline.SqwKeys;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
@@ -19,6 +12,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public abstract class OozieJob implements Comparable<OozieJob> {
     /**
@@ -64,7 +65,7 @@ public abstract class OozieJob implements Comparable<OozieJob> {
     protected final String threadsSgeParamFormat;
     protected final String maxMemorySgeParamFormat;
     protected final File scriptsDir;
-    private boolean useCheckFile = false;
+    private boolean useCheckFile = true;
     protected final File seqwareJar;
     private final StringTruncator stringTruncator;
 

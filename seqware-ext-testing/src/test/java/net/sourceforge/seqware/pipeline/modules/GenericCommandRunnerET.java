@@ -18,15 +18,19 @@ package net.sourceforge.seqware.pipeline.modules;
 
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
-import java.io.File;
-import java.io.IOException;
-import java.util.Random;
-import org.junit.Assert;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
+import org.apache.commons.dbutils.handlers.ArrayHandler;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Random;
 
 /**
  * These tests support command-line tools found in the SeqWare User Tutorial, in this case, GenericCommandRunner
@@ -34,6 +38,8 @@ import org.junit.Test;
  * @author dyuen
  */
 public class GenericCommandRunnerET {
+
+    private final ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
 
     @BeforeClass
     public static void resetDatabase() {
@@ -58,6 +64,44 @@ public class GenericCommandRunnerET {
             }
         }
         Assert.assertTrue("did not find command in output", false);
+    }
+
+    @Test
+    public void testProvisionTwice() throws IOException {
+        File createTempDir = com.google.common.io.Files.createTempDir();
+        final Path tempFile = java.nio.file.Files.createTempFile("test", "test");
+        tempFile.toFile().createNewFile();
+
+        Random generator = new Random();
+        String listCommand = "net.sourceforge.seqware.pipeline.runner.Runner " + "--metadata "
+                + "--metadata-workflow-run-ancestor-accession " + "4419139 " + "--metadata-processing-accession-file "
+                + createTempDir.getAbsolutePath() + "/s4419139_pfo_5_accession "
+                + "--metadata-processing-accession-file-lock "
+                + createTempDir.getAbsolutePath() + "/s4419139_pfo_5_accession.lock " + "--module "
+                + "net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles " + "-- " + "--input-file-metadata "
+                + "pfo::txt/plain::" + tempFile.toFile().getAbsolutePath() + " " + "--output-file "
+                + "./seqware-results/CheckProvision_1.0-SNAPSHOT/19614578/dir1/output " + "--force-copy " + "--annotation-file "
+                + createTempDir.getAbsolutePath() + "/generated-scripts/s4419139_pfo_5.annotations.tsv";
+
+        Object[] runQuerya = dbCreator.runQuery(new ArrayHandler(), "select count(*) from processing");
+        Object[] runQueryb = dbCreator.runQuery(new ArrayHandler(), "select count(*) from file");
+
+        String listOutput = ITUtility.runSeqWareJarDirect(listCommand, ReturnValue.SUCCESS, createTempDir);
+        // check the number of provision and file records
+        Object[] runQuery1 = dbCreator.runQuery(new ArrayHandler(), "select count(*) from processing");
+        Object[] runQuery2 = dbCreator.runQuery(new ArrayHandler(), "select count(*) from file");
+        // the number of provision and file records should have gone up by one
+        runQuerya[0] = (long)runQuerya[0] + 1;
+        runQueryb[0] = (long)runQueryb[0] + 1;
+        Assert.assertTrue("processing did not change" , Arrays.equals(runQuery1, runQuerya));
+        Assert.assertTrue("processing did not change" , Arrays.equals(runQuery2, runQueryb));
+
+        listOutput = ITUtility.runSeqWareJarDirect(listCommand, ReturnValue.SUCCESS, createTempDir);
+        // the number of provision and file records should not have changed
+        Object[] runQuery3 = dbCreator.runQuery(new ArrayHandler(), "select count(*) from processing");
+        Object[] runQuery4 = dbCreator.runQuery(new ArrayHandler(), "select count(*) from file");
+        Assert.assertTrue("processing changed" , Arrays.equals(runQuery1, runQuery3));
+        Assert.assertTrue("processing changed" , Arrays.equals(runQuery2, runQuery4));
     }
 
     @Test
