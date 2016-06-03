@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -67,7 +68,9 @@ public class GenericCommandRunnerET {
 
     @Test
     public void testProvisionTwice() throws IOException {
-        File createTempDir = Files.createTempDir();
+        File createTempDir = com.google.common.io.Files.createTempDir();
+        final Path tempFile = java.nio.file.Files.createTempFile("test", "test");
+        tempFile.toFile().createNewFile();
 
         Random generator = new Random();
         String listCommand = "net.sourceforge.seqware.pipeline.runner.Runner " + "--metadata "
@@ -76,7 +79,7 @@ public class GenericCommandRunnerET {
                 + "--metadata-processing-accession-file-lock "
                 + createTempDir.getAbsolutePath() + "/s4419139_pfo_5_accession.lock " + "--module "
                 + "net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles " + "-- " + "--input-file-metadata "
-                + "pfo::txt/plain::/datastore/oozie-83ec61c6-d8e7-46a7-a98c-ed9833a39cfb/dir1/output " + "--output-file "
+                + "pfo::txt/plain::" + tempFile.toFile().getAbsolutePath() + " " + "--output-file "
                 + "./seqware-results/CheckProvision_1.0-SNAPSHOT/19614578/dir1/output " + "--force-copy " + "--annotation-file "
                 + createTempDir.getAbsolutePath() + "/generated-scripts/s4419139_pfo_5.annotations.tsv";
 
