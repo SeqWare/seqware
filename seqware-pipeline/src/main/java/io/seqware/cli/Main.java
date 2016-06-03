@@ -330,6 +330,7 @@ public class Main {
         out("Usage: seqware annotate [--help]");
         out("       seqware annotate <object> --accession <swid> --key <key> --val <value>");
         out("       seqware annotate <object> --accession <swid> --skip [--reason <text>]");
+        out("       seqware annotate <object> --accession <swid> --unskip [--reason <text>]");
         out("       seqware annotate <object> --csv <file>");
         out("");
         out("Description:");
@@ -344,8 +345,9 @@ public class Main {
         out("  --csv <file>        Bulk annotation from CSV file of: accession, key, value");
         out("  --accession <swid>  The SWID of the object to annotate");
         out("  --key <key>         The identifier of the annotation");
-        out("  --reason <text>     The reason the object is skipped");
+        out("  --reason <text>     The reason the object is skipped/unskipped");
         out("  --skip              Sets the skip attribute flag on the object");
+        out("  --unskip            Unsets the skip attribute flag on the object");
         out("  --val <value>       The value of the annotation");
         out("");
     }
@@ -365,25 +367,29 @@ public class Main {
                     String key = optVal(args, "--key", null);
                     String val = optVal(args, "--val", null);
                     boolean skip = flag(args, "--skip");
+                    boolean unskip = flag(args, "--unskip");
+                    if (skip && unskip){
+                        kill("seqware: cannot both skip and unzip");
+                    }
                     String reason = optVal(args, "--reason", null);
                     String csv = optVal(args, "--csv", null);
 
                     extras(args, "annotate " + obj);
 
-                    if (swid != null && key != null && val != null && skip == false && csv == null) {
+                    if (swid != null && key != null && val != null && !skip && !unskip && csv == null) {
                         String idFlag = "--" + obj + "-accession";
                         run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid, "--key", key,
                                 "--value", val);
-                    } else if (swid != null && key == null && val == null && skip == true && csv == null) {
+                    } else if (swid != null && key == null && val == null && (skip || unskip) && csv == null) {
                         String idFlag = "--" + obj + "-accession";
                         if (reason == null) {
                             run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid, "--skip",
-                                    "true");
+                                    skip ? "true" : "false");
                         } else {
                             run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", idFlag, swid, "--skip",
-                                    "true", "--value", reason);
+                                    skip ? "true" : "false", "--value", reason);
                         }
-                    } else if (swid == null && key == null && val == null && skip == false && csv != null) {
+                    } else if (swid == null && key == null && val == null && !skip && !unskip && csv != null) {
                         run("--plugin", "net.sourceforge.seqware.pipeline.plugins.AttributeAnnotator", "--", "--file", csv);
                     } else {
                         kill("seqware: invalid set of parameters to 'seqware annotate'. See 'seqware annotate --help'.");
