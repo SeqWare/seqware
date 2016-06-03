@@ -16,10 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Random;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
@@ -27,6 +23,11 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * These tests support command-line tools found in the SeqWare User Tutorial, in this case, ProvisionFiles

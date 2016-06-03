@@ -38,28 +38,28 @@ public interface WorkflowEngine {
      * @param objectModel
      *            model of the workflow to prepare to run
      */
-    public void prepareWorkflow(AbstractWorkflowDataModel objectModel);
+    void prepareWorkflow(AbstractWorkflowDataModel objectModel);
 
     /**
      * Run the prepared workflow.
      * 
      * @return
      */
-    public ReturnValue runWorkflow();
+    ReturnValue runWorkflow();
 
     /**
      * An engine-specific token for this workflow run that can be used to lookup relevant runtime data.
      * 
      * @return the token
      */
-    public String getLookupToken();
+    String getLookupToken();
 
     /**
      * The working directory for the prepared workflow run, or null if not yet prepared or if not applicable for the concrete engine.
      * 
      * @return the working directory, or null
      */
-    public String getWorkingDirectory();
+    String getWorkingDirectory();
 
     /**
      * Watch a workflow and return running information until it completes.
@@ -69,6 +69,6 @@ public interface WorkflowEngine {
      * @param jobToken
      * @return
      */
-    public ReturnValue watchWorkflow(String jobToken);
+    ReturnValue watchWorkflow(String jobToken);
 
 }

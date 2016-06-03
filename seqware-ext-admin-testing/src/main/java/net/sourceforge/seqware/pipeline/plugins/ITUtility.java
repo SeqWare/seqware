@@ -100,6 +100,19 @@ public class ITUtility {
         return output;
     }
 
+
+    public static String runSeqWareJarDirect(String parameters, int expectedReturnValue, File workingDir) throws IOException {
+        File jar = retrieveFullAssembledJar();
+
+        if (workingDir == null) {
+            workingDir = Files.createTempDir();
+            workingDir.deleteOnExit();
+        }
+
+        String line = "java -cp " + jar.getAbsolutePath() + " " + parameters;
+        return runArbitraryCommand(line, expectedReturnValue, workingDir);
+    }
+
     /**
      * 
      * @param seqTargetDir
