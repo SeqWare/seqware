@@ -18,14 +18,16 @@ package net.sourceforge.seqware.pipeline.debugging_tutorial;
 
 import com.google.common.io.Files;
 import io.seqware.cli.Main;
-import java.io.File;
-import java.io.IOException;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * These tests support the tutorial for debugging workflows.
@@ -37,6 +39,7 @@ import org.junit.Test;
 public class DebugWorkflowTutorialET {
 
     @Test
+    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void runThroughFirstFailAtLaunchTutorial() throws IOException {
         // here we test that the first error is properly propagated into the database and reported
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers(false);
@@ -79,6 +82,7 @@ public class DebugWorkflowTutorialET {
     }
 
     @Test
+    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void runThroughFirstFailAtRuntimeTutorial() throws IOException {
         // here we test that the first error is properly propagated into the database and reported
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers(false);
