@@ -20,6 +20,28 @@ import com.google.common.collect.ImmutableList;
 import io.seqware.common.model.ProcessingStatus;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.plugins.WorkflowScheduler;
+import joptsimple.NonOptionArgumentSpec;
+import joptsimple.OptionSpecBuilder;
+import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
+import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
+import net.sourceforge.seqware.common.metadata.Metadata;
+import net.sourceforge.seqware.common.model.FileProvenanceParam;
+import net.sourceforge.seqware.common.model.WorkflowParam;
+import net.sourceforge.seqware.common.model.WorkflowRun;
+import net.sourceforge.seqware.common.module.FileMetadata;
+import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.filetools.FileTools;
+import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
+import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
+import net.sourceforge.seqware.pipeline.plugin.Plugin;
+import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
+import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import net.sourceforge.seqware.pipeline.tools.SetOperations;
+import org.apache.commons.lang3.StringUtils;
+import org.openide.util.lookup.ServiceProvider;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -47,27 +69,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import joptsimple.NonOptionArgumentSpec;
-import joptsimple.OptionSpecBuilder;
-import net.sourceforge.seqware.common.hibernate.FindAllTheFiles;
-import net.sourceforge.seqware.common.hibernate.FindAllTheFiles.Header;
-import net.sourceforge.seqware.common.metadata.Metadata;
-import net.sourceforge.seqware.common.model.FileProvenanceParam;
-import net.sourceforge.seqware.common.model.WorkflowParam;
-import net.sourceforge.seqware.common.model.WorkflowRun;
-import net.sourceforge.seqware.common.module.FileMetadata;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.filetools.FileTools;
-import net.sourceforge.seqware.common.util.filetools.FileTools.LocalhostPair;
-import net.sourceforge.seqware.pipeline.decider.DeciderInterface;
-import net.sourceforge.seqware.pipeline.plugin.Plugin;
-import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import net.sourceforge.seqware.pipeline.plugins.fileprovenance.ProvenanceUtility;
-import net.sourceforge.seqware.pipeline.runner.PluginRunner;
-import net.sourceforge.seqware.pipeline.tools.SetOperations;
-import org.apache.commons.lang3.StringUtils;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -590,15 +591,6 @@ public class BasicDecider extends Plugin implements DeciderInterface {
     private void addFileToSets(ReturnValue file, FileMetadata fm, Collection<String> workflowParentAccessionsToRun,
             Collection<String> parentAccessionsToRun, Collection<String> filesToRun, Collection<Integer> fileToRunSWIDs) {
         if (checkFileDetails(file, fm)) {
-            if (skipStuff) {
-                for (String key : file.getAttributes().keySet()) {
-                    if (key.contains("skip")) {
-                        Log.warn("File SWID:" + fm.getDescription() + " path " + fm.getFilePath() + " is skipped: " + key + ">"
-                                + file.getAttribute(key));
-                        return;
-                    }
-                }
-            }
             if (test) {
                 printFileMetadata(file, fm);
             }
