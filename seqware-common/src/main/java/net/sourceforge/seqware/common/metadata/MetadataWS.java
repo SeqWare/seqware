@@ -1268,7 +1268,10 @@ public class MetadataWS implements Metadata {
 
             processing.setExitStatus(retval.getExitStatus());
             processing.setProcessExitStatus(retval.getProcessExitStatus());
-            processing.setAlgorithm(retval.getAlgorithm());
+            // update of processing should not change algorithm to null
+            if (retval.getAlgorithm() != null) {
+                processing.setAlgorithm(retval.getAlgorithm());
+            }
             processing.setDescription(retval.getDescription());
             processing.setParameters(retval.getParameters());
             processing.setVersion(retval.getVersion());

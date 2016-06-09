@@ -1,11 +1,11 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
+import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
+import org.jdom.Element;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import static net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object.OozieJob.file;
-import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
-import org.jdom.Element;
 
 /**
  * Container for batching up provision file jobs
@@ -31,6 +31,19 @@ public class BatchedOozieProvisionFileJob extends OozieJob {
         add(sge, "options-file", optionsFile.getAbsolutePath());
 
         return sge;
+    }
+
+    @Override
+    public boolean addParentAccessionFile(String... pafs) {
+        super.addParentAccessionFile(pafs);
+        boolean added = false;
+        // also propagate to provision jobs
+        for(OozieProvisionFileJob job : provisionJobs){
+            if (job.addParentAccessionFile(pafs)){
+                added = true;
+            }
+        }
+        return added;
     }
 
     @Override
