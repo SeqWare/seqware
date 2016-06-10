@@ -336,117 +336,120 @@ public class ProvisionFiles extends Module {
     public ReturnValue do_run() {
 
         ReturnValue ret = new ReturnValue();
-        ret.setExitStatus(ReturnValue.SUCCESS);
-        boolean skipIfMissing = options.has("skip-if-missing");
-        boolean verbose = options.has("verbose");
-        filesUtil.setVerbose(verbose);
-        ret.setAlgorithm(algorithmName);
 
-        ArrayList<FileMetadata> fileArray = ret.getFiles();
-        // this sucks, but I cannot tell with all this fiddling which input file->FileMetadata we're dealing with
-        Map<String, FileMetadata> input2metadataMap = new HashMap<>();
+        try {
 
-        List<String> inputs = (List<String>) options.valuesOf("input-file");
+            ret.setExitStatus(ReturnValue.SUCCESS);
+            boolean skipIfMissing = options.has("skip-if-missing");
+            boolean verbose = options.has("verbose");
+            filesUtil.setVerbose(verbose);
+            ret.setAlgorithm(algorithmName);
 
-        if (options.has("input-file-metadata")) {
-            List<String> metaInputs = (List<String>) options.valuesOf("input-file-metadata");
-            List<String> outputFiles = (List<String>) options.valuesOf("output-file");
-            ArrayList<String> newArray = new ArrayList<>();
-            if (inputs != null && inputs.size() > 0) {
-                newArray.addAll(inputs);
-            }
-            for (String input : metaInputs) {
-                String[] tokens = input.split("::");
-                if (tokens.length == 3) {
-                    newArray.add(tokens[2]);
-                    FileMetadata fmd = new FileMetadata();
-                    fmd.setDescription(tokens[0]);
-                    fmd.setMetaType(tokens[1]);
-                    if (outputFiles != null && outputFiles.size() > 0) {
-                        fmd.setFilePath(outputFiles.get(0));
-                    } else {
-                        fmd.setFilePath(tokens[2]);
-                    }
-                    fmd.setType(tokens[0]);
-                    fileArray.add(fmd);
-                    input2metadataMap.put(tokens[2], fmd);
+            ArrayList<FileMetadata> fileArray = ret.getFiles();
+            // this sucks, but I cannot tell with all this fiddling which input file->FileMetadata we're dealing with
+            Map<String, FileMetadata> input2metadataMap = new HashMap<>();
+
+            List<String> inputs = (List<String>) options.valuesOf("input-file");
+
+            if (options.has("input-file-metadata")) {
+                List<String> metaInputs = (List<String>) options.valuesOf("input-file-metadata");
+                List<String> outputFiles = (List<String>) options.valuesOf("output-file");
+                ArrayList<String> newArray = new ArrayList<>();
+                if (inputs != null && inputs.size() > 0) {
+                    newArray.addAll(inputs);
                 }
+                for (String input : metaInputs) {
+                    String[] tokens = input.split("::");
+                    if (tokens.length == 3) {
+                        newArray.add(tokens[2]);
+                        FileMetadata fmd = new FileMetadata();
+                        fmd.setDescription(tokens[0]);
+                        fmd.setMetaType(tokens[1]);
+                        if (outputFiles != null && outputFiles.size() > 0) {
+                            fmd.setFilePath(outputFiles.get(0));
+                        } else {
+                            fmd.setFilePath(tokens[2]);
+                        }
+                        fmd.setType(tokens[0]);
+                        fileArray.add(fmd);
+                        input2metadataMap.put(tokens[2], fmd);
+                    }
+                }
+                inputs = newArray;
             }
-            inputs = newArray;
-        }
 
-        // debug info, loop over inputs
-        for (FileMetadata fmd : fileArray) {
-            Log.info("FMD:\nDescription: " + fmd.getDescription() + "\nFile Path: " + fmd.getFilePath() + "\nMeta Type: "
-                    + fmd.getMetaType() + "\nType: " + fmd.getType());
-            // handle text/key-value
-            if (fmd.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
-                handleAnnotations(fmd.getFilePath(), this.getProcessingAccession(), this.getMetadata());
-            }
-        }
-        if (options.has(annotationFileSpec) && this.getProcessingAccession() != 0) {
-
-            Map<String, String> map = FileTools.getKeyValueFromFile(options.valueOf(annotationFileSpec));
-            Set<FileAttribute> atts = new TreeSet<>();
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                FileAttribute a = new FileAttribute();
-                a.setTag(entry.getKey());
-                a.setValue(entry.getValue());
-                atts.add(a);
-            }
-            // assumption is that annotation file applies to all files (normally just one with seqware-oozie)
+            // debug info, loop over inputs
             for (FileMetadata fmd : fileArray) {
-                fmd.getAnnotations().addAll(atts);
+                Log.info("FMD:\nDescription: " + fmd.getDescription() + "\nFile Path: " + fmd.getFilePath() + "\nMeta Type: " + fmd.getMetaType() + "\nType: " + fmd.getType());
+                // handle text/key-value
+                if (fmd.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
+                    handleAnnotations(fmd.getFilePath(), this.getProcessingAccession(), this.getMetadata());
+                }
             }
-        }
+            if (options.has(annotationFileSpec) && this.getProcessingAccession() != 0) {
 
-        for (String input : inputs) {
-            FileMetadata filemetadata = input2metadataMap.get(input);
-            if (filemetadata != null) {
-                Log.stdout("Found metadata for input: " + input);
+                Map<String, String> map = FileTools.getKeyValueFromFile(options.valueOf(annotationFileSpec));
+                Set<FileAttribute> atts = new TreeSet<>();
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    FileAttribute a = new FileAttribute();
+                    a.setTag(entry.getKey());
+                    a.setValue(entry.getValue());
+                    atts.add(a);
+                }
+                // assumption is that annotation file applies to all files (normally just one with seqware-oozie)
+                for (FileMetadata fmd : fileArray) {
+                    fmd.getAnnotations().addAll(atts);
+                }
             }
-            Log.stdout("Processing input: " + input);
-            if (options.has("output-dir")) {
-                Log.stdout("      output-dir: " + options.valueOf("output-dir"));
-            }
-            if (options.has("output-file")) {
-                Log.stdout("     output-file: " + options.valueOf("output-file"));
-            }
-            if (!input.startsWith("http") && !input.startsWith("s3") && new File(input).isDirectory()) {
-                if (options.has("recursive")) {
-                    ReturnValue currRet = recursivelyCopyDir(new File(input).getAbsolutePath(), new File(input).list(),
-                            (String) options.valueOf("output-dir"), fileArray);
-                    if (currRet.getExitStatus() != ReturnValue.SUCCESS) {
-                        return (currRet);
+
+            for (String input : inputs) {
+                FileMetadata filemetadata = input2metadataMap.get(input);
+                if (filemetadata != null) {
+                    Log.stdout("Found metadata for input: " + input);
+                }
+                Log.stdout("Processing input: " + input);
+                if (options.has("output-dir")) {
+                    Log.stdout("      output-dir: " + options.valueOf("output-dir"));
+                }
+                if (options.has("output-file")) {
+                    Log.stdout("     output-file: " + options.valueOf("output-file"));
+                }
+                if (!input.startsWith("http") && !input.startsWith("s3") && new File(input).isDirectory()) {
+                    if (options.has("recursive")) {
+                        ReturnValue currRet = recursivelyCopyDir(new File(input).getAbsolutePath(), new File(input).list(), (String) options.valueOf("output-dir"), fileArray);
+                        if (currRet.getExitStatus() != ReturnValue.SUCCESS) {
+                            return (currRet);
+                        }
+                    }
+                } else if ((options.valuesOf("input-file").size() == 1 && options.valuesOf("input-file-metadata").isEmpty()) && options.has("output-file") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single
+                    // file copy
+                    if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true, filemetadata)) {
+                        Log.error("Failed to copy file");
+                        ret.setExitStatus(ReturnValue.FAILURE);
+                        return ret;
+                    }
+                } else if ((options.valuesOf("input-file").isEmpty() && options.valuesOf("input-file-metadata").size() == 1) && options.has("input-file-metadata") && options.valuesOf("output-file").size() == 1) { // then this is a single file to
+                    // single file copy
+                    if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true, filemetadata)) {
+                        Log.error("Failed to copy file");
+                        ret.setExitStatus(ReturnValue.FAILURE);
+                        return ret;
+                    }
+                } else if (options.has("output-dir")) { // then this is just a normal file copy
+                    if (!provisionFile(input, (String) options.valueOf("output-dir"), skipIfMissing, fileArray, false, filemetadata)) {
+                        Log.error("Failed to copy file to dir");
+                        ret.setExitStatus(ReturnValue.FAILURE);
+                        return ret;
                     }
                 }
-            } else if ((options.valuesOf("input-file").size() == 1 && options.valuesOf("input-file-metadata").isEmpty())
-                    && options.has("output-file") && options.valuesOf("output-file").size() == 1) { // then this is a single file to single
-                                                                                                    // file copy
-                if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true, filemetadata)) {
-                    Log.error("Failed to copy file");
-                    ret.setExitStatus(ReturnValue.FAILURE);
-                    return ret;
-                }
-            } else if ((options.valuesOf("input-file").isEmpty() && options.valuesOf("input-file-metadata").size() == 1)
-                    && options.has("input-file-metadata") && options.valuesOf("output-file").size() == 1) { // then this is a single file to
-                                                                                                            // single file copy
-                if (!provisionFile(input, (String) options.valueOf("output-file"), skipIfMissing, fileArray, true, filemetadata)) {
-                    Log.error("Failed to copy file");
-                    ret.setExitStatus(ReturnValue.FAILURE);
-                    return ret;
-                }
-            } else if (options.has("output-dir")) { // then this is just a normal file copy
-                if (!provisionFile(input, (String) options.valueOf("output-dir"), skipIfMissing, fileArray, false, filemetadata)) {
-                    Log.error("Failed to copy file to dir");
-                    ret.setExitStatus(ReturnValue.FAILURE);
-                    return ret;
-                }
             }
-        }
 
-        if (options.has("skip-record-file")) {
-            fileArray.clear();
+            if (options.has("skip-record-file")) {
+                fileArray.clear();
+            }
+
+        } finally{
+            Log.stdout("ProvisionFiles exit code: " + ret.getExitStatus() + "\n");
         }
 
         return ret;
