@@ -1,15 +1,6 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
 import io.seqware.pipeline.SqwKeys;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.common.util.maptools.ReservedIniKeys;
@@ -21,6 +12,16 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.JobBatch;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import org.apache.hadoop.fs.Path;
 import org.jdom.Element;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This class is responsible for the conversion of our AbstractWorkflowDataModel to an oozie xml workflow
@@ -459,9 +460,9 @@ public class WorkflowApp {
     private BucketGenerator isRequireBuckets(final Collection<SqwFile> files, final boolean input, final String uniqueName,
             String workflowRunAccession) {
         // only use buckets for SGE for now
-        if (!this.useSge) {
-            return null;
-        }
+        //if (!this.useSge) {
+        //    return null;
+        //}
 
         int numFiles = countInputFiles(files);
         if (!input) {
