@@ -3,12 +3,10 @@ package net.sourceforge.seqware.common.util.filetools;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
-import com.amazonaws.HttpMethod;
 import com.amazonaws.Protocol;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.retry.PredefinedRetryPolicies;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
@@ -19,6 +17,15 @@ import com.amazonaws.services.s3.transfer.Upload;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import io.seqware.pipeline.SqwKeys;
+import net.sourceforge.seqware.common.module.FileMetadata;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import org.apache.commons.codec.binary.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -42,21 +49,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.CipherOutputStream;
-import javax.crypto.spec.SecretKeySpec;
-import net.sourceforge.seqware.common.module.FileMetadata;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.configtools.ConfigTools;
-import org.apache.commons.codec.binary.Base64;
-//import org.apache.hadoop.conf.Configuration;
-//import org.apache.hadoop.fs.FSDataInputStream;
-//import org.apache.hadoop.fs.FSDataOutputStream;
-//import org.apache.hadoop.fs.FileSystem;
-//import org.apache.hadoop.fs.FsUrlStreamHandlerFactory;
-//import org.apache.hadoop.fs.Path;
-//import org.apache.hadoop.io.IOUtils;
 
 /**
  * <p>
@@ -68,14 +60,14 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class ProvisionFilesUtil {
 
-    protected final int READ_ATTEMPTS = 1000;
-    protected long inputSize = 0L;
-    protected long position = 0L;
-    protected String fileName = "";
-    protected String originalFileName = "";
-    protected File inputFile = null;
-    protected Key dataEncryptionKey = null;
-    protected Key dataDecryptionKey = null;
+    private final int READ_ATTEMPTS = 1000;
+    private long inputSize = 0L;
+    private long position = 0L;
+    private String fileName = "";
+    private String originalFileName = "";
+    private File inputFile = null;
+    private Key dataEncryptionKey = null;
+    private Key dataDecryptionKey = null;
     private boolean verbose;
     private AmazonS3Client s3;
     private static final String DATA_ENCRYPTION_ALGORITHM = "DESede";
@@ -197,10 +189,6 @@ public class ProvisionFilesUtil {
             cipher = null;
         }
         return cipher;
-    }
-
-    public File copyToFile(BufferedInputStream reader, String output, int bufLen, String input) {
-        return copyToFile(reader, output, false, bufLen, input, null, null, null);
     }
 
     /**
@@ -400,70 +388,6 @@ public class ProvisionFilesUtil {
         return (false);
     }
 
-    // public boolean putToHDFS(InputStream reader, String output, boolean fullOutputPath){
-    // return(putToHDFS(reader, output, fullOutputPath, null, null));
-    // }
-    //
-    // /**
-    // * The output path is an HDFS URL that look like
-    // * hdfs://<host>/<path>/<filename>
-    // *
-    // * TODO:
-    // *
-    // * 1) encryption/decryption
-    // *
-    // * @param reader
-    // * @param output
-    // * @param decryptCipher
-    // * @param encryptCipher
-    // * @return
-    // */
-    // public boolean putToHDFS(InputStream reader, String output, boolean fullOutputPath, Cipher decryptCipher, Cipher encryptCipher) {
-    // try {
-    //
-    // // the final URL
-    // String outputStr = null;
-    //
-    // // first, try and figure out if the output is a dir or an actual file
-    // if (fullOutputPath) {
-    // outputStr = output;
-    // } else {
-    // if (output.endsWith("/")) {
-    // outputStr = output + this.getFileName();
-    // } else {
-    // outputStr = output + "/" + this.getFileName();
-    // }
-    // }
-    //
-    // // Hadoop stuff
-    // Configuration conf = new Configuration();
-    // // FIXME: is this OK to pass in the complete URL?
-    // FileSystem fs = FileSystem.get(URI.create(outputStr), conf);
-    // Path outputPath = new Path(outputStr);
-    //
-    // // delete if it already exists
-    // if (fs.exists(outputPath) && !fs.isDirectory(outputPath)) {
-    // // delete it and re-upload
-    // fs.delete(outputPath, false);
-    // }
-    //
-    // OutputStream out = fs.create(outputPath);
-    // IOUtils.copyBytes(reader, out, 4096, true);
-    //
-    // // Close all the file descripters
-    // reader.close();
-    // out.close();
-    // fs.close();
-    // return(true);
-    //
-    // } catch (IOException ex) {
-    // Logger.getLogger(ProvisionFilesUtil.class.getName()).log(Level.SEVERE, "There was a problem in putToHDFS", ex);
-    // }
-    //
-    // return(false);
-    //
-    // }
-
     /**
      * Copy file using reader into output.
      *
@@ -491,7 +415,7 @@ public class ProvisionFilesUtil {
      * @param socketTimeout
      * @return
      */
-    public boolean putToS3(BufferedInputStream reader, String output, boolean fullOutputPath, int connectionTimeout, int maxConnections,
+    private boolean putToS3(BufferedInputStream reader, String output, boolean fullOutputPath, int connectionTimeout, int maxConnections,
             int maxErrorRetry, int socketTimeout) {
         return (putToS3(reader, output, fullOutputPath, connectionTimeout, maxConnections, maxErrorRetry, socketTimeout, null, null));
     }
@@ -529,7 +453,7 @@ public class ProvisionFilesUtil {
      * @param encryptCipher
      * @return
      */
-    public boolean putToS3(InputStream reader, String output, boolean fullOutputPath, int connectionTimeout, int maxConnections,
+    private boolean putToS3(InputStream reader, String output, boolean fullOutputPath, int connectionTimeout, int maxConnections,
             int maxErrorRetry, int socketTimeout, Cipher decryptCipher, Cipher encryptCipher) {
 
         // can encode the access key and secret key within the URL
@@ -700,103 +624,6 @@ public class ProvisionFilesUtil {
     }
 
     /**
-     * <p>
-     * getS3Url.
-     * </p>
-     *
-     * @param input
-     *            a {@link java.lang.String} object.
-     * @return a {@link java.net.URL} object.
-     */
-    public URL getS3Url(String input) {
-        URL url = null;
-        if (input.startsWith("s3://")) {
-
-            Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
-            Matcher m = p.matcher(input);
-            boolean result = m.find();
-            String accessKey = null;
-            String secretKey = null;
-            String localUrl = input;
-            if (result) {
-                accessKey = m.group(1);
-                secretKey = m.group(2);
-                localUrl = "s3://" + m.group(3);
-            } else {
-                // get the access/secret key from the .seqware/settings file
-                try {
-                    HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                    accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
-                    secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-
-            if (accessKey == null || secretKey == null) {
-                return null;
-            }
-
-            // parse out the bucket and key
-            p = Pattern.compile("s3://([^/]+)/(\\S+)");
-            m = p.matcher(localUrl);
-            if (m.find()) {
-                String bucket = m.group(1);
-                String key = m.group(2);
-
-                // now get this from S3
-                s3 = new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey));
-                url = s3.generatePresignedUrl(new GeneratePresignedUrlRequest(bucket, key, HttpMethod.GET).withExpiration(new Date(
-                        new Date().getTime() + 10000)));
-            }
-        }
-        return url;
-    }
-
-    /**
-     * <p>
-     * getS3Url.
-     * </p>
-     *
-     * @param input
-     *            a {@link java.lang.String} object.
-     * @param accessKey
-     *            a {@link java.lang.String} object.
-     * @param secretKey
-     *            a {@link java.lang.String} object.
-     * @return a {@link java.net.URL} object.
-     */
-    public URL getS3Url(String input, String accessKey, String secretKey) {
-
-        URL url = null;
-        Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
-        Matcher m = p.matcher(input);
-        boolean result = m.find();
-        String stringUrl = input;
-        if (result) {
-            accessKey = m.group(1);
-            secretKey = m.group(2);
-            stringUrl = "s3://" + m.group(3);
-        }
-
-        // parse out the bucket and key
-        p = Pattern.compile("s3://([^/]+)/(\\S+)");
-        m = p.matcher(stringUrl);
-
-        if (m.find()) {
-            String bucket = m.group(1);
-            String key = m.group(2);
-
-            // now get this from S3
-            s3 = new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey));
-            url = s3.generatePresignedUrl(new GeneratePresignedUrlRequest(bucket, key, HttpMethod.GET).withExpiration(new Date(new Date()
-                    .getTime() + 10000)));
-        }
-        return url;
-    }
-
-    /**
      * This attempts to resume if passed in startPosition > 0.
      *
      * @param input
@@ -865,7 +692,7 @@ public class ProvisionFilesUtil {
      *            a long.
      * @return a {@link java.io.BufferedInputStream} object.
      */
-    public BufferedInputStream getHttpInputStream(String input, int bufLen, long startPosition) {
+    private BufferedInputStream getHttpInputStream(String input, int bufLen, long startPosition) {
         BufferedInputStream reader = null;
         Pattern p = Pattern.compile("(https*)://(\\S+):(\\S+)@(\\S+)");
         Matcher m = p.matcher(input);
@@ -917,48 +744,6 @@ public class ProvisionFilesUtil {
         return reader;
     }
 
-    // public BufferedInputStream getHDFSInputStream(String input, int bufLen, long startPosition) {
-    //
-    // try {
-    //
-    // BufferedInputStream reader = null;
-    //
-    // // figure out the filename
-    // String[] path = input.split("/");
-    // this.fileName = path[path.length - 1];
-    //
-    // // Hadoop stuff
-    // Configuration conf = new Configuration();
-    // // FIXME: is this OK to pass in the complete URL?
-    // FileSystem fs = FileSystem.get(URI.create(input), conf);
-    // Path inputPath = new Path(input);
-    //
-    // // should exist and not be a directory
-    // if (!fs.exists(inputPath) || fs.isDirectory(inputPath)) {
-    // Log.error("Can't read the input file "+input+", it is either missing or a directory!");
-    // return(null);
-    // }
-    //
-    // // open the HDFS input stream
-    // reader = new BufferedInputStream(fs.open(inputPath, bufLen));
-    // this.inputSize = fs.getFileStatus(inputPath).getBlockSize();
-    //
-    // // move forward if given an offset
-    // if (startPosition > 0) {
-    // reader.skip(startPosition);
-    // }
-    //
-    // // and just return this
-    // return(reader);
-    //
-    // } catch (IOException ex) {
-    // Logger.getLogger(ProvisionFilesUtil.class.getName()).log(Level.SEVERE, null, ex);
-    // }
-    //
-    // // default null
-    // return(null);
-    // }
-
     /**
      * <p>
      * getS3InputStream.
@@ -976,7 +761,7 @@ public class ProvisionFilesUtil {
      *            a {@link java.lang.String} object.
      * @return a {@link java.io.BufferedInputStream} object.
      */
-    public BufferedInputStream getS3InputStream(String input, int bufLen, long startPosition, String accessKey, String secretKey) {
+    private BufferedInputStream getS3InputStream(String input, int bufLen, long startPosition, String accessKey, String secretKey) {
 
         BufferedInputStream reader = null;
         S3Object object = null;
@@ -1031,7 +816,7 @@ public class ProvisionFilesUtil {
      *            a long.
      * @return a {@link java.io.BufferedInputStream} object.
      */
-    public BufferedInputStream getS3InputStream(String input, int bufLen, long startPosition) {
+    private BufferedInputStream getS3InputStream(String input, int bufLen, long startPosition) {
 
         String accessKey = null;
         String secretKey = null;
@@ -1077,7 +862,7 @@ public class ProvisionFilesUtil {
      * @param value
      *            BASE64-encoded key
      */
-    public void setDataEncryptionKeyString(String value) {
+    private void setDataEncryptionKeyString(String value) {
         byte[] bytes = getBase64().decode(value);
         dataEncryptionKey = new SecretKeySpec(bytes, DATA_ENCRYPTION_ALGORITHM);
     }
@@ -1088,7 +873,7 @@ public class ProvisionFilesUtil {
      * @param value
      *            BASE64-encoded key
      */
-    public void setDataDecryptionKeyString(String value) {
+    private void setDataDecryptionKeyString(String value) {
         byte[] bytes = getBase64().decode(value);
         dataDecryptionKey = new SecretKeySpec(bytes, DATA_ENCRYPTION_ALGORITHM);
     }
@@ -1104,7 +889,7 @@ public class ProvisionFilesUtil {
      *
      * @return a boolean.
      */
-    public boolean isVerbose() {
+    private boolean isVerbose() {
         return verbose;
     }
 
@@ -1153,146 +938,7 @@ public class ProvisionFilesUtil {
         if (!currDir.exists()) {
             currDir.mkdirs();
         }
-        String targetPath = (new StringBuilder()).append(pathCurrDir).append(fileDownlodName).toString();
-        return targetPath;
-    }
-
-    /**
-     * Creates abstract pathname.
-     *
-     * @param folderStore
-     *            a {@link java.lang.String} object.
-     * @param email
-     *            a {@link java.lang.String} object.
-     * @return a {@link java.lang.String} object.
-     */
-    public static String createTargetDirectory(String folderStore, String email) {
-        String separator = java.io.File.separator;
-        Date dateNow = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        StringBuilder strNow = new StringBuilder(dateFormat.format(dateNow));
-        String pathCurrDir = (new StringBuilder()).append(folderStore).append(email).append(separator).append(strNow).append(separator)
-                .toString();
-        java.io.File currDir = new java.io.File(pathCurrDir);
-        if (!currDir.exists()) {
-            currDir.mkdirs();
-        }
-        String targetPath = (new StringBuilder()).append(pathCurrDir).toString();
-        return targetPath;
-    }
-
-    /**
-     * <p>
-     * getFileSize.
-     * </p>
-     *
-     * @param path
-     *            a {@link java.lang.String} object.
-     * @return a long.
-     * @throws java.lang.Exception
-     *             if any.
-     */
-    public static long getFileSize(String path) throws Exception {
-        if (path.startsWith("http://") || path.startsWith("https://")) {
-            Pattern p = Pattern.compile("(https*)://(\\S+):(\\S+)@(\\S+)");
-            Matcher m = p.matcher(path);
-            boolean result = m.find();
-            String protocol = null;
-            String user = null;
-            String pass = null;
-            String stringURL = path;
-            if (result) {
-                protocol = m.group(1);
-                user = m.group(2);
-                pass = m.group(3);
-                stringURL = protocol + "://" + m.group(4);
-            }
-            URL urlObj = null;
-            try {
-                urlObj = new URL(stringURL);
-                URLConnection urlConn = urlObj.openConnection();
-                if (user != null && pass != null) {
-                    String userPassword = user + ":" + pass;
-                    String encoding = Base64.encodeBase64String(userPassword.getBytes());
-                    urlConn.setRequestProperty("Authorization", "Basic " + encoding);
-                }
-                // get size
-                return urlConn.getContentLength();
-
-            } catch (MalformedURLException e) {
-                Log.stderr(e.getMessage());
-                e.printStackTrace();
-                throw e;
-            } catch (IOException e) {
-                Log.stderr(e.getMessage());
-                e.printStackTrace();
-                throw e;
-            }
-        } else if (path.startsWith("s3://")) {
-
-            String accessKey = null;
-            String secretKey = null;
-
-            Pattern p = Pattern.compile("s3://(\\S+):(\\S+)@(\\S+)");
-            Matcher m = p.matcher(path);
-            boolean result = m.find();
-            String stringURL = path;
-            if (result) {
-                accessKey = m.group(1);
-                secretKey = m.group(2);
-                stringURL = "s3://" + m.group(3);
-            } else {
-                try {
-                    HashMap<String, String> settings = (HashMap<String, String>) ConfigTools.getSettings();
-                    accessKey = settings.get(SqwKeys.AWS_ACCESS_KEY.getSettingKey());
-                    secretKey = settings.get(SqwKeys.AWS_SECRET_KEY.getSettingKey());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw e;
-                }
-            }
-
-            // now get this from S3
-            AmazonS3Client s3 = new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey));
-
-            // parse out the bucket and key
-            p = Pattern.compile("s3://([^/]+)/(\\S+)");
-            m = p.matcher(stringURL);
-            result = m.find();
-
-            if (result) {
-                String bucket = m.group(1);
-                String key = m.group(2);
-
-                try {
-                    GetObjectRequest gor = new GetObjectRequest(bucket, key);
-                    return s3.getObject(gor).getObjectMetadata().getContentLength();
-
-                } catch (AmazonServiceException e) {
-                    e.printStackTrace();
-                    throw e;
-                } catch (AmazonClientException e) {
-                    e.printStackTrace();
-                    throw e;
-                }
-            } else {
-                return 0;
-            }
-        }/**
-         * else if (path.startsWith("hdfs://")) {
-         *
-         * Configuration conf = new Configuration(); // FIXME: is this OK to pass in the complete URL? FileSystem fs =
-         * FileSystem.get(URI.create(path), conf); Path hdfsPath = new Path(path); return(fs.getFileStatus(hdfsPath).getBlockSize());
-         *
-         * }
-         */
-        else {
-            File file = new File(path);
-            if (!file.exists()) {
-                throw new IllegalStateException("File not exist " + path);
-            }
-            return file.length();
-        }
+        return (new StringBuilder()).append(pathCurrDir).append(fileDownlodName).toString();
     }
 
     /**
@@ -1304,18 +950,6 @@ public class ProvisionFilesUtil {
      */
     public String getOriginalFileName() {
         return originalFileName;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>originalFileName</code>.
-     * </p>
-     *
-     * @param originalFileName
-     *            a {@link java.lang.String} object.
-     */
-    public void setOriginalFileName(String originalFileName) {
-        this.originalFileName = originalFileName;
     }
 
     public static void calculateInputMetadata(String input, FileMetadata metadata) throws RuntimeException {
