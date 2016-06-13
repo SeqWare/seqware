@@ -24,6 +24,7 @@ public class SqwFile {
     private final String uniqueDir;
     private final List<String> parentAccessions;
     private boolean skipIfMissing = false;
+    private boolean skipCopy = false;
     private final Map<String, String> annotations = new HashMap<>();
 
     public SqwFile() {
@@ -188,5 +189,13 @@ public class SqwFile {
      */
     public Map<String, String> getAnnotations() {
         return annotations;
+    }
+
+    public boolean isSkipCopy() {
+        return skipCopy;
+    }
+
+    public void setSkipCopy(boolean skipCopy) {
+        this.skipCopy = skipCopy;
     }
 }

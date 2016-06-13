@@ -1,14 +1,5 @@
 package net.sourceforge.seqware.pipeline.modules;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -21,6 +12,15 @@ import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import net.sourceforge.seqware.pipeline.plugins.Metadata;
 import org.openide.util.lookup.ServiceProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This is a very simple module is used to save both a processing event and 0 or more files to the metadb. It does absolutely no computation
@@ -270,13 +270,7 @@ public class GenericMetadataSaver extends Module {
                 ret.getFiles().add(fm);
                 if (fm.getMetaType().equals("text/key-value") && this.getProcessingAccession() != 0) {
                     Map<String, String> map = FileTools.getKeyValueFromFile(fm.getFilePath());
-                    Set<ProcessingAttribute> atts = new TreeSet<>();
-                    for (Map.Entry<String, String> entry : map.entrySet()) {
-                        ProcessingAttribute a = new ProcessingAttribute();
-                        a.setTag(entry.getKey());
-                        a.setValue(entry.getValue());
-                        atts.add(a);
-                    }
+                    Set<ProcessingAttribute> atts = ProcessingAttribute.convertMapToAttributes(map);
                     this.getMetadata().annotateProcessing(this.getProcessingAccession(), atts);
                 }
             }

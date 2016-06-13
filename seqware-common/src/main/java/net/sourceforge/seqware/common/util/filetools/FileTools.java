@@ -4,6 +4,11 @@ import ch.enterag.utils.zip.EntryInputStream;
 import ch.enterag.utils.zip.EntryOutputStream;
 import ch.enterag.utils.zip.FileEntry;
 import ch.enterag.utils.zip.Zip64File;
+import joptsimple.OptionSet;
+import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.runtools.RunTools;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,10 +31,6 @@ import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import joptsimple.OptionSet;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.runtools.RunTools;
 
 /**
  * <p>
@@ -546,8 +547,6 @@ public class FileTools {
                 ret.put(args[0], args[1]);
             }
             freader.close();
-        } catch (FileNotFoundException e) {
-            Log.error(e.getMessage());
         } catch (IOException e) {
             Log.error(e.getMessage());
         }

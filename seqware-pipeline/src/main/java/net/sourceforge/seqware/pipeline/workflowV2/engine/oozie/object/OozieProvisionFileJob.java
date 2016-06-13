@@ -1,13 +1,14 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
 import io.seqware.pipeline.SqwKeys;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
 import net.sourceforge.seqware.pipeline.workflowV2.model.SqwFile;
 import org.jdom.Element;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OozieProvisionFileJob extends OozieJob {
 
@@ -118,6 +119,10 @@ public class OozieProvisionFileJob extends OozieJob {
 
         if (file.isForceCopy()) {
             args.add("--force-copy");
+        }
+
+        if (file.isSkipCopy()){
+            args.add("--skip-copy");
         }
 
         if (!file.getAnnotations().isEmpty()) {

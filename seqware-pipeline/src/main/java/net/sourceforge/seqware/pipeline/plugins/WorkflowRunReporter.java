@@ -17,6 +17,14 @@
 package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.common.model.WorkflowRunStatus;
+import joptsimple.ArgumentAcceptingOptionSpec;
+import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.TabExpansionUtil;
+import net.sourceforge.seqware.pipeline.plugin.Plugin;
+import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
+import org.openide.util.lookup.ServiceProvider;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,13 +34,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import joptsimple.ArgumentAcceptingOptionSpec;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.TabExpansionUtil;
-import net.sourceforge.seqware.pipeline.plugin.Plugin;
-import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * <p>
