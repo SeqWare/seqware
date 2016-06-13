@@ -1,14 +1,5 @@
 package net.sourceforge.seqware.pipeline.modules;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
@@ -23,6 +14,15 @@ import net.sourceforge.seqware.common.util.runtools.RunTools;
 import net.sourceforge.seqware.pipeline.module.Module;
 import net.sourceforge.seqware.pipeline.module.ModuleInterface;
 import org.openide.util.lookup.ServiceProvider;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This is a very simple module that takes a few options on the command line and then passes the rest of the arguments to whatever command
@@ -419,13 +419,7 @@ public class GenericCommandRunner extends Module {
 
     private static void handleAnnotations(String file, Metadata metadata, int processingAccession) {
         Map<String, String> map = FileTools.getKeyValueFromFile(file);
-        Set<ProcessingAttribute> atts = new TreeSet<>();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            ProcessingAttribute a = new ProcessingAttribute();
-            a.setTag(entry.getKey());
-            a.setValue(entry.getValue());
-            atts.add(a);
-        }
+        Set<ProcessingAttribute> atts = ProcessingAttribute.convertMapToAttributes(map);
         metadata.annotateProcessing(processingAccession, atts);
     }
 

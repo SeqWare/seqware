@@ -3,6 +3,9 @@ package net.sourceforge.seqware.common.model;
 //default package
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 //Generated 09.12.2011 15:01:20 by Hibernate Tools 3.2.4.GA
 
@@ -66,6 +69,17 @@ public class ProcessingAttribute extends Attribute<Processing, ProcessingAttribu
         this.tag = tag;
         this.value = value;
         this.units = units;
+    }
+
+    public static Set<ProcessingAttribute> convertMapToAttributes(Map<String, String> keyvalueMap) {
+        Set<ProcessingAttribute> atts = new TreeSet<>();
+        for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
+            ProcessingAttribute a = new ProcessingAttribute();
+            a.setTag(entry2.getKey());
+            a.setValue(entry2.getValue());
+            atts.add(a);
+        }
+        return atts;
     }
 
     /**

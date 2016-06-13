@@ -16,17 +16,6 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
 import net.sourceforge.seqware.common.model.FileAttribute;
 import net.sourceforge.seqware.common.model.IUSAttribute;
@@ -42,6 +31,18 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugin.Plugin;
 import net.sourceforge.seqware.pipeline.plugin.PluginInterface;
 import org.openide.util.lookup.ServiceProvider;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * <p>
@@ -409,13 +410,7 @@ public class AttributeAnnotator extends Plugin {
         for (Map.Entry<String, Map<String, String>> entry : wmap.entrySet()) {
             Integer swid = Integer.parseInt(entry.getKey());
             Map<String, String> keyvalueMap = entry.getValue();
-            Set<ProcessingAttribute> atts = new TreeSet<>();
-            for (Map.Entry<String, String> entry2 : keyvalueMap.entrySet()) {
-                ProcessingAttribute a = new ProcessingAttribute();
-                a.setTag(entry2.getKey());
-                a.setValue(entry2.getValue());
-                atts.add(a);
-            }
+            Set<ProcessingAttribute> atts = ProcessingAttribute.convertMapToAttributes(keyvalueMap);
             metadata.annotateProcessing(swid, atts);
         }
     }

@@ -194,22 +194,15 @@ public class ProvisionFilesUtil {
     /**
      * Copy reader into output using Cipher.
      *
-     * @param reader
-     *            a {@link java.io.BufferedInputStream} object.
-     * @param output
-     *            a {@link java.lang.String} object.
+     * @param reader         a {@link java.io.BufferedInputStream} object.
+     * @param output         a {@link java.lang.String} object.
      * @param fullOutputPath
-     * @param bufLen
-     *            a int.
-     * @param input
-     *            a {@link java.lang.String} object.
-     * @param metadata
-     *            store the file size and md5sum here after checking the destination
+     * @param bufLen         a int.
+     * @param input          a {@link java.lang.String} object.
+     * @param metadata       store the file size and md5sum here after checking the destination
+     * @param decryptCipher  a {@link javax.crypto.Cipher} object.
+     * @param encryptCipher  a {@link javax.crypto.Cipher} object.
      * @return written File object
-     * @param decryptCipher
-     *            a {@link javax.crypto.Cipher} object.
-     * @param encryptCipher
-     *            a {@link javax.crypto.Cipher} object.
      */
     public File copyToFile(BufferedInputStream reader, String output, boolean fullOutputPath, int bufLen, String input,
             Cipher decryptCipher, Cipher encryptCipher, FileMetadata metadata) {
@@ -347,18 +340,8 @@ public class ProvisionFilesUtil {
         // do the calculations to record file size and md5sum to see if they are consistent between source and destination
         FileMetadata outputMetadata = new FileMetadata();
         if (decryptCipher == null && encryptCipher == null && metadata != null) {
-            Map<String, String> settings = ConfigTools.getSettings();
-            if (settings.containsKey(SqwKeys.SW_PROVISION_FILES_MD5.getSettingKey())) {
-                String value = settings.get(SqwKeys.SW_PROVISION_FILES_MD5.getSettingKey());
-                boolean usemd5 = Boolean.valueOf(value);
-                if (usemd5) {
-                    calculateInputMetadata(outputObj.getAbsolutePath(), outputMetadata);
-                } else {
-                    return outputObj;
-                }
-            } else {
-                calculateInputMetadata(outputObj.getAbsolutePath(), outputMetadata);
-            }
+            if (decideOnMetadata(outputObj, outputMetadata))
+                return outputObj;
             // verify source and destination values. this does the file size check again but we'll probably delete the former code given a
             // chance
             if (!Objects.equals(metadata.getSize(), outputMetadata.getSize())) {
@@ -378,6 +361,27 @@ public class ProvisionFilesUtil {
     }
 
     /**
+     * @param outputObj the file on which to calculate metadata
+     * @param outputMetadata where to store metadata
+     * @return true iff we're skipping metadata calculations
+     */
+    private boolean decideOnMetadata(File outputObj, FileMetadata outputMetadata) {
+        Map<String, String> settings = ConfigTools.getSettings();
+        if (settings.containsKey(SqwKeys.SW_PROVISION_FILES_MD5.getSettingKey())) {
+            String value = settings.get(SqwKeys.SW_PROVISION_FILES_MD5.getSettingKey());
+            boolean usemd5 = Boolean.valueOf(value);
+            if (usemd5) {
+                calculateInputMetadata(outputObj.getAbsolutePath(), outputMetadata);
+            } else {
+                return true;
+            }
+        } else {
+            calculateInputMetadata(outputObj.getAbsolutePath(), outputMetadata);
+        }
+        return false;
+    }
+
+    /**
      * Not supported yet.
      *
      * @return a boolean.
@@ -385,7 +389,7 @@ public class ProvisionFilesUtil {
     public boolean putToHttp() {
         // TODO: not going to support HTTP PUT initially
         Log.warn("HTTP upload not yet supported");
-        return (false);
+        return false;
     }
 
     /**
