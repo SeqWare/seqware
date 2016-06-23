@@ -207,7 +207,7 @@ public abstract class OozieJob implements Comparable<OozieJob> {
         args.add("-o");
         args.add(scriptsDir.getAbsolutePath());
         args.add("-N");
-        args.add(longName);
+        args.add(shortName);
 
         if (jobObj.getQsubOptions() != null) {
             args.add(jobObj.getQsubOptions());
