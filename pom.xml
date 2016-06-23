@@ -1281,6 +1281,15 @@
                     <excludeFilterFile>findbugs-exclude.xml</excludeFilterFile>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>com.versioneye</groupId>
+                <artifactId>versioneye-maven-plugin</artifactId>
+                <version>3.9.2</version>
+                <configuration>
+                    <updatePropertiesAfterCreate>false</updatePropertiesAfterCreate>
+                    <projectId>54a7221327b014d85a000351</projectId>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

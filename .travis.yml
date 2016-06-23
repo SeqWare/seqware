@@ -22,7 +22,8 @@ before_install:
 script: 
 - docker run -h master -ti --rm -v $HOME/.m2:/home/seqware/.m2 -v $TRAVIS_BUILD_DIR:/home/seqware/gitroot/seqware quay.io/seqware/seqware_test_environment:1.3 /test-start.sh "cd /home/seqware && sudo chown -R seqware:seqware . && cd /home/seqware/gitroot/seqware && cp .travis/settings ~/.seqware  && export MAVEN_OPTS=\"-Xmx4096m -XX:MaxPermSize=1024m\" && mvn -B clean install -DskipITs=false &&  cp seqware-pipeline/target/seqware ~/bin &&  mvn -B clean install -pl seqware-ext-testing -DskipITs=false -P 'extITs,embeddedTomcat'"
 
-#after_success:
+after_success:
+- mvn versioneye:update
 #- docker run -v $HOME/.m2:/root/.m2 -v $TRAVIS_BUILD_DIR/seqware_jenkins.id_rsa:/root/.ssh/private_key.pem seqware/documentation_builder:1.3 sh -c 'chown -R root . &&  chown root /root/.ssh/private_key.pem && chmod -R 600 /root/.ssh/private_key.pem && eval `ssh-agent -s` && ssh-add /root/.ssh/private_key.pem && locale && export LC_ALL="en_US.UTF-8" && export LANG="en_US.UTF-8" && locale && export MAVEN_OPTS=\"-Xmx4096m -XX:MaxPermSize=1024m\" && mvn site-deploy'
 
 # sudo required for docker based testing
