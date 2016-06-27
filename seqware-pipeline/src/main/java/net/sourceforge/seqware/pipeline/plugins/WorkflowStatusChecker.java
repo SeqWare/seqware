@@ -18,7 +18,6 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import io.seqware.Engines;
 import io.seqware.common.model.WorkflowRunStatus;
-import io.seqware.oozie.action.sge.JobStatus;
 import io.seqware.pipeline.SqwKeys;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.model.WorkflowRun;
@@ -339,22 +338,23 @@ public class WorkflowStatusChecker extends Plugin {
                         case FAILED:
                         case KILLED:
                             Properties conf = getCurrentConf(wfJob);
-                            // here we need specify the precise nodes to skip since OozieClient.RERUN_FAIL_NODES is bugged due to
-                            // OOZIE-1879
-                            // conf.setProperty(OozieClient.RERUN_FAIL_NODES, "true");
-                            WorkflowJob jobInfo = oc.getJobInfo(jobId);
-                            StringBuilder nodesToSkip = new StringBuilder();
-                            for (WorkflowAction action : jobInfo.getActions()) {
-                                Log.debug("examining node: " + action.getName());
-                                if (JobStatus.SUCCESSFUL.name().equals(action.getExternalStatus())) {
-                                    if (nodesToSkip.length() != 0) {
-                                        nodesToSkip.append(",");
-                                    }
-                                    nodesToSkip.append(action.getName());
-                                }
-                            }
-                            Log.info("skipping nodes: " + nodesToSkip.toString());
-                            conf.setProperty(OozieClient.RERUN_SKIP_NODES, nodesToSkip.toString());
+                            conf.setProperty(OozieClient.RERUN_FAIL_NODES, "true");
+// no longer needed due to upgrade past
+// here we need specify the precise nodes to skip since OozieClient.RERUN_FAIL_NODES is bugged due to
+// OOZIE-1879
+//                            WorkflowJob jobInfo = oc.getJobInfo(jobId);
+//                            StringBuilder nodesToSkip = new StringBuilder();
+//                            for (WorkflowAction action : jobInfo.getActions()) {
+//                                Log.debug("examining node: " + action.getName());
+//                                if (JobStatus.SUCCESSFUL.name().equals(action.getExternalStatus())) {
+//                                    if (nodesToSkip.length() != 0) {
+//                                        nodesToSkip.append(",");
+//                                    }
+//                                    nodesToSkip.append(action.getName());
+//                                }
+//                            }
+//                            Log.info("skipping nodes: " + nodesToSkip.toString());
+//                            conf.setProperty(OozieClient.RERUN_SKIP_NODES, nodesToSkip.toString());
                             oc.reRun(jobId, conf);
                             nextSqwStatus = WorkflowRunStatus.pending;
                             break;
