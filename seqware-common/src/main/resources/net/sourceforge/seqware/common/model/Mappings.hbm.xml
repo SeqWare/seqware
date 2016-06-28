@@ -461,6 +461,7 @@
         <!-- <property name="dax" type="string" column="dax" /> -->
         <property name="iniFile" type="string" column="ini_file"/>
         <property name="workflowEngine" type="string" column="workflow_engine"/>
+        <property name="sgeNameIdMap" type="string" column="sge_name_id_map"/>
 
         <many-to-one
                 name="owner"

@@ -16,6 +16,7 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import com.google.common.base.Joiner;
 import io.seqware.Engines;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
@@ -51,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -76,6 +78,7 @@ import static io.seqware.common.model.WorkflowRunStatus.submitted_cancel;
 public class WorkflowStatusChecker extends Plugin {
     public static final String WORKFLOW_RUN_ACCESSION = "workflow-run-accession";
     private static final String METADATA_SYNC = "synch_for_metadata";
+    public static final String SEQWARE_SGE_NAME_ID_MAP = "SEQWARE_SGE_NAME_ID_MAP";
     // variables for use in the app
     private String hostname = null;
     private String username = null;
@@ -251,7 +254,7 @@ public class WorkflowStatusChecker extends Plugin {
 
             // check that this workflow run matches the specified workflow if provided
             if (options.has("workflow-accession") && options.valueOf("workflow-accession") != null
-                    && !((String) options.valueOf("workflow-accession")).equals(wr.getWorkflowAccession().toString())) {
+                    && !options.valueOf("workflow-accession").equals(wr.getWorkflowAccession().toString())) {
                 return;
             }
 
@@ -260,7 +263,7 @@ public class WorkflowStatusChecker extends Plugin {
                 // check the host is either overridden or this is the same host the
                 // workflow was launched from
                 if (options.has("force-host") && options.valueOf("force-host") != null
-                        && !((String) options.valueOf("force-host")).equals(wr.getHost())) {
+                        && !options.valueOf("force-host").equals(wr.getHost())) {
                     return;
                 } else if (!options.has("force-host") && WorkflowStatusChecker.this.hostname != null
                         && !WorkflowStatusChecker.this.hostname.equals(wr.getHost())) {
@@ -297,7 +300,7 @@ public class WorkflowStatusChecker extends Plugin {
 
         private void checkOozie() {
             try {
-                OozieClient oc = new OozieClient((String) config.get(SqwKeys.OOZIE_URL.getSettingKey()));
+                OozieClient oc = new OozieClient(config.get(SqwKeys.OOZIE_URL.getSettingKey()));
                 String jobId = wr.getStatusCmd();
                 if (jobId == null) {
                     handlePreLaunch();
@@ -381,8 +384,14 @@ public class WorkflowStatusChecker extends Plugin {
 
                 String err;
                 String out;
+                LinkedHashMap<String, String> sgeMap = null;
+                String sgeMapString = null;
 
                 if (wfJob != null) {
+                    // populate map if possible
+                    sgeMap = sgeIdsMap(wfJob);
+                    sgeMapString = Joiner.on(',').join(sgeMap.entrySet());
+
                     if (wr.getWorkflowEngine().equals("oozie-sge")) {
                         Set<String> extIds = sgeIds(wfJob);
                         out = extractStdOut(wr, extIds);
@@ -403,7 +412,11 @@ public class WorkflowStatusChecker extends Plugin {
                     err = "";
                 }
 
+
                 synchronized (METADATA_SYNC) {
+                    if (sgeMapString != null) {
+                        wr.setSgeNameIdMap(sgeMapString);
+                    }
                     wr.setStatus(nextSqwStatus);
                     wr.setStdErr(err);
                     wr.setStdOut(out);
@@ -567,6 +580,22 @@ public class WorkflowStatusChecker extends Plugin {
             sb.append("-----------------------------------------------------------------------\n\n");
         }
         return sb.toString();
+    }
+
+    private static LinkedHashMap<String, String> sgeIdsMap(WorkflowJob wf){
+        List<WorkflowAction> actions = wf.getActions();
+        final LinkedHashMap<String, String> extIds = new LinkedHashMap<>();
+        for (WorkflowAction a : actions) {
+            if (a == null) {
+                Log.fatal("Null action in Oozie provided list of actions in " + wf.toString());
+                continue;
+            }
+            if (a.getExternalId().equals("-")){
+                continue;
+            }
+            extIds.put(a.getName(), a.getExternalId());
+        }
+        return extIds;
     }
 
     private static Set<String> sgeIds(WorkflowJob wf) {
