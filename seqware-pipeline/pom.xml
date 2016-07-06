@@ -297,12 +297,6 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <artifactId>xercesImpl</artifactId>
-            <groupId>xerces</groupId>
-            <type>jar</type>
-            <version>2.10.0</version>
-        </dependency>
-        <dependency>
             <artifactId>commons-dbutils</artifactId>
             <groupId>commons-dbutils</groupId>
             <type>jar</type>

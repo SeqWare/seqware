@@ -37,7 +37,6 @@ import org.apache.oozie.client.OozieClient;
 import org.apache.oozie.client.OozieClientException;
 import org.apache.oozie.client.WorkflowAction;
 import org.apache.oozie.client.WorkflowJob;
-import org.apache.xerces.util.XMLChar;
 import org.openide.util.lookup.ServiceProvider;
 
 import java.io.File;
@@ -622,12 +621,31 @@ public class WorkflowStatusChecker extends Plugin {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
-            if (XMLChar.isValid(c)) {
+            if (isValid(c)) {
                 sb.append(c);
             }
         }
 
         return sb.toString();
+    }
+
+    /**
+     * stripped from xerces2 due to https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2013-4002
+     * However, there is no newer version of Xerces
+     */
+
+    /**
+     * Character flags.
+     */
+    private static final byte[] CHARS = new byte[1 << 16];
+
+    /**
+     * Valid character mask.
+     */
+    private static final int MASK_VALID = 0x01;
+
+    private static boolean isValid(int c) {
+        return (c < 0x10000 && (CHARS[c] & MASK_VALID) != 0) || (0x10000 <= c && c <= 0x10FFFF);
     }
 
     /**
