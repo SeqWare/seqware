@@ -1,5 +1,6 @@
 package net.sourceforge.seqware.queryengine.webservice.security;
 
+import io.seqware.util.PasswordStorage;
 import net.sourceforge.seqware.common.business.RegistrationService;
 import net.sourceforge.seqware.common.factory.BeanFactory;
 import net.sourceforge.seqware.common.model.Registration;
@@ -31,20 +32,20 @@ public class SeqWareVerifier extends SecretVerifier {
         Logger.getLogger(SeqWareVerifier.class).debug(registration);
         if (registration != null) {
             String pass = new String(secret).trim();
-            if (registration.getPassword() == null) {
-                if (pass.isEmpty() || pass.equals("null")) {
+            try {
+                final boolean b = PasswordStorage.verifyPassword(pass, registration.getPassword());
+                if (b){
                     return RESULT_VALID;
-                } else {
-                    return RESULT_INVALID;
                 }
-            } else if (registration.getPassword().equals(pass)) {
-                return RESULT_VALID;
-            } else {
+            } catch (PasswordStorage.CannotPerformOperationException e) {
+                return RESULT_INVALID;
+            } catch (PasswordStorage.InvalidHashException e) {
                 return RESULT_INVALID;
             }
         } else {
             return RESULT_MISSING;
         }
+        return RESULT_INVALID;
     }
 
 }

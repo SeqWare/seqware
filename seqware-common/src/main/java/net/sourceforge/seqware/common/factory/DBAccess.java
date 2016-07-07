@@ -63,13 +63,7 @@ public class DBAccess {
     }
 
     private static MetadataDB create() {
-        DataSource ds = null;
-        try {
-            InitialContext initCtx = new InitialContext();
-            ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/SeqWareMetaDB");
-        } catch (NamingException ex) {
-            Log.info("Could not lookup database via context", ex);
-        }
+        DataSource ds = getDataSource();
 
         if (ds != null) {
             Log.debug("Instantiate MetadataDB via datasource " + ds.getClass());
@@ -83,6 +77,17 @@ public class DBAccess {
             Map<String, String> settings = ConfigTools.getSettings();
             return MetadataFactory.getDB(settings);
         }
+    }
+
+    public static DataSource getDataSource() {
+        DataSource ds = null;
+        try {
+            InitialContext initCtx = new InitialContext();
+            ds = (DataSource) initCtx.lookup("java:comp/env/jdbc/SeqWareMetaDB");
+        } catch (NamingException ex) {
+            Log.info("Could not lookup database via context", ex);
+        }
+        return ds;
     }
 
     /**
