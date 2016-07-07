@@ -18,13 +18,6 @@ package io.seqware.pipeline.whitestar;
 
 import io.seqware.cli.Main;
 import io.seqware.pipeline.Utility;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
@@ -34,9 +27,18 @@ import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Run a helloworld using whitestar.
@@ -59,6 +61,7 @@ public class WhiteStarTest {
     }
 
     @Test
+    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void testWhiteStarStandardWorkflow() throws Exception {
         Path createTempFile = createSettingsFile("whitestar", "inmemory");
         createAndRunWorkflow(createTempFile, false);

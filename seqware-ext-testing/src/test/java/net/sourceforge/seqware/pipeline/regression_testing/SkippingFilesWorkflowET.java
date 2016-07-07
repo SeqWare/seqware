@@ -24,6 +24,7 @@ import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,6 +38,7 @@ import java.io.IOException;
 public class SkippingFilesWorkflowET {
 
     @Test
+    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void runSEQWARE2039() throws IOException {
         // here we test that the first error is properly propagated into the database and reported
         final ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
