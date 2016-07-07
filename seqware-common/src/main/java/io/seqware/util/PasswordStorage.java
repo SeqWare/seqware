@@ -8,6 +8,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 /**
+ * See https://crackstation.net/hashing-security.htm and
  * https://github.com/defuse/password-hashing
  */
 public class PasswordStorage {
