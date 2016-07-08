@@ -17,10 +17,10 @@
 
 package net.sourceforge.seqware.pipeline.cli_tutorial;
 
-import net.sourceforge.seqware.pipeline.tutorial.*;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
+import net.sourceforge.seqware.pipeline.tutorial.DeveloperPhase1;
+import net.sourceforge.seqware.pipeline.tutorial.TutorialSuite;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -34,10 +34,9 @@ import org.junit.runners.Suite;
  * @author dyuen
  */
 
-@Ignore("see https://github.com/SeqWare/seqware/issues/324")
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = { DeveloperPhase1.class, CLIDeveloperPhase2.class })
-public class CLIDeveloperTutorialSuiteET extends TutorialSuite {
+public class CLIDeveloperTutorialSuiteLT extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();

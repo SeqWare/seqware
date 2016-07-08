@@ -18,19 +18,18 @@ package net.sourceforge.seqware.pipeline.tutorial;
 
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
- * This runs all the tests needed to test the User Tutorials. The test suite actually enforces order for us.
+ * This runs all the tests needed to test the Developer Tutorials. The test suite actually enforces order for us. We actually started with
+ * built and installed bundles from step 5 of the user tutorials.
  * 
  * @author dyuen
  */
-@Ignore("see https://github.com/SeqWare/seqware/issues/324")
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = { UserPhase1.class, UserPhase2.class, UserPhase3.class, UserPhase4.class, UserPhase5.class, UserPhase6.class })
-public class OldUserTutorialSuiteET extends TutorialSuite {
+@Suite.SuiteClasses(value = { DeveloperPhase1.class, DeveloperPhase2.class })
+public class OldDeveloperTutorialSuiteLT extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();

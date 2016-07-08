@@ -23,7 +23,6 @@ import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -36,10 +35,9 @@ import java.io.IOException;
  *
  * @author dyuen
  */
-public class DebugWorkflowTutorialET {
+public class DebugWorkflowTutorialLT {
 
     @Test
-    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void runThroughFirstFailAtLaunchTutorial() throws IOException {
         // here we test that the first error is properly propagated into the database and reported
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers(false);
@@ -60,7 +58,7 @@ public class DebugWorkflowTutorialET {
         Log.info(genOutput);
 
         // Replace contents of WorkflowClient from both workflows with code from tutorial
-        String tarTemplatePath = DebugWorkflowTutorialET.class.getResource("FailLaunch.template").getPath();
+        String tarTemplatePath = DebugWorkflowTutorialLT.class.getResource("FailLaunch.template").getPath();
         // determine existing file paths
         File tarTarget = new File(tempDir, "BuggyWorkflow/src/main/java/com/github/seqware/BuggyWorkflowWorkflow.java");
 
@@ -82,7 +80,6 @@ public class DebugWorkflowTutorialET {
     }
 
     @Test
-    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void runThroughFirstFailAtRuntimeTutorial() throws IOException {
         // here we test that the first error is properly propagated into the database and reported
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers(false);
@@ -103,7 +100,7 @@ public class DebugWorkflowTutorialET {
         Log.info(genOutput);
 
         // Replace contents of WorkflowClient from both workflows with code from tutorial
-        String tarTemplatePath = DebugWorkflowTutorialET.class.getResource("FailRun.template").getPath();
+        String tarTemplatePath = DebugWorkflowTutorialLT.class.getResource("FailRun.template").getPath();
         // determine existing file paths
         File tarTarget = new File(tempDir, "BuggyWorkflow/src/main/java/com/github/seqware/BuggyWorkflowWorkflow.java");
 

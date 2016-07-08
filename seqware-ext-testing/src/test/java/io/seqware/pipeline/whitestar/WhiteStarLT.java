@@ -27,7 +27,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
@@ -45,7 +44,7 @@ import java.util.Map;
  *
  * @author dyuen
  */
-public class WhiteStarTest {
+public class WhiteStarLT {
 
     @Rule
     public final ExpectedSystemExit exit = ExpectedSystemExit.none();
@@ -61,7 +60,6 @@ public class WhiteStarTest {
     }
 
     @Test
-    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void testWhiteStarStandardWorkflow() throws Exception {
         Path createTempFile = createSettingsFile("whitestar", "inmemory");
         createAndRunWorkflow(createTempFile, false);
@@ -74,7 +72,7 @@ public class WhiteStarTest {
         createAndRunWorkflow(createTempFile, false);
     }
 
-    protected static void createAndRunWorkflow(Path settingsFile, boolean metadata) throws Exception, IOException {
+    static void createAndRunWorkflow(Path settingsFile, boolean metadata) throws Exception {
         // create a helloworld
         Path tempDir = Files.createTempDirectory("tempTestingDirectory");
         PluginRunner it = new PluginRunner();
@@ -122,7 +120,7 @@ public class WhiteStarTest {
 
     }
 
-    protected static Path createSettingsFile(String engine, String metadataMethod) throws IOException {
+    static Path createSettingsFile(String engine, String metadataMethod) throws IOException {
         // override seqware settings file
         List<String> whiteStarProperties = new ArrayList<>();
         whiteStarProperties.add("SW_METADATA_METHOD=" + metadataMethod);
