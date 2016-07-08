@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.sourceforge.seqware.pipeline.tutorial;
+package net.sourceforge.seqware.pipeline.cli_tutorial;
 
+import net.sourceforge.seqware.pipeline.tutorial.*;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -27,10 +27,10 @@ import org.junit.runners.Suite;
  * 
  * @author dyuen
  */
-@Ignore("see https://github.com/SeqWare/seqware/issues/324")
 @RunWith(Suite.class)
-@Suite.SuiteClasses(value = { UserPhase1.class, UserPhase2.class, UserPhase3.class, UserPhase4.class, UserPhase5.class, UserPhase6.class })
-public class OldUserTutorialSuiteET extends TutorialSuite {
+@Suite.SuiteClasses(value = { CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class, CLIUserPhase4.class, CLIUserPhase5.class,
+        CLIUserPhase6.class })
+public class CLIUserTutorialSuiteLT extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();

@@ -94,6 +94,8 @@ When this is complete:
 (This runs all unit tests and integration tests that only require postgres as a prerequisite)
     mvn clean install -DskipITs=false -P extITs,embeddedTomcat
 (runs all unit tests and all integration tests including those that require Oozie)
+    mvn clean install -DskipITs=false -P allITs,embeddedTomcat
+(runs all unit tests and all integration tests including those that require Oozie or take longer than can fix on Travis-CI)
 
 In the last case, the extended integration tests profile is used to trigger integration tests that run our command line utilities. 
 In order to point your command-line tools at the web service brought up by the integration tests, you will need to comment out your crontab and modify your SeqWare ~/.seqware/settings to include:
@@ -112,11 +114,11 @@ It is possible to disable our embedded tomcat instance and run against both a re
     EXTENDED_TEST_DB_USER=seqware
     EXTENDED_TEST_DB_PASSWORD=seqware
 
-Then set your SW_REST_URL to the web service that uses the above database and invoke the following command. Note that you will need to deploy the seqware-webservice war yourself. 
+Then set your SW\_REST\_URL to the web service that uses the above database and invoke the following command. Note that you will need to deploy the seqware-webservice war yourself. 
 
     mvn clean install -DskipITs=false -P 'extITs,!embeddedTomcat'
 
-Alternatively, if you wish to still use an embedded tomcat instance for testing, modify the properties at the beginning of your seqware-webservice/pom.xml to match the above databases and invoke the integration tests with your SW_REST_URL set to http://localhost:8889/seqware-webservice
+Alternatively, if you wish to still use an embedded tomcat instance for testing, modify the properties at the beginning of your seqware-webservice/pom.xml to match the above databases and invoke the integration tests with your SW\_REST\_URL set to http://localhost:8889/seqware-webservice
 
     mvn clean install -DskipITs=false -P extITs,embeddedTomcat
 

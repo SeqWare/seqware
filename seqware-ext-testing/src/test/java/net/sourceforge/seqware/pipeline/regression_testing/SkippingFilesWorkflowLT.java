@@ -22,24 +22,24 @@ import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
+import org.apache.commons.dbutils.handlers.ArrayHandler;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 
 /**
- * This tests a workflow that creates workflow jobs out of order as described by SEQWARE-1890.
+ * This tests a workflow that skips files (and should not create File entries in the database).
  * 
  * @author dyuen
  */
-public class OutofOrderWorkflowET {
+public class SkippingFilesWorkflowLT {
 
     @Test
-    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
-    public void runSEQWARE1890() throws IOException {
+    public void runSEQWARE2039() throws IOException {
         // here we test that the first error is properly propagated into the database and reported
+        final ExtendedTestDatabaseCreator dbCreator = new ExtendedTestDatabaseCreator();
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers(false);
 
         Main main = new Main();
@@ -50,31 +50,42 @@ public class OutofOrderWorkflowET {
         File tempDir = Files.createTempDir();
 
         // create the workflow
-        String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=com.github.seqware"
-                + " -DgupId=com.github.seqware -DarchetypeArtifactId=seqware-archetype-java-workflow "
-                + "-Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=HelloOutofOrder "
-                + "-Dworkflow-name=HelloOutofOrder -B";
+        String command = "mvn archetype:generate -DarchetypeCatalog=local -Dpackage=io.seqware"
+                + " -DgupId=io.seqware -DarchetypeArtifactId=seqware-archetype-java-workflow "
+                + "-Dversion=1.0-SNAPSHOT -DarchetypeGroupId=com.github.seqware -DartifactId=Skipping "
+                + "-Dworkflow-name=Skipping -B";
         String genOutput = ITUtility.runArbitraryCommand(command, 0, tempDir);
         Log.info(genOutput);
 
         // Replace contents of WorkflowClient from both workflows with code from tutorial
-        String workflowJavaPath = OutofOrderWorkflowET.class.getResource("seqware1890.template").getPath();
+        String workflowJavaPath = SkippingFilesWorkflowLT.class.getResource("seqware2039.template").getPath();
         // determine existing file paths
-        File targetJavaPath = new File(tempDir, "HelloOutofOrder/src/main/java/com/github/seqware/HelloOutofOrderWorkflow.java");
+        File targetJavaPath = new File(tempDir, "Skipping/src/main/java/io/seqware/SkippingWorkflow.java");
 
         // replace workflow file
         Files.copy(new File(workflowJavaPath), targetJavaPath);
 
+        // store number of file records and processing records
+        long numProcessing = (Long)dbCreator.runQuery(new ArrayHandler(), "SELECT count(*) from Processing where algorithm = 'ProvisionFiles'")[0];
+        long numFiles = (Long)dbCreator.runQuery(new ArrayHandler(), "SELECT count(*) from File")[0];
+
+
         // rebuild bundles
         command = "mvn clean install";
-        genOutput = ITUtility.runArbitraryCommand(command, 0, new File(tempDir, "HelloOutofOrder"));
+        genOutput = ITUtility.runArbitraryCommand(command, 0, new File(tempDir, "Skipping"));
         Log.info(genOutput);
         // run bundle and don't error
-        String listCommand = " bundle launch --dir HelloOutofOrder/target/Workflow_Bundle_HelloOutofOrder_1.0-SNAPSHOT_SeqWare_"
+        String listCommand = " bundle launch --dir Skipping/target/Workflow_Bundle_Skipping_1.0-SNAPSHOT_SeqWare_"
                 + SEQWARE_VERSION + "/";
         String listOutput = ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, tempDir);
         System.out.println(listOutput);
-        Assert.assertTrue("Launch did not succeed", listOutput.contains("Application Status : SUCCEEDED"));
+        Assert.assertTrue("Launch did not succeed", listOutput.contains("completed"));
+
+        // processing should go up by one more than files
+        long numProcessing2 = (Long)dbCreator.runQuery(new ArrayHandler(), "SELECT count(*) from Processing where algorithm = 'ProvisionFiles'")[0];
+        long numFiles2 = (Long)dbCreator.runQuery(new ArrayHandler(), "SELECT count(*) from File")[0];
+        Assert.assertTrue("number of file records is unexpected, " + (numFiles2 - numFiles), numFiles2 - numFiles == 2);
+        Assert.assertTrue("number of processing records is unexpected, " +  (numProcessing2 - numProcessing), numProcessing2 - numProcessing == 4);
 
         // clean-up on the way out
         tempDir.deleteOnExit();

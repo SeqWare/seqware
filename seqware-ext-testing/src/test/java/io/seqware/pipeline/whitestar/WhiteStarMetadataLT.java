@@ -16,19 +16,20 @@
  */
 package io.seqware.pipeline.whitestar;
 
-import java.nio.file.Path;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 
+import java.nio.file.Path;
+
 /**
  * Run a helloworld using whitestar.
  *
  * @author dyuen
  */
-public class WhiteStarMetadataET {
+public class WhiteStarMetadataLT {
 
     @Rule
     public final ExpectedSystemExit exit = ExpectedSystemExit.none();
@@ -45,20 +46,20 @@ public class WhiteStarMetadataET {
 
     @Test
     public void testWhiteStarSGEWorkflow() throws Exception {
-        Path createTempFile = WhiteStarTest.createSettingsFile("whitestar-sge", "webservice");
-        WhiteStarTest.createAndRunWorkflow(createTempFile, true);
+        Path createTempFile = WhiteStarLT.createSettingsFile("whitestar-sge", "webservice");
+        WhiteStarLT.createAndRunWorkflow(createTempFile, true);
     }
 
     @Test
     public void testWhiteStarParallelWorkflowWithMetadata() throws Exception {
-        Path createTempFile = WhiteStarTest.createSettingsFile("whitestar-parallel", "webservice");
-        WhiteStarTest.createAndRunWorkflow(createTempFile, true);
+        Path createTempFile = WhiteStarLT.createSettingsFile("whitestar-parallel", "webservice");
+        WhiteStarLT.createAndRunWorkflow(createTempFile, true);
     }
 
     @Test
     public void testWhiteStarWorkflowWithMetadata() throws Exception {
-        Path createTempFile = WhiteStarTest.createSettingsFile("whitestar-parallel", "webservice");
-        WhiteStarTest.createAndRunWorkflow(createTempFile, true);
+        Path createTempFile = WhiteStarLT.createSettingsFile("whitestar-parallel", "webservice");
+        WhiteStarLT.createAndRunWorkflow(createTempFile, true);
     }
 
 }

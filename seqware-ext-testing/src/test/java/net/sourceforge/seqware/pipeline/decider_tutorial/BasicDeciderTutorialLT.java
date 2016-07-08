@@ -18,16 +18,16 @@ package net.sourceforge.seqware.pipeline.decider_tutorial;
 
 import com.google.common.io.Files;
 import io.seqware.cli.Main;
-import java.io.File;
-import java.io.IOException;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.pipeline.plugins.ExtendedTestDatabaseCreator;
 import net.sourceforge.seqware.pipeline.plugins.ITUtility;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * These tests support the tutorial for BasicDeciders
@@ -36,7 +36,7 @@ import org.junit.Test;
  * 
  * @author dyuen
  */
-public class BasicDeciderTutorialET {
+public class BasicDeciderTutorialLT {
 
     @BeforeClass
     public static void resetDatabase() {
@@ -44,7 +44,6 @@ public class BasicDeciderTutorialET {
     }
 
     @Test
-    @Ignore("see https://github.com/SeqWare/seqware/issues/324")
     public void runThroughTutorial() throws IOException {
         // create some top level metadata
         Main main = new Main();
@@ -111,9 +110,9 @@ public class BasicDeciderTutorialET {
         Log.info(genOutput);
 
         // Replace contents of WorkflowClient from both workflows with code from tutorial
-        String tarTemplatePath = BasicDeciderTutorialET.class.getResource("TarWorkflow.template").getPath();
-        String gzTemplatePath = BasicDeciderTutorialET.class.getResource("GZWorkflow.template").getPath();
-        String workflowIniTemplatePath = BasicDeciderTutorialET.class.getResource("workflowini.template").getPath();
+        String tarTemplatePath = BasicDeciderTutorialLT.class.getResource("TarWorkflow.template").getPath();
+        String gzTemplatePath = BasicDeciderTutorialLT.class.getResource("GZWorkflow.template").getPath();
+        String workflowIniTemplatePath = BasicDeciderTutorialLT.class.getResource("workflowini.template").getPath();
         // determine existing file paths
         File tarTarget = new File(tempDir, "Tar/src/main/java/com/github/seqware/TarWorkflow.java");
         File gzTarget = new File(tempDir, "GZ/src/main/java/com/github/seqware/GZWorkflow.java");
