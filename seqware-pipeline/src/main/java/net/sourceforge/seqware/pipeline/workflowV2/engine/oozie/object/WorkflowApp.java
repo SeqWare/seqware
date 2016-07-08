@@ -27,16 +27,16 @@ import java.util.Set;
  * This class is responsible for the conversion of our AbstractWorkflowDataModel to an oozie xml workflow
  */
 public class WorkflowApp {
-    public static final String URIOOZIEWORKFLOW = "uri:oozie:workflow:0.4";
-    public static final org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace(URIOOZIEWORKFLOW);
-    public static final int BUCKET_SIZE = Integer
+    static final String URIOOZIEWORKFLOW = "uri:oozie:workflow:0.4";
+    static final org.jdom.Namespace NAMESPACE = org.jdom.Namespace.getNamespace(URIOOZIEWORKFLOW);
+    private static final int BUCKET_SIZE = Integer
             .parseInt(ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_BATCH_SIZE.getSettingKey()) ? ConfigTools.getSettings().get(
                     SqwKeys.OOZIE_BATCH_SIZE.getSettingKey()) : "100");
-    public static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings()
+    private static final int THRESHOLD = Integer.valueOf(ConfigTools.getSettings()
             .containsKey(SqwKeys.OOZIE_BATCH_THRESHOLD.getSettingKey()) ? ConfigTools.getSettings().get(
             SqwKeys.OOZIE_BATCH_THRESHOLD.getSettingKey()) : "5");
     // note: jobs must be prefixed with a valid character from the alphabet
-    public static final String JOB_PREFIX = "s";
+    private static final String JOB_PREFIX = "s";
 
     private final AbstractWorkflowDataModel wfdm;
     /**
@@ -76,8 +76,7 @@ public class WorkflowApp {
     public List<List<OozieJob>> getOrderedJobs() {
         if (!this.jobs.isEmpty()) {
             OozieJob job0 = this.jobs.get(0);
-            List<List<OozieJob>> graph = this.reOrganizeGraph(job0);
-            return graph;
+            return this.reOrganizeGraph(job0);
         }
         return new ArrayList<>();
     }
@@ -243,7 +242,7 @@ public class WorkflowApp {
         // provisionout's children
         for (AbstractJob job : wfdm.getWorkflow().getJobs()) {
             OozieJob oozieActualJob = this.getOozieJobObject(job);
-            Log.debug("Manipulating parents for " + oozieActualJob.getLongName());
+            Log.debug(String.format("Manipulating parents for %s", oozieActualJob.getLongName()));
             for (Job parent : job.getParents()) {
                 oozieActualJob.addParent(this.getOozieJobObject((AbstractJob) parent));
             }
@@ -285,18 +284,16 @@ public class WorkflowApp {
         if (needLastJoin()) {
             // set a unique name for the join action in case of name conflict
             this.lastJoin = "join_" + Long.toString(System.nanoTime());
-            for (OozieJob job : this.jobs) {
-                if (job.getChildren().isEmpty()) {
-                    job.setOkTo(this.lastJoin);
-                }
-            }
+            this.jobs.stream().filter(job -> job.getChildren().isEmpty()).forEachOrdered(job -> {
+                job.setOkTo(this.lastJoin);
+            });
         }
     }
 
     /**
      * Goes through all jobs in this.jobs and returns true iff there are leaves (nodes with no children)
      *
-     * @return
+     * @return returns whether we found more than one Oozie Job
      */
     private boolean needLastJoin() {
         int leafCount = 0;
@@ -306,6 +303,12 @@ public class WorkflowApp {
         return leafCount > 1;
     }
 
+    /**
+     * Create a concrete OozieJob from an abstract job
+     * @param job a Job that needs to be wrapped in an Oozie object
+     * @param wfdm a workflow data model
+     * @return a concrete Oozie Job
+     */
     private OozieJob createOozieJobObject(AbstractJob job, AbstractWorkflowDataModel wfdm) {
         final String workflowRunAccession = wfdm.getWorkflow_run_accession();
         if (job instanceof BashJob) {
@@ -437,7 +440,7 @@ public class WorkflowApp {
         for (OozieJob job : this.jobs) {
             // Note: the leaves accumulated are to be parents of output provisions,
             // thus the leaves themselves should not be file provisions
-            if ((job instanceof OozieProvisionFileJob == false && job instanceof BatchedOozieProvisionFileJob == false)
+            if ((!(job instanceof OozieProvisionFileJob) && !(job instanceof BatchedOozieProvisionFileJob))
                     && job.getChildren().isEmpty()) {
                 leaves.add(job);
             }
@@ -540,7 +543,6 @@ public class WorkflowApp {
                 if (entry.getValue().isInput()) {
                     OozieJob target;
                     if (useInputBatches) {
-                        assert (inputBucketGenerator != null);
                         target = inputBucketGenerator.getCurrentBucket();
                     } else {
                         target = oozieProvisionXJob;
@@ -582,7 +584,7 @@ public class WorkflowApp {
         // has provisionfiles dependency?
         // this based on the assumption that the provisionFiles job is always in
         // the before or after the actual job
-        if (job.getFiles().isEmpty() == false) {
+        if (!job.getFiles().isEmpty()) {
             BucketGenerator inputBucketGenerator = isRequireBuckets(job.getFiles(), true, job.getAlgo() + "_" + jobs.size(),
                     workflowRunAccession);
             boolean useInputBatches = inputBucketGenerator != null;
@@ -619,12 +621,12 @@ public class WorkflowApp {
                         // perform the work after the provision in finishes
                         oozieActualJob.addParent(oozieProvisionInJob);
                     } else {
-                        assert (inputBucketGenerator != null);
                         BatchedOozieProvisionFileJob currentInBucket = inputBucketGenerator.attachAndIterateBuckets(oozieProvisionInJob);
-                        currentInBucket.addParent(oozieActualJob);
+                        currentInBucket.addParent(oozieRootJob);
                         if (!this.jobs.contains(currentInBucket)) {
                             this.jobs.add(currentInBucket);
                         }
+                        oozieActualJob.addParent(currentInBucket);
                     }
                 } else {
                     // create a provisionFileJob;
@@ -650,7 +652,6 @@ public class WorkflowApp {
                         oozieProvisionOutJob.addParent(oozieActualJob);
                         this.jobs.add(oozieProvisionOutJob);
                     } else {
-                        assert (outputBucketGenerator != null);
                         BatchedOozieProvisionFileJob currentOutBucket = outputBucketGenerator.attachAndIterateBuckets(oozieProvisionOutJob);
                         currentOutBucket.addParent(oozieActualJob);
                         if (!this.jobs.contains(currentOutBucket)) {
@@ -676,13 +677,13 @@ public class WorkflowApp {
      * Encapsulates logic for the generation and iteration of buckets
      */
     private class BucketGenerator {
-        public int currentBucketCount = 0;
+        int currentBucketCount = 0;
         private BatchedOozieProvisionFileJob currentBucket;
         private final boolean input;
         private final String uniqueName;
         private final String workflowRunAccession;
 
-        public BucketGenerator(boolean input, String uniqueName, String workflowRunAccession) {
+        BucketGenerator(boolean input, String uniqueName, String workflowRunAccession) {
             this.input = input;
             this.uniqueName = uniqueName;
             this.workflowRunAccession = workflowRunAccession;
