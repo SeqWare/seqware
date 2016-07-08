@@ -30,7 +30,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = { CLIUserPhase1.class, CLIUserPhase2.class, CLIUserPhase3.class, CLIUserPhase4.class, CLIUserPhase5.class,
         CLIUserPhase6.class })
-public class CLIUserTutorialSuiteET extends TutorialSuite {
+public class CLIUserTutorialSuiteLT extends TutorialSuite {
     @BeforeClass
     public static void resetDatabase() {
         ExtendedTestDatabaseCreator.resetDatabaseWithUsers();
