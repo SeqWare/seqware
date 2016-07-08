@@ -275,7 +275,7 @@ INSERT INTO platform VALUES (28, 'PACBIO_SMRT', 'PacBio RS', 'PacificBiosciences
 -- Data for Name: registration; Type: TABLE DATA; Schema: public; Owner: seqware
 --
 
-INSERT INTO registration VALUES (1, 'admin@admin.com', 'admin', 'admin', 'LIMS', 'Admin', 'Institution', NULL, true, '2009-09-15 19:33:40.428035', '2009-09-15 19:33:40.428035', false, false, false);
+INSERT INTO registration VALUES (1, 'admin@admin.com', 'sha1:64000:18:t2t6A0gFKzmIrgmKneMDTD5NbrMotqwj:EWbFCmOrK2iwq5kVU6Rsobdp', 'admin', 'LIMS', 'Admin', 'Institution', NULL, true, '2009-09-15 19:33:40.428035', '2009-09-15 19:33:40.428035', false, false, false);
 
 
 --
