@@ -1,20 +1,20 @@
 package net.sourceforge.seqware.common.util.filetools;
 
-import ch.enterag.utils.zip.EntryInputStream;
-import ch.enterag.utils.zip.EntryOutputStream;
-import ch.enterag.utils.zip.FileEntry;
-import ch.enterag.utils.zip.Zip64File;
 import joptsimple.OptionSet;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
 import net.sourceforge.seqware.common.util.runtools.RunTools;
+import org.apache.commons.compress.archivers.zip.Zip64Mode;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
+import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.FileUtils;
 
-import java.io.BufferedOutputStream;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -24,13 +24,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.UserPrincipal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.zip.Deflater;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 /**
  * <p>
@@ -286,16 +284,12 @@ public class FileTools {
      *            a {@link java.io.File} object.
      * @param zipFileName
      *            a {@link java.io.File} object.
-     * @param excludeRegEx
-     *            a {@link java.lang.String} object.
-     * @param relative
-     *            a boolean.
      * @param compress
      *            a boolean.
      * @return a boolean.
      */
-    public static boolean zipDirectoryRecursive(File path, File zipFileName, String excludeRegEx, boolean relative, boolean compress) {
-        ArrayList<File> filesToZip = new ArrayList<>();
+    public static boolean zipDirectoryRecursive(File path, File zipFileName, boolean compress) {
+        List<File> filesToZip = new ArrayList<>();
         if (path.exists()) {
             File[] files = path.listFiles();
             for (File file : files) {
@@ -306,118 +300,27 @@ public class FileTools {
                 }
             }
         }
-        try {
-            byte[] buffer = new byte[18024];
-            // going to overwrite the zip file not add to it
-            if (zipFileName.exists() && zipFileName.isFile() && zipFileName.canWrite()) {
-                zipFileName.delete();
-            }
-            Zip64File zipFile = new Zip64File(zipFileName);
-            for (File filesToZip1 : filesToZip) {
-                if (excludeRegEx == null || !filesToZip1.getName().contains(excludeRegEx)) {
-                    try (final FileInputStream in = new FileInputStream(filesToZip1)) {
-                        String filePath = filesToZip1.getPath();
-                        if (relative) {
-                            filePath = filePath.replaceFirst(path.getAbsolutePath() + File.separator, "");
-                        }
-                        Log.debug("Deflating: " + filePath);
-                        int method = FileEntry.iMETHOD_DEFLATED;
-                        if (!compress) {
-                            method = FileEntry.iMETHOD_STORED;
-                        }
-                        try (EntryOutputStream out = zipFile.openEntryOutputStream(filePath, method, null)) {
-                            int len;
-                            while ((len = in.read(buffer)) > 0) {
-                                out.write(buffer, 0, len);
-                            }
-                        }
-                    }
-                }
-            }
-            // Close the ZipFile
-            zipFile.close();
-
-        } catch (IllegalArgumentException iae) {
-            Log.error(iae.getMessage());
-            return (false);
-        } catch (FileNotFoundException fnfe) {
-            Log.error(fnfe.getMessage());
-            return (false);
-        } catch (IOException ioe) {
-            Log.error(ioe.getMessage());
-            return (false);
-        }
-        return (true);
-    }
-
-    /**
-     * <p>
-     * zipListFileRecursiveOld.
-     * </p>
-     * 
-     * @param filesToZip
-     *            a {@link java.util.List} object.
-     * @param zipFileName
-     *            a {@link java.io.File} object.
-     * @param cutPrefix
-     *            a {@link java.lang.String} object.
-     * @param excludeRegEx
-     *            a {@link java.lang.String} object.
-     * @param compress
-     *            a boolean.
-     * @return a boolean.
-     */
-    public static boolean zipListFileRecursiveOld(List<File> filesToZip, File zipFileName, String cutPrefix, String excludeRegEx,/*
-                                                                                                                                  * boolean
-                                                                                                                                  * relative
-                                                                                                                                  * ,
-                                                                                                                                  */
-            boolean compress) {
 
         try {
-            byte[] buffer = new byte[18024];
-            try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFileName))) {
-                if (!compress) {
-                    out.setLevel(Deflater.NO_COMPRESSION);
-                } else {
-                    out.setLevel(Deflater.DEFAULT_COMPRESSION);
+            ZipArchiveOutputStream writer = new ZipArchiveOutputStream(zipFileName);
+            writer.setUseZip64(Zip64Mode.Always);
+            writer.setLevel(compress? ZipArchiveOutputStream.DEFAULT_COMPRESSION : ZipArchiveOutputStream.STORED);
+            for(File file : filesToZip) {
+                ZipArchiveEntry entry = new ZipArchiveEntry(file, file.getAbsolutePath().replaceFirst(path.getAbsolutePath() + File.separator, ""));
+                entry.setSize(file.length());
+                writer.putArchiveEntry(entry);
+                if (!file.isDirectory()) {
+                    BufferedInputStream input = new BufferedInputStream(new FileInputStream(file));
+                    IOUtils.copy(input, writer);
                 }
-                for (File filesToZip1 : filesToZip) {
-                    if (excludeRegEx == null || !filesToZip1.getName().contains(excludeRegEx)) {
-                        try (final FileInputStream in = new FileInputStream(filesToZip1)) {
-                            String filePath = filesToZip1.getPath();
-                            // if (relative) {
-                            // filePath = filePath.replaceFirst(path.getAbsolutePath() +
-                            // File.separator, "");
-                            // }
-                            // cutting from file path folder store
-                            filePath = filePath.substring(cutPrefix.length());
-                            Log.debug("Deflating: " + filePath);
-                            out.putNextEntry(new ZipEntry(filePath));
-                            // Transfer bytes from the current file to the ZIP file
-                            // out.write(buffer, 0, in.read(buffer));
-                            int len;
-                            while ((len = in.read(buffer)) > 0) {
-                                out.write(buffer, 0, len);
-                            }
-                            // Close the current entry
-                            out.closeEntry();
-                        }
-                    }
-                }
+                writer.closeArchiveEntry();
             }
-
-        } catch (IllegalArgumentException iae) {
-            Log.error(iae.getMessage());
-            return (false);
-        } catch (FileNotFoundException fnfe) {
-            Log.error(fnfe.getMessage());
-            return (false);
-        } catch (IOException ioe) {
-            Log.error(ioe.getMessage());
-            return (false);
+            writer.close();
+        } catch (IOException e) {
+            Log.error(e.getMessage());
+            return false;
         }
-        return (true);
+        return true;
     }
 
     /**
@@ -430,70 +333,33 @@ public class FileTools {
      * @return a boolean.
      */
     public static boolean unzipFile(File path, File outputDir) {
-
-        int buffer = 2048;
-
+        ZipFile zipInput;
         try {
-
-            Zip64File zipFile = new Zip64File(path, true);
-
-            List<FileEntry> entityList = zipFile.getListFileEntries();
-
-            BufferedOutputStream dest;
-            for (FileEntry entry : entityList) {
-                if (entry.isDirectory()) {
-                    File dir = new File(outputDir.getAbsolutePath() + File.separator + entry.getName());
-                    dir.mkdirs();
+            zipInput = new ZipFile(path);
+            for(ZipArchiveEntry entry : Collections.list(zipInput.getEntries())){
+                final Path outPath = Paths.get(outputDir.getAbsolutePath(), entry.getName());
+                if (entry.isDirectory()){
+                    // deals with empty directories
+                    Files.createDirectories(outPath);
+                    continue;
+                }
+                Files.createDirectories(outPath.getParent());
+                final File outFile = outPath.toFile();
+                outFile.setExecutable(true, false);
+                outFile.setWritable(true);
+                outFile.setReadable(true);
+                if (entry.getSize() == 0){
+                    // deal with empty files
+                    outFile.createNewFile();
                 } else {
-                    int count;
-                    byte data[] = new byte[buffer];
-                    // write the files to the disk
-                    File dir = new File(outputDir.getAbsolutePath() + File.separator + entry.getName());
-                    // only try to extract if doesn't already exist (dir is really the
-                    // output file)
-                    if (!dir.exists()) {
-                        Log.debug("Extracting: " + entry);
-                        // make directories
-                        if (entry.getName().contains(File.separator)) {
-                            // then this is within a directory path I guess
-                            String[] t = entry.getName().split(File.separator);
-                            StringBuffer newDir = new StringBuffer();
-                            for (int i = 0; i < t.length - 1; i++) {
-                                newDir.append(t[i]).append(File.separator);
-                            }
-                            Log.debug("Creating Dir: " + outputDir.getAbsolutePath() + File.separator + newDir);
-                            File newDirFile = new File(outputDir.getAbsolutePath() + File.separator + newDir);
-                            newDirFile.mkdirs();
-                        }
-                        dest = new BufferedOutputStream(new FileOutputStream(dir.getAbsolutePath()), buffer);
-                        try (EntryInputStream zis = zipFile.openEntryInputStream(entry.getName())) {
-                            while ((count = zis.read(data, 0, buffer)) != -1) {
-                                dest.write(data, 0, count);
-                            }
-                        }
-                        dest.flush();
-                        dest.close();
-                    } else {
-                        Log.info("Skipping since already exists: " + entry);
-                    }
-                    // going out on a limb here and just setting everything executable
-                    // since mostly binaries
-                    // and ZIP file doesn't preserve this
-                    File finalFile = new File(outputDir.getAbsolutePath() + File.separator + entry.getName());
-                    // allow executable for others like mapred and oozie
-                    finalFile.setExecutable(true, false);
-                    finalFile.setWritable(true);
-                    finalFile.setReadable(true);
+                    FileUtils.copyInputStreamToFile(zipInput.getInputStream(entry), outFile);
                 }
             }
-            zipFile.close();
-
-        } catch (IOException ioe) {
-            Log.error("Unhandled exception:", ioe);
-            return (false);
+        } catch (IOException e) {
+            Log.error("Unhandled exception:", e);
+            return false;
         }
-
-        return (true);
+        return true;
     }
 
     /**
@@ -506,7 +372,7 @@ public class FileTools {
      * @param filesArray
      *            a {@link java.util.ArrayList} object.
      */
-    public static void listFilesRecursive(File path, ArrayList<File> filesArray) {
+    public static void listFilesRecursive(File path, List<File> filesArray) {
         if (path.exists()) {
             File[] files = path.listFiles();
             if (files == null) {
@@ -516,9 +382,8 @@ public class FileTools {
             for (int i = 0; files != null && i < files.length; i++) {
                 if (files[i].isDirectory()) {
                     FileTools.listFilesRecursive(files[i], filesArray);
-                } else {
-                    filesArray.add(files[i]);
                 }
+                filesArray.add(files[i]);
             }
         }
     }
