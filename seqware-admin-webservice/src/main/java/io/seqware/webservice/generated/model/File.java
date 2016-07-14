@@ -4,9 +4,8 @@
  */
 package io.seqware.webservice.generated.model;
 
-import java.io.Serializable;
-import java.math.BigInteger;
-import java.util.Collection;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +25,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import java.io.Serializable;
+import java.math.BigInteger;
+import java.util.Collection;
 
 /**
  * 

@@ -95,7 +95,7 @@ public abstract class DatabaseResourceIDTest extends AbstractResourceTest {
             rep.release();
             Assert.fail("No Post on " + getRelativeURI());
         } catch (Exception e) {
-            Assert.assertEquals("Method Not Allowed", e.getMessage());
+            Assert.assertTrue("Method Not Allowed", e.getMessage().contains("Method Not Allowed"));
         }
     }
 
