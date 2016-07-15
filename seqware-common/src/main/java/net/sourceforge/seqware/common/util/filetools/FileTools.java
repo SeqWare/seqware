@@ -345,15 +345,15 @@ public class FileTools {
                 }
                 Files.createDirectories(outPath.getParent());
                 final File outFile = outPath.toFile();
-                outFile.setExecutable(true, false);
-                outFile.setWritable(true);
-                outFile.setReadable(true);
                 if (entry.getSize() == 0){
                     // deal with empty files
                     outFile.createNewFile();
                 } else {
                     FileUtils.copyInputStreamToFile(zipInput.getInputStream(entry), outFile);
                 }
+                outFile.setExecutable(true, false);
+                outFile.setWritable(true);
+                outFile.setReadable(true);
             }
         } catch (IOException e) {
             Log.error("Unhandled exception:", e);
