@@ -18,6 +18,7 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import com.google.common.base.Joiner;
 import io.seqware.Engines;
+import io.seqware.util.XMLChar;
 import io.seqware.common.model.WorkflowRunStatus;
 import io.seqware.pipeline.SqwKeys;
 import net.sourceforge.seqware.common.metadata.Metadata;
@@ -621,31 +622,12 @@ public class WorkflowStatusChecker extends Plugin {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
-            if (isValid(c)) {
+            if (XMLChar.isValid(c)) {
                 sb.append(c);
             }
         }
 
         return sb.toString();
-    }
-
-    /**
-     * stripped from xerces2 due to https://bugzilla.redhat.com/show_bug.cgi?id=CVE-2013-4002
-     * However, there is no newer version of Xerces
-     */
-
-    /**
-     * Character flags.
-     */
-    private static final byte[] CHARS = new byte[1 << 16];
-
-    /**
-     * Valid character mask.
-     */
-    private static final int MASK_VALID = 0x01;
-
-    private static boolean isValid(int c) {
-        return (c < 0x10000 && (CHARS[c] & MASK_VALID) != 0) || (0x10000 <= c && c <= 0x10FFFF);
     }
 
     /**

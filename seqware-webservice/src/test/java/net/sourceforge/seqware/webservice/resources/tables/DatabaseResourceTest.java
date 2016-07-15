@@ -80,7 +80,7 @@ public abstract class DatabaseResourceTest extends AbstractResourceTest {
             rep.release();
             Assert.fail("No POST on " + getRelativeURI());
         } catch (Exception e) {
-            Assert.assertEquals("Method Not Allowed", e.getMessage());
+            Assert.assertTrue("Method Not Allowed", e.getMessage().contains("Method Not Allowed"));
         }
     }
 
@@ -94,7 +94,7 @@ public abstract class DatabaseResourceTest extends AbstractResourceTest {
             rep.release();
             Assert.fail("No PUT on " + getRelativeURI());
         } catch (Exception e) {
-            Assert.assertEquals("Method Not Allowed", e.getMessage());
+            Assert.assertTrue("Method Not Allowed", e.getMessage().contains("Method Not Allowed"));
         }
     }
 
@@ -108,7 +108,7 @@ public abstract class DatabaseResourceTest extends AbstractResourceTest {
             rep.release();
             Assert.fail("No DELETE on " + getRelativeURI());
         } catch (Exception e) {
-            Assert.assertEquals("Method Not Allowed", e.getMessage());
+            Assert.assertTrue("Method Not Allowed", e.getMessage().contains("Method Not Allowed"));
         }
     }
 }

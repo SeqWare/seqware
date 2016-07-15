@@ -180,9 +180,10 @@
             <artifactId>org.restlet.ext.jsslutils</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
         <dependency>
-            <groupId>ch.enterag</groupId>
-            <artifactId>zip64</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
@@ -242,11 +243,6 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>

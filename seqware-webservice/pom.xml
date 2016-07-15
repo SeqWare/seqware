@@ -180,6 +180,18 @@
             <artifactId>org.restlet.ext.jackson</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20160212</version>
+        </dependency>
+
         <dependency>
             <groupId>net.sf.beanlib</groupId>
             <artifactId>beanlib</artifactId>
@@ -516,6 +528,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
@@ -528,6 +541,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        -->
 
         <!-- Validator is need for tests not running inside a web containter. -->
         <dependency>
@@ -562,12 +576,6 @@
             <version>1.4.01</version>
         </dependency>
         <dependency>
-            <groupId>org.restlet.jee</groupId>
-            <artifactId>org.restlet.lib.org.restlet.lib.org.json</artifactId>
-            <type>jar</type>
-            <version>2.0</version>
-        </dependency>
-        <dependency>
             <artifactId>org.restlet</artifactId>
             <groupId>org.restlet.jee</groupId>
             <type>jar</type>
@@ -575,11 +583,6 @@
         <dependency>
             <artifactId>log4j</artifactId>
             <groupId>log4j</groupId>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <groupId>org.codehaus.jackson</groupId>
             <type>jar</type>
         </dependency>
         <dependency>

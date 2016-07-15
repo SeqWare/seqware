@@ -1,15 +1,6 @@
 package net.sourceforge.seqware.pipeline.bundle;
 
 import io.seqware.pipeline.SqwKeys;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
 import net.sourceforge.seqware.common.util.Log;
@@ -21,6 +12,16 @@ import net.sourceforge.seqware.pipeline.modules.utilities.ProvisionFiles;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This is a utility class that lets you manipulate a workflow bundle.
@@ -288,7 +289,7 @@ public class Bundle {
                 && settings.get(SqwKeys.BUNDLE_COMPRESSION.getSettingKey()).equals("OFF")) {
             compression = false;
         }
-        if (!FileTools.zipDirectoryRecursive(bundlePath, outputZipFile, null, true, compression)) {
+        if (!FileTools.zipDirectoryRecursive(bundlePath, outputZipFile, compression)) {
             // tests
             ret.setExitStatus(ReturnValue.FAILURE);
         }
@@ -337,7 +338,7 @@ public class Bundle {
             compression = false;
         }
         if (!FileTools.zipDirectoryRecursive(bundlePath, new File(tempDir.getAbsolutePath() + File.separator + bundlePath.getName()
-                + ".zip"), null, true, compression)) {
+                + ".zip"), compression)) {
             ret.setExitStatus(ReturnValue.FAILURE);
         }
 

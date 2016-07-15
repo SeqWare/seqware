@@ -21,8 +21,8 @@
         <seqware_meta_db_host>localhost</seqware_meta_db_host>
 
         <!-- while merging com.amazonaws.services.s3.transfer.MultipleFileUpload , I couldn't compile without setting a version here -->
-        <aws-java-sdk.version>1.10.77</aws-java-sdk.version>
-        <jackson.version>1.9.13</jackson.version>
+        <aws-java-sdk.version>1.11.15</aws-java-sdk.version>
+        <jackson.version>2.4.4</jackson.version>
         <spring.version>4.2.6.RELEASE</spring.version>
         <hibernate.version>5.1.0.Final</hibernate.version>
         <hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
@@ -35,7 +35,7 @@
         <commons-exec.version>1.3</commons-exec.version>
         <postgresql.version>9.4-1201-jdbc41</postgresql.version>
         <guava.version>19.0</guava.version>
-        <restlet.version>2.2.2</restlet.version>
+        <restlet.version>2.3.7</restlet.version>
         <opencsv.version>2.3</opencsv.version>
         <maven-assembly-plugin.version>2.6</maven-assembly-plugin.version>
         <jetty-maven-plugin.version>6.1.26</jetty-maven-plugin.version>
@@ -59,6 +59,8 @@
         <powermock.version>1.6.5</powermock.version>
         <findbugs.version>3.0.3</findbugs.version>
         <maven-pmd-plugin.version>3.6</maven-pmd-plugin.version>
+        <slf4j.version>1.7.21</slf4j.version>
+        <old-jersey.version>1.19.1</old-jersey.version>
 
         <skipITs>true</skipITs>
         <!-- Needs to be set for memory issues, but must be overrideable from the command line for Bionimbus for unknown reasons -->
@@ -196,22 +198,22 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.6</version>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.6</version>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jul-to-slf4j</artifactId>
-                <version>1.7.6</version>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jcl-over-slf4j</artifactId>
-                <version>1.7.6</version>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>log4j</groupId>
@@ -229,9 +231,20 @@
                 <version>4.1</version>
             </dependency>
             <dependency>
-                <groupId>ch.enterag</groupId>
-                <artifactId>zip64</artifactId>
-                <version>1.03</version>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>3.2.1</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-digester</groupId>
+                <artifactId>commons-digester</artifactId>
+                <version>1.8</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.12</version>
             </dependency>
             <dependency>
                 <groupId>commons-dbutils</groupId>
@@ -377,25 +390,43 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-core-asl</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
+            <!-- enforce for dependencies but replaced by com.fasterxml.jackson in our code -->
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-mapper-asl</artifactId>
-                <version>${jackson.version}</version>
+                <version>1.9.13</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-jaxrs</artifactId>
+                <artifactId>jackson-core-asl</artifactId>
+                <version>1.9.13</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-xc</artifactId>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
                 <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>1.17</version>
             </dependency>
 
             <dependency>
@@ -576,7 +607,7 @@
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>stax2-api</artifactId>
-                <version>3.1.3</version>
+                <version>3.1.4</version>
             </dependency>
             <dependency>
                 <groupId>xml-apis</groupId>
@@ -698,32 +729,32 @@
             <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-json</artifactId>
-                <version>1.11.1</version>
+                <version>${old-jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey.contribs</groupId>
                 <artifactId>jersey-moxy</artifactId>
-                <version>1.11.1</version>
+                <version>${old-jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
                 <artifactId>jersey-gf-server</artifactId>
-                <version>1.11.1</version>
+                <version>${old-jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-client</artifactId>
-                <version>1.11.1</version>
+                <version>${old-jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-grizzly</artifactId>
-                <version>1.11.1</version>
+                <version>${old-jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
                 <artifactId>jersey-gf-statsproviders</artifactId>
-                <version>1.11.1</version>
+                <version>${old-jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.hk2.external</groupId>
@@ -733,7 +764,7 @@
             <dependency>
                 <groupId>com.sun.jersey.glassfish.v3.osgi</groupId>
                 <artifactId>jersey-gf-servlet</artifactId>
-                <version>1.11.1</version>
+                <version>${old-jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jettison</groupId>
@@ -743,17 +774,17 @@
             <dependency>
                 <groupId>org.jvnet.mimepull</groupId>
                 <artifactId>mimepull</artifactId>
-                <version>1.8</version>
+                <version>1.9.3</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey.contribs</groupId>
                 <artifactId>jersey-multipart</artifactId>
-                <version>1.11.1</version>
+                <version>${old-jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-core</artifactId>
-                <version>1.11.1</version>
+                <version>${old-jersey.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -831,7 +862,7 @@
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
-                <version>2.6.2</version>
+                <version>2.7</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
@@ -856,6 +887,27 @@
                 <artifactId>commons-beanutils</artifactId>
                 <version>1.9.2</version>
             </dependency>
+
+            <dependency>
+                <groupId>asm</groupId>
+                <artifactId>asm</artifactId>
+                <version>3.3.1</version>
+            </dependency>
+
+            <!-- explicitly define dependency to version 0.8.11 -->
+            <dependency>
+                <groupId>org.raml</groupId>
+                <artifactId>raml-parser</artifactId>
+                <version>0.8.14</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305 -->
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.0</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

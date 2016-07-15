@@ -16,19 +16,12 @@
  */
 package net.sourceforge.seqware.pipeline.plugins;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import net.sourceforge.seqware.common.model.Attribute;
 import net.sourceforge.seqware.common.model.Experiment;
 import net.sourceforge.seqware.common.model.ExperimentAttribute;
@@ -54,11 +47,19 @@ import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.RunInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.SampleInfo;
 import net.sourceforge.seqware.pipeline.plugins.batchmetadatainjection.TagValueUnit;
 import net.sourceforge.seqware.pipeline.runner.PluginRunner;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.openide.util.lookup.ServiceProvider;
+
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -238,7 +239,7 @@ public class BatchMetadataInjection extends Metadata {
                 }
 
                 ObjectMapper mapper = new ObjectMapper();
-                mapper.setSerializationInclusion(Inclusion.NON_NULL);
+                mapper.setSerializationInclusion(Include.NON_NULL);
                 ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
                 String jsonRunInfo;
                 try {
@@ -659,7 +660,7 @@ public class BatchMetadataInjection extends Metadata {
         String jsonRunInfo = Files.toString(jsonFileInputPath, Charsets.UTF_8);
 
         ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         return mapper.readValue(jsonRunInfo, RunInfo.class);
     }

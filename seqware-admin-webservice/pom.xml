@@ -66,18 +66,20 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <!--
+        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>seqware-meta-db</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <artifactId>jackson-core-asl</artifactId>
-            <groupId>org.codehaus.jackson</groupId>
-            <type>jar</type>
         </dependency>
         <dependency>
             <artifactId>jaxb-api</artifactId>
@@ -124,6 +126,14 @@
             <type>jar</type>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

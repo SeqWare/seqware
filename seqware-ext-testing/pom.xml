@@ -243,7 +243,7 @@
             <!-- run integration tests (IT) that require postgres and tomcat -->
             <!-- run extended integration tests (ET) that require Oozie -->
             <!-- run long integration tests (LT) that take more time than can be provided by Travis-CI -->
-            <id>allITs</id>
+            <id>longITs</id>
             <build>
                 <plugins>
                     <plugin>
@@ -253,10 +253,6 @@
 
                         <configuration>
                             <includes>
-                                <include>**/IT*.java</include>
-                                <include>**/*IT.java</include>
-                                <include>**/ET*.java</include>
-                                <include>**/*ET.java</include>
                                 <include>**/LT*.java</include>
                                 <include>**/*LT.java</include>
                             </includes>
