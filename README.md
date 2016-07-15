@@ -94,8 +94,8 @@ When this is complete:
 (This runs all unit tests and integration tests that only require postgres as a prerequisite)
     mvn clean install -DskipITs=false -P extITs,embeddedTomcat
 (runs all unit tests and all integration tests including those that require Oozie)
-    mvn clean install -DskipITs=false -P allITs,embeddedTomcat
-(runs all unit tests and all integration tests including those that require Oozie or take longer than can fix on Travis-CI)
+    mvn clean install -DskipITs=false -P longITs,embeddedTomcat
+(runs all unit tests and just the long integration tests that take longer than can run on Travis-CI)
 
 In the last case, the extended integration tests profile is used to trigger integration tests that run our command line utilities. 
 In order to point your command-line tools at the web service brought up by the integration tests, you will need to comment out your crontab and modify your SeqWare ~/.seqware/settings to include:
