@@ -1,8 +1,5 @@
 package net.sourceforge.seqware.pipeline.workflowV2.engine.oozie.object;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import net.sourceforge.seqware.common.util.configtools.ConfigTools;
 import net.sourceforge.seqware.pipeline.modules.GenericCommandRunner;
 import net.sourceforge.seqware.pipeline.workflowV2.model.AbstractJob;
@@ -10,25 +7,17 @@ import net.sourceforge.seqware.pipeline.workflowV2.model.Command;
 import org.apache.commons.io.FilenameUtils;
 import org.jdom.Element;
 
-public class OozieBashJob extends OozieJob {
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+class OozieBashJob extends OozieJob {
 
     private File jobScript = null;
 
-    public OozieBashJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
-            String threadsSgeParamFormat, String maxMemorySgeParamFormat, StringTruncator truncator) {
+    OozieBashJob(AbstractJob job, String name, String oozie_working_dir, boolean useSge, File seqwareJar, String threadsSgeParamFormat,
+            String maxMemorySgeParamFormat, StringTruncator truncator) {
         super(job, name, oozie_working_dir, useSge, seqwareJar, threadsSgeParamFormat, maxMemorySgeParamFormat, truncator);
-    }
-
-    @Override
-    protected Element createSgeElement() {
-        File runnerScript = emitRunnerScript();
-        File optionsFile = emitOptionsFile();
-
-        Element sge = new Element("sge", SGE_XMLNS);
-        add(sge, "script", runnerScript.getAbsolutePath());
-        add(sge, "options-file", optionsFile.getAbsolutePath());
-
-        return sge;
     }
 
     @Override
@@ -54,21 +43,26 @@ public class OozieBashJob extends OozieJob {
         return java;
     }
 
-    public static String scriptFileName(String jobName) {
+    private static String scriptFileName(String jobName) {
         return jobName + ".sh";
     }
 
     private File emitJobScript() {
         File file = file(scriptsDir, scriptFileName(this.getLongName()), true);
-        writeScript(concat(" ", jobObj.getCommand().getArguments()), file);
+        final String command = concat(" ", jobObj.getCommand().getArguments());
+        writeScript(command, file);
+        final String commentedCommand = "#"+this.getLongName()+"\n" + command;
+        archiver.archiveWorkflowCommands(commentedCommand);
         return file;
     }
 
-    private File emitRunnerScript() {
+    protected File emitRunnerScript() {
         File file = file(scriptsDir, runnerFileName(this.getLongName()), true);
         ArrayList<String> args = generateRunnerLine();
-        writeScript(concat(" ", args), file);
-
+        final String command = concat(" ", args);
+        writeScript(command, file);
+        final String commentedCommand = "#"+this.getLongName()+"\n" + command;
+        archiver.archiveSeqWareMetadataCalls(commentedCommand);
         return file;
     }
 
@@ -114,7 +108,7 @@ public class OozieBashJob extends OozieJob {
         return args;
     }
 
-    public ArrayList<String> generateRunnerLine() {
+    ArrayList<String> generateRunnerLine() {
         ArrayList<String> args = new ArrayList<>();
         String pathToJRE = createPathToJava();
         args.add(pathToJRE + "java");
@@ -130,7 +124,7 @@ public class OozieBashJob extends OozieJob {
     /**
      * @return the jobScript
      */
-    public File getJobScript() {
+    private File getJobScript() {
         if (this.jobScript == null) {
             this.jobScript = emitJobScript();
         }

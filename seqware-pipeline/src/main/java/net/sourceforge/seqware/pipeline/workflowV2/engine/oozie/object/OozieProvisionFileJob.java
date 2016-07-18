@@ -10,31 +10,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OozieProvisionFileJob extends OozieJob {
+class OozieProvisionFileJob extends OozieJob {
 
     private String metadataOutputPrefix;
     private String outputDir;
     private final SqwFile file;
 
-    public OozieProvisionFileJob(AbstractJob job, SqwFile file, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
+    OozieProvisionFileJob(AbstractJob job, SqwFile file, String name, String oozie_working_dir, boolean useSge, File seqwareJar,
             String slotsSgeParamFormat, String maxMemorySgeParamFormat, StringTruncator truncator) {
         super(job, name, oozie_working_dir, useSge, seqwareJar, slotsSgeParamFormat, maxMemorySgeParamFormat, truncator);
         // oozie provision file jobs should only require 2GB, leaving a margin of safety
         String startMem = ConfigTools.getSettings().get(SqwKeys.SW_CONTROL_NODE_MEMORY.getSettingKey());
         job.setMaxMemory(startMem == null ? SqwKeys.SW_CONTROL_NODE_MEMORY.getDefaultValue() : startMem);
         this.file = file;
-    }
-
-    @Override
-    protected Element createSgeElement() {
-        File runnerScript = emitRunnerScript();
-        File optionsFile = emitOptionsFile();
-
-        Element sge = new Element("sge", SGE_XMLNS);
-        add(sge, "script", runnerScript.getAbsolutePath());
-        add(sge, "options-file", optionsFile.getAbsolutePath());
-
-        return sge;
     }
 
     @Override
@@ -60,10 +48,22 @@ public class OozieProvisionFileJob extends OozieJob {
         return java;
     }
 
-    private File emitRunnerScript() {
+    protected File emitRunnerScript() {
         File localFile = file(scriptsDir, runnerFileName(this.getLongName()), true);
-        ArrayList<String> args = generateRunnerLine();
-        writeScript(concat(" ", args), localFile);
+        List<String> args = generateRunnerLine();
+        final String command = concat(" ", args);
+        writeScript(command, localFile);
+
+        // create archive of commands with metadata calls
+        final String commentedCommand = "#"+this.getLongName()+"\n" + command;
+        archiver.archiveSeqWareMetadataCalls(commentedCommand);
+
+        // create command version without metadata calls
+        this.turnOffMetadata();
+        List<String> argsWithOutMetadata = generateRunnerLine();
+        final String commandWithoutMetadata = concat(" ", argsWithOutMetadata);
+        final String commentedCommandWithoutMetadata = "#"+this.getLongName()+"\n" + commandWithoutMetadata;
+        archiver.archiveWorkflowCommands(commentedCommandWithoutMetadata);
         return localFile;
     }
 
@@ -134,23 +134,16 @@ public class OozieProvisionFileJob extends OozieJob {
         return args;
     }
 
-    public String getOutputDir() {
-        return outputDir;
-    }
 
-    public void setOutputDir(String outputDir) {
+    void setOutputDir(String outputDir) {
         this.outputDir = outputDir;
     }
 
-    public String getMetadataOutputPrefix() {
-        return metadataOutputPrefix;
-    }
-
-    public void setMetadataOutputPrefix(String metadataOutputPrefix) {
+    void setMetadataOutputPrefix(String metadataOutputPrefix) {
         this.metadataOutputPrefix = metadataOutputPrefix;
     }
 
-    public ArrayList<String> generateRunnerLine() {
+    ArrayList<String> generateRunnerLine() {
         ArrayList<String> args = new ArrayList<>();
         String pathToJRE = createPathToJava();
         args.add(pathToJRE + "java");
@@ -161,6 +154,11 @@ public class OozieProvisionFileJob extends OozieJob {
         args.add("net.sourceforge.seqware.pipeline.runner.Runner");
         args.addAll(runnerArgs());
         return args;
+    }
+
+    public void turnOffMetadata(){
+        super.turnOffMetadata();
+        file.getAnnotations().clear();
     }
 
 }
