@@ -35,39 +35,40 @@ public abstract class OozieJob implements Comparable<OozieJob> {
     /**
      * The sub-directory (of the working directory) in which generated script files will be placed.
      */
-    public static final String SCRIPTS_SUBDIR = "generated-scripts";
+    private static final String SCRIPTS_SUBDIR = "generated-scripts";
 
     /**
      * Namespace of the Oozie workflow xml nodes.
      */
-    public static final Namespace WF_XMLNS = Namespace.getNamespace(WorkflowApp.URIOOZIEWORKFLOW);
+    static final Namespace WF_XMLNS = Namespace.getNamespace(WorkflowApp.URIOOZIEWORKFLOW);
 
     /**
      * Namespace of the Oozie SGE action xml node.
      */
-    public static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
+    private static final Namespace SGE_XMLNS = Namespace.getNamespace("uri:oozie:sge-action:1.0");
 
-    protected String okTo = "done";
+    private String okTo = "done";
     // private String errorTo; always to fail now
     private String longName;
     private String shortName;
-    protected Collection<String> parentAccessions;
-    protected String wfrAccession;
-    protected boolean wfrAncesstor;
-    protected AbstractJob jobObj;
-    protected boolean metadataWriteback;
-    protected List<OozieJob> parents;
-    protected List<OozieJob> children;
+    private Collection<String> parentAccessions;
+    private String wfrAccession;
+    private boolean wfrAncesstor;
+    AbstractJob jobObj;
+    private boolean metadataWriteback;
+    private List<OozieJob> parents;
+    private List<OozieJob> children;
     protected String oozie_working_dir;
-    protected List<String> parentAccessionFiles;
-    protected boolean useSge;
+    private List<String> parentAccessionFiles;
+    private boolean useSge;
     protected String seqwareJarPath;
-    protected final String threadsSgeParamFormat;
-    protected final String maxMemorySgeParamFormat;
+    private final String threadsSgeParamFormat;
+    private final String maxMemorySgeParamFormat;
     protected final File scriptsDir;
     private boolean useCheckFile = true;
-    protected final File seqwareJar;
+    private final File seqwareJar;
     private final StringTruncator stringTruncator;
+    protected final Archiver archiver;
 
     public OozieJob(AbstractJob job, String longName, String oozie_working_dir, boolean useSge, File seqwareJar,
             String threadsSgeParamFormat, String maxMemorySgeParamFormat, StringTruncator truncator) {
@@ -87,6 +88,8 @@ public abstract class OozieJob implements Comparable<OozieJob> {
         this.seqwareJar = seqwareJar;
         this.stringTruncator = truncator;
 
+        archiver = new Archiver(oozie_working_dir, scriptsDir);
+
         if (useSge) {
             if (this.seqwareJarPath == null) {
                 throw new IllegalArgumentException("seqwareJarPath must be specified when useSge is true.");
@@ -101,7 +104,7 @@ public abstract class OozieJob implements Comparable<OozieJob> {
         }
     }
 
-    public final Element serializeXML() {
+    final Element serializeXML() {
         Element element = new Element("action", WorkflowApp.NAMESPACE);
         element.setAttribute("name", this.getShortName());
         element.setAttribute("retry-max", ConfigTools.getSettings().containsKey(SqwKeys.OOZIE_RETRY_MAX.getSettingKey()) ? ConfigTools
@@ -129,16 +132,29 @@ public abstract class OozieJob implements Comparable<OozieJob> {
         return element;
     }
 
-    protected abstract Element createSgeElement();
+    private Element createSgeElement(){
+        File runnerScript = emitRunnerScript();
+        File optionsFile = emitOptionsFile();
+
+        Element sge = new Element("sge", SGE_XMLNS);
+        add(sge, "script", runnerScript.getAbsolutePath());
+        add(sge, "options-file", optionsFile.getAbsolutePath());
+
+        return sge;
+    }
 
     protected abstract Element createJavaElement();
+
+    protected abstract File emitRunnerScript();
+
+
 
     /**
      * Returns the metadata arg list for the Runner.
      *
      * @return Runner args
      */
-    protected ArrayList<String> runnerMetaDataArgs() {
+    ArrayList<String> runnerMetaDataArgs() {
         ArrayList<String> args = new ArrayList<>();
 
         if (metadataWriteback) {
@@ -196,7 +212,7 @@ public abstract class OozieJob implements Comparable<OozieJob> {
         return jobName + "-qsub.opts";
     }
 
-    protected File emitOptionsFile() {
+    private File emitOptionsFile() {
         File file = file(scriptsDir, optsFileName(longName), false);
 
         ArrayList<String> args = new ArrayList<>();
@@ -284,7 +300,7 @@ public abstract class OozieJob implements Comparable<OozieJob> {
         return file;
     }
 
-    protected static void write(String contents, File file) {
+    private static void write(String contents, File file) {
         try {
             FileUtils.write(file, contents, StandardCharsets.UTF_8);
         } catch (IOException e) {
@@ -327,7 +343,11 @@ public abstract class OozieJob implements Comparable<OozieJob> {
     }
 
     public void setParentAccessions(Collection<String> parentAccessions) {
-        this.parentAccessions.addAll(parentAccessions);
+        if (parentAccessions != null) {
+            this.parentAccessions.addAll(parentAccessions);
+        } else{
+            this.parentAccessions = null;
+        }
     }
 
     public boolean hasMetadataWriteback() {
@@ -430,7 +450,7 @@ public abstract class OozieJob implements Comparable<OozieJob> {
     /**
      * @return the useCheckFile
      */
-    public boolean isUseCheckFile() {
+    private boolean isUseCheckFile() {
         return useCheckFile;
     }
 
@@ -456,7 +476,7 @@ public abstract class OozieJob implements Comparable<OozieJob> {
         return scriptsDir;
     }
 
-    public static String annotationFileName(String jobName) {
+    private static String annotationFileName(String jobName) {
         return jobName + ".annotations.tsv";
     }
 
@@ -486,4 +506,16 @@ public abstract class OozieJob implements Comparable<OozieJob> {
         return ComparisonChain.start().compare(this.longName, that.longName).result();
     }
 
+    public void setParentAccessionFiles(List<String> parentAccessionFiles) {
+        this.parentAccessionFiles = parentAccessionFiles;
+    }
+
+    public void turnOffMetadata(){
+        this.setMetadataWriteback(false);
+        this.setParentAccessions(null);
+        this.setParentAccessionFiles(null);
+        this.setWorkflowRunAccession(null);
+        this.setUseCheckFile(false);
+
+    }
 }
