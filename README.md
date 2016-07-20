@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/SeqWare/seqware.svg?branch=develop)](https://travis-ci.org/SeqWare/seqware)
-[![DOI](https://zenodo.org/badge/4360/SeqWare/seqware.svg)](http://dx.doi.org/10.5281/zenodo.13358)
 [![Join the chat at https://gitter.im/SeqWare/seqware](https://badges.gitter.im/SeqWare/seqware.svg)](https://gitter.im/SeqWare/seqware?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.33952.svg)](http://dx.doi.org/10.5281/zenodo.33952)
 
 
 ## Introduction 
