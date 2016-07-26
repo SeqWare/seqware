@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/SeqWare/seqware.svg?branch=develop)](https://travis-ci.org/SeqWare/seqware)
 [![Join the chat at https://gitter.im/SeqWare/seqware](https://badges.gitter.im/SeqWare/seqware.svg)](https://gitter.im/SeqWare/seqware?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Coverity Scan](https://img.shields.io/coverity/scan/9681.svg?maxAge=2592000)](https://scan.coverity.com/projects/seqware-seqware)
 
 [![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.33952.svg)](http://dx.doi.org/10.5281/zenodo.33952)
 
