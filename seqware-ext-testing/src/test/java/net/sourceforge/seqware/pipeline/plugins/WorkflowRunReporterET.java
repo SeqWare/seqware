@@ -162,10 +162,10 @@ public class WorkflowRunReporterET {
         File testOutFile = new File(createTempDir, randomString + ".txt");
         String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.WorkflowRunReporter " + "-- --output-filename "
                 + testOutFile.getName() + " --workflow-accession 2861 --time-period 2014-01-01";
-        String listOutput = ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
+        ITUtility.runSeqWareJar(listCommand, ReturnValue.SUCCESS, createTempDir);
         File retrievedFile = new File(createTempDir, testOutFile.getName());
         Assert.assertTrue("output file does not exist", retrievedFile.exists());
-        List<String> readLines = FileUtils.readLines(testOutFile);
+        List<String> readLines = FileUtils.readLines(testOutFile, StandardCharsets.UTF_8);
         Assert.assertTrue("incorrect number of lines ", readLines.size() == 1);
         long checksumCRC32 = FileUtils.checksumCRC32(testOutFile);
         Assert.assertTrue("incorrect output checksum " + checksumCRC32, checksumCRC32 == 1649363086L);

@@ -29,6 +29,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -196,11 +197,11 @@ public class ITUtility {
             if (exitValue != expectedReturnValue){
                 throw new RuntimeException("exit value for full jar with no params should be " + expectedReturnValue + " was " + exitValue);
             }
-            String output = outputStream.toString();
+            String output = outputStream.toString(StandardCharsets.UTF_8);
             return output;
         } catch (ExecuteException e) {
             Log.error("Execution failed with:");
-            Log.error(outputStream.toString());
+            Log.error(outputStream.toString(StandardCharsets.UTF_8));
             throw e;
         }
     }
