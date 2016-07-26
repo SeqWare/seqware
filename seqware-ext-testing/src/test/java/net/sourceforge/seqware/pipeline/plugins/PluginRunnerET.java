@@ -2,10 +2,22 @@ package net.sourceforge.seqware.pipeline.plugins;
 
 import com.google.common.io.Files;
 import io.seqware.pipeline.SqwKeys;
+import net.sourceforge.seqware.common.module.ReturnValue;
+import net.sourceforge.seqware.common.util.Log;
+import net.sourceforge.seqware.common.util.configtools.ConfigTools;
+import net.sourceforge.seqware.pipeline.runner.PluginRunner;
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.springframework.util.SerializationUtils;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,16 +30,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import org.junit.Assert;
-import net.sourceforge.seqware.common.module.ReturnValue;
-import net.sourceforge.seqware.common.util.Log;
-import net.sourceforge.seqware.common.util.configtools.ConfigTools;
-import net.sourceforge.seqware.pipeline.runner.PluginRunner;
-import org.apache.commons.io.FileUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.springframework.util.SerializationUtils;
 
 /*
  * Copyright (C) 2013 SeqWare
@@ -421,7 +423,7 @@ public class PluginRunnerET {
             String listCommand = " workflow ini --accession " + accession + " --out " + workflowIni.getAbsolutePath();
             ITUtility.runSeqwareCLI(listCommand, ReturnValue.SUCCESS, null);
             // new command line does not go to stdout
-            listOutput = FileUtils.readFileToString(workflowIni);
+            listOutput = FileUtils.readFileToString(workflowIni, StandardCharsets.UTF_8);
         } else {
             Log.info("Attempting to export parameters for  " + name);
             String listCommand = "-p net.sourceforge.seqware.pipeline.plugins.BundleManager -- --list-workflow-params --workflow-accession "
@@ -475,7 +477,7 @@ public class PluginRunnerET {
                 String tOutput = ITUtility.runSeqWareJar("-p io.seqware.pipeline.plugins.WorkflowLifecycle -- " + command,
                         ReturnValue.SUCCESS, null);
                 Log.error(command + " completed, writing output to " + output.getAbsolutePath());
-                FileUtils.write(output, tOutput);
+                FileUtils.write(output, tOutput, StandardCharsets.UTF_8);
                 return tOutput;
             } catch (IOException ex) {
                 Log.error("IOException while running " + command, ex);

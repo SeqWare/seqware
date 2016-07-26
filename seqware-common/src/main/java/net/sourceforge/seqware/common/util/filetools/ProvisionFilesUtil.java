@@ -512,7 +512,7 @@ public class ProvisionFilesUtil {
             omd.setContentLength(this.inputSize);
             // just encrypt everything via Server-Side encryption, see
             // http://docs.amazonwebservices.com/AmazonS3/latest/dev/SSEUsingJavaSDK.html
-            omd.setServerSideEncryption(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
+            omd.setSSEAlgorithm(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
             BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
             ClientConfiguration config = new ClientConfiguration();
             config.setConnectionTimeout(connectionTimeout);
@@ -602,12 +602,12 @@ public class ProvisionFilesUtil {
             // FIXME: this doesn't try to reconnect via a new reader if things go badly
             while (myUpload.isDone() == false) {
                 if (isVerbose()) {
-                    float percent = (myUpload.getProgress().getBytesTransfered() * 100.0f) / this.inputSize;
+                    float percent = (myUpload.getProgress().getBytesTransferred() * 100.0f) / this.inputSize;
                     System.out.printf("  + completed: %.2f", percent);
                     System.out.print("%\r");
                     Log.info("Transfer: " + myUpload.getDescription());
                     Log.info("  - State:    " + myUpload.getState());
-                    Log.info("  - Progress: " + myUpload.getProgress().getBytesTransfered() + " of " + this.inputSize);
+                    Log.info("  - Progress: " + myUpload.getProgress().getBytesTransferred() + " of " + this.inputSize);
                 }
                 // Do work while we wait for our upload to complete...
                 if (myUpload.getState() == TransferState.Failed) {

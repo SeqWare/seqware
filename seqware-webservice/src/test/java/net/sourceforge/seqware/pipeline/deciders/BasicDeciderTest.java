@@ -48,6 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -606,10 +607,10 @@ public class BasicDeciderTest extends PluginTest {
                     Gson gson = new GsonBuilder().create();
                     String toJson = gson.toJson(returnValue.getAttributes());
                     File file = new File(file_swa + ".json");
-                    FileUtils.writeStringToFile(file, toJson);
+                    FileUtils.writeStringToFile(file, toJson, StandardCharsets.UTF_8);
                 } else {
                     // ensure that json check files contain a subset of the decider attributes
-                    String query = FileUtils.readFileToString(new File((BasicDeciderTest.class.getResource(file_swa + ".json").getPath())));
+                    String query = FileUtils.readFileToString(new File((BasicDeciderTest.class.getResource(file_swa + ".json").getPath())), StandardCharsets.UTF_8);
                     Gson gson = new GsonBuilder().create();
                     Type fooType = new TypeToken<Map<String, String>>() {
                     }.getType();
