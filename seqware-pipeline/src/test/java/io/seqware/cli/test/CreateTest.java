@@ -86,7 +86,7 @@ public class CreateTest {
     public void createFileError() throws Exception {
 
         String[] mainArgs = new String[] { "create", "file", "--workflow-accession", "123", "--parent-accession", "321", "--file", "a:b:c" };
-        testWithError(mainArgs, "seqware: 'file' is not a valid object type.  See 'seqware create --help'.");
+        testWithError(mainArgs, "seqware: 'create file' is not a seqware command. See 'seqware create --help'.");
     }
 
     @Test
