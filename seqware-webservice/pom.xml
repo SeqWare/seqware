@@ -141,6 +141,7 @@
                         <include>**/WSResourceTestSuite.java</include>
                         <include>**/plugins/*.java</include>
                         <include>**/deciders/*.java</include>
+                        <include>**/runner/*.java</include>
                     </includes>
                 </configuration>
             </plugin>

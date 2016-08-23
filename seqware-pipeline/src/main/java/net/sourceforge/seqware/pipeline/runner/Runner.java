@@ -9,6 +9,7 @@ import net.sourceforge.seqware.common.err.NotFoundException;
 import net.sourceforge.seqware.common.metadata.Metadata;
 import net.sourceforge.seqware.common.metadata.MetadataDB;
 import net.sourceforge.seqware.common.metadata.MetadataFactory;
+import net.sourceforge.seqware.common.model.ParentAccessionModel;
 import net.sourceforge.seqware.common.model.Processing;
 import net.sourceforge.seqware.common.module.FileMetadata;
 import net.sourceforge.seqware.common.module.ReturnValue;
@@ -45,21 +46,21 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 // FIXME: auto-adding to rc.data, support "," delimited
-// FIXME: When adding STDOUT/STDERR to metadb, we should add a timestamp or something else to make it easier to merge. Right now, it is hard to tell which stdout message corresponds to which step in stderr 
+// FIXME: When adding STDOUT/STDERR to metadb, we should add a timestamp or something else to make it easier to merge. Right now, it is hard to tell which stdout message corresponds to which step in stderr
 // FIXME: is parent accession comma separated?
 
 /*
  * Run each method for the requested module object. Based on return value, either continue or exit:
  *   Return values > 0 are errors that will cause the runner to exit.
  *   Return of 0 implies success and the runner will continue, assuming all is well.
- *   Return of -1 implies the method was not implemented for that Module, AND IS NOT AN ERROR!!! By default the runner will continue on with steps as if it succeeded!  
+ *   Return of -1 implies the method was not implemented for that Module, AND IS NOT AN ERROR!!! By default the runner will continue on with steps as if it succeeded!
  */
 //Create a main() function here, which will be compiled in, to parse input and run all steps
 /**
  * <p>
  * Runner class.
  * </p>
- * 
+ *
  * @author boconnor
  * @version $Id: $Id
  */
@@ -187,7 +188,7 @@ public class Runner {
      * <p>
      * getSyntax.
      * </p>
-     * 
+     *
      * @param parser
      *            a {@link joptsimple.OptionParser} object.
      * @param errorMessage
@@ -213,19 +214,20 @@ public class Runner {
         System.exit(-1);
     }
 
-    private void writeProcessingAccessionToFile(File file, boolean append) {
+    private void writeStringToFile(File file, boolean append, String output) {
         int maxTries = (Integer) options.valueOf("metadata-tries-number");
-        for (int i = 0; i < maxTries; i++) {
+        for (int i = 0; i <= maxTries; i++) {
+            Log.fatal("On try " + i + " of " + maxTries);
             // Break on success
-            if (LockingFileTools.lockAndWrite(file, processingAccession + System.getProperty("line.separator"), append)) {
+            if (LockingFileTools.lockAndWrite(file, output, append)) {
                 break;
             } // Sleep if going to try again
             else if (i < maxTries) {
                 ProcessTools.sleep((Integer) options.valueOf("metadata-tries-delay"));
             } // Return error if failed on last try
-            else {
+            if (maxTries == i) {
                 ReturnValue retval = new ReturnValue();
-                retval.printAndAppendtoStderr("Could not write to processingAccession File for metadata");
+                retval.printAndAppendtoStderr("Could not write to " + file.getAbsolutePath() + " for metadata");
                 retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
                 meta.update_processing_event(processingID, retval);
                 meta.update_processing_status(processingID, ProcessingStatus.failed);
@@ -238,7 +240,7 @@ public class Runner {
      * <p>
      * printAndAppendtoStderr.
      * </p>
-     * 
+     *
      * @param buffer
      *            a {@link java.lang.String} object.
      */
@@ -251,7 +253,7 @@ public class Runner {
      * <p>
      * printAndAppendtoStdout.
      * </p>
-     * 
+     *
      * @param buffer
      *            a {@link java.lang.String} object.
      */
@@ -268,7 +270,7 @@ public class Runner {
      * <p>
      * evaluateReturn.
      * </p>
-     * 
+     *
      * @param app
      *            a {@link net.sourceforge.seqware.pipeline.module.Module} object.
      * @param methodName
@@ -372,7 +374,7 @@ public class Runner {
 
     /**
      * FIXME: this needs to be migrated to something that is ZIP64 aware. Try using the unzip feature of FileTools.java
-     * 
+     *
      * @param zipFile
      *            a {@link java.lang.String} object.
      * @throws java.util.zip.ZipException
@@ -440,7 +442,7 @@ public class Runner {
      * <p>
      * main.
      * </p>
-     * 
+     *
      * @param args
      *            an array of {@link java.lang.String} objects.
      */
@@ -644,24 +646,7 @@ public class Runner {
 
                 try {
                     if ((file.exists() || file.createNewFile()) && file.canWrite()) {
-                        int maxTries = (Integer) options.valueOf("metadata-tries-number");
-                        for (int i = 0; i < maxTries; i++) {
-                            // Break on success
-                            if (LockingFileTools.lockAndAppend(file, workflowRunAccession + System.getProperty("line.separator"))) {
-                                break;
-                            } // Sleep if going to try again
-                            else if (i < maxTries) {
-                                ProcessTools.sleep((Integer) options.valueOf("metadata-tries-delay"));
-                            } // Return error if failed on last try
-                            else {
-                                ReturnValue retval = new ReturnValue();
-                                retval.printAndAppendtoStderr("Could not write to processingID File for metadata");
-                                retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
-                                meta.update_processing_event(workflowRunAccession, retval);
-                                meta.update_processing_status(workflowRunAccession, ProcessingStatus.failed);
-                                System.exit(retval.getExitStatus());
-                            }
-                        }
+                        this.writeStringToFile(file, true, workflowRunAccession + System.getProperty("line.separator"));
                     } else {
                         Log.error("Could not create processingAccession File for metadata");
                         System.exit(ReturnValue.METADATAINVALIDIDCHAIN);
@@ -721,16 +706,29 @@ public class Runner {
                 BufferedReader r;
                 String line;
                 r = new BufferedReader(new FileReader(file));
-
+                boolean accessionFound = false;
+                // seqware-2023, we need to ensure that there is at least one accession found
                 while ((line = r.readLine()) != null) {
                     try {
-                        parentAccessions.add(Integer.parseInt(line));
+                        int parseInt = Integer.parseInt(line);
+                        parentAccessions.add(parseInt);
+                        int[] accessions = new int[] { parseInt };
+                        List<ParentAccessionModel> viaParentAccessions = meta.getViaParentAccessions(accessions);
+                        if (viaParentAccessions == null) {
+                            Log.error("Invalid accession found when parsing parent accession file '" + line + "'");
+                            System.exit(ReturnValue.METADATAINVALIDIDCHAIN);
+                        }
+                        accessionFound = true;
                     } catch (NumberFormatException ex) {
                         Log.error("Non number found when parsing parent accession file '" + line + "'");
                         System.exit(ReturnValue.METADATAINVALIDIDCHAIN);
                     }
                 }
                 r.close();
+                if (!accessionFound) {
+                    Log.error("No number found when parsing parent accession file '" + file + "'");
+                    System.exit(ReturnValue.METADATAINVALIDIDCHAIN);
+                }
             } catch (Exception e) {
                 Log.error("Could not open parent accession file for metadata-parent-accession-file: " + e.getMessage());
                 System.exit(ReturnValue.METADATAINVALIDIDCHAIN);
@@ -882,35 +880,18 @@ public class Runner {
             // Try to write to each processingIDFile until success or timeout
             for (File file : processingIDFiles) {
                 Log.debug("Writing out accession to " + file.toString());
-                int maxTries = (Integer) options.valueOf("metadata-tries-number");
-                for (int i = 0; i < maxTries; i++) {
-                    // Break on success
-                    if (LockingFileTools.lockAndAppend(file, processingID + System.getProperty("line.separator"))) {
-                        break;
-                    } // Sleep if going to try again
-                    else if (i < maxTries) {
-                        ProcessTools.sleep((Integer) options.valueOf("metadata-tries-delay"));
-                    } // Return error if failed on last try
-                    else {
-                        ReturnValue retval = new ReturnValue();
-                        retval.printAndAppendtoStderr("Could not write to processingID File for metadata");
-                        retval.setExitStatus(ReturnValue.METADATAINVALIDIDCHAIN);
-                        meta.update_processing_event(processingID, retval);
-                        meta.update_processing_status(processingID, ProcessingStatus.failed);
-                        System.exit(retval.getExitStatus());
-                    }
-                }
+                this.writeStringToFile(file, true, processingID + System.getProperty("line.separator"));
             }
             Log.debug("Completed processingIDFiles");
 
             // Try to write to each processingAccessionFile until success or timeout
             for (File file : processingAccessionFiles) {
                 Log.debug("Writing out to " + file.toString());
-                writeProcessingAccessionToFile(file, true);
+                writeStringToFile(file, true, processingAccession + System.getProperty("line.separator"));
             }
             Log.debug("Completed processingAccessionFiles");
             if (processingAccessionFileCheck != null) {
-                writeProcessingAccessionToFile(processingAccessionFileCheck, false);
+                writeStringToFile(processingAccessionFileCheck, true, processingAccession + System.getProperty("line.separator"));
             }
             Log.debug("Completed processingAccessionFileCheck");
             meta.update_processing_status(processingID, ProcessingStatus.success);
@@ -974,7 +955,7 @@ public class Runner {
      * <p>
      * run.
      * </p>
-     * 
+     *
      * @param args
      *            an array of {@link java.lang.String} objects.
      */
