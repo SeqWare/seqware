@@ -118,3 +118,24 @@ Third, you'll probably want to create the initial file-provenance-report (note, 
 Optionally, you may want to setup database comments if you wish to explore the database schema:
 
     psql -U seqware seqware_meta_db < comments_on_tables.sql
+    
+## Upgrading From 1.0.X to 1.2.X
+
+SeqWare web service passwords starting with 1.2.X are salted and encrypted. To perform this migration, run the following utility. 
+
+    java -jar seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.RegistrationMigrationPlugin 
+
+Note that from a user POV, their password will remain the same. This just means that their passwords will be stored more securely on the server-side in the database. 
+ 
+The simplest way of creating new users is to simply create them in the database and then re-run the migration utility to encrypt their password. 
+
+    $ psql seqware_meta_db
+    psql (9.3.14)
+    Type "help" for help.
+
+    seqware_meta_db=# insert into registration(email, password, password_hint, first_name, last_name, create_tstmp, last_update_tstmp) VALUES('testing@test.com', 'test-password', 'a test password hint', 'firstname', 'lastname', now(), now());
+    INSERT 0 1
+    seqware_meta_db=# \quit
+    $ java -jar seqware-distribution/target/seqware-distribution-<%= seqware_release_version %>-full.jar --plugin net.sourceforge.seqware.pipeline.plugins.RegistrationMigrationPlugin 
+ 
+    
