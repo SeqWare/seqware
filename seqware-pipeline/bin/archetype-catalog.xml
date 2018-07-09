@@ -19,21 +19,21 @@
       <groupId>com.github.seqware</groupId>
       <artifactId>seqware-archetype-java-workflow</artifactId>
       <version>${project.version}</version>
-      <repository>http://wrench.res.oicr.on.ca/artifactory/seqware-release</repository>
+      <repository>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</repository>
       <description>SeqWare Java workflow archetype</description>
     </archetype>
     <archetype>
       <groupId>com.github.seqware</groupId>
       <artifactId>seqware-archetype-module</artifactId>
       <version>${project.version}</version>
-      <repository>http://wrench.res.oicr.on.ca/artifactory/seqware-release</repository>
+      <repository>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</repository>
       <description>SeqWare module archetype</description>
     </archetype>
     <archetype>
       <groupId>com.github.seqware</groupId>
       <artifactId>seqware-archetype-decider</artifactId>
       <version>${project.version}</version>
-      <repository>http://wrench.res.oicr.on.ca/artifactory/seqware-release</repository>
+      <repository>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</repository>
       <description>SeqWare Java Decider archetype</description>
     </archetype>
   </archetypes>
