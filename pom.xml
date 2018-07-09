@@ -75,8 +75,8 @@
     </scm>
     <distributionManagement>
         <repository>
-            <id>wrench.res.oicr.on.ca</id>
-            <name>wrench.res.oicr.on.ca-releases</name>
+            <id>seqwaremaven.oicr.on.ca</id>
+            <name>seqwaremaven.oicr.on.ca-releases</name>
             <url>http://seqwaremaven.oicr.on.ca/artifactory/seqware-release</url>
             <uniqueVersion>false</uniqueVersion>
         </repository>
